@@ -1,5 +1,4 @@
 debug: true
-analysis: true
 
 visible:
   ontime: true

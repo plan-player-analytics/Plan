@@ -32,10 +32,6 @@ public class InspectCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = getPlayerDisplayname(args, sender);
-//        if (args.length < 1 && !(sender instanceof Player)) {
-//            sender.sendMessage(ChatColor.RED+"Console use of inspect requires arguments.");
-//            return false;
-//        }
         if (this.plugin.getHooks().isEmpty()) {
             this.plugin.logError("noHookedPluginsError on InspectCommand");
 
@@ -55,9 +51,9 @@ public class InspectCommand extends SubCommand {
             }
         }
 
-        HashMap<String, String> data = getData(allData, playerName);
+        HashMap<String, String> data = DataUtils.getData(allData, playerName);
         if (format && !data.isEmpty()) {
-            data = format(data);
+            data = DataFormatUtils.removeExtraDataPoints(data);
         }
         if (data.isEmpty()) {
             data.put("ERR-NO RESULTS", "No results were found.");
@@ -66,19 +62,12 @@ public class InspectCommand extends SubCommand {
 
         }
 
-        List<String[]> dataList = new ArrayList<>();
-        for (String key : data.keySet()) {
-            dataList.add(new String[]{key, data.get(key)});
-        }
-        Collections.sort(dataList, new Comparator<String[]>() {
-            public int compare(String[] strings, String[] otherStrings) {
-                return strings[0].compareTo(otherStrings[0]);
-            }
-        });
+        List<String[]> dataList = DataFormatUtils.turnDataHashMapToSortedListOfArrays(data);
 
         ChatColor operatorColor = ChatColor.DARK_GREEN;
         ChatColor textColor = ChatColor.GRAY;
 
+        //header
         sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + textColor + "] --");
 
         for (String[] dataString : dataList) {
@@ -88,10 +77,12 @@ public class InspectCommand extends SubCommand {
         return true;
     }
 
+    @Deprecated
     public HashMap<String, String> getData(boolean allData, String playerName) {
         return DataUtils.getData(allData, playerName);
     }
 
+    @Deprecated
     public HashMap<String, String> format(HashMap<String, String> data) throws NumberFormatException {
         return DataFormatUtils.removeExtraDataPoints(data);
     }

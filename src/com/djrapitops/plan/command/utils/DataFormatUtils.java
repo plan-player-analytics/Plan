@@ -4,6 +4,8 @@ package com.djrapitops.plan.command.utils;
 import com.djrapitops.plan.Plan;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +87,7 @@ public class DataFormatUtils {
                     if (key.equals("ONT-TOTAL PLAY")) {
                         formatted = formatTimeAmount(data.get(key));
                     } else {
-                        formatted = formatTimeAmount(data.get(key), new Date());
+                        formatted = formatTimeAmountSinceString(data.get(key), new Date());
                     }
                     if (formatted != null) {
                         data.replace(key, formatted);
@@ -138,7 +140,7 @@ public class DataFormatUtils {
         return returnValue;
     }
     
-    public static String formatTimeAmount(String string, Date date) throws NumberFormatException {
+    public static String formatTimeAmountSinceString(String string, Date date) throws NumberFormatException {
         String returnValue = "";
         long ms = (date.toInstant().getEpochSecond() * 1000) - Long.parseLong(string);
         long x = ms / 1000;
@@ -163,7 +165,7 @@ public class DataFormatUtils {
         }
         return returnValue;
     }
-    public static String formatTimeAmount(Date before, Date now) throws NumberFormatException {
+    public static String formatTimeAmountSinceDate(Date before, Date now) throws NumberFormatException {
         String returnValue = "";
         long ms = (now.toInstant().getEpochSecond() * 1000) - (before.toInstant().getEpochSecond() * 1000);
         long x = ms / 1000;
@@ -207,5 +209,18 @@ public class DataFormatUtils {
             }
         }
         return returnString;
+    }
+    
+    public static List<String[]> turnDataHashMapToSortedListOfArrays(HashMap<String, String> data) {
+        List<String[]> dataList = new ArrayList<>();
+        for (String key : data.keySet()) {
+            dataList.add(new String[]{key, data.get(key)});
+        }
+        Collections.sort(dataList, new Comparator<String[]>() {
+            public int compare(String[] strings, String[] otherStrings) {
+                return strings[0].compareTo(otherStrings[0]);
+            }
+        });
+        return dataList;
     }
 }

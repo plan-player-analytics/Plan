@@ -26,9 +26,7 @@ public class PlanCommand implements CommandExecutor {
 
         commands.add(new HelpCommand(plugin, this));
         commands.add(new InspectCommand(plugin));
-        if (plugin.getConfig().getBoolean("analysis")) {
-            commands.add(new AnalyzeCommand(plugin));
-        }
+        commands.add(new AnalyzeCommand(plugin));
         commands.add(new ReloadCommand(plugin));
     }
 

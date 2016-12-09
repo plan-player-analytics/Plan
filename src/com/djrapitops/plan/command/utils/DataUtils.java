@@ -2,7 +2,11 @@ package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -65,5 +69,97 @@ public class DataUtils {
             plugin.logToFile("Failed to create placeholders.yml\n" + e);
         }
         return null;
+    }
+    
+    public static HashMap<String, String> analyze(HashMap<UUID, HashMap<String, String>> playerData) {
+        Plan plugin = getPlugin(Plan.class);
+        HashMap<String, List<String>> playerDataLists = new HashMap<>();
+        String[] ignore = {"ESS-BAN REASON", "ESS-OPPED", "ESS-MUTE TIME", "ESS-LOCATION", "ESS-HUNGER", "ESS-LOCATION WORLD",
+            "ESS-NICKNAME", "ESS-UUID", "FAC-FACTION", "ONT-LAST LOGIN", "TOW-TOWN", "TOW-REGISTERED",
+            "TOW-LAST LOGIN", "TOW-OWNER OF", "TOW-PLOT PERMS", "TOW-PLOT OPTIONS", "TOW-FRIENDS", "ESS-ONLINE SINCE",
+            "ESS-OFFLINE SINCE"};
+        List<String> ignoreKeys = new ArrayList<>();
+        ignoreKeys.addAll(Arrays.asList(ignore));
+        for (UUID key : playerData.keySet()) {
+            for (String dataKey : playerData.get(key).keySet()) {
+                if (ignoreKeys.contains(dataKey)) {
+                    continue;
+                }
+                if (playerDataLists.get(dataKey) == null) {
+                    playerDataLists.put(dataKey, new ArrayList<>());
+                }
+                playerDataLists.get(dataKey).add(playerData.get(key).get(dataKey));
+            }
+        }
+
+        String[] numbers = {"ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
+            "FAC-POWER PER DEATH", "SVO-VOTES", "ONT-TOTAL VOTES", "ONT-TOTAL REFERRED", "ECO-BALANCE"};
+        List<String> numberKeys = new ArrayList<>();
+        numberKeys.addAll(Arrays.asList(numbers));
+        String[] booleanValues = {"ESS-BANNED", "ESS-JAILED", "ESS-MUTED", "ESS-FLYING", "TOW-ONLINE"};
+        List<String> boolKeys = new ArrayList<>();
+        boolKeys.addAll(Arrays.asList(booleanValues));
+        String[] timeValues = {"ONT-TOTAL PLAY"};
+        List<String> timeKeys = new ArrayList<>();
+        timeKeys.addAll(Arrays.asList(timeValues));
+
+        HashMap<String, String> analyzedData = new HashMap<>();
+        int errors = 0;
+        HashSet<String> errorTypes = new HashSet<>();
+
+        for (String dataKey : playerDataLists.keySet()) {
+            if (numberKeys.contains(dataKey)) {
+                double sum = 0;
+
+                for (String dataPoint : playerDataLists.get(dataKey)) {
+                    try {
+                        if (dataKey.equals("FAC-POWER") || dataKey.equals("AAC-ACHIEVEMENTS")) {
+                            sum += Double.parseDouble(dataPoint.split(" ")[0]);
+                        } else if (dataKey.equals("ECO-BALANCE")) {
+                            sum += Double.parseDouble(DataFormatUtils.removeLetters(dataPoint));
+                        } else {
+                            sum += Double.parseDouble(dataPoint);
+                        }
+                    } catch (Exception e) {
+                        errors++;
+                        errorTypes.add("" + e);
+                    }
+                }
+                analyzedData.put(dataKey, "" + (sum / playerData.size()));
+
+            } else if (boolKeys.contains(dataKey)) {
+                int amount = 0;
+                for (String dataPoint : playerDataLists.get(dataKey)) {
+                    try {
+                        if (Boolean.parseBoolean(dataPoint)) {
+                            amount++;
+                        }
+                    } catch (Exception e) {
+                        errors++;
+                        errorTypes.add("" + e);
+                    }
+                }
+                analyzedData.put(dataKey, "" + ((amount / playerData.size()) * 100) + "%");
+            } else if (timeKeys.contains(dataKey)) {
+                Long time = Long.parseLong("0");
+                for (String dataPoint : playerDataLists.get(dataKey)) {
+                    try {
+                        time += Long.parseLong(dataPoint);
+                    } catch (Exception e) {
+                        errors++;
+                        errorTypes.add("" + e);
+                    }
+                }
+                analyzedData.put(dataKey, "" + (time / playerData.size()));
+            }
+        }
+        if (errors > 0) {
+            String log = "ANALYZE\n" + errors + " error(s) occurred while analyzing total data.\nFollowing types:";
+            for (String errorType : errorTypes) {
+                log += "\n  " + errorType;
+            }
+            plugin.logToFile(log);
+        }
+        return DataFormatUtils.formatAnalyzed(analyzedData);
     }
 }

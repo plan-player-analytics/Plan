@@ -3,6 +3,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.command.hooks.Hook;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
+import java.util.Date;
 import java.util.HashMap;
 
 public class API {
@@ -55,6 +56,24 @@ public class API {
     
     public HashMap<String, String> getAllData(String playerName) {
         return DataFormatUtils.removeExtraDataPoints(DataUtils.getData(true, playerName));
+    }
+    
+    // use (new Date) on after parameter for time since moment to now
+    public static String formatTimeSinceDate(Date before, Date after) {
+        return DataFormatUtils.formatTimeAmountSinceDate(before, after);
+    }
+    
+    // use (new Date) on after parameter for time since moment to now
+    public static String formatTimeSinceString(String before, Date after) {
+        return DataFormatUtils.formatTimeAmountSinceString(before, after);
+    }
+    
+    public static String formatTimeAmount(String timeInMs) {
+        return DataFormatUtils.formatTimeAmount(timeInMs);
+    }
+    
+    public static String formatTimeStamp(String timeInMs) {
+        return DataFormatUtils.formatTimeStamp(timeInMs);
     }
     
     public void addExtraHook(String name, Hook hook) {
