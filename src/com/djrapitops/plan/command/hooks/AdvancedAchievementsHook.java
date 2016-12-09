@@ -96,4 +96,7 @@ public class AdvancedAchievementsHook implements Hook {
         return getData(player);
     }
 
+    public boolean isUsingUUID() {
+        return usingUUID;
+    }
 }

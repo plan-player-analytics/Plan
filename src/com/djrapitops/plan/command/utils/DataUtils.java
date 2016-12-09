@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,7 +80,16 @@ public class DataUtils {
             "TOW-LAST LOGIN", "TOW-OWNER OF", "TOW-PLOT PERMS", "TOW-PLOT OPTIONS", "TOW-FRIENDS", "ESS-ONLINE SINCE",
             "ESS-OFFLINE SINCE"};
         List<String> ignoreKeys = new ArrayList<>();
+        try {
+            AdvancedAchievementsHook aaHook = (AdvancedAchievementsHook) plugin.getHooks().get("AdvancedAchievements");
+            if (!aaHook.isUsingUUID()) {
+                ignoreKeys.add("AAC-ACHIEVEMENTS");
+            }
+        } catch (Exception e) {
+            ignoreKeys.add("AAC-ACHIEVEMENTS");
+        }
         ignoreKeys.addAll(Arrays.asList(ignore));
+        
         for (UUID key : playerData.keySet()) {
             for (String dataKey : playerData.get(key).keySet()) {
                 if (ignoreKeys.contains(dataKey)) {
