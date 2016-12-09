@@ -92,7 +92,7 @@ public class DataUtils {
             }
         }
 
-        String[] numbers = {"ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
+        String[] numbers = {"AAC-ACHIEVEMENTS","ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
             "FAC-POWER PER DEATH", "SVO-VOTES", "ONT-TOTAL VOTES", "ONT-TOTAL REFERRED", "ECO-BALANCE"};
         List<String> numberKeys = new ArrayList<>();
         numberKeys.addAll(Arrays.asList(numbers));
@@ -125,7 +125,7 @@ public class DataUtils {
                         errorTypes.add("" + e);
                     }
                 }
-                analyzedData.put(dataKey, "" + (sum / playerData.size()));
+                analyzedData.put(dataKey, "" + (sum * 1.0 / playerData.size()));
 
             } else if (boolKeys.contains(dataKey)) {
                 int amount = 0;
@@ -139,7 +139,7 @@ public class DataUtils {
                         errorTypes.add("" + e);
                     }
                 }
-                analyzedData.put(dataKey, "" + ((amount / playerData.size()) * 100) + "%");
+                analyzedData.put(dataKey, "" + ((amount * 1.0 / playerData.size()) * 100) + "%");
             } else if (timeKeys.contains(dataKey)) {
                 Long time = Long.parseLong("0");
                 for (String dataPoint : playerDataLists.get(dataKey)) {
@@ -150,7 +150,7 @@ public class DataUtils {
                         errorTypes.add("" + e);
                     }
                 }
-                analyzedData.put(dataKey, "" + (time / playerData.size()));
+                analyzedData.put(dataKey, "" + (time * 1.0 / playerData.size()));
             }
         }
         if (errors > 0) {
