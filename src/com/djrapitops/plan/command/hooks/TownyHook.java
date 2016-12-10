@@ -10,8 +10,6 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.util.BukkitTools;
-import com.palmergames.bukkit.util.Colors;
-import com.palmergames.util.StringMgmt;
 import java.util.HashMap;
 import java.util.List;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;

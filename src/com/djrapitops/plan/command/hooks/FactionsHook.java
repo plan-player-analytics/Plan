@@ -8,9 +8,7 @@ import java.util.HashMap;
 import com.massivecraft.factions.entity.MPlayer;
 import java.util.UUID;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class FactionsHook implements Hook {
@@ -28,11 +26,16 @@ public class FactionsHook implements Hook {
         HashMap<String, String> data = new HashMap<>();
         MPlayer mplayer;
         UUID uuid = UUIDFetcher.getUUIDOf(player);
-        OfflinePlayer p = getOfflinePlayer(player);
+        OfflinePlayer p;
         if (uuid != null) {
             p = getOfflinePlayer(uuid);
+            mplayer = MPlayer.get(uuid);
+        } else {
+            // Fallback method if UUID is not found
+            p = getOfflinePlayer(player);
+            mplayer = MPlayer.get(p.getUniqueId());
         }
-        mplayer = MPlayer.get(p.getUniqueId());
+        // Check if player has played on server
         if (p.hasPlayedBefore()) {
             if (mplayer.hasFaction()) {
                 data.put("FAC-FACTION", mplayer.getFactionName());

@@ -7,7 +7,6 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import com.earth2me.essentials.craftbukkit.BanLookup;
-import com.gmail.nossr50.util.uuid.UUIDFetcher;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import org.bukkit.BanList;
 import org.bukkit.Location;
@@ -22,6 +21,7 @@ public class EssentialsHook implements Hook {
         this.plugin = p;
     }
 
+    // Gets data with Essentials own User methods
     @Override
     public HashMap<String, String> getData(String player) throws Exception {
         HashMap<String, String> data = new HashMap<>();

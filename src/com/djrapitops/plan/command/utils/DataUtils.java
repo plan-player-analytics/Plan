@@ -16,6 +16,8 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class DataUtils {
 
+    // allData defined by -a argument in InspectCommand
+    // returns data given by each Hook
     public static HashMap<String, String> getData(boolean allData, String playerName) {
         HashMap<String, String> data = new HashMap<>();
         Plan plugin = getPlugin(Plan.class);
@@ -27,7 +29,6 @@ public class DataUtils {
                     data.putAll(plugin.getHooks().get(hook).getData(playerName));
                 }
             } catch (Exception e) {
-
                 String toLog = "UTILS-GetData"
                         + "\nFailed to getData from " + hook
                         + "\n" + e
@@ -36,18 +37,18 @@ public class DataUtils {
                     toLog += "\n  " + element;
                 }
                 plugin.logToFile(toLog);
-
             }
         }
         return data;
     }
-    
+
+    // Returns data HashMaps for all pplayers in a HashMap.
     public static HashMap<UUID, HashMap<String, String>> getTotalData() {
         HashMap<UUID, HashMap<String, String>> playerData = new HashMap<>();
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
             if (playerData.get(player.getUniqueId()) == null) {
                 playerData.put(player.getUniqueId(), getData(true, player.getName()));
-            } 
+            }
         }
         return playerData;
     }
@@ -71,10 +72,11 @@ public class DataUtils {
         }
         return null;
     }
-    
+
     public static HashMap<String, String> analyze(HashMap<UUID, HashMap<String, String>> playerData) {
         Plan plugin = getPlugin(Plan.class);
         HashMap<String, List<String>> playerDataLists = new HashMap<>();
+        // Ignore following keys (Strings, unprocessable or irrelevant data)
         String[] ignore = {"ESS-BAN REASON", "ESS-OPPED", "ESS-MUTE TIME", "ESS-LOCATION", "ESS-HUNGER", "ESS-LOCATION WORLD",
             "ESS-NICKNAME", "ESS-UUID", "FAC-FACTION", "ONT-LAST LOGIN", "TOW-TOWN", "TOW-REGISTERED",
             "TOW-LAST LOGIN", "TOW-OWNER OF", "TOW-PLOT PERMS", "TOW-PLOT OPTIONS", "TOW-FRIENDS", "ESS-ONLINE SINCE",
@@ -89,7 +91,8 @@ public class DataUtils {
             ignoreKeys.add("AAC-ACHIEVEMENTS");
         }
         ignoreKeys.addAll(Arrays.asList(ignore));
-        
+
+        // Turn playerData into Hashmap of Lists sorted by keys.
         for (UUID key : playerData.keySet()) {
             for (String dataKey : playerData.get(key).keySet()) {
                 if (ignoreKeys.contains(dataKey)) {
@@ -102,26 +105,32 @@ public class DataUtils {
             }
         }
 
-        String[] numbers = {"AAC-ACHIEVEMENTS","ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
+        // Define analysis method for keys
+        String[] numbers = {"AAC-ACHIEVEMENTS", "ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
             "FAC-POWER PER DEATH", "SVO-VOTES", "ONT-TOTAL VOTES", "ONT-TOTAL REFERRED", "ECO-BALANCE"};
-        List<String> numberKeys = new ArrayList<>();
-        numberKeys.addAll(Arrays.asList(numbers));
         String[] booleanValues = {"ESS-BANNED", "ESS-JAILED", "ESS-MUTED", "ESS-FLYING", "TOW-ONLINE"};
-        List<String> boolKeys = new ArrayList<>();
-        boolKeys.addAll(Arrays.asList(booleanValues));
         String[] timeValues = {"ONT-TOTAL PLAY"};
+
+        List<String> numberKeys = new ArrayList<>();
+        List<String> boolKeys = new ArrayList<>();
         List<String> timeKeys = new ArrayList<>();
+
+        numberKeys.addAll(Arrays.asList(numbers));
+        boolKeys.addAll(Arrays.asList(booleanValues));
         timeKeys.addAll(Arrays.asList(timeValues));
 
+        // TODO: Add extrahook analysis methods here
         HashMap<String, String> analyzedData = new HashMap<>();
         int errors = 0;
         HashSet<String> errorTypes = new HashSet<>();
 
+        // Analyze - Go through each key - Go through each point of data in the list.
         for (String dataKey : playerDataLists.keySet()) {
             if (numberKeys.contains(dataKey)) {
                 double sum = 0;
 
                 for (String dataPoint : playerDataLists.get(dataKey)) {
+                    // Special cases separated.
                     try {
                         if (dataKey.equals("FAC-POWER") || dataKey.equals("AAC-ACHIEVEMENTS")) {
                             sum += Double.parseDouble(dataPoint.split(" ")[0]);
@@ -135,6 +144,7 @@ public class DataUtils {
                         errorTypes.add("" + e);
                     }
                 }
+                // Average
                 analyzedData.put(dataKey, "" + (sum * 1.0 / playerData.size()));
 
             } else if (boolKeys.contains(dataKey)) {
@@ -149,6 +159,7 @@ public class DataUtils {
                         errorTypes.add("" + e);
                     }
                 }
+                // Average
                 analyzedData.put(dataKey, "" + ((amount * 1.0 / playerData.size()) * 100) + "%");
             } else if (timeKeys.contains(dataKey)) {
                 Long time = Long.parseLong("0");
@@ -160,9 +171,11 @@ public class DataUtils {
                         errorTypes.add("" + e);
                     }
                 }
+                // Average
                 analyzedData.put(dataKey, "" + (time * 1.0 / playerData.size()));
             }
         }
+        // Log errors
         if (errors > 0) {
             String log = "ANALYZE\n" + errors + " error(s) occurred while analyzing total data.\nFollowing types:";
             for (String errorType : errorTypes) {

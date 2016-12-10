@@ -24,9 +24,11 @@ public class VaultHook implements Hook {
         HashMap<String, String> data = new HashMap<>();
         try {
             UUID uuid = UUIDFetcher.getUUIDOf(player);
-            OfflinePlayer p = getOfflinePlayer(player);
+            OfflinePlayer p;
             if (uuid != null) {
                 p = getOfflinePlayer(uuid);
+            } else {
+                p = getOfflinePlayer(player);
             }
             if (p.hasPlayedBefore()) {
                 data.put("ECO-BALANCE", this.econ.format(this.econ.getBalance(p)));

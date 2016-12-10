@@ -21,6 +21,7 @@ public class AdvancedAchievementsHook implements Hook {
     public AdvancedAchievementsHook(Plan plugin) throws Exception, NoClassDefFoundError {
         this.plugin = plugin;
         this.aAPlugin = getPlugin(AdvancedAchievements.class);
+        // Version was important because 4.0.3 added required method for Offline players
         String[] aAVersion = aAPlugin.getDescription().getVersion().split(".");
         try {
             double versionNumber = Double.parseDouble(aAVersion[0] + "." + aAVersion[1] + aAVersion[2]);
@@ -31,6 +32,7 @@ public class AdvancedAchievementsHook implements Hook {
                 plugin.logError("Advanced Achievements 4.0.3 or above required for Offline players");
             }
         } catch (Exception e) {
+            // Some versions were formatted with two numbers
             try {
                 double versionNumber = Double.parseDouble(aAVersion[0] + "." + aAVersion[1]);
                 if (versionNumber >= 4.03) {
@@ -43,7 +45,7 @@ public class AdvancedAchievementsHook implements Hook {
                 plugin.logToFile("AAHOOK\nError getting version number.\n" + e2);
             }
         }
-
+        // Get total number of Achievements
         for (NormalAchievements category : NormalAchievements.values()) {
             String categoryName = category.toString();
             if (aAPlugin.getDisabledCategorySet().contains(categoryName)) {
@@ -65,15 +67,21 @@ public class AdvancedAchievementsHook implements Hook {
         if (!aAPlugin.getDisabledCategorySet().contains("Commands")) {
             totalAchievements += aAPlugin.getPluginConfig().getConfigurationSection("Commands").getKeys(false).size();
         }
+        //
     }
 
     @Override
     public HashMap<String, String> getData(String player) throws Exception {
         HashMap<String, String> data = new HashMap<>();
+        // Check if achievements exist
         if (totalAchievements > 0) {
             UUID uuid = UUIDFetcher.getUUIDOf(player);
             try {
+                // Check if correct method is present
                 if (this.usingUUID) {
+                    data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements);
+                } else {
+                    // Fallback method for older versions, only returns Online player data
                     Player p = getPlayer(player);
                     if (uuid != null) {
                         p = getPlayer(uuid);
@@ -81,8 +89,6 @@ public class AdvancedAchievementsHook implements Hook {
                     if (p != null) {
                         data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(p) + " / " + totalAchievements);
                     }
-                } else {
-                    data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements);
                 }
             } catch (Exception e) {
                 plugin.logToFile("AAHOOK-GetData\nFailed to get data\n" + e + "\nfor: " + player);
