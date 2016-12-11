@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import me.edge209.OnTime.UUIDFetcher;
+import com.djrapitops.plan.UUIDFetcher;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
