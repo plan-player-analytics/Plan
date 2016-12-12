@@ -82,10 +82,13 @@ public class AdvancedAchievementsHook implements Hook {
                     data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements);
                 } else {
                     // Fallback method for older versions, only returns Online player data
-                    Player p = getPlayer(player);
+                    Player p;
                     if (uuid != null) {
                         p = getPlayer(uuid);
+                    } else {
+                        p = getPlayer(player);
                     }
+                    
                     if (p != null) {
                         data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(p) + " / " + totalAchievements);
                     }

@@ -21,7 +21,7 @@ public class DataUtils {
     public static HashMap<String, String> getData(boolean allData, String playerName) {
         HashMap<String, String> data = new HashMap<>();
         Plan plugin = getPlugin(Plan.class);
-        for (String hook : plugin.getHooks().keySet()) {
+        plugin.getHooks().keySet().parallelStream().forEach((hook) -> {
             try {
                 if (allData) {
                     data.putAll(plugin.getHooks().get(hook).getAllData(playerName));
@@ -38,18 +38,21 @@ public class DataUtils {
                 }
                 plugin.logToFile(toLog);
             }
-        }
+        });
         return data;
     }
 
     // Returns data HashMaps for all pplayers in a HashMap.
     public static HashMap<UUID, HashMap<String, String>> getTotalData() {
         HashMap<UUID, HashMap<String, String>> playerData = new HashMap<>();
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if (playerData.get(player.getUniqueId()) == null) {
-                playerData.put(player.getUniqueId(), getData(true, player.getName()));
-            }
-        }
+
+        List<OfflinePlayer> players = new ArrayList<>();
+        players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
+        players.parallelStream()
+                .filter((player) -> (playerData.get(player.getUniqueId()) == null))
+                .forEach((player) -> {
+                    playerData.put(player.getUniqueId(), getData(true, player.getName()));
+                });
         return playerData;
     }
 
@@ -93,17 +96,19 @@ public class DataUtils {
         ignoreKeys.addAll(Arrays.asList(ignore));
 
         // Turn playerData into Hashmap of Lists sorted by keys.
-        for (UUID key : playerData.keySet()) {
-            for (String dataKey : playerData.get(key).keySet()) {
-                if (ignoreKeys.contains(dataKey)) {
-                    continue;
-                }
-                if (playerDataLists.get(dataKey) == null) {
-                    playerDataLists.put(dataKey, new ArrayList<>());
-                }
-                playerDataLists.get(dataKey).add(playerData.get(key).get(dataKey));
-            }
-        }
+        playerData.keySet().parallelStream().forEach((key) -> {
+            playerData.get(key).keySet().parallelStream()
+                    .filter((dataKey) -> !(ignoreKeys.contains(dataKey)))
+                    .map((dataKey) -> {
+                        if (playerDataLists.get(dataKey) == null) {
+                            playerDataLists.put(dataKey, new ArrayList<>());
+                        }
+                        return dataKey;
+                    })
+                    .forEach((dataKey) -> {
+                        playerDataLists.get(dataKey).add(playerData.get(key).get(dataKey));
+                    });
+        });
 
         // Define analysis method for keys
         String[] numbers = {"AAC-ACHIEVEMENTS", "ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",

@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -100,9 +101,10 @@ public class Plan extends JavaPlugin {
     public List<String> hookInit() {
         this.hooks.clear();
         List<String> hookFail = new ArrayList<>();
-        String[] plugins = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote", "AdvancedAchievements"};
-        for (String pluginName : plugins) {
-
+        String[] pluginsArray = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote", "AdvancedAchievements"};
+        List<String> plugins = new ArrayList<>();
+        plugins.addAll(Arrays.asList(pluginsArray));
+        plugins.parallelStream().forEach((pluginName) -> {
             if (getConfig().getBoolean("visible." + pluginName.toLowerCase())) {
                 try {
                     String className = "com.djrapitops.plan.command.hooks." + pluginName + "Hook";
@@ -118,7 +120,7 @@ public class Plan extends JavaPlugin {
             } else {
                 hookFail.add(ChatColor.YELLOW + pluginName);
             }
-        }
+        });
         for (String extraHook : this.extraHooks.keySet()) {
             this.hooks.put(extraHook, this.extraHooks.get(extraHook));
         }
@@ -176,7 +178,7 @@ public class Plan extends JavaPlugin {
     public API getAPI() {
         return api;
     }
-    
+
     public void addExtraHook(String name, Hook hook) {
         this.extraHooks.put(name, hook);
         this.hooks.put(name, hook);

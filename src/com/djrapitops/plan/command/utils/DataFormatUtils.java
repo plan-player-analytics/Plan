@@ -3,7 +3,6 @@ package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,7 +15,7 @@ public class DataFormatUtils {
     public static HashMap<String, String> removeExtraDataPoints(HashMap<String, String> data) throws NumberFormatException {
         List<String> remove = new ArrayList<>();
         Plan plugin = getPlugin(Plan.class);
-        for (String key : data.keySet()) {
+        data.keySet().parallelStream().forEach((key) -> {
             try {
                 // Process OnTime empty data (returns -1 if empty)
                 if (key.subSequence(0, 3).equals("ONT")) {
@@ -33,7 +32,7 @@ public class DataFormatUtils {
             } catch (Exception e) {
                 plugin.logToFile("FORMAT-Remove\n" + e + "\n" + key);
             }
-        }
+        });
         // Remove faulty data to prevent TOW-LAST LOGIN from being removed with empty data
         for (String removedKey : remove) {
             data.remove(removedKey);
@@ -189,9 +188,9 @@ public class DataFormatUtils {
     // Sorts HashMap into Sorted List of Arrays
     public static List<String[]> turnDataHashMapToSortedListOfArrays(HashMap<String, String> data) {
         List<String[]> dataList = new ArrayList<>();
-        for (String key : data.keySet()) {
+        data.keySet().parallelStream().forEach((key) -> {
             dataList.add(new String[]{key, data.get(key)});
-        }
+        });
         Collections.sort(dataList, new Comparator<String[]>() {
             public int compare(String[] strings, String[] otherStrings) {
                 return strings[0].compareTo(otherStrings[0]);

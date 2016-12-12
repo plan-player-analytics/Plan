@@ -2,7 +2,6 @@ package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
-import com.djrapitops.plan.command.commands.InspectCommand;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class PlaceholderAPIHook extends EZPlaceholderHook implements Hook {
         HashMap<String, String> data = new HashMap<>();
         Player player = Bukkit.getPlayer(UUIDFetcher.getUUIDOf(playerName));
         for (String placeholder : placeholders) {
-            if (placeholder.length() > 0) {
+            if (placeholder.length() > 0 && placeholder.contains("%") || placeholder.contains("{")) {
                 String key = ("" + placeholder.subSequence(1, placeholder.length() - 1)).toUpperCase();
                 data.put("PHA-" + key.toUpperCase(), PlaceholderAPI.setPlaceholders(player, placeholder));
             }
