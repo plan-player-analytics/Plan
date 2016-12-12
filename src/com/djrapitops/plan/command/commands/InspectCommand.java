@@ -31,7 +31,7 @@ public class InspectCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        String playerName = getPlayerDisplayname(args, sender);
+        String playerName = DataUtils.getPlayerDisplayname(args, sender);
         if (this.plugin.getHooks().isEmpty()) {
             this.plugin.logError("noHookedPluginsError on InspectCommand");
 
@@ -50,7 +50,7 @@ public class InspectCommand extends SubCommand {
                 format = false;
             }
         }
-
+        Date refreshDate = new Date();
         HashMap<String, String> data = DataUtils.getData(allData, playerName);
         if (format && !data.isEmpty()) {
             data = DataFormatUtils.removeExtraDataPoints(data);
@@ -68,7 +68,7 @@ public class InspectCommand extends SubCommand {
         ChatColor textColor = ChatColor.GRAY;
 
         //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + textColor + "] --");
+        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName +" - took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date())+ textColor + "] --");
 
         for (String[] dataString : dataList) {
             sender.sendMessage("" + operatorColor + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + textColor + dataString[1]);
@@ -77,36 +77,21 @@ public class InspectCommand extends SubCommand {
         return true;
     }
 
+    // Use DataUtils.getData instead
     @Deprecated
     public HashMap<String, String> getData(boolean allData, String playerName) {
         return DataUtils.getData(allData, playerName);
     }
 
+    // Use DataFormatUtils.removeExtraDataPoints instead
     @Deprecated
     public HashMap<String, String> format(HashMap<String, String> data) throws NumberFormatException {
         return DataFormatUtils.removeExtraDataPoints(data);
     }
 
+    // Use DataUtils.getPlayerDisplayname instead
+    @Deprecated
     private String getPlayerDisplayname(String[] args, CommandSender sender) {
-        String playerName = "";
-        if (args.length > 0) {
-            if ((args[0].equals("-a")) || (args[0].equals("-r"))) {
-                playerName = "ArgumentGivenError";
-                plugin.log("No username given, returned empty username.");
-
-                plugin.logToFile("INSPECT-GETNAME\nNo username given, returned empty username.\n" + args[0]);
-
-            } else if (sender.hasPermission("plan.inspect.other")) {
-                playerName = args[0];
-            }
-        } else {
-            try {
-                Player player = plugin.getServer().getPlayer(UUIDFetcher.getUUIDOf(sender.getName()));
-                playerName = player.getName();
-            } catch (Exception e) {
-                playerName = "ConsoleNotPlayerErr";
-            }
-        }
-        return playerName;
+        return DataUtils.getPlayerDisplayname(args, sender);
     }
 }

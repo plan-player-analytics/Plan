@@ -5,6 +5,7 @@ import com.djrapitops.plan.UUIDFetcher;
 import com.hm.achievement.AdvancedAchievements;
 import com.hm.achievement.category.MultipleAchievements;
 import com.hm.achievement.category.NormalAchievements;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 import static org.bukkit.Bukkit.getPlayer;
@@ -22,7 +23,7 @@ public class AdvancedAchievementsHook implements Hook {
         this.plugin = plugin;
         this.aAPlugin = getPlugin(AdvancedAchievements.class);
         // Version was important because 4.0.3 added required method for Offline players
-        String[] aAVersion = aAPlugin.getDescription().getVersion().split(".");
+        String[] aAVersion = aAPlugin.getDescription().getVersion().split("\\.");
         try {
             double versionNumber = Double.parseDouble(aAVersion[0] + "." + aAVersion[1] + aAVersion[2]);
             if (versionNumber >= 4.03) {
@@ -42,7 +43,8 @@ public class AdvancedAchievementsHook implements Hook {
                     plugin.logError("Advanced Achievements 4.0.3 or above required for Offline players");
                 }
             } catch (Exception e2) {
-                plugin.logToFile("AAHOOK\nError getting version number.\n" + e2);
+                plugin.logToFile("AAHOOK\nError getting version number.\n" + e2+"\n"+e+"\n"
+                        +aAPlugin.getDescription().getVersion()+"\n"+Arrays.toString(aAVersion));
             }
         }
         // Get total number of Achievements

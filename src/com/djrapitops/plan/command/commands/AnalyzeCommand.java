@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class AnalyzeCommand extends SubCommand {
 
@@ -31,17 +32,18 @@ public class AnalyzeCommand extends SubCommand {
         ChatColor textColor = ChatColor.GRAY;
         for (String arg : args) {
             if (arg.toLowerCase().equals("-refresh")) {
-                if (sender.hasPermission("plan.analyze.refresh")) {
+                if (sender.hasPermission("plan.analyze.refresh") || !(sender instanceof Player)) {
                     refreshAnalysisData(sender);
                 }
             }
         }
-        if (this.playerData == null || this.refreshDate == null || this.analyzedPlayerdata == null) {
+        if (this.playerData == null || this.refreshDate == null || this.analyzedPlayerdata == null || DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()).contains("m")) {
             refreshAnalysisData(sender);
         }
         
         //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Analysis results, refreshed " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + " ago:" + textColor + "] --");
+        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Analysis results, refreshed " 
+                + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + " ago:" + textColor + "] --");
         
         List<String[]> dataList = DataFormatUtils.turnDataHashMapToSortedListOfArrays(analyzedPlayerdata);
         
@@ -58,9 +60,11 @@ public class AnalyzeCommand extends SubCommand {
         ChatColor textColor = ChatColor.GRAY;
         sender.sendMessage(textColor + "[" + operatorColor + "Plan" + textColor + "] "
                 + "Refreshing playerData, this might take a while..");
-        this.playerData = DataUtils.getTotalData();
+        this.playerData = DataUtils.getTotalData(DataUtils.getMatchingDisplaynames(true));
         this.refreshDate = new Date();
         this.analyzedPlayerdata = DataUtils.analyze(this.playerData);
+        sender.sendMessage(textColor + "[" + operatorColor + "Plan" + textColor + "] "
+                + "Refreshed, took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
     }
 
     @Deprecated

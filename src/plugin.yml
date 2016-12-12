@@ -11,10 +11,12 @@ commands:
     description: inspect player data
   analyze:
     usage: /plan analyze
-    description: analyze all players' data, add -r to refresh analysis.
+    description: analyze all players' data, add -refresh to refresh analysis.
   reload:
     usage: /plan reload
     description: reload plugin config
+  search:
+    usage: /plan <search terms> -p add -p to make not search playername
 
 softdepend:
 - OnTime
@@ -44,4 +46,7 @@ permissions:
     default: false
   plan.reload:
     description: Allows to reload plugin config
+    default: true
+  plan.search:
+    description: Allows search
     default: true

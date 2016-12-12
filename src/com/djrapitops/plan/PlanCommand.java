@@ -6,6 +6,7 @@ import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.command.commands.HelpCommand;
 import com.djrapitops.plan.command.commands.InspectCommand;
 import com.djrapitops.plan.command.commands.ReloadCommand;
+import com.djrapitops.plan.command.commands.SearchCommand;
 import com.djrapitops.plan.javaTools.Editor;
 import org.bukkit.ChatColor;
 
@@ -27,6 +28,7 @@ public class PlanCommand implements CommandExecutor {
         commands.add(new HelpCommand(plugin, this));
         commands.add(new InspectCommand(plugin));
         commands.add(new AnalyzeCommand(plugin));
+        commands.add(new SearchCommand(plugin));
         commands.add(new ReloadCommand(plugin));
     }
 
@@ -70,13 +72,13 @@ public class PlanCommand implements CommandExecutor {
             return true;
         }
 
+        boolean console = !(sender instanceof Player);
+        
         if (!sender.hasPermission(command.getPermission())) {
 //            Phrase.NO_PERMISSION_FOR_COMMAND.sendWithPrefix( sender );
             sender.sendMessage(ChatColor.RED + "[PLAN] You do not have the required permmission.");
             return true;
         }
-
-        boolean console = !(sender instanceof Player);
 
         if (console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS) {
 //            Phrase.COMMAND_NEEDS_ARGUMENTS.sendWithPrefix( sender );

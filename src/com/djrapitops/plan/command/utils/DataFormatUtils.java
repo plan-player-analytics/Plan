@@ -1,8 +1,8 @@
-
 package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.List;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class DataFormatUtils {
-    
+
     public static HashMap<String, String> removeExtraDataPoints(HashMap<String, String> data) throws NumberFormatException {
         List<String> remove = new ArrayList<>();
         Plan plugin = getPlugin(Plan.class);
@@ -112,25 +112,26 @@ public class DataFormatUtils {
         }
         return data;
     }
+
     // Creates a new Date with Epoch second and returns Date and Time String
     public static String formatTimeStamp(String string) throws NumberFormatException {
         long ms = Long.parseLong(string);
         Date sfd = new Date(ms);
         return ("" + sfd).substring(4, 19);
     }
-    
+
     // Formats Time Since (0 -> string)
     public static String formatTimeAmount(String string) throws NumberFormatException {
         long ms = Long.parseLong(string);
         return turnMsLongToString(ms);
     }
-    
+
     // Formats Time Difference String before -> Date now
     public static String formatTimeAmountSinceString(String string, Date date) throws NumberFormatException {
         long ms = (date.toInstant().getEpochSecond() * 1000) - Long.parseLong(string);
         return turnMsLongToString(ms);
     }
-    
+
     // Formats Time Difference Date before -> Date now
     public static String formatTimeAmountSinceDate(Date before, Date now) throws NumberFormatException {
         long ms = (now.toInstant().getEpochSecond() * 1000) - (before.toInstant().getEpochSecond() * 1000);
@@ -160,6 +161,9 @@ public class DataFormatUtils {
         if (seconds != 0) {
             returnValue += seconds + "s";
         }
+        if (returnValue.isEmpty()) {
+            returnValue += "< 1s";
+        }
         return returnValue;
     }
 
@@ -184,7 +188,7 @@ public class DataFormatUtils {
         }
         return returnString;
     }
-    
+
     // Sorts HashMap into Sorted List of Arrays
     public static List<String[]> turnDataHashMapToSortedListOfArrays(HashMap<String, String> data) {
         List<String[]> dataList = new ArrayList<>();
@@ -197,5 +201,88 @@ public class DataFormatUtils {
             }
         });
         return dataList;
+    }
+
+    public static HashMap<String, String> removeExtraDataPointsSearch(HashMap<String, String> dataMap, String[] args) {
+        if (args.length <= 1) {
+            return removeExtraDataPoints(dataMap);
+        }
+        HashMap<String, String> returnMap = new HashMap<>();
+        String errors = "FORMAT-SEARCH\n";
+        for (String key : dataMap.keySet()) {
+            for (String arg : args) {
+                try {
+                    if (key.toLowerCase().contains(arg.toLowerCase())) {
+                        returnMap.put(key, dataMap.get(key));
+                    }
+                } catch (Exception e) {
+                    if (!errors.contains(Arrays.toString(args))) {
+                        errors += Arrays.toString(args)+"\n";
+                    }
+                    errors += (e + "\n" + key + " " + arg + "\n");
+                }
+            }
+        }
+        if (!errors.equals("FORMAT-SEARCH\n")) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logToFile(errors);
+        }
+        return removeExtraDataPoints(returnMap);
+    }
+
+    public static String[] parseSearchArgs(String[] args) {
+        String[] aacTerms = {"aac", "advanced", "achiev"};
+        String[] svoTerms = {"svo", "superb", "vote"};
+        String[] ontTerms = {"ont", "onoime", "time"};
+        String[] ecoTerms = {"eco", "money", "bal"};
+        String[] towTerms = {"tow", "town", "nation", "res", "plot", "perm"};
+
+        List<String> aac = new ArrayList<>();
+        List<String> svo = new ArrayList<>();
+        List<String> ont = new ArrayList<>();
+        List<String> eco = new ArrayList<>();
+        List<String> tow = new ArrayList<>();
+
+        aac.addAll(Arrays.asList(aacTerms));
+        svo.addAll(Arrays.asList(svoTerms));
+        ont.addAll(Arrays.asList(ontTerms));
+        eco.addAll(Arrays.asList(ecoTerms));
+        tow.addAll(Arrays.asList(towTerms));
+        String[] returnArray = new String[args.length];
+        argloop:
+        for (int i = 0; i < args.length; i++) {
+            for (String s : aac) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "AAC";
+                    continue argloop;
+                }
+            }
+            for (String s : svo) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "SVO";
+                    continue argloop;
+                }
+            }
+            for (String s : ont) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "ONT";
+                    continue argloop;
+                }
+            }
+            for (String s : eco) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "ECO";
+                    continue argloop;
+                }
+            }
+            for (String s : tow) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "TOW";
+                    continue argloop;
+                }
+            }
+            returnArray[i] = args[i];
+        }
+        return returnArray;
     }
 }
