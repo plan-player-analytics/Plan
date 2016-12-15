@@ -182,5 +182,6 @@ public class Plan extends JavaPlugin {
     public void addExtraHook(String name, Hook hook) {
         this.extraHooks.put(name, hook);
         this.hooks.put(name, hook);
+        log("Registered additional hook: "+name);
     }
 }
