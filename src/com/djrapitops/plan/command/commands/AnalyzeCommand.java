@@ -5,6 +5,7 @@ import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
+import com.djrapitops.plan.command.utils.Analysis;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class AnalyzeCommand extends SubCommand {
                 + "Refreshing playerData, this might take a while..");
         this.playerData = DataUtils.getTotalData(DataUtils.getMatchingDisplaynames(true));
         this.refreshDate = new Date();
-        this.analyzedPlayerdata = DataUtils.analyze(this.playerData);
+        this.analyzedPlayerdata = Analysis.analyze(this.playerData);
         sender.sendMessage(textColor + "[" + operatorColor + "Plan" + textColor + "] "
                 + "Refreshed, took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
     }

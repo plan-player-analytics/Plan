@@ -112,6 +112,101 @@ public class DataFormatUtils {
         }
         return data;
     }
+        
+    // Analysis data Formatting, will be updated after more analysis is added
+    public static HashMap<String, String> formatAnalyzed(HashMap<String, String> analyzedData) {
+        return removeExtraDataPoints(analyzedData);
+    }
+    
+    // Format Search Results
+    public static HashMap<String, String> removeExtraDataPointsSearch(HashMap<String, String> dataMap, String[] args) {
+        if (args.length <= 1) {
+            return removeExtraDataPoints(dataMap);
+        }
+        HashMap<String, String> returnMap = new HashMap<>();
+        String errors = "FORMAT-SEARCH\n";
+        for (String key : dataMap.keySet()) {
+            for (String arg : args) {
+                try {
+                    if (key.toLowerCase().contains(arg.toLowerCase())) {
+                        returnMap.put(key, dataMap.get(key));
+                    }
+                } catch (Exception e) {
+                    if (!errors.contains(Arrays.toString(args))) {
+                        errors += Arrays.toString(args)+"\n";
+                    }
+                    errors += (e + "\n" + key + " " + arg + "\n");
+                }
+            }
+        }
+        if (!errors.equals("FORMAT-SEARCH\n")) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logToFile(errors);
+        }
+        return removeExtraDataPoints(returnMap);
+    }
+
+    // Replace certain items of search terms with plugin tags and remove playername if -p
+    public static String[] parseSearchArgs(String[] args) {
+        String[] aacTerms = {"aac", "advanced", "achiev"};
+        String[] svoTerms = {"svo", "superb", "vote"};
+        String[] ontTerms = {"ont", "onoime", "time"};
+        String[] ecoTerms = {"eco", "money", "bal"};
+        String[] towTerms = {"tow", "town", "nation", "res", "plot", "perm"};
+
+        List<String> aac = new ArrayList<>();
+        List<String> svo = new ArrayList<>();
+        List<String> ont = new ArrayList<>();
+        List<String> eco = new ArrayList<>();
+        List<String> tow = new ArrayList<>();
+
+        aac.addAll(Arrays.asList(aacTerms));
+        svo.addAll(Arrays.asList(svoTerms));
+        ont.addAll(Arrays.asList(ontTerms));
+        eco.addAll(Arrays.asList(ecoTerms));
+        tow.addAll(Arrays.asList(towTerms));
+        String[] returnArray = new String[args.length];
+        argloop:
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-p")) {
+                args[0] = "";
+                returnArray[0] = "";
+                returnArray[i] = "";
+            }
+            for (String s : aac) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "AAC";
+                    continue argloop;
+                }
+            }
+            for (String s : svo) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "SVO";
+                    continue argloop;
+                }
+            }
+            for (String s : ont) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "ONT";
+                    continue argloop;
+                }
+            }
+            for (String s : eco) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "ECO";
+                    continue argloop;
+                }
+            }
+            for (String s : tow) {
+                if (args[i].toLowerCase().contains(s)) {
+                    returnArray[i] = "TOW";
+                    continue argloop;
+                }
+            }
+            returnArray[i] = args[i];
+        }
+        return returnArray;
+    }
 
     // Creates a new Date with Epoch second and returns Date and Time String
     public static String formatTimeStamp(String string) throws NumberFormatException {
@@ -167,11 +262,6 @@ public class DataFormatUtils {
         return returnValue;
     }
 
-    // Analysis data Formatting, will be updated after more analysis is added
-    public static HashMap<String, String> formatAnalyzed(HashMap<String, String> analyzedData) {
-        return removeExtraDataPoints(analyzedData);
-    }
-
     // Removes letters from a string leaving only numbers and dots.
     public static String removeLetters(String dataPoint) {
         String numbers = "0123456789.";
@@ -195,94 +285,22 @@ public class DataFormatUtils {
         data.keySet().parallelStream().forEach((key) -> {
             dataList.add(new String[]{key, data.get(key)});
         });
-        Collections.sort(dataList, new Comparator<String[]>() {
-            public int compare(String[] strings, String[] otherStrings) {
-                return strings[0].compareTo(otherStrings[0]);
-            }
-        });
+        Collections.sort(dataList, (String[] strings, String[] otherStrings) -> strings[0].compareTo(otherStrings[0]));
         return dataList;
     }
 
-    public static HashMap<String, String> removeExtraDataPointsSearch(HashMap<String, String> dataMap, String[] args) {
-        if (args.length <= 1) {
-            return removeExtraDataPoints(dataMap);
+    public static String[] mergeArrays(String[]... arrays) {
+        int arraySize = 0;
+        for (String[] array : arrays) {
+            arraySize += array.length;
         }
-        HashMap<String, String> returnMap = new HashMap<>();
-        String errors = "FORMAT-SEARCH\n";
-        for (String key : dataMap.keySet()) {
-            for (String arg : args) {
-                try {
-                    if (key.toLowerCase().contains(arg.toLowerCase())) {
-                        returnMap.put(key, dataMap.get(key));
-                    }
-                } catch (Exception e) {
-                    if (!errors.contains(Arrays.toString(args))) {
-                        errors += Arrays.toString(args)+"\n";
-                    }
-                    errors += (e + "\n" + key + " " + arg + "\n");
-                }
+        String[] result = new String[arraySize];
+        int j = 0;
+        for (String[] array : arrays) {
+            for (String string : array) {
+                result[j++] = string;
             }
         }
-        if (!errors.equals("FORMAT-SEARCH\n")) {
-            Plan plugin = getPlugin(Plan.class);
-            plugin.logToFile(errors);
-        }
-        return removeExtraDataPoints(returnMap);
-    }
-
-    public static String[] parseSearchArgs(String[] args) {
-        String[] aacTerms = {"aac", "advanced", "achiev"};
-        String[] svoTerms = {"svo", "superb", "vote"};
-        String[] ontTerms = {"ont", "onoime", "time"};
-        String[] ecoTerms = {"eco", "money", "bal"};
-        String[] towTerms = {"tow", "town", "nation", "res", "plot", "perm"};
-
-        List<String> aac = new ArrayList<>();
-        List<String> svo = new ArrayList<>();
-        List<String> ont = new ArrayList<>();
-        List<String> eco = new ArrayList<>();
-        List<String> tow = new ArrayList<>();
-
-        aac.addAll(Arrays.asList(aacTerms));
-        svo.addAll(Arrays.asList(svoTerms));
-        ont.addAll(Arrays.asList(ontTerms));
-        eco.addAll(Arrays.asList(ecoTerms));
-        tow.addAll(Arrays.asList(towTerms));
-        String[] returnArray = new String[args.length];
-        argloop:
-        for (int i = 0; i < args.length; i++) {
-            for (String s : aac) {
-                if (args[i].toLowerCase().contains(s)) {
-                    returnArray[i] = "AAC";
-                    continue argloop;
-                }
-            }
-            for (String s : svo) {
-                if (args[i].toLowerCase().contains(s)) {
-                    returnArray[i] = "SVO";
-                    continue argloop;
-                }
-            }
-            for (String s : ont) {
-                if (args[i].toLowerCase().contains(s)) {
-                    returnArray[i] = "ONT";
-                    continue argloop;
-                }
-            }
-            for (String s : eco) {
-                if (args[i].toLowerCase().contains(s)) {
-                    returnArray[i] = "ECO";
-                    continue argloop;
-                }
-            }
-            for (String s : tow) {
-                if (args[i].toLowerCase().contains(s)) {
-                    returnArray[i] = "TOW";
-                    continue argloop;
-                }
-            }
-            returnArray[i] = args[i];
-        }
-        return returnArray;
+        return result;
     }
 }

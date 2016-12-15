@@ -7,7 +7,7 @@ import com.djrapitops.plan.command.commands.HelpCommand;
 import com.djrapitops.plan.command.commands.InspectCommand;
 import com.djrapitops.plan.command.commands.ReloadCommand;
 import com.djrapitops.plan.command.commands.SearchCommand;
-import com.djrapitops.plan.javaTools.Editor;
+import com.djrapitops.plan.command.utils.DataFormatUtils;
 import org.bukkit.ChatColor;
 
 import org.bukkit.command.Command;
@@ -54,8 +54,7 @@ public class PlanCommand implements CommandExecutor {
         if (args.length < 1) {
             command = "help";
         }
-        Editor edit = new Editor();
-        onCommand(sender, cmd, commandLabel, edit.mergeArrays(new String[]{command}, args));
+        onCommand(sender, cmd, commandLabel, DataFormatUtils.mergeArrays(new String[]{command}, args));
     }
 
     @Override
