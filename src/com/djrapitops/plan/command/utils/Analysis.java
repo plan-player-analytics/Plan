@@ -63,27 +63,27 @@ public class Analysis {
         timeKeys.addAll(Arrays.asList(timeValues));
 
         // Attempt to determine if undefined data is usable
-        List<String> unusedKeys = new ArrayList<>();
-        unusedKeys.addAll(playerDataLists.keySet());
-        unusedKeys.removeAll(numberKeys);
-        unusedKeys.removeAll(boolKeys);
-        unusedKeys.removeAll(timeKeys);
-        unusedKeys.removeAll(ignoreKeys);
-        for (String key : unusedKeys) {
-            try {
-                Double.parseDouble(playerDataLists.get(key).get(0));
-                numberKeys.add(key);
-                continue;
-            } catch (Exception e) {
-                
-            }
-            try {
-                Boolean.parseBoolean(playerDataLists.get(key).get(0));
-                boolKeys.add(key);
-            } catch (Exception e) {
-                
-            }
-        }
+//        List<String> unusedKeys = new ArrayList<>();
+//        unusedKeys.addAll(playerDataLists.keySet());
+//        unusedKeys.removeAll(numberKeys);
+//        unusedKeys.removeAll(boolKeys);
+//        unusedKeys.removeAll(timeKeys);
+//        unusedKeys.removeAll(ignoreKeys);
+//        for (String key : unusedKeys) {
+//            try {
+//                Double.parseDouble(playerDataLists.get(key).get(0));
+//                numberKeys.add(key);
+//                continue;
+//            } catch (Exception e) {
+//                
+//            }
+//            try {
+//                Boolean.parseBoolean(playerDataLists.get(key).get(0));
+//                boolKeys.add(key);
+//            } catch (Exception e) {
+//                
+//            }
+//        }
         
         HashMap<String, String> averagesAndPercents = new HashMap<>();
         int errors = 0;

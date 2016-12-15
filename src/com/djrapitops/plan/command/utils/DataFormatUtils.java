@@ -168,11 +168,6 @@ public class DataFormatUtils {
         String[] returnArray = new String[args.length];
         argloop:
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-p")) {
-                args[0] = "";
-                returnArray[0] = "";
-                returnArray[i] = "";
-            }
             for (String s : aac) {
                 if (args[i].toLowerCase().contains(s)) {
                     returnArray[i] = "AAC";
@@ -204,6 +199,10 @@ public class DataFormatUtils {
                 }
             }
             returnArray[i] = args[i];
+            if (args[i].equals("-p")) {
+                returnArray[0] = args[0]+"_(Playername)";
+                returnArray[i] = "---";
+            }
         }
         return returnArray;
     }

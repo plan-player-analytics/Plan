@@ -71,9 +71,9 @@ public class SearchCommand extends SubCommand {
 
         //header
         sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Search results: took " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
-
+        sender.sendMessage(operatorColor + "Results for: " + Arrays.toString(args));
         for (String playerName : dataLists.keySet()) {
-            sender.sendMessage(textColor + "Results for: " + playerName);
+            sender.sendMessage(textColor + "Matching player: " + playerName);
             for (String[] dataString : dataLists.get(playerName)) {
                 sender.sendMessage("" + operatorColor + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + textColor + dataString[1]);
             }
