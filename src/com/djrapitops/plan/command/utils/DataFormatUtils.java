@@ -75,8 +75,25 @@ public class DataFormatUtils {
                 data.remove("ONT-TOTAL VOTES");
             }
         }
+        // Remove Bukkit data points if plugin present
+        if (data.get("ONT-LAST LOGIN") != null || data.get("TOW-LAST LOGIN") != null) {
+            data.remove("BUK-LAST LOGIN");
+        }
+        if (data.get("TOW-REGISTERED") != null) {
+            data.remove("BUK-REGISTERED");
+        }
+        if (data.get("TOW-ONLINE") != null) {
+            data.remove("BUK-ONLINE");
+        }
+        if (data.get("ESS-BANNED") != null) {
+            data.remove("BUK-BANNED");
+        }
+        if (data.get("ESS-UUID") != null) {
+            data.remove("BUK-UUID");
+        }
+        
         // Format TimeStamps
-        String[] keysTimestamp = {"ONT-LAST LOGIN"};
+        String[] keysTimestamp = {"ONT-LAST LOGIN", "BUK-LAST LOGIN", "BUK-REGISTERED"};
         for (String key : keysTimestamp) {
             if (data.get(key) != null) {
                 try {

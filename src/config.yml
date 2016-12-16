@@ -1,6 +1,7 @@
 debug: true
 
 visible:
+  bukkitdata: true
   ontime: true
   essentials: true
   factions: true

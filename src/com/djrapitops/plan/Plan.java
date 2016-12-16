@@ -10,6 +10,7 @@ import com.djrapitops.plan.command.hooks.SuperbVoteHook;
 import com.djrapitops.plan.command.hooks.TownyHook;
 import com.djrapitops.plan.command.hooks.VaultHook;
 import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
+import com.djrapitops.plan.command.hooks.BukkitDataHook;
 import com.djrapitops.plan.command.utils.DataUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -101,7 +102,7 @@ public class Plan extends JavaPlugin {
     public List<String> hookInit() {
         this.hooks.clear();
         List<String> hookFail = new ArrayList<>();
-        String[] pluginsArray = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote", "AdvancedAchievements"};
+        String[] pluginsArray = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote", "AdvancedAchievements", "BukkitData"};
         List<String> plugins = new ArrayList<>();
         plugins.addAll(Arrays.asList(pluginsArray));
         plugins.parallelStream().forEach((pluginName) -> {

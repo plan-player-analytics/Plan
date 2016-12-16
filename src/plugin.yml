@@ -1,6 +1,6 @@
 name: Plan
 main: com.djrapitops.plan.Plan
-version: 1.5.1
+version: 1.5.2
 
 commands:
   plan:

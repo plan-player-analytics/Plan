@@ -21,7 +21,7 @@ public class Analysis {
         String[] ignore = {"ESS-BAN REASON", "ESS-OPPED", "ESS-MUTE TIME", "ESS-LOCATION", "ESS-HUNGER", "ESS-LOCATION WORLD",
             "ESS-NICKNAME", "ESS-UUID", "FAC-FACTION", "ONT-LAST LOGIN", "TOW-TOWN", "TOW-REGISTERED",
             "TOW-LAST LOGIN", "TOW-OWNER OF", "TOW-PLOT PERMS", "TOW-PLOT OPTIONS", "TOW-FRIENDS", "ESS-ONLINE SINCE",
-            "ESS-OFFLINE SINCE"};
+            "ESS-OFFLINE SINCE", "BUK-BED LOCATION", "BUK-BED LOCATION WORLD", "BUK-UUID", "BUK-LAST LOGIN", "BUK-REGISTERED"};
         List<String> ignoreKeys = new ArrayList<>();
         try {
             AdvancedAchievementsHook aaHook = (AdvancedAchievementsHook) plugin.getHooks().get("AdvancedAchievements");
@@ -50,8 +50,8 @@ public class Analysis {
 
         // Define analysis method for keys
         String[] numbers = {"AAC-ACHIEVEMENTS", "ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
-            "FAC-POWER PER DEATH", "SVO-VOTES", "ONT-TOTAL VOTES", "ONT-TOTAL REFERRED", "ECO-BALANCE"};
-        String[] booleanValues = {"ESS-BANNED", "ESS-JAILED", "ESS-MUTED", "ESS-FLYING", "TOW-ONLINE"};
+            "FAC-POWER PER DEATH", "SVO-VOTES", "ONT-TOTAL VOTES", "ONT-TOTAL REFERRED", "ECO-BALANCE", "DEM-AGE"};
+        String[] booleanValues = {"ESS-BANNED", "ESS-JAILED", "ESS-MUTED", "ESS-FLYING", "TOW-ONLINE", "BUK-BANNED", "BUK-ONLINE"};
         String[] timeValues = {"ONT-TOTAL PLAY"};
 
         List<String> numberKeys = new ArrayList<>();
