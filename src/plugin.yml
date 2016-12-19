@@ -1,6 +1,6 @@
 name: Plan
 main: com.djrapitops.plan.Plan
-version: 1.5.2
+version: 1.6.0
 
 commands:
   plan:
@@ -27,6 +27,7 @@ softdepend:
 - SuperbVote
 - PlaceholderAPI
 - AdvancedAchievements
+- PlayerLogger
 
 permissions:
   plan.?:
@@ -50,3 +51,25 @@ permissions:
   plan.search:
     description: Allows search
     default: true
+  plan.info:
+    description: Allows to view info
+    default: true
+  plan.basic:
+    children:
+      plan.?: true
+      plan.inspect: true
+      plan.info: true
+      plan.search: true
+  plan.advanced:
+    childer:
+      plan.basic: true
+      plan.analyze: true
+  plan.staff:
+    children:
+      plan.advanced: true
+      plan.inspect.other: true
+      plan.analyze.refresh: true
+      plan.reload: true
+  plan.*:
+    children:
+      plan.staff: true

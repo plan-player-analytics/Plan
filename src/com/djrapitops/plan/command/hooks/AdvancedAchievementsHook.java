@@ -1,7 +1,10 @@
 package com.djrapitops.plan.command.hooks;
 
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import com.hm.achievement.AdvancedAchievements;
 import com.hm.achievement.category.MultipleAchievements;
 import com.hm.achievement.category.NormalAchievements;
@@ -73,15 +76,15 @@ public class AdvancedAchievementsHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getData(String player) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
+    public HashMap<String, DataPoint> getData(String player) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
         // Check if achievements exist
         if (totalAchievements > 0) {
             UUID uuid = UUIDFetcher.getUUIDOf(player);
             try {
                 // Check if correct method is present
                 if (this.usingUUID) {
-                    data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements);
+                    data.put("AAC-ACHIEVEMENTS", new DataPoint(aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements, DataType.AMOUNT_WITH_MAX));
                 } else {
                     // Fallback method for older versions, only returns Online player data
                     Player p;
@@ -92,7 +95,7 @@ public class AdvancedAchievementsHook implements Hook {
                     }
                     
                     if (p != null) {
-                        data.put("AAC-ACHIEVEMENTS", aAPlugin.getDb().getPlayerAchievementsAmount(p) + " / " + totalAchievements);
+                        data.put("AAC-ACHIEVEMENTS", new DataPoint(aAPlugin.getDb().getPlayerAchievementsAmount(p) + " / " + totalAchievements, DataType.AMOUNT_WITH_MAX));
                     }
                 }
             } catch (Exception e) {
@@ -103,7 +106,7 @@ public class AdvancedAchievementsHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getAllData(String player) throws Exception {
+    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
         return getData(player);
     }
 

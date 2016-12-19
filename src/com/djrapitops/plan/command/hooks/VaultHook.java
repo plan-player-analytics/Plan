@@ -1,7 +1,10 @@
 package com.djrapitops.plan.command.hooks;
 
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
@@ -20,8 +23,8 @@ public class VaultHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getData(String player) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
+    public HashMap<String, DataPoint> getData(String player) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
         try {
             UUID uuid = UUIDFetcher.getUUIDOf(player);
             OfflinePlayer p;
@@ -31,7 +34,7 @@ public class VaultHook implements Hook {
                 p = getOfflinePlayer(player);
             }
             if (p.hasPlayedBefore()) {
-                data.put("ECO-BALANCE", this.econ.format(this.econ.getBalance(p)));
+                data.put("ECO-BALANCE", new DataPoint(this.econ.format(this.econ.getBalance(p)), DataType.AMOUNT_WITH_LETTERS));
             }
         } catch (Exception e) {
             plugin.logToFile("VAULTHOOK\n" + e + "\nError player: " + player);
@@ -41,7 +44,7 @@ public class VaultHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getAllData(String player) throws Exception {
+    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
         return getData(player);
     }
 

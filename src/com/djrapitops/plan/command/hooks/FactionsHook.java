@@ -1,7 +1,10 @@
 package com.djrapitops.plan.command.hooks;
 
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import com.massivecraft.factions.Factions;
 import java.util.HashMap;
 
@@ -22,8 +25,8 @@ public class FactionsHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getData(String player) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
+    public HashMap<String, DataPoint> getData(String player) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
         MPlayer mplayer;
         UUID uuid = UUIDFetcher.getUUIDOf(player);
         OfflinePlayer p;
@@ -38,20 +41,20 @@ public class FactionsHook implements Hook {
         // Check if player has played on server
         if (p.hasPlayedBefore()) {
             if (mplayer.hasFaction()) {
-                data.put("FAC-FACTION", mplayer.getFactionName());
+                data.put("FAC-FACTION", new DataPoint(mplayer.getFactionName(), DataType.STRING));
                 if (mplayer.hasTitle()) {
-                    data.put("FAC-TITLE", mplayer.getTitle());
+                    data.put("FAC-TITLE", new DataPoint(mplayer.getTitle(), DataType.STRING));
                 }
             }
-            data.put("FAC-POWER", mplayer.getPowerRounded() + " / " + mplayer.getPowerMax());
-            data.put("FAC-POWER PER HOUR", "" + mplayer.getPowerPerHour());
-            data.put("FAC-POWER PER DEATH", "" + mplayer.getPowerPerDeath());
+            data.put("FAC-POWER", new DataPoint(mplayer.getPowerRounded() + " / " + mplayer.getPowerMax(), DataType.AMOUNT_WITH_MAX));
+            data.put("FAC-POWER PER HOUR", new DataPoint("" + mplayer.getPowerPerHour(), DataType.AMOUNT));
+            data.put("FAC-POWER PER DEATH", new DataPoint("" + mplayer.getPowerPerDeath(), DataType.AMOUNT));
         }
         return data;
     }
 
     @Override
-    public HashMap<String, String> getAllData(String player) throws Exception {
+    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
         return getData(player);
     }
 }

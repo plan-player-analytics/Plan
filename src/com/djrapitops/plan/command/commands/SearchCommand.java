@@ -3,6 +3,8 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 import java.util.Arrays;
@@ -43,7 +45,7 @@ public class SearchCommand extends SubCommand {
             matchingPlayers = DataUtils.getMatchingDisplaynames(args, sender, false);
         }
         args = DataFormatUtils.parseSearchArgs(args);
-        HashMap<UUID, HashMap<String, String>> data = DataUtils.getTotalData(matchingPlayers);
+        HashMap<UUID, HashMap<String, DataPoint>> data = DataUtils.getTotalData(matchingPlayers);
         if (this.plugin.getHooks().isEmpty()) {
             this.plugin.logError("noHookedPluginsError on SearchCommand");
             this.plugin.logToFile("SEARCH\nnoHookedPluginsError on SearchCommand");
@@ -55,12 +57,12 @@ public class SearchCommand extends SubCommand {
         HashMap<String, List<String[]>> dataLists = new HashMap<>();
         for (UUID key : data.keySet()) {
             OfflinePlayer p = getOfflinePlayer(key);
-            HashMap<String, String> dataMap = data.get(key);
+            HashMap<String, DataPoint> dataMap = data.get(key);
             if (!dataMap.isEmpty()) {
                 dataMap = DataFormatUtils.removeExtraDataPointsSearch(dataMap, args);
             }
             if (dataMap.isEmpty()) {
-                dataMap.put("ERR-NO RESULTS", "No results were found.");
+                dataMap.put("ERR-NO RESULTS", new DataPoint("No results were found.", DataType.OTHER));
                 plugin.logToFile("SEARCH-Results\nNo results were found for: " + p.getName() + Arrays.toString(args));
             }
             dataLists.put(p.getName(), DataFormatUtils.turnDataHashMapToSortedListOfArrays(dataMap));

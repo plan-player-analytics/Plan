@@ -1,6 +1,6 @@
-package com.djrapitops.plan;
+package com.djrapitops.plan.api;
 
-import com.djrapitops.plan.command.hooks.Hook;
+import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 import java.util.Date;
@@ -50,12 +50,42 @@ public class API {
         return plugin.getConfig().getBoolean("visible.placeholderapi");
     }
     
-    public HashMap<String, String> getData(String playerName) {
+    public HashMap<String, DataPoint> getData(String playerName, boolean dataPoint) {
         return DataFormatUtils.removeExtraDataPoints(DataUtils.getData(false, playerName));
     }
     
-    public HashMap<String, String> getAllData(String playerName) {
+    // Please move to DataPoint system as soon as possible
+    @Deprecated
+    public HashMap<String, String> getData(String playerName) {
+        HashMap<String, String> data = new HashMap<>();
+        HashMap<String, DataPoint> dataWPoints = getData(playerName, true);
+        dataWPoints.keySet().parallelStream().forEach((key) -> {
+            data.put(key, dataWPoints.get(key).data());
+        });
+        return data;
+    }
+    
+    public HashMap<String, DataPoint> getAllData(String playerName, boolean dataPoint) {
         return DataFormatUtils.removeExtraDataPoints(DataUtils.getData(true, playerName));
+    }
+    
+    // Please move to DataPoint system as soon as possible
+    @Deprecated
+    public HashMap<String, String> getAllData(String playerName) {
+        HashMap<String, String> data = new HashMap<>();
+        HashMap<String, DataPoint> dataWPoints = getAllData(playerName, true);
+        dataWPoints.keySet().parallelStream().forEach((key) -> {
+            data.put(key, dataWPoints.get(key).data());
+        });
+        return data;
+    }
+    
+    public HashMap<String, DataPoint> transformOldDataFormat(HashMap<String, String> oldData) {
+        HashMap<String, DataPoint> data = new HashMap<>();
+        for (String key : oldData.keySet()) {
+            data.put(key, new DataPoint(oldData.get(key), DataType.OTHER));
+        }
+        return data;
     }
     
     // use (new Date) on after parameter for time since moment to now

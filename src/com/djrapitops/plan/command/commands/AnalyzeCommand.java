@@ -3,6 +3,7 @@ package com.djrapitops.plan.command.commands;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
+import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 import com.djrapitops.plan.command.utils.Analysis;
@@ -18,8 +19,8 @@ import org.bukkit.entity.Player;
 public class AnalyzeCommand extends SubCommand {
 
     private Plan plugin;
-    private HashMap<UUID, HashMap<String, String>> playerData;
-    private HashMap<String, String> analyzedPlayerdata;
+    private HashMap<UUID, HashMap<String, DataPoint>> playerData;
+    private HashMap<String, DataPoint> analyzedPlayerdata;
     private Date refreshDate;
 
     public AnalyzeCommand(Plan plugin) {
@@ -66,10 +67,5 @@ public class AnalyzeCommand extends SubCommand {
         this.analyzedPlayerdata = Analysis.analyze(this.playerData);
         sender.sendMessage(textColor + "[" + operatorColor + "Plan" + textColor + "] "
                 + "Refreshed, took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
-    }
-
-    @Deprecated
-    private HashMap<String, String> analyze(HashMap<UUID, HashMap<String, String>> playerData) {
-        return DataUtils.analyze(playerData);
     }
 }

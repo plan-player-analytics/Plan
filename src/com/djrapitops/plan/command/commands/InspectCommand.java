@@ -6,18 +6,15 @@ import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class InspectCommand extends SubCommand {
 
@@ -51,12 +48,12 @@ public class InspectCommand extends SubCommand {
             }
         }
         Date refreshDate = new Date();
-        HashMap<String, String> data = DataUtils.getData(allData, playerName);
+        HashMap<String, DataPoint> data = DataUtils.getData(allData, playerName);
         if (format && !data.isEmpty()) {
             data = DataFormatUtils.removeExtraDataPoints(data);
         }
         if (data.isEmpty()) {
-            data.put("ERR-NO RESULTS", "No results were found.");
+            data.put("ERR-NO RESULTS", new DataPoint("No results were found.", DataType.OTHER));
 
             plugin.logToFile("INSPECT-Results\nNo results were found for: " + playerName);
 
@@ -75,23 +72,5 @@ public class InspectCommand extends SubCommand {
         }
         sender.sendMessage(textColor + "-- o --");
         return true;
-    }
-
-    // Use DataUtils.getData instead
-    @Deprecated
-    public HashMap<String, String> getData(boolean allData, String playerName) {
-        return DataUtils.getData(allData, playerName);
-    }
-
-    // Use DataFormatUtils.removeExtraDataPoints instead
-    @Deprecated
-    public HashMap<String, String> format(HashMap<String, String> data) throws NumberFormatException {
-        return DataFormatUtils.removeExtraDataPoints(data);
-    }
-
-    // Use DataUtils.getPlayerDisplayname instead
-    @Deprecated
-    private String getPlayerDisplayname(String[] args, CommandSender sender) {
-        return DataUtils.getPlayerDisplayname(args, sender);
     }
 }

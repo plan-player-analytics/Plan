@@ -1,7 +1,10 @@
 package com.djrapitops.plan.command.hooks;
 
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 import java.util.ArrayList;
@@ -27,10 +30,10 @@ public class PlaceholderAPIHook extends EZPlaceholderHook implements Hook {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
-        HashMap<String, String> data = DataFormatUtils.removeExtraDataPoints(DataUtils.getData(true, player.getDisplayName()));
+        HashMap<String, DataPoint> data = DataFormatUtils.removeExtraDataPoints(DataUtils.getData(true, player.getDisplayName()));
         String key = identifier.toUpperCase();
         if (data.get(key) != null) {
-            return data.get(key);
+            return data.get(key).data();
         } else {
             plan.logToFile("PlaceholderAPIHOOK\nFailed to get data\n" + player.getDisplayName() + "\n" + key);
         }
@@ -38,20 +41,20 @@ public class PlaceholderAPIHook extends EZPlaceholderHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getData(String playerName) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
+    public HashMap<String, DataPoint> getData(String playerName) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
         Player player = Bukkit.getPlayer(UUIDFetcher.getUUIDOf(playerName));
         for (String placeholder : placeholders) {
             if (placeholder.length() > 0 && placeholder.contains("%") || placeholder.contains("{")) {
                 String key = ("" + placeholder.subSequence(1, placeholder.length() - 1)).toUpperCase();
-                data.put("PHA-" + key.toUpperCase(), PlaceholderAPI.setPlaceholders(player, placeholder));
+                data.put("PHA-" + key.toUpperCase(), new DataPoint(PlaceholderAPI.setPlaceholders(player, placeholder), DataType.OTHER));
             }
         }
         return data;
     }
 
     @Override
-    public HashMap<String, String> getAllData(String player) throws Exception {
+    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
         return getData(player);
     }
 

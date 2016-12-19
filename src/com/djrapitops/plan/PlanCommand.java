@@ -4,10 +4,11 @@ import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
 import com.djrapitops.plan.command.commands.HelpCommand;
+import com.djrapitops.plan.command.commands.InfoCommand;
 import com.djrapitops.plan.command.commands.InspectCommand;
 import com.djrapitops.plan.command.commands.ReloadCommand;
 import com.djrapitops.plan.command.commands.SearchCommand;
-import com.djrapitops.plan.command.utils.DataFormatUtils;
+import com.djrapitops.plan.command.utils.MiscUtils;
 import org.bukkit.ChatColor;
 
 import org.bukkit.command.Command;
@@ -29,6 +30,7 @@ public class PlanCommand implements CommandExecutor {
         commands.add(new InspectCommand(plugin));
         commands.add(new AnalyzeCommand(plugin));
         commands.add(new SearchCommand(plugin));
+        commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
     }
 
@@ -54,7 +56,7 @@ public class PlanCommand implements CommandExecutor {
         if (args.length < 1) {
             command = "help";
         }
-        onCommand(sender, cmd, commandLabel, DataFormatUtils.mergeArrays(new String[]{command}, args));
+        onCommand(sender, cmd, commandLabel, MiscUtils.mergeArrays(new String[]{command}, args));
     }
 
     @Override

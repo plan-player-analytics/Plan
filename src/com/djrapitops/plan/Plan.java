@@ -1,9 +1,10 @@
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.api.API;
 import com.djrapitops.plan.command.hooks.EssentialsHook;
 import com.djrapitops.plan.command.hooks.FactionsHook;
 import com.djrapitops.plan.command.hooks.OnTimeHook;
-import com.djrapitops.plan.command.hooks.Hook;
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.command.hooks.PlaceholderAPIHook;
 import com.djrapitops.plan.command.hooks.SuperbVoteHook;
 //import com.djrapitops.plan.command.hooks.McMMOHook;
@@ -11,7 +12,9 @@ import com.djrapitops.plan.command.hooks.TownyHook;
 import com.djrapitops.plan.command.hooks.VaultHook;
 import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
 import com.djrapitops.plan.command.hooks.BukkitDataHook;
+import com.djrapitops.plan.command.hooks.PlayerLoggerHook;
 import com.djrapitops.plan.command.utils.DataUtils;
+import com.djrapitops.plan.command.utils.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -81,6 +84,8 @@ public class Plan extends JavaPlugin {
 
         this.api = new API(this);
 
+        log(MiscUtils.checkVersion());
+        
         String loadedMsg = "Hooked into: ";
         for (String key : this.hooks.keySet()) {
             loadedMsg += ChatColor.GREEN + key + " ";
@@ -102,7 +107,8 @@ public class Plan extends JavaPlugin {
     public List<String> hookInit() {
         this.hooks.clear();
         List<String> hookFail = new ArrayList<>();
-        String[] pluginsArray = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote", "AdvancedAchievements", "BukkitData"};
+        String[] pluginsArray = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote",
+            "AdvancedAchievements", "BukkitData", "PlayerLogger"};
         List<String> plugins = new ArrayList<>();
         plugins.addAll(Arrays.asList(pluginsArray));
         plugins.parallelStream().forEach((pluginName) -> {
@@ -181,8 +187,12 @@ public class Plan extends JavaPlugin {
     }
 
     public void addExtraHook(String name, Hook hook) {
-        this.extraHooks.put(name, hook);
-        this.hooks.put(name, hook);
-        log("Registered additional hook: "+name);
+        try {
+            this.extraHooks.put(name, hook);
+            this.hooks.put(name, hook);
+            log("Registered additional hook: " + name);
+        } catch (Exception | NoClassDefFoundError e) {
+            logToFile("Failed to hook " + name + "\n" + e);
+        }
     }
 }

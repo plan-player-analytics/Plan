@@ -1,7 +1,10 @@
 package com.djrapitops.plan.command.hooks;
 
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import java.util.HashMap;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.Location;
@@ -16,32 +19,32 @@ public class BukkitDataHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getData(String player) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
+    public HashMap<String, DataPoint> getData(String player) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
         OfflinePlayer p = getOfflinePlayer(UUIDFetcher.getUUIDOf(player));
         if (p.hasPlayedBefore()) {
-            data.put("BUK-REGISTERED", "" + p.getFirstPlayed());
-            data.put("BUK-LAST LOGIN", "" + p.getLastPlayed());
+            data.put("BUK-REGISTERED", new DataPoint("" + p.getFirstPlayed(), DataType.DATE));
+            data.put("BUK-LAST LOGIN", new DataPoint("" + p.getLastPlayed(), DataType.DATE));
             if (p.isBanned()) {
-                data.put("BUK-BANNED", "" + p.isBanned());
+                data.put("BUK-BANNED", new DataPoint("" + p.isBanned(), DataType.BOOLEAN));
             }
-            data.put("BUK-ONLINE", "" + p.isOnline());
+            data.put("BUK-ONLINE", new DataPoint("" + p.isOnline(), DataType.BOOLEAN));
         }
         return data;
     }
 
     @Override
-    public HashMap<String, String> getAllData(String player) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
+    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
         data.putAll(getData(player));
         OfflinePlayer p = getOfflinePlayer(UUIDFetcher.getUUIDOf(player));
-        Location loc = p.getBedSpawnLocation();
         if (p.hasPlayedBefore()) {
+            Location loc = p.getBedSpawnLocation();
             if (loc != null) {
-                data.put("BUK-BED LOCATION WORLD", loc.getWorld().getName());
-                data.put("BUK-BED LOCATION", " X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ());
+                data.put("BUK-BED LOCATION WORLD", new DataPoint(loc.getWorld().getName(), DataType.STRING));
+                data.put("BUK-BED LOCATION", new DataPoint(" X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ(), DataType.LOCATION));
             }
-            data.put("BUK-UUID", "" + p.getUniqueId());
+            data.put("BUK-UUID", new DataPoint("" + p.getUniqueId(), DataType.OTHER));
         }
         return data;
     }

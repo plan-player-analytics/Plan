@@ -1,10 +1,11 @@
 package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,20 +13,20 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class DataFormatUtils {
 
-    public static HashMap<String, String> removeExtraDataPoints(HashMap<String, String> data) throws NumberFormatException {
+    public static HashMap<String, DataPoint> removeExtraDataPoints(HashMap<String, DataPoint> data) throws NumberFormatException {
         List<String> remove = new ArrayList<>();
         Plan plugin = getPlugin(Plan.class);
         data.keySet().parallelStream().forEach((key) -> {
             try {
                 // Process OnTime empty data (returns -1 if empty)
                 if (key.subSequence(0, 3).equals("ONT")) {
-                    if ((data.get(key)).equals("-1") || (data.get(key)).equals("-1.0")) {
+                    if ((data.get(key)).data().equals("-1") || (data.get(key)).data().equals("-1.0")) {
                         remove.add(key);
                     }
                 }
                 // Process failed PlaceholderAPI requests (%string%)
                 if (key.subSequence(0, 3).equals("PHA")) {
-                    if ((data.get(key)).contains("%")) {
+                    if ((data.get(key)).data().contains("%")) {
                         remove.add(key);
                     }
                 }
@@ -34,13 +35,13 @@ public class DataFormatUtils {
             }
         });
         // Remove faulty data to prevent TOW-LAST LOGIN from being removed with empty data
-        for (String removedKey : remove) {
+        remove.parallelStream().forEach((removedKey) -> {
             data.remove(removedKey);
-        }
+        });
         remove.clear();
         // Process Towny data (Empty returns Java Epoch date 1970 for REGISTERED)
         if (data.get("TOW-REGISTERED") != null) {
-            if (data.get("TOW-REGISTERED").contains("1970")) {
+            if (data.get("TOW-REGISTERED").data().contains("1970")) {
                 remove.add("TOW-REGISTERED");
                 remove.add("TOW-ONLINE");
                 remove.add("TOW-LAST LOGIN");
@@ -51,20 +52,21 @@ public class DataFormatUtils {
                     remove.add("TOW-PLOT OPTIONS");
                 }
             }
-            // If both OnTime and Towny data found, OnTime priority.
-            if (data.get("ONT-LAST LOGIN") != null) {
-                remove.add("TOW-LAST LOGIN");
-            }
+        }
+        // If both OnTime and Towny data found, OnTime priority.
+        if (data.get("ONT-LAST LOGIN") != null) {
+            remove.add("TOW-LAST LOGIN");
+            remove.add("PLG-LAST LOGIN");
         }
         // Remove faulty Towny data
-        for (String removedKey : remove) {
-            data.remove(removedKey);
-        }
+        remove.parallelStream().forEach((removeKey) -> {
+            data.remove(removeKey);
+        });
         // Remove faulty Essentials SINCE data, reload turns data to 0
         String[] keysRemoveIfZero = {"ESS-ONLINE SINCE", "ESS-OFFLINE SINCE"};
         for (String key : keysRemoveIfZero) {
             if (data.get(key) != null) {
-                if (data.get(key).equals("0")) {
+                if (data.get(key).data().equals("0")) {
                     data.remove(key);
                 }
             }
@@ -75,72 +77,54 @@ public class DataFormatUtils {
                 data.remove("ONT-TOTAL VOTES");
             }
         }
-        // Remove Bukkit data points if plugin present
-        if (data.get("ONT-LAST LOGIN") != null || data.get("TOW-LAST LOGIN") != null) {
-            data.remove("BUK-LAST LOGIN");
-        }
-        if (data.get("TOW-REGISTERED") != null) {
-            data.remove("BUK-REGISTERED");
-        }
-        if (data.get("TOW-ONLINE") != null) {
-            data.remove("BUK-ONLINE");
-        }
-        if (data.get("ESS-BANNED") != null) {
-            data.remove("BUK-BANNED");
-        }
+        // Remove Bukkit uuid points if essentials present        
         if (data.get("ESS-UUID") != null) {
             data.remove("BUK-UUID");
         }
-        
-        // Format TimeStamps
-        String[] keysTimestamp = {"ONT-LAST LOGIN", "BUK-LAST LOGIN", "BUK-REGISTERED"};
-        for (String key : keysTimestamp) {
-            if (data.get(key) != null) {
-                try {
-                    String formatted = formatTimeStamp(data.get(key));
-                    data.replace(key, formatted);
-                } catch (NumberFormatException e) {
-
-                    plugin.logToFile("FORMAT-TimeStamp\nError Parsing Last Login.\n" + e + "\n" + data.get(key));
-
-                    data.remove(key);
-                }
-            }
+        // Remove colliding Player Logger Data
+        if (data.get("TOW-LAST LOGIN") != null) {
+            data.remove("PLG-LAST LOGIN");
         }
-        // Format Milliseconds to readable format
-        String[] keysTimeAmount = {"ONT-TOTAL PLAY", "ESS-ONLINE SINCE", "ESS-OFFLINE SINCE"};
-        for (String key : keysTimeAmount) {
-            if (data.get(key) != null) {
-                try {
-                    String formatted;
-                    if (key.equals("ONT-TOTAL PLAY")) {
-                        formatted = formatTimeAmount(data.get(key));
-                    } else {
-                        formatted = formatTimeAmountSinceString(data.get(key), new Date());
-                    }
-                    if (formatted != null) {
-                        data.replace(key, formatted);
-                    }
-                } catch (NumberFormatException e) {
-                    plugin.logToFile("FORMAT-Since\nError Parsing number.\n" + e + "\n" + data.get(key));
-                    data.remove(key);
+        
+        data.keySet().parallelStream()
+                .filter((key) -> (data.get(key).type() == DataType.DEPRECATED))
+                .forEach((key) -> {
+            remove.add(key);
+        });
+        remove.parallelStream().forEach((key) -> {
+            data.remove(key);
+        });
+        // Format TimeStamps and Time Amounts
+        for (String key : data.keySet()) {
+            if (data.get(key).type() == DataType.DATE) {
+                String formatted = formatTimeStamp(data.get(key).data());
+                data.get(key).setData(formatted);
+            } else if (data.get(key).type() == DataType.TIME) {
+                String formatted;
+                if (key.equals("ESS-ONLINE SINCE") || key.equals("ESS_OFFLINE SINCE")) {
+                    formatted = formatTimeAmountSinceString(data.get(key).data(), new Date());
+                } else {
+                    formatted = formatTimeAmount(data.get(key).data());
+                }
+                if (formatted != null) {
+                    data.get(key).setData(formatted);
                 }
             }
         }
         return data;
     }
-        
+
     // Analysis data Formatting, will be updated after more analysis is added
-    public static HashMap<String, String> formatAnalyzed(HashMap<String, String> analyzedData) {
+    public static HashMap<String, DataPoint> formatAnalyzed(HashMap<String, DataPoint> analyzedData) {
         return removeExtraDataPoints(analyzedData);
     }
-    
+
     // Format Search Results
-    public static HashMap<String, String> removeExtraDataPointsSearch(HashMap<String, String> dataMap, String[] args) {
+    public static HashMap<String, DataPoint> removeExtraDataPointsSearch(HashMap<String, DataPoint> dataMap, String[] args) {
         if (args.length <= 1) {
             return removeExtraDataPoints(dataMap);
         }
-        HashMap<String, String> returnMap = new HashMap<>();
+        HashMap<String, DataPoint> returnMap = new HashMap<>();
         String errors = "FORMAT-SEARCH\n";
         for (String key : dataMap.keySet()) {
             for (String arg : args) {
@@ -150,7 +134,7 @@ public class DataFormatUtils {
                     }
                 } catch (Exception e) {
                     if (!errors.contains(Arrays.toString(args))) {
-                        errors += Arrays.toString(args)+"\n";
+                        errors += Arrays.toString(args) + "\n";
                     }
                     errors += (e + "\n" + key + " " + arg + "\n");
                 }
@@ -217,7 +201,7 @@ public class DataFormatUtils {
             }
             returnArray[i] = args[i];
             if (args[i].equals("-p")) {
-                returnArray[0] = args[0]+"_(Playername)";
+                returnArray[0] = args[0] + "_(Playername)";
                 returnArray[i] = "---";
             }
         }
@@ -296,27 +280,12 @@ public class DataFormatUtils {
     }
 
     // Sorts HashMap into Sorted List of Arrays
-    public static List<String[]> turnDataHashMapToSortedListOfArrays(HashMap<String, String> data) {
+    public static List<String[]> turnDataHashMapToSortedListOfArrays(HashMap<String, DataPoint> data) {
         List<String[]> dataList = new ArrayList<>();
         data.keySet().parallelStream().forEach((key) -> {
-            dataList.add(new String[]{key, data.get(key)});
+            dataList.add(new String[]{key, data.get(key).data()});
         });
         Collections.sort(dataList, (String[] strings, String[] otherStrings) -> strings[0].compareTo(otherStrings[0]));
         return dataList;
-    }
-
-    public static String[] mergeArrays(String[]... arrays) {
-        int arraySize = 0;
-        for (String[] array : arrays) {
-            arraySize += array.length;
-        }
-        String[] result = new String[arraySize];
-        int j = 0;
-        for (String[] array : arrays) {
-            for (String string : array) {
-                result[j++] = string;
-            }
-        }
-        return result;
     }
 }

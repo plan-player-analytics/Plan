@@ -1,0 +1,6 @@
+
+package com.djrapitops.plan.api;
+
+public enum DataType {
+    STRING, TIME, DATE, LOCATION, AMOUNT, AMOUNT_WITH_MAX, AMOUNT_WITH_LETTERS, BOOLEAN, PERCENT, OTHER, MAP, LINK, HEATMAP, DEPRECATED
+}

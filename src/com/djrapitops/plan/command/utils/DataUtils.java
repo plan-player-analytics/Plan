@@ -2,7 +2,7 @@ package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
-import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
+import com.djrapitops.plan.api.DataPoint;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +22,8 @@ public class DataUtils {
 
     // allData defined by -a argument in InspectCommand
     // returns data given by each Hook
-    public static HashMap<String, String> getData(boolean allData, String playerName) {
-        HashMap<String, String> data = new HashMap<>();
+    public static HashMap<String, DataPoint> getData(boolean allData, String playerName) {
+        HashMap<String, DataPoint> data = new HashMap<>();
         Plan plugin = getPlugin(Plan.class);
         plugin.getHooks().keySet().parallelStream().forEach((hook) -> {
             try {
@@ -47,8 +47,8 @@ public class DataUtils {
     }
 
     // Returns data HashMaps for all pplayers in a HashMap.
-    public static HashMap<UUID, HashMap<String, String>> getTotalData(Set<OfflinePlayer> ofPlayers) {
-        HashMap<UUID, HashMap<String, String>> playerData = new HashMap<>();
+    public static HashMap<UUID, HashMap<String, DataPoint>> getTotalData(Set<OfflinePlayer> ofPlayers) {
+        HashMap<UUID, HashMap<String, DataPoint>> playerData = new HashMap<>();
 
         List<OfflinePlayer> players = new ArrayList<>();
         players.addAll(ofPlayers);
@@ -81,7 +81,7 @@ public class DataUtils {
     }
 
     @Deprecated
-    public static HashMap<String, String> analyze(HashMap<UUID, HashMap<String, String>> playerData) {        
+    public static HashMap<String, DataPoint> analyze(HashMap<UUID, HashMap<String, DataPoint>> playerData) {        
         return Analysis.analyze(playerData);
     }
 

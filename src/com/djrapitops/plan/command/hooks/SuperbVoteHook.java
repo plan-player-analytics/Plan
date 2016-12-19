@@ -1,7 +1,10 @@
 package com.djrapitops.plan.command.hooks;
 
+import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import io.minimum.minecraft.superbvote.SuperbVote;
 import java.util.HashMap;
 
@@ -16,14 +19,14 @@ public class SuperbVoteHook implements Hook {
     }
 
     @Override
-    public HashMap<String, String> getData(String player) throws Exception {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("SVO-VOTES", "" + hookP.getVoteStorage().getVotes(UUIDFetcher.getUUIDOf(player)));
+    public HashMap<String, DataPoint> getData(String player) throws Exception {
+        HashMap<String, DataPoint> data = new HashMap<>();
+        data.put("SVO-VOTES", new DataPoint("" + hookP.getVoteStorage().getVotes(UUIDFetcher.getUUIDOf(player)), DataType.AMOUNT));
         return data;
     }
 
     @Override
-    public HashMap<String, String> getAllData(String player) throws Exception {
+    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
         return getData(player);
     }
 

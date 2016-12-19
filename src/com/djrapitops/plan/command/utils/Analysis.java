@@ -1,9 +1,9 @@
-
 package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
-import com.djrapitops.plan.command.utils.DataFormatUtils;
+import com.djrapitops.plan.api.DataPoint;
+import com.djrapitops.plan.api.DataType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,16 +13,17 @@ import java.util.UUID;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class Analysis {
-    
-    public static HashMap<String, String> analyze(HashMap<UUID, HashMap<String, String>> playerData) {
+
+    public static HashMap<String, DataPoint> analyze(HashMap<UUID, HashMap<String, DataPoint>> playerData) {
         Plan plugin = getPlugin(Plan.class);
         HashMap<String, List<String>> playerDataLists = new HashMap<>();
+        HashMap<String, DataType> dataTypes = new HashMap<>();
         // Ignore following keys (Strings, unprocessable or irrelevant data)
-        String[] ignore = {"ESS-BAN REASON", "ESS-OPPED", "ESS-MUTE TIME", "ESS-LOCATION", "ESS-HUNGER", "ESS-LOCATION WORLD",
-            "ESS-NICKNAME", "ESS-UUID", "FAC-FACTION", "ONT-LAST LOGIN", "TOW-TOWN", "TOW-REGISTERED",
-            "TOW-LAST LOGIN", "TOW-OWNER OF", "TOW-PLOT PERMS", "TOW-PLOT OPTIONS", "TOW-FRIENDS", "ESS-ONLINE SINCE",
-            "ESS-OFFLINE SINCE", "BUK-BED LOCATION", "BUK-BED LOCATION WORLD", "BUK-UUID", "BUK-LAST LOGIN", "BUK-REGISTERED"};
+        DataType[] ignoreType = {DataType.DEPRECATED, DataType.STRING, DataType.LOCATION, DataType.LINK, DataType.HEATMAP,
+            DataType.MAP, DataType.OTHER, DataType.DATE};
+        String[] ignore = {"ESS-ONLINE SINCE", "ESS-OFFLINE SINCE", "ESS-HEALTH", "ESS-HUNGER", "ESS-XP LEVEL", "ESS-OPPED"};
         List<String> ignoreKeys = new ArrayList<>();
+        List<DataType> ignoreTypes = new ArrayList<>();
         try {
             AdvancedAchievementsHook aaHook = (AdvancedAchievementsHook) plugin.getHooks().get("AdvancedAchievements");
             if (!aaHook.isUsingUUID()) {
@@ -32,11 +33,19 @@ public class Analysis {
             ignoreKeys.add("AAC-ACHIEVEMENTS");
         }
         ignoreKeys.addAll(Arrays.asList(ignore));
+        ignoreTypes.addAll(Arrays.asList(ignoreType));
 
         // Turn playerData into Hashmap of Lists sorted by keys.
         playerData.keySet().parallelStream().forEach((key) -> {
             playerData.get(key).keySet().parallelStream()
                     .filter((dataKey) -> !(ignoreKeys.contains(dataKey)))
+                    .map((dataKey) -> {
+                        if (dataTypes.get(dataKey) == null) {
+                            dataTypes.put(dataKey, playerData.get(key).get(dataKey).type());
+                        }
+                        return dataKey;
+                    })
+                    .filter((dataKey) -> !(ignoreTypes.contains(dataTypes.get(dataKey))))
                     .map((dataKey) -> {
                         if (playerDataLists.get(dataKey) == null) {
                             playerDataLists.put(dataKey, new ArrayList<>());
@@ -44,110 +53,39 @@ public class Analysis {
                         return dataKey;
                     })
                     .forEach((dataKey) -> {
-                        playerDataLists.get(dataKey).add(playerData.get(key).get(dataKey));
+                        playerDataLists.get(dataKey).add(playerData.get(key).get(dataKey).data());
                     });
         });
 
-        // Define analysis method for keys
-        String[] numbers = {"AAC-ACHIEVEMENTS", "ESS-HEALTH", "ESS-XP LEVEL", "FAC-POWER", "FAC-POWER PER HOUR",
-            "FAC-POWER PER DEATH", "SVO-VOTES", "ONT-TOTAL VOTES", "ONT-TOTAL REFERRED", "ECO-BALANCE", "DEM-AGE"};
-        String[] booleanValues = {"ESS-BANNED", "ESS-JAILED", "ESS-MUTED", "ESS-FLYING", "TOW-ONLINE", "BUK-BANNED", "BUK-ONLINE"};
-        String[] timeValues = {"ONT-TOTAL PLAY"};
+        HashMap<String, DataPoint> analyzedData = new HashMap<>();
 
-        List<String> numberKeys = new ArrayList<>();
-        List<String> boolKeys = new ArrayList<>();
-        List<String> timeKeys = new ArrayList<>();
-
-        numberKeys.addAll(Arrays.asList(numbers));
-        boolKeys.addAll(Arrays.asList(booleanValues));
-        timeKeys.addAll(Arrays.asList(timeValues));
-
-        // Attempt to determine if undefined data is usable
-//        List<String> unusedKeys = new ArrayList<>();
-//        unusedKeys.addAll(playerDataLists.keySet());
-//        unusedKeys.removeAll(numberKeys);
-//        unusedKeys.removeAll(boolKeys);
-//        unusedKeys.removeAll(timeKeys);
-//        unusedKeys.removeAll(ignoreKeys);
-//        for (String key : unusedKeys) {
-//            try {
-//                Double.parseDouble(playerDataLists.get(key).get(0));
-//                numberKeys.add(key);
-//                continue;
-//            } catch (Exception e) {
-//                
-//            }
-//            try {
-//                Boolean.parseBoolean(playerDataLists.get(key).get(0));
-//                boolKeys.add(key);
-//            } catch (Exception e) {
-//                
-//            }
-//        }
-        
-        HashMap<String, String> averagesAndPercents = new HashMap<>();
-        int errors = 0;
-        HashSet<String> errorTypes = new HashSet<>();
-
-        // Analyze - Go through each key - Go through each point of data in the list.
-        for (String dataKey : playerDataLists.keySet()) {
-            if (numberKeys.contains(dataKey)) {
-                double sum = 0;
-
-                for (String dataPoint : playerDataLists.get(dataKey)) {
-                    // Special cases separated.
-                    try {
-                        if (dataKey.equals("FAC-POWER") || dataKey.equals("AAC-ACHIEVEMENTS")) {
-                            sum += Double.parseDouble(dataPoint.split(" ")[0]);
-                        } else if (dataKey.equals("ECO-BALANCE")) {
-                            sum += Double.parseDouble(DataFormatUtils.removeLetters(dataPoint));
-                        } else {
-                            sum += Double.parseDouble(dataPoint);
-                        }
-                    } catch (Exception e) {
-                        errors++;
-                        errorTypes.add("" + e);
-                    }
+        // Analyze
+        playerDataLists.keySet().parallelStream().forEach((dataKey) -> {
+            if (null != dataTypes.get(dataKey)) {
+                switch (dataTypes.get(dataKey)) {
+                    case AMOUNT:
+                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountAverage(playerDataLists.get(dataKey)), DataType.AMOUNT));
+                        break;
+                    case AMOUNT_WITH_LETTERS:
+                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountWLettersAverage(playerDataLists.get(dataKey)), DataType.AMOUNT));
+                        break;
+                    case AMOUNT_WITH_MAX:
+                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountWMaxAverage(playerDataLists.get(dataKey)), DataType.AMOUNT));
+                        break;
+                    case TIME:
+                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.TimeAverage(playerDataLists.get(dataKey)), DataType.TIME));
+                        break;
+                    case BOOLEAN:
+                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.BooleanPercent(playerDataLists.get(dataKey)), DataType.PERCENT));
+                        break;
+                    case PERCENT:
+                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountWLettersAverage(playerDataLists.get(dataKey))+"%", DataType.PERCENT));
+                        break;
+                    default:
+                        break;
                 }
-                // Average
-                averagesAndPercents.put(dataKey, "" + (sum * 1.0 / playerDataLists.get(dataKey).size()));
-
-            } else if (boolKeys.contains(dataKey)) {
-                int amount = 0;
-                for (String dataPoint : playerDataLists.get(dataKey)) {
-                    try {
-                        if (Boolean.parseBoolean(dataPoint)) {
-                            amount++;
-                        }
-                    } catch (Exception e) {
-                        errors++;
-                        errorTypes.add("" + e);
-                    }
-                }
-                // Percent
-                averagesAndPercents.put(dataKey, "" + ((amount * 1.0 / playerDataLists.get(dataKey).size()) * 100) + "%");
-            } else if (timeKeys.contains(dataKey)) {
-                Long time = Long.parseLong("0");
-                for (String dataPoint : playerDataLists.get(dataKey)) {
-                    try {
-                        time += Long.parseLong(dataPoint);
-                    } catch (Exception e) {
-                        errors++;
-                        errorTypes.add("" + e);
-                    }
-                }
-                // Average
-                averagesAndPercents.put(dataKey, "" + (time * 1.0 / playerDataLists.get(dataKey).size()));
             }
-        }
-        // Log errors
-        if (errors > 0) {
-            String log = "ANALYZE\n" + errors + " error(s) occurred while analyzing total data.\nFollowing types:";
-            for (String errorType : errorTypes) {
-                log += "\n  " + errorType;
-            }
-            plugin.logToFile(log);
-        }
-        return DataFormatUtils.formatAnalyzed(averagesAndPercents);
+        });
+        return DataFormatUtils.formatAnalyzed(analyzedData);
     }
 }
