@@ -14,6 +14,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 public class DataFormatUtils {
 
     public static HashMap<String, DataPoint> removeExtraDataPoints(HashMap<String, DataPoint> data) throws NumberFormatException {
+        Date now = new Date();
         List<String> remove = new ArrayList<>();
         Plan plugin = getPlugin(Plan.class);
         data.keySet().parallelStream().forEach((key) -> {
@@ -39,7 +40,7 @@ public class DataFormatUtils {
             data.remove(removedKey);
         });
         remove.clear();
-        // Process Towny data (Empty returns Java Epoch date 1970 for REGISTERED)
+        // Process Towny data (Empty returns date with 1970 for REGISTERED)
         if (data.get("TOW-REGISTERED") != null) {
             if (data.get("TOW-REGISTERED").data().contains("1970")) {
                 remove.add("TOW-REGISTERED");
@@ -101,8 +102,8 @@ public class DataFormatUtils {
                 data.get(key).setData(formatted);
             } else if (data.get(key).type() == DataType.TIME) {
                 String formatted;
-                if (key.equals("ESS-ONLINE SINCE") || key.equals("ESS_OFFLINE SINCE")) {
-                    formatted = formatTimeAmountSinceString(data.get(key).data(), new Date());
+                if (key.equals("ESS-ONLINE SINCE") || key.equals("ESS-OFFLINE SINCE")) {
+                    formatted = formatTimeAmountSinceString(data.get(key).data(), now);
                 } else {
                     formatted = formatTimeAmount(data.get(key).data());
                 }
@@ -222,14 +223,14 @@ public class DataFormatUtils {
     }
 
     // Formats Time Difference String before -> Date now
-    public static String formatTimeAmountSinceString(String string, Date date) throws NumberFormatException {
-        long ms = (date.toInstant().getEpochSecond() * 1000) - Long.parseLong(string);
+    public static String formatTimeAmountSinceString(String string, Date now) throws NumberFormatException {
+        long ms = Math.abs((now.toInstant().getEpochSecond() * 1000) - Long.parseLong(string));
         return turnMsLongToString(ms);
     }
 
     // Formats Time Difference Date before -> Date now
     public static String formatTimeAmountSinceDate(Date before, Date now) throws NumberFormatException {
-        long ms = (now.toInstant().getEpochSecond() * 1000) - (before.toInstant().getEpochSecond() * 1000);
+        long ms = Math.abs((now.toInstant().getEpochSecond() * 1000) - (before.toInstant().getEpochSecond() * 1000));
         return turnMsLongToString(ms);
     }
 
@@ -282,7 +283,7 @@ public class DataFormatUtils {
     // Sorts HashMap into Sorted List of Arrays
     public static List<String[]> turnDataHashMapToSortedListOfArrays(HashMap<String, DataPoint> data) {
         List<String[]> dataList = new ArrayList<>();
-        data.keySet().parallelStream().forEach((key) -> {
+        data.keySet().stream().forEach((key) -> {
             dataList.add(new String[]{key, data.get(key).data()});
         });
         Collections.sort(dataList, (String[] strings, String[] otherStrings) -> strings[0].compareTo(otherStrings[0]));

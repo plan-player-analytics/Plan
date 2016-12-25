@@ -10,9 +10,10 @@ import com.hm.achievement.category.MultipleAchievements;
 import com.hm.achievement.category.NormalAchievements;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
-import static org.bukkit.Bukkit.getPlayer;
-import org.bukkit.entity.Player;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.OfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class AdvancedAchievementsHook implements Hook {
@@ -46,8 +47,8 @@ public class AdvancedAchievementsHook implements Hook {
                     plugin.logError("Advanced Achievements 4.0.3 or above required for Offline players");
                 }
             } catch (Exception e2) {
-                plugin.logToFile("AAHOOK\nError getting version number.\n" + e2+"\n"+e+"\n"
-                        +aAPlugin.getDescription().getVersion()+"\n"+Arrays.toString(aAVersion));
+                plugin.logToFile("AAHOOK\nError getting version number.\n" + e2 + "\n" + e + "\n"
+                        + aAPlugin.getDescription().getVersion() + "\n" + Arrays.toString(aAVersion));
             }
         }
         // Get total number of Achievements
@@ -72,34 +73,20 @@ public class AdvancedAchievementsHook implements Hook {
         if (!aAPlugin.getDisabledCategorySet().contains("Commands")) {
             totalAchievements += aAPlugin.getPluginConfig().getConfigurationSection("Commands").getKeys(false).size();
         }
-        //
     }
 
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        // Check if achievements exist
-        if (totalAchievements > 0) {
-            UUID uuid = UUIDFetcher.getUUIDOf(player);
-            try {
-                // Check if correct method is present
+        UUID uuid = UUIDFetcher.getUUIDOf(player);
+        OfflinePlayer p = getOfflinePlayer(uuid);
+        if (p.hasPlayedBefore()) {
+            if (totalAchievements > 0) {
                 if (this.usingUUID) {
                     data.put("AAC-ACHIEVEMENTS", new DataPoint(aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements, DataType.AMOUNT_WITH_MAX));
                 } else {
-                    // Fallback method for older versions, only returns Online player data
-                    Player p;
-                    if (uuid != null) {
-                        p = getPlayer(uuid);
-                    } else {
-                        p = getPlayer(player);
-                    }
-                    
-                    if (p != null) {
-                        data.put("AAC-ACHIEVEMENTS", new DataPoint(aAPlugin.getDb().getPlayerAchievementsAmount(p) + " / " + totalAchievements, DataType.AMOUNT_WITH_MAX));
-                    }
+                    plugin.log("You're using outdated version of AdvancedAchievements!");
                 }
-            } catch (Exception e) {
-                plugin.logToFile("AAHOOK-GetData\nFailed to get data\n" + e + "\nfor: " + player);
             }
         }
         return data;

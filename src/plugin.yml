@@ -1,6 +1,6 @@
 name: Plan
 main: com.djrapitops.plan.Plan
-version: 1.6.0
+version: 1.6.1
 
 commands:
   plan:
@@ -17,6 +17,7 @@ commands:
     description: reload plugin config
   search:
     usage: /plan <search terms> -p add -p to make not search playername
+    description: search data of multiple players with search terms
 
 softdepend:
 - OnTime

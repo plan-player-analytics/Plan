@@ -1,66 +1,33 @@
 package com.djrapitops.plan.command.hooks;
 
-import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
-import com.djrapitops.plan.api.DataType;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.google.common.base.Optional;
 import java.util.HashMap;
-import java.util.List;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PlaceholderAPIHook extends EZPlaceholderHook implements Hook {
+public class PlaceholderAPIHook extends EZPlaceholderHook {
 
-    private final List<String> placeholders;
     private final Plan plan;
 
-    public PlaceholderAPIHook(Plan plan, String[] placeholders) {
+    public PlaceholderAPIHook(Plan plan) {
         super(plan, "plan");
         this.plan = plan;
-        this.placeholders = new ArrayList<>();
-        this.placeholders.addAll(Arrays.asList(placeholders));
     }
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         HashMap<String, DataPoint> data = DataFormatUtils.removeExtraDataPoints(DataUtils.getData(true, player.getDisplayName()));
         String key = identifier.toUpperCase();
-        if (data.get(key) != null) {
+        if (Optional.of(data.get(key)).isPresent()) {
             return data.get(key).data();
         } else {
             plan.logToFile("PlaceholderAPIHOOK\nFailed to get data\n" + player.getDisplayName() + "\n" + key);
         }
         return null;
-    }
-
-    @Override
-    public HashMap<String, DataPoint> getData(String playerName) throws Exception {
-        HashMap<String, DataPoint> data = new HashMap<>();
-        Player player = Bukkit.getPlayer(UUIDFetcher.getUUIDOf(playerName));
-        for (String placeholder : placeholders) {
-            if (placeholder.length() > 0 && placeholder.contains("%") || placeholder.contains("{")) {
-                String key = ("" + placeholder.subSequence(1, placeholder.length() - 1)).toUpperCase();
-                data.put("PHA-" + key.toUpperCase(), new DataPoint(PlaceholderAPI.setPlaceholders(player, placeholder), DataType.OTHER));
-            }
-        }
-        return data;
-    }
-
-    @Override
-    public HashMap<String, DataPoint> getAllData(String player) throws Exception {
-        return getData(player);
-    }
-
-    public void setPlaceholders(String[] placeholders) {
-        this.placeholders.clear();
-        this.placeholders.addAll(Arrays.asList(placeholders));
     }
 
     @Override

@@ -7,6 +7,9 @@ import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
 import io.minimum.minecraft.superbvote.SuperbVote;
 import java.util.HashMap;
+import java.util.UUID;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.OfflinePlayer;
 
 public class SuperbVoteHook implements Hook {
 
@@ -21,7 +24,11 @@ public class SuperbVoteHook implements Hook {
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        data.put("SVO-VOTES", new DataPoint("" + hookP.getVoteStorage().getVotes(UUIDFetcher.getUUIDOf(player)), DataType.AMOUNT));
+        UUID uuid = UUIDFetcher.getUUIDOf(player);
+        OfflinePlayer p = getOfflinePlayer(uuid);
+        if (p.hasPlayedBefore()) {
+            data.put("SVO-VOTES", new DataPoint("" + hookP.getVoteStorage().getVotes(uuid), DataType.AMOUNT));
+        }
         return data;
     }
 

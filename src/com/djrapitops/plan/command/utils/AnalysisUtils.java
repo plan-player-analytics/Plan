@@ -43,7 +43,7 @@ class AnalysisUtils {
             } catch (Exception e) {
             }
         }
-        return "" + (time * 1.0 / dataPoints.size());
+        return "" + (time / dataPoints.size());
     }
 
     static String BooleanPercent(List<String> dataPoints) {

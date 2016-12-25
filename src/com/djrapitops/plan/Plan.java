@@ -32,7 +32,6 @@ import org.bukkit.ChatColor;
 public class Plan extends JavaPlugin {
 
     private final Map<String, Hook> hooks;
-    private Hook placeholderAPIHook;
     private API api;
     private final Map<String, Hook> extraHooks;
 
@@ -60,14 +59,8 @@ public class Plan extends JavaPlugin {
 
         try {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                String[] placeholders = DataUtils.getPlaceholdersFileData();
-                if (placeholders != null) {
-                    this.placeholderAPIHook = new PlaceholderAPIHook(this, placeholders);
-                    PlaceholderAPIHook phAHook = (PlaceholderAPIHook) placeholderAPIHook;
-                    phAHook.hook();
-                } else {
-                    logToFile("Failed to read placeholders.yml\n");
-                }
+                PlaceholderAPIHook phAHook = new PlaceholderAPIHook(this);
+                phAHook.hook();
             }
         } catch (Exception e) {
             logError("Failed to create placeholders.yml");
@@ -85,7 +78,7 @@ public class Plan extends JavaPlugin {
         this.api = new API(this);
 
         log(MiscUtils.checkVersion());
-        
+
         String loadedMsg = "Hooked into: ";
         for (String key : this.hooks.keySet()) {
             loadedMsg += ChatColor.GREEN + key + " ";
@@ -111,6 +104,8 @@ public class Plan extends JavaPlugin {
             "AdvancedAchievements", "BukkitData", "PlayerLogger"};
         List<String> plugins = new ArrayList<>();
         plugins.addAll(Arrays.asList(pluginsArray));
+        StringBuilder errors = new StringBuilder();
+        errors.append("MAIN-HOOKINIT\n");
         plugins.parallelStream().forEach((pluginName) -> {
             if (getConfig().getBoolean("visible." + pluginName.toLowerCase())) {
                 try {
@@ -119,26 +114,16 @@ public class Plan extends JavaPlugin {
                     this.hooks.put(pluginName, clazz.getConstructor(Plan.class).newInstance(this));
                 } catch (Exception | NoClassDefFoundError e) {
                     hookFail.add(pluginName);
-                    String toLog = "MAIN-HOOKINIT\nFailed to hook " + pluginName + "\n" + e;
-                    toLog += "\n" + e.getCause();
-                    logToFile(toLog);
-
+                    errors.append("Failed to hook ").append(pluginName).append("\n").append(e);
+                    errors.append("\n").append(e.getCause());
                 }
             } else {
                 hookFail.add(ChatColor.YELLOW + pluginName);
             }
         });
+        logToFile(errors.toString());
         for (String extraHook : this.extraHooks.keySet()) {
             this.hooks.put(extraHook, this.extraHooks.get(extraHook));
-        }
-        if (getConfig().getBoolean("visible.placeholderapi")) {
-            if (this.placeholderAPIHook != null) {
-                this.hooks.put("PlaceholderAPI", this.placeholderAPIHook);
-            } else {
-                hookFail.add("PlaceholderAPI");
-            }
-        } else {
-            hookFail.add(ChatColor.YELLOW + "PlaceholderAPI");
         }
         return hookFail;
     }
@@ -176,10 +161,6 @@ public class Plan extends JavaPlugin {
                 logError("Failed to create log.txt file");
             }
         }
-    }
-
-    public Hook getPlaceholderAPIHook() {
-        return this.placeholderAPIHook;
     }
 
     public API getAPI() {

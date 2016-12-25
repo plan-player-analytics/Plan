@@ -29,17 +29,9 @@ public class FactionsHook implements Hook {
         HashMap<String, DataPoint> data = new HashMap<>();
         MPlayer mplayer;
         UUID uuid = UUIDFetcher.getUUIDOf(player);
-        OfflinePlayer p;
-        if (uuid != null) {
-            p = getOfflinePlayer(uuid);
-            mplayer = MPlayer.get(uuid);
-        } else {
-            // Fallback method if UUID is not found
-            p = getOfflinePlayer(player);
-            mplayer = MPlayer.get(p.getUniqueId());
-        }
-        // Check if player has played on server
+        OfflinePlayer p = getOfflinePlayer(uuid);
         if (p.hasPlayedBefore()) {
+            mplayer = MPlayer.get(uuid);
             if (mplayer.hasFaction()) {
                 data.put("FAC-FACTION", new DataPoint(mplayer.getFactionName(), DataType.STRING));
                 if (mplayer.hasTitle()) {

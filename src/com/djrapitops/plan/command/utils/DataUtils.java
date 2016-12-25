@@ -60,26 +60,6 @@ public class DataUtils {
         return playerData;
     }
 
-    public static String[] getPlaceholdersFileData() {
-        Plan plugin = getPlugin(Plan.class);
-        File placeholdersFile = new File(plugin.getDataFolder(), "placeholders.yml");
-        try {
-            if (!placeholdersFile.exists()) {
-                placeholdersFile.createNewFile();
-            }
-            Scanner filescanner = new Scanner(placeholdersFile);
-            String placeholdersString = "";
-            if (filescanner.hasNextLine()) {
-                placeholdersString = filescanner.nextLine();
-            }
-            String[] returnArray = placeholdersString.split(" ");
-            return returnArray;
-        } catch (Exception e) {
-            plugin.logToFile("Failed to create placeholders.yml\n" + e);
-        }
-        return null;
-    }
-
     @Deprecated
     public static HashMap<String, DataPoint> analyze(HashMap<UUID, HashMap<String, DataPoint>> playerData) {        
         return Analysis.analyze(playerData);

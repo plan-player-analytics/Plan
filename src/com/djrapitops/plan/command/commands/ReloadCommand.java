@@ -27,14 +27,6 @@ public class ReloadCommand extends SubCommand {
         List<String> hookFail = plugin.hookInit();
         ChatColor operatorColor = ChatColor.DARK_GREEN;
         ChatColor textColor = ChatColor.GRAY;
-        try {
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                PlaceholderAPIHook papih = (PlaceholderAPIHook) plugin.getPlaceholderAPIHook();
-                papih.setPlaceholders(DataUtils.getPlaceholdersFileData());
-            }
-        } catch (Exception e) {
-            plugin.logToFile("RELOAD-PlaceholderAPI reload failed\n" + e);
-        }
         sender.sendMessage(textColor + "[" + operatorColor + "PLAN" + textColor + "] Config & Hooks reloaded.");
         String loadedMsg = " Hooked into: ";
         for (String key : plugin.getHooks().keySet()) {

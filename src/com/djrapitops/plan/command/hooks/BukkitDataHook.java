@@ -5,6 +5,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
+import com.google.common.base.Optional;
 import java.util.HashMap;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.Location;
@@ -40,7 +41,7 @@ public class BukkitDataHook implements Hook {
         OfflinePlayer p = getOfflinePlayer(UUIDFetcher.getUUIDOf(player));
         if (p.hasPlayedBefore()) {
             Location loc = p.getBedSpawnLocation();
-            if (loc != null) {
+            if (Optional.of(loc).isPresent()) {
                 data.put("BUK-BED LOCATION WORLD", new DataPoint(loc.getWorld().getName(), DataType.STRING));
                 data.put("BUK-BED LOCATION", new DataPoint(" X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ(), DataType.LOCATION));
             }
