@@ -121,7 +121,9 @@ public class Plan extends JavaPlugin {
                 hookFail.add(ChatColor.YELLOW + pluginName);
             }
         });
-        logToFile(errors.toString());
+        if (!errors.toString().equals("MAIN-HOOKINIT\n")) {
+            logToFile(errors.toString());
+        }
         for (String extraHook : this.extraHooks.keySet()) {
             this.hooks.put(extraHook, this.extraHooks.get(extraHook));
         }

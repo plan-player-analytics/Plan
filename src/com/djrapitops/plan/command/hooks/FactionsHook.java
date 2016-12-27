@@ -27,20 +27,23 @@ public class FactionsHook implements Hook {
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        MPlayer mplayer;
-        UUID uuid = UUIDFetcher.getUUIDOf(player);
-        OfflinePlayer p = getOfflinePlayer(uuid);
-        if (p.hasPlayedBefore()) {
-            mplayer = MPlayer.get(uuid);
-            if (mplayer.hasFaction()) {
-                data.put("FAC-FACTION", new DataPoint(mplayer.getFactionName(), DataType.STRING));
-                if (mplayer.hasTitle()) {
-                    data.put("FAC-TITLE", new DataPoint(mplayer.getTitle(), DataType.STRING));
+        try {
+            MPlayer mplayer;
+            UUID uuid = UUIDFetcher.getUUIDOf(player);
+            OfflinePlayer p = getOfflinePlayer(uuid);
+            if (p.hasPlayedBefore()) {
+                mplayer = MPlayer.get(uuid);
+                if (mplayer.hasFaction()) {
+                    data.put("FAC-FACTION", new DataPoint(mplayer.getFactionName(), DataType.STRING));
+                    if (mplayer.hasTitle()) {
+                        data.put("FAC-TITLE", new DataPoint(mplayer.getTitle(), DataType.STRING));
+                    }
                 }
+                data.put("FAC-POWER", new DataPoint(mplayer.getPowerRounded() + " / " + mplayer.getPowerMax(), DataType.AMOUNT_WITH_MAX));
+                data.put("FAC-POWER PER HOUR", new DataPoint("" + mplayer.getPowerPerHour(), DataType.AMOUNT));
+                data.put("FAC-POWER PER DEATH", new DataPoint("" + mplayer.getPowerPerDeath(), DataType.AMOUNT));
             }
-            data.put("FAC-POWER", new DataPoint(mplayer.getPowerRounded() + " / " + mplayer.getPowerMax(), DataType.AMOUNT_WITH_MAX));
-            data.put("FAC-POWER PER HOUR", new DataPoint("" + mplayer.getPowerPerHour(), DataType.AMOUNT));
-            data.put("FAC-POWER PER DEATH", new DataPoint("" + mplayer.getPowerPerDeath(), DataType.AMOUNT));
+        } catch (IllegalArgumentException e) {
         }
         return data;
     }

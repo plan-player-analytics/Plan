@@ -19,20 +19,20 @@ class AnalysisUtils {
         return "" + (sum * 1.0 / dataPoints.size());
     }
 
-    static String AmountWLettersAverage(List<String> dataPoints) {
+    static List<String> parseWLetters(List<String> dataPoints) {
         List<String> parsed = new ArrayList<>();
         dataPoints.parallelStream().forEach((dataPoint) -> {
             parsed.add(DataFormatUtils.removeLetters(dataPoint));
         });
-        return AmountAverage(parsed);
+        return parsed;
     }
 
-    static String AmountWMaxAverage(List<String> dataPoints) {
+    static List<String> parseWMax(List<String> dataPoints) {
         List<String> parsed = new ArrayList<>();
         dataPoints.parallelStream().forEach((dataPoint) -> {
             parsed.add(dataPoint.split(" ")[0]);
         });
-        return AmountAverage(parsed);
+        return parsed;
     }
 
     static String TimeAverage(List<String> dataPoints) {
@@ -57,6 +57,20 @@ class AnalysisUtils {
             }
         }
         return "" + ((amount * 1.0 / dataPoints.size())*100)+"%";
+    }
+
+    static String AmountHighest(List<String> dataPoints) {
+        int highest = 0;
+        for (String dataPoint : dataPoints) {
+            try {
+                int value = Integer.parseInt(dataPoint);
+                if (value > highest) {
+                    highest = value;
+                }
+            } catch (Exception e) {                
+            }
+        }
+        return ""+highest;
     }
 
 }

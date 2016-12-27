@@ -24,20 +24,23 @@ public class OnTimeHook implements Hook {
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        OfflinePlayer p = getOfflinePlayer(UUIDFetcher.getUUIDOf(player));
-        if (p.hasPlayedBefore()) {
-            try {
-                data.put("ONT-LAST LOGIN", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.LASTLOGIN), DataType.DEPRECATED));
-                data.put("ONT-TOTAL PLAY", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.TOTALPLAY), DataType.TIME));
-                data.put("ONT-TOTAL VOTES", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.TOTALVOTE), DataType.AMOUNT));
-                data.put("ONT-TOTAL REFERRED", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.TOTALREFER), DataType.AMOUNT));
-            } catch (NoClassDefFoundError e) {
-                plugin.logToFile("ONTIME HOOK ERROR"
-                        + "\nOntimeHook enabled but failing, could not get data."
-                        + "\n" + e
-                        + "\n" + e.getMessage());
+        try {
+            OfflinePlayer p = getOfflinePlayer(UUIDFetcher.getUUIDOf(player));
+            if (p.hasPlayedBefore()) {
+                try {
+                    data.put("ONT-LAST LOGIN", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.LASTLOGIN), DataType.DEPRECATED));
+                    data.put("ONT-TOTAL PLAY", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.TOTALPLAY), DataType.TIME));
+                    data.put("ONT-TOTAL VOTES", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.TOTALVOTE), DataType.AMOUNT));
+                    data.put("ONT-TOTAL REFERRED", new DataPoint("" + OnTimeAPI.getPlayerTimeData(player, OnTimeAPI.data.TOTALREFER), DataType.AMOUNT));
+                } catch (NoClassDefFoundError e) {
+                    plugin.logToFile("ONTIME HOOK ERROR"
+                            + "\nOntimeHook enabled but failing, could not get data."
+                            + "\n" + e
+                            + "\n" + e.getMessage());
 
+                }
             }
+        } catch (IllegalArgumentException e) {
         }
         return data;
     }

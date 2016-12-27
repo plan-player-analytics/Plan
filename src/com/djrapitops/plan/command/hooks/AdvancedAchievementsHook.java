@@ -78,16 +78,19 @@ public class AdvancedAchievementsHook implements Hook {
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        UUID uuid = UUIDFetcher.getUUIDOf(player);
-        OfflinePlayer p = getOfflinePlayer(uuid);
-        if (p.hasPlayedBefore()) {
-            if (totalAchievements > 0) {
-                if (this.usingUUID) {
-                    data.put("AAC-ACHIEVEMENTS", new DataPoint(aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements, DataType.AMOUNT_WITH_MAX));
-                } else {
-                    plugin.log("You're using outdated version of AdvancedAchievements!");
+        try {
+            UUID uuid = UUIDFetcher.getUUIDOf(player);
+            OfflinePlayer p = getOfflinePlayer(uuid);
+            if (p.hasPlayedBefore()) {
+                if (totalAchievements > 0) {
+                    if (this.usingUUID) {
+                        data.put("AAC-ACHIEVEMENTS", new DataPoint(aAPlugin.getDb().getPlayerAchievementsAmount(uuid.toString()) + " / " + totalAchievements, DataType.AMOUNT_WITH_MAX));
+                    } else {
+                        plugin.log("You're using outdated version of AdvancedAchievements!");
+                    }
                 }
             }
+        } catch (IllegalArgumentException e) {
         }
         return data;
     }

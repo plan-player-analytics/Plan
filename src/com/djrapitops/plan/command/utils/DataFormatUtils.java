@@ -14,7 +14,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 public class DataFormatUtils {
 
     public static HashMap<String, DataPoint> removeExtraDataPoints(HashMap<String, DataPoint> data) throws NumberFormatException {
-        Date now = new Date();
+        Date dateNow = new Date();
         List<String> remove = new ArrayList<>();
         Plan plugin = getPlugin(Plan.class);
         data.keySet().parallelStream().forEach((key) -> {
@@ -86,30 +86,36 @@ public class DataFormatUtils {
         if (data.get("TOW-LAST LOGIN") != null) {
             data.remove("PLG-LAST LOGIN");
         }
-        
+
         data.keySet().parallelStream()
                 .filter((key) -> (data.get(key).type() == DataType.DEPRECATED))
                 .forEach((key) -> {
-            remove.add(key);
-        });
+                    remove.add(key);
+                });
         remove.parallelStream().forEach((key) -> {
             data.remove(key);
         });
         // Format TimeStamps and Time Amounts
         for (String key : data.keySet()) {
-            if (data.get(key).type() == DataType.DATE) {
-                String formatted = formatTimeStamp(data.get(key).data());
-                data.get(key).setData(formatted);
-            } else if (data.get(key).type() == DataType.TIME) {
-                String formatted;
-                if (key.equals("ESS-ONLINE SINCE") || key.equals("ESS-OFFLINE SINCE")) {
-                    formatted = formatTimeAmountSinceString(data.get(key).data(), now);
-                } else {
-                    formatted = formatTimeAmount(data.get(key).data());
-                }
-                if (formatted != null) {
-                    data.get(key).setData(formatted);
-                }
+            DataPoint dataPoint = data.get(key);
+            if (null != dataPoint.type()) switch (dataPoint.type()) {
+                case DATE:{
+                    String formatted = formatTimeStamp(dataPoint.data());
+                    dataPoint.setData(formatted);
+                        break;
+                    }
+                case TIME:{
+                    String formatted = formatTimeAmount(dataPoint.data());
+                    dataPoint.setData(formatted);
+                        break;
+                    }
+                case TIME_TIMESTAMP:{
+                    String formatted = formatTimeAmountSinceString(dataPoint.data(), dateNow);
+                    dataPoint.setData(formatted);
+                        break;
+                    }
+                default:
+                    break;
             }
         }
         return data;

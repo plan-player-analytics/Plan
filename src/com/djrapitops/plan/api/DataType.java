@@ -4,6 +4,7 @@ package com.djrapitops.plan.api;
 public enum DataType {
     STRING, // Any preformatted data & words
     TIME, // Long in milliseconds
+    TIME_TIMESTAMP, // Long in milliseconds since Epoch Date 1970, will be subtracted from current time.
     DATE, // Long in milliseconds since Epoch Date 1970
     LOCATION, // X:# Y:# Z:#
     AMOUNT, // Number

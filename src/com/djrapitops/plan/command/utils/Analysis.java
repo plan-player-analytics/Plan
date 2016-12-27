@@ -20,8 +20,8 @@ public class Analysis {
         HashMap<String, DataType> dataTypes = new HashMap<>();
         // Ignore following keys (Strings, unprocessable or irrelevant data)
         DataType[] ignoreType = {DataType.DEPRECATED, DataType.STRING, DataType.LOCATION, DataType.LINK, DataType.HEATMAP,
-            DataType.MAP, DataType.OTHER, DataType.DATE};
-        String[] ignore = {"ESS-ONLINE SINCE", "ESS-OFFLINE SINCE", "ESS-HEALTH", "ESS-HUNGER", "ESS-XP LEVEL", "ESS-OPPED"};
+            DataType.MAP, DataType.OTHER, DataType.DATE, DataType.TIME_TIMESTAMP};
+        String[] ignore = {"ESS-HEALTH", "ESS-HUNGER", "ESS-XP LEVEL", "ESS-OPPED"};
         List<String> ignoreKeys = new ArrayList<>();
         List<DataType> ignoreTypes = new ArrayList<>();
         try {
@@ -61,29 +61,43 @@ public class Analysis {
 
         // Analyze
         playerDataLists.keySet().parallelStream().forEach((dataKey) -> {
-            if (null != dataTypes.get(dataKey)) {
-                switch (dataTypes.get(dataKey)) {
-                    case AMOUNT:
-                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountAverage(playerDataLists.get(dataKey)), DataType.AMOUNT));
-                        break;
-                    case AMOUNT_WITH_LETTERS:
-                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountWLettersAverage(playerDataLists.get(dataKey)), DataType.AMOUNT));
-                        break;
-                    case AMOUNT_WITH_MAX:
-                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountWMaxAverage(playerDataLists.get(dataKey)), DataType.AMOUNT));
-                        break;
-                    case TIME:
-                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.TimeAverage(playerDataLists.get(dataKey)), DataType.TIME));
-                        break;
-                    case BOOLEAN:
-                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.BooleanPercent(playerDataLists.get(dataKey)), DataType.PERCENT));
-                        break;
-                    case PERCENT:
-                        analyzedData.put(dataKey, new DataPoint(AnalysisUtils.AmountWLettersAverage(playerDataLists.get(dataKey))+"%", DataType.PERCENT));
-                        break;
-                    default:
-                        break;
+            DataType type = dataTypes.get(dataKey);
+            if (type == DataType.AMOUNT
+                    || type == DataType.AMOUNT_WITH_LETTERS
+                    || type == DataType.AMOUNT_WITH_MAX
+                    || type == DataType.PERCENT) {
+                // Get a clean list of dataPoints with only numbers
+                List<String> dataPoints = playerDataLists.get(dataKey);
+                if (null != type) {
+                    switch (type) {
+                        case AMOUNT_WITH_LETTERS:
+                            dataPoints = AnalysisUtils.parseWLetters(playerDataLists.get(dataKey));
+                            break;
+                        case PERCENT:
+                            dataPoints = AnalysisUtils.parseWLetters(playerDataLists.get(dataKey));
+                            break;
+                        case AMOUNT_WITH_MAX:
+                            dataPoints = AnalysisUtils.parseWMax(playerDataLists.get(dataKey));
+                            break;
+                        default:
+                            break;
+                    }
+                }                
+                if (type == DataType.PERCENT) {
+                    String averageAmount = AnalysisUtils.AmountAverage(dataPoints);
+                    analyzedData.put(dataKey, new DataPoint(averageAmount + "%", DataType.PERCENT));
+                } else {
+                    String averageAmount = AnalysisUtils.AmountAverage(dataPoints);
+                    analyzedData.put(dataKey, new DataPoint(averageAmount, DataType.AMOUNT));
+//                    String highestAmount = AnalysisUtils.AmountHighest(dataPoints);
+//                    analyzedData.put(dataKey + " (HIGHEST)", new DataPoint(highestAmount, DataType.AMOUNT));
                 }
+            } else if (type == DataType.TIME) {
+                String averageTime = AnalysisUtils.TimeAverage(playerDataLists.get(dataKey));
+                analyzedData.put(dataKey, new DataPoint(averageTime, DataType.TIME));
+            } else if (type == DataType.BOOLEAN) {
+                String percent = AnalysisUtils.BooleanPercent(playerDataLists.get(dataKey));
+                analyzedData.put(dataKey, new DataPoint(percent, DataType.PERCENT));
             }
         });
         return DataFormatUtils.formatAnalyzed(analyzedData);

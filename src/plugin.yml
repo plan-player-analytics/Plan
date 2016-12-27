@@ -1,6 +1,6 @@
 name: Plan
 main: com.djrapitops.plan.Plan
-version: 1.6.1
+version: 1.6.2
 
 commands:
   plan:
@@ -18,7 +18,10 @@ commands:
   search:
     usage: /plan <search terms> -p add -p to make not search playername
     description: search data of multiple players with search terms
-
+  debug:
+    usage: /plan debug
+    description: run commands to debug the plugin.
+    
 softdepend:
 - OnTime
 - EssentialsX
@@ -45,7 +48,7 @@ permissions:
     default: true
   plan.analyze.refresh:
     description: Allows you to refresh the analyse result with -r argument
-    default: false
+    default: op
   plan.reload:
     description: Allows to reload plugin config
     default: true
@@ -55,6 +58,9 @@ permissions:
   plan.info:
     description: Allows to view info
     default: true
+  plan.debug:
+    description: Allows debug command
+    default: op
   plan.basic:
     children:
       plan.?: true
@@ -67,6 +73,7 @@ permissions:
       plan.analyze: true
   plan.staff:
     children:
+      plan.debug: true
       plan.advanced: true
       plan.inspect.other: true
       plan.analyze.refresh: true

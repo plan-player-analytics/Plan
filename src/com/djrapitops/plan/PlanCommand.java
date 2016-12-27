@@ -3,6 +3,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.commands.AnalyzeCommand;
+import com.djrapitops.plan.command.commands.DebugCommand;
 import com.djrapitops.plan.command.commands.HelpCommand;
 import com.djrapitops.plan.command.commands.InfoCommand;
 import com.djrapitops.plan.command.commands.InspectCommand;
@@ -32,6 +33,7 @@ public class PlanCommand implements CommandExecutor {
         commands.add(new SearchCommand(plugin));
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
+        commands.add(new DebugCommand(plugin));
     }
 
     public List<SubCommand> getCommands() {

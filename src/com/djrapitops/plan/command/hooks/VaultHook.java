@@ -25,10 +25,13 @@ public class VaultHook implements Hook {
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        UUID uuid = UUIDFetcher.getUUIDOf(player);
-        OfflinePlayer p = getOfflinePlayer(uuid);
-        if (p.hasPlayedBefore()) {
-            data.put("ECO-BALANCE", new DataPoint(this.econ.format(this.econ.getBalance(p)), DataType.AMOUNT_WITH_LETTERS));
+        try {
+            UUID uuid = UUIDFetcher.getUUIDOf(player);
+            OfflinePlayer p = getOfflinePlayer(uuid);
+            if (p.hasPlayedBefore()) {
+                data.put("ECO-BALANCE", new DataPoint(this.econ.format(this.econ.getBalance(p)), DataType.AMOUNT_WITH_LETTERS));
+            }
+        } catch (IllegalArgumentException e) {
         }
         return data;
     }

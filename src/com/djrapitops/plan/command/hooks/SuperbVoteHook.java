@@ -24,10 +24,13 @@ public class SuperbVoteHook implements Hook {
     @Override
     public HashMap<String, DataPoint> getData(String player) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
-        UUID uuid = UUIDFetcher.getUUIDOf(player);
-        OfflinePlayer p = getOfflinePlayer(uuid);
-        if (p.hasPlayedBefore()) {
-            data.put("SVO-VOTES", new DataPoint("" + hookP.getVoteStorage().getVotes(uuid), DataType.AMOUNT));
+        try {
+            UUID uuid = UUIDFetcher.getUUIDOf(player);
+            OfflinePlayer p = getOfflinePlayer(uuid);
+            if (p.hasPlayedBefore()) {
+                data.put("SVO-VOTES", new DataPoint("" + hookP.getVoteStorage().getVotes(uuid), DataType.AMOUNT));
+            }
+        } catch (IllegalArgumentException e) {
         }
         return data;
     }
