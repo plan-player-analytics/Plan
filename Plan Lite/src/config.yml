@@ -1,0 +1,13 @@
+debug: true
+
+visible:
+  bukkitdata: true
+  ontime: true
+  essentials: true
+  factions: true
+  towny: true
+  vault: true
+  superbvote: true
+  placeholderapi: true
+  advancedachievements: true
+  playerlogger: true
