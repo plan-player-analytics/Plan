@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
@@ -24,22 +25,11 @@ public class ReloadCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         plugin.reloadConfig();
-        List<String> hookFail = plugin.hookInit();
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
-        sender.sendMessage(textColor + "[" + operatorColor + "PLAN" + textColor + "] Config & Hooks reloaded.");
-        String loadedMsg = " Hooked into: ";
-        for (String key : plugin.getHooks().keySet()) {
-            loadedMsg += ChatColor.GREEN + key + " ";
-        }
-        String failedMsg = " Not Hooked: ";
-        for (String string : hookFail) {
-            failedMsg += ChatColor.RED + string + " ";
-        }
-        sender.sendMessage(textColor + loadedMsg);
-        if (!hookFail.isEmpty()) {
-            sender.sendMessage(textColor + failedMsg);
-        }
+        plugin.hookPlanLite();
+        ChatColor operatorColor = Phrase.COLOR_MAIN.color();
+        ChatColor textColor = Phrase.COLOR_SEC.color();
+        sender.sendMessage(textColor + "[" + operatorColor + "PLAN" + textColor + "] Reload complete.");
+        
         return true;
     }
 

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.api.DataPoint;
@@ -18,12 +18,12 @@ import org.bukkit.entity.Player;
 
 public class AnalyzeCommand extends SubCommand {
 
-    private Plan plugin;
+    private PlanLite plugin;
     private HashMap<UUID, HashMap<String, DataPoint>> playerData;
     private HashMap<String, DataPoint> analyzedPlayerdata;
     private Date refreshDate;
 
-    public AnalyzeCommand(Plan plugin) {
+    public AnalyzeCommand(PlanLite plugin) {
         super("analyze", "plan.analyze", "Analyze data of all players /plan analyze [-refresh]", CommandType.CONSOLE);
         this.plugin = plugin;
     }

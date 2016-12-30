@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -11,13 +11,14 @@ import org.bukkit.OfflinePlayer;
 import net.milkbowl.vault.economy.Economy;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getServer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class VaultHook implements Hook {
 
-    private Plan plugin;
+    private PlanLite plugin;
     private Economy econ;
 
-    public VaultHook(Plan plugin) throws Exception {
+    public VaultHook(PlanLite plugin) throws Exception {
         this.plugin = plugin;
         this.econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
     }

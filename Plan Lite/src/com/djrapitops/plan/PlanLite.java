@@ -29,13 +29,13 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-public class Plan extends JavaPlugin {
+public class PlanLite extends JavaPlugin {
 
     private final Map<String, Hook> hooks;
     private API api;
     private final Map<String, Hook> extraHooks;
 
-    public Plan() {
+    public PlanLite() {
         this.hooks = new HashMap<>();
         this.extraHooks = new HashMap<>();
     }
@@ -111,7 +111,7 @@ public class Plan extends JavaPlugin {
                 try {
                     String className = "com.djrapitops.plan.command.hooks." + pluginName + "Hook";
                     Class<Hook> clazz = (Class<Hook>) Hook.class.forName(className);
-                    this.hooks.put(pluginName, clazz.getConstructor(Plan.class).newInstance(this));
+                    this.hooks.put(pluginName, clazz.getConstructor(PlanLite.class).newInstance(this));
                 } catch (Exception | NoClassDefFoundError e) {
                     hookFail.add(pluginName);
                     errors.append("Failed to hook ").append(pluginName).append("\n").append(e);

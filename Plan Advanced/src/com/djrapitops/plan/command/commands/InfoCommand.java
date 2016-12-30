@@ -26,7 +26,6 @@ public class InfoCommand extends SubCommand {
         sender.sendMessage(textColor +"--["+operatorColor+"PLAN - Info"+textColor+"]--");
         sender.sendMessage(operatorColor+"Version: "+textColor+plugin.getDescription().getVersion());
         sender.sendMessage(textColor+MiscUtils.checkVersion());
-        sender.sendMessage(operatorColor+"Enabled Hooks: "+textColor+plugin.getHooks().keySet());
         return true;
     }
 

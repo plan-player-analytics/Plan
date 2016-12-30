@@ -1,6 +1,6 @@
-name: Plan
-main: com.djrapitops.plan.Plan
-version: 1.6.2
+name: PlanLite
+main: com.djrapitops.plan.PlanLite
+version: 1.6.3
 
 commands:
   plan:

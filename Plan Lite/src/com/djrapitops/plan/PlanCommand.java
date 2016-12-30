@@ -24,7 +24,7 @@ public class PlanCommand implements CommandExecutor {
 
     private final List<SubCommand> commands;
 
-    public PlanCommand(Plan plugin) {
+    public PlanCommand(PlanLite plugin) {
         commands = new ArrayList<>();
 
         commands.add(new HelpCommand(plugin, this));

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.utils;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import java.io.File;
@@ -24,7 +24,7 @@ public class DataUtils {
     // returns data given by each Hook
     public static HashMap<String, DataPoint> getData(boolean allData, String playerName) {
         HashMap<String, DataPoint> data = new HashMap<>();
-        Plan plugin = getPlugin(Plan.class);
+        PlanLite plugin = getPlugin(PlanLite.class);
         plugin.getHooks().keySet().parallelStream().forEach((hook) -> {
             try {
                 if (allData) {
@@ -67,7 +67,7 @@ public class DataUtils {
 
     public static String getPlayerDisplayname(String[] args, CommandSender sender) {
         String playerName = "";
-        Plan plugin = getPlugin(Plan.class);
+        PlanLite plugin = getPlugin(PlanLite.class);
         if (args.length > 0) {
             if ((args[0].equals("-a")) || (args[0].equals("-r"))) {
                 playerName = "ArgumentGivenError";

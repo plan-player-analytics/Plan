@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 //import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.PlanCommand;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 
 public class HelpCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final PlanLite plugin;
     private final PlanCommand command;
 
-    public HelpCommand(Plan plugin, PlanCommand command) {
+    public HelpCommand(PlanLite plugin, PlanCommand command) {
         super("help,?", "plan.?", "Show command list.", CommandType.CONSOLE);
 
         this.plugin = plugin;

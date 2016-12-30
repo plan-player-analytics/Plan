@@ -1,13 +1,50 @@
 debug: true
 
-visible:
-  bukkitdata: true
-  ontime: true
-  essentials: true
-  factions: true
-  towny: true
-  vault: true
-  superbvote: true
-  placeholderapi: true
-  advancedachievements: true
-  playerlogger: true
+saveEveryXMinutes: 5
+database:
+  type: sqlite  
+
+enabledData:
+  planLite:
+    pluginEnabled: true
+    
+    towny: true
+    factions: true
+    achievements: true
+    votes: true
+    economy: true
+    essentials:
+      ruleBreaking: true
+  
+  server:
+    commandUsage: true
+    playersOnline: true
+    amountOfNewPlayers: true
+  
+  player:
+    basic info:
+      uuid: true
+      ipAddresses: true
+      usedNicknames: true
+      opped: true
+    activity:      
+      dateRegistered: true
+      lastLogin: true
+      playTime: true
+      loginTimes: true
+      gamemodePercentages: true
+    location:
+      showLocation: true
+      locationHeatmap: true
+      bedLocation: true
+    ruleBreaking:
+      banLogging: true
+      timesKicked: true
+    demographics:
+      geoLocation: true
+      age: true
+      gender: true
+    
+    
+      
+    

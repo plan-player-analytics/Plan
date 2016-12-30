@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -17,13 +17,14 @@ import org.bukkit.BanList;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class EssentialsHook implements Hook {
 
     private IEssentials ess;
-    private final Plan plugin;
+    private final PlanLite plugin;
 
-    public EssentialsHook(Plan p) throws Exception {
+    public EssentialsHook(PlanLite p) throws Exception {
         this.ess = getPlugin(Essentials.class);
         this.plugin = p;
     }

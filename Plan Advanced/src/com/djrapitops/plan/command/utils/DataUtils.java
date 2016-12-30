@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.utils;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
@@ -24,39 +25,12 @@ public class DataUtils {
     // returns data given by each Hook
     public static HashMap<String, DataPoint> getData(boolean allData, String playerName) {
         HashMap<String, DataPoint> data = new HashMap<>();
-        Plan plugin = getPlugin(Plan.class);
-        plugin.getHooks().keySet().parallelStream().forEach((hook) -> {
-            try {
-                if (allData) {
-                    data.putAll(plugin.getHooks().get(hook).getAllData(playerName));
-                } else {
-                    data.putAll(plugin.getHooks().get(hook).getData(playerName));
-                }
-            } catch (Exception e) {
-                String toLog = "UTILS-GetData"
-                        + "\nFailed to getData from " + hook
-                        + "\n" + e
-                        + "\ncausing argument: " + playerName;
-                for (StackTraceElement element : e.getStackTrace()) {
-                    toLog += "\n  " + element;
-                }
-                plugin.logToFile(toLog);
-            }
-        });
         return data;
     }
 
     // Returns data HashMaps for all pplayers in a HashMap.
     public static HashMap<UUID, HashMap<String, DataPoint>> getTotalData(Set<OfflinePlayer> ofPlayers) {
         HashMap<UUID, HashMap<String, DataPoint>> playerData = new HashMap<>();
-
-        List<OfflinePlayer> players = new ArrayList<>();
-        players.addAll(ofPlayers);
-        players.parallelStream()
-                .filter((player) -> (playerData.get(player.getUniqueId()) == null))
-                .forEach((player) -> {
-                    playerData.put(player.getUniqueId(), getData(true, player.getName()));
-                });
         return playerData;
     }
 
@@ -73,7 +47,7 @@ public class DataUtils {
                 playerName = "ArgumentGivenError";
                 plugin.log("No username given, returned empty username.");
 
-                plugin.logToFile("INSPECT-GETNAME\nNo username given, returned empty username.\n" + args[0]);
+                plugin.logToFile(Phrase.ERROR_NO_USERNAME + args[0]);
 
             } else if (sender.hasPermission("plan.inspect.other") || !(sender instanceof Player)) {
                 playerName = args[0];

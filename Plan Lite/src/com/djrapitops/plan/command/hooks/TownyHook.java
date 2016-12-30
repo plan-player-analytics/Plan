@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -19,13 +19,15 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import static com.palmergames.bukkit.towny.TownyFormatter.getFormattedResidents;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
+import static com.palmergames.bukkit.towny.TownyFormatter.getFormattedResidents;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class TownyHook implements Hook {
 
     private final Towny towny;
-    private final Plan plugin;
+    private final PlanLite plugin;
 
-    public TownyHook(Plan p) throws Exception {
+    public TownyHook(PlanLite p) throws Exception {
         this.towny = getPlugin(Towny.class);
         this.plugin = p;
     }

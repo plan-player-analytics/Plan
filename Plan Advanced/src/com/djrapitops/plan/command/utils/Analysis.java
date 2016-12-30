@@ -1,13 +1,11 @@
 package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
@@ -24,14 +22,6 @@ public class Analysis {
         String[] ignore = {"ESS-HEALTH", "ESS-HUNGER", "ESS-XP LEVEL", "ESS-OPPED"};
         List<String> ignoreKeys = new ArrayList<>();
         List<DataType> ignoreTypes = new ArrayList<>();
-        try {
-            AdvancedAchievementsHook aaHook = (AdvancedAchievementsHook) plugin.getHooks().get("AdvancedAchievements");
-            if (!aaHook.isUsingUUID()) {
-                ignoreKeys.add("AAC-ACHIEVEMENTS");
-            }
-        } catch (Exception e) {
-            ignoreKeys.add("AAC-ACHIEVEMENTS");
-        }
         ignoreKeys.addAll(Arrays.asList(ignore));
         ignoreTypes.addAll(Arrays.asList(ignoreType));
 

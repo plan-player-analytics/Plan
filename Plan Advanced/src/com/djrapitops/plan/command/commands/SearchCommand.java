@@ -46,12 +46,6 @@ public class SearchCommand extends SubCommand {
         }
         args = DataFormatUtils.parseSearchArgs(args);
         HashMap<UUID, HashMap<String, DataPoint>> data = DataUtils.getTotalData(matchingPlayers);
-        if (this.plugin.getHooks().isEmpty()) {
-            this.plugin.logError("noHookedPluginsError on SearchCommand");
-            this.plugin.logToFile("SEARCH\nnoHookedPluginsError on SearchCommand");
-
-            return false;
-        }
 
         Date refreshDate = new Date();
         HashMap<String, List<String[]>> dataLists = new HashMap<>();

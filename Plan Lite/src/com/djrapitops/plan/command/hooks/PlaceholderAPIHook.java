@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.hooks;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 
 public class PlaceholderAPIHook extends EZPlaceholderHook {
 
-    private final Plan plan;
+    private final PlanLite plan;
 
-    public PlaceholderAPIHook(Plan plan) {
+    public PlaceholderAPIHook(PlanLite plan) {
         super(plan, "plan");
         this.plan = plan;
     }

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.utils;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class DataFormatUtils {
     public static HashMap<String, DataPoint> removeExtraDataPoints(HashMap<String, DataPoint> data) throws NumberFormatException {
         Date dateNow = new Date();
         List<String> remove = new ArrayList<>();
-        Plan plugin = getPlugin(Plan.class);
+        PlanLite plugin = getPlugin(PlanLite.class);
         data.keySet().parallelStream().forEach((key) -> {
             try {
                 // Process OnTime empty data (returns -1 if empty)
@@ -148,7 +148,7 @@ public class DataFormatUtils {
             }
         }
         if (!errors.equals("FORMAT-SEARCH\n")) {
-            Plan plugin = getPlugin(Plan.class);
+            PlanLite plugin = getPlugin(PlanLite.class);
             plugin.logToFile(errors);
         }
         return removeExtraDataPoints(returnMap);

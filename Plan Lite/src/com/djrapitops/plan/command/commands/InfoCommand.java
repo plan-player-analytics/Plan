@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.MiscUtils;
@@ -10,9 +10,9 @@ import org.bukkit.command.CommandSender;
 
 public class InfoCommand extends SubCommand {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public InfoCommand(Plan plugin) {
+    public InfoCommand(PlanLite plugin) {
         super("info", "plan.info", "View version and enabled hooks", CommandType.CONSOLE);
 
         this.plugin = plugin;

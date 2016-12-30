@@ -1,18 +1,20 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import com.djrapitops.plan.api.DataPoint;
-import com.djrapitops.plan.api.DataType;
+import com.djrapitops.plan.database.UserData;
+import java.util.UUID;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -29,47 +31,39 @@ public class InspectCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = DataUtils.getPlayerDisplayname(args, sender);
-        if (this.plugin.getHooks().isEmpty()) {
-            this.plugin.logError("noHookedPluginsError on InspectCommand");
-
-            this.plugin.logToFile("INSPECT\nnoHookedPluginsError on InspectCommand");
-
-            return false;
+        
+        UUID uuid;
+        try {
+            uuid = UUIDFetcher.getUUIDOf(playerName);
+        } catch (Exception e) {
+            sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
+            return true;
         }
-
-        boolean allData = false;
-        boolean format = true;
-        for (String arg : args) {
-            if (arg.toLowerCase().equals("-a")) {
-                allData = true;
-            }
-            if (arg.toLowerCase().equals("-r")) {
-                format = false;
-            }
+        
+        OfflinePlayer p = getOfflinePlayer(uuid);
+        if (!p.hasPlayedBefore()) {
+            sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
+            return true;
         }
+        
+        if (!plugin.getDB().wasSeenBefore(uuid)) {
+            sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
+            return true;
+        }
+        
         Date refreshDate = new Date();
-        HashMap<String, DataPoint> data = DataUtils.getData(allData, playerName);
-        if (format && !data.isEmpty()) {
-            data = DataFormatUtils.removeExtraDataPoints(data);
-        }
-        if (data.isEmpty()) {
-            data.put("ERR-NO RESULTS", new DataPoint("No results were found.", DataType.OTHER));
+        UserData data = plugin.getHandler().getCurrentData(uuid);
 
-            plugin.logToFile("INSPECT-Results\nNo results were found for: " + playerName);
-
-        }
-
-        List<String[]> dataList = DataFormatUtils.turnDataHashMapToSortedListOfArrays(data);
-
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
+        ChatColor operatorColor = Phrase.COLOR_MAIN.color();
+        ChatColor textColor = Phrase.COLOR_SEC.color();
 
         //header
         sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName +" - took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date())+ textColor + "] --");
 
-        for (String[] dataString : dataList) {
-            sender.sendMessage("" + operatorColor + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + textColor + dataString[1]);
-        }
+        sender.sendMessage(data.getUuid().toString());
+        sender.sendMessage(data.getIps().toString());
+        sender.sendMessage(""+data.isBanned());
+        
         sender.sendMessage(textColor + "-- o --");
         return true;
     }

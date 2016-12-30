@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -12,12 +12,13 @@ import me.BadBones69.Logger.SettingsManager;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class PlayerLoggerHook implements Hook {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public PlayerLoggerHook(Plan plugin) throws Exception, NoClassDefFoundError {
+    public PlayerLoggerHook(PlanLite plugin) throws Exception, NoClassDefFoundError {
         this.plugin = plugin;
         SettingsManager.getInstance();
     }

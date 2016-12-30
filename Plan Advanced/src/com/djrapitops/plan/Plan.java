@@ -1,52 +1,57 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.command.hooks.EssentialsHook;
-import com.djrapitops.plan.command.hooks.FactionsHook;
-import com.djrapitops.plan.command.hooks.OnTimeHook;
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.command.hooks.PlaceholderAPIHook;
-import com.djrapitops.plan.command.hooks.SuperbVoteHook;
-//import com.djrapitops.plan.command.hooks.McMMOHook;
-import com.djrapitops.plan.command.hooks.TownyHook;
-import com.djrapitops.plan.command.hooks.VaultHook;
-import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
-import com.djrapitops.plan.command.hooks.BukkitDataHook;
-import com.djrapitops.plan.command.hooks.PlayerLoggerHook;
-import com.djrapitops.plan.command.utils.DataUtils;
 import com.djrapitops.plan.command.utils.MiscUtils;
+import com.djrapitops.plan.database.Database;
+import com.djrapitops.plan.database.databases.MySQLDB;
+import com.djrapitops.plan.database.databases.SQLiteDB;
+import com.djrapitops.plan.datahandlers.DataHandler;
+import com.djrapitops.plan.datahandlers.listeners.PlanChatListener;
+import com.djrapitops.plan.datahandlers.listeners.PlanGamemodeChangeListener;
+import com.djrapitops.plan.datahandlers.listeners.PlanPlayerListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import java.util.HashSet;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class Plan extends JavaPlugin {
 
-    private final Map<String, Hook> hooks;
     private API api;
-    private final Map<String, Hook> extraHooks;
-
-    public Plan() {
-        this.hooks = new HashMap<>();
-        this.extraHooks = new HashMap<>();
-    }
-
-    public Map<String, Hook> getHooks() {
-        return this.hooks;
-    }
+    private PlanLiteHook planLiteHook;
+    private DataHandler handler;
+    private Database db;
+    private HashSet<Database> databases;
 
     @Override
     public void onEnable() {
         getDataFolder().mkdirs();
+
+        databases = new HashSet<>();
+        databases.add(new MySQLDB(this));
+        databases.add(new SQLiteDB(this));
+
+        for (Database database : databases) {
+            String name = database.getConfigName();
+
+            ConfigurationSection section = getConfig().getConfigurationSection(name);
+
+            if (section == null) {
+                section = getConfig().createSection(name);
+            }
+
+            database.getConfigDefaults(section);
+
+            if (section.getKeys(false).isEmpty()) {
+                getConfig().set(name, null);
+            }
+        }
 
         getConfig().options().copyDefaults(true);
 
@@ -57,81 +62,39 @@ public class Plan extends JavaPlugin {
 
         saveConfig();
 
-        try {
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                PlaceholderAPIHook phAHook = new PlaceholderAPIHook(this);
-                phAHook.hook();
-            }
-        } catch (Exception e) {
-            logError("Failed to create placeholders.yml");
-            logToFile("Failed to create placeholders.yml\n" + e);
-        }
-
-        List<String> hookFail = hookInit();
-        if (this.hooks.isEmpty()) {
-            logError("Found no plugins to get data (or config set to false). Disabling plugin..");
-            logToFile("MAIN\nNo Hooks found. Plugin Disabled.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        initDatabase();
 
         this.api = new API(this);
+        hookPlanLite();
+        this.handler = new DataHandler(this);
+        registerListeners();
 
         log(MiscUtils.checkVersion());
-
-        String loadedMsg = "Hooked into: ";
-        for (String key : this.hooks.keySet()) {
-            loadedMsg += ChatColor.GREEN + key + " ";
-        }
-        String failedMsg = "Not Hooked: ";
-        for (String string : hookFail) {
-            failedMsg += ChatColor.RED + string + " ";
-        }
-        Bukkit.getServer().getConsoleSender().sendMessage("[Plan] " + loadedMsg);
-        if (!hookFail.isEmpty()) {
-            Bukkit.getServer().getConsoleSender().sendMessage("[Plan] " + failedMsg);
-        }
 
         getCommand("plan").setExecutor(new PlanCommand(this));
 
         log("Player Analytics Enabled.");
     }
 
-    public List<String> hookInit() {
-        this.hooks.clear();
-        List<String> hookFail = new ArrayList<>();
-        String[] pluginsArray = {"OnTime", "Essentials", "Towny", "Vault", "Factions", "SuperbVote",
-            "AdvancedAchievements", "BukkitData", "PlayerLogger"};
-        List<String> plugins = new ArrayList<>();
-        plugins.addAll(Arrays.asList(pluginsArray));
-        StringBuilder errors = new StringBuilder();
-        errors.append("MAIN-HOOKINIT\n");
-        plugins.parallelStream().forEach((pluginName) -> {
-            if (getConfig().getBoolean("visible." + pluginName.toLowerCase())) {
-                try {
-                    String className = "com.djrapitops.plan.command.hooks." + pluginName + "Hook";
-                    Class<Hook> clazz = (Class<Hook>) Hook.class.forName(className);
-                    this.hooks.put(pluginName, clazz.getConstructor(Plan.class).newInstance(this));
-                } catch (Exception | NoClassDefFoundError e) {
-                    hookFail.add(pluginName);
-                    errors.append("Failed to hook ").append(pluginName).append("\n").append(e);
-                    errors.append("\n").append(e.getCause());
-                }
-            } else {
-                hookFail.add(ChatColor.YELLOW + pluginName);
+    public void hookPlanLite() {
+        try {
+            if (getConfig().getBoolean("enabledData.planLite.pluginEnabled")) {
+                planLiteHook = new PlanLiteHook(this);
             }
-        });
-        if (!errors.toString().equals("MAIN-HOOKINIT\n")) {
-            logToFile(errors.toString());
+        } catch (NoClassDefFoundError | Exception e) {
+            
         }
-        for (String extraHook : this.extraHooks.keySet()) {
-            this.hooks.put(extraHook, this.extraHooks.get(extraHook));
-        }
-        return hookFail;
+    }
+
+    @Deprecated
+    public List<String> hookInit() {
+        return new ArrayList<>();
     }
 
     @Override
     public void onDisable() {
+        log("Saving cached data..");
+        handler.saveCachedData();
         log("Player Analytics Disabled.");
     }
 
@@ -149,7 +112,7 @@ public class Plan extends JavaPlugin {
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            File log = new File(getDataFolder(), "errorlog.txt");
+            File log = new File(getDataFolder(), "Errors.txt");
             try {
                 if (!log.exists()) {
                     log.createNewFile();
@@ -160,7 +123,7 @@ public class Plan extends JavaPlugin {
                     pw.flush();
                 }
             } catch (IOException e) {
-                logError("Failed to create log.txt file");
+                logError("Failed to create Errors.txt file");
             }
         }
     }
@@ -170,12 +133,55 @@ public class Plan extends JavaPlugin {
     }
 
     public void addExtraHook(String name, Hook hook) {
-        try {
-            this.extraHooks.put(name, hook);
-            this.hooks.put(name, hook);
-            log("Registered additional hook: " + name);
-        } catch (Exception | NoClassDefFoundError e) {
-            logToFile("Failed to hook " + name + "\n" + e);
+        if (planLiteHook != null) {
+            planLiteHook.addExtraHook(name, hook);
+        } else {
+            logError(Phrase.ERROR_PLANLITE.toString());
         }
+    }
+
+    private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new PlanChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlanPlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlanGamemodeChangeListener(this), this);
+    }
+
+    public DataHandler getHandler() {
+        return handler;
+    }
+
+    public PlanLiteHook getPlanLiteHook() {
+        return planLiteHook;
+    }
+
+    public Database getDB() {
+        return db;
+    }
+
+    private boolean initDatabase() {
+        String type = getConfig().getString("database.type");
+
+        db = null;
+
+        for (Database database : databases) {
+            if (type.equalsIgnoreCase(database.getConfigName())) {
+                this.db = database;
+
+                break;
+            }
+        }
+
+        if (db == null) {
+            log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST.toString());
+            return false;
+        }
+
+        if (!db.init()) {
+            log(Phrase.DATABASE_FAILURE_DISABLE.toString());
+            setEnabled(false);
+            return false;
+        }
+
+        return true;
     }
 }

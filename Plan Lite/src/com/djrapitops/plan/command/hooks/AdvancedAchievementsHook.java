@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -15,15 +15,16 @@ import java.util.UUID;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class AdvancedAchievementsHook implements Hook {
 
-    private Plan plugin;
+    private PlanLite plugin;
     private AdvancedAchievements aAPlugin;
     private int totalAchievements;
     private boolean usingUUID;
 
-    public AdvancedAchievementsHook(Plan plugin) throws Exception, NoClassDefFoundError {
+    public AdvancedAchievementsHook(PlanLite plugin) throws Exception, NoClassDefFoundError {
         this.plugin = plugin;
         this.aAPlugin = getPlugin(AdvancedAchievements.class);
         // Version was important because 4.0.3 added required method for Offline players

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.utils;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -15,7 +15,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 public class Analysis {
 
     public static HashMap<String, DataPoint> analyze(HashMap<UUID, HashMap<String, DataPoint>> playerData) {
-        Plan plugin = getPlugin(Plan.class);
+        PlanLite plugin = getPlugin(PlanLite.class);
         HashMap<String, List<String>> playerDataLists = new HashMap<>();
         HashMap<String, DataType> dataTypes = new HashMap<>();
         // Ignore following keys (Strings, unprocessable or irrelevant data)

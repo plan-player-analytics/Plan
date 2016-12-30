@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.utils;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class MiscUtils {
 //    <h1>Plan - Player Analytics <span class="muted">
 
     public static String checkVersion() {
-        Plan plugin = getPlugin(Plan.class);
+        PlanLite plugin = getPlugin(PlanLite.class);
         String[] nVersion;
         String[] cVersion;
         String lineWithVersion;

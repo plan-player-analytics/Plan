@@ -1,6 +1,6 @@
 name: Plan
 main: com.djrapitops.plan.Plan
-version: 1.6.2
+version: 2.0.0
 
 commands:
   plan:
@@ -23,15 +23,7 @@ commands:
     description: run commands to debug the plugin.
     
 softdepend:
-- OnTime
-- EssentialsX
-- Towny
-- Vault
-- Factions
-- SuperbVote
-- PlaceholderAPI
-- AdvancedAchievements
-- PlayerLogger
+- PlanLite
 
 permissions:
   plan.?:
@@ -61,6 +53,7 @@ permissions:
   plan.debug:
     description: Allows debug command
     default: op
+  
   plan.basic:
     children:
       plan.?: true

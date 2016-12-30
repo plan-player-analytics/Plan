@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
@@ -18,9 +18,9 @@ import org.bukkit.command.CommandSender;
 
 public class InspectCommand extends SubCommand {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public InspectCommand(Plan plugin) {
+    public InspectCommand(PlanLite plugin) {
         super("inspect", "plan.inspect", "Inspect data /plan <player> [-a, -r].", CommandType.CONSOLE_WITH_ARGUMENTS);
 
         this.plugin = plugin;

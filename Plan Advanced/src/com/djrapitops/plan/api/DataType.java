@@ -1,6 +1,7 @@
 
 package com.djrapitops.plan.api;
 
+@Deprecated
 public enum DataType {
     STRING, // Any preformatted data & words
     TIME, // Long in milliseconds

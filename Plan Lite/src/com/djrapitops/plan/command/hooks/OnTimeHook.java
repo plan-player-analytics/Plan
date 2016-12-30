@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -9,12 +9,13 @@ import java.util.HashMap;
 import me.edge209.OnTime.OnTimeAPI;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class OnTimeHook implements Hook {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public OnTimeHook(Plan plugin) throws Exception {
+    public OnTimeHook(PlanLite plugin) throws Exception {
         this.plugin = plugin;
         if (OnTimeAPI.data.LASTLOGIN == null) {
             throw new Exception("Ontime not installed.");

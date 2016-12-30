@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.DataUtils;
@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 
 public class DebugCommand extends SubCommand {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public DebugCommand(Plan plugin) {
+    public DebugCommand(PlanLite plugin) {
         super("debug", "plan.debug", "Test plugin for possible errors (debug feature)", CommandType.PLAYER);
         this.plugin = plugin;
     }

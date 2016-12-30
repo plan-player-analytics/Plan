@@ -1,6 +1,6 @@
 package com.djrapitops.plan.api;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
 import java.util.Date;
@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class API {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public API(Plan plugin) {
+    public API(PlanLite plugin) {
         this.plugin = plugin;
     }
 

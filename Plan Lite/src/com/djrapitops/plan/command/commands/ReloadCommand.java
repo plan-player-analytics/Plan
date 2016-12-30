@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.hooks.PlaceholderAPIHook;
@@ -13,9 +13,9 @@ import org.bukkit.command.CommandSender;
 
 public class ReloadCommand extends SubCommand {
 
-    private Plan plugin;
+    private PlanLite plugin;
 
-    public ReloadCommand(Plan plugin) {
+    public ReloadCommand(PlanLite plugin) {
         super("reload", "plan.reload", "Reload plugin config & Hooks", CommandType.CONSOLE);
 
         this.plugin = plugin;

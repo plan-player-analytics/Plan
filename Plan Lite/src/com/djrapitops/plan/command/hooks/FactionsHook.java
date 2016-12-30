@@ -1,7 +1,7 @@
 package com.djrapitops.plan.command.hooks;
 
 import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.UUIDFetcher;
 import com.djrapitops.plan.api.DataPoint;
 import com.djrapitops.plan.api.DataType;
@@ -13,13 +13,14 @@ import java.util.UUID;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class FactionsHook implements Hook {
 
-    private Plan plugin;
+    private PlanLite plugin;
     private Factions factions;
 
-    public FactionsHook(Plan plugin) throws Exception {
+    public FactionsHook(PlanLite plugin) throws Exception {
         this.plugin = plugin;
         this.factions = getPlugin(Factions.class);
     }

@@ -1,6 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLite;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.api.DataPoint;
@@ -18,12 +18,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class SearchCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final PlanLite plugin;
 
-    public SearchCommand(Plan plugin) {
+    public SearchCommand(PlanLite plugin) {
         super("search", "plan.search", "Inspect specific data /plan <search terms> [-p]", CommandType.CONSOLE_WITH_ARGUMENTS);
         this.plugin = plugin;
     }
