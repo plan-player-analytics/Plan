@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import org.bukkit.GameMode;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class MiscUtils {
@@ -57,5 +58,23 @@ public class MiscUtils {
             }
         }
         return result;
+    }
+
+    public static GameMode parseGM(String string) {
+        String survival = GameMode.SURVIVAL.name();
+        String creative = GameMode.CREATIVE.name();
+        String adventure = GameMode.ADVENTURE.name();
+        String spectator = GameMode.SPECTATOR.name();
+        if (string.equalsIgnoreCase(survival)) {
+            return GameMode.SURVIVAL;
+        } else if (string.equalsIgnoreCase(creative)) {
+            return GameMode.CREATIVE;
+        } else if (string.equalsIgnoreCase(adventure)) {
+            return GameMode.ADVENTURE;
+        } else if (string.equalsIgnoreCase(spectator)) {
+            return GameMode.SPECTATOR;
+        } else {
+            return GameMode.SURVIVAL;
+        }
     }
 }

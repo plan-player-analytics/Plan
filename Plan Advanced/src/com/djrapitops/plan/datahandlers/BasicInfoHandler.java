@@ -15,20 +15,19 @@ public class BasicInfoHandler {
     public BasicInfoHandler(Plan plugin, DataHandler h) {
         this.handler = h;
     }
-    
+
     public void save(Player player) {
-        
+
     }
 
-    public void handleLogIn(PlayerLoginEvent event) {
+    public void handleLogIn(PlayerLoginEvent event, UserData data) {
         Player player = event.getPlayer();
-        UserData data = handler.getCurrentData(player.getUniqueId());
         data.addNickname(player.getDisplayName());
         data.addIpAddress(event.getAddress());
     }
 
-    public void handleLogOut(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        UserData data = handler.getCurrentData(player.getUniqueId());
+    void handleReload(Player player, UserData data) {
+        data.addNickname(player.getDisplayName());
+        data.addIpAddress(player.getAddress().getAddress());
     }
 }

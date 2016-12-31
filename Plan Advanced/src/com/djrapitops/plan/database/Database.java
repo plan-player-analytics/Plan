@@ -4,10 +4,6 @@ import com.djrapitops.plan.Plan;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 public abstract class Database {
 
@@ -48,5 +44,7 @@ public abstract class Database {
 
     public abstract void saveServerData(ServerData serverData);
 
-    public abstract ServerData getServerData();
+    public abstract ServerData getNewestServerData();
+
+    public abstract void close();
 }

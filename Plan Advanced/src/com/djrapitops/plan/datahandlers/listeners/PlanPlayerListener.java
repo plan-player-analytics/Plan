@@ -8,6 +8,8 @@ import com.djrapitops.plan.datahandlers.LocationHandler;
 import com.djrapitops.plan.datahandlers.RuleBreakingHandler;
 import com.djrapitops.plan.datahandlers.ServerDataHandler;
 import com.djrapitops.plan.database.UserData;
+import com.djrapitops.plan.datahandlers.BasicInfoHandler;
+import com.djrapitops.plan.datahandlers.GamemodeTimesHandler;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +24,8 @@ public class PlanPlayerListener implements Listener {
 
     private final DataHandler handler;
     private final ActivityHandler activityH;
+    private final BasicInfoHandler basicInfoH;
+    private final GamemodeTimesHandler gmTimesH;
     private final LocationHandler locationH;
     private final DemographicsHandler demographicH;
     private final RuleBreakingHandler rulebreakH;
@@ -30,6 +34,8 @@ public class PlanPlayerListener implements Listener {
     public PlanPlayerListener(Plan plugin) {
         handler = plugin.getHandler();
         activityH = handler.getActivityHandler();
+        basicInfoH = handler.getBasicInfoHandler();
+        gmTimesH = handler.getGamemodeTimesHandler();
         demographicH = handler.getDemographicsHandler();
         locationH = handler.getLocationHandler();
         rulebreakH = handler.getRuleBreakingHandler();
@@ -44,12 +50,12 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         boolean newPlayer = activityH.isFirstTimeJoin(uuid);
-        if (newPlayer) {
-            handler.newPlayer(player);
-        }
+        handler.newPlayer(player);
         serverHandler.handleLogin(newPlayer);
         UserData data = handler.getCurrentData(uuid);
         activityH.handleLogIn(event, data);
+        basicInfoH.handleLogIn(event, data);
+        gmTimesH.handleLogin(event, data);
         demographicH.handleLogIn(event, data);
         handler.saveCachedData(uuid);
     }

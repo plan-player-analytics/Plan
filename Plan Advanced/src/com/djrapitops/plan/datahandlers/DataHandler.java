@@ -8,7 +8,11 @@ import com.djrapitops.plan.database.ServerData;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 public class DataHandler {
 
@@ -25,6 +29,8 @@ public class DataHandler {
     private final PlanLiteHandler planLiteHandler;
     private final Database db;
 
+    private int timesSaved;
+
     public DataHandler(Plan plugin) {
         this.plugin = plugin;
         db = plugin.getDB();
@@ -35,16 +41,21 @@ public class DataHandler {
         demographicsHandler = new DemographicsHandler(plugin, this);
         basicInfoHandler = new BasicInfoHandler(plugin, this);
         ruleBreakingHandler = new RuleBreakingHandler(plugin, this);
-        serverData = db.getServerData();
+        serverData = db.getNewestServerData();
         serverDataHandler = new ServerDataHandler(serverData);
         planLiteHandler = new PlanLiteHandler(plugin);
-        
+
+        timesSaved = 0;
+
         int minutes = plugin.getConfig().getInt("saveEveryXMinutes");
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
                 saveHandlerDataToCache();
                 saveCachedData();
+                if (timesSaved % 5 == 0) {
+                    clearCache();
+                }
             }
         }, 60 * 20 * minutes, 60 * 20 * minutes);
     }
@@ -55,9 +66,6 @@ public class DataHandler {
     }
 
     public UserData getCurrentData(UUID uuid, boolean cache) {
-        if (!db.wasSeenBefore(uuid)) {
-            return null;
-        }
         if (cache) {
             if (dataCache.get(uuid) == null) {
                 dataCache.put(uuid, db.getUserData(uuid));
@@ -77,16 +85,36 @@ public class DataHandler {
             saveCachedData(uuid);
         });
         saveServerData();
+        timesSaved++;
+    }
+
+    public void saveCacheOnDisable() {
+        dataCache.keySet().stream().forEach((uuid) -> {
+            if (dataCache.get(uuid) != null) {
+                db.saveUserData(uuid, dataCache.get(uuid));
+            }
+        });
+        db.saveServerData(serverData);
     }
 
     public void saveCachedData(UUID uuid) {
-        if (dataCache.get(uuid) != null) {
-            db.saveUserData(uuid, dataCache.get(uuid));
-        }
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (dataCache.get(uuid) != null) {
+                    db.saveUserData(uuid, dataCache.get(uuid));
+                }
+            }
+        });
     }
 
     public void saveServerData() {
-        db.saveServerData(serverData);
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                db.saveServerData(serverData);
+            }
+        });
     }
 
     private void saveHandlerDataToCache() {
@@ -108,7 +136,19 @@ public class DataHandler {
     }
 
     public void newPlayer(Player player) {
-        dataCache.put(player.getUniqueId(), new UserData(player, new DemographicsData(), db));
+        UserData data = new UserData(player, new DemographicsData(), db);
+        saveCachedData(player.getUniqueId());
+        GameMode defaultGM = Bukkit.getServer().getDefaultGameMode();
+        if (defaultGM != null) {
+            data.setLastGamemode(defaultGM);
+        } else {
+            data.setLastGamemode(GameMode.SURVIVAL);
+        }
+        data.setPlayTime(Long.parseLong("0"));
+        data.setTimesKicked(0);
+        data.setLoginTimes(1);
+        data.setLastGmSwapTime(Long.parseLong("0"));
+        dataCache.put(player.getUniqueId(), data);
     }
 
     public ActivityHandler getActivityHandler() {
@@ -134,7 +174,6 @@ public class DataHandler {
     public GamemodeTimesHandler getGamemodeTimesHandler() {
         return gamemodeTimesHandler;
     }
-    
 
     public Database getDB() {
         return db;
@@ -146,5 +185,20 @@ public class DataHandler {
 
     public ServerDataHandler getServerDataHandler() {
         return serverDataHandler;
+    }
+
+    public void handleReload() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            UUID uuid = player.getUniqueId();
+            boolean newPlayer = activityHandler.isFirstTimeJoin(uuid);
+            newPlayer(player);
+            serverDataHandler.handleLogin(newPlayer);
+            UserData data = getCurrentData(uuid);
+            activityHandler.handleReload(player, data);
+            basicInfoHandler.handleReload(player, data);
+            gamemodeTimesHandler.handleReload(player, data);
+            demographicsHandler.handleReload(player, data);
+            saveCachedData(uuid);
+        }
     }
 }

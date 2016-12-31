@@ -8,8 +8,10 @@ import com.djrapitops.plan.database.databases.MySQLDB;
 import com.djrapitops.plan.database.databases.SQLiteDB;
 import com.djrapitops.plan.datahandlers.DataHandler;
 import com.djrapitops.plan.datahandlers.listeners.PlanChatListener;
+import com.djrapitops.plan.datahandlers.listeners.PlanCommandPreprocessListener;
 import com.djrapitops.plan.datahandlers.listeners.PlanGamemodeChangeListener;
 import com.djrapitops.plan.datahandlers.listeners.PlanPlayerListener;
+import com.djrapitops.plan.datahandlers.listeners.PlanPlayerMoveListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -72,7 +74,9 @@ public class Plan extends JavaPlugin {
         log(MiscUtils.checkVersion());
 
         getCommand("plan").setExecutor(new PlanCommand(this));
+        handler.handleReload();
 
+        logToFile("-- Server Start/Reload --");
         log("Player Analytics Enabled.");
     }
 
@@ -94,7 +98,8 @@ public class Plan extends JavaPlugin {
     @Override
     public void onDisable() {
         log("Saving cached data..");
-        handler.saveCachedData();
+        handler.saveCacheOnDisable();
+        db.close();
         log("Player Analytics Disabled.");
     }
 
@@ -144,6 +149,8 @@ public class Plan extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlanChatListener(this), this);
         getServer().getPluginManager().registerEvents(new PlanPlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new PlanGamemodeChangeListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlanCommandPreprocessListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlanPlayerMoveListener(this), this);
     }
 
     public DataHandler getHandler() {

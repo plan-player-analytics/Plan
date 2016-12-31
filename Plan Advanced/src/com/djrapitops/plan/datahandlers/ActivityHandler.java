@@ -18,13 +18,13 @@ public class ActivityHandler {
         this.handler = h;
     }
 
-    public boolean isFirstTimeJoin(UUID uuid) {        
+    public boolean isFirstTimeJoin(UUID uuid) {
         return !handler.getDB().wasSeenBefore(uuid);
     }
-    
+
     public void saveToCache(Player player, UserData data) {
         long timeNow = new Date().getTime();
-        data.setPlayTime(data.getPlayTime()+(data.getLastPlayed()-timeNow));
+        data.setPlayTime(data.getPlayTime() + (data.getLastPlayed() - timeNow));
         data.setLastPlayed(timeNow);
     }
 
@@ -35,7 +35,12 @@ public class ActivityHandler {
 
     public void handleLogOut(PlayerQuitEvent event, UserData data) {
         Player player = event.getPlayer();
-        data.setPlayTime(data.getPlayTime()+(data.getLastPlayed()-new Date().getTime()));
+        data.setPlayTime(data.getPlayTime() + (data.getLastPlayed() - new Date().getTime()));
+        data.setLastPlayed(player.getLastPlayed());
+    }
+
+    void handleReload(Player player, UserData data) {
+        data.setPlayTime(data.getPlayTime() + (data.getLastPlayed() - new Date().getTime()));
         data.setLastPlayed(player.getLastPlayed());
     }
 }

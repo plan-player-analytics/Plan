@@ -1,4 +1,3 @@
-
 package com.djrapitops.plan.datahandlers;
 
 import com.djrapitops.plan.Plan;
@@ -17,6 +16,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class DemographicsHandler {
+
     private final DataHandler handler;
 
     public DemographicsHandler(Plan plugin, DataHandler h) {
@@ -31,13 +31,13 @@ public class DemographicsHandler {
         String[] maleA = {"male", "boy", "man", "boe", "sir", "mr", "guy", "he"};
         String[] ageA = {"years", "year-old", "old"};
         String[] ignoreA = {"sure", "think", "with", "are"};
-        
+
         Set<String> triggers = new HashSet<>();
         Set<String> female = new HashSet<>();
         Set<String> male = new HashSet<>();
         Set<String> ages = new HashSet<>();
         Set<String> ignore = new HashSet<>();
-        
+
         triggers.addAll(Arrays.asList(triggersA));
         female.addAll(Arrays.asList(femaleA));
         male.addAll(Arrays.asList(maleA));
@@ -46,11 +46,11 @@ public class DemographicsHandler {
         // get message
         String message = event.getMessage();
         String[] messageA = message.split("\\s+");
-        
+
         boolean trigger = false;
         boolean age = false;
         boolean gender = false;
-        
+
         // Does message contain important data?
         for (String string : messageA) {
             if (ignore.contains(string)) {
@@ -67,12 +67,12 @@ public class DemographicsHandler {
                 gender = true;
             }
         }
-        
+
         // if not end
         if (!trigger) {
             return;
         }
-        
+
         // Manage important data
         if (age) {
             int ageNum = -1;
@@ -103,23 +103,43 @@ public class DemographicsHandler {
     public void handleLogIn(PlayerLoginEvent event, UserData data) {
         InetAddress address = event.getAddress();
         try {
-                Scanner locationScanner = new Scanner("http://ip-api.com/line/" + address.getHostAddress());
-                List<String> results = new ArrayList<>();
-                while (locationScanner.hasNextLine()) {
-                    results.add(locationScanner.nextLine());
-                }
-                if (results.size() >= 2) {
-                    data.getDemData().setGeoLocation(results.get(1));
-                } else {
-                    data.getDemData().setGeoLocation("UNKOWN");
-                }
-            } catch (Exception e) {
-                Plan plugin = getPlugin(Plan.class);
-                plugin.logToFile("http://ip-api.com/line/" + address.getHostAddress());
-                plugin.logToFile("" + e);
-                plugin.logToFile(address.toString());
+            Scanner locationScanner = new Scanner("http://ip-api.com/line/" + address.getHostAddress());
+            List<String> results = new ArrayList<>();
+            while (locationScanner.hasNextLine()) {
+                results.add(locationScanner.nextLine());
             }
+            if (results.size() >= 2) {
+                data.getDemData().setGeoLocation(results.get(1));
+            } else {
+                data.getDemData().setGeoLocation("Not Known");
+            }
+        } catch (Exception e) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logToFile("http://ip-api.com/line/" + address.getHostAddress());
+            plugin.logToFile("" + e);
+            plugin.logToFile(address.toString());
+        }
     }
-    
-    
+
+    void handleReload(Player player, UserData data) {
+        InetAddress address = player.getAddress().getAddress();
+        try {
+            Scanner locationScanner = new Scanner("http://ip-api.com/line/" + address.getHostAddress());
+            List<String> results = new ArrayList<>();
+            while (locationScanner.hasNextLine()) {
+                results.add(locationScanner.nextLine());
+            }
+            if (results.size() >= 2) {
+                data.getDemData().setGeoLocation(results.get(1));
+            } else {
+                data.getDemData().setGeoLocation("Not Known");
+            }
+        } catch (Exception e) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logToFile("http://ip-api.com/line/" + address.getHostAddress());
+            plugin.logToFile("" + e);
+            plugin.logToFile(address.toString());
+        }
+    }
+
 }
