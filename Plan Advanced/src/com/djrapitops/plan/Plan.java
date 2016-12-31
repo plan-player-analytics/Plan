@@ -33,6 +33,8 @@ public class Plan extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        logToFile("-- Server Start/Reload --");
+
         getDataFolder().mkdirs();
 
         databases = new HashSet<>();
@@ -75,8 +77,6 @@ public class Plan extends JavaPlugin {
 
         getCommand("plan").setExecutor(new PlanCommand(this));
         handler.handleReload();
-
-        logToFile("-- Server Start/Reload --");
         log("Player Analytics Enabled.");
     }
 
@@ -86,7 +86,7 @@ public class Plan extends JavaPlugin {
                 planLiteHook = new PlanLiteHook(this);
             }
         } catch (NoClassDefFoundError | Exception e) {
-            
+
         }
     }
 
@@ -117,7 +117,7 @@ public class Plan extends JavaPlugin {
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            File log = new File(getDataFolder(), "Errors.txt");
+            File log = new File(getDataFolder(), "Debug.txt");
             try {
                 if (!log.exists()) {
                     log.createNewFile();
@@ -128,7 +128,7 @@ public class Plan extends JavaPlugin {
                     pw.flush();
                 }
             } catch (IOException e) {
-                logError("Failed to create Errors.txt file");
+                logError("Failed to create Debug.txt file");
             }
         }
     }

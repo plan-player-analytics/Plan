@@ -17,7 +17,7 @@ public class ReloadCommand extends SubCommand {
     private Plan plugin;
 
     public ReloadCommand(Plan plugin) {
-        super("reload", "plan.reload", "Reload plugin config & Hooks", CommandType.CONSOLE);
+        super("reload", "plan.reload", "Reload plugin config & save cached data", CommandType.CONSOLE);
 
         this.plugin = plugin;
     }
@@ -25,6 +25,7 @@ public class ReloadCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         plugin.reloadConfig();
+        plugin.getHandler().saveCachedData();
         plugin.hookPlanLite();
         ChatColor operatorColor = Phrase.COLOR_MAIN.color();
         ChatColor textColor = Phrase.COLOR_SEC.color();

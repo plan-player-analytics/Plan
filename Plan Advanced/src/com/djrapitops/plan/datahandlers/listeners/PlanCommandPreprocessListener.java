@@ -25,6 +25,6 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        serverH.handleCommand(event.getMessage().split("\\s*")[0]);
+        serverH.handleCommand(event.getMessage().split(" ")[0]);
     }
 }

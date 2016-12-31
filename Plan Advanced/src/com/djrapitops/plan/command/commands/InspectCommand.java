@@ -55,7 +55,7 @@ public class InspectCommand extends SubCommand {
         }
         
         Date refreshDate = new Date();
-        UserData data = plugin.getHandler().getCurrentData(uuid);
+        UserData data = plugin.getHandler().getCurrentData(uuid); 
 
         ChatColor operatorColor = Phrase.COLOR_MAIN.color();
         ChatColor textColor = Phrase.COLOR_SEC.color();

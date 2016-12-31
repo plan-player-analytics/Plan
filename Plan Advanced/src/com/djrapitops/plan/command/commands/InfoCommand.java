@@ -1,5 +1,6 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
@@ -21,11 +22,12 @@ public class InfoCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         plugin.reloadConfig();
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
-        sender.sendMessage(textColor +"--["+operatorColor+"PLAN - Info"+textColor+"]--");
-        sender.sendMessage(operatorColor+"Version: "+textColor+plugin.getDescription().getVersion());
-        sender.sendMessage(textColor+MiscUtils.checkVersion());
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        sender.sendMessage(tColor +"--["+oColor+"PLAN - Info"+tColor+"]--");
+        sender.sendMessage(oColor+"Version: "+tColor+plugin.getDescription().getVersion());
+        sender.sendMessage(tColor+MiscUtils.checkVersion());
+        sender.sendMessage(oColor+"Cache\n"+tColor+"Cached users: "+plugin.getHandler().getDataCache().keySet().size());
         return true;
     }
 

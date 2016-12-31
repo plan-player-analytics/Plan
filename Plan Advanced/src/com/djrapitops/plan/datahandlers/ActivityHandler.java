@@ -24,23 +24,25 @@ public class ActivityHandler {
 
     public void saveToCache(Player player, UserData data) {
         long timeNow = new Date().getTime();
-        data.setPlayTime(data.getPlayTime() + (data.getLastPlayed() - timeNow));
+        data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
         data.setLastPlayed(timeNow);
     }
 
     public void handleLogIn(PlayerLoginEvent event, UserData data) {
         data.setLastPlayed(new Date().getTime());
-        data.updateBanned(event.getPlayer());
+        Player player = event.getPlayer();
+        data.updateBanned(player);
+        handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
     }
 
     public void handleLogOut(PlayerQuitEvent event, UserData data) {
         Player player = event.getPlayer();
-        data.setPlayTime(data.getPlayTime() + (data.getLastPlayed() - new Date().getTime()));
+        data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
         data.setLastPlayed(player.getLastPlayed());
     }
 
     void handleReload(Player player, UserData data) {
-        data.setPlayTime(data.getPlayTime() + (data.getLastPlayed() - new Date().getTime()));
+        data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
         data.setLastPlayed(player.getLastPlayed());
     }
 }

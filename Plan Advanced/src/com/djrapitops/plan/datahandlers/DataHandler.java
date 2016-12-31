@@ -151,6 +151,10 @@ public class DataHandler {
         dataCache.put(player.getUniqueId(), data);
     }
 
+    public HashMap<UUID, UserData> getDataCache() {
+        return dataCache;
+    }
+
     public ActivityHandler getActivityHandler() {
         return activityHandler;
     }

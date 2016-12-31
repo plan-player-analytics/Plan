@@ -24,33 +24,40 @@ public class GamemodeTimesHandler {
 
     public void handleChangeEvent(PlayerGameModeChangeEvent event, UserData data) {
         HashMap<GameMode, Long> times = data.getGmTimes();
-        long lastSwap = data.getLastGmSwapTime();
         handler.getActivityHandler().saveToCache(event.getPlayer(), data);
+
+        long lastSwap = data.getLastGmSwapTime();
         long now = data.getPlayTime();
         GameMode oldGM = data.getLastGamemode();
-        data.setGMTime(oldGM, times.get(oldGM) + (lastSwap - now));
+        data.setGMTime(oldGM, times.get(oldGM) + (now - lastSwap));
+
         GameMode newGM = event.getNewGameMode();
         data.setLastGamemode(newGM);
+
         data.setLastGmSwapTime(now);
     }
 
     void saveToCache(Player p, UserData data) {
         HashMap<GameMode, Long> times = data.getGmTimes();
-        long lastSwap = data.getLastGmSwapTime();
         handler.getActivityHandler().saveToCache(p, data);
+
+        long lastSwap = data.getLastGmSwapTime();
         long now = data.getPlayTime();
         GameMode currentGM = p.getGameMode();
-        data.setGMTime(currentGM, times.get(currentGM) + (lastSwap - now));
+        data.setGMTime(currentGM, times.get(currentGM) + (now - lastSwap));
+
         data.setLastGmSwapTime(now);
     }
 
     void handleReload(Player p, UserData data) {
         HashMap<GameMode, Long> times = data.getGmTimes();
-        long lastSwap = data.getLastGmSwapTime();
         handler.getActivityHandler().saveToCache(p, data);
+
+        long lastSwap = data.getLastGmSwapTime();
         long now = data.getPlayTime();
         GameMode currentGM = p.getGameMode();
-        data.setGMTime(currentGM, times.get(currentGM) + (lastSwap - now));
+        data.setGMTime(currentGM, times.get(currentGM) + (now - lastSwap));
+        
         data.setLastGmSwapTime(now);
     }
 

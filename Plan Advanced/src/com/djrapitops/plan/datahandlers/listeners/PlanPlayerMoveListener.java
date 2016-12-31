@@ -29,8 +29,8 @@ public class PlanPlayerMoveListener implements Listener {
         }
         Player p = event.getPlayer();
         Location from = event.getFrom();
-        Location to = event.getTo();
-        if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ() && from.getWorld() == to.getWorld()) {
+        Location to = event.getTo();        
+        if (from.getX() == to.getX() && from.getZ() == to.getZ()) {
             return;
         }
         locationH.addLocation(p.getUniqueId(), to);

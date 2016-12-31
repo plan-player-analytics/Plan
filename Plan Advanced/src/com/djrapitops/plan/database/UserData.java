@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -20,8 +21,8 @@ public class UserData {
     private Location location;
     private List<Location> locations;
     private Location bedLocation;
-    private List<InetAddress> ips;
-    private List<String> nicknames;
+    private HashSet<InetAddress> ips;
+    private HashSet<String> nicknames;
     private long registered;
     private long lastPlayed;
     private long playTime;
@@ -38,14 +39,14 @@ public class UserData {
         uuid = player.getUniqueId();
         bedLocation = player.getBedSpawnLocation();
         if (bedLocation == null) {
-            bedLocation = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0 ,0);
+            bedLocation = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0, 0);
         }
         registered = player.getFirstPlayed();
         location = player.getLocation();
         isOp = player.isOp();
         locations = new ArrayList<>();
-        nicknames = new ArrayList<>();
-        ips = new ArrayList<>();
+        nicknames = new HashSet<>();
+        ips = new HashSet<>();
         gmTimes = new HashMap<>();
         long zero = Long.parseLong("0");
         gmTimes.put(GameMode.SURVIVAL, zero);
@@ -61,13 +62,13 @@ public class UserData {
         uuid = player.getUniqueId();
         bedLocation = player.getBedSpawnLocation();
         if (bedLocation == null) {
-            bedLocation = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0 ,0);
+            bedLocation = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0, 0);
         }
         registered = player.getFirstPlayed();
         isOp = player.isOp();
         locations = new ArrayList<>();
-        nicknames = new ArrayList<>();
-        ips = new ArrayList<>();
+        nicknames = new HashSet<>();
+        ips = new HashSet<>();
         gmTimes = new HashMap<>();
         long zero = Long.parseLong("0");
         gmTimes.put(GameMode.SURVIVAL, zero);
@@ -90,12 +91,14 @@ public class UserData {
 
     public void addLocation(Location loc) {
         locations.add(loc);
-        location = locations.get(locations.size() - 1);
+        location = loc;
     }
 
     public void addLocations(Collection<Location> addLocs) {
         locations.addAll(addLocs);
-        location = locations.get(locations.size() - 1);
+        if (!locations.isEmpty()) {
+            location = locations.get(locations.size() - 1);
+        }
     }
 
     public void addNickname(String nick) {
@@ -149,11 +152,11 @@ public class UserData {
         return bedLocation;
     }
 
-    public List<InetAddress> getIps() {
+    public HashSet<InetAddress> getIps() {
         return ips;
     }
 
-    public List<String> getNicknames() {
+    public HashSet<String> getNicknames() {
         return nicknames;
     }
 
@@ -218,11 +221,11 @@ public class UserData {
         this.bedLocation = bedLocation;
     }
 
-    public void setIps(List<InetAddress> ips) {
+    public void setIps(HashSet<InetAddress> ips) {
         this.ips = ips;
     }
 
-    public void setNicknames(List<String> nicknames) {
+    public void setNicknames(HashSet<String> nicknames) {
         this.nicknames = nicknames;
     }
 

@@ -14,15 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -51,6 +50,7 @@ public abstract class SQLDB extends Database {
     private String userColumnDemGender;
     private String userColumnLastGM;
     private String userColumnLastGMSwapTime;
+    private String userColumnLoginTimes;
     private final String locationColumnUserID;
     private String locationColumnID;
     private String locationColumnCoordinatesX;
@@ -98,6 +98,7 @@ public abstract class SQLDB extends Database {
         userColumnLastGM = "last_gamemode";
         userColumnLastGMSwapTime = "last_gamemode_swap";
         userColumnPlayTime = "play_time";
+        userColumnLoginTimes = "login_times";
 
         locationColumnCoordinatesX = "x";
         locationColumnCoordinatesZ = "z";
@@ -162,7 +163,8 @@ public abstract class SQLDB extends Database {
                         + userColumnDemGeoLocation + " varchar(50) NOT NULL, "
                         + userColumnLastGM + " varchar(15) NOT NULL, "
                         + userColumnLastGMSwapTime + " bigint NOT NULL, "
-                        + userColumnPlayTime + " bigint NOT NULL"
+                        + userColumnPlayTime + " bigint NOT NULL, "
+                        + userColumnLoginTimes + " int NOT NULL"
                         + ")"
                 );
 
@@ -315,7 +317,7 @@ public abstract class SQLDB extends Database {
                 String id = null;
 
                 while (set.next()) {
-                    id = set.getString(userColumnID);
+                    id = ""+set.getInt(userColumnID);
                     if (id == null) {
                         return null;
                     }
@@ -325,6 +327,7 @@ public abstract class SQLDB extends Database {
                     data.setLastGamemode(MiscUtils.parseGM(set.getString(userColumnLastGM)));
                     data.setLastGmSwapTime(set.getLong(userColumnLastGMSwapTime));
                     data.setPlayTime(set.getLong(userColumnPlayTime));
+                    data.setLoginTimes(set.getInt(userColumnLoginTimes));
                 }
                 set.close();
                 statement.close();
@@ -408,15 +411,15 @@ public abstract class SQLDB extends Database {
         HashMap<String, Integer> commandUse = getCommandUse();
         int newPlayers = 0;
         Date now = new Date();
-        Date startOfToday = new Date(now.getTime() - now.getTime() % 86400000);
+        Date startOfToday = new Date(now.getTime() - (now.getTime() % 86400000));
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + serverdataName
-                    + "ORDER BY " + serverdataColumnDate + " ASC");
+                    + " ORDER BY " + serverdataColumnDate + " ASC LIMIT 1");
 
             ResultSet set = statement.executeQuery();
             while (set.next()) {
                 Date lastSave = new Date(set.getLong(serverdataColumnDate));
-                Date startOfSaveDay = new Date(lastSave.getTime() - lastSave.getTime() % 86400000);
+                Date startOfSaveDay = new Date(lastSave.getTime() - (lastSave.getTime() % 86400000));
                 if (startOfSaveDay == startOfToday) {
                     newPlayers = set.getInt(serverdataColumnNewPlayers);
                 }
@@ -539,7 +542,8 @@ public abstract class SQLDB extends Database {
                     + userColumnDemGeoLocation + "=?, "
                     + userColumnLastGM + "=?, "
                     + userColumnLastGMSwapTime + "=?, "
-                    + userColumnPlayTime + "=? "
+                    + userColumnPlayTime + "=?, "
+                    + userColumnLoginTimes + "=? "
                     + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -554,6 +558,8 @@ public abstract class SQLDB extends Database {
             }
             statement.setLong(5, data.getLastGmSwapTime());
             statement.setLong(6, data.getPlayTime());
+            statement.setInt(7, data.getLoginTimes());
+            statement.setString(8, uuid.toString());
 
             if (statement.executeUpdate() == 0) {
                 statement = connection.prepareStatement("INSERT INTO " + userName + " ("
@@ -563,8 +569,9 @@ public abstract class SQLDB extends Database {
                         + userColumnDemGeoLocation + ", "
                         + userColumnLastGM + ", "
                         + userColumnLastGMSwapTime + ", "
-                        + userColumnPlayTime
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?)");
+                        + userColumnPlayTime + ", "
+                        + userColumnLoginTimes
+                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
                 statement.setString(1, uuid.toString());
                 statement.setInt(2, data.getDemData().getAge());
@@ -577,10 +584,12 @@ public abstract class SQLDB extends Database {
                 }
                 statement.setLong(6, data.getLastGmSwapTime());
                 statement.setLong(7, data.getPlayTime());
+                statement.setInt(8, data.getLoginTimes());
 
                 statement.execute();
                 statement.close();
-            }
+                userId = getUserId(uuid.toString());
+            }            
             saveLocationList(userId, data.getLocations());
             saveNickList(userId, data.getNicknames());
             saveIPList(userId, data.getIps());
@@ -629,7 +638,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public void saveNickList(int userId, List<String> names) {
+    public void saveNickList(int userId, HashSet<String> names) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
@@ -653,7 +662,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public void saveIPList(int userId, List<InetAddress> ips) {
+    public void saveIPList(int userId, HashSet<InetAddress> ips) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
