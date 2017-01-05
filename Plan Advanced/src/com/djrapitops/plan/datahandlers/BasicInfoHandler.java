@@ -2,11 +2,8 @@ package com.djrapitops.plan.datahandlers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.database.UserData;
-import java.util.Date;
-import java.util.UUID;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class BasicInfoHandler {
 
@@ -16,14 +13,10 @@ public class BasicInfoHandler {
         this.handler = h;
     }
 
-    public void save(Player player) {
-
-    }
-
-    public void handleLogIn(PlayerLoginEvent event, UserData data) {
+    public void handleLogIn(PlayerJoinEvent event, UserData data) {
         Player player = event.getPlayer();
         data.addNickname(player.getDisplayName());
-        data.addIpAddress(event.getAddress());
+        data.addIpAddress(player.getAddress().getAddress());
     }
 
     void handleReload(Player player, UserData data) {

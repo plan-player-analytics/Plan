@@ -7,7 +7,6 @@ import com.djrapitops.plan.command.hooks.OnTimeHook;
 import com.djrapitops.plan.api.Hook;
 import com.djrapitops.plan.command.hooks.PlaceholderAPIHook;
 import com.djrapitops.plan.command.hooks.SuperbVoteHook;
-//import com.djrapitops.plan.command.hooks.McMMOHook;
 import com.djrapitops.plan.command.hooks.TownyHook;
 import com.djrapitops.plan.command.hooks.VaultHook;
 import com.djrapitops.plan.command.hooks.AdvancedAchievementsHook;
@@ -169,6 +168,11 @@ public class PlanLite extends JavaPlugin {
         return api;
     }
 
+    /**
+     *
+     * @param name
+     * @param hook
+     */
     public void addExtraHook(String name, Hook hook) {
         try {
             this.extraHooks.put(name, hook);

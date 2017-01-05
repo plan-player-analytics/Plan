@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class GamemodeTimesHandler {
 
@@ -18,7 +18,7 @@ public class GamemodeTimesHandler {
         handler = h;
     }
 
-    public void handleLogin(PlayerLoginEvent event, UserData data) {
+    public void handleLogin(PlayerJoinEvent event, UserData data) {
         data.setLastGamemode(event.getPlayer().getGameMode());
     }
 
@@ -27,14 +27,14 @@ public class GamemodeTimesHandler {
         handler.getActivityHandler().saveToCache(event.getPlayer(), data);
 
         long lastSwap = data.getLastGmSwapTime();
-        long now = data.getPlayTime();
+        long playTime = data.getPlayTime();
         GameMode oldGM = data.getLastGamemode();
-        data.setGMTime(oldGM, times.get(oldGM) + (now - lastSwap));
+        data.setGMTime(oldGM, times.get(oldGM) + (playTime - lastSwap));
 
         GameMode newGM = event.getNewGameMode();
         data.setLastGamemode(newGM);
 
-        data.setLastGmSwapTime(now);
+        data.setLastGmSwapTime(playTime);
     }
 
     void saveToCache(Player p, UserData data) {
@@ -42,11 +42,11 @@ public class GamemodeTimesHandler {
         handler.getActivityHandler().saveToCache(p, data);
 
         long lastSwap = data.getLastGmSwapTime();
-        long now = data.getPlayTime();
+        long playtime = data.getPlayTime();
         GameMode currentGM = p.getGameMode();
-        data.setGMTime(currentGM, times.get(currentGM) + (now - lastSwap));
+        data.setGMTime(currentGM, times.get(currentGM) + (playtime - lastSwap));
 
-        data.setLastGmSwapTime(now);
+        data.setLastGmSwapTime(playtime);
     }
 
     void handleReload(Player p, UserData data) {
@@ -54,11 +54,11 @@ public class GamemodeTimesHandler {
         handler.getActivityHandler().saveToCache(p, data);
 
         long lastSwap = data.getLastGmSwapTime();
-        long now = data.getPlayTime();
+        long playTime = data.getPlayTime();
         GameMode currentGM = p.getGameMode();
-        data.setGMTime(currentGM, times.get(currentGM) + (now - lastSwap));
+        data.setGMTime(currentGM, times.get(currentGM) + (playTime - lastSwap));
         
-        data.setLastGmSwapTime(now);
+        data.setLastGmSwapTime(playTime);
     }
 
 }

@@ -12,7 +12,7 @@ import java.util.Scanner;
 import java.util.Set;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class DemographicsHandler {
@@ -100,8 +100,8 @@ public class DemographicsHandler {
         }
     }
 
-    public void handleLogIn(PlayerLoginEvent event, UserData data) {
-        InetAddress address = event.getAddress();
+    public void handleLogIn(PlayerJoinEvent event, UserData data) {
+        InetAddress address = event.getPlayer().getAddress().getAddress();
         try {
             Scanner locationScanner = new Scanner("http://ip-api.com/line/" + address.getHostAddress());
             List<String> results = new ArrayList<>();

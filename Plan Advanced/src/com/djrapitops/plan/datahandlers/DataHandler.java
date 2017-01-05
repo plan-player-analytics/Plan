@@ -8,11 +8,8 @@ import com.djrapitops.plan.database.ServerData;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerLoginEvent;
 
 public class DataHandler {
 
@@ -28,6 +25,7 @@ public class DataHandler {
     private final ServerDataHandler serverDataHandler;
     private final PlanLiteHandler planLiteHandler;
     private final Database db;
+    private final NewPlayerCreator newPlayerCreator;
 
     private int timesSaved;
 
@@ -44,6 +42,7 @@ public class DataHandler {
         serverData = db.getNewestServerData();
         serverDataHandler = new ServerDataHandler(serverData);
         planLiteHandler = new PlanLiteHandler(plugin);
+        newPlayerCreator = new NewPlayerCreator(plugin, this);
 
         timesSaved = 0;
 
@@ -136,19 +135,7 @@ public class DataHandler {
     }
 
     public void newPlayer(Player player) {
-        UserData data = new UserData(player, new DemographicsData(), db);
-        saveCachedData(player.getUniqueId());
-        GameMode defaultGM = Bukkit.getServer().getDefaultGameMode();
-        if (defaultGM != null) {
-            data.setLastGamemode(defaultGM);
-        } else {
-            data.setLastGamemode(GameMode.SURVIVAL);
-        }
-        data.setPlayTime(Long.parseLong("0"));
-        data.setTimesKicked(0);
-        data.setLoginTimes(1);
-        data.setLastGmSwapTime(Long.parseLong("0"));
-        dataCache.put(player.getUniqueId(), data);
+       newPlayerCreator.createNewPlayer(player);
     }
 
     public HashMap<UUID, UserData> getDataCache() {
@@ -184,6 +171,7 @@ public class DataHandler {
     }
 
     public ServerData getServerData() {
+        serverData.updatePlayerCount();
         return serverData;
     }
 

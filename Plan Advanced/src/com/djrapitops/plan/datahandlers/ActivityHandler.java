@@ -5,7 +5,7 @@ import com.djrapitops.plan.database.UserData;
 import java.util.Date;
 import java.util.UUID;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ActivityHandler {
@@ -28,21 +28,24 @@ public class ActivityHandler {
         data.setLastPlayed(timeNow);
     }
 
-    public void handleLogIn(PlayerLoginEvent event, UserData data) {
+    public void handleLogIn(PlayerJoinEvent event, UserData data) {
         data.setLastPlayed(new Date().getTime());
         Player player = event.getPlayer();
         data.updateBanned(player);
+        data.setLoginTimes(data.getLoginTimes()+1);
         handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
     }
 
     public void handleLogOut(PlayerQuitEvent event, UserData data) {
         Player player = event.getPlayer();
-        data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
-        data.setLastPlayed(player.getLastPlayed());
+        long now = new Date().getTime();
+        data.setPlayTime(data.getPlayTime() + (now - data.getLastPlayed()));
+        data.setLastPlayed(now);
     }
 
     void handleReload(Player player, UserData data) {
-        data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
-        data.setLastPlayed(player.getLastPlayed());
+        long now = new Date().getTime();
+        data.setPlayTime(data.getPlayTime() + (now - data.getLastPlayed()));
+        data.setLastPlayed(now);
     }
 }

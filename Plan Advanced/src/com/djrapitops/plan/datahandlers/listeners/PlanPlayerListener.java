@@ -15,8 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -43,15 +43,14 @@ public class PlanPlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerLogin(PlayerLoginEvent event) {
-        if (!event.getResult().equals(Result.ALLOWED)) {
-            return;
-        }
+    public void onPlayerLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        boolean newPlayer = activityH.isFirstTimeJoin(uuid);
-        handler.newPlayer(player);
-        serverHandler.handleLogin(newPlayer);
+        boolean isNewPlayer = activityH.isFirstTimeJoin(uuid);
+        if (isNewPlayer) {
+            handler.newPlayer(player);
+        }
+        serverHandler.handleLogin(isNewPlayer);
         UserData data = handler.getCurrentData(uuid);
         activityH.handleLogIn(event, data);
         basicInfoH.handleLogIn(event, data);

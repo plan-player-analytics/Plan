@@ -34,58 +34,61 @@ public class InspectCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = DataUtils.getPlayerDisplayname(args, sender);
-        
+
         UUID uuid;
         try {
             uuid = UUIDFetcher.getUUIDOf(playerName);
+            if (uuid == null) {
+                throw new Exception("Username doesn't exist.");
+            }
         } catch (Exception e) {
             sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
             return true;
         }
-        
+
         OfflinePlayer p = getOfflinePlayer(uuid);
         if (!p.hasPlayedBefore()) {
             sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
             return true;
         }
-        
+
         if (!plugin.getDB().wasSeenBefore(uuid)) {
             sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
             return true;
         }
-        
+
         Date refreshDate = new Date();
-        UserData data = plugin.getHandler().getCurrentData(uuid); 
+        UserData data = plugin.getHandler().getCurrentData(uuid);
 
         ChatColor operatorColor = Phrase.COLOR_MAIN.color();
         ChatColor textColor = Phrase.COLOR_SEC.color();
 
         List<String> msgs = new ArrayList<>();
-        msgs.add(""+data.getLoginTimes());
-        msgs.add(""+data.getBedLocation().getBlockX());
-        msgs.add(""+data.getDemData().getGeoLocation());
-        msgs.add(""+data.getGmTimes().keySet().toString());
-        msgs.add(""+data.getIps().toString());
-        msgs.add(""+data.getLastGamemode());
-        msgs.add(""+data.getLastGmSwapTime());
-        msgs.add(""+data.getLastPlayed());
-        msgs.add(""+data.getLocation().getBlockX());
-        msgs.add(""+data.getNicknames().toString());
-        msgs.add(""+data.getRegistered());
-        msgs.add(""+data.getTimesKicked());
-        msgs.add(""+data.getUuid());
-        msgs.add(operatorColor+"SERVER");
+        msgs.add("Logintimes " + data.getLoginTimes());
+        msgs.add("BedLocation " + data.getBedLocation().getBlockX());
+        msgs.add("GeoLoc " + data.getDemData().getGeoLocation());
+        msgs.add("GMTimes values " + data.getGmTimes().values().toString());
+        msgs.add("Ips " + data.getIps().toString());
+        msgs.add("Last gamemode " + data.getLastGamemode());
+        msgs.add("Last gm swap time " + data.getLastGmSwapTime());
+        msgs.add("Last Played" + data.getLastPlayed());
+        msgs.add("Location " + data.getLocation().getBlockX());
+        msgs.add("Nicknames " + data.getNicknames().toString());
+        msgs.add("Registered " + data.getRegistered());
+        msgs.add("TimesKicked " + data.getTimesKicked());
+        msgs.add("Uuid " + data.getUuid());
+        msgs.add(operatorColor + "SERVER");
         ServerData sdata = plugin.getHandler().getServerData();
-        msgs.add(""+sdata.getCommandUsage().keySet().toString());
-        msgs.add(""+sdata.getNewPlayers());
-        msgs.add(""+sdata.getPlayersOnline());
+        msgs.add("Commands " + sdata.getCommandUsage().keySet().toString());
+        msgs.add("New Players " + sdata.getNewPlayers());
+        msgs.add("Online Players " + sdata.getPlayersOnline());
         //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName +" - took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date())+ textColor + "] --");
-        
+        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + " - took " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
+
         for (String message : msgs) {
-            sender.sendMessage(textColor+message);
+            sender.sendMessage(textColor + message);
         }
-        
+
         sender.sendMessage(textColor + "-- o --");
         return true;
     }
