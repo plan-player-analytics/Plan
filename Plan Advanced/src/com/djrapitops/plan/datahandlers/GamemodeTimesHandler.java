@@ -7,6 +7,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GamemodeTimesHandler {
 
@@ -50,15 +51,11 @@ public class GamemodeTimesHandler {
     }
 
     void handleReload(Player p, UserData data) {
-        HashMap<GameMode, Long> times = data.getGmTimes();
-        handler.getActivityHandler().saveToCache(p, data);
+        saveToCache(p, data);
+    }
 
-        long lastSwap = data.getLastGmSwapTime();
-        long playTime = data.getPlayTime();
-        GameMode currentGM = p.getGameMode();
-        data.setGMTime(currentGM, times.get(currentGM) + (playTime - lastSwap));
-        
-        data.setLastGmSwapTime(playTime);
+    public void handleLogOut(PlayerQuitEvent event, UserData data) {
+        saveToCache(event.getPlayer(), data);
     }
 
 }

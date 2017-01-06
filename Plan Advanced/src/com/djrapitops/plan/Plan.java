@@ -67,8 +67,7 @@ public class Plan extends JavaPlugin {
         saveConfig();
 
         initDatabase();
-
-        this.api = new API(this);
+        
         hookPlanLite();
         this.handler = new DataHandler(this);
         registerListeners();
@@ -76,7 +75,10 @@ public class Plan extends JavaPlugin {
         log(MiscUtils.checkVersion());
 
         getCommand("plan").setExecutor(new PlanCommand(this));
+        
+        this.api = new API(this);
         handler.handleReload();
+        
         log("Player Analytics Enabled.");
     }
 

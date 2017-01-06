@@ -156,7 +156,7 @@ public abstract class SQLDB extends Database {
                 set.close();
 
                 query("CREATE TABLE IF NOT EXISTS " + userName + " ("
-                        + userColumnID + " int PRIMARY KEY, "
+                        + userColumnID + " integer PRIMARY KEY, "
                         + userColumnUUID + " varchar(36) NOT NULL, "
                         + userColumnDemAge + " int NOT NULL, "
                         + userColumnDemGender + " varchar(8) NOT NULL, "
@@ -169,7 +169,7 @@ public abstract class SQLDB extends Database {
                 );
 
                 query("CREATE TABLE IF NOT EXISTS " + locationName + " ("
-                        + locationColumnID + " int NOT NULL, "
+                        + locationColumnID + " integer PRIMARY KEY, "
                         + locationColumnUserID + " int NOT NULL, "
                         + locationColumnCoordinatesX + " int NOT NULL, "
                         + locationColumnCoordinatesZ + " int NOT NULL, "
@@ -317,7 +317,6 @@ public abstract class SQLDB extends Database {
             statement.setString(1, uuid.toString());
             ResultSet set = statement.executeQuery();
 
-
             while (set.next()) {
                 data.getDemData().setAge(set.getInt(userColumnDemAge));
                 data.getDemData().setGender(Gender.parse(set.getString(userColumnDemGender)));
@@ -329,7 +328,7 @@ public abstract class SQLDB extends Database {
             }
             set.close();
             statement.close();
-            String userId = ""+getUserId(uuid.toString());
+            String userId = "" + getUserId(uuid.toString());
 
             statement = connection.prepareStatement("SELECT * FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, userId);
@@ -524,31 +523,31 @@ public abstract class SQLDB extends Database {
         try {
             int update = 0;
             if (userId != -1) {
-            String sql = "UPDATE " + userName + " SET "
-                    + userColumnDemAge + "=?, "
-                    + userColumnDemGender + "=?, "
-                    + userColumnDemGeoLocation + "=?, "
-                    + userColumnLastGM + "=?, "
-                    + userColumnLastGMSwapTime + "=?, "
-                    + userColumnPlayTime + "=?, "
-                    + userColumnLoginTimes + "=? "
-                    + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
+                String sql = "UPDATE " + userName + " SET "
+                        + userColumnDemAge + "=?, "
+                        + userColumnDemGender + "=?, "
+                        + userColumnDemGeoLocation + "=?, "
+                        + userColumnLastGM + "=?, "
+                        + userColumnLastGMSwapTime + "=?, "
+                        + userColumnPlayTime + "=?, "
+                        + userColumnLoginTimes + "=? "
+                        + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
 
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, data.getDemData().getAge());
-            statement.setString(2, data.getDemData().getGender().toString().toLowerCase());
-            statement.setString(3, data.getDemData().getGeoLocation());
-            GameMode gm = data.getLastGamemode();
-            if (gm != null) {
-                statement.setString(4, data.getLastGamemode().name());
-            } else {
-                statement.setString(4, GameMode.SURVIVAL.name());
-            }
-            statement.setLong(5, data.getLastGmSwapTime());
-            statement.setLong(6, data.getPlayTime());
-            statement.setInt(7, data.getLoginTimes());
-            statement.setString(8, uuid.toString());
-            update = statement.executeUpdate();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1, data.getDemData().getAge());
+                statement.setString(2, data.getDemData().getGender().toString().toLowerCase());
+                statement.setString(3, data.getDemData().getGeoLocation());
+                GameMode gm = data.getLastGamemode();
+                if (gm != null) {
+                    statement.setString(4, data.getLastGamemode().name());
+                } else {
+                    statement.setString(4, GameMode.SURVIVAL.name());
+                }
+                statement.setLong(5, data.getLastGmSwapTime());
+                statement.setLong(6, data.getPlayTime());
+                statement.setInt(7, data.getLoginTimes());
+                statement.setString(8, uuid.toString());
+                update = statement.executeUpdate();
             }
             if (update == 0) {
                 PreparedStatement statement = connection.prepareStatement("INSERT INTO " + userName + " ("
@@ -606,18 +605,16 @@ public abstract class SQLDB extends Database {
             for (int i = 0; i < locations.size(); i++) {
                 Location location = locations.get(i);
                 statement = connection.prepareStatement("INSERT INTO " + locationName + " ("
-                        + locationColumnID + ", "
                         + locationColumnUserID + ", "
                         + locationColumnCoordinatesX + ", "
                         + locationColumnCoordinatesZ + ", "
                         + locationColumnWorld
-                        + ") VALUES (?, ?, ?, ?, ?)");
+                        + ") VALUES (?, ?, ?, ?)");
 
-                statement.setInt(1, i);
-                statement.setInt(2, userId);
-                statement.setInt(3, location.getBlockX());
-                statement.setInt(4, location.getBlockZ());
-                statement.setString(5, location.getWorld().getName());
+                statement.setInt(1, userId);
+                statement.setInt(2, location.getBlockX());
+                statement.setInt(3, location.getBlockZ());
+                statement.setString(4, location.getWorld().getName());
 
                 statement.execute();
                 statement.close();

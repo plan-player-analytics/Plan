@@ -35,7 +35,7 @@ public class NewPlayerCreator {
         long zero = Long.parseLong("0");
         data.setPlayTime(zero);
         data.setTimesKicked(0);
-        data.setLoginTimes(1);
+        data.setLoginTimes(0);
         data.setLastGmSwapTime(zero);
         db.saveUserData(p.getUniqueId(), data);
     }

@@ -65,6 +65,7 @@ public class PlanPlayerListener implements Listener {
         UserData data = handler.getCurrentData(uuid);
         activityH.handleLogOut(event, data);
         locationH.handleLogOut(event, data);
+        gmTimesH.handleLogOut(event, data);
         serverHandler.handleLogout();
         handler.saveCachedData(uuid);
         handler.clearFromCache(uuid);

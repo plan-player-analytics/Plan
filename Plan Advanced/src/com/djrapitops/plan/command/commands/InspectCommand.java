@@ -71,12 +71,15 @@ public class InspectCommand extends SubCommand {
         msgs.add("Ips " + data.getIps().toString());
         msgs.add("Last gamemode " + data.getLastGamemode());
         msgs.add("Last gm swap time " + data.getLastGmSwapTime());
-        msgs.add("Last Played" + data.getLastPlayed());
+        msgs.add("Last Played " + data.getLastPlayed());
         msgs.add("Location " + data.getLocation().getBlockX());
         msgs.add("Nicknames " + data.getNicknames().toString());
         msgs.add("Registered " + data.getRegistered());
         msgs.add("TimesKicked " + data.getTimesKicked());
         msgs.add("Uuid " + data.getUuid());
+        msgs.add("PlayTime " + data.getPlayTime());
+        msgs.add("Banned "+ data.isBanned());
+        msgs.add("Opped" + data.isOp());
         msgs.add(operatorColor + "SERVER");
         ServerData sdata = plugin.getHandler().getServerData();
         msgs.add("Commands " + sdata.getCommandUsage().keySet().toString());
