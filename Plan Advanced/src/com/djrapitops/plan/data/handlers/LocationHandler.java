@@ -1,7 +1,8 @@
-package com.djrapitops.plan.datahandlers;
+package com.djrapitops.plan.data.handlers;
 
+import com.djrapitops.plan.data.cache.DataCacheHandler;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.UserData;
+import com.djrapitops.plan.data.UserData;
 import java.util.Collection;
 import java.util.UUID;
 import org.bukkit.Location;
@@ -10,9 +11,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LocationHandler {
 
-    private final DataHandler handler;
+    private final DataCacheHandler handler;
 
-    public LocationHandler(Plan plugin, DataHandler h) {
+    public LocationHandler(Plan plugin, DataCacheHandler h) {
         this.handler = h;
     }
 

@@ -1,7 +1,7 @@
 
-package com.djrapitops.plan.datahandlers;
+package com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.database.ServerData;
+import com.djrapitops.plan.data.ServerData;
 
 public class ServerDataHandler {
     private ServerData serverData;

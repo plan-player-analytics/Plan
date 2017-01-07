@@ -1,17 +1,19 @@
-package com.djrapitops.plan.datahandlers;
+package com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.DemographicsData;
-import com.djrapitops.plan.database.UserData;
-import com.djrapitops.plan.database.ServerData;
+import com.djrapitops.plan.data.*;
+import com.djrapitops.plan.data.handlers.*;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-public class DataHandler {
+/**
+ *
+ * @author Rsl1122
+ */
+public class DataCacheHandler {
 
     private final HashMap<UUID, UserData> dataCache;
     private final Plan plugin;
@@ -29,7 +31,15 @@ public class DataHandler {
 
     private int timesSaved;
 
-    public DataHandler(Plan plugin) {
+    /**
+     * Class Constructor
+     *
+     * Creates the set of Handlers that will be used to modify UserData gets the
+     * Database from the plugin
+     *
+     * @param plugin Current instance of Plan
+     */
+    public DataCacheHandler(Plan plugin) {
         this.plugin = plugin;
         db = plugin.getDB();
         dataCache = new HashMap<>();
@@ -59,11 +69,28 @@ public class DataHandler {
         }, 60 * 20 * minutes, 60 * 20 * minutes);
     }
 
+    /**
+     * Tells wether or not user has been saved to the database before
+     *
+     * @param uuid Players UUID
+     * @return User's data is not in the database: true
+     * @deprecated Moved to ActivityHandler
+     */
     @Deprecated
     public boolean isFirstTimeJoin(UUID uuid) {
         return activityHandler.isFirstTimeJoin(uuid);
     }
 
+    /**
+     * Uses Database to retrieve the UserData of a matching player
+     *
+     * Caches the data to the HashMap if cache: true
+     *
+     * @param uuid Player's UUID
+     * @param cache Wether or not the UserData will be Cached in this instance
+     * of DataCacheHandler
+     * @return UserData matching the Player
+     */
     public UserData getCurrentData(UUID uuid, boolean cache) {
         if (cache) {
             if (dataCache.get(uuid) == null) {
@@ -75,10 +102,20 @@ public class DataHandler {
         }
     }
 
+    /**
+     ** Uses Database to retrieve the UserData of a matching player Caches the
+     * data to the HashMap
+     *
+     * @param uuid Player's UUID
+     * @return UserData matching the Player
+     */
     public UserData getCurrentData(UUID uuid) {
         return getCurrentData(uuid, true);
     }
 
+    /**
+     * Saves all data in the cache to Database with AsyncTasks
+     */
     public void saveCachedData() {
         dataCache.keySet().parallelStream().forEach((uuid) -> {
             saveCachedData(uuid);
@@ -87,6 +124,10 @@ public class DataHandler {
         timesSaved++;
     }
 
+    /**
+     * Saves all data in the cache to Database without AsyncTask (Disabled
+     * plugins can't register tasks)
+     */
     public void saveCacheOnDisable() {
         dataCache.keySet().stream().forEach((uuid) -> {
             if (dataCache.get(uuid) != null) {
@@ -96,6 +137,11 @@ public class DataHandler {
         db.saveServerData(serverData);
     }
 
+    /**
+     * Saves the cached data of matching Player if it is in the cache
+     *
+     * @param uuid Player's UUID
+     */
     public void saveCachedData(UUID uuid) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
             @Override
@@ -107,6 +153,11 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Saves the cached ServerData with AsyncTask
+     *
+     * Data is saved on a new line with a long value matching current Date
+     */
     public void saveServerData() {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
             @Override
@@ -124,72 +175,125 @@ public class DataHandler {
         });
     }
 
+    /**
+     * Clears all UserData from the HashMap
+     */
     public void clearCache() {
         dataCache.clear();
     }
 
+    /**
+     * Clears the matching UserData from the HashMap
+     *
+     * @param uuid Player's UUID
+     */
     public void clearFromCache(UUID uuid) {
         if (dataCache.get(uuid) != null) {
             dataCache.remove(uuid);
         }
     }
 
+    /**
+     * Creates a new UserData instance and saves it to the Database
+     *
+     * @param player Player the new UserData is created for
+     */
     public void newPlayer(Player player) {
-       newPlayerCreator.createNewPlayer(player);
+        newPlayerCreator.createNewPlayer(player);
     }
 
+    /**
+     * @return The HashMap containing all Cached UserData
+     */
     public HashMap<UUID, UserData> getDataCache() {
         return dataCache;
     }
 
+    /**
+     * @return Current instance of the ActivityHandler
+     */
     public ActivityHandler getActivityHandler() {
         return activityHandler;
     }
 
+    /**
+     * @return Current instance of the LocationHandler
+     */
     public LocationHandler getLocationHandler() {
         return locationHandler;
     }
 
+    /**
+     * @return Current instance of the DemographicsHandler
+     */
     public DemographicsHandler getDemographicsHandler() {
         return demographicsHandler;
     }
 
+    /**
+     * @return Current instance of the BasicInfoHandler
+     */
     public BasicInfoHandler getBasicInfoHandler() {
         return basicInfoHandler;
     }
 
+    /**
+     * @return Current instance of the RuleBreakingHandler
+     */
     public RuleBreakingHandler getRuleBreakingHandler() {
         return ruleBreakingHandler;
     }
 
+    /**
+     * @return Current instance of the GamemodeTimesHandler
+     */
     public GamemodeTimesHandler getGamemodeTimesHandler() {
         return gamemodeTimesHandler;
     }
 
+    /**
+     * Returns the same value as Plan#getDB().
+     *
+     * @return Current instance of the Database,
+     */
     public Database getDB() {
         return db;
     }
 
+    /**
+     * Updates the player count and returns cached ServerData.
+     *
+     * @return Cached serverData
+     */
     public ServerData getServerData() {
         serverData.updatePlayerCount();
         return serverData;
     }
 
+    /**
+     * @return Current instance of ServerDataHandler
+     */
     public ServerDataHandler getServerDataHandler() {
         return serverDataHandler;
     }
 
+    /**
+     * If /reload is run this treats every online player as a new login.
+     *
+     * Calls all the methods that are ran when PlayerJoinEvent is fired
+     */
     public void handleReload() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID uuid = player.getUniqueId();
-            boolean newPlayer = activityHandler.isFirstTimeJoin(uuid);
-            newPlayer(player);
-            serverDataHandler.handleLogin(newPlayer);
+            boolean isNewPlayer = activityHandler.isFirstTimeJoin(uuid);
+            if (isNewPlayer) {
+                newPlayer(player);
+            }
+            serverDataHandler.handleLogin(isNewPlayer);
             UserData data = getCurrentData(uuid);
             activityHandler.handleReload(player, data);
             basicInfoHandler.handleReload(player, data);
             gamemodeTimesHandler.handleReload(player, data);
-            demographicsHandler.handleReload(player, data);
             saveCachedData(uuid);
         }
     }

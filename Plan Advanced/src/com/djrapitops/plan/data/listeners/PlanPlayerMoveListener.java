@@ -1,8 +1,8 @@
-package com.djrapitops.plan.datahandlers.listeners;
+package com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.datahandlers.DataHandler;
-import com.djrapitops.plan.datahandlers.LocationHandler;
+import com.djrapitops.plan.data.cache.DataCacheHandler;
+import com.djrapitops.plan.data.handlers.LocationHandler;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class PlanPlayerMoveListener implements Listener {
 
     private final Plan plugin;
-    private final DataHandler handler;
+    private final DataCacheHandler handler;
     private final LocationHandler locationH;
 
     public PlanPlayerMoveListener(Plan plugin) {

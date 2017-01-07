@@ -7,10 +7,10 @@ import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
 import com.djrapitops.plan.command.utils.DataUtils;
-import com.djrapitops.plan.database.ServerData;
+import com.djrapitops.plan.data.ServerData;
 
 import java.util.Date;
-import com.djrapitops.plan.database.UserData;
+import com.djrapitops.plan.data.UserData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class InspectCommand extends SubCommand {

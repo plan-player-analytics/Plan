@@ -1,9 +1,9 @@
-package com.djrapitops.plan.datahandlers.listeners;
+package com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.datahandlers.DataHandler;
-import com.djrapitops.plan.datahandlers.GamemodeTimesHandler;
-import com.djrapitops.plan.database.UserData;
+import com.djrapitops.plan.data.cache.DataCacheHandler;
+import com.djrapitops.plan.data.handlers.GamemodeTimesHandler;
+import com.djrapitops.plan.data.UserData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 public class PlanGamemodeChangeListener implements Listener {
 
     private final Plan plugin;
-    private final DataHandler handler;
+    private final DataCacheHandler handler;
     private final GamemodeTimesHandler gmTimesH;
 
     public PlanGamemodeChangeListener(Plan plugin) {

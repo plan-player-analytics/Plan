@@ -2,11 +2,8 @@ package com.djrapitops.plan.database.databases;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.Gender;
-import com.djrapitops.plan.command.utils.MiscUtils;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.DemographicsData;
-import com.djrapitops.plan.database.ServerData;
-import com.djrapitops.plan.database.UserData;
+import com.djrapitops.plan.data.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -51,6 +48,7 @@ public abstract class SQLDB extends Database {
     private String userColumnLastGM;
     private String userColumnLastGMSwapTime;
     private String userColumnLoginTimes;
+    private String userColumnLastPlayed;
     private final String locationColumnUserID;
     private String locationColumnID;
     private String locationColumnCoordinatesX;
@@ -62,8 +60,10 @@ public abstract class SQLDB extends Database {
     private String commanduseColumnCommand;
     private String commanduseColumnTimesUsed;
     private final String gamemodetimesColumnUserID;
-    private String gamemodetimesColumnGamemode;
-    private String gamemodetimesColumnTime;
+    private String gamemodetimesColumnSurvivalTime;
+    private String gamemodetimesColumnCreativeTime;
+    private String gamemodetimesColumnAdventureTime;
+    private String gamemodetimesColumnSpectatorTime;
     private String nicknamesColumnUserID;
     private String nicknamesColumnNick;
     private final String ipsColumnUserID;
@@ -99,6 +99,7 @@ public abstract class SQLDB extends Database {
         userColumnLastGMSwapTime = "last_gamemode_swap";
         userColumnPlayTime = "play_time";
         userColumnLoginTimes = "login_times";
+        userColumnLastPlayed = "last_played";
 
         locationColumnCoordinatesX = "x";
         locationColumnCoordinatesZ = "z";
@@ -106,8 +107,10 @@ public abstract class SQLDB extends Database {
 
         nicknamesColumnNick = "nickname";
 
-        gamemodetimesColumnGamemode = "gamemode";
-        gamemodetimesColumnTime = "time";
+        gamemodetimesColumnSurvivalTime = "survival";
+        gamemodetimesColumnCreativeTime = "creative";
+        gamemodetimesColumnAdventureTime = "adventure";
+        gamemodetimesColumnSpectatorTime = "spectator";
 
         ipsColumnIP = "ip";
 
@@ -164,7 +167,8 @@ public abstract class SQLDB extends Database {
                         + userColumnLastGM + " varchar(15) NOT NULL, "
                         + userColumnLastGMSwapTime + " bigint NOT NULL, "
                         + userColumnPlayTime + " bigint NOT NULL, "
-                        + userColumnLoginTimes + " int NOT NULL"
+                        + userColumnLoginTimes + " int NOT NULL, "
+                        + userColumnLastPlayed + " bigint NOT NULL"
                         + ")"
                 );
 
@@ -180,8 +184,10 @@ public abstract class SQLDB extends Database {
 
                 query("CREATE TABLE IF NOT EXISTS " + gamemodetimesName + " ("
                         + gamemodetimesColumnUserID + " int NOT NULL, "
-                        + gamemodetimesColumnGamemode + " varchar(15) NOT NULL, "
-                        + gamemodetimesColumnTime + " bigint NOT NULL, "
+                        + gamemodetimesColumnSurvivalTime + " bigint NOT NULL, "
+                        + gamemodetimesColumnCreativeTime + " bigint NOT NULL, "
+                        + gamemodetimesColumnAdventureTime + " bigint NOT NULL, "
+                        + gamemodetimesColumnSpectatorTime + " bigint NOT NULL, "
                         + "FOREIGN KEY(" + gamemodetimesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                         + ")"
                 );
@@ -321,10 +327,11 @@ public abstract class SQLDB extends Database {
                 data.getDemData().setAge(set.getInt(userColumnDemAge));
                 data.getDemData().setGender(Gender.parse(set.getString(userColumnDemGender)));
                 data.getDemData().setGeoLocation(set.getString(userColumnDemGeoLocation));
-                data.setLastGamemode(MiscUtils.parseGM(set.getString(userColumnLastGM)));
+                data.setLastGamemode(GameMode.valueOf(set.getString(userColumnLastGM)));
                 data.setLastGmSwapTime(set.getLong(userColumnLastGMSwapTime));
                 data.setPlayTime(set.getLong(userColumnPlayTime));
                 data.setLoginTimes(set.getInt(userColumnLoginTimes));
+                data.setLastPlayed(set.getLong(userColumnLastPlayed));
             }
             set.close();
             statement.close();
@@ -380,7 +387,10 @@ public abstract class SQLDB extends Database {
 
             HashMap<GameMode, Long> times = new HashMap<>();
             while (set.next()) {
-                times.put(GameMode.valueOf(set.getString(gamemodetimesColumnGamemode)), set.getLong(gamemodetimesColumnTime));
+                times.put(GameMode.SURVIVAL, set.getLong(gamemodetimesColumnSurvivalTime));
+                times.put(GameMode.CREATIVE, set.getLong(gamemodetimesColumnCreativeTime));
+                times.put(GameMode.ADVENTURE, set.getLong(gamemodetimesColumnAdventureTime));
+                times.put(GameMode.SPECTATOR, set.getLong(gamemodetimesColumnSpectatorTime));
             }
             set.close();
             statement.close();
@@ -530,7 +540,8 @@ public abstract class SQLDB extends Database {
                         + userColumnLastGM + "=?, "
                         + userColumnLastGMSwapTime + "=?, "
                         + userColumnPlayTime + "=?, "
-                        + userColumnLoginTimes + "=? "
+                        + userColumnLoginTimes + "=?, "
+                        + userColumnLastPlayed + "=? "
                         + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
 
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -546,7 +557,8 @@ public abstract class SQLDB extends Database {
                 statement.setLong(5, data.getLastGmSwapTime());
                 statement.setLong(6, data.getPlayTime());
                 statement.setInt(7, data.getLoginTimes());
-                statement.setString(8, uuid.toString());
+                statement.setLong(8, data.getLastPlayed());
+                statement.setString(9, uuid.toString());
                 update = statement.executeUpdate();
             }
             if (update == 0) {
@@ -558,8 +570,9 @@ public abstract class SQLDB extends Database {
                         + userColumnLastGM + ", "
                         + userColumnLastGMSwapTime + ", "
                         + userColumnPlayTime + ", "
-                        + userColumnLoginTimes
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                        + userColumnLoginTimes +", "
+                        + userColumnLastPlayed
+                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 statement.setString(1, uuid.toString());
                 statement.setInt(2, data.getDemData().getAge());
@@ -574,6 +587,7 @@ public abstract class SQLDB extends Database {
                 statement.setLong(6, data.getLastGmSwapTime());
                 statement.setLong(7, data.getPlayTime());
                 statement.setInt(8, data.getLoginTimes());
+                statement.setLong(9, data.getLastPlayed());
 
                 statement.execute();
                 statement.close();
@@ -682,19 +696,21 @@ public abstract class SQLDB extends Database {
             statement.execute();
             statement.close();
 
-            for (GameMode gm : gamemodeTimes.keySet()) {
-                statement = connection.prepareStatement("INSERT INTO " + gamemodetimesName + " ("
-                        + gamemodetimesColumnUserID + ", "
-                        + gamemodetimesColumnGamemode + ", "
-                        + gamemodetimesColumnTime
-                        + ") VALUES (?, ?, ?)");
+            statement = connection.prepareStatement("INSERT INTO " + gamemodetimesName + " ("
+                    + gamemodetimesColumnUserID + ", "
+                    + gamemodetimesColumnSurvivalTime + ", "
+                    + gamemodetimesColumnCreativeTime + ", "
+                    + gamemodetimesColumnAdventureTime + ", "
+                    + gamemodetimesColumnSpectatorTime
+                    + ") VALUES (?, ?, ?, ?, ?)");
 
-                statement.setInt(1, userId);
-                statement.setString(2, gm.name());
-                statement.setLong(3, gamemodeTimes.get(gm));
-                statement.execute();
-                statement.close();
-            }
+            statement.setInt(1, userId);
+            statement.setLong(2, gamemodeTimes.get(GameMode.SURVIVAL));
+            statement.setLong(3, gamemodeTimes.get(GameMode.CREATIVE));
+            statement.setLong(4, gamemodeTimes.get(GameMode.ADVENTURE));
+            statement.setLong(5, gamemodeTimes.get(GameMode.SPECTATOR));
+            statement.execute();
+            statement.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -811,12 +827,24 @@ public abstract class SQLDB extends Database {
         this.commanduseColumnTimesUsed = commanduseColumnTimesUsed;
     }
 
-    public void setGamemodetimesColumnGamemode(String gamemodetimesColumnGamemode) {
-        this.gamemodetimesColumnGamemode = gamemodetimesColumnGamemode;
+    public void setUserColumnLoginTimes(String userColumnLoginTimes) {
+        this.userColumnLoginTimes = userColumnLoginTimes;
     }
 
-    public void setGamemodetimesColumnTime(String gamemodetimesColumnTime) {
-        this.gamemodetimesColumnTime = gamemodetimesColumnTime;
+    public void setGamemodetimesColumnSurvivalTime(String gamemodetimesColumnSurvivalTime) {
+        this.gamemodetimesColumnSurvivalTime = gamemodetimesColumnSurvivalTime;
+    }
+
+    public void setGamemodetimesColumnCreativeTime(String gamemodetimesColumnCreativeTime) {
+        this.gamemodetimesColumnCreativeTime = gamemodetimesColumnCreativeTime;
+    }
+
+    public void setGamemodetimesColumnAdventureTime(String gamemodetimesColumnAdventureTime) {
+        this.gamemodetimesColumnAdventureTime = gamemodetimesColumnAdventureTime;
+    }
+
+    public void setGamemodetimesColumnSpectatorTime(String gamemodetimesColumnSpectatorTime) {
+        this.gamemodetimesColumnSpectatorTime = gamemodetimesColumnSpectatorTime;
     }
 
     public void setNicknamesColumnUserID(String nicknamesColumnUserID) {

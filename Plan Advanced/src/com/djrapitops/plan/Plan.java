@@ -6,12 +6,12 @@ import com.djrapitops.plan.command.utils.MiscUtils;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.MySQLDB;
 import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.datahandlers.DataHandler;
-import com.djrapitops.plan.datahandlers.listeners.PlanChatListener;
-import com.djrapitops.plan.datahandlers.listeners.PlanCommandPreprocessListener;
-import com.djrapitops.plan.datahandlers.listeners.PlanGamemodeChangeListener;
-import com.djrapitops.plan.datahandlers.listeners.PlanPlayerListener;
-import com.djrapitops.plan.datahandlers.listeners.PlanPlayerMoveListener;
+import com.djrapitops.plan.data.cache.DataCacheHandler;
+import com.djrapitops.plan.data.listeners.PlanChatListener;
+import com.djrapitops.plan.data.listeners.PlanCommandPreprocessListener;
+import com.djrapitops.plan.data.listeners.PlanGamemodeChangeListener;
+import com.djrapitops.plan.data.listeners.PlanPlayerListener;
+import com.djrapitops.plan.data.listeners.PlanPlayerMoveListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class Plan extends JavaPlugin {
 
     private API api;
     private PlanLiteHook planLiteHook;
-    private DataHandler handler;
+    private DataCacheHandler handler;
     private Database db;
     private HashSet<Database> databases;
 
@@ -69,7 +69,7 @@ public class Plan extends JavaPlugin {
         initDatabase();
         
         hookPlanLite();
-        this.handler = new DataHandler(this);
+        this.handler = new DataCacheHandler(this);
         registerListeners();
 
         log(MiscUtils.checkVersion());
@@ -155,7 +155,7 @@ public class Plan extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlanPlayerMoveListener(this), this);
     }
 
-    public DataHandler getHandler() {
+    public DataCacheHandler getHandler() {
         return handler;
     }
 
@@ -190,7 +190,9 @@ public class Plan extends JavaPlugin {
             setEnabled(false);
             return false;
         }
-
+        
+        db.setVersion(0);
+        
         return true;
     }
 }

@@ -1,5 +1,6 @@
-package com.djrapitops.plan.database;
+package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.database.Database;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,8 +1,8 @@
-package com.djrapitops.plan.datahandlers.listeners;
+package com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.datahandlers.DataHandler;
-import com.djrapitops.plan.datahandlers.ServerDataHandler;
+import com.djrapitops.plan.data.cache.DataCacheHandler;
+import com.djrapitops.plan.data.handlers.ServerDataHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class PlanCommandPreprocessListener implements Listener {
 
     private final Plan plugin;
-    private final DataHandler handler;
+    private final DataCacheHandler handler;
     private final ServerDataHandler serverH;
 
     public PlanCommandPreprocessListener(Plan plugin) {

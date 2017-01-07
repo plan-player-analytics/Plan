@@ -1,5 +1,5 @@
 
-package com.djrapitops.plan.datahandlers;
+package com.djrapitops.plan.data.handlers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;

@@ -1,22 +1,24 @@
 package com.djrapitops.plan.command.utils;
 
 import com.djrapitops.plan.Plan;
-import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
-import org.bukkit.GameMode;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class MiscUtils {
-//    <h1>Plan - Player Analytics <span class="muted">
 
+    /**
+     * Checks the version and returns response String.
+     *
+     * @return String informing about status of plugins version.
+     */
     public static String checkVersion() {
         Plan plugin = getPlugin(Plan.class);
-        String[] nVersion;
-        String[] cVersion;
+        String cVersion;
         String lineWithVersion;
         try {
             URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/src/plugin.yml");
@@ -30,21 +32,42 @@ public class MiscUtils {
                 }
             }
             String versionString = lineWithVersion.split(": ")[1];
-            nVersion = versionString.split("\\.");
-            double newestVersionNumber = Double.parseDouble(nVersion[0] + "." + nVersion[1] + nVersion[2]);
-            cVersion = plugin.getDescription().getVersion().split("\\.");
-            double currentVersionNumber = Double.parseDouble(cVersion[0] + "." + cVersion[1] + cVersion[2]);
+            double newestVersionNumber = parseVersionDouble(versionString);
+            cVersion = plugin.getDescription().getVersion();
+            double currentVersionNumber = parseVersionDouble(cVersion);
             if (newestVersionNumber > currentVersionNumber) {
                 return "New Version (" + versionString + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/";
             } else {
                 return "You're running the latest version";
             }
         } catch (Exception e) {
-            plugin.logToFile("Failed to compare versions.\n"+e);
+            plugin.logToFile("Failed to compare versions.\n" + e);
         }
         return "Failed to get newest version number.";
     }
 
+    /**
+     * Turns the version string into a double
+     *
+     * @param versionString String - number format 1.1.1
+     * @return parsed double - for example 1,11
+     * @throws NumberFormatException When wrong format
+     */
+    public static double parseVersionDouble(String versionString) throws NumberFormatException {
+        String[] versionArray = versionString.split("\\.");
+        if (versionArray.length != 3) {
+            throw new NumberFormatException("Wrong format used");
+        }
+        double versionDouble = Double.parseDouble(versionArray[0] + "." + versionArray[1] + versionArray[2]);
+        return versionDouble;
+    }
+
+    /**
+     * Merges multiple arrays into one.
+     *
+     * @param arrays String arrays that need to be combined
+     * @return One array with contents of the multiple
+     */
     public static String[] mergeArrays(String[]... arrays) {
         int arraySize = 0;
         for (String[] array : arrays) {
@@ -58,23 +81,5 @@ public class MiscUtils {
             }
         }
         return result;
-    }
-
-    public static GameMode parseGM(String string) {
-        String survival = GameMode.SURVIVAL.name();
-        String creative = GameMode.CREATIVE.name();
-        String adventure = GameMode.ADVENTURE.name();
-        String spectator = GameMode.SPECTATOR.name();
-        if (string.equalsIgnoreCase(survival)) {
-            return GameMode.SURVIVAL;
-        } else if (string.equalsIgnoreCase(creative)) {
-            return GameMode.CREATIVE;
-        } else if (string.equalsIgnoreCase(adventure)) {
-            return GameMode.ADVENTURE;
-        } else if (string.equalsIgnoreCase(spectator)) {
-            return GameMode.SPECTATOR;
-        } else {
-            return GameMode.SURVIVAL;
-        }
     }
 }

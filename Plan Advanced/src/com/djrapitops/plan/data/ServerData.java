@@ -1,5 +1,5 @@
 
-package com.djrapitops.plan.database;
+package com.djrapitops.plan.data;
 
 import java.util.HashMap;
 import org.bukkit.Bukkit;

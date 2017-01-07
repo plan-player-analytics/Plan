@@ -1,5 +1,7 @@
 package com.djrapitops.plan.database;
 
+import com.djrapitops.plan.data.UserData;
+import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.Plan;
 import org.bukkit.configuration.ConfigurationSection;
 

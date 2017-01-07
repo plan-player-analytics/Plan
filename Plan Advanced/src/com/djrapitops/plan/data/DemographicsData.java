@@ -1,5 +1,5 @@
 
-package com.djrapitops.plan.database;
+package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.api.Gender;
 
