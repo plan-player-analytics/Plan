@@ -5,9 +5,12 @@ import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
 import com.djrapitops.plan.data.handlers.*;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -32,10 +35,10 @@ public class DataCacheHandler {
     private int timesSaved;
 
     /**
-     * Class Constructor
+     * Class Constructor.
      *
-     * Creates the set of Handlers that will be used to modify UserData gets the
-     * Database from the plugin
+     * Creates the set of Handlers that will be used to modify UserData. Gets
+     * the Database from the plugin. Registers Asyncronous Periodic Save Task
      *
      * @param plugin Current instance of Plan
      */
@@ -57,28 +60,21 @@ public class DataCacheHandler {
         timesSaved = 0;
 
         int minutes = plugin.getConfig().getInt("saveEveryXMinutes");
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+        if (minutes <= 0) {
+            minutes = 5;
+        }
+        (new BukkitRunnable() {
             @Override
             public void run() {
-                saveHandlerDataToCache();
-                saveCachedData();
+                DataCacheHandler handler = plugin.getHandler();
+                handler.saveHandlerDataToCache();
+                handler.saveCachedData();
                 if (timesSaved % 5 == 0) {
-                    clearCache();
+                    handler.clearCache();
                 }
+                timesSaved++;
             }
-        }, 60 * 20 * minutes, 60 * 20 * minutes);
-    }
-
-    /**
-     * Tells wether or not user has been saved to the database before
-     *
-     * @param uuid Players UUID
-     * @return User's data is not in the database: true
-     * @deprecated Moved to ActivityHandler
-     */
-    @Deprecated
-    public boolean isFirstTimeJoin(UUID uuid) {
-        return activityHandler.isFirstTimeJoin(uuid);
+        }).runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
     }
 
     /**
@@ -95,6 +91,7 @@ public class DataCacheHandler {
         if (cache) {
             if (dataCache.get(uuid) == null) {
                 dataCache.put(uuid, db.getUserData(uuid));
+                plugin.log("Added " + uuid.toString() + " to Cache.");
             }
             return dataCache.get(uuid);
         } else {
@@ -117,7 +114,7 @@ public class DataCacheHandler {
      * Saves all data in the cache to Database with AsyncTasks
      */
     public void saveCachedData() {
-        dataCache.keySet().parallelStream().forEach((uuid) -> {
+        dataCache.keySet().stream().forEach((uuid) -> {
             saveCachedData(uuid);
         });
         saveServerData();
@@ -125,8 +122,7 @@ public class DataCacheHandler {
     }
 
     /**
-     * Saves all data in the cache to Database without AsyncTask (Disabled
-     * plugins can't register tasks)
+     * Saves all data in the cache to Database and closes the database down.
      */
     public void saveCacheOnDisable() {
         dataCache.keySet().stream().forEach((uuid) -> {
@@ -135,6 +131,7 @@ public class DataCacheHandler {
             }
         });
         db.saveServerData(serverData);
+        db.close();
     }
 
     /**
@@ -143,14 +140,16 @@ public class DataCacheHandler {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+        (new BukkitRunnable() {
             @Override
             public void run() {
                 if (dataCache.get(uuid) != null) {
                     db.saveUserData(uuid, dataCache.get(uuid));
                 }
+                this.cancel();
             }
-        });
+        }).runTaskAsynchronously(plugin);
+
     }
 
     /**
@@ -159,27 +158,43 @@ public class DataCacheHandler {
      * Data is saved on a new line with a long value matching current Date
      */
     public void saveServerData() {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+        (new BukkitRunnable() {
             @Override
             public void run() {
                 db.saveServerData(serverData);
             }
-        });
+        }).runTaskAsynchronously(plugin);
     }
 
     private void saveHandlerDataToCache() {
         Bukkit.getServer().getOnlinePlayers().parallelStream().forEach((p) -> {
-            UserData data = getCurrentData(p.getUniqueId());
-            activityHandler.saveToCache(p, data);
-            gamemodeTimesHandler.saveToCache(p, data);
+            saveHandlerDataToCache(p);
         });
+    }
+
+    public void saveHandlerDataToCache(UUID uuid) {
+        Player p = getPlayer(uuid);
+        if (p != null) {
+            if (p.isOnline()) {
+                saveHandlerDataToCache(p);
+            }
+        }
+    }
+
+    private void saveHandlerDataToCache(Player p) {
+        UserData data = getCurrentData(p.getUniqueId());
+        activityHandler.saveToCache(p, data);
+        gamemodeTimesHandler.saveToCache(p, data);
     }
 
     /**
      * Clears all UserData from the HashMap
      */
     public void clearCache() {
-        dataCache.clear();
+        Set<UUID> uuidSet = dataCache.keySet();
+        for (UUID uuid : uuidSet) {
+            clearFromCache(uuid);
+        }
     }
 
     /**
@@ -189,7 +204,21 @@ public class DataCacheHandler {
      */
     public void clearFromCache(UUID uuid) {
         if (dataCache.get(uuid) != null) {
-            dataCache.remove(uuid);
+            if (dataCache.get(uuid).isAccessed()) {
+                (new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (!dataCache.get(uuid).isAccessed()) {
+                            dataCache.remove(uuid);
+                            plugin.log("Cleared " + uuid.toString() + " from Cache. (Delay task)");
+                            this.cancel();
+                        }
+                    }
+                }).runTaskTimer(plugin, 30 * 20, 30 * 20);
+            } else {
+                dataCache.remove(uuid);
+                plugin.log("Cleared " + uuid.toString() + " from Cache.");
+            }
         }
     }
 

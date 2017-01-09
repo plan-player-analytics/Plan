@@ -7,18 +7,15 @@ import com.djrapitops.plan.data.UserData;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class DemographicsHandler {
 

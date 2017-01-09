@@ -2,8 +2,8 @@ package com.djrapitops.plan.command.commands;
 
 //import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanCommand;
 import com.djrapitops.plan.command.CommandType;
+import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.command.SubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

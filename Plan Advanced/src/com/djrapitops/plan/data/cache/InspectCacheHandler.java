@@ -4,6 +4,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
 import java.util.HashMap;
 import java.util.UUID;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -37,12 +38,12 @@ public class InspectCacheHandler {
             return;
         }
         cache.put(uuid, handler.getCurrentData(uuid, false));
-        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+        (new BukkitRunnable() {
             @Override
             public void run() {
                 clearFomCache(uuid);
             }
-        }, 60 * 20 * 3);
+        }).runTaskLater(plugin, 60 * 20 * 3);
     }
 
     private void clearFomCache(UUID uuid) {
@@ -59,4 +60,7 @@ public class InspectCacheHandler {
         return cache.get(uuid);
     }
 
+    public HashMap<UUID, UserData> getCache() {
+        return cache;
+    }
 }

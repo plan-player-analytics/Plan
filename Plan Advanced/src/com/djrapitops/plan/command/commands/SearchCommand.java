@@ -1,19 +1,13 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.api.DataPoint;
-import com.djrapitops.plan.api.DataType;
-import com.djrapitops.plan.command.utils.DataFormatUtils;
-import com.djrapitops.plan.command.utils.DataUtils;
+import com.djrapitops.plan.utilities.FormatUtils;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -30,51 +24,19 @@ public class SearchCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        boolean playerFirst = false;
-        for (String arg : args) {
-            if (arg.equals("-p")) {
-                playerFirst = true;
-            }
-        }
-        Set<OfflinePlayer> matchingPlayers;
-        if (playerFirst) {
-            String[] playername = new String[1];
-            playername[0] = args[0];
-            matchingPlayers = DataUtils.getMatchingDisplaynames(playername, sender, false);
-        } else {
-            matchingPlayers = DataUtils.getMatchingDisplaynames(args, sender, false);
-        }
-        args = DataFormatUtils.parseSearchArgs(args);
-        HashMap<UUID, HashMap<String, DataPoint>> data = DataUtils.getTotalData(matchingPlayers);
-
+        
         Date refreshDate = new Date();
-        HashMap<String, List<String[]>> dataLists = new HashMap<>();
-        for (UUID key : data.keySet()) {
-            OfflinePlayer p = getOfflinePlayer(key);
-            HashMap<String, DataPoint> dataMap = data.get(key);
-            if (!dataMap.isEmpty()) {
-                dataMap = DataFormatUtils.removeExtraDataPointsSearch(dataMap, args);
-            }
-            if (dataMap.isEmpty()) {
-                dataMap.put("ERR-NO RESULTS", new DataPoint("No results were found.", DataType.OTHER));
-                plugin.logToFile("SEARCH-Results\nNo results were found for: " + p.getName() + Arrays.toString(args));
-            }
-            dataLists.put(p.getName(), DataFormatUtils.turnDataHashMapToSortedListOfArrays(dataMap));
-        }
 
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
+        ChatColor operatorColor = Phrase.COLOR_MAIN.color();
+        ChatColor textColor = Phrase.COLOR_SEC.color();
 
         //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Search results: took " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
+        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Search results: took " + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
         sender.sendMessage(operatorColor + "Results for: " + Arrays.toString(args));
-        for (String playerName : dataLists.keySet()) {
-            sender.sendMessage(textColor + "Matching player: " + playerName);
-            for (String[] dataString : dataLists.get(playerName)) {
-                sender.sendMessage("" + operatorColor + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + textColor + dataString[1]);
-            }
-        }
-        if (dataLists.isEmpty()) {
+
+        sender.sendMessage(textColor + "Matching player: ");
+
+        if (false) {
             sender.sendMessage(operatorColor + "No results for " + textColor + Arrays.toString(args) + operatorColor + ".");
         }
         sender.sendMessage(textColor + "-- o --");

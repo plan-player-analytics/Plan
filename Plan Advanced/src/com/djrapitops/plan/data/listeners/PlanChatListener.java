@@ -10,18 +10,31 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class PlanChatListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
     private final DemographicsHandler demographicsHandler;
 
+    /**
+     * Class Constructor.
+     * 
+     * @param plugin Current instance of Plan
+     */
     public PlanChatListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
         demographicsHandler = handler.getDemographicsHandler();
     }
 
+    /**
+     * ChatEvent listener.
+     * @param event Fired Event
+     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) {

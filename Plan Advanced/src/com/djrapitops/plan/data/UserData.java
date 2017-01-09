@@ -91,15 +91,18 @@ public class UserData {
     }
 
     public void addLocation(Location loc) {
-        locations.add(loc);
+//        locations.add(loc);
         location = loc;
     }
 
+    @Deprecated
     public void addLocations(Collection<Location> addLocs) {
+        /*
         locations.addAll(addLocs);
         if (!locations.isEmpty()) {
             location = locations.get(locations.size() - 1);
         }
+        */
     }
 
     public void addNickname(String nick) {
@@ -140,11 +143,13 @@ public class UserData {
     public UUID getUuid() {
         return uuid;
     }
-
+    
+    @Deprecated
     public Location getLocation() {
         return location;
     }
 
+    @Deprecated
     public List<Location> getLocations() {
         return locations;
     }

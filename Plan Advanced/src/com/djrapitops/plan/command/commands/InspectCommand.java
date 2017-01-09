@@ -2,15 +2,16 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.UUIDFetcher;
+import com.djrapitops.plan.utilities.UUIDFetcher;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.command.utils.DataFormatUtils;
-import com.djrapitops.plan.command.utils.DataUtils;
 import com.djrapitops.plan.data.ServerData;
 
 import java.util.Date;
 import com.djrapitops.plan.data.UserData;
+import com.djrapitops.plan.data.cache.InspectCacheHandler;
+import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,21 +21,22 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public class InspectCommand extends SubCommand {
 
     private Plan plugin;
+    private InspectCacheHandler inspectCache;
 
     public InspectCommand(Plan plugin) {
         super("inspect", "plan.inspect", "Inspect data /plan <player> [-a, -r].", CommandType.CONSOLE_WITH_ARGUMENTS);
 
         this.plugin = plugin;
+        inspectCache = plugin.getInspectCache();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        String playerName = DataUtils.getPlayerDisplayname(args, sender);
+        String playerName = MiscUtils.getPlayerDisplayname(args, sender);
 
         UUID uuid;
         try {
@@ -46,20 +48,19 @@ public class InspectCommand extends SubCommand {
             sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
             return true;
         }
-
         OfflinePlayer p = getOfflinePlayer(uuid);
         if (!p.hasPlayedBefore()) {
             sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
             return true;
         }
-
         if (!plugin.getDB().wasSeenBefore(uuid)) {
             sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
             return true;
         }
 
         Date refreshDate = new Date();
-        UserData data = plugin.getHandler().getCurrentData(uuid);
+        inspectCache.cache(uuid);
+        UserData data = inspectCache.getFromCache(uuid);
 
         ChatColor operatorColor = Phrase.COLOR_MAIN.color();
         ChatColor textColor = Phrase.COLOR_SEC.color();
@@ -74,6 +75,7 @@ public class InspectCommand extends SubCommand {
         msgs.add("Last gm swap time " + data.getLastGmSwapTime());
         msgs.add("Last Played " + data.getLastPlayed());
         msgs.add("Location " + data.getLocation().getBlockX());
+        msgs.add("Locations "+data.getLocations().size());
         msgs.add("Nicknames " + data.getNicknames().toString());
         msgs.add("Registered " + data.getRegistered());
         msgs.add("TimesKicked " + data.getTimesKicked());
@@ -87,7 +89,7 @@ public class InspectCommand extends SubCommand {
         msgs.add("New Players " + sdata.getNewPlayers());
         msgs.add("Online Players " + sdata.getPlayersOnline());
         //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + " - took " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
+        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + " - took " + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
 
         for (String message : msgs) {
             sender.sendMessage(textColor + message);

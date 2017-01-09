@@ -1,6 +1,11 @@
 
 package com.djrapitops.plan.api;
 
+/**
+ * Old API Part.
+ * @author Rsl1122
+ * @deprecated Moved to PlanLite plugin
+ */
 @Deprecated
 public enum DataType {
     STRING, // Any preformatted data & words

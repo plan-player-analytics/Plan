@@ -89,7 +89,6 @@ public class PlanPlayerListener implements Listener {
         gmTimesH.handleLogOut(event, data);
         serverHandler.handleLogout();
         handler.saveCachedData(uuid);
-        handler.clearFromCache(uuid);
     }
 
     /**

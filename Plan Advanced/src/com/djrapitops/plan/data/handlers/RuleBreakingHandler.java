@@ -44,7 +44,6 @@ public class RuleBreakingHandler {
      * @param data UserData matching Player
      */
     public void handleKick(PlayerKickEvent event, UserData data) {
-        Player player = event.getPlayer();
         data.setTimesKicked(data.getTimesKicked() + 1);
         data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
         data.setLastPlayed(new Date().getTime());

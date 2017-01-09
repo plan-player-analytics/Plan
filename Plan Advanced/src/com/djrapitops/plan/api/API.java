@@ -2,7 +2,10 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
+import com.djrapitops.planlite.api.DataPoint;
+import com.djrapitops.planlite.api.Hook;
 import com.djrapitops.plan.command.utils.DataFormatUtils;
+import com.djrapitops.plan.utilities.FormatUtils;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -33,7 +36,7 @@ public class API {
      * @return String that is easily readable d:h:m:s
      */
     public static String formatTimeSinceDate(Date before, Date after) {
-        return DataFormatUtils.formatTimeAmountSinceDate(before, after);
+        return FormatUtils.formatTimeAmountSinceDate(before, after);
     }
 
     /**
@@ -44,7 +47,7 @@ public class API {
      * @return String that is easily readable d:h:m:s
      */
     public static String formatTimeSinceString(String before, Date after) {
-        return DataFormatUtils.formatTimeAmountSinceString(before, after);
+        return FormatUtils.formatTimeAmountSinceString(before, after);
     }
 
     /**
@@ -54,7 +57,7 @@ public class API {
      * @return String that is easily readable d:h:m:s
      */
     public static String formatTimeAmount(String timeInMs) {
-        return DataFormatUtils.formatTimeAmount(timeInMs);
+        return FormatUtils.formatTimeAmount(timeInMs);
     }
 
     /**
@@ -64,7 +67,7 @@ public class API {
      * @return String that is easily readable date.
      */
     public static String formatTimeStamp(String timeInMs) {
-        return DataFormatUtils.formatTimeStamp(timeInMs);
+        return FormatUtils.formatTimeStamp(timeInMs);
     }
 
     /**

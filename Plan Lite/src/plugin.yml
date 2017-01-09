@@ -1,5 +1,5 @@
 name: PlanLite
-main: com.djrapitops.plan.PlanLite
+main: com.djrapitops.planlite.PlanLite
 version: 1.6.3
 
 commands:

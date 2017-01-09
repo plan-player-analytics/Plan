@@ -1,18 +1,31 @@
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.api.DataPoint;
-import com.djrapitops.plan.api.Hook;
+import com.djrapitops.planlite.PlanLite;
+import com.djrapitops.planlite.api.API;
+import com.djrapitops.planlite.api.DataPoint;
+import com.djrapitops.planlite.api.Hook;
 import java.util.HashMap;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class PlanLiteHook {
 
     private PlanLite planLite;
     private Plan plugin;
     private API planLiteApi;
 
+    /**
+     * Class Constructor.
+     * 
+     * Attempts to hook to PlanLite, if not present logs error.
+     * 
+     * @param plugin
+     */
     public PlanLiteHook(Plan plugin) {
+        this.plugin = plugin;
         try {
             this.planLite = getPlugin(PlanLite.class);
             if (planLite == null) {
@@ -21,6 +34,7 @@ public class PlanLiteHook {
             planLiteApi = planLite.getAPI();
         } catch (Exception e) {
             plugin.logError(e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -50,7 +64,7 @@ public class PlanLiteHook {
     public boolean getVisibleOnTime() {
         return planLiteApi.getVisibleOnTime();
     }
-
+    
     @Deprecated
     public boolean getVisibleFactions() {
         return planLiteApi.getVisibleFactions();

@@ -1,17 +1,15 @@
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.api.Hook;
-import com.djrapitops.plan.command.utils.MiscUtils;
+import com.djrapitops.planlite.api.Hook;
+import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.MySQLDB;
 import com.djrapitops.plan.database.databases.SQLiteDB;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.data.listeners.PlanChatListener;
-import com.djrapitops.plan.data.listeners.PlanCommandPreprocessListener;
-import com.djrapitops.plan.data.listeners.PlanGamemodeChangeListener;
-import com.djrapitops.plan.data.listeners.PlanPlayerListener;
-import com.djrapitops.plan.data.listeners.PlanPlayerMoveListener;
+import com.djrapitops.plan.data.cache.InspectCacheHandler;
+import com.djrapitops.plan.data.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -21,6 +19,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class Plan extends JavaPlugin {
@@ -28,6 +29,7 @@ public class Plan extends JavaPlugin {
     private API api;
     private PlanLiteHook planLiteHook;
     private DataCacheHandler handler;
+    private InspectCacheHandler inspectCache;
     private Database db;
     private HashSet<Database> databases;
 
@@ -67,18 +69,19 @@ public class Plan extends JavaPlugin {
         saveConfig();
 
         initDatabase();
-        
+
         hookPlanLite();
         this.handler = new DataCacheHandler(this);
+        this.inspectCache = new InspectCacheHandler(this);
         registerListeners();
 
         log(MiscUtils.checkVersion());
 
         getCommand("plan").setExecutor(new PlanCommand(this));
-        
+
         this.api = new API(this);
         handler.handleReload();
-        
+
         log("Player Analytics Enabled.");
     }
 
@@ -99,9 +102,14 @@ public class Plan extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
         log("Saving cached data..");
-        handler.saveCacheOnDisable();
-        db.close();
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.execute(() -> {
+            handler.saveCacheOnDisable();
+        });
+        scheduler.shutdown();
+        
         log("Player Analytics Disabled.");
     }
 
@@ -152,19 +160,8 @@ public class Plan extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlanPlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new PlanGamemodeChangeListener(this), this);
         getServer().getPluginManager().registerEvents(new PlanCommandPreprocessListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlanPlayerMoveListener(this), this);
-    }
-
-    public DataCacheHandler getHandler() {
-        return handler;
-    }
-
-    public PlanLiteHook getPlanLiteHook() {
-        return planLiteHook;
-    }
-
-    public Database getDB() {
-        return db;
+        // Locations Removed from Build 2.0.0 for performance reasons.
+        // getServer().getPluginManager().registerEvents(new PlanPlayerMoveListener(this), this);
     }
 
     private boolean initDatabase() {
@@ -190,9 +187,25 @@ public class Plan extends JavaPlugin {
             setEnabled(false);
             return false;
         }
-        
+
         db.setVersion(0);
-        
+
         return true;
+    }
+
+    public InspectCacheHandler getInspectCache() {
+        return inspectCache;
+    }
+    
+    public DataCacheHandler getHandler() {
+        return handler;
+    }
+
+    public PlanLiteHook getPlanLiteHook() {
+        return planLiteHook;
+    }
+
+    public Database getDB() {
+        return db;
     }
 }
