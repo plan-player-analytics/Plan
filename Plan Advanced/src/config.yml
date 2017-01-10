@@ -2,7 +2,10 @@ debug: true
 
 saveEveryXMinutes: 5
 database:
-  type: sqlite  
+  type: sqlite
+
+WebServer:
+  Port: 8804
 
 enabledData:
   planLite:

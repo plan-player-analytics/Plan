@@ -2,6 +2,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.api.API;
+import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.planlite.api.Hook;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.database.Database;
@@ -10,6 +11,7 @@ import com.djrapitops.plan.database.databases.SQLiteDB;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.data.listeners.*;
+import com.djrapitops.plan.ui.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -30,8 +32,10 @@ public class Plan extends JavaPlugin {
     private PlanLiteHook planLiteHook;
     private DataCacheHandler handler;
     private InspectCacheHandler inspectCache;
+    private AnalysisCacheHandler analysisCache;
     private Database db;
     private HashSet<Database> databases;
+    private WebSocketServer uiServer;
 
     @Override
     public void onEnable() {
@@ -73,6 +77,7 @@ public class Plan extends JavaPlugin {
         hookPlanLite();
         this.handler = new DataCacheHandler(this);
         this.inspectCache = new InspectCacheHandler(this);
+        this.analysisCache = new AnalysisCacheHandler(this);
         registerListeners();
 
         log(MiscUtils.checkVersion());
@@ -81,6 +86,9 @@ public class Plan extends JavaPlugin {
 
         this.api = new API(this);
         handler.handleReload();
+        
+        uiServer = new WebSocketServer(this);
+        uiServer.initServer();
 
         log("Player Analytics Enabled.");
     }
@@ -102,6 +110,7 @@ public class Plan extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        uiServer.stop();
         Bukkit.getScheduler().cancelTasks(this);
         log("Saving cached data..");
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -193,6 +202,10 @@ public class Plan extends JavaPlugin {
         return true;
     }
 
+    public AnalysisCacheHandler getAnalysisCache() {
+        return analysisCache;
+    }
+    
     public InspectCacheHandler getInspectCache() {
         return inspectCache;
     }
