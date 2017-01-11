@@ -1,13 +1,10 @@
 package com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ui.DataRequestHandler;
 import com.djrapitops.plan.utilities.UUIDFetcher;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.UUID;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -18,11 +15,11 @@ public class Response {
     private OutputStream output;
     private Request request;
 
-    private DataRequestHandler handler;
+    private DataRequestHandler requestHandler;
 
     public Response(OutputStream output, DataRequestHandler h) {
         this.output = output;
-        handler = h;
+        requestHandler = h;
     }
 
     public void sendStaticResource() throws IOException {
@@ -56,8 +53,8 @@ public class Response {
                         output.write(errorMessage.getBytes());
                         return;
                     }
-                    if (handler.checkIfCached(uuid)) {
-                        String dataHtml = handler.getDataHtml(uuid);
+                    if (requestHandler.checkIfCached(uuid)) {
+                        String dataHtml = requestHandler.getDataHtml(uuid);
                         String htmlDef = "HTTP/1.1 Inspect\r\n"
                                 + "Content-Type: text/html\r\n"
                                 + "Content-Length: " + dataHtml.length() + "\r\n"
@@ -67,8 +64,8 @@ public class Response {
                     }
                 }
             } else if (command.equals("server")) {
-                if (handler.checkIfAnalysisIsCached()) {
-                    String analysisHtml = handler.getAnalysisHtml();
+                if (requestHandler.checkIfAnalysisIsCached()) {
+                    String analysisHtml = requestHandler.getAnalysisHtml();
                     String htmlDef = "HTTP/1.1 Analysis\r\n"
                             + "Content-Type: text/html\r\n"
                             + "Content-Length: " + analysisHtml.length() + "\r\n"

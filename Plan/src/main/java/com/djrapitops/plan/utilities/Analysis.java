@@ -4,19 +4,21 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
+import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Analysis {
 
     private Plan plugin;
-    private AnalysisData data;
     private InspectCacheHandler inspectCache;
     private final List<UserData> rawData;
     private HashMap<Long, ServerData> rawServerData;
@@ -29,17 +31,27 @@ public class Analysis {
         added = new ArrayList<>();
     }
 
-    public void analyze() {
+    public void analyze(AnalysisCacheHandler analysisCache) {
         rawData.clear();
         added.clear();
         plugin.log("Analysis | Beginning analysis of user data..");
-        OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
+        OfflinePlayer[] offlinePlayers;
+        try {
+            offlinePlayers = plugin.getServer().getOfflinePlayers();
+        } catch (IndexOutOfBoundsException e) {
+            plugin.log("Analysis | Analysis failed, no known players.");
+            return;
+        }
         final List<UUID> uuids = new ArrayList<>();
         for (OfflinePlayer p : offlinePlayers) {
             UUID uuid = p.getUniqueId();
             if (plugin.getDB().wasSeenBefore(uuid)) {
                 uuids.add(uuid);
             }
+        }
+        if (uuids.isEmpty()) {
+            plugin.log("Analysis | Analysis failed, no data in the database.");
+            return;
         }
         (new BukkitRunnable() {
             @Override
@@ -49,23 +61,95 @@ public class Analysis {
                 });
                 plugin.log("Analysis | Fetching Data..");
                 while (rawData.size() != uuids.size()) {
-                    try {
-                        this.wait(1);
-                    } catch (InterruptedException ex) {
-                    }
                     uuids.stream()
                             .filter((uuid) -> (!added.contains(uuid)))
                             .forEach((uuid) -> {
-                        UserData userData = inspectCache.getFromCache(uuid);
-                        if (userData != null) {
-                            rawData.add(userData);
-                            added.add(uuid);
-                        }
-                    });
+                                UserData userData = inspectCache.getFromCache(uuid);
+                                if (userData != null) {
+                                    rawData.add(userData);
+                                    added.add(uuid);
+                                }
+                            });
                 }
                 rawServerData = plugin.getDB().getServerDataHashMap();
                 plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
-                
+                AnalysisData data = new AnalysisData();
+                String playerActivityHtml = AnalysisUtils.createPlayerActivityGraph(rawServerData, new Date().getTime());
+                data.setPlayersChartImgHtml(playerActivityHtml);
+                long gmZero = 0;
+                long gmOne = 0;
+                long gmTwo = 0;
+                long gmThree = 0;
+
+                long totalPlaytime = 0;
+                int totalBanned = 0;
+                long totalLoginTimes = 0;
+                int active = 0;
+                int inactive = 0;
+                int ops = 0;
+                List<Integer> ages = new ArrayList<>();
+
+                for (UserData uData : rawData) {
+                    HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
+                    gmZero += gmTimes.get(GameMode.SURVIVAL);
+                    gmOne += gmTimes.get(GameMode.CREATIVE);
+                    gmTwo += gmTimes.get(GameMode.ADVENTURE);
+                    gmThree += gmTimes.get(GameMode.SPECTATOR);
+                    totalPlaytime += uData.getPlayTime();
+                    totalLoginTimes += uData.getLoginTimes();
+                    int age = uData.getDemData().getAge();
+                    if (age != -1) {
+                        ages.add(age);
+                    }
+                    if (uData.isOp()) {
+                        ops++;
+                    }
+
+                    if (uData.isBanned()) {
+                        totalBanned++;
+                    } else if (AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes())) {
+                        active++;
+                    } else {
+                        inactive++;
+                    }
+                }
+                data.setTotalLoginTimes(totalLoginTimes);
+
+                String activityPieChartHtml = AnalysisUtils.createActivityPieChart(totalBanned, active, inactive);
+                data.setActivityChartImgHtml(activityPieChartHtml);
+                data.setActive(active);
+                data.setInactive(inactive);
+                data.setBanned(totalBanned);
+                data.setTotal(offlinePlayers.length);
+
+                data.setOps(ops);
+
+                data.setTotalPlayTime(totalPlaytime);
+                long averagePlaytime = totalPlaytime / rawData.size();
+                data.setAveragePlayTime(averagePlaytime);
+                int totalAge = 0;
+                for (int age : ages) {
+                    totalAge += age;
+                }
+                double averageAge = totalAge * 1.0 / ages.size();
+                data.setAverageAge(averageAge);
+                long gmTotal = gmZero + gmOne + gmTwo + gmThree;
+                HashMap<GameMode, Long> totalGmTimes = new HashMap<>();
+                totalGmTimes.put(GameMode.SURVIVAL, gmZero);
+                totalGmTimes.put(GameMode.CREATIVE, gmOne);
+                totalGmTimes.put(GameMode.ADVENTURE, gmTwo);
+                totalGmTimes.put(GameMode.SPECTATOR, gmThree);
+                String serverGMChartHtml = AnalysisUtils.createGMPieChart(totalGmTimes, gmTotal);
+                data.setGmTimesChartImgHtml(serverGMChartHtml);
+                data.setGm0Perc((int) (gmZero / gmTotal));
+                data.setGm1Perc((int) (gmOne / gmTotal));
+                data.setGm2Perc((int) (gmTwo / gmTotal));
+                data.setGm3Perc((int) (gmThree / gmTotal));
+
+                data.setRefreshDate(new Date().getTime());
+                analysisCache.cache(data);
+                plugin.log("Analysis | Analysis Complete.");
+                this.cancel();
             }
         }).runTaskAsynchronously(plugin);
     }

@@ -47,7 +47,7 @@ public class WebSocketServer {
         try {
             //Setup server
             try {
-                server = new ServerSocket(PORT, 1, InetAddress.getByName("127.0.0.1"));
+                server = new ServerSocket(PORT, 1, InetAddress.getByName("0.0.0.0"));
             } catch (IOException e) {
                 System.exit(1);
             }
@@ -63,7 +63,6 @@ public class WebSocketServer {
                             socket = server.accept();
                             input = socket.getInputStream();
                             output = socket.getOutputStream();
-                            plugin.log("Connected: " + socket.getRemoteSocketAddress().toString());
                             Request request = new Request(input);
                             request.parse();
 
@@ -79,7 +78,7 @@ public class WebSocketServer {
 
             ENABLED = true;
 
-            plugin.log("Webserver running: " + server.getInetAddress().getHostAddress() + ":" + server.getLocalPort());
+            plugin.log("Webserver running on PORT "+server.getLocalPort());
         } catch (Exception e) {
             ENABLED = false;
         }

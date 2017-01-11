@@ -5,15 +5,11 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.utilities.UUIDFetcher;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.ServerData;
 
 import java.util.Date;
-import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
@@ -21,7 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class InspectCommand extends SubCommand {
 
@@ -29,7 +25,7 @@ public class InspectCommand extends SubCommand {
     private InspectCacheHandler inspectCache;
 
     public InspectCommand(Plan plugin) {
-        super("inspect", "plan.inspect", "Inspect data /plan <player> [-a, -r].", CommandType.CONSOLE_WITH_ARGUMENTS);
+        super("inspect", "plan.inspect", "Inspect data /plan <player>", CommandType.CONSOLE_WITH_ARGUMENTS);
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -61,42 +57,22 @@ public class InspectCommand extends SubCommand {
 
         Date refreshDate = new Date();
         inspectCache.cache(uuid);
-        UserData data = inspectCache.getFromCache(uuid);
-
         ChatColor operatorColor = Phrase.COLOR_MAIN.color();
         ChatColor textColor = Phrase.COLOR_SEC.color();
-
-        List<String> msgs = new ArrayList<>();
-        msgs.add("Logintimes " + data.getLoginTimes());
-        msgs.add("BedLocation " + data.getBedLocation().getBlockX());
-        msgs.add("GeoLoc " + data.getDemData().getGeoLocation());
-        msgs.add("GMTimes values " + data.getGmTimes().values().toString());
-        msgs.add("Ips " + data.getIps().toString());
-        msgs.add("Last gamemode " + data.getLastGamemode());
-        msgs.add("Last gm swap time " + data.getLastGmSwapTime());
-        msgs.add("Last Played " + data.getLastPlayed());
-        msgs.add("Location " + data.getLocation().getBlockX());
-        msgs.add("Locations "+data.getLocations().size());
-        msgs.add("Nicknames " + data.getNicknames().toString());
-        msgs.add("Registered " + data.getRegistered());
-        msgs.add("TimesKicked " + data.getTimesKicked());
-        msgs.add("Uuid " + data.getUuid());
-        msgs.add("PlayTime " + data.getPlayTime());
-        msgs.add("Banned "+ data.isBanned());
-        msgs.add("Opped" + data.isOp());
-        msgs.add(operatorColor + "SERVER");
-        ServerData sdata = plugin.getHandler().getServerData();
-        msgs.add("Commands " + sdata.getCommandUsage().keySet().toString());
-        msgs.add("New Players " + sdata.getNewPlayers());
-        msgs.add("Online Players " + sdata.getPlayersOnline());
-        //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + " - took " + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
-
-        for (String message : msgs) {
-            sender.sendMessage(textColor + message);
-        }
-
-        sender.sendMessage(textColor + "-- o --");
+        (new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (inspectCache.getCache().containsKey(uuid)) {
+                    sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + " - took " + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
+                    sender.sendMessage(operatorColor + "Link: " + textColor
+                            + "http://" + plugin.getServer().getIp() + ":" + plugin.getConfig().getString("WebServer.Port"
+                            ) + "/player/" + playerName);
+                    sender.sendMessage(textColor+"Results will be available for 5 minutes.");
+                    sender.sendMessage(textColor + "-- o --");
+                    this.cancel();
+                }
+            }
+        }).runTaskTimer(plugin, 1 * 20, 5 * 20);
         return true;
     }
 }

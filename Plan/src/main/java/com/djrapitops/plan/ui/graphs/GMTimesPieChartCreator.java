@@ -13,19 +13,32 @@ import org.bukkit.GameMode;
  */
 public class GMTimesPieChartCreator {
 
-    public static String createChart(HashMap<GameMode, Long> gmTimes, String uuid) {
+    public static String createChart(HashMap<GameMode, Long> gmTimes) {
+        long total = gmTimes.get(GameMode.SURVIVAL) + gmTimes.get(GameMode.CREATIVE)
+                + gmTimes.get(GameMode.ADVENTURE) + gmTimes.get(GameMode.SPECTATOR);
 
+        return createChart(gmTimes, total);
+    }
+
+    public static String createChart(HashMap<GameMode, Long> gmTimes, long total) {
         long gmZero = gmTimes.get(GameMode.SURVIVAL);
         long gmOne = gmTimes.get(GameMode.CREATIVE);
         long gmTwo = gmTimes.get(GameMode.ADVENTURE);
         long gmThree = gmTimes.get(GameMode.SPECTATOR);
+        int zero = (int) (gmZero / total);
+        int one = (int) (gmOne / total);
+        int two = (int) (gmTwo / total);
+        int three = (int) (gmThree / total);
 
-        long total = gmZero + gmOne + gmTwo + gmThree;
+        System.out.println(zero + " " + one + " " + two + " " + three + " " + (zero + one + two + three));
 
-        Slice s1 = Slice.newSlice((int) (gmZero / total), Color.newColor("951800"), "Survival", "Survival");
-        Slice s2 = Slice.newSlice((int) (gmOne / total), Color.newColor("01A1DB"), "Creative", "Creative");
-        Slice s3 = Slice.newSlice((int) (gmThree / total), Color.newColor("FFFF33"), "Adventure", "Adventure");
-        Slice s4 = Slice.newSlice((int) (gmTwo / total), Color.newColor("228B22"), "Spectator", "Spectator");
+        Slice s1 = Slice.newSlice((zero), Color.newColor("951800"), "Survival", "Survival");
+
+        Slice s2 = Slice.newSlice((one), Color.newColor("01A1DB"), "Creative", "Creative");
+
+        Slice s3 = Slice.newSlice((two), Color.newColor("FFFF33"), "Adventure", "Adventure");
+
+        Slice s4 = Slice.newSlice((three), Color.newColor("228B22"), "Spectator", "Spectator");
 
         PieChart refChart = GCharts.newPieChart(s1, s2, s3, s4);
         refChart.setSize(500, 150);

@@ -16,25 +16,38 @@
     <body>
         <div style="line-height: 55%; font-family: Verdana, Geneva, sans-serif;">
             <h1 style="text-decoration: underline;">Plan | Server Analysis</h1>
+            <h4>Analysis refreshed %refresh% ago</h4>
             <table>
                 <tr>
                     <td style="margin-left: 3px; margin-right: auto; 
                         border-style: groove; border-width: 3px; border-radius: 12px; 
                         box-shadow: 5px 5px 4px 0px #888888;">
-                        <p>%activitygraph%</p>
+                        %playerchart%
                     </td>
                     <td style="margin-left: 3px; margin-right: auto; 
                         border-style: groove; border-width: 3px; border-radius: 12px; 
-                        box-shadow: 5px 5px 4px 0px #888888;">
-                        <p>%activitypiegraph%</p>
+                        box-shadow: 5px 5px 4px 0px #888888;text-align: center;">
+                        %activitypiechart%
+                        <p>Active %active% | Inactive %inactive% | Banned %banned% |  Total Players: %activitytotal%</p>
                     </td>
                 </tr>
-            </table>
-            <div style="margin-left: 3px; margin-right: auto; 
-                 border-style: groove; border-width: 3px; border-radius: 12px; 
-                 box-shadow: 5px 5px 4px 0px #888888;">
-                <p>Averages</p>
-            </div>
+                <tr>
+                    <td style="margin-left: 3px; margin-right: auto; 
+                        border-style: groove; border-width: 3px; border-radius: 12px; 
+                        box-shadow: 5px 5px 4px 0px #888888;">
+                        <p>%activitytotal% players have played on this server.</p>
+                        <p>A Total of %totalplaytime% has been played with the average of %avgplaytime%</p>
+                        <p>Players have joined %totallogins% times.</p>
+                        <p>The average age of known players is %avgage%.</p>
+                    </td>
+                    <td style="margin-left: 3px; margin-right: auto; 
+                        border-style: groove; border-width: 3px; border-radius: 12px; 
+                        box-shadow: 5px 5px 4px 0px #888888;text-align: center;">
+                        %gmpiechart%
+                        <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
+                    </td>
+                </tr>
+            </table>  
         </div>
     </body>
 </html>

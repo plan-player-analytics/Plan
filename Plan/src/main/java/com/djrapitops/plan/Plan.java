@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Plan extends JavaPlugin {
 
@@ -86,11 +87,23 @@ public class Plan extends JavaPlugin {
 
         this.api = new API(this);
         handler.handleReload();
-        
+
         uiServer = new WebSocketServer(this);
         uiServer.initServer();
 
         log("Player Analytics Enabled.");
+        
+        if (getConfig().getBoolean("RefreshAnalysisOnEnable")) {
+            log("Analysis | Boot analysis in 30 seconds..");
+            (new BukkitRunnable() {
+                @Override
+                public void run() {
+                    log("Analysis | Starting Boot Analysis..");
+                    analysisCache.updateCache();
+                    this.cancel();
+                }
+            }).runTaskLater(this, 30 * 20);
+        }
     }
 
     public void hookPlanLite() {
@@ -118,7 +131,7 @@ public class Plan extends JavaPlugin {
             handler.saveCacheOnDisable();
         });
         scheduler.shutdown();
-        
+
         log("Player Analytics Disabled.");
     }
 
@@ -205,11 +218,11 @@ public class Plan extends JavaPlugin {
     public AnalysisCacheHandler getAnalysisCache() {
         return analysisCache;
     }
-    
+
     public InspectCacheHandler getInspectCache() {
         return inspectCache;
     }
-    
+
     public DataCacheHandler getHandler() {
         return handler;
     }
