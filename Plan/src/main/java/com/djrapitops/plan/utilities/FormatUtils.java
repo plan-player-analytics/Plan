@@ -78,7 +78,7 @@ public class FormatUtils {
             returnValue += seconds + "s";
         }
         if (returnValue.isEmpty()) {
-            returnValue += "< 1s";
+            returnValue += "0s";
         }
         return returnValue;
     }

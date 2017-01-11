@@ -2,9 +2,11 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -17,6 +19,7 @@ public class Analysis {
     private AnalysisData data;
     private InspectCacheHandler inspectCache;
     private final List<UserData> rawData;
+    private HashMap<Long, ServerData> rawServerData;
     private final List<UUID> added;
 
     public Analysis(Plan plugin) {
@@ -31,7 +34,7 @@ public class Analysis {
         added.clear();
         plugin.log("Analysis | Beginning analysis of user data..");
         OfflinePlayer[] offlinePlayers = Bukkit.getServer().getOfflinePlayers();
-        List<UUID> uuids = new ArrayList<>();
+        final List<UUID> uuids = new ArrayList<>();
         for (OfflinePlayer p : offlinePlayers) {
             UUID uuid = p.getUniqueId();
             if (plugin.getDB().wasSeenBefore(uuid)) {
@@ -60,6 +63,7 @@ public class Analysis {
                         }
                     });
                 }
+                rawServerData = plugin.getDB().getServerDataHashMap();
                 plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
                 
             }

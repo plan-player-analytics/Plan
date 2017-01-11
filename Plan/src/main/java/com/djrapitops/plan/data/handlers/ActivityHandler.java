@@ -67,7 +67,7 @@ public class ActivityHandler {
         Player player = event.getPlayer();
         data.updateBanned(player);
         data.setLoginTimes(data.getLoginTimes() + 1);
-        handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
+//        handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
     }
 
     /**

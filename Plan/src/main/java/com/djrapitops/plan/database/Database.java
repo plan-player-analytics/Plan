@@ -49,4 +49,6 @@ public abstract class Database {
     public abstract ServerData getNewestServerData();
 
     public abstract void close();
+
+    public abstract HashMap<Long, ServerData> getServerDataHashMap();
 }

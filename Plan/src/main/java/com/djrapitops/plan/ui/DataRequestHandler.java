@@ -5,10 +5,12 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
+import com.djrapitops.plan.utilities.AnalysisUtils;
 import com.djrapitops.plan.utilities.FormatUtils;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.UUID;
+import org.bukkit.GameMode;
 
 /**
  *
@@ -48,7 +50,18 @@ public class DataRequestHandler {
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? ""+age:"Not known");
         replaceMap.put("%gender%", ""+data.getDemData().getGender().name().toLowerCase());
-        replaceMap.put("%gmpiechart%", "Piechart soon");
+        HashMap<GameMode, Long> gmTimes = data.getGmTimes();
+        replaceMap.put("%gmpiechart%", AnalysisUtils.createPieChart(gmTimes, data.getUuid().toString()));
+        long gmZero = gmTimes.get(GameMode.SURVIVAL);
+        long gmOne = gmTimes.get(GameMode.CREATIVE);
+        long gmTwo = gmTimes.get(GameMode.ADVENTURE);
+        long gmThree = gmTimes.get(GameMode.SPECTATOR);
+        long total = gmZero + gmOne + gmTwo + gmThree;
+        replaceMap.put("%gm0%", FormatUtils.formatTimeAmount(""+gmZero));
+        replaceMap.put("%gm1%", FormatUtils.formatTimeAmount(""+gmOne));
+        replaceMap.put("%gm2%", FormatUtils.formatTimeAmount(""+gmTwo));
+        replaceMap.put("%gm3%", FormatUtils.formatTimeAmount(""+gmThree));
+        replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount(""+total));
         replaceMap.put("%ips%", data.getIps().toString());
         replaceMap.put("%nicknames%", data.getNicknames().toString());
         replaceMap.put("%name%", data.getName());

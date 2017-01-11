@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public abstract class SQLDB extends Database {
 
@@ -184,7 +185,7 @@ public abstract class SQLDB extends Database {
                         + "FOREIGN KEY(" + locationColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                         + ")"
                 );
-                */
+                 */
                 query("CREATE TABLE IF NOT EXISTS " + gamemodetimesName + " ("
                         + gamemodetimesColumnUserID + " integer NOT NULL, "
                         + gamemodetimesColumnSurvivalTime + " bigint NOT NULL, "
@@ -344,12 +345,12 @@ public abstract class SQLDB extends Database {
             set.close();
             statement.close();
             String userId = "" + getUserId(uuid.toString());
-
+            
+            /* Locations Removed from Build 2.0.0 for performance reasons.
             statement = connection.prepareStatement("SELECT * FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, userId);
             set = statement.executeQuery();
 
-            /* Locations Removed from Build 2.0.0 for performance reasons.
             List<Location> locations = new ArrayList<>();
             while (set.next()) {
                 locations.add(new Location(worlds.get(set.getString(locationColumnWorld)), set.getInt(locationColumnCoordinatesX), 0, set.getInt(locationColumnCoordinatesZ)));
@@ -363,7 +364,7 @@ public abstract class SQLDB extends Database {
             } else {
                 data.setLocation(locations.get(locations.size() - 1));
             }
-            */
+             */
             data.setLocation(new Location(defaultWorld, 0, 0, 0));
 
             statement = connection.prepareStatement("SELECT * FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
@@ -412,6 +413,27 @@ public abstract class SQLDB extends Database {
             e.printStackTrace();
         }
         return data;
+    }
+
+    @Override
+    public HashMap<Long, ServerData> getServerDataHashMap() {
+        HashMap<String, Integer> commandUse = getCommandUse();
+        HashMap<Long, ServerData> rawServerData = new HashMap<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + serverdataName
+                    + " ORDER BY " + serverdataColumnDate + " ASC");
+
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                int newPlayers = set.getInt(serverdataColumnNewPlayers);
+                rawServerData.put(set.getLong(serverdataColumnDate), new ServerData(commandUse, newPlayers));
+            }
+            set.close();
+            statement.close();
+        } catch (SQLException e) {
+            plugin.logToFile("DATABASE-SQLDB-GetServerData\n" + e + "\n" + e.getCause());
+        }
+        return rawServerData;
     }
 
     @Override
@@ -521,7 +543,7 @@ public abstract class SQLDB extends Database {
             statement.setString(1, "" + userId);
             statement.execute();
             statement.close();
-            */
+             */
             statement = connection.prepareStatement("DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
@@ -653,7 +675,7 @@ public abstract class SQLDB extends Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        */
+         */
     }
 
     public void saveNickList(int userId, HashSet<String> names) {
