@@ -4,6 +4,7 @@ package com.djrapitops.plan.utilities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.bukkit.Location;
 
 /**
  *
@@ -117,6 +118,10 @@ public class FormatUtils {
             }
         }
         return result;
+    }
+
+    public static String formatLocation(Location loc) {
+        return "x "+loc.getBlockX()+" z " + loc.getBlockZ() +" in "+loc.getWorld();
     }
     
 }

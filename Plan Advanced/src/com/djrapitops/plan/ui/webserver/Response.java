@@ -58,11 +58,11 @@ public class Response {
                     }
                     if (handler.checkIfCached(uuid)) {
                         String dataHtml = handler.getDataHtml(uuid);
-                        String htmlDef = "HTTP/1.1 Analysis\r\n"
+                        String htmlDef = "HTTP/1.1 Inspect\r\n"
                                 + "Content-Type: text/html\r\n"
                                 + "Content-Length: " + dataHtml.length() + "\r\n"
                                 + "\r\n";
-                        output.write((htmlDef + dataHtml).getBytes());
+                        output.write((htmlDef+dataHtml).getBytes());
                         return;
                     }
                 }

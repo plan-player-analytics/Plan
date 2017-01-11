@@ -35,6 +35,8 @@ public class UserData {
     private boolean isOp;
     private boolean isBanned;
     private DemographicsData demData;
+    
+    private String name;
 
     public UserData(Player player, DemographicsData demData, Database db) {
         uuid = player.getUniqueId();
@@ -57,6 +59,7 @@ public class UserData {
         lastGamemode = player.getGameMode();
         this.demData = demData;
         isBanned = player.isBanned();
+        name = player.getName();
     }
 
     public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
@@ -78,6 +81,7 @@ public class UserData {
         gmTimes.put(GameMode.SPECTATOR, zero);
         this.demData = demData;
         isBanned = player.isBanned();
+        name = player.getName();
     }
 
     public void addIpAddress(InetAddress ip) {
@@ -210,6 +214,10 @@ public class UserData {
         return demData;
     }
 
+    public String getName() {
+        return name;
+    }
+
     // Setters -------------------------------------------------------------
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
@@ -273,5 +281,9 @@ public class UserData {
 
     public void setDemData(DemographicsData demData) {
         this.demData = demData;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
