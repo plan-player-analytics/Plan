@@ -13,7 +13,7 @@ public class ReloadCommand extends SubCommand {
     private Plan plugin;
 
     public ReloadCommand(Plan plugin) {
-        super("reload", "plan.reload", "Reload plugin config & save cached data", CommandType.CONSOLE);
+        super("reload", "plan.reload", "Reload plugin config & save cached data", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }
@@ -23,9 +23,7 @@ public class ReloadCommand extends SubCommand {
         plugin.reloadConfig();
         plugin.getHandler().saveCachedData();
         plugin.hookPlanLite();
-        ChatColor operatorColor = Phrase.COLOR_MAIN.color();
-        ChatColor textColor = Phrase.COLOR_SEC.color();
-        sender.sendMessage(textColor + "[" + operatorColor + "PLAN" + textColor + "] Reload complete.");
+        sender.sendMessage(ChatColor.GREEN+"[Plan] Reload complete.");
         
         return true;
     }

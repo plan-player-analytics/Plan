@@ -25,20 +25,21 @@ public class GMTimesPieChartCreator {
         long gmOne = gmTimes.get(GameMode.CREATIVE);
         long gmTwo = gmTimes.get(GameMode.ADVENTURE);
         long gmThree = gmTimes.get(GameMode.SPECTATOR);
-        int zero = (int) (gmZero / total);
-        int one = (int) (gmOne / total);
-        int two = (int) (gmTwo / total);
-        int three = (int) (gmThree / total);
+        int zero = (int) ((gmZero * 1.0 / total) * 100);
+        int one = (int) ((gmOne * 1.0 / total) * 100);
+        int two = (int) ((gmTwo * 1.0 / total) * 100);
+        int three = (int) ((gmThree * 1.0 / total) * 100);
+        while (zero + one + two + three < 100) {
+            one++;
+        }
+        while (zero + one + two + three > 100) {
+            one--;
+        }
 
-        System.out.println(zero + " " + one + " " + two + " " + three + " " + (zero + one + two + three));
-
-        Slice s1 = Slice.newSlice((zero), Color.newColor("951800"), "Survival", "Survival");
-
-        Slice s2 = Slice.newSlice((one), Color.newColor("01A1DB"), "Creative", "Creative");
-
-        Slice s3 = Slice.newSlice((two), Color.newColor("FFFF33"), "Adventure", "Adventure");
-
-        Slice s4 = Slice.newSlice((three), Color.newColor("228B22"), "Spectator", "Spectator");
+        Slice s1 = Slice.newSlice(zero, Color.newColor("951800"), "Survival", "Survival");
+        Slice s2 = Slice.newSlice(one, Color.newColor("01A1DB"), "Creative", "Creative");
+        Slice s3 = Slice.newSlice(two, Color.newColor("FFFF33"), "Adventure", "Adventure");
+        Slice s4 = Slice.newSlice(three, Color.newColor("228B22"), "Spectator", "Spectator");
 
         PieChart refChart = GCharts.newPieChart(s1, s2, s3, s4);
         refChart.setSize(500, 150);

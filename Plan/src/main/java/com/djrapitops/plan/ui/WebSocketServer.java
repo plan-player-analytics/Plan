@@ -33,7 +33,7 @@ public class WebSocketServer {
     public WebSocketServer(Plan plugin) {
         this.plugin = plugin;
         this.inspectHandler = plugin.getInspectCache();
-        this.PORT = plugin.getConfig().getInt("WebServer.Port");
+        this.PORT = plugin.getConfig().getInt("Settings.WebServer.Port");
         shutdown = false;
         dataReqHandler = new DataRequestHandler(plugin);
     }

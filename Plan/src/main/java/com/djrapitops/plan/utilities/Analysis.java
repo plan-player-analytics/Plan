@@ -141,10 +141,23 @@ public class Analysis {
                 totalGmTimes.put(GameMode.SPECTATOR, gmThree);
                 String serverGMChartHtml = AnalysisUtils.createGMPieChart(totalGmTimes, gmTotal);
                 data.setGmTimesChartImgHtml(serverGMChartHtml);
-                data.setGm0Perc((int) (gmZero / gmTotal));
-                data.setGm1Perc((int) (gmOne / gmTotal));
-                data.setGm2Perc((int) (gmTwo / gmTotal));
-                data.setGm3Perc((int) (gmThree / gmTotal));
+                data.setGm0Perc((gmZero * 1.0 / gmTotal));
+                data.setGm1Perc((gmOne * 1.0 / gmTotal));
+                data.setGm2Perc((gmTwo * 1.0 / gmTotal));
+                data.setGm3Perc((gmThree * 1.0 / gmTotal));
+
+                if (rawServerData.keySet().size() > 0) {
+                    ServerData sData = null;
+                    for (long sDataKey : rawServerData.keySet()) {
+                        sData = rawServerData.get(sDataKey);
+                        break;
+                    }
+                    if (sData != null) {
+                        data.setTop50CommandsListHtml(AnalysisUtils.createCommandUseListHtml(sData.getCommandUsage()));
+                    }
+                } else {
+                    data.setTop50CommandsListHtml("<p>Error Calcuclating Command usages (No usage data)</p>");
+                }
 
                 data.setRefreshDate(new Date().getTime());
                 analysisCache.cache(data);

@@ -28,7 +28,7 @@ public class InspectCacheHandler {
     }
 
     /**
-     * Caches the UserData of user to the HashMap for 5 minutes. Data is removed
+     * Caches the UserData of user to the HashMap for X minutes. Data is removed
      * from the cache automatically after 5 minutes with a BukkitRunnable
      *
      * @param uuid UUID of the player
@@ -38,12 +38,16 @@ public class InspectCacheHandler {
             return;
         }
         cache.put(uuid, handler.getCurrentData(uuid, false));
+        int minutes = plugin.getConfig().getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
+        if (minutes <= 0) {
+            minutes = 3;
+        }
         (new BukkitRunnable() {
             @Override
             public void run() {
                 clearFomCache(uuid);
             }
-        }).runTaskLater(plugin, 60 * 20 * 3);
+        }).runTaskLater(plugin, 60 * 20 * minutes);
     }
 
     private void clearFomCache(UUID uuid) {

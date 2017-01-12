@@ -10,13 +10,17 @@ import java.util.Date;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
+import static com.google.common.base.Predicates.instanceOf;
 import java.util.UUID;
+import org.bukkit.Bukkit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class InspectCommand extends SubCommand {
@@ -25,7 +29,7 @@ public class InspectCommand extends SubCommand {
     private InspectCacheHandler inspectCache;
 
     public InspectCommand(Plan plugin) {
-        super("inspect", "plan.inspect", "Inspect data /plan <player>", CommandType.CONSOLE_WITH_ARGUMENTS);
+        super("inspect", "plan.inspect", "Inspect Player's Data", CommandType.CONSOLE_WITH_ARGUMENTS, "<player>");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -57,18 +61,42 @@ public class InspectCommand extends SubCommand {
 
         Date refreshDate = new Date();
         inspectCache.cache(uuid);
-        ChatColor operatorColor = Phrase.COLOR_MAIN.color();
-        ChatColor textColor = Phrase.COLOR_SEC.color();
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
+        FileConfiguration config = plugin.getConfig();
+
+        final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
+        final int port = config.getInt("Settings.WebServer.Port");
+        final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
+        final int available = config.getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
         (new BukkitRunnable() {
             @Override
             public void run() {
                 if (inspectCache.getCache().containsKey(uuid)) {
-                    sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Inspect results: " + playerName + " - took " + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
-                    sender.sendMessage(operatorColor + "Link: " + textColor
-                            + "http://" + plugin.getServer().getIp() + ":" + plugin.getConfig().getString("WebServer.Port"
-                            ) + "/player/" + playerName);
-                    sender.sendMessage(textColor+"Results will be available for 5 minutes.");
-                    sender.sendMessage(textColor + "-- o --");
+                    // Header
+                    sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor
+                            + " Player Analytics - Inspect results: " + oColor + playerName
+                            + tColor + " | took " + oColor + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
+                    // Link
+                    String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
+                            + "/player/" + playerName;
+                    String message = tColor + " " + Phrase.BALL.toString() + oColor + " Link: " + hColor;
+                    boolean console = !(sender instanceof Player);
+                    if (console) {
+                        sender.sendMessage(message + url);
+                    } else {
+                        sender.sendMessage(message);
+                        Player player = (Player) sender;
+                        Bukkit.getServer().dispatchCommand(
+                                Bukkit.getConsoleSender(),
+                                "tellraw " + player.getName() + " [\"\",{\"text\":\"     Inspect Results\",\"underlined\":true,"
+                                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                    }
+
+                    sender.sendMessage(tColor + "   Results will be available for " + hColor + available + tColor + " minutes.");
+                    // Footer
+                    sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
                     this.cancel();
                 }
             }

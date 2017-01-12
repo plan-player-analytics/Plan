@@ -1,12 +1,25 @@
 debug: true
 
-RefreshAnalysisOnEnable: true
-saveEveryXMinutes: 5
+Settings:
+  Analysis:
+    MinutesPlayedUntilConsidiredActive: 10
+  Cache:
+    AnalysisCache:
+      RefreshAnalysisCacheOnEnable: true
+    InspectCache:
+      ClearFromInspectCacheAfterXMinutes: 3
+    DataCache:
+      SaveEveryXMinutes: 5
+      ClearCacheEveryXSaves: 5
+  WebServer:
+    Port: 8804
+    ShowAlternativeServerIP: false
+    AlternativeIP: your.ip.here:%port%
+  PlanLite:
+    Enabled: false
+
 database:
   type: sqlite
-
-WebServer:
-  Port: 8804
 
 enabledData:
   planLite:
@@ -19,11 +32,6 @@ enabledData:
     economy: true
     essentials:
       ruleBreaking: true
-  
-  server:
-    commandUsage: true
-    playersOnline: true
-    amountOfNewPlayers: true
     
     
       

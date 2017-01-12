@@ -15,12 +15,15 @@ public enum Phrase {
     USERNAME_NOT_KNOWN(ChatColor.RED+"Player not found from the database."),
     COLOR_MAIN(ChatColor.DARK_GREEN),
     COLOR_SEC(ChatColor.GRAY),
-    COLOR_TER(ChatColor.DARK_GRAY),
+    COLOR_TER(ChatColor.WHITE),
+    ARROWS_RIGHT("»"),
+    BALL("•"),
     ERROR_PLANLITE("PlanLite not found, if you're have plugins using PlanAPI v1.6.0 download PlanLite."),
     ERROR_NO_USERNAME("INSPECT-GETNAME\nNo username given, returned empty username.\n"), 
-    COMMAND_SENDER_NOT_PLAYER(ChatColor.RED + "[PLAN] This command can be only used as a player."), 
-    COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "[PLAN] Command requires arguments."), 
-    COMMAND_NO_PERMISSION(ChatColor.RED + "[PLAN] You do not have the required permmission.");
+    COMMAND_SENDER_NOT_PLAYER(ChatColor.RED + "[Plan] This command can be only used as a player."), 
+    COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "[Plan] Command requires arguments."), 
+    COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "[Plan] Command requires one argument."), 
+    COMMAND_NO_PERMISSION(ChatColor.RED + "[Plan] You do not have the required permmission.");
 
     private final String text;
     private final ChatColor color;

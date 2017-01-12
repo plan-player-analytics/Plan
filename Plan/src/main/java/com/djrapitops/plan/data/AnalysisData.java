@@ -14,11 +14,12 @@ public class AnalysisData {
     private String gmTimesChartImgHtml;
     private String playersChartImgHtml;
     private String activityChartImgHtml;
+    private String top50CommandsListHtml;
 
-    private int gm0Perc;
-    private int gm1Perc;
-    private int gm2Perc;
-    private int gm3Perc;
+    private double gm0Perc;
+    private double gm1Perc;
+    private double gm2Perc;
+    private double gm3Perc;
 
     private int banned;
     private int active;
@@ -33,6 +34,15 @@ public class AnalysisData {
     }
 
     // Getters and setters v---------------------------------v
+
+    public String getTop50CommandsListHtml() {
+        return top50CommandsListHtml;
+    }
+
+    public void setTop50CommandsListHtml(String top50CommandsListHtml) {
+        this.top50CommandsListHtml = top50CommandsListHtml;
+    }
+    
     public int getBanned() {
         return banned;
     }
@@ -65,37 +75,39 @@ public class AnalysisData {
         this.total = total;
     }
 
-    public int getGm0Perc() {
+    public double getGm0Perc() {
         return gm0Perc;
     }
 
-    public void setGm0Perc(int gm0Perc) {
+    public void setGm0Perc(double gm0Perc) {
         this.gm0Perc = gm0Perc;
     }
 
-    public int getGm1Perc() {
+    public double getGm1Perc() {
         return gm1Perc;
     }
 
-    public void setGm1Perc(int gm1Perc) {
+    public void setGm1Perc(double gm1Perc) {
         this.gm1Perc = gm1Perc;
     }
 
-    public int getGm2Perc() {
+    public double getGm2Perc() {
         return gm2Perc;
     }
 
-    public void setGm2Perc(int gm2Perc) {
+    public void setGm2Perc(double gm2Perc) {
         this.gm2Perc = gm2Perc;
     }
 
-    public int getGm3Perc() {
+    public double getGm3Perc() {
         return gm3Perc;
     }
 
-    public void setGm3Perc(int gm3Perc) {
+    public void setGm3Perc(double gm3Perc) {
         this.gm3Perc = gm3Perc;
     }
+
+    
 
     public int getTotalPlayers() {
         return totalPlayers;

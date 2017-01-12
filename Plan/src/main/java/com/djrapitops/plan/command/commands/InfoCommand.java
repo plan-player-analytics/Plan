@@ -14,22 +14,22 @@ public class InfoCommand extends SubCommand {
     private Plan plugin;
 
     public InfoCommand(Plan plugin) {
-        super("info", "plan.info", "View version and enabled hooks", CommandType.CONSOLE);
+        super("info", "plan.info", "View Version of Plan", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        plugin.reloadConfig();
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
+        
         String[] messages = {
-            tColor +"--["+oColor+"PLAN - Info"+tColor+"]--",
-            oColor+"Version: "+tColor+plugin.getDescription().getVersion(),
-            tColor+MiscUtils.checkVersion(),
-            oColor+"Cache Size: "+tColor+plugin.getHandler().getDataCache().keySet().size(),
-            oColor+"InspectCache Size: "+tColor+plugin.getInspectCache().getCache().keySet().size()
+            hColor + Phrase.ARROWS_RIGHT.toString()+oColor+"Player Analytics - Info",
+            tColor + " " + Phrase.BALL.toString() +oColor+"Version: "+tColor+plugin.getDescription().getVersion(),
+            tColor + " " + Phrase.BALL.toString() +tColor+MiscUtils.checkVersion(),
+            hColor + Phrase.ARROWS_RIGHT.toString()
         };
         sender.sendMessage(messages);
         return true;

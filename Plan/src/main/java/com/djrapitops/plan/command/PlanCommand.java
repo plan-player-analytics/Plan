@@ -8,7 +8,6 @@ import com.djrapitops.plan.command.commands.InfoCommand;
 import com.djrapitops.plan.command.commands.InspectCommand;
 import com.djrapitops.plan.command.commands.ReloadCommand;
 import com.djrapitops.plan.command.commands.SearchCommand;
-import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.FormatUtils;
 
 import org.bukkit.command.Command;

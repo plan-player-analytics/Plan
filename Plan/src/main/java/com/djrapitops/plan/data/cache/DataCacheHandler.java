@@ -60,9 +60,16 @@ public class DataCacheHandler {
 
         timesSaved = 0;
 
-        int minutes = plugin.getConfig().getInt("saveEveryXMinutes");
+        int minutes = plugin.getConfig().getInt("Settings.Cache.DataCache.SaveEveryXMinutes");
         if (minutes <= 0) {
             minutes = 5;
+        }
+        final int clearAfterXsaves;
+        int configValue = plugin.getConfig().getInt("Settings.Cache.DataCache.ClearCacheEveryXSaves");
+        if (configValue <= 1) {
+            clearAfterXsaves = 2;
+        } else {
+            clearAfterXsaves = configValue;
         }
         (new BukkitRunnable() {
             @Override
@@ -70,7 +77,7 @@ public class DataCacheHandler {
                 DataCacheHandler handler = plugin.getHandler();
                 handler.saveHandlerDataToCache();
                 handler.saveCachedData();
-                if (timesSaved % 5 == 0) {
+                if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
                 timesSaved++;
@@ -96,6 +103,9 @@ public class DataCacheHandler {
             }
             return dataCache.get(uuid);
         } else {
+            if (dataCache.get(uuid) != null) {
+                return dataCache.get(uuid);
+            }
             return db.getUserData(uuid);
         }
     }

@@ -33,8 +33,7 @@ public class PlanLiteHook {
             }
             planLiteApi = planLite.getAPI();
         } catch (Exception e) {
-            plugin.logError(e.toString());
-            e.printStackTrace();
+            
         }
     }
 

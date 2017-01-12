@@ -15,9 +15,9 @@ public class ActivityPieChartCreator {
 
         int total = totalBanned + active + inactive;
 
-        int banPerc = (int) (totalBanned / total);
-        int inacPerc = (int) (inactive / total);
-        int actPerc = (int) (active / total);
+        int banPerc = (int) ((totalBanned / total) * 100);
+        int inacPerc = (int) ((inactive / total) * 100);
+        int actPerc = (int) ((active / total) * 100);
         while (banPerc + inacPerc + actPerc < 100) {
             actPerc++;
         }

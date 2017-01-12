@@ -1,6 +1,7 @@
 package com.djrapitops.plan.command.commands;
 
 //import com.djrapitops.plan.Phrase;
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.PlanCommand;
@@ -16,7 +17,7 @@ public class HelpCommand extends SubCommand {
     private final PlanCommand command;
 
     public HelpCommand(Plan plugin, PlanCommand command) {
-        super("help,?", "plan.?", "Show command list.", CommandType.CONSOLE);
+        super("help,?", "plan.?", "Show command list.", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
         this.command = command;
@@ -25,12 +26,13 @@ public class HelpCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
 
-        ChatColor textColor = ChatColor.GRAY;
-
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Player Analytics" + textColor + "] --");
-
+        // Header
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics - Help");
+        // Help results
         for (SubCommand command : this.command.getCommands()) {
             if (command.getName().equalsIgnoreCase(getName())) {
                 continue;
@@ -44,9 +46,11 @@ public class HelpCommand extends SubCommand {
                 continue;
             }
 
-            sender.sendMessage(operatorColor + "/plan " + command.getFirstName() + textColor + " - " + command.getUsage());
+            sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor 
+                    + " /plan " + command.getFirstName() + command.getArguments() + tColor + " - " + command.getUsage());
         }
-
+        // Footer
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
         return true;
     }
 

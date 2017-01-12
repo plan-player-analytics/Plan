@@ -2,7 +2,6 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.utilities.FormatUtils;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,9 +82,11 @@ public class MiscUtils {
         List<OfflinePlayer> players = new ArrayList<>();
         players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
         Set<OfflinePlayer> matches = new HashSet<>();
-        players.parallelStream().filter((OfflinePlayer player) -> (player.getName().contains(search))).forEach((OfflinePlayer player) -> {
-            matches.add(player);
-        });
+        players.parallelStream()
+                .filter((OfflinePlayer player) -> (player.getName().toLowerCase().contains(search.toLowerCase())))
+                .forEach((OfflinePlayer player) -> {
+                    matches.add(player);
+                });
         return matches;
     }
 

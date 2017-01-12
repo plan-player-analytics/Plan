@@ -93,7 +93,7 @@ public class Plan extends JavaPlugin {
 
         log("Player Analytics Enabled.");
         
-        if (getConfig().getBoolean("RefreshAnalysisOnEnable")) {
+        if (getConfig().getBoolean("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable")) {
             log("Analysis | Boot analysis in 30 seconds..");
             (new BukkitRunnable() {
                 @Override
@@ -108,7 +108,7 @@ public class Plan extends JavaPlugin {
 
     public void hookPlanLite() {
         try {
-            if (getConfig().getBoolean("enabledData.planLite.pluginEnabled")) {
+            if (getConfig().getBoolean("Settings.PlanLite.Enabled")) {
                 planLiteHook = new PlanLiteHook(this);
             }
         } catch (NoClassDefFoundError | Exception e) {
