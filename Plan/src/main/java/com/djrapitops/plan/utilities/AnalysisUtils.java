@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
+import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
 import org.bukkit.GameMode;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
@@ -23,6 +24,7 @@ public class AnalysisUtils {
         String url = GMTimesPieChartCreator.createChart(gmTimes);
         return "<img src=\"" + url + "\">";
     }
+
     public static String createGMPieChart(HashMap<GameMode, Long> gmTimes, long total) {
         String url = GMTimesPieChartCreator.createChart(gmTimes, total);
         return "<img src=\"" + url + "\">";
@@ -31,9 +33,12 @@ public class AnalysisUtils {
     public static HashMap<String, String> getInspectReplaceRules(UserData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%uuid%", "" + data.getUuid());
+        replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp("" + data.getLastPlayed()));
         replaceMap.put("%logintimes%", "" + data.getLoginTimes());
         replaceMap.put("%bed%", FormatUtils.formatLocation(data.getBedLocation()));
         replaceMap.put("%geoloc%", data.getDemData().getGeoLocation());
+        replaceMap.put("%active%", AnalysisUtils.isActive(data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes())
+                ? "| Player is Active" : "| Player is inactive");
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? "" + age : "Not known");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
@@ -60,37 +65,40 @@ public class AnalysisUtils {
         return replaceMap;
     }
 
-    static String createPlayerActivityGraph(HashMap<Long, ServerData> rawServerData, long time) {
-        return "<img src=\"" + "\">";
+    static String createPlayerActivityGraph(HashMap<Long, ServerData> rawServerData, long scale) {
+        String url = PlayerActivityGraphCreator.createChart(rawServerData, scale);
+        return "<img src=\"" + url + "\">";
     }
 
     public static HashMap<String, String> getAnalysisReplaceRules(AnalysisData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%activitypiechart%", data.getActivityChartImgHtml());
         replaceMap.put("%gmpiechart%", data.getGmTimesChartImgHtml());
-        replaceMap.put("%gm0%", (int) data.getGm0Perc()*100+"%");
-        replaceMap.put("%gm1%", (int) data.getGm1Perc()*100+"%");
-        replaceMap.put("%gm2%", (int) data.getGm2Perc()*100+"%");
-        replaceMap.put("%gm3%", (int) data.getGm3Perc()*100+"%");
+        replaceMap.put("%gm0%", (int) data.getGm0Perc() * 100 + "%");
+        replaceMap.put("%gm1%", (int) data.getGm1Perc() * 100 + "%");
+        replaceMap.put("%gm2%", (int) data.getGm2Perc() * 100 + "%");
+        replaceMap.put("%gm3%", (int) data.getGm3Perc() * 100 + "%");
         replaceMap.put("%active%", "" + data.getActive());
         replaceMap.put("%banned%", "" + data.getBanned());
         replaceMap.put("%inactive%", "" + data.getInactive());
         replaceMap.put("%activitytotal%", "" + data.getTotal());
-        replaceMap.put("%playerchart%", data.getPlayersChartImgHtml());
+        replaceMap.put("%playerchartmonth%", data.getPlayersChartImgHtmlMonth());
+        replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
+        replaceMap.put("%playerchartday%", data.getPlayersChartImgHtmlDay());
         replaceMap.put("%top50commands%", data.getTop50CommandsListHtml());
-        replaceMap.put("%avgage%", ""+data.getAverageAge());
-        replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount(""+data.getAveragePlayTime()));
-        replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount(""+data.getTotalPlayTime()));
-        replaceMap.put("%ops%", ""+data.getOps());
-        replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString(""+data.getRefreshDate(), new Date()));
-        replaceMap.put("%totallogins%", ""+data.getTotalLoginTimes());
+        replaceMap.put("%avgage%", "" + data.getAverageAge());
+        replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
+        replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
+        replaceMap.put("%ops%", "" + data.getOps());
+        replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
+        replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         return replaceMap;
     }
 
     static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         Plan plugin = getPlugin(Plan.class);
         int timeToActive = plugin.getConfig().getInt("Settings.Analysis.MinutesPlayedUntilConsidiredActive");
-        long twoWeeks = 1209600;
+        long twoWeeks = 1209600000;
         if (new Date().getTime() - lastPlayed < twoWeeks) {
             if (loginTimes > 3) {
                 if (playTime > 60 * timeToActive) {
@@ -105,10 +113,10 @@ public class AnalysisUtils {
         String url = ActivityPieChartCreator.createChart(totalBanned, active, inactive);
         return "<img src=\"" + url + "\">";
     }
-    
+
     static String createCommandUseListHtml(HashMap<String, Integer> commandUse) {
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
-        String html ="<table>";
+        String html = "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
         if (sorted.isEmpty()) {
             html = "<p>Error Calcuclating Command usages</p>";
             return html;
@@ -118,7 +126,7 @@ public class AnalysisUtils {
             if (i >= 50) {
                 break;
             }
-            html += "<tr style=\"text-align: center;\"><td><b>"+values[1]+"</b></td>\r\n<td>"+values[0]+"</td></tr>";
+            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
             i++;
         }
         html += "</table>";

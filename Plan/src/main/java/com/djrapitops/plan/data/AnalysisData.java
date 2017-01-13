@@ -12,7 +12,9 @@ public class AnalysisData {
     private long totalPlayTime;
     private double averageAge;
     private String gmTimesChartImgHtml;
-    private String playersChartImgHtml;
+    private String playersChartImgHtmlMonth;
+    private String playersChartImgHtmlWeek;
+    private String playersChartImgHtmlDay;
     private String activityChartImgHtml;
     private String top50CommandsListHtml;
 
@@ -35,6 +37,30 @@ public class AnalysisData {
 
     // Getters and setters v---------------------------------v
 
+    public String getPlayersChartImgHtmlMonth() {
+        return playersChartImgHtmlMonth;
+    }
+
+    public void setPlayersChartImgHtmlMonth(String playersChartImgHtmlMonth) {
+        this.playersChartImgHtmlMonth = playersChartImgHtmlMonth;
+    }
+
+    public String getPlayersChartImgHtmlWeek() {
+        return playersChartImgHtmlWeek;
+    }
+
+    public void setPlayersChartImgHtmlWeek(String playersChartImgHtmlWeek) {
+        this.playersChartImgHtmlWeek = playersChartImgHtmlWeek;
+    }
+
+    public String getPlayersChartImgHtmlDay() {
+        return playersChartImgHtmlDay;
+    }
+
+    public void setPlayersChartImgHtmlDay(String playersChartImgHtmlDay) {
+        this.playersChartImgHtmlDay = playersChartImgHtmlDay;
+    }    
+    
     public String getTop50CommandsListHtml() {
         return top50CommandsListHtml;
     }
@@ -141,9 +167,6 @@ public class AnalysisData {
         return gmTimesChartImgHtml;
     }
 
-    public String getPlayersChartImgHtml() {
-        return playersChartImgHtml;
-    }
 
     public String getActivityChartImgHtml() {
         return activityChartImgHtml;
@@ -173,9 +196,6 @@ public class AnalysisData {
         this.gmTimesChartImgHtml = gmTimesChartImgHtml;
     }
 
-    public void setPlayersChartImgHtml(String playersChartImgHtml) {
-        this.playersChartImgHtml = playersChartImgHtml;
-    }
 
     public void setActivityChartImgHtml(String activityChartImgHtml) {
         this.activityChartImgHtml = activityChartImgHtml;

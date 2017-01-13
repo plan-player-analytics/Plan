@@ -74,8 +74,15 @@ public class Analysis {
                 rawServerData = plugin.getDB().getServerDataHashMap();
                 plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
                 AnalysisData data = new AnalysisData();
-                String playerActivityHtml = AnalysisUtils.createPlayerActivityGraph(rawServerData, new Date().getTime());
-                data.setPlayersChartImgHtml(playerActivityHtml);
+                long scale = 2592000 * Long.valueOf("1000");
+                String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scale);
+                data.setPlayersChartImgHtmlMonth(playerActivityHtmlMonth);
+                scale = 604800 * 1000;
+                String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scale);
+                data.setPlayersChartImgHtmlWeek(playerActivityHtmlWeek);
+                scale = 86400 * 1000;
+                String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scale);
+                data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
                 long gmZero = 0;
                 long gmOne = 0;
                 long gmTwo = 0;

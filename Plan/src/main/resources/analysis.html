@@ -14,49 +14,49 @@
     </head>
 
     <body>
-        <div style="line-height: 55%; font-family: Verdana, Geneva, sans-serif;">
+        <div style="line-height: 55%; font-family: Verdana, Geneva, sans-serif;padding: 2px 4px 2px 3px;">
             <h1 style="text-decoration: underline;">Plan | Server Analysis</h1>
             <h4>Analysis refreshed %refresh% ago</h4>
             <table>
                 <tr>
                     <td style="margin-left: 3px; margin-right: auto; 
-                        border-style: groove; border-width: 3px; border-radius: 12px; 
+                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;
                         box-shadow: 5px 5px 4px 0px #888888;">
-                        %playerchart%
+                        <h4>Player Activity - Last 24h</h4>
+                        %playerchartday%
+                        <h4>Player Activity - Last 7 days</h4>
+                        %playerchartweek%
+                        <h4>Player Activity - Last 30 days</h4>
+                        %playerchartmonth%
                     </td>
                     <td style="margin-left: 3px; margin-right: auto; 
-                        border-style: groove; border-width: 3px; border-radius: 12px; 
-                        box-shadow: 5px 5px 4px 0px #888888;text-align: center;">
-                        %activitypiechart%
-                        <p>Active %active% | Inactive %inactive% | Banned %banned% |  Total Players: %activitytotal%</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="margin-left: 3px; margin-right: auto; 
-                        border-style: groove; border-width: 3px; border-radius: 12px; 
-                        box-shadow: 5px 5px 4px 0px #888888;">
+                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;
+                        box-shadow: 5px 5px 4px 0px #888888;text-align: left;vertical-align: top;">
+                        <h4>Information</h4>
                         <p>%activitytotal% players have played on this server.</p>
                         <p>A Total of %totalplaytime% has been played with the average of %avgplaytime%</p>
                         <p>Players have joined %totallogins% times.</p>
                         <p>The average age of known players is %avgage%.</p>
-                    </td>
-                    <td style="margin-left: 3px; margin-right: auto; 
-                        border-style: groove; border-width: 3px; border-radius: 12px; 
-                        box-shadow: 5px 5px 4px 0px #888888;text-align: center;">
+                        <br/><h4>Playerbase composition</h4>
+                        %activitypiechart%
+                        <p>Active %active% | Inactive %inactive% | Banned %banned% |  Total Players: %activitytotal%</p>
+                        <br/><h4>Gamemode Usage</h4>
                         %gmpiechart%
                         <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
+                        <br/><h4>Top 50 Most used commands</h4>
+                        %top50commands%
                     </td>
                 </tr>
                 <tr>
                     <td style="margin-left: 3px; margin-right: auto; 
-                        border-style: groove; border-width: 3px; border-radius: 12px; 
-                        box-shadow: 5px 5px 4px 0px #888888;text-align: center;">
-                        %top50commands%
+                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;
+                        box-shadow: 5px 5px 4px 0px #888888;text-align: center;"> 
+                        <p>Empty wrapper</p>
                     </td>
                     <td style="margin-left: 3px; margin-right: auto; 
-                        border-style: groove; border-width: 3px; border-radius: 12px; 
+                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;
                         box-shadow: 5px 5px 4px 0px #888888;text-align: center;">
-                        %top50commands%
+                        <p>Empty wrapper</p>
                     </td>
                 </tr>
             </table> 

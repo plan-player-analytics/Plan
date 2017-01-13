@@ -34,6 +34,7 @@ public class DataCacheHandler {
     private final NewPlayerCreator newPlayerCreator;
 
     private int timesSaved;
+    private int maxPlayers;
 
     /**
      * Class Constructor.
@@ -59,6 +60,7 @@ public class DataCacheHandler {
         newPlayerCreator = new NewPlayerCreator(plugin, this);
 
         timesSaved = 0;
+        maxPlayers = plugin.getServer().getMaxPlayers();
 
         int minutes = plugin.getConfig().getInt("Settings.Cache.DataCache.SaveEveryXMinutes");
         if (minutes <= 0) {
@@ -336,5 +338,9 @@ public class DataCacheHandler {
             gamemodeTimesHandler.handleReload(player, data);
             saveCachedData(uuid);
         }
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 }
