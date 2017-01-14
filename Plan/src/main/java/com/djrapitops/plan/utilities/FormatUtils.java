@@ -1,4 +1,3 @@
-
 package com.djrapitops.plan.utilities;
 
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class FormatUtils {
     }
 
     public static String formatLocation(Location loc) {
-        return "x "+loc.getBlockX()+" z " + loc.getBlockZ() +" in "+loc.getWorld();
+        return "x " + loc.getBlockX() + " z " + loc.getBlockZ() + " in " + loc.getWorld();
     }
-    
+
 }

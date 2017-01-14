@@ -17,11 +17,22 @@ public class Response {
 
     private DataRequestHandler requestHandler;
 
+    /**
+     * Class Constructor.
+     *
+     * @param output Website outputstream to write the response to.
+     * @param h Current Instance of DataRequestHandler
+     */
     public Response(OutputStream output, DataRequestHandler h) {
         this.output = output;
         requestHandler = h;
     }
 
+    /**
+     * Wrties the HTML to the Outputstream according to the requested page.
+     *
+     * @throws IOException
+     */
     public void sendStaticResource() throws IOException {
         try {
             if (request == null) {
@@ -55,18 +66,18 @@ public class Response {
                     }
                     if (requestHandler.checkIfCached(uuid)) {
                         String dataHtml = requestHandler.getDataHtml(uuid);
-                        String htmlDef = "HTTP/1.1 Inspect\r\n"
+                        String htmlDef = "HTTP/1.1 OK\r\n"
                                 + "Content-Type: text/html\r\n"
                                 + "Content-Length: " + dataHtml.length() + "\r\n"
                                 + "\r\n";
-                        output.write((htmlDef+dataHtml).getBytes());
+                        output.write((htmlDef + dataHtml).getBytes());
                         return;
                     }
                 }
             } else if (command.equals("server")) {
                 if (requestHandler.checkIfAnalysisIsCached()) {
                     String analysisHtml = requestHandler.getAnalysisHtml();
-                    String htmlDef = "HTTP/1.1 Analysis\r\n"
+                    String htmlDef = "HTTP/1.1 OK\r\n"
                             + "Content-Type: text/html\r\n"
                             + "Content-Length: " + analysisHtml.length() + "\r\n"
                             + "\r\n";
@@ -86,6 +97,11 @@ public class Response {
         }
     }
 
+    /**
+     * Sets the HTML Request to get response for.
+     *
+     * @param request Request.
+     */
     public void setRequest(Request request) {
         this.request = request;
     }

@@ -22,7 +22,7 @@ public abstract class SubCommand {
     public String getArguments() {
         return arguments;
     }
-    
+
     public String getFirstName() {
         return name.split(",")[0];
     }

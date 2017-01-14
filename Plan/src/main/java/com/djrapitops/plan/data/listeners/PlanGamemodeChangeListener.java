@@ -28,8 +28,7 @@ public class PlanGamemodeChangeListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        UserData data = handler.getCurrentData(p.getUniqueId());        
+        UserData data = handler.getCurrentData(p.getUniqueId());
         gmTimesH.handleChangeEvent(event, data);
     }
 }
-

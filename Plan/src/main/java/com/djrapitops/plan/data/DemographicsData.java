@@ -1,9 +1,9 @@
-
 package com.djrapitops.plan.data;
 
 import com.djrapitops.plan.api.Gender;
 
 public class DemographicsData {
+
     private int age;
     private Gender gender;
     private String geoLocation;
@@ -13,13 +13,12 @@ public class DemographicsData {
         this.gender = gender;
         this.geoLocation = geoLocation;
     }
-    
+
     public DemographicsData() {
         this(-1, Gender.UNKNOWN, "Not_known");
     }
 
     // Getters
-    
     public int getAge() {
         return age;
     }
@@ -31,9 +30,8 @@ public class DemographicsData {
     public String getGeoLocation() {
         return geoLocation;
     }
-    
-    // Setters
 
+    // Setters
     public void setAge(int age) {
         this.age = age;
     }
@@ -45,6 +43,5 @@ public class DemographicsData {
     public void setGeoLocation(String geoLocation) {
         this.geoLocation = geoLocation;
     }
-    
-    
+
 }

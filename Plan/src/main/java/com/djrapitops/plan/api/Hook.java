@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * Old API Part
+ *
  * @author Rsl1122
  * @deprecated
  */
@@ -11,7 +12,7 @@ import java.util.HashMap;
 public interface Hook {
 
     /**
-     * 
+     *
      * @param player
      * @return
      * @throws Exception

@@ -73,8 +73,7 @@ public class ActivityHandler {
     /**
      * Updates UserData about activity related things on Logout.
      *
-     * Saves PlayTime, Set's LastPlayed
-     * value to long matching current Date
+     * Saves PlayTime, Set's LastPlayed value to long matching current Date
      *
      * @param event QuitEvent from Listener
      * @param data UserData matching the Player

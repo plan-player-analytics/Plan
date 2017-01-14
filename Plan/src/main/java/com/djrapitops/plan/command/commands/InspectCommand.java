@@ -10,7 +10,6 @@ import java.util.Date;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
-import static com.google.common.base.Predicates.instanceOf;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 
@@ -23,11 +22,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class InspectCommand extends SubCommand {
 
     private Plan plugin;
     private InspectCacheHandler inspectCache;
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public InspectCommand(Plan plugin) {
         super("inspect", "plan.inspect", "Inspect Player's Data", CommandType.CONSOLE_WITH_ARGUMENTS, "<player>");
 
@@ -35,6 +43,19 @@ public class InspectCommand extends SubCommand {
         inspectCache = plugin.getInspectCache();
     }
 
+    /**
+     * Subcommand inspect.
+     *
+     * Adds player's data from DataCache/DB to the InspectCache for amount of
+     * time specified in the config, and clears the data from Cache with a timer
+     * task.
+     *
+     * @param sender
+     * @param cmd
+     * @param commandLabel
+     * @param args Player's name or nothing - if empty sender's name is used.
+     * @return true in all cases.
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerDisplayname(args, sender);
@@ -69,7 +90,11 @@ public class InspectCommand extends SubCommand {
         final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
         final int port = config.getInt("Settings.WebServer.Port");
         final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
-        final int available = config.getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
+        int configValue = config.getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
+        if (configValue <= 0) {
+            configValue = 4;
+        }
+        final int available = configValue;
         (new BukkitRunnable() {
             @Override
             public void run() {
@@ -90,7 +115,7 @@ public class InspectCommand extends SubCommand {
                         Player player = (Player) sender;
                         Bukkit.getServer().dispatchCommand(
                                 Bukkit.getConsoleSender(),
-                                "tellraw " + player.getName() + " [\"\",{\"text\":\"     Inspect Results\",\"underlined\":true,"
+                                "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
                                 + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
                     }
 

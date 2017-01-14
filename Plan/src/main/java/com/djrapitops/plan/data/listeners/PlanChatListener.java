@@ -22,7 +22,7 @@ public class PlanChatListener implements Listener {
 
     /**
      * Class Constructor.
-     * 
+     *
      * @param plugin Current instance of Plan
      */
     public PlanChatListener(Plan plugin) {
@@ -33,6 +33,7 @@ public class PlanChatListener implements Listener {
 
     /**
      * ChatEvent listener.
+     *
      * @param event Fired Event
      */
     @EventHandler(priority = EventPriority.MONITOR)
@@ -41,9 +42,8 @@ public class PlanChatListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        UserData data = handler.getCurrentData(p.getUniqueId());        
+        UserData data = handler.getCurrentData(p.getUniqueId());
         data.addNickname(p.getDisplayName());
         demographicsHandler.handleChatEvent(event, data);
     }
 }
-

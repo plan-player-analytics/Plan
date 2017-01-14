@@ -36,7 +36,6 @@ public class AnalysisData {
     }
 
     // Getters and setters v---------------------------------v
-
     public String getPlayersChartImgHtmlMonth() {
         return playersChartImgHtmlMonth;
     }
@@ -59,8 +58,8 @@ public class AnalysisData {
 
     public void setPlayersChartImgHtmlDay(String playersChartImgHtmlDay) {
         this.playersChartImgHtmlDay = playersChartImgHtmlDay;
-    }    
-    
+    }
+
     public String getTop50CommandsListHtml() {
         return top50CommandsListHtml;
     }
@@ -68,7 +67,7 @@ public class AnalysisData {
     public void setTop50CommandsListHtml(String top50CommandsListHtml) {
         this.top50CommandsListHtml = top50CommandsListHtml;
     }
-    
+
     public int getBanned() {
         return banned;
     }
@@ -133,8 +132,6 @@ public class AnalysisData {
         this.gm3Perc = gm3Perc;
     }
 
-    
-
     public int getTotalPlayers() {
         return totalPlayers;
     }
@@ -167,7 +164,6 @@ public class AnalysisData {
         return gmTimesChartImgHtml;
     }
 
-
     public String getActivityChartImgHtml() {
         return activityChartImgHtml;
     }
@@ -195,7 +191,6 @@ public class AnalysisData {
     public void setGmTimesChartImgHtml(String gmTimesChartImgHtml) {
         this.gmTimesChartImgHtml = gmTimesChartImgHtml;
     }
-
 
     public void setActivityChartImgHtml(String activityChartImgHtml) {
         this.activityChartImgHtml = activityChartImgHtml;

@@ -35,7 +35,7 @@ public class UserData {
     private boolean isOp;
     private boolean isBanned;
     private DemographicsData demData;
-    
+
     private String name;
 
     public UserData(Player player, DemographicsData demData, Database db) {
@@ -106,7 +106,7 @@ public class UserData {
         if (!locations.isEmpty()) {
             location = locations.get(locations.size() - 1);
         }
-        */
+         */
     }
 
     public void addNickname(String nick) {
@@ -147,7 +147,7 @@ public class UserData {
     public UUID getUuid() {
         return uuid;
     }
-    
+
     @Deprecated
     public Location getLocation() {
         return location;

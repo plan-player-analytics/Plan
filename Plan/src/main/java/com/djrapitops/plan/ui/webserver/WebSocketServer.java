@@ -1,8 +1,9 @@
-package com.djrapitops.plan.ui;
+package main.java.com.djrapitops.plan.ui.webserver;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
+import com.djrapitops.plan.ui.DataRequestHandler;
 import com.djrapitops.plan.ui.webserver.Request;
 import com.djrapitops.plan.ui.webserver.Response;
 import java.io.IOException;
@@ -30,6 +31,13 @@ public class WebSocketServer {
 
     private boolean shutdown;
 
+    /**
+     * Class Constructor.
+     *
+     * Initializes DataRequestHandler
+     *
+     * @param plugin Current instance of Plan
+     */
     public WebSocketServer(Plan plugin) {
         this.plugin = plugin;
         this.inspectHandler = plugin.getInspectCache();
@@ -38,6 +46,9 @@ public class WebSocketServer {
         dataReqHandler = new DataRequestHandler(plugin);
     }
 
+    /**
+     * Starts up the Webserver in a Asyncronous thread.
+     */
     public void initServer() {
         //Server is already enabled stop code
         if (ENABLED) {
@@ -78,12 +89,15 @@ public class WebSocketServer {
 
             ENABLED = true;
 
-            plugin.log("Webserver running on PORT "+server.getLocalPort());
+            plugin.log("Webserver running on PORT " + server.getLocalPort());
         } catch (Exception e) {
             ENABLED = false;
         }
     }
 
+    /**
+     * Shuts down the server - Async thread is closed with shutdown boolean.
+     */
     public void stop() {
         plugin.log("Shutting down Webserver..");
         shutdown = true;

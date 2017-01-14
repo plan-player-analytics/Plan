@@ -5,7 +5,6 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import com.djrapitops.plan.utilities.FormatUtils;
 import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,23 +14,44 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class AnalyzeCommand extends SubCommand {
 
     private Plan plugin;
     private AnalysisCacheHandler analysisCache;
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public AnalyzeCommand(Plan plugin) {
         super("analyze", "plan.analyze", "View the Server Analysis", CommandType.CONSOLE, "");
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }
 
+    /**
+     * Subcommand analyze.
+     *
+     * Updates AnalysisCache if last refresh was over 60 seconds ago and sends
+     * player the link that views cache.
+     *
+     * @param sender
+     * @param cmd
+     * @param commandLabel
+     * @param args
+     * @return true in all cases.
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         Date refresh = new Date();
         if (!analysisCache.isCached()) {
             analysisCache.updateCache();
-        } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60 * 5) {
+        } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60) {
             analysisCache.updateCache();
         }
         ChatColor oColor = Phrase.COLOR_MAIN.color();
@@ -60,7 +80,7 @@ public class AnalyzeCommand extends SubCommand {
                         Player player = (Player) sender;
                         Bukkit.getServer().dispatchCommand(
                                 Bukkit.getConsoleSender(),
-                                "tellraw " + player.getName() + " [\"\",{\"text\":\"     Analysis Results\",\"underlined\":true,"
+                                "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
                                 + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
                     }
                     // Footer

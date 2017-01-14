@@ -1,4 +1,3 @@
-
 package com.djrapitops.plan.api;
 
 public enum Gender {

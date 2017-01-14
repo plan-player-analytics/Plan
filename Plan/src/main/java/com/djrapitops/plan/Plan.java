@@ -11,7 +11,7 @@ import com.djrapitops.plan.database.databases.SQLiteDB;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.data.listeners.*;
-import com.djrapitops.plan.ui.WebSocketServer;
+import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class Plan extends JavaPlugin {
         uiServer.initServer();
 
         log("Player Analytics Enabled.");
-        
+
         if (getConfig().getBoolean("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable")) {
             log("Analysis | Boot analysis in 30 seconds..");
             (new BukkitRunnable() {

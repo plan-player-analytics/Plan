@@ -16,6 +16,7 @@ public class BasicInfoHandler {
 
     /**
      * Class Constructor
+     *
      * @param plugin Current instance of Plan
      * @param h Current instance of DataCacheHandler
      */
@@ -25,6 +26,7 @@ public class BasicInfoHandler {
 
     /**
      * Adds new nicknames and IPs to UserData
+     *
      * @param event JoinEvent to get the Player
      * @param data UserData matching the Player
      */
@@ -36,6 +38,7 @@ public class BasicInfoHandler {
 
     /**
      * Adds new nicknames and IPs to UserData in case of /reload
+     *
      * @param player A player that is online when /reload is run
      * @param data UserData matching the Player
      */

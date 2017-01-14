@@ -22,6 +22,7 @@ public class PlanPlayerMoveListener implements Listener {
 
     /**
      * Class Consturctor.
+     *
      * @param plugin Current instance of Plan
      */
     public PlanPlayerMoveListener(Plan plugin) {
@@ -32,9 +33,9 @@ public class PlanPlayerMoveListener implements Listener {
 
     /**
      * MoveEventListener.
-     * 
+     *
      * Adds location to UserData if the player has moved a block.
-     * 
+     *
      * @param event Event that is fired
      */
     @EventHandler(priority = EventPriority.MONITOR)
@@ -44,8 +45,8 @@ public class PlanPlayerMoveListener implements Listener {
         }
         Player p = event.getPlayer();
         Location from = event.getFrom();
-        Location to = event.getTo();        
-        if (from.getBlockX() == to.getBlockX() && from.getBlockZ()== to.getBlockZ()) {
+        Location to = event.getTo();
+        if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
             return;
         }
         Location savedLocation = to.getBlock().getLocation();

@@ -13,6 +13,15 @@ import org.bukkit.GameMode;
  */
 public class GMTimesPieChartCreator {
 
+    /**
+     * Creates a link to New image of the Gamemode usage chart without total.
+     *
+     * Calculated total is not required.
+     *
+     * @param gmTimes Map with all 4 Gamemodes and responding times spent in
+     * them
+     * @return Url of charts4j image link.
+     */
     public static String createChart(HashMap<GameMode, Long> gmTimes) {
         long total = gmTimes.get(GameMode.SURVIVAL) + gmTimes.get(GameMode.CREATIVE)
                 + gmTimes.get(GameMode.ADVENTURE) + gmTimes.get(GameMode.SPECTATOR);
@@ -20,6 +29,14 @@ public class GMTimesPieChartCreator {
         return createChart(gmTimes, total);
     }
 
+    /**
+     * Creates a link to New image of the Gamemode usage chart.
+     *
+     * @param gmTimes Map with all 4 Gamemodes and responding times spent in
+     * them
+     * @param total Time spent in all 4 gamemodes.
+     * @return Url of charts4j image link.
+     */
     public static String createChart(HashMap<GameMode, Long> gmTimes, long total) {
         long gmZero = gmTimes.get(GameMode.SURVIVAL);
         long gmOne = gmTimes.get(GameMode.CREATIVE);

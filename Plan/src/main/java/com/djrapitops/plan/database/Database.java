@@ -21,7 +21,7 @@ public abstract class Database {
     }
 
     public abstract UserData getUserData(UUID uuid);
-    
+
     public abstract void saveUserData(UUID uuid, UserData data);
 
     public abstract boolean wasSeenBefore(UUID uuid);

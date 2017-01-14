@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,10 +75,10 @@ public class AnalysisUtils {
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%activitypiechart%", data.getActivityChartImgHtml());
         replaceMap.put("%gmpiechart%", data.getGmTimesChartImgHtml());
-        replaceMap.put("%gm0%", (int) data.getGm0Perc() * 100 + "%");
-        replaceMap.put("%gm1%", (int) data.getGm1Perc() * 100 + "%");
-        replaceMap.put("%gm2%", (int) data.getGm2Perc() * 100 + "%");
-        replaceMap.put("%gm3%", (int) data.getGm3Perc() * 100 + "%");
+        replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
+        replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
+        replaceMap.put("%gm2%", (int) (data.getGm2Perc() * 100) + "%");
+        replaceMap.put("%gm3%", (int) (data.getGm3Perc() * 100) + "%");
         replaceMap.put("%active%", "" + data.getActive());
         replaceMap.put("%banned%", "" + data.getBanned());
         replaceMap.put("%inactive%", "" + data.getInactive());
@@ -121,6 +122,7 @@ public class AnalysisUtils {
             html = "<p>Error Calcuclating Command usages</p>";
             return html;
         }
+        Collections.reverse(sorted);
         int i = 1;
         for (String[] values : sorted) {
             if (i >= 50) {

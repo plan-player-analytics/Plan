@@ -47,7 +47,7 @@ public class PlayerActivityGraphCreator {
             Double scaledPlayerValue = (serverData.getPlayersOnline() * 1.0 / maxPlayers) * 100;
             Double scaledNewPValue = (serverData.getNewPlayers() * 1.0 / maxPlayers) * 100;
             xListDate.add(scaledDateValue);
-           
+
             pYList.add(scaledPlayerValue);
             nYList.add(scaledNewPValue);
         }

@@ -5,10 +5,10 @@ import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
 import com.djrapitops.plan.data.handlers.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getPlayer;
@@ -205,8 +205,9 @@ public class DataCacheHandler {
      */
     public void clearCache() {
         Set<UUID> uuidSet = dataCache.keySet();
-        for (UUID uuid : uuidSet) {
-            clearFromCache(uuid);
+        Iterator<UUID> uuidIterator = uuidSet.iterator();
+        while (uuidIterator.hasNext()) {
+            clearFromCache(uuidIterator.next());
         }
     }
 

@@ -1,4 +1,3 @@
-
 package com.djrapitops.plan.ui;
 
 import com.djrapitops.plan.Plan;
@@ -15,6 +14,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class DataRequestHandler {
+
     private Plan plugin;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
@@ -41,11 +41,11 @@ public class DataRequestHandler {
             html += line + "\r\n";
         }
         HashMap<String, String> replaceMap = AnalysisUtils.getInspectReplaceRules(data);
-        
+
         for (String key : replaceMap.keySet()) {
             html = html.replaceAll(key, replaceMap.get(key));
         }
-        
+
         return html;
     }
 
@@ -60,11 +60,11 @@ public class DataRequestHandler {
             html += line + "\r\n";
         }
         HashMap<String, String> replaceMap = AnalysisUtils.getAnalysisReplaceRules(analysisCache.getData());
-        
+
         for (String key : replaceMap.keySet()) {
             html = html.replaceAll(key, replaceMap.get(key));
         }
-        
+
         return html;
     }
 

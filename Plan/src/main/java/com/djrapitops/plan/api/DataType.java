@@ -1,8 +1,8 @@
-
 package com.djrapitops.plan.api;
 
 /**
  * Old API Part.
+ *
  * @author Rsl1122
  * @deprecated Moved to PlanLite plugin
  */

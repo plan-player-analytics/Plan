@@ -23,8 +23,8 @@ public class ReloadCommand extends SubCommand {
         plugin.reloadConfig();
         plugin.getHandler().saveCachedData();
         plugin.hookPlanLite();
-        sender.sendMessage(ChatColor.GREEN+"[Plan] Reload complete.");
-        
+        sender.sendMessage(ChatColor.GREEN + "[Plan] Reload complete.");
+
         return true;
     }
 

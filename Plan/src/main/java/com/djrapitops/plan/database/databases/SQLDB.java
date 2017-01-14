@@ -144,7 +144,6 @@ public abstract class SQLDB extends Database {
     public boolean init() {
         super.init();
         return checkConnection();
-
     }
 
     public boolean checkConnection() {
@@ -230,10 +229,8 @@ public abstract class SQLDB extends Database {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-
             return false;
         }
-
         return true;
     }
 
@@ -344,7 +341,7 @@ public abstract class SQLDB extends Database {
             set.close();
             statement.close();
             String userId = "" + getUserId(uuid.toString());
-            
+
             /* Locations Removed from Build 2.0.0 for performance reasons.
             statement = connection.prepareStatement("SELECT * FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, userId);
@@ -420,7 +417,7 @@ public abstract class SQLDB extends Database {
         HashMap<Long, ServerData> rawServerData = new HashMap<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + serverdataName
-                    + " ORDER BY " + serverdataColumnDate + " ASC");
+                    + " ORDER BY " + serverdataColumnDate + " DESC");
 
             ResultSet set = statement.executeQuery();
             while (set.next()) {
@@ -443,7 +440,7 @@ public abstract class SQLDB extends Database {
         Date startOfToday = new Date(now.getTime() - (now.getTime() % 86400000));
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + serverdataName
-                    + " ORDER BY " + serverdataColumnDate + " ASC LIMIT 1");
+                    + " ORDER BY " + serverdataColumnDate + " DESC LIMIT 1");
 
             ResultSet set = statement.executeQuery();
             while (set.next()) {

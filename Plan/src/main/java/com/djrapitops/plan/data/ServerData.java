@@ -1,10 +1,10 @@
-
 package com.djrapitops.plan.data;
 
 import java.util.HashMap;
 import org.bukkit.Bukkit;
 
 public class ServerData {
+
     private final HashMap<String, Integer> commandUsage;
     private int playersOnline;
     private int newPlayers;
@@ -14,7 +14,7 @@ public class ServerData {
         this.playersOnline = Bukkit.getServer().getOnlinePlayers().size();
         this.newPlayers = newPlayers;
     }
-    
+
     public void playerJoined(boolean newPlayer) {
         updatePlayerCount();
         if (newPlayer) {
@@ -25,16 +25,16 @@ public class ServerData {
     public void updatePlayerCount() {
         playersOnline = Bukkit.getServer().getOnlinePlayers().size();
     }
-    
+
     public void playerLeft() {
         updatePlayerCount();
     }
-    
+
     public void commandRegistered(String command) {
         if (!commandUsage.containsKey(command)) {
             commandUsage.put(command, 0);
         }
-        commandUsage.put(command, commandUsage.get(command)+1);
+        commandUsage.put(command, commandUsage.get(command) + 1);
     }
 
     public HashMap<String, Integer> getCommandUsage() {
@@ -47,5 +47,5 @@ public class ServerData {
 
     public int getNewPlayers() {
         return newPlayers;
-    }    
+    }
 }

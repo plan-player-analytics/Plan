@@ -11,6 +11,14 @@ import com.googlecode.charts4j.Slice;
  */
 public class ActivityPieChartCreator {
 
+    /**
+     * Creates a image link to Activity Chart.
+     *
+     * @param totalBanned Number of Banned Players
+     * @param active Number of Active Players
+     * @param inactive Number of Inactive Players
+     * @return Url to Image link.
+     */
     public static String createChart(int totalBanned, int active, int inactive) {
 
         int total = totalBanned + active + inactive;
@@ -35,5 +43,4 @@ public class ActivityPieChartCreator {
         String refURL = refChart.toURLString();
         return refURL;
     }
-
 }

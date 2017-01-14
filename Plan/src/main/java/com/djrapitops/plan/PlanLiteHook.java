@@ -19,9 +19,9 @@ public class PlanLiteHook {
 
     /**
      * Class Constructor.
-     * 
+     *
      * Attempts to hook to PlanLite, if not present logs error.
-     * 
+     *
      * @param plugin
      */
     public PlanLiteHook(Plan plugin) {
@@ -33,7 +33,7 @@ public class PlanLiteHook {
             }
             planLiteApi = planLite.getAPI();
         } catch (Exception e) {
-            
+
         }
     }
 
@@ -63,7 +63,7 @@ public class PlanLiteHook {
     public boolean getVisibleOnTime() {
         return planLiteApi.getVisibleOnTime();
     }
-    
+
     @Deprecated
     public boolean getVisibleFactions() {
         return planLiteApi.getVisibleFactions();

@@ -20,6 +20,7 @@ public class LocationHandler {
 
     /**
      * Class Constructor.
+     *
      * @param plugin Current instance of Plan
      * @param h Current instance of DataCacheHandler
      */
@@ -29,6 +30,7 @@ public class LocationHandler {
 
     /**
      * Adds location to the UserData if it is not being saved.
+     *
      * @param uuid UUID of the matching Player
      * @param loc Location from the MoveEvent listener.
      */
@@ -43,6 +45,7 @@ public class LocationHandler {
 
     /**
      * Adds multiple locaitons to the UserData.
+     *
      * @param uuid UUID of the matching Player
      * @param locs The Locations that are added.
      */
@@ -52,8 +55,9 @@ public class LocationHandler {
 
     /**
      * Handles QuitEvent by updating BedLocation.
-     * 
+     *
      * Uses OfflinePlayer to prevent null bedlocation.
+     *
      * @param event QuitEvent from Listener.
      * @param data UserData matching Player.
      */

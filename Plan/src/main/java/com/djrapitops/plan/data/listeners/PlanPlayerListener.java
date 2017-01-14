@@ -12,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -19,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlanPlayerListener implements Listener {
 
+    private final Plan plugin;
     private final DataCacheHandler handler;
     private final ActivityHandler activityH;
     private final BasicInfoHandler basicInfoH;
@@ -37,6 +40,7 @@ public class PlanPlayerListener implements Listener {
      * @param plugin Current instance of Plan
      */
     public PlanPlayerListener(Plan plugin) {
+        this.plugin = plugin;
         handler = plugin.getHandler();
         activityH = handler.getActivityHandler();
         basicInfoH = handler.getBasicInfoHandler();
@@ -69,7 +73,12 @@ public class PlanPlayerListener implements Listener {
         basicInfoH.handleLogin(event, data);
         gmTimesH.handleLogin(event, data);
         demographicH.handleLogin(event, data);
-        handler.saveCachedData(uuid);
+        (new BukkitRunnable() {
+            @Override
+            public void run() {
+                handler.saveCachedData(uuid);
+            }
+        }).runTaskLater(plugin, 15 * 20);
     }
 
     /**
