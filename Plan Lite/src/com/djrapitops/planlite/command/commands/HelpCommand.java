@@ -1,7 +1,8 @@
 package com.djrapitops.planlite.command.commands;
 
+import com.djrapitops.planlite.Phrase;
 import com.djrapitops.planlite.PlanLite;
-import com.djrapitops.planlite.PlanCommand;
+import com.djrapitops.planlite.PlanLiteCommand;
 import com.djrapitops.planlite.command.CommandType;
 import com.djrapitops.planlite.command.SubCommand;
 import org.bukkit.ChatColor;
@@ -12,9 +13,9 @@ import org.bukkit.entity.Player;
 public class HelpCommand extends SubCommand {
 
     private final PlanLite plugin;
-    private final PlanCommand command;
+    private final PlanLiteCommand command;
 
-    public HelpCommand(PlanLite plugin, PlanCommand command) {
+    public HelpCommand(PlanLite plugin, PlanLiteCommand command) {
         super("help,?", "planlite.?", "Show command list.", CommandType.CONSOLE);
 
         this.plugin = plugin;
@@ -24,11 +25,11 @@ public class HelpCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-
-        ChatColor textColor = ChatColor.GRAY;
-
-        sender.sendMessage(textColor + "-- [" + operatorColor + "Plan Lite - Player Analytics Lite" + textColor + "] --");
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
+        
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics Lite");
 
         for (SubCommand command : this.command.getCommands()) {
             if (command.getName().equalsIgnoreCase(getName())) {
@@ -43,8 +44,10 @@ public class HelpCommand extends SubCommand {
                 continue;
             }
 
-            sender.sendMessage(operatorColor + "/planlite " + command.getFirstName() + textColor + " - " + command.getUsage());
+            sender.sendMessage(" "+Phrase.BALL+oColor + " /planlite " + command.getFirstName() + tColor + " " + command.getUsage());
         }
+        
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
 
         return true;
     }

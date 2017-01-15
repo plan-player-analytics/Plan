@@ -2,12 +2,7 @@ package com.djrapitops.plan.command;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.commands.AnalyzeCommand;
-import com.djrapitops.plan.command.commands.HelpCommand;
-import com.djrapitops.plan.command.commands.InfoCommand;
-import com.djrapitops.plan.command.commands.InspectCommand;
-import com.djrapitops.plan.command.commands.ReloadCommand;
-import com.djrapitops.plan.command.commands.SearchCommand;
+import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.utilities.FormatUtils;
 
 import org.bukkit.command.Command;
@@ -42,6 +37,9 @@ public class PlanCommand implements CommandExecutor {
         commands.add(new SearchCommand(plugin));
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
+        if (plugin.getPlanLiteHook().isEnabled()) {
+            commands.add(new LiteCommand(plugin));
+        }
     }
 
     /**

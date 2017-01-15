@@ -6,6 +6,8 @@ import com.djrapitops.planlite.api.DataPoint;
 import java.util.HashMap;
 import java.util.Set;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -38,12 +40,14 @@ public class PlanLiteHook {
                     }
                     enabled = true;
                     planLiteApi = planLite.getAPI();
-                    return;
-                } catch (Exception e) {                   
+                } catch (Exception e) {
                 }
+            } else {
+                enabled = false;
             }
+        } else {
+            enabled = false;
         }
-        enabled = false;
     }
 
     public Set<String> getEnabledHooksNames() {
@@ -60,5 +64,9 @@ public class PlanLiteHook {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public boolean passCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        return planLite.getPlanCommand().onCommand(sender, cmd, commandLabel, args);
     }
 }

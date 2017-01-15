@@ -3,23 +3,23 @@ main: com.djrapitops.planlite.PlanLite
 version: 1.6.3
 
 commands:
-  plan:
+  planlite:
     usage: /<command> <name>
     description: base command
   inspect:
-    usage: /plan inspect <name>
+    usage: /planlite inspect <name>
     description: inspect player data
   analyze:
-    usage: /plan analyze
+    usage: /planlite analyze
     description: analyze all players' data, add -refresh to refresh analysis.
   reload:
-    usage: /plan reload
+    usage: /planlite reload
     description: reload plugin config
   search:
-    usage: /plan <search terms> -p add -p to make not search playername
+    usage: /planlite <search terms> -p add -p to make not search playername
     description: search data of multiple players with search terms
   debug:
-    usage: /plan debug
+    usage: /planlite debug
     description: run commands to debug the plugin.
     
 softdepend:

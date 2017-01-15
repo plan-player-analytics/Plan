@@ -32,7 +32,7 @@ public class PlanLite extends JavaPlugin {
     private final Map<String, Hook> hooks;
     private API api;
     private final Map<String, Hook> extraHooks;
-    private PlanCommand planCommand;
+    private PlanLiteCommand planCommand;
 
     public PlanLite() {
         this.hooks = new HashMap<>();
@@ -79,11 +79,11 @@ public class PlanLite extends JavaPlugin {
         if (!hookFail.isEmpty()) {
             Bukkit.getServer().getConsoleSender().sendMessage("[PlanLite] " + failedMsg);
         }
-        planCommand = new PlanCommand(this);
+        planCommand = new PlanLiteCommand(this);
 
         getCommand("planlite").setExecutor(planCommand);
 
-        log("Player Analytics Enabled.");
+        log("Player Analytics Lite Enabled.");
     }
 
     public List<String> hookInit() {
@@ -121,7 +121,7 @@ public class PlanLite extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        log("Player Analytics Disabled.");
+        log("Player Analytics Lite Disabled.");
     }
 
     public void log(String message) {
@@ -173,7 +173,7 @@ public class PlanLite extends JavaPlugin {
         }
     }
 
-    public PlanCommand getPlanCommand() {
+    public PlanLiteCommand getPlanCommand() {
         return planCommand;
     }
 }

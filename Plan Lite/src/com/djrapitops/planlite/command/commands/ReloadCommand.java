@@ -1,5 +1,6 @@
 package com.djrapitops.planlite.command.commands;
 
+import com.djrapitops.planlite.Phrase;
 import com.djrapitops.planlite.PlanLite;
 import com.djrapitops.planlite.command.CommandType;
 import com.djrapitops.planlite.command.SubCommand;
@@ -24,9 +25,10 @@ public class ReloadCommand extends SubCommand {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         plugin.reloadConfig();
         List<String> hookFail = plugin.hookInit();
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
-        sender.sendMessage(textColor + "[" + operatorColor + "PLAN" + textColor + "] Config & Hooks reloaded.");
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics Lite | Config & Hooks reloaded.");
         String loadedMsg = " Hooked into: ";
         for (String key : plugin.getHooks().keySet()) {
             loadedMsg += ChatColor.GREEN + key + " ";
@@ -35,9 +37,9 @@ public class ReloadCommand extends SubCommand {
         for (String string : hookFail) {
             failedMsg += ChatColor.RED + string + " ";
         }
-        sender.sendMessage(textColor + loadedMsg);
+        sender.sendMessage(tColor + loadedMsg);
         if (!hookFail.isEmpty()) {
-            sender.sendMessage(textColor + failedMsg);
+            sender.sendMessage(tColor + failedMsg);
         }
         return true;
     }

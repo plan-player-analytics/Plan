@@ -1,5 +1,6 @@
 package com.djrapitops.planlite.command.commands;
 
+import com.djrapitops.planlite.Phrase;
 import com.djrapitops.planlite.PlanLite;
 import com.djrapitops.planlite.command.CommandType;
 import com.djrapitops.planlite.command.SubCommand;
@@ -24,48 +25,52 @@ public class AnalyzeCommand extends SubCommand {
     private Date refreshDate;
 
     public AnalyzeCommand(PlanLite plugin) {
-        super("analyze", "planlite.analyze", "Analyze data of all players /plan analyze [-refresh]", CommandType.CONSOLE);
+        super("analyze", "planlite.analyze", "Analyze data of players, /planlite analyze [-refresh]", CommandType.CONSOLE);
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
         for (String arg : args) {
             if (arg.toLowerCase().equals("-refresh")) {
                 if (sender.hasPermission("planlite.analyze.refresh") || !(sender instanceof Player)) {
                     refreshAnalysisData(sender);
+                } else {
+                    sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
                 }
             }
         }
         if (this.playerData == null || this.refreshDate == null || this.analyzedPlayerdata == null || DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()).contains("m")) {
             refreshAnalysisData(sender);
         }
-        
-        //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Analysis results, refreshed " 
-                + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + " ago:" + textColor + "] --");
-        
+
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics Lite | Analysis results - refreshed "
+                + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + " ago");
+
         List<String[]> dataList = DataFormatUtils.turnDataHashMapToSortedListOfArrays(analyzedPlayerdata);
-        
-        sender.sendMessage("" + textColor + "Averages for " + this.playerData.size() + " player(s)");
+
+        sender.sendMessage(hColor + Phrase.BALL.toString() + tColor + " Averages for " + hColor + this.playerData.size() + tColor + " player(s)");
         for (String[] dataString : dataList) {
-            sender.sendMessage("" + operatorColor + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + textColor + dataString[1]);
+            sender.sendMessage(" " + tColor + Phrase.BALL + oColor+" "
+                    + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + tColor + dataString[1]);
         }
-        sender.sendMessage(textColor + "-- o --");
+        sender.sendMessage(hColor + Phrase.BALL.toString());
         return true;
     }
 
     private void refreshAnalysisData(CommandSender sender) {
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
-        sender.sendMessage(textColor + "[" + operatorColor + "Plan" + textColor + "] "
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics Lite " + tColor + "| "
                 + "Refreshing playerData, this might take a while..");
         this.playerData = DataUtils.getTotalData(DataUtils.getMatchingDisplaynames(true));
         this.refreshDate = new Date();
         this.analyzedPlayerdata = Analysis.analyze(this.playerData);
-        sender.sendMessage(textColor + "[" + operatorColor + "Plan" + textColor + "] "
-                + "Refreshed, took "+DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics Lite " + tColor + "| "
+                + "Refreshed, took " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
     }
 }

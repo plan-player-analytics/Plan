@@ -47,7 +47,7 @@ public class HelpCommand extends SubCommand {
             }
 
             sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor
-                    + " /plan " + command.getFirstName() + command.getArguments() + tColor + " - " + command.getUsage());
+                    + " /plan " + command.getFirstName() +" "+ command.getArguments() + tColor + " - " + command.getUsage());
         }
         // Footer
         sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());

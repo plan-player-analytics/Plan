@@ -1,5 +1,6 @@
 package com.djrapitops.planlite.command.commands;
 
+import com.djrapitops.planlite.Phrase;
 import com.djrapitops.planlite.PlanLite;
 import com.djrapitops.planlite.command.CommandType;
 import com.djrapitops.planlite.command.SubCommand;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -25,7 +25,7 @@ public class SearchCommand extends SubCommand {
     private final PlanLite plugin;
 
     public SearchCommand(PlanLite plugin) {
-        super("search", "planlite.search", "Inspect specific data /plan <search terms> [-p]", CommandType.CONSOLE_WITH_ARGUMENTS);
+        super("search", "planlite.search", "Inspect specific data /planlite <search terms> [-p]", CommandType.CONSOLE_WITH_ARGUMENTS);
         this.plugin = plugin;
     }
 
@@ -46,13 +46,11 @@ public class SearchCommand extends SubCommand {
             matchingPlayers = DataUtils.getMatchingDisplaynames(args, sender, false);
         }
         args = DataFormatUtils.parseSearchArgs(args);
-        HashMap<UUID, HashMap<String, DataPoint>> data = DataUtils.getTotalData(matchingPlayers);
         if (this.plugin.getHooks().isEmpty()) {
-            this.plugin.logError("noHookedPluginsError on SearchCommand");
-            this.plugin.logToFile("SEARCH\nnoHookedPluginsError on SearchCommand");
-
-            return false;
+            sender.sendMessage(Phrase.ERROR_NO_HOOKS.toString());
+            return true;
         }
+        HashMap<UUID, HashMap<String, DataPoint>> data = DataUtils.getTotalData(matchingPlayers);
 
         Date refreshDate = new Date();
         HashMap<String, List<String[]>> dataLists = new HashMap<>();
@@ -69,22 +67,23 @@ public class SearchCommand extends SubCommand {
             dataLists.put(p.getName(), DataFormatUtils.turnDataHashMapToSortedListOfArrays(dataMap));
         }
 
-        ChatColor operatorColor = ChatColor.DARK_GREEN;
-        ChatColor textColor = ChatColor.GRAY;
+        ChatColor oColor = Phrase.COLOR_MAIN.color();
+        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ChatColor hColor = Phrase.COLOR_TER.color();
 
-        //header
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Search results: took " + DataFormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()) + textColor + "] --");
-        sender.sendMessage(operatorColor + "Results for: " + Arrays.toString(args));
-        for (String playerName : dataLists.keySet()) {
-            sender.sendMessage(textColor + "Matching player: " + playerName);
-            for (String[] dataString : dataLists.get(playerName)) {
-                sender.sendMessage("" + operatorColor + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + textColor + dataString[1]);
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics Lite | Search results: " + Arrays.toString(args));
+        if (dataLists.isEmpty()) {
+            sender.sendMessage(" " + tColor + Phrase.BALL + oColor + " No results.");
+        } else {
+            for (String playerName : dataLists.keySet()) {
+                sender.sendMessage(tColor + "Matching player: " + hColor + playerName);
+                for (String[] dataString : dataLists.get(playerName)) {
+                    sender.sendMessage(" " + tColor + Phrase.BALL + oColor + " "
+                            + dataString[0].charAt(4) + dataString[0].toLowerCase().substring(5) + ": " + tColor + dataString[1]);
+                }
             }
         }
-        if (dataLists.isEmpty()) {
-            sender.sendMessage(operatorColor + "No results for " + textColor + Arrays.toString(args) + operatorColor + ".");
-        }
-        sender.sendMessage(textColor + "-- o --");
+        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
         return true;
     }
 }

@@ -1,0 +1,30 @@
+package com.djrapitops.plan.command.commands;
+
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLiteHook;
+import com.djrapitops.plan.command.CommandType;
+import com.djrapitops.plan.command.SubCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+
+public class LiteCommand extends SubCommand {
+
+    private Plan plugin;
+    private PlanLiteHook hook;
+
+    public LiteCommand(Plan plugin) {
+        super("lite", "plan.?", "Use PlanLite Commands", CommandType.CONSOLE, "<planlite command>");
+
+        this.plugin = plugin;
+        this.hook = plugin.getPlanLiteHook();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (hook.isEnabled()) {
+            return hook.passCommand(sender, cmd, commandLabel, args);
+        }
+        return false;
+    }
+
+}

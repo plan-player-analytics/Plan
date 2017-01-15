@@ -9,7 +9,6 @@ import com.djrapitops.planlite.command.commands.InspectCommand;
 import com.djrapitops.planlite.command.commands.ReloadCommand;
 import com.djrapitops.planlite.command.commands.SearchCommand;
 import com.djrapitops.planlite.command.utils.MiscUtils;
-import org.bukkit.ChatColor;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,11 +18,11 @@ import java.util.List;
 import java.util.ArrayList;
 import org.bukkit.entity.Player;
 
-public class PlanCommand implements CommandExecutor {
+public class PlanLiteCommand implements CommandExecutor {
 
     private final List<SubCommand> commands;
 
-    public PlanCommand(PlanLite plugin) {
+    public PlanLiteCommand(PlanLite plugin) {
         commands = new ArrayList<>();
 
         commands.add(new HelpCommand(plugin, this));
@@ -76,22 +75,18 @@ public class PlanCommand implements CommandExecutor {
         boolean console = !(sender instanceof Player);
         
         if (!sender.hasPermission(command.getPermission())) {
-//            Phrase.NO_PERMISSION_FOR_COMMAND.sendWithPrefix( sender );
-            sender.sendMessage(ChatColor.RED + "[PlanLite] You do not have the required permmission.");
+            sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
             return true;
         }
 
         if (console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS) {
-//            Phrase.COMMAND_NEEDS_ARGUMENTS.sendWithPrefix( sender );
-            sender.sendMessage(ChatColor.RED + "[PlanLite] Command requires arguments.");
+            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.toString());
 
             return true;
         }
 
         if (console && command.getCommandType() == CommandType.PLAYER) {
-//            Phrase.COMMAND_NOT_CONSOLE.sendWithPrefix( sender, commandLabel );
-            sender.sendMessage(ChatColor.RED + "[PlanLite] This command can be only used as a player.");
-
+            sender.sendMessage(Phrase.COMMAND_SENDER_NOT_PLAYER.toString());
             return true;
         }
 
@@ -100,10 +95,8 @@ public class PlanCommand implements CommandExecutor {
         for (int i = 1; i < args.length; i++) {
             realArgs[i - 1] = args[i];
         }
-
-        if (!command.onCommand(sender, cmd, commandLabel, realArgs)) {
-//            Phrase.TRY_COMMAND.sendWithPrefix( sender, parse( commandLabel, command ) );
-        }
+        
+        command.onCommand(sender, cmd, commandLabel, realArgs);
         return true;
     }
 

@@ -152,17 +152,21 @@ public class AnalysisUtils {
                 + "border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px; "
                 + "box-shadow: 5px 5px 4px 0px #888888;\">";
 
-        html += "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+        if (sortedTowns.size() > 1) {
+            html += "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
 
-        int i = 1;
-        for (String[] values : sortedTowns) {
-            if (i >= 20) {
-                break;
+            int i = 1;
+            for (String[] values : sortedTowns) {
+                if (i >= 20) {
+                    break;
+                }
+                html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
+                i++;
             }
-            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
-            i++;
+            html += "</table>";
         }
-        html += "</table><table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+
+        html += "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
         int j = 1;
         for (String[] values : sortedFactions) {
             if (j >= 20) {
@@ -172,9 +176,9 @@ public class AnalysisUtils {
             j++;
         }
         html += "</table></tr>" + "<tr>"
-                + "                    <td style=\"margin-left: 3px; margin-right: auto; "
-                + "                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;"
-                + "                        box-shadow: 5px 5px 4px 0px #888888;\">"
+                + "<td style=\"margin-left: 3px; margin-right: auto; "
+                + "border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;"
+                + "box-shadow: 5px 5px 4px 0px #888888;\">"
                 + "<h4>Information</h4>"
                 + "<p>Total Money on the server: " + planLiteData.getTotalMoney() + "<br/>Players have voted the server "
                 + planLiteData.getTotalVotes() + " times.</p>"
