@@ -15,7 +15,7 @@ public class ReloadCommand extends SubCommand {
     private PlanLite plugin;
 
     public ReloadCommand(PlanLite plugin) {
-        super("reload", "plan.reload", "Reload plugin config & Hooks", CommandType.CONSOLE);
+        super("reload", "planlite.reload", "Reload plugin config & Hooks", CommandType.CONSOLE);
 
         this.plugin = plugin;
     }

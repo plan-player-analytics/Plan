@@ -1,5 +1,7 @@
 package com.djrapitops.plan.data;
 
+import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
+
 /**
  *
  * @author Rsl1122
@@ -31,11 +33,31 @@ public class AnalysisData {
     private int totalPlayers;
     private long totalLoginTimes;
     private int ops;
+    
+    private boolean planLiteEnabled;
+    private PlanLiteAnalyzedData planLiteData;
 
     public AnalysisData() {
     }
 
     // Getters and setters v---------------------------------v
+
+    public boolean isPlanLiteEnabled() {
+        return planLiteEnabled;
+    }
+
+    public void setPlanLiteEnabled(boolean planLiteEnabled) {
+        this.planLiteEnabled = planLiteEnabled;
+    }
+
+    public PlanLiteAnalyzedData getPlanLiteData() {
+        return planLiteData;
+    }
+
+    public void setPlanLiteData(PlanLiteAnalyzedData planLiteData) {
+        this.planLiteData = planLiteData;
+    }
+        
     public String getPlayersChartImgHtmlMonth() {
         return playersChartImgHtmlMonth;
     }

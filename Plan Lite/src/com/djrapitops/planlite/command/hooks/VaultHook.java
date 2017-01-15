@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
 import net.milkbowl.vault.economy.Economy;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getServer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 

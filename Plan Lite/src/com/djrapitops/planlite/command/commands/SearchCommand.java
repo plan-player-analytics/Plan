@@ -25,7 +25,7 @@ public class SearchCommand extends SubCommand {
     private final PlanLite plugin;
 
     public SearchCommand(PlanLite plugin) {
-        super("search", "plan.search", "Inspect specific data /plan <search terms> [-p]", CommandType.CONSOLE_WITH_ARGUMENTS);
+        super("search", "planlite.search", "Inspect specific data /plan <search terms> [-p]", CommandType.CONSOLE_WITH_ARGUMENTS);
         this.plugin = plugin;
     }
 

@@ -1,6 +1,5 @@
 package com.djrapitops.planlite.command;
 
-//import com.djrapitops.plan.Phrase;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

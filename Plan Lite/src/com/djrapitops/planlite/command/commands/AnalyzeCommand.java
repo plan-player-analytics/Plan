@@ -24,7 +24,7 @@ public class AnalyzeCommand extends SubCommand {
     private Date refreshDate;
 
     public AnalyzeCommand(PlanLite plugin) {
-        super("analyze", "plan.analyze", "Analyze data of all players /plan analyze [-refresh]", CommandType.CONSOLE);
+        super("analyze", "planlite.analyze", "Analyze data of all players /plan analyze [-refresh]", CommandType.CONSOLE);
         this.plugin = plugin;
     }
 
@@ -34,7 +34,7 @@ public class AnalyzeCommand extends SubCommand {
         ChatColor textColor = ChatColor.GRAY;
         for (String arg : args) {
             if (arg.toLowerCase().equals("-refresh")) {
-                if (sender.hasPermission("plan.analyze.refresh") || !(sender instanceof Player)) {
+                if (sender.hasPermission("planlite.analyze.refresh") || !(sender instanceof Player)) {
                     refreshAnalysisData(sender);
                 }
             }

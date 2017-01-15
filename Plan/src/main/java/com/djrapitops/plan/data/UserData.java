@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -35,7 +36,10 @@ public class UserData {
     private boolean isOp;
     private boolean isBanned;
     private DemographicsData demData;
-
+    
+    private boolean planLiteFound;
+    private PlanLitePlayerData planLiteData;
+    
     private String name;
 
     public UserData(Player player, DemographicsData demData, Database db) {
@@ -144,6 +148,23 @@ public class UserData {
     }
 
     // Getters -------------------------------------------------------------
+
+    public boolean isPlanLiteFound() {
+        return planLiteFound;
+    }
+
+    public void setPlanLiteFound(boolean planLiteFound) {
+        this.planLiteFound = planLiteFound;
+    }
+
+    public PlanLitePlayerData getPlanLiteData() {
+        return planLiteData;
+    }
+
+    public void setPlanLiteData(PlanLitePlayerData planLiteData) {
+        this.planLiteData = planLiteData;
+    }
+    
     public UUID getUuid() {
         return uuid;
     }

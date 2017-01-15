@@ -108,17 +108,10 @@ public class Plan extends JavaPlugin {
 
     public void hookPlanLite() {
         try {
-            if (getConfig().getBoolean("Settings.PlanLite.Enabled")) {
-                planLiteHook = new PlanLiteHook(this);
-            }
+            planLiteHook = new PlanLiteHook(this);            
         } catch (NoClassDefFoundError | Exception e) {
 
         }
-    }
-
-    @Deprecated
-    public List<String> hookInit() {
-        return new ArrayList<>();
     }
 
     @Override
@@ -167,14 +160,6 @@ public class Plan extends JavaPlugin {
 
     public API getAPI() {
         return api;
-    }
-
-    public void addExtraHook(String name, Hook hook) {
-        if (planLiteHook != null) {
-            planLiteHook.addExtraHook(name, hook);
-        } else {
-            logError(Phrase.ERROR_PLANLITE.toString());
-        }
     }
 
     private void registerListeners() {

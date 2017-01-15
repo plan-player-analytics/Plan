@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -29,6 +28,7 @@ public class PlanPlayerListener implements Listener {
     private final LocationHandler locationH;
     private final DemographicsHandler demographicH;
     private final RuleBreakingHandler rulebreakH;
+    private final PlanLiteHandler planLiteH;
     private final ServerDataHandler serverHandler;
 
     /**
@@ -48,6 +48,7 @@ public class PlanPlayerListener implements Listener {
         demographicH = handler.getDemographicsHandler();
         locationH = handler.getLocationHandler();
         rulebreakH = handler.getRuleBreakingHandler();
+        planLiteH = handler.getPlanLiteHandler();
         serverHandler = handler.getServerDataHandler();
     }
 
@@ -73,6 +74,7 @@ public class PlanPlayerListener implements Listener {
         basicInfoH.handleLogin(event, data);
         gmTimesH.handleLogin(event, data);
         demographicH.handleLogin(event, data);
+        planLiteH.handleLogin(event, data);
         (new BukkitRunnable() {
             @Override
             public void run() {

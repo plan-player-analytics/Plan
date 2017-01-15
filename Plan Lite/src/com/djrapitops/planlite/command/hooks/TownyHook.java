@@ -16,8 +16,6 @@ import com.palmergames.bukkit.util.BukkitTools;
 import java.util.HashMap;
 import java.util.List;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
-import static com.palmergames.bukkit.towny.TownyFormatter.getFormattedResidents;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import static com.palmergames.bukkit.towny.TownyFormatter.getFormattedResidents;
 import static org.bukkit.Bukkit.getOfflinePlayer;

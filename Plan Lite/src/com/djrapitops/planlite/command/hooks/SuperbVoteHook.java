@@ -8,7 +8,6 @@ import com.djrapitops.planlite.api.DataType;
 import io.minimum.minecraft.superbvote.SuperbVote;
 import java.util.HashMap;
 import java.util.UUID;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 

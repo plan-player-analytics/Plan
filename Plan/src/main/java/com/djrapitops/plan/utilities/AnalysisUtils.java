@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
@@ -93,6 +94,12 @@ public class AnalysisUtils {
         replaceMap.put("%ops%", "" + data.getOps());
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
+        if (data.isPlanLiteEnabled()) {
+            replaceMap.put("%planlite%", getPlanLiteAnalysisHtml(data.getPlanLiteData()));
+        } else {
+            replaceMap.put("%planlite%", "");
+        }
+
         return replaceMap;
     }
 
@@ -132,6 +139,47 @@ public class AnalysisUtils {
             i++;
         }
         html += "</table>";
+        return html;
+    }
+
+    private static String getPlanLiteAnalysisHtml(PlanLiteAnalyzedData planLiteData) {
+        List<String[]> sortedTowns = MapComparator.sortByValue(planLiteData.getTownMap());
+        Collections.reverse(sortedTowns);
+        List<String[]> sortedFactions = MapComparator.sortByValue(planLiteData.getFactionMap());
+        Collections.reverse(sortedFactions);
+        String html = "<tr>"
+                + "<td style=\"margin-left: 3px; margin-right: auto; "
+                + "border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px; "
+                + "box-shadow: 5px 5px 4px 0px #888888;\">";
+
+        html += "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+
+        int i = 1;
+        for (String[] values : sortedTowns) {
+            if (i >= 20) {
+                break;
+            }
+            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
+            i++;
+        }
+        html += "</table><table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+        int j = 1;
+        for (String[] values : sortedFactions) {
+            if (j >= 20) {
+                break;
+            }
+            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
+            j++;
+        }
+        html += "</table></tr>" + "<tr>"
+                + "                    <td style=\"margin-left: 3px; margin-right: auto; "
+                + "                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;"
+                + "                        box-shadow: 5px 5px 4px 0px #888888;\">"
+                + "<h4>Information</h4>"
+                + "<p>Total Money on the server: " + planLiteData.getTotalMoney() + "<br/>Players have voted the server "
+                + planLiteData.getTotalVotes() + " times.</p>"
+                + "</td>";
+        html += "</tr>";
         return html;
     }
 }

@@ -21,7 +21,7 @@ public class InspectCommand extends SubCommand {
     private PlanLite plugin;
 
     public InspectCommand(PlanLite plugin) {
-        super("inspect", "plan.inspect", "Inspect data /plan <player> [-a, -r].", CommandType.CONSOLE_WITH_ARGUMENTS);
+        super("inspect", "planlite.inspect", "Inspect data /plan <player> [-a, -r].", CommandType.CONSOLE_WITH_ARGUMENTS);
 
         this.plugin = plugin;
     }

@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import org.bukkit.Bukkit;
+import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
+import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -96,7 +97,30 @@ public class Analysis {
                 int ops = 0;
                 List<Integer> ages = new ArrayList<>();
 
+                boolean planLiteEnabled = plugin.getPlanLiteHook().isEnabled();
+
+                PlanLiteAnalyzedData plData = new PlanLiteAnalyzedData();
+                HashMap<String, Integer> townMap = new HashMap<>();
+                HashMap<String, Integer> factionMap = new HashMap<>();
+                int totalVotes = 0;
+                int totalMoney = 0;
+
                 for (UserData uData : rawData) {
+                    if (planLiteEnabled) {
+                        PlanLitePlayerData litePlayerData = uData.getPlanLiteData();
+                        String town = litePlayerData.getTown();
+                        if (!townMap.containsKey(town)) {
+                            townMap.put(town, 0);
+                        }
+                        townMap.replace(town, townMap.get(town) + 1);
+                        String faction = litePlayerData.getFaction();
+                        if (!factionMap.containsKey(faction)) {
+                            factionMap.put(faction, 0);
+                        }
+                        factionMap.replace(faction, factionMap.get(faction) + 1);
+                        totalVotes += litePlayerData.getVotes();
+                        totalMoney += litePlayerData.getMoney();
+                    }
                     HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
                     gmZero += gmTimes.get(GameMode.SURVIVAL);
                     gmOne += gmTimes.get(GameMode.CREATIVE);
@@ -119,7 +143,20 @@ public class Analysis {
                     } else {
                         inactive++;
                     }
+
                 }
+
+                if (planLiteEnabled) {
+                    plData.setFactionMap(factionMap);
+                    plData.setTownMap(townMap);
+                    plData.setTotalVotes(totalVotes);
+                    plData.setTotalMoney(totalMoney);
+                    data.setPlanLiteEnabled(true);
+                    data.setPlanLiteData(plData);
+                } else {
+                    data.setPlanLiteEnabled(false);
+                }
+
                 data.setTotalLoginTimes(totalLoginTimes);
 
                 String activityPieChartHtml = AnalysisUtils.createActivityPieChart(totalBanned, active, inactive);

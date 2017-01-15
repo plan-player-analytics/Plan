@@ -1,6 +1,5 @@
 package com.djrapitops.planlite.command.commands;
 
-//import com.djrapitops.plan.Phrase;
 import com.djrapitops.planlite.PlanLite;
 import com.djrapitops.planlite.PlanCommand;
 import com.djrapitops.planlite.command.CommandType;
@@ -16,7 +15,7 @@ public class HelpCommand extends SubCommand {
     private final PlanCommand command;
 
     public HelpCommand(PlanLite plugin, PlanCommand command) {
-        super("help,?", "plan.?", "Show command list.", CommandType.CONSOLE);
+        super("help,?", "planlite.?", "Show command list.", CommandType.CONSOLE);
 
         this.plugin = plugin;
         this.command = command;
@@ -29,7 +28,7 @@ public class HelpCommand extends SubCommand {
 
         ChatColor textColor = ChatColor.GRAY;
 
-        sender.sendMessage(textColor + "-- [" + operatorColor + "PLAN - Player Analytics" + textColor + "] --");
+        sender.sendMessage(textColor + "-- [" + operatorColor + "Plan Lite - Player Analytics Lite" + textColor + "] --");
 
         for (SubCommand command : this.command.getCommands()) {
             if (command.getName().equalsIgnoreCase(getName())) {
@@ -44,7 +43,7 @@ public class HelpCommand extends SubCommand {
                 continue;
             }
 
-            sender.sendMessage(operatorColor + "/plan " + command.getFirstName() + textColor + " - " + command.getUsage());
+            sender.sendMessage(operatorColor + "/planlite " + command.getFirstName() + textColor + " - " + command.getUsage());
         }
 
         return true;

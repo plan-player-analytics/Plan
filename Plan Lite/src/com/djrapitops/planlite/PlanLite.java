@@ -32,6 +32,7 @@ public class PlanLite extends JavaPlugin {
     private final Map<String, Hook> hooks;
     private API api;
     private final Map<String, Hook> extraHooks;
+    private PlanCommand planCommand;
 
     public PlanLite() {
         this.hooks = new HashMap<>();
@@ -78,8 +79,9 @@ public class PlanLite extends JavaPlugin {
         if (!hookFail.isEmpty()) {
             Bukkit.getServer().getConsoleSender().sendMessage("[PlanLite] " + failedMsg);
         }
+        planCommand = new PlanCommand(this);
 
-        getCommand("plan").setExecutor(new PlanCommand(this));
+        getCommand("planlite").setExecutor(planCommand);
 
         log("Player Analytics Enabled.");
     }
@@ -169,5 +171,9 @@ public class PlanLite extends JavaPlugin {
         } catch (Exception | NoClassDefFoundError e) {
             logToFile("Failed to hook " + name + "\n" + e);
         }
+    }
+
+    public PlanCommand getPlanCommand() {
+        return planCommand;
     }
 }

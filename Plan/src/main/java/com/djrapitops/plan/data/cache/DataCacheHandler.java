@@ -100,7 +100,11 @@ public class DataCacheHandler {
     public UserData getCurrentData(UUID uuid, boolean cache) {
         if (cache) {
             if (dataCache.get(uuid) == null) {
-                dataCache.put(uuid, db.getUserData(uuid));
+                UserData uData = db.getUserData(uuid);
+                if (uData.getPlanLiteData() == null) {
+                    getPlanLiteHandler().handleEvents(uData.getName(), uData);
+                }
+                dataCache.put(uuid, uData);
                 plugin.log("Added " + uuid.toString() + " to Cache.");
             }
             return dataCache.get(uuid);
@@ -108,7 +112,11 @@ public class DataCacheHandler {
             if (dataCache.get(uuid) != null) {
                 return dataCache.get(uuid);
             }
-            return db.getUserData(uuid);
+            UserData uData = db.getUserData(uuid);
+            if (uData.getPlanLiteData() == null) {
+                getPlanLiteHandler().handleEvents(uData.getName(), uData);
+            }
+            return uData;
         }
     }
 
@@ -185,6 +193,12 @@ public class DataCacheHandler {
         });
     }
 
+    /**
+     * Saves a single player's data to the cache from the handler if the player
+     * is online.
+     *
+     * @param uuid UUID of the Player to save
+     */
     public void saveHandlerDataToCache(UUID uuid) {
         Player p = getPlayer(uuid);
         if (p != null) {
@@ -295,6 +309,13 @@ public class DataCacheHandler {
     }
 
     /**
+     * @return Current instance of PlanLiteHandler
+     */
+    public PlanLiteHandler getPlanLiteHandler() {
+        return planLiteHandler;
+    }
+
+    /**
      * Returns the same value as Plan#getDB().
      *
      * @return Current instance of the Database,
@@ -341,6 +362,11 @@ public class DataCacheHandler {
         }
     }
 
+    /**
+     * Used by Analysis for Player activity graphs.
+     *
+     * @return Maximum number of players defined in server.properties.
+     */
     public int getMaxPlayers() {
         return maxPlayers;
     }

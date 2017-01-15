@@ -13,7 +13,7 @@ public class InfoCommand extends SubCommand {
     private PlanLite plugin;
 
     public InfoCommand(PlanLite plugin) {
-        super("info", "plan.info", "View version and enabled hooks", CommandType.CONSOLE);
+        super("info", "planlite.info", "View version and enabled hooks", CommandType.CONSOLE);
 
         this.plugin = plugin;
     }

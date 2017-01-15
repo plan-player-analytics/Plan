@@ -75,7 +75,7 @@ public class DataUtils {
 
                 plugin.logToFile("INSPECT-GETNAME\nNo username given, returned empty username.\n" + args[0]);
 
-            } else if (sender.hasPermission("plan.inspect.other") || !(sender instanceof Player)) {
+            } else if (sender.hasPermission("planlite.inspect.other") || !(sender instanceof Player)) {
                 playerName = args[0];
             }
         } else {
