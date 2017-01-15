@@ -44,14 +44,12 @@ public class DemographicsHandler {
         List<String> triggers = Arrays.asList("i\'m", "am", "im");
         List<String> female = Arrays.asList("female", "girl", "gurl", "woman", "gal", "mrs", "she", "miss");
         List<String> male = Arrays.asList("male", "boy", "man", "boe", "sir", "mr", "guy", "he");
-        List<String> ages = Arrays.asList("years", "year-old", "old");
         List<String> ignore = Arrays.asList("sure", "think", "with", "are");
 
         String message = event.getMessage();
-        String[] messageA = message.split("\\s+");
+        String[] messageA = message.toLowerCase().split("\\s+");
 
         boolean trigger = false;
-        boolean age = false;
         boolean gender = false;
 
         // Does message contain important data?
@@ -62,9 +60,6 @@ public class DemographicsHandler {
             }
             if (triggers.contains(string)) {
                 trigger = true;
-            }
-            if (ages.contains(string)) {
-                age = true;
             }
             if (female.contains(string) || male.contains(string)) {
                 gender = true;
@@ -77,20 +72,18 @@ public class DemographicsHandler {
         }
 
         // Manage important data
-        if (age) {
-            int ageNum = -1;
-            for (String string : messageA) {
-                try {
-                    ageNum = Integer.parseInt(string);
-                    if (ageNum != -1) {
-                        break;
-                    }
-                } catch (Exception e) {
+        int ageNum = -1;
+        for (String string : messageA) {
+            try {
+                ageNum = Integer.parseInt(string);
+                if (ageNum != -1) {
+                    break;
                 }
+            } catch (Exception e) {
             }
-            if (ageNum != -1 && ageNum < 100) {
-                data.getDemData().setAge(ageNum);
-            }
+        }
+        if (ageNum != -1 && ageNum < 100) {
+            data.getDemData().setAge(ageNum);
         }
         if (gender) {
             for (String string : messageA) {
@@ -114,22 +107,21 @@ public class DemographicsHandler {
      */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
         InetAddress address = event.getPlayer().getAddress().getAddress();
+        Plan plugin = getPlugin(Plan.class);
         try {
-            Scanner locationScanner = new Scanner("http://ip-api.com/line/" + address.getHostAddress());
-            List<String> results = new ArrayList<>();
+            Scanner locationScanner = new Scanner("http://freegeoip.net/csv/" + address.getHostAddress());
+            String result = "";
             while (locationScanner.hasNextLine()) {
-                results.add(locationScanner.nextLine());
+                result = locationScanner.nextLine();
             }
-            if (results.size() >= 2) {
-                data.getDemData().setGeoLocation(results.get(1));
+            String[] results = result.split(",");
+            if (!result.isEmpty()) {
+                data.getDemData().setGeoLocation(results[2]);
             } else {
                 data.getDemData().setGeoLocation("Not Known");
             }
         } catch (Exception e) {
-            Plan plugin = getPlugin(Plan.class);
-            plugin.logToFile("http://ip-api.com/line/" + address.getHostAddress());
-            plugin.logToFile("" + e);
-            plugin.logToFile(address.toString());
+            
         }
     }
 }

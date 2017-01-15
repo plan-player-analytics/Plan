@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
@@ -9,7 +10,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
+import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
@@ -64,6 +67,8 @@ public class AnalysisUtils {
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount("" + data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? "Banned" : "Not Banned");
         replaceMap.put("%op%", data.isOp() ? ", Operator (Op)" : "");
+        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
+        replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
         return replaceMap;
     }
 
@@ -94,12 +99,8 @@ public class AnalysisUtils {
         replaceMap.put("%ops%", "" + data.getOps());
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
-        if (data.isPlanLiteEnabled()) {
-            replaceMap.put("%planlite%", getPlanLiteAnalysisHtml(data.getPlanLiteData()));
-        } else {
-            replaceMap.put("%planlite%", "");
-        }
-
+        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
+        replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
         return replaceMap;
     }
 
@@ -122,8 +123,12 @@ public class AnalysisUtils {
         return "<img src=\"" + url + "\">";
     }
 
-    static String createCommandUseListHtml(HashMap<String, Integer> commandUse) {
-        List<String[]> sorted = MapComparator.sortByValue(commandUse);
+    static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
+        return createTableOutOfHashMap(commandUse, 50);
+    }
+
+    static String createTableOutOfHashMap(HashMap<String, Integer> map, int limit) {
+        List<String[]> sorted = MapComparator.sortByValue(map);
         String html = "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
         if (sorted.isEmpty()) {
             html = "<p>Error Calcuclating Command usages</p>";
@@ -143,47 +148,57 @@ public class AnalysisUtils {
     }
 
     private static String getPlanLiteAnalysisHtml(PlanLiteAnalyzedData planLiteData) {
-        List<String[]> sortedTowns = MapComparator.sortByValue(planLiteData.getTownMap());
-        Collections.reverse(sortedTowns);
-        List<String[]> sortedFactions = MapComparator.sortByValue(planLiteData.getFactionMap());
-        Collections.reverse(sortedFactions);
-        String html = "<tr>"
-                + "<td style=\"margin-left: 3px; margin-right: auto; "
-                + "border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px; "
-                + "box-shadow: 5px 5px 4px 0px #888888;\">";
-
-        if (sortedTowns.size() > 1) {
-            html += "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
-
-            int i = 1;
-            for (String[] values : sortedTowns) {
-                if (i >= 20) {
-                    break;
-                }
-                html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
-                i++;
-            }
-            html += "</table>";
+        Scanner scanner = new Scanner(getPlugin(Plan.class).getResource("planlite.html"));
+        String html = "";
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            html += line + "\r\n";
         }
 
-        html += "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
-        int j = 1;
-        for (String[] values : sortedFactions) {
-            if (j >= 20) {
-                break;
-            }
-            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
-            j++;
+        HashMap<String, String> replaceMap = getPlanLiteAnalysisReplaceRules(planLiteData);
+        for (String key : replaceMap.keySet()) {
+            html = html.replaceAll(key, replaceMap.get(key));
         }
-        html += "</table></tr>" + "<tr>"
-                + "<td style=\"margin-left: 3px; margin-right: auto; "
-                + "border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;"
-                + "box-shadow: 5px 5px 4px 0px #888888;\">"
-                + "<h4>Information</h4>"
-                + "<p>Total Money on the server: " + planLiteData.getTotalMoney() + "<br/>Players have voted the server "
-                + planLiteData.getTotalVotes() + " times.</p>"
-                + "</td>";
-        html += "</tr>";
         return html;
+    }
+
+    private static HashMap<String, String> getPlanLiteAnalysisReplaceRules(PlanLiteAnalyzedData planLiteData) {
+        HashMap<String, String> replaceMap = new HashMap<>();
+        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
+        replaceMap.put("%townyheader%", hook.hasTowny() ? "<p>Top 20 Towns</p>" : "");
+        replaceMap.put("%townylist%", hook.hasTowny() ? createTableOutOfHashMap(planLiteData.getTownMap(), 20) : "");
+        replaceMap.put("%factionheader%", hook.hasFactions() ? "<p>Top 20 Factions</p>" : "");
+        replaceMap.put("%factionlist%", hook.hasFactions() ? createTableOutOfHashMap(planLiteData.getFactionMap(), 20) : "");
+        replaceMap.put("%totalmoneyline%", hook.hasVault() ? "<p>Server Total Balance: " + planLiteData.getTotalMoney() + "</p>" : "");
+        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? "<p>Players have voted total of " + planLiteData.getTotalVotes() + " times.</p>" : "");
+        return replaceMap;
+    }
+
+    private static String getPlanLitePlayerHtml(PlanLitePlayerData planLiteData) {
+        Scanner scanner = new Scanner(getPlugin(Plan.class).getResource("planliteplayer.html"));
+        String html = "";
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            html += line + "\r\n";
+        }
+
+        HashMap<String, String> replaceMap = getPlanLitePlayerReplaceRules(planLiteData);
+        for (String key : replaceMap.keySet()) {
+            html = html.replaceAll(key, replaceMap.get(key));
+        }
+        return html;
+    }
+
+    private static HashMap<String, String> getPlanLitePlayerReplaceRules(PlanLitePlayerData planLiteData) {
+        HashMap<String, String> replaceMap = new HashMap<>();
+        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
+        replaceMap.put("%townylinetown%", hook.hasTowny() ? "<p>Town: "+planLiteData.getTown()+"</p>" : "");
+        replaceMap.put("%townylineplotperms%", "");
+        replaceMap.put("%townylineplotoptions%", hook.hasTowny() ? "<p>Plot options: "+planLiteData.getPlotOptions()+"</p>" : "");
+        replaceMap.put("%townylinefriends%", hook.hasTowny() ? "<p>Friends with "+planLiteData.getFriends()+"</p>" : "");
+        replaceMap.put("%factionsline%", hook.hasFactions() ? "<p>Faction: "+planLiteData.getFaction()+"</p>" : "");
+        replaceMap.put("%totalmoneyline%", hook.hasVault() ? "<p>Balance: "+planLiteData.getMoney()+"</p>" : "");
+        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? "<p>Player has voted " + planLiteData.getVotes()+ " times.</p>" : "");
+        return replaceMap;
     }
 }

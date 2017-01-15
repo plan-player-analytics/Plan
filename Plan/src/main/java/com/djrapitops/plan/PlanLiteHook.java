@@ -69,4 +69,20 @@ public class PlanLiteHook {
     public boolean passCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         return planLite.getPlanCommand().onCommand(sender, cmd, commandLabel, args);
     }
+
+    public boolean hasTowny() {
+        return getEnabledHooksNames().contains("Towny");
+    }
+
+    public boolean hasFactions() {
+        return getEnabledHooksNames().contains("Factions");
+    }
+
+    public boolean hasSuperbVote() {
+        return getEnabledHooksNames().contains("SuperbVote");
+    }
+
+    public boolean hasVault() {
+        return getEnabledHooksNames().contains("Vault");
+    }
 }

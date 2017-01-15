@@ -197,7 +197,7 @@ public class Analysis {
                         break;
                     }
                     if (sData != null) {
-                        data.setTop50CommandsListHtml(AnalysisUtils.createCommandUseListHtml(sData.getCommandUsage()));
+                        data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(sData.getCommandUsage()));
                     }
                 } else {
                     data.setTop50CommandsListHtml("<p>Error Calcuclating Command usages (No usage data)</p>");
