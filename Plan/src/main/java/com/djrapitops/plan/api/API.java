@@ -2,8 +2,12 @@ package com.djrapitops.plan.api;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
+import com.djrapitops.plan.data.AnalysisData;
+import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.utilities.FormatUtils;
+import com.djrapitops.planlite.UUIDFetcher;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  *
@@ -64,5 +68,82 @@ public class API {
      */
     public static String formatTimeStamp(String timeInMs) {
         return FormatUtils.formatTimeStamp(timeInMs);
+    }
+
+    /**
+     * Uses UUIDFetcher to turn PlayerName to UUID
+     *
+     * @param playerName Player's name
+     * @return UUID of the Player
+     * @throws Exception if player's name is not registered at Mojang
+     */
+    public UUID playerNameToUUID(String playerName) throws Exception {
+        return UUIDFetcher.getUUIDOf(playerName);
+    }
+
+    /**
+     * Caches the UserData to the InspectCache for time specified in the Plan
+     * config, so it can be called by webserver.
+     *
+     * Does not cache anything if the player has not joined the server or has no
+     * data in the database.
+     *
+     * @param uuid UUID of the Player
+     */
+    public void cacheUserDataToInspectCache(UUID uuid) {
+        plugin.getInspectCache().cache(uuid);
+    }
+
+    /**
+     * Returns the ip:port/player/playername html as a string so it can be
+     * integrated into other webserver plugins.
+     *
+     * If UserData of the specified player is not in the Cache returns <h1>404
+     * Data was not found in cache</h1>
+     *
+     * @param uuid UUID of the Player
+     * @return html as a string or a single error line html.
+     */
+    public String getPlayerHtmlAsString(UUID uuid) {
+        return plugin.getUiServer().getDataReqHandler().getDataHtml(uuid);
+    }
+
+    /**
+     * Updates the AnalysisCache so the cached data can be called by the
+     * webserver.
+     */
+    public void updateAnalysisCache() {
+        plugin.getAnalysisCache().updateCache();
+    }
+
+    /**
+     * Returns the ip:port/server html as a string so it can be integrated into
+     * other webserver plugins.
+     *
+     * If AnalysisData is not in the AnalysisCache: returns <h1>404 Data was not
+     * found in cache</h1>
+     *
+     * @return html as a string or a single error line html.
+     */
+    public String getAnalysisHtmlAsString() {
+        return plugin.getUiServer().getDataReqHandler().getAnalysisHtml();
+    }
+
+    /**
+     * Returns UserData from the InspectCache
+     *
+     * @param uuid UUID of the Player
+     * @return UserData of the Player in the InspectCache or null if not found
+     */
+    public UserData getUserDataFromInspectCache(UUID uuid) {
+        return plugin.getInspectCache().getFromCache(uuid);
+    }
+
+    /**
+     * Returns AnalysisData from the AnalysisCache
+     * @return AnalysisData in the AnalysisCache or null if not found
+     */
+    public AnalysisData getAnalysisDataFromCache() {
+        return plugin.getAnalysisCache().getData();
     }
 }

@@ -12,7 +12,6 @@ import com.googlecode.charts4j.LineChart;
 import com.googlecode.charts4j.Plots;
 import com.googlecode.charts4j.XYLine;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

@@ -138,6 +138,7 @@ public class DataCacheHandler {
         dataCache.keySet().stream().forEach((uuid) -> {
             saveCachedData(uuid);
         });
+        serverData.updatePlayerCount();
         saveServerData();
         timesSaved++;
     }

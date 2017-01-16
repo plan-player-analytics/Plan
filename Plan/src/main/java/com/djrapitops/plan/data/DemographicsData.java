@@ -15,7 +15,7 @@ public class DemographicsData {
     }
 
     public DemographicsData() {
-        this(-1, Gender.UNKNOWN, "Not_known");
+        this(-1, Gender.UNKNOWN, "Not Known");
     }
 
     // Getters

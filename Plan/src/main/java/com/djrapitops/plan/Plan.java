@@ -3,7 +3,6 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.command.PlanCommand;
 import com.djrapitops.plan.api.API;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import com.djrapitops.planlite.api.Hook;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.MySQLDB;
@@ -14,8 +13,6 @@ import com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -218,5 +215,9 @@ public class Plan extends JavaPlugin {
 
     public Database getDB() {
         return db;
+    }
+
+    public WebSocketServer getUiServer() {
+        return uiServer;
     }
 }

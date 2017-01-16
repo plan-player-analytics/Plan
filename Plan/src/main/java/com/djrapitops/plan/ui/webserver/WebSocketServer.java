@@ -1,8 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.ui.DataRequestHandler;
 import com.djrapitops.plan.ui.webserver.Request;
 import com.djrapitops.plan.ui.webserver.Response;
@@ -25,8 +23,6 @@ public class WebSocketServer {
     private ServerSocket server;
 
     private Plan plugin;
-    private InspectCacheHandler inspectHandler;
-    private AnalysisCacheHandler analysisHandler;
     private DataRequestHandler dataReqHandler;
 
     private boolean shutdown;
@@ -40,7 +36,6 @@ public class WebSocketServer {
      */
     public WebSocketServer(Plan plugin) {
         this.plugin = plugin;
-        this.inspectHandler = plugin.getInspectCache();
         this.PORT = plugin.getConfig().getInt("Settings.WebServer.Port");
         shutdown = false;
         dataReqHandler = new DataRequestHandler(plugin);
@@ -106,5 +101,9 @@ public class WebSocketServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public DataRequestHandler getDataReqHandler() {
+        return dataReqHandler;
     }
 }

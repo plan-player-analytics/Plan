@@ -12,7 +12,7 @@ public class MapComparator {
         hashMap.keySet().stream().forEach((key) -> {
             sortedList.add(new String[]{"" + hashMap.get(key), key});
         });
-        Collections.sort(sortedList, (String[] strings, String[] otherStrings) -> strings[0].compareTo(otherStrings[0]));
+        Collections.sort(sortedList, (String[] strings, String[] otherStrings) -> Integer.parseInt(strings[0])-(Integer.parseInt(otherStrings[0])));
         return sortedList;
     }
 

@@ -422,7 +422,8 @@ public abstract class SQLDB extends Database {
             ResultSet set = statement.executeQuery();
             while (set.next()) {
                 int newPlayers = set.getInt(serverdataColumnNewPlayers);
-                rawServerData.put(set.getLong(serverdataColumnDate), new ServerData(commandUse, newPlayers));
+                int playersOnline = set.getInt(serverdataColumnPlayersOnline);
+                rawServerData.put(set.getLong(serverdataColumnDate), new ServerData(commandUse, newPlayers, playersOnline));
             }
             set.close();
             statement.close();
@@ -752,6 +753,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public void clean() {
         checkConnection();
         plugin.log("DATABASE-SQLDB\nCleaning DB not implemented");

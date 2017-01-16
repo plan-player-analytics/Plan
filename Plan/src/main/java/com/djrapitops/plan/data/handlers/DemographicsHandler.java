@@ -3,15 +3,16 @@ package com.djrapitops.plan.data.handlers;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.Gender;
+import com.djrapitops.plan.data.DemographicsData;
 import com.djrapitops.plan.data.UserData;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -107,21 +108,24 @@ public class DemographicsHandler {
      */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
         InetAddress address = event.getPlayer().getAddress().getAddress();
-        Plan plugin = getPlugin(Plan.class);
+        DemographicsData demData = data.getDemData();
         try {
-            Scanner locationScanner = new Scanner("http://freegeoip.net/csv/" + address.getHostAddress());
             String result = "";
-            while (locationScanner.hasNextLine()) {
-                result = locationScanner.nextLine();
+            URL url = new URL("http://freegeoip.net/csv/" + address.getHostAddress());
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String resultline;
+            while ((resultline = in.readLine()) != null) {
+                result += resultline + ",";
             }
+            in.close();
+
             String[] results = result.split(",");
-            if (!result.isEmpty()) {
-                data.getDemData().setGeoLocation(results[2]);
-            } else {
-                data.getDemData().setGeoLocation("Not Known");
+            if (!results[2].isEmpty()) {
+                demData.setGeoLocation(results[2]);
             }
         } catch (Exception e) {
-            
+            demData.setGeoLocation("Not Known");
         }
     }
 }
