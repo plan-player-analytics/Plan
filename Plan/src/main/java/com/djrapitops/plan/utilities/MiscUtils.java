@@ -60,10 +60,11 @@ public class MiscUtils {
         String playerName = "";
         Plan plugin = getPlugin(Plan.class);
         if (args.length > 0) {
-            if (sender.hasPermission("plan.inspect.other") 
-                    || !(sender instanceof Player) 
-                    || args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
+            if (sender.hasPermission("plan.inspect.other")
+                    || !(sender instanceof Player)) {
                 playerName = args[0];
+            } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
+                playerName = sender.getName();
             } else {
                 sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
             }
