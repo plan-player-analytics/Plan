@@ -1,5 +1,3 @@
-debug: true
-
 Settings:
   Analysis:
     MinutesPlayedUntilConsidiredActive: 10
@@ -16,23 +14,10 @@ Settings:
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
   PlanLite:
-    Enabled: false
+    Enabled: true
 
 database:
   type: sqlite
-
-enabledData:
-  planLite:
-    pluginEnabled: true
-    
-    towny: true
-    factions: true
-    achievements: true
-    votes: true
-    economy: true
-    essentials:
-      ruleBreaking: true
-    
     
       
     

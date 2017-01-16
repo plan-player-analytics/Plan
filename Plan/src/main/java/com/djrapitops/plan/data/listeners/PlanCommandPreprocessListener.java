@@ -25,6 +25,9 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+        if (event.getPlayer().hasPermission("plan.ignore.commanduse")) {
+            return;
+        }
         serverH.handleCommand(event.getMessage().split(" ")[0]);
     }
 }

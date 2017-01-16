@@ -1,11 +1,7 @@
 package com.djrapitops.planlite.command.utils;
 
 import com.djrapitops.planlite.PlanLite;
-import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -18,7 +14,7 @@ public class MiscUtils {
         String[] cVersion;
         String lineWithVersion;
         try {
-            URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/src/plugin.yml");
+            URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan%20Lite/src/plugin.yml");
             lineWithVersion = "";
             Scanner websiteScanner = new Scanner(githubUrl.openStream());
             while (websiteScanner.hasNextLine()) {

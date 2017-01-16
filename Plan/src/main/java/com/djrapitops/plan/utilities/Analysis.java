@@ -75,14 +75,14 @@ public class Analysis {
                 rawServerData = plugin.getDB().getServerDataHashMap();
                 plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
                 AnalysisData data = new AnalysisData();
-                long scale = 2592000 * Long.valueOf("1000");
-                String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scale);
+                long scaleMonth = (long) 2592000 * (long) 1000;
+                String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleMonth);
                 data.setPlayersChartImgHtmlMonth(playerActivityHtmlMonth);
-                scale = 604800 * 1000;
-                String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scale);
+                long scaleWeek = 604800 * 1000;
+                String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleWeek);
                 data.setPlayersChartImgHtmlWeek(playerActivityHtmlWeek);
-                scale = 86400 * 1000;
-                String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scale);
+                long scaleDay = 86400 * 1000;
+                String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleDay);
                 data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
                 long gmZero = 0;
                 long gmOne = 0;
@@ -175,7 +175,12 @@ public class Analysis {
                 for (int age : ages) {
                     totalAge += age;
                 }
-                double averageAge = totalAge * 1.0 / ages.size();
+                double averageAge;
+                if (ages.size() != 0) {
+                    averageAge = totalAge * 1.0 / ages.size();
+                } else {
+                    averageAge = -1;
+                }
                 data.setAverageAge(averageAge);
                 long gmTotal = gmZero + gmOne + gmTwo + gmThree;
                 HashMap<GameMode, Long> totalGmTimes = new HashMap<>();

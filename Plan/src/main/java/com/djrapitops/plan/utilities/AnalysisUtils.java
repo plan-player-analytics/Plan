@@ -67,8 +67,11 @@ public class AnalysisUtils {
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount("" + data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? "Banned" : "Not Banned");
         replaceMap.put("%op%", data.isOp() ? ", Operator (Op)" : "");
+        replaceMap.put("%isonline%", (data.isOnline()) ? "| Online":"| Offline");
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
         replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
+        replaceMap.put("%inaccuratedatawarning%", (new Date().getTime()-data.getRegistered() < 180000) 
+                ? "<h3>Data might be inaccurate, player has just registered.</h3>" : "");
         return replaceMap;
     }
 
@@ -93,12 +96,12 @@ public class AnalysisUtils {
         replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
         replaceMap.put("%playerchartday%", data.getPlayersChartImgHtmlDay());
         replaceMap.put("%top50commands%", data.getTop50CommandsListHtml());
-        replaceMap.put("%avgage%", "" + data.getAverageAge());
+        replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : "Not Known");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
         replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
         replaceMap.put("%ops%", "" + data.getOps());
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
-        replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
+        replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());        
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
         replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
         return replaceMap;
@@ -107,6 +110,9 @@ public class AnalysisUtils {
     static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         Plan plugin = getPlugin(Plan.class);
         int timeToActive = plugin.getConfig().getInt("Settings.Analysis.MinutesPlayedUntilConsidiredActive");
+        if (timeToActive < 0) {
+            timeToActive = 0;
+        }
         long twoWeeks = 1209600000;
         if (new Date().getTime() - lastPlayed < twoWeeks) {
             if (loginTimes > 3) {

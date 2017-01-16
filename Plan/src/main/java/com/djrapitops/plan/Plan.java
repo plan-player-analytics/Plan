@@ -13,10 +13,6 @@ import com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,8 +33,6 @@ public class Plan extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        logToFile("-- Server Start/Reload --");
-
         getDataFolder().mkdirs();
 
         databases = new HashSet<>();
@@ -63,10 +57,7 @@ public class Plan extends JavaPlugin {
 
         getConfig().options().copyDefaults(true);
 
-        getConfig().options().header("Plan Config\n"
-                + "debug - Errors are saved in errorlog.txt when they occur\n"
-                + "visible - Plugin's data is accessable with /plan inspect command"
-        );
+        getConfig().options().header("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/");
 
         saveConfig();
 
@@ -131,28 +122,6 @@ public class Plan extends JavaPlugin {
 
     public void logError(String message) {
         getLogger().severe(message);
-    }
-
-    public void logToFile(String message) {
-        if (getConfig().getBoolean("debug")) {
-            File folder = getDataFolder();
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
-            File log = new File(getDataFolder(), "Debug.txt");
-            try {
-                if (!log.exists()) {
-                    log.createNewFile();
-                }
-                FileWriter fw = new FileWriter(log, true);
-                try (PrintWriter pw = new PrintWriter(fw)) {
-                    pw.println(message + "\n");
-                    pw.flush();
-                }
-            } catch (IOException e) {
-                logError("Failed to create Debug.txt file");
-            }
-        }
     }
 
     public API getAPI() {

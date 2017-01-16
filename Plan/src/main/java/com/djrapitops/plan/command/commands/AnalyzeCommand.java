@@ -48,10 +48,9 @@ public class AnalyzeCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        Date refresh = new Date();
         if (!analysisCache.isCached()) {
             analysisCache.updateCache();
-        } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60) {
+        } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60000) {
             analysisCache.updateCache();
         }
         ChatColor oColor = Phrase.COLOR_MAIN.color();

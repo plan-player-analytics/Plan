@@ -41,6 +41,7 @@ public class UserData {
     private PlanLitePlayerData planLiteData;
     
     private String name;
+    private boolean isOnline;
 
     public UserData(Player player, DemographicsData demData, Database db) {
         uuid = player.getUniqueId();
@@ -64,6 +65,7 @@ public class UserData {
         this.demData = demData;
         isBanned = player.isBanned();
         name = player.getName();
+        isOnline = player.isOnline();
     }
 
     public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
@@ -86,6 +88,7 @@ public class UserData {
         this.demData = demData;
         isBanned = player.isBanned();
         name = player.getName();
+        isOnline = player.isOnline();
     }
 
     public void addIpAddress(InetAddress ip) {
@@ -307,4 +310,10 @@ public class UserData {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+    
+    
 }

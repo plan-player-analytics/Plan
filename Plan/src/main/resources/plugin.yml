@@ -35,42 +35,37 @@ permissions:
     default: true
   plan.inspect.other:
     description: Allows you to check other players' player data.
-    default: true
+    default: op
   plan.analyze:
     description: Allows you to check analysed data about all players.
-    default: true
-  plan.analyze.refresh:
-    description: Allows you to refresh the analyse result with -r argument
     default: op
   plan.reload:
     description: Allows to reload plugin config
-    default: true
+    default: op
   plan.search:
     description: Allows search
-    default: true
+    default: op
   plan.info:
     description: Allows to view info
-    default: true
-  plan.debug:
-    description: Allows debug command
     default: op
+  plan.ignore.commanduse:
+    description: Commands used by this player are not saved
+    default: false
   
   plan.basic:
     children:
       plan.?: true
-      plan.inspect: true
-      plan.info: true
-      plan.search: true
+      plan.inspect: true         
   plan.advanced:
     childer:
       plan.basic: true
+      plan.info: true   
       plan.analyze: true
   plan.staff:
     children:
-      plan.debug: true
+      plan.search: true
       plan.advanced: true
       plan.inspect.other: true
-      plan.analyze.refresh: true
       plan.reload: true
   plan.*:
     children:

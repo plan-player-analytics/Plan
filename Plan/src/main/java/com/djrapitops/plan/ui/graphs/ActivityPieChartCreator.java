@@ -23,9 +23,9 @@ public class ActivityPieChartCreator {
 
         int total = totalBanned + active + inactive;
 
-        int banPerc = (int) ((totalBanned / total) * 100);
-        int inacPerc = (int) ((inactive / total) * 100);
-        int actPerc = (int) ((active / total) * 100);
+        int banPerc = (int) ((totalBanned * 1.0 / total) * 100);
+        int inacPerc = (int) ((inactive * 1.0 / total) * 100);
+        int actPerc = (int) ((active * 1.0 / total) * 100);
         while (banPerc + inacPerc + actPerc < 100) {
             actPerc++;
         }
@@ -38,7 +38,7 @@ public class ActivityPieChartCreator {
         Slice s4 = Slice.newSlice((int) (actPerc), Color.newColor("228B22"), "Active", "Active");
 
         PieChart refChart = GCharts.newPieChart(s4, s3, s1);
-        refChart.setSize(500, 150);
+        refChart.setSize(400, 150);
         refChart.setThreeD(true);
         String refURL = refChart.toURLString();
         return refURL;

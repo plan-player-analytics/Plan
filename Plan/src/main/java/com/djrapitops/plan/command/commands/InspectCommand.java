@@ -101,8 +101,7 @@ public class InspectCommand extends SubCommand {
                 if (inspectCache.getCache().containsKey(uuid)) {
                     // Header
                     sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor
-                            + " Player Analytics - Inspect results: " + oColor + playerName
-                            + tColor + " | took " + oColor + FormatUtils.formatTimeAmountSinceDate(refreshDate, new Date()));
+                            + " Player Analytics - Inspect results: " + oColor + playerName);
                     // Link
                     String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
                             + "/player/" + playerName;

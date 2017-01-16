@@ -59,7 +59,7 @@ public class GMTimesPieChartCreator {
         Slice s4 = Slice.newSlice(three, Color.newColor("228B22"), "Spectator", "Spectator");
 
         PieChart refChart = GCharts.newPieChart(s1, s2, s3, s4);
-        refChart.setSize(500, 150);
+        refChart.setSize(400, 150);
         refChart.setThreeD(true);
         String refURL = refChart.toURLString();
         return refURL;

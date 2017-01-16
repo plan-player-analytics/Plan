@@ -34,22 +34,37 @@ public class PlayerActivityGraphCreator {
         Plan plugin = getPlugin(Plan.class);
 
         int maxPlayers = plugin.getHandler().getMaxPlayers();
-        long now = new Date().getTime();
+        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         long nowMinusScale = now - scale;
-        int i = 0;
-        for (long keyDate : rawServerData.keySet()) {
-            if (keyDate < nowMinusScale) {
-                continue;
-            }
-            Double scaledDateValue = ((keyDate - nowMinusScale) * 1.0 / scale) * 100;
-            ServerData serverData = rawServerData.get(keyDate);
-            Double scaledPlayerValue = (serverData.getPlayersOnline() * 1.0 / maxPlayers) * 100;
-            Double scaledNewPValue = (serverData.getNewPlayers() * 1.0 / maxPlayers) * 100;
-            xListDate.add(scaledDateValue);
 
-            pYList.add(scaledPlayerValue);
-            nYList.add(scaledNewPValue);
+        int lastPValue = 0;
+        int lastNValue = 0;
+        int lastSavedPValue = -1;
+        int lastSavedNValue = -1;
+        long lastSaveI = 0;
+        for (long i = nowMinusScale; i <= now; i += 1000) {
+            if (rawServerData.containsKey(i)) {
+                ServerData serverData = rawServerData.get(i);
+                lastPValue = serverData.getPlayersOnline();
+                lastNValue = serverData.getNewPlayers();
+            }
+            Double scaledDateValue = ((i - nowMinusScale) * 1.0 / scale) * 100;
+            Double scaledPlayerValue = (lastPValue * 1.0 / maxPlayers) * 100;
+            Double scaledNewPValue = (lastNValue * 1.0 / maxPlayers) * 100;
+
+            if (lastSavedPValue != lastPValue || lastSavedNValue != lastNValue || i-lastSaveI > (scale / (long) 50)) {
+                lastSaveI = i;
+                xListDate.add(scaledDateValue);
+                pYList.add((lastSavedPValue * 1.0 / maxPlayers) * 100);
+                nYList.add((lastSavedNValue * 1.0 / maxPlayers) * 100);
+                lastSavedPValue = lastPValue;
+                lastSavedNValue = lastNValue;
+                xListDate.add(scaledDateValue);
+                pYList.add(scaledPlayerValue);
+                nYList.add(scaledNewPValue);
+            }
         }
+
         // Date labels
         for (long j = 0; j <= 8; j++) {
             long scaleAddition = j * (scale / 8);

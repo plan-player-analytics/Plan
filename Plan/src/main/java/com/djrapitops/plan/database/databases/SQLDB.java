@@ -423,12 +423,13 @@ public abstract class SQLDB extends Database {
             while (set.next()) {
                 int newPlayers = set.getInt(serverdataColumnNewPlayers);
                 int playersOnline = set.getInt(serverdataColumnPlayersOnline);
-                rawServerData.put(set.getLong(serverdataColumnDate), new ServerData(commandUse, newPlayers, playersOnline));
+                rawServerData.put(new Date(set.getLong(serverdataColumnDate)).toInstant().getEpochSecond() * (long) 1000,
+                        new ServerData(commandUse, newPlayers, playersOnline));
             }
             set.close();
             statement.close();
         } catch (SQLException e) {
-            plugin.logToFile("DATABASE-SQLDB-GetServerData\n" + e + "\n" + e.getCause());
+            e.printStackTrace();
         }
         return rawServerData;
     }
@@ -454,7 +455,7 @@ public abstract class SQLDB extends Database {
             set.close();
             statement.close();
         } catch (SQLException e) {
-            plugin.logToFile("DATABASE-SQLDB-GetServerData\n" + e + "\n" + e.getCause());
+            e.printStackTrace();
         }
         return new ServerData(commandUse, newPlayers);
     }
@@ -463,7 +464,7 @@ public abstract class SQLDB extends Database {
     public void saveServerData(ServerData data) {
         try {
             saveCommandUse(data.getCommandUsage());
-            long now = new Date().getTime();
+            long now = new Date().toInstant().getEpochSecond() * (long) 1000;
             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + serverdataName + " ("
                     + serverdataColumnDate + ", "
                     + serverdataColumnNewPlayers + ", "
@@ -516,7 +517,7 @@ public abstract class SQLDB extends Database {
             set.close();
             statement.close();
         } catch (SQLException e) {
-            plugin.logToFile("DATABASE-SQLDB\n" + e + "\n" + e.getCause());
+            e.printStackTrace();
         }
         return commandUse;
     }
@@ -554,7 +555,7 @@ public abstract class SQLDB extends Database {
             statement.execute();
             statement.close();
         } catch (SQLException e) {
-            plugin.logToFile("DATABASE_SQLDB\n" + e + "\n" + e.getCause());
+            e.printStackTrace();
         }
     }
 
@@ -632,12 +633,7 @@ public abstract class SQLDB extends Database {
             saveGMTimes(userId, data.getGmTimes());
 
         } catch (SQLException | NullPointerException e) {
-            e.printStackTrace();
-            plugin.logToFile("SQLDB-Save\n" + e
-                    + "\n" + data.getLastGamemode()
-                    + "\n" + Bukkit.getDefaultGameMode()
-                    + "\n" + wasSeenBefore(uuid)
-            );
+            e.printStackTrace();            
         }
         data.setAccessing(false);
     }

@@ -31,7 +31,7 @@ public class MiscUtils {
         String cVersion;
         String lineWithVersion;
         try {
-            URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/src/plugin.yml");
+            URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
             lineWithVersion = "";
             Scanner websiteScanner = new Scanner(githubUrl.openStream());
             while (websiteScanner.hasNextLine()) {
@@ -51,7 +51,7 @@ public class MiscUtils {
                 return "You're running the latest version";
             }
         } catch (Exception e) {
-            plugin.logToFile("Failed to compare versions.\n" + e);
+            plugin.logError("Failed to compare versions.");
         }
         return "Failed to get newest version number.";
     }
@@ -60,12 +60,12 @@ public class MiscUtils {
         String playerName = "";
         Plan plugin = getPlugin(Plan.class);
         if (args.length > 0) {
-            if ((args[0].equals("-a")) || (args[0].equals("-r"))) {
-                playerName = "ArgumentGivenError";
-                plugin.log("No username given, returned empty username.");
-                plugin.logToFile(Phrase.ERROR_NO_USERNAME + args[0]);
-            } else if (sender.hasPermission("plan.inspect.other") || !(sender instanceof Player)) {
+            if (sender.hasPermission("plan.inspect.other") 
+                    || !(sender instanceof Player) 
+                    || args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
                 playerName = args[0];
+            } else {
+                sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
             }
         } else {
             try {
