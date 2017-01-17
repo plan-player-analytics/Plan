@@ -54,9 +54,12 @@ public class PlanLiteHandler {
         if (plData.hasTowny()) {
             DataPoint town = liteData.get("TOW-TOWN");
             plData.setTown((town != null) ? town.data() : "Not in a town");
-            plData.setFriends(liteData.get("TOW-FRIENDS").data());
-            plData.setPlotPerms(liteData.get("TOW-PLOT PERMS").data());
-            plData.setPlotOptions(liteData.get("TOW-PLOT OPTIONS").data());
+            DataPoint friends = liteData.get("TOW-FRIENDS");
+            plData.setFriends((town != null) ? friends.data() : "");
+            DataPoint perms = liteData.get("TOW-PLOT PERMS");
+            plData.setPlotPerms((perms != null) ? perms.data() : "");
+            DataPoint options = liteData.get("TOW-PLOT OPTIONS");
+            plData.setPlotOptions((options != null) ? options.data() : "");
         }
         if (plData.hasFactions()) {
             DataPoint faction = liteData.get("FAC-FACTION");
