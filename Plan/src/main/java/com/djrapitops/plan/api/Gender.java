@@ -3,8 +3,13 @@ package com.djrapitops.plan.api;
 public enum Gender {
     MALE, FEMALE, OTHER, UNKNOWN;
 
-    public static Gender parse(String string) {
-        switch (string) {
+    /**
+     * Gets the Enum that corresponds to the name.
+     * @param name name of the gender enum.
+     * @return Gender Enum
+     */
+    public static Gender parse(String name) {
+        switch (name) {
             case "female":
                 return Gender.FEMALE;
             case "male":

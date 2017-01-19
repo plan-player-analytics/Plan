@@ -24,6 +24,13 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class PlayerActivityGraphCreator {
 
+    /**
+     * Creates a new url for a PlayerActivity graph.
+     *
+     * @param rawServerData HashMap of all ServerData
+     * @param scale Long in ms, time the graph will be limited to.
+     * @return Url of charts4j image link.
+     */
     public static String createChart(HashMap<Long, ServerData> rawServerData, long scale) {
 
         List<Double> xListDate = new ArrayList<>();
@@ -53,7 +60,7 @@ public class PlayerActivityGraphCreator {
             Double scaledPlayerValue = (lastPValue * 1.0 / maxPlayers) * 100;
             Double scaledNewPValue = (lastNValue * 1.0 / maxPlayers) * 100;
 
-            if (lastSavedPValue != lastPValue || lastSavedNValue != lastNValue || i-lastSaveI > (scale / (long) 50)) {
+            if (lastSavedPValue != lastPValue || lastSavedNValue != lastNValue || i - lastSaveI > (scale / (long) 50)) {
                 lastSaveI = i;
                 xListDate.add(scaledDateValue);
                 pYList.add((lastSavedPValue * 1.0 / maxPlayers) * 100);

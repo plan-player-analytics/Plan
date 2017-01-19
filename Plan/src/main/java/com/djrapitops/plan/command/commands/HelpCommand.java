@@ -11,11 +11,21 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class HelpCommand extends SubCommand {
 
     private final Plan plugin;
     private final PlanCommand command;
 
+    /**
+     * Subcommand Constructor.
+     *
+     * @param plugin Current instance of Plan
+     * @param command Current instance of PlanCommand
+     */
     public HelpCommand(Plan plugin, PlanCommand command) {
         super("help,?", "plan.?", "Show command list.", CommandType.CONSOLE, "");
 
@@ -47,7 +57,7 @@ public class HelpCommand extends SubCommand {
             }
 
             sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor
-                    + " /plan " + command.getFirstName() +" "+ command.getArguments() + tColor + " - " + command.getUsage());
+                    + " /plan " + command.getFirstName() + " " + command.getArguments() + tColor + " - " + command.getUsage());
         }
         // Footer
         sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());

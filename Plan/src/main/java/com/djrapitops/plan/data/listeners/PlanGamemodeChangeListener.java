@@ -10,18 +10,32 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class PlanGamemodeChangeListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
     private final GamemodeTimesHandler gmTimesH;
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public PlanGamemodeChangeListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
         gmTimesH = handler.getGamemodeTimesHandler();
     }
 
+    /**
+     * GM Change Event Listener.
+     *
+     * @param event Fired Event.
+     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGamemodeChange(PlayerGameModeChangeEvent event) {
         if (event.isCancelled()) {

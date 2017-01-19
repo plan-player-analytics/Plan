@@ -633,7 +633,7 @@ public abstract class SQLDB extends Database {
             saveGMTimes(userId, data.getGmTimes());
 
         } catch (SQLException | NullPointerException e) {
-            e.printStackTrace();            
+            e.printStackTrace();
         }
         data.setAccessing(false);
     }

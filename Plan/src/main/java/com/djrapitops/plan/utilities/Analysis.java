@@ -17,6 +17,10 @@ import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class Analysis {
 
     private Plan plugin;
@@ -25,6 +29,11 @@ public class Analysis {
     private HashMap<Long, ServerData> rawServerData;
     private final List<UUID> added;
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public Analysis(Plan plugin) {
         this.plugin = plugin;
         this.inspectCache = plugin.getInspectCache();
@@ -32,6 +41,15 @@ public class Analysis {
         added = new ArrayList<>();
     }
 
+    /**
+     * Analyzes the data of all offlineplayers on the server.
+     *
+     * First retrieves all Offlineplayers and checks those that are in the
+     * database. Then Runs a new Analysis Task Asyncronously. Saves AnalysisData
+     * to the provided Cache.
+     *
+     * @param analysisCache Cache that the data is saved to.
+     */
     public void analyze(AnalysisCacheHandler analysisCache) {
         rawData.clear();
         added.clear();
@@ -75,7 +93,7 @@ public class Analysis {
                 rawServerData = plugin.getDB().getServerDataHashMap();
                 plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
                 AnalysisData data = new AnalysisData();
-                
+
                 createPlayerActivityGraphs(data);
 
                 // Create empty Dataset

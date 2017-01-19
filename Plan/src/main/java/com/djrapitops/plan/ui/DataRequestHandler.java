@@ -19,16 +19,34 @@ public class DataRequestHandler {
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public DataRequestHandler(Plan plugin) {
         this.plugin = plugin;
         this.inspectCache = plugin.getInspectCache();
         this.analysisCache = plugin.getAnalysisCache();
     }
 
+    /**
+     * Checks if the Players data is in the inspect cache.
+     *
+     * @param uuid UUID of Player
+     * @return true if cached.
+     */
     public boolean checkIfCached(UUID uuid) {
-        return inspectCache.getCache().containsKey(uuid);
+        return inspectCache.isCached(uuid);
     }
 
+    /**
+     * Returns the player.html as string with replaced placeholders.
+     *
+     * @param uuid UUID of player, whose UserData is used to replace
+     * placeholders with
+     * @return The html
+     */
     public String getDataHtml(UUID uuid) {
         UserData data = inspectCache.getFromCache(uuid);
         if (data == null) {
@@ -49,6 +67,10 @@ public class DataRequestHandler {
         return html;
     }
 
+    /**
+     * Returns the analysis.html as string with replaced placeholders.
+     * @return the html
+     */
     public String getAnalysisHtml() {
         if (!analysisCache.isCached()) {
             return "<h1>404 Data was not found in cache</h1>";
@@ -68,6 +90,10 @@ public class DataRequestHandler {
         return html;
     }
 
+    /**
+     * Checks if the AnalysisData is cached.
+     * @return true if cached.
+     */
     public boolean checkIfAnalysisIsCached() {
         return analysisCache.isCached();
     }

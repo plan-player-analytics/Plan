@@ -55,9 +55,9 @@ public class GMTimesPieChartCreator {
         }
 
         Slice s1 = Slice.newSlice(zero, Color.newColor(Phrase.HCOLOR_GMP_0 + ""), "Survival", "Survival");
-        Slice s2 = Slice.newSlice(one, Color.newColor(Phrase.HCOLOR_GMP_1+""), "Creative", "Creative");
-        Slice s3 = Slice.newSlice(two, Color.newColor(Phrase.HCOLOR_GMP_2+""), "Adventure", "Adventure");
-        Slice s4 = Slice.newSlice(three, Color.newColor(Phrase.HCOLOR_GMP_3+""), "Spectator", "Spectator");
+        Slice s2 = Slice.newSlice(one, Color.newColor(Phrase.HCOLOR_GMP_1 + ""), "Creative", "Creative");
+        Slice s3 = Slice.newSlice(two, Color.newColor(Phrase.HCOLOR_GMP_2 + ""), "Adventure", "Adventure");
+        Slice s4 = Slice.newSlice(three, Color.newColor(Phrase.HCOLOR_GMP_3 + ""), "Spectator", "Spectator");
 
         PieChart refChart = GCharts.newPieChart(s1, s2, s3, s4);
         refChart.setSize(400, 150);

@@ -56,6 +56,14 @@ public class MiscUtils {
         return "Failed to get newest version number.";
     }
 
+    /**
+     * Used by the inspect command.
+     *
+     * @param args Arguments of the inspect command
+     * @param sender Command sender
+     * @return The name of the player searched for, if the arguments are empty
+     * player's own name is returned.
+     */
     public static String getPlayerDisplayname(String[] args, CommandSender sender) {
         String playerName = "";
         Plan plugin = getPlugin(Plan.class);
@@ -79,6 +87,11 @@ public class MiscUtils {
         return playerName;
     }
 
+    /**
+     * Get matching playernames from the offlineplayers
+     * @param search Part of a name to search for.
+     * @return Set of OfflinePlayers that match.
+     */
     public static Set<OfflinePlayer> getMatchingDisplaynames(String search) {
         List<OfflinePlayer> players = new ArrayList<>();
         players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));

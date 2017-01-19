@@ -7,7 +7,6 @@ import com.djrapitops.plan.utilities.UUIDFetcher;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 
-import java.util.Date;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.UUID;
@@ -17,10 +16,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -110,7 +109,7 @@ public class InspectCommand extends SubCommand {
         (new BukkitRunnable() {
             @Override
             public void run() {
-                if (inspectCache.getCache().containsKey(uuid)) {
+                if (inspectCache.isCached(uuid)) {
                     // Header
                     sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor
                             + " Player Analytics - Inspect results: " + oColor + playerName);

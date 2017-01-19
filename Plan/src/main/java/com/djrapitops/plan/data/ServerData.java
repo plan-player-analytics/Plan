@@ -82,7 +82,9 @@ public class ServerData {
     }
 
     /**
-     * Adds command to the commandUse Map and adds 1 to the amount it has been used.
+     * Adds command to the commandUse Map and adds 1 to the amount it has been
+     * used.
+     *
      * @param command Used command (eg. /plan)
      */
     public void commandRegistered(String command) {

@@ -12,10 +12,17 @@ public class Request {
     private InputStream input;
     private String uri;
 
+    /**
+     * Creates a new Request object.
+     * @param input InputStream to read the web request from.
+     */
     public Request(InputStream input) {
         this.input = input;
     }
 
+    /**
+     * Parses the request URI.
+     */
     public void parse() {
         // Read a set of characters from the socket
         StringBuffer request = new StringBuffer(2048);
@@ -48,6 +55,9 @@ public class Request {
         return null;
     }
 
+    /**
+     * @return Parsed URI
+     */
     public String getUri() {
         return uri;
     }

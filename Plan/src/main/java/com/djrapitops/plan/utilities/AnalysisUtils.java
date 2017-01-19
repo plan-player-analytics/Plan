@@ -25,16 +25,36 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class AnalysisUtils {
 
+    /**
+     * Creates a GMTimesPieChart image HTML.
+     *
+     * @param gmTimes HashMap of gamemodes and time in ms how long has been
+     * played in them.
+     * @return Html img tag with url.
+     */
     public static String createGMPieChart(HashMap<GameMode, Long> gmTimes) {
         String url = GMTimesPieChartCreator.createChart(gmTimes);
         return "<img src=\"" + url + "\">";
     }
 
+    /**
+     * Creates a GMTimesPieChart image HTML.
+     *
+     * @param gmTimes HashMap of gamemodes and time in ms how long has been
+     * played in them.
+     * @param total Total time played in all gamemodes
+     * @return Html img tag with url.
+     */
     public static String createGMPieChart(HashMap<GameMode, Long> gmTimes, long total) {
         String url = GMTimesPieChartCreator.createChart(gmTimes, total);
         return "<img src=\"" + url + "\">";
     }
 
+    /**
+     * Gets the HashMap that is used to replace placeholders.
+     * @param data UserData used to replace the placeholders with
+     * @return HashMap that contains string for each placeholder.
+     */
     public static HashMap<String, String> getInspectReplaceRules(UserData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%uuid%", "" + data.getUuid());
@@ -67,10 +87,10 @@ public class AnalysisUtils {
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount("" + data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? "Banned" : "Not Banned");
         replaceMap.put("%op%", data.isOp() ? ", Operator (Op)" : "");
-        replaceMap.put("%isonline%", (data.isOnline()) ? "| Online":"| Offline");
+        replaceMap.put("%isonline%", (data.isOnline()) ? "| Online" : "| Offline");
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
         replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
-        replaceMap.put("%inaccuratedatawarning%", (new Date().getTime()-data.getRegistered() < 180000) 
+        replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000)
                 ? "<h3>Data might be inaccurate, player has just registered.</h3>" : "");
         return replaceMap;
     }
@@ -80,6 +100,11 @@ public class AnalysisUtils {
         return "<img src=\"" + url + "\">";
     }
 
+    /**
+     * Gets the HashMap that is used to replace placeholders in Analysis.
+     * @param data AnalysisData used to replace the placeholders with
+     * @return HashMap that contains string for each placeholder.
+     */
     public static HashMap<String, String> getAnalysisReplaceRules(AnalysisData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%activitypiechart%", data.getActivityChartImgHtml());
@@ -91,7 +116,7 @@ public class AnalysisUtils {
         replaceMap.put("%active%", "" + data.getActive());
         replaceMap.put("%banned%", "" + data.getBanned());
         replaceMap.put("%inactive%", "" + data.getInactive());
-        replaceMap.put("%joinleaver%", ""+data.getJoinleaver());
+        replaceMap.put("%joinleaver%", "" + data.getJoinleaver());
         replaceMap.put("%activitytotal%", "" + data.getTotal());
         replaceMap.put("%playerchartmonth%", data.getPlayersChartImgHtmlMonth());
         replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
@@ -102,7 +127,7 @@ public class AnalysisUtils {
         replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
         replaceMap.put("%ops%", "" + data.getOps());
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
-        replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());        
+        replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
         replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
         return replaceMap;
@@ -199,13 +224,13 @@ public class AnalysisUtils {
     private static HashMap<String, String> getPlanLitePlayerReplaceRules(PlanLitePlayerData planLiteData) {
         HashMap<String, String> replaceMap = new HashMap<>();
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%townylinetown%", hook.hasTowny() ? "<p>Town: "+planLiteData.getTown()+"</p>" : "");
+        replaceMap.put("%townylinetown%", hook.hasTowny() ? "<p>Town: " + planLiteData.getTown() + "</p>" : "");
         replaceMap.put("%townylineplotperms%", "");
-        replaceMap.put("%townylineplotoptions%", hook.hasTowny() ? "<p>Plot options: "+planLiteData.getPlotOptions()+"</p>" : "");
-        replaceMap.put("%townylinefriends%", hook.hasTowny() ? "<p>Friends with "+planLiteData.getFriends()+"</p>" : "");
-        replaceMap.put("%factionsline%", hook.hasFactions() ? "<p>Faction: "+planLiteData.getFaction()+"</p>" : "");
-        replaceMap.put("%totalmoneyline%", hook.hasVault() ? "<p>Balance: "+planLiteData.getMoney()+"</p>" : "");
-        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? "<p>Player has voted " + planLiteData.getVotes()+ " times.</p>" : "");
+        replaceMap.put("%townylineplotoptions%", hook.hasTowny() ? "<p>Plot options: " + planLiteData.getPlotOptions() + "</p>" : "");
+        replaceMap.put("%townylinefriends%", hook.hasTowny() ? "<p>Friends with " + planLiteData.getFriends() + "</p>" : "");
+        replaceMap.put("%factionsline%", hook.hasFactions() ? "<p>Faction: " + planLiteData.getFaction() + "</p>" : "");
+        replaceMap.put("%totalmoneyline%", hook.hasVault() ? "<p>Balance: " + planLiteData.getMoney() + "</p>" : "");
+        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? "<p>Player has voted " + planLiteData.getVotes() + " times.</p>" : "");
         return replaceMap;
     }
 }

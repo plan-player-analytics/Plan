@@ -25,7 +25,7 @@ public class AnalyzeCommand extends SubCommand {
     private AnalysisCacheHandler analysisCache;
 
     /**
-     * Class Constructor.
+     * Subcommand Constructor.
      *
      * @param plugin Current instance of Plan
      */
@@ -77,6 +77,12 @@ public class AnalyzeCommand extends SubCommand {
         return true;
     }
 
+    /**
+     * Used to send the message after /plan analysis.
+     * @param sender Command sender.
+     * @param config Plan config.
+     * @throws CommandException
+     */
     public void sendAnalysisMessage(CommandSender sender, FileConfiguration config) throws CommandException {
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();

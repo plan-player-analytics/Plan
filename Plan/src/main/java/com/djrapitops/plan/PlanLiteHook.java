@@ -22,7 +22,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  *
  * @author Rsl1122
  */
-public class PlanLiteHook implements Hook{
+public class PlanLiteHook implements Hook {
 
     private PlanLite planLite;
     private Plan plugin;
@@ -62,42 +62,91 @@ public class PlanLiteHook implements Hook{
         }
     }
 
+    /**
+     * @return Set of the Enabled hooks names.
+     */
     public Set<String> getEnabledHooksNames() {
         return planLite.getHooks().keySet();
     }
 
+    /**
+     * Used to get data from PlanLite for the Analysis & Inspect.
+     *
+     * @param playerName Name of the player.
+     * @param dataPoint true (use datapoint system)
+     * @return The data about the player.
+     */
     public HashMap<String, DataPoint> getData(String playerName, boolean dataPoint) {
         return planLiteApi.getData(playerName, dataPoint);
     }
 
+    /**
+     * Used to get data from PlanLite for the Analysis & Inspect.
+     *
+     * @param playerName Name of the player.
+     * @param dataPoint true (use datapoint system)
+     * @return The data about the player.
+     */
     public HashMap<String, DataPoint> getAllData(String playerName, boolean dataPoint) {
         return planLiteApi.getAllData(playerName, dataPoint);
     }
 
+    /**
+     * @return true if the config setting is true & PlanLite is installed.
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Passes commands to PlanLite.
+     * 
+     * Used by /plan lite
+     * @param sender
+     * @param cmd
+     * @param commandLabel
+     * @param args
+     * @return
+     */
     public boolean passCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         return planLite.getPlanCommand().onCommand(sender, cmd, commandLabel, args);
     }
 
+    /**
+     * @return true if server has towny
+     */
     public boolean hasTowny() {
         return getEnabledHooksNames().contains("Towny");
     }
 
+    /**
+     * @return true if server has factions
+     */
     public boolean hasFactions() {
         return getEnabledHooksNames().contains("Factions");
     }
 
+    /**
+     * @return true if server has superbvote
+     */
     public boolean hasSuperbVote() {
         return getEnabledHooksNames().contains("SuperbVote");
     }
 
+    /**
+     * @return true if server has vault
+     */
     public boolean hasVault() {
         return getEnabledHooksNames().contains("Vault");
     }
 
+    /**
+     * Used to send data to PlanLite if it's use as UI is enabled.
+     *
+     * @param playername
+     * @return
+     * @throws Exception
+     */
     @Override
     public HashMap<String, DataPoint> getData(String playername) throws Exception {
         HashMap<String, DataPoint> data = new HashMap<>();
@@ -112,14 +161,21 @@ public class PlanLiteHook implements Hook{
                     if (key.equals("%planlite%") || key.equals("%gmpiechart%")) {
                         continue;
                     }
-                    data.put("PLA-"+key.toUpperCase().substring(1, key.length()-1), new DataPoint(userData.get(key), DataType.OTHER));
+                    data.put("PLA-" + key.toUpperCase().substring(1, key.length() - 1), new DataPoint(userData.get(key), DataType.OTHER));
                 }
             }
-        } catch (Exception e) {            
+        } catch (Exception e) {
         }
         return data;
     }
 
+    /**
+     * Used to send data to PlanLite if it's use as UI is enabled.
+     *
+     * @param playername
+     * @return
+     * @throws Exception
+     */
     @Override
     public HashMap<String, DataPoint> getAllData(String playername) throws Exception {
         return getData(playername);

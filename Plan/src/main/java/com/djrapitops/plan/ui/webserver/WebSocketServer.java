@@ -103,6 +103,9 @@ public class WebSocketServer {
         }
     }
 
+    /**
+     * @return DataRequestHandler used by the WebServer.
+     */
     public DataRequestHandler getDataReqHandler() {
         return dataReqHandler;
     }

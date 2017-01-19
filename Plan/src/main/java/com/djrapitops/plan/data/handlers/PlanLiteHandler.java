@@ -12,6 +12,10 @@ import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class PlanLiteHandler {
 
     private Plan plugin;
@@ -19,6 +23,11 @@ public class PlanLiteHandler {
     private DataCacheHandler handler;
     private boolean enabled;
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public PlanLiteHandler(Plan plugin) {
         this.plugin = plugin;
         PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
@@ -28,6 +37,12 @@ public class PlanLiteHandler {
         }
     }
 
+    /**
+     * Handles the player login by getting the data of the player from planlite.
+     *
+     * @param event LoginEvent
+     * @param data UserData for the player.
+     */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
         if (!enabled) {
             data.setPlanLiteFound(false);
@@ -39,6 +54,15 @@ public class PlanLiteHandler {
         handleEvents(playerName, data);
     }
 
+    /**
+     * Places the data to the PlanLitePlayerData and saves that to UserData.
+     *
+     * If PlanLite is used as UI the additional data of PlanLite has to be
+     * disabled to avoid stackoverflow.
+     *
+     * @param playerName Name of the Player
+     * @param data UserData for the player.
+     */
     public void handleEvents(String playerName, UserData data) {
         if (!enabled) {
             return;
@@ -47,7 +71,7 @@ public class PlanLiteHandler {
         PlanLitePlayerData plData = new PlanLitePlayerData();
 
         // Avoiding StackOverFlow
-        if (plugin.getConfig().getBoolean("Settings.PlanLite.UseAsAlternativeUI") 
+        if (plugin.getConfig().getBoolean("Settings.PlanLite.UseAsAlternativeUI")
                 && plugin.getPlanLiteHook().isEnabled()) {
             data.setPlanLiteFound(false);
             plData.setTowny(false);

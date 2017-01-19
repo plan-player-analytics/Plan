@@ -7,12 +7,26 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class MySQLDB extends SQLDB {
 
+    /**
+     * Class Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public MySQLDB(Plan plugin) {
         super(plugin, true);
     }
 
+    /**
+     * Creates a new connection to the database.
+     *
+     * @return the new Connection.
+     */
     @Override
     protected Connection getNewConnection() {
         ConfigurationSection config = getConfigSection();

@@ -1,9 +1,6 @@
 package com.djrapitops.plan.utilities;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import org.bukkit.Location;
 
 /**
@@ -12,33 +9,65 @@ import org.bukkit.Location;
  */
 public class FormatUtils {
 
-    // Formats Time Since (0 -> string)
+    /**
+     * Formats a String of long in ms to readable format.
+     *
+     * @param string String of a Long in ms
+     * @return Readable format
+     * @throws NumberFormatException if String is not long.
+     */
     public static String formatTimeAmount(String string) throws NumberFormatException {
         long ms = Long.parseLong(string);
         return turnMsLongToString(ms);
     }
 
-    // Formats Time Difference Date before -> Date now
+    /**
+     * Formats the difference between the two dates into readable format.
+     *
+     * @param before
+     * @param now
+     * @return Readable format
+     * @throws NumberFormatException
+     */
     public static String formatTimeAmountSinceDate(Date before, Date now) throws NumberFormatException {
         long ms = Math.abs((now.toInstant().getEpochSecond() * 1000) - (before.toInstant().getEpochSecond() * 1000));
         return turnMsLongToString(ms);
     }
 
-    // Creates a new Date with Epoch second and returns Date and Time String
+    /**
+     * Creates a new Date with Epoch second and returns Date and Time String.
+     *
+     * @param string
+     * @return Readable TimeStamp
+     * @throws NumberFormatException String is not Long
+     */
     public static String formatTimeStamp(String string) throws NumberFormatException {
         long ms = Long.parseLong(string);
         Date sfd = new Date(ms);
         return ("" + sfd).substring(4, 19);
     }
 
-    // Formats Time Difference String before -> Date now
+    /**
+     * Formats the difference between the two dates, where first is in String of
+     * Long format, into readable format.
+     *
+     * @param string Long in ms, date
+     * @param now
+     * @return
+     * @throws NumberFormatException
+     */
     public static String formatTimeAmountSinceString(String string, Date now) throws NumberFormatException {
         long ms = Math.abs((now.toInstant().getEpochSecond() * 1000) - Long.parseLong(string));
         return turnMsLongToString(ms);
     }
 
-    // Removes letters from a string leaving only numbers and dots.
-    public static String removeLetters(String dataPoint) {        
+    /**
+     * Removes letters from a string leaving only numbers and dots.
+     *
+     * @param dataPoint
+     * @return
+     */
+    public static String removeLetters(String dataPoint) {
         return dataPoint.replaceAll("[^\\d.]", "");
     }
 
@@ -111,6 +140,12 @@ public class FormatUtils {
         return result;
     }
 
+    /**
+     * Formats a Minecraft Location into readable format.
+     *
+     * @param loc Location to format
+     * @return Readable location format.
+     */
     public static String formatLocation(Location loc) {
         return "x " + loc.getBlockX() + " z " + loc.getBlockZ() + " in " + loc.getWorld();
     }

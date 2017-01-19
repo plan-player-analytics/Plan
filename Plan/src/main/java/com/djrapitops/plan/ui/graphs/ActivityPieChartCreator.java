@@ -36,10 +36,10 @@ public class ActivityPieChartCreator {
             actPerc--;
         }
 
-        Slice bannedSlice = Slice.newSlice((int) (banPerc), Color.newColor(Phrase.HCOLOR_ACTP_BAN+""), "Banned", "Banned");
-        Slice joinLeaverSlice = Slice.newSlice((int) (joinlPerc), Color.newColor(Phrase.HCOLOR_ACTP_JON+""), "Unknown", "Unknown");
-        Slice inactiveSlice = Slice.newSlice((int) (inacPerc), Color.newColor(Phrase.HCOLOR_ACTP_INA+""), "Inactive", "Inactive");
-        Slice activeSlice = Slice.newSlice((int) (actPerc), Color.newColor(Phrase.HCOLOR_ACTP_ACT+""), "Active", "Active");
+        Slice bannedSlice = Slice.newSlice((int) (banPerc), Color.newColor(Phrase.HCOLOR_ACTP_BAN + ""), "Banned", "Banned");
+        Slice joinLeaverSlice = Slice.newSlice((int) (joinlPerc), Color.newColor(Phrase.HCOLOR_ACTP_JON + ""), "Unknown", "Unknown");
+        Slice inactiveSlice = Slice.newSlice((int) (inacPerc), Color.newColor(Phrase.HCOLOR_ACTP_INA + ""), "Inactive", "Inactive");
+        Slice activeSlice = Slice.newSlice((int) (actPerc), Color.newColor(Phrase.HCOLOR_ACTP_ACT + ""), "Active", "Active");
 
         PieChart refChart = GCharts.newPieChart(activeSlice, bannedSlice, inactiveSlice, joinLeaverSlice);
         refChart.setSize(400, 150);

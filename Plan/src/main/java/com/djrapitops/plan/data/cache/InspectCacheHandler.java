@@ -64,7 +64,13 @@ public class InspectCacheHandler {
         return cache.get(uuid);
     }
 
-    public HashMap<UUID, UserData> getCache() {
-        return cache;
+    /**
+     * Check if the data of a player is in the inspect cache.
+     *
+     * @param uuid UUID of player.
+     * @return true if cached.
+     */
+    public boolean isCached(UUID uuid) {
+        return cache.containsKey(uuid);
     }
 }

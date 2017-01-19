@@ -32,7 +32,6 @@ PlanLite Top 20 most votes
 Top 20 most active
 Clear setting multiper (InspectCache)
 Clear check for existing clear task. (InspectCache)
-    Update Version checker so it doesn't fail
  */
 
 /**

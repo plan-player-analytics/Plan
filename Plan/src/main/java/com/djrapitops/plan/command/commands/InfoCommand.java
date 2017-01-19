@@ -9,10 +9,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class InfoCommand extends SubCommand {
 
     private Plan plugin;
 
+    /**
+     * Subcommand Constructor.
+     *
+     * @param plugin Current instance of Plan
+     */
     public InfoCommand(Plan plugin) {
         super("info", "plan.info", "View Version of Plan", CommandType.CONSOLE, "");
 
@@ -28,7 +37,7 @@ public class InfoCommand extends SubCommand {
         String[] messages = {
             hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics - Info",
             tColor + " " + Phrase.BALL.toString() + oColor + " Version: " + tColor + plugin.getDescription().getVersion(),
-            tColor + " " + Phrase.BALL.toString() + tColor +" "+ MiscUtils.checkVersion(),
+            tColor + " " + Phrase.BALL.toString() + tColor + " " + MiscUtils.checkVersion(),
             hColor + Phrase.ARROWS_RIGHT.toString()
         };
         sender.sendMessage(messages);
