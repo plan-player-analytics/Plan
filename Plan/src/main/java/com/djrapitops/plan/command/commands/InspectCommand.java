@@ -2,13 +2,13 @@ package com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.utilities.UUIDFetcher;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 
 import java.util.Date;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
-import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -58,6 +58,19 @@ public class InspectCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        FileConfiguration config = plugin.getConfig();
+        if (!config.getBoolean("Settings.WebServer.Enabled")) {
+            if (!config.getBoolean("Settings.WebServer.ShowAlternativeServerIP")) {
+                PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
+                if (config.getBoolean("Settings.PlanLite.UseAsAlternativeUI") && planLiteHook.isEnabled()) {
+                    sender.sendMessage(ChatColor.YELLOW + "[Plan] Passing to PlanLite..");
+                    planLiteHook.passCommand(sender, cmd, commandLabel, args);
+                } else {
+                    sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT.toString());
+                }
+                return true;
+            }
+        }
         String playerName = MiscUtils.getPlayerDisplayname(args, sender);
 
         UUID uuid;
@@ -80,12 +93,10 @@ public class InspectCommand extends SubCommand {
             return true;
         }
 
-        Date refreshDate = new Date();
         inspectCache.cache(uuid);
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();
         ChatColor hColor = Phrase.COLOR_TER.color();
-        FileConfiguration config = plugin.getConfig();
 
         final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
         final int port = config.getInt("Settings.WebServer.Port");

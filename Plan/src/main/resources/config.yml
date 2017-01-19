@@ -5,19 +5,45 @@ Settings:
     AnalysisCache:
       RefreshAnalysisCacheOnEnable: true
     InspectCache:
-      ClearFromInspectCacheAfterXMinutes: 3
+      ClearFromInspectCacheAfterXMinutes: 5
     DataCache:
       SaveEveryXMinutes: 5
+      SaveServerDataEveryXMinutes: 5
       ClearCacheEveryXSaves: 5
   WebServer:
+    Enabled: true
     Port: 8804
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
   PlanLite:
     Enabled: true
+    UseAsAlternativeUI: false
+
+Customization:
+  Colors:
+    Commands:
+      Main: '&2'
+      Secondary: '&7'
+      Highlight: '&f'
+    HTML:
+      ActivityGraph:
+        OnlinePlayers: '1E90FF'
+        NewPlayers: '228B22'
+      GamemodePie:
+        Survival: '951800'
+        Creative: '01A1DB'
+        Adventure: 'FFFF33'
+        Spectator: '228B22'
+      ActivityPie:
+        Active: '228B22'
+        Banned: '951800'
+        Inactive: 'A9A9A9'
+        JoinedOnce: '808080'
+  DemographicsTriggers:
+    Trigger: "i'm, am, im"
+    Female: 'female, girl, gurl, woman, gal, mrs, she, miss'
+    Male: 'male, boy, man, boe, sir, mr, guy, he'
+    IgnoreWhen: 'sure, think, with, are, you'
 
 database:
   type: sqlite
-    
-      
-    

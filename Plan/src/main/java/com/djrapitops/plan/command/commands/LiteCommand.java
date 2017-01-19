@@ -20,11 +20,10 @@ public class LiteCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {        
         if (hook.isEnabled()) {
             return hook.passCommand(sender, cmd, commandLabel, args);
         }
         return false;
     }
-
 }

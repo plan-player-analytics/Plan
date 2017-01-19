@@ -26,9 +26,9 @@ public class InfoCommand extends SubCommand {
         ChatColor hColor = Phrase.COLOR_TER.color();
 
         String[] messages = {
-            hColor + Phrase.ARROWS_RIGHT.toString() + oColor + "Player Analytics - Info",
-            tColor + " " + Phrase.BALL.toString() + oColor + "Version: " + tColor + plugin.getDescription().getVersion(),
-            tColor + " " + Phrase.BALL.toString() + tColor + MiscUtils.checkVersion(),
+            hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics - Info",
+            tColor + " " + Phrase.BALL.toString() + oColor + " Version: " + tColor + plugin.getDescription().getVersion(),
+            tColor + " " + Phrase.BALL.toString() + tColor +" "+ MiscUtils.checkVersion(),
             hColor + Phrase.ARROWS_RIGHT.toString()
         };
         sender.sendMessage(messages);

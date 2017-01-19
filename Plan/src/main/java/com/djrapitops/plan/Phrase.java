@@ -1,6 +1,7 @@
 package com.djrapitops.plan;
 
 import org.bukkit.ChatColor;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -13,13 +14,26 @@ public enum Phrase {
     USERNAME_NOT_VALID(ChatColor.RED + "This Player doesn't exist."),
     USERNAME_NOT_SEEN(ChatColor.RED + "This Player has not played on this server."),
     USERNAME_NOT_KNOWN(ChatColor.RED + "Player not found from the database."),
-    COLOR_MAIN(ChatColor.DARK_GREEN),
-    COLOR_SEC(ChatColor.GRAY),
-    COLOR_TER(ChatColor.WHITE),
+    COLOR_MAIN(ChatColor.getByChar(getPlugin(Plan.class).getConfig().getString("Customization.Colors.Commands.Main").charAt(1))),
+    COLOR_SEC(ChatColor.getByChar(getPlugin(Plan.class).getConfig().getString("Customization.Colors.Commands.Secondary").charAt(1))),
+    COLOR_TER(ChatColor.getByChar(getPlugin(Plan.class).getConfig().getString("Customization.Colors.Commands.Highlight").charAt(1))),
+    HCOLOR_ACT_ONL(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.ActivityGraph.OnlinePlayers")),
+    HCOLOR_ACT_NEW(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.ActivityGraph.NewPlayers")),
+    HCOLOR_GMP_0(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.GamemodePie.Survival")),
+    HCOLOR_GMP_1(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.GamemodePie.Creative")),
+    HCOLOR_GMP_2(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.GamemodePie.Adventure")),
+    HCOLOR_GMP_3(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.GamemodePie.Spectator")),
+    HCOLOR_ACTP_ACT(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.ActivityPie.Active")),
+    HCOLOR_ACTP_BAN(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.ActivityPie.Banned")),
+    HCOLOR_ACTP_INA(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.ActivityPie.Inactive")),
+    HCOLOR_ACTP_JON(getPlugin(Plan.class).getConfig().getString("Customization.Colors.HTML.ActivityPie.JoinedOnce")),
     ARROWS_RIGHT("»"),
     BALL("•"),
     ERROR_PLANLITE("PlanLite not found, if you're have plugins using PlanAPI v1.6.0 download PlanLite."),
-    ERROR_NO_USERNAME("INSPECT-GETNAME\nNo username given, returned empty username.\n"),
+    ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
+    ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "[Plan] This command can be only used if the webserver is running on this server."),
+    ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "[Plan] This command can be only used if webserver/planlite is enabled on this server."),
+    
     COMMAND_SENDER_NOT_PLAYER(ChatColor.RED + "[Plan] This command can be only used as a player."),
     COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "[Plan] Command requires arguments."),
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "[Plan] Command requires one argument."),

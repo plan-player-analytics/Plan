@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.bukkit.Location;
@@ -37,20 +38,8 @@ public class FormatUtils {
     }
 
     // Removes letters from a string leaving only numbers and dots.
-    public static String removeLetters(String dataPoint) {
-        String numbers = "0123456789.";
-        List<Character> numList = new ArrayList<>();
-        char[] numberArray = numbers.toCharArray();
-        for (char c : numberArray) {
-            numList.add(c);
-        }
-        String returnString = "";
-        for (int i = 0; i < dataPoint.length(); i++) {
-            if (numList.contains(dataPoint.charAt(i))) {
-                returnString += dataPoint.charAt(i);
-            }
-        }
-        return returnString;
+    public static String removeLetters(String dataPoint) {        
+        return dataPoint.replaceAll("[^\\d.]", "");
     }
 
     // Formats long in milliseconds into d:h:m:s string

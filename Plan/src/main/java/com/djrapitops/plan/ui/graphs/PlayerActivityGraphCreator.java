@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -84,8 +85,8 @@ public class PlayerActivityGraphCreator {
         Data pYData = Data.newData(pYList);
         Data nYData = Data.newData(nYList);
 
-        XYLine playerLine = Plots.newXYLine(xData, pYData, Color.BLUE, "Online Players");
-        XYLine newPlayerLine = Plots.newXYLine(xData, nYData, Color.GREEN, "New Players");
+        XYLine playerLine = Plots.newXYLine(xData, pYData, Color.newColor(Phrase.HCOLOR_ACT_ONL + ""), "Online Players");
+        XYLine newPlayerLine = Plots.newXYLine(xData, nYData, Color.newColor(Phrase.HCOLOR_ACT_NEW + ""), "New Players");
         LineChart chart = GCharts.newLineChart(playerLine, newPlayerLine);
         chart.addXAxisLabels(xAxisLabels);
         chart.addTopAxisLabels(AxisLabelsFactory.newAxisLabels("Players", 1));

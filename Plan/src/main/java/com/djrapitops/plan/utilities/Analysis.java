@@ -75,25 +75,23 @@ public class Analysis {
                 rawServerData = plugin.getDB().getServerDataHashMap();
                 plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
                 AnalysisData data = new AnalysisData();
-                long scaleMonth = (long) 2592000 * (long) 1000;
-                String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleMonth);
-                data.setPlayersChartImgHtmlMonth(playerActivityHtmlMonth);
-                long scaleWeek = 604800 * 1000;
-                String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleWeek);
-                data.setPlayersChartImgHtmlWeek(playerActivityHtmlWeek);
-                long scaleDay = 86400 * 1000;
-                String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleDay);
-                data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
+                
+                createPlayerActivityGraphs(data);
+
+                // Create empty Dataset
                 long gmZero = 0;
                 long gmOne = 0;
                 long gmTwo = 0;
                 long gmThree = 0;
 
-                long totalPlaytime = 0;
-                int totalBanned = 0;
                 long totalLoginTimes = 0;
+                long totalPlaytime = 0;
+
+                int totalBanned = 0;
                 int active = 0;
+                int joinleaver = 0;
                 int inactive = 0;
+
                 int ops = 0;
                 List<Integer> ages = new ArrayList<>();
 
@@ -105,6 +103,7 @@ public class Analysis {
                 int totalVotes = 0;
                 int totalMoney = 0;
 
+                // Fill Dataset with userdata.
                 for (UserData uData : rawData) {
                     if (planLiteEnabled) {
                         PlanLitePlayerData litePlayerData = uData.getPlanLiteData();
@@ -138,12 +137,13 @@ public class Analysis {
 
                     if (uData.isBanned()) {
                         totalBanned++;
+                    } else if (uData.getLoginTimes() == 1) {
+                        joinleaver++;
                     } else if (AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes())) {
                         active++;
                     } else {
                         inactive++;
                     }
-
                 }
 
                 if (planLiteEnabled) {
@@ -159,29 +159,30 @@ public class Analysis {
 
                 data.setTotalLoginTimes(totalLoginTimes);
 
-                String activityPieChartHtml = AnalysisUtils.createActivityPieChart(totalBanned, active, inactive);
+                String activityPieChartHtml = AnalysisUtils.createActivityPieChart(totalBanned, active, inactive, joinleaver);
                 data.setActivityChartImgHtml(activityPieChartHtml);
                 data.setActive(active);
                 data.setInactive(inactive);
                 data.setBanned(totalBanned);
-                data.setTotal(offlinePlayers.length);
+                data.setJoinleaver(joinleaver);
 
+                data.setTotal(offlinePlayers.length);
                 data.setOps(ops);
 
                 data.setTotalPlayTime(totalPlaytime);
-                long averagePlaytime = totalPlaytime / rawData.size();
-                data.setAveragePlayTime(averagePlaytime);
+                data.setAveragePlayTime(totalPlaytime / rawData.size());
                 int totalAge = 0;
                 for (int age : ages) {
                     totalAge += age;
                 }
                 double averageAge;
-                if (ages.size() != 0) {
+                if (!ages.isEmpty()) {
                     averageAge = totalAge * 1.0 / ages.size();
                 } else {
                     averageAge = -1;
                 }
                 data.setAverageAge(averageAge);
+
                 long gmTotal = gmZero + gmOne + gmTwo + gmThree;
                 HashMap<GameMode, Long> totalGmTimes = new HashMap<>();
                 totalGmTimes.put(GameMode.SURVIVAL, gmZero);
@@ -212,6 +213,18 @@ public class Analysis {
                 analysisCache.cache(data);
                 plugin.log("Analysis | Analysis Complete.");
                 this.cancel();
+            }
+
+            private void createPlayerActivityGraphs(AnalysisData data) {
+                long scaleMonth = (long) 2592000 * (long) 1000;
+                String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleMonth);
+                data.setPlayersChartImgHtmlMonth(playerActivityHtmlMonth);
+                long scaleWeek = 604800 * 1000;
+                String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleWeek);
+                data.setPlayersChartImgHtmlWeek(playerActivityHtmlWeek);
+                long scaleDay = 86400 * 1000;
+                String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleDay);
+                data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
             }
         }).runTaskAsynchronously(plugin);
     }

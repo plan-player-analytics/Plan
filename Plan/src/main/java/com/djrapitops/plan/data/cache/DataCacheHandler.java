@@ -6,11 +6,12 @@ import com.djrapitops.plan.data.*;
 import com.djrapitops.plan.data.handlers.*;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import static org.bukkit.Bukkit.getPlayer;
 import static org.bukkit.Bukkit.getPlayer;
 
 /**
@@ -66,6 +67,10 @@ public class DataCacheHandler {
         if (minutes <= 0) {
             minutes = 5;
         }
+        int sMinutes = plugin.getConfig().getInt("Settings.Cache.DataCache.SaveServerDataEveryXMinutes");
+        if (sMinutes <= 0) {
+            sMinutes = 5;
+        }
         final int clearAfterXsaves;
         int configValue = plugin.getConfig().getInt("Settings.Cache.DataCache.ClearCacheEveryXSaves");
         if (configValue <= 1) {
@@ -78,13 +83,21 @@ public class DataCacheHandler {
             public void run() {
                 DataCacheHandler handler = plugin.getHandler();
                 handler.saveHandlerDataToCache();
-                handler.saveCachedData();
+                handler.saveCachedUserData();
                 if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
+                handler.clearNulls();
                 timesSaved++;
             }
         }).runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
+        (new BukkitRunnable() {
+            @Override
+            public void run() {
+                serverData.updatePlayerCount();
+                saveServerData();
+            }
+        }).runTaskTimerAsynchronously(plugin, 60 * 20 * sMinutes, 60 * 20 * sMinutes);
     }
 
     /**
@@ -134,12 +147,10 @@ public class DataCacheHandler {
     /**
      * Saves all data in the cache to Database with AsyncTasks
      */
-    public void saveCachedData() {
+    public void saveCachedUserData() {
         dataCache.keySet().stream().forEach((uuid) -> {
             saveCachedData(uuid);
         });
-        serverData.updatePlayerCount();
-        saveServerData();
         timesSaved++;
     }
 
@@ -219,10 +230,9 @@ public class DataCacheHandler {
      * Clears all UserData from the HashMap
      */
     public void clearCache() {
-        Set<UUID> uuidSet = dataCache.keySet();
-        Iterator<UUID> uuidIterator = uuidSet.iterator();
-        while (uuidIterator.hasNext()) {
-            clearFromCache(uuidIterator.next());
+        Iterator<Map.Entry<UUID, UserData>> clearIterator = dataCache.entrySet().iterator();
+        while (clearIterator.hasNext()) {
+            clearFromCache(clearIterator.next());
         }
     }
 
@@ -247,6 +257,36 @@ public class DataCacheHandler {
             } else {
                 dataCache.remove(uuid);
                 plugin.log("Cleared " + uuid.toString() + " from Cache.");
+            }
+        }
+    }
+
+    /**
+     * Setting entry value to null, clearing it from memory.
+     *
+     * This method is used to avoid ConcurrentModificationException when
+     * clearing the cache.
+     *
+     * @param entry An entry from the cache HashMap that is being iterated over.
+     */
+    public void clearFromCache(Map.Entry<UUID, UserData> entry) {
+        if (entry != null) {
+            if (entry.getValue() != null) {
+                if (entry.getValue().isAccessed()) {
+                    (new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if (entry.getValue().isAccessed()) {
+                                entry.setValue(null);
+                                plugin.log("Cleared " + entry.getKey().toString() + " from Cache. (Delay task)");
+                                this.cancel();
+                            }
+                        }
+                    }).runTaskTimer(plugin, 30 * 20, 30 * 20);
+                } else {
+                    entry.setValue(null);
+                    plugin.log("Cleared " + entry.getKey().toString() + " from Cache.");
+                }
             }
         }
     }
@@ -370,5 +410,14 @@ public class DataCacheHandler {
      */
     public int getMaxPlayers() {
         return maxPlayers;
+    }
+
+    private void clearNulls() {
+        Iterator<UUID> clearIterator = dataCache.keySet().iterator();
+        while (clearIterator.hasNext()) {
+            if (dataCache.get(clearIterator.next()) == null) {
+                clearIterator.remove();
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.djrapitops.plan.ui.graphs;
 
+import com.djrapitops.plan.Phrase;
 import com.googlecode.charts4j.Color;
 import com.googlecode.charts4j.GCharts;
 import com.googlecode.charts4j.PieChart;
@@ -53,10 +54,10 @@ public class GMTimesPieChartCreator {
             one--;
         }
 
-        Slice s1 = Slice.newSlice(zero, Color.newColor("951800"), "Survival", "Survival");
-        Slice s2 = Slice.newSlice(one, Color.newColor("01A1DB"), "Creative", "Creative");
-        Slice s3 = Slice.newSlice(two, Color.newColor("FFFF33"), "Adventure", "Adventure");
-        Slice s4 = Slice.newSlice(three, Color.newColor("228B22"), "Spectator", "Spectator");
+        Slice s1 = Slice.newSlice(zero, Color.newColor(Phrase.HCOLOR_GMP_0 + ""), "Survival", "Survival");
+        Slice s2 = Slice.newSlice(one, Color.newColor(Phrase.HCOLOR_GMP_1+""), "Creative", "Creative");
+        Slice s3 = Slice.newSlice(two, Color.newColor(Phrase.HCOLOR_GMP_2+""), "Adventure", "Adventure");
+        Slice s4 = Slice.newSlice(three, Color.newColor(Phrase.HCOLOR_GMP_3+""), "Spectator", "Spectator");
 
         PieChart refChart = GCharts.newPieChart(s1, s2, s3, s4);
         refChart.setSize(400, 150);

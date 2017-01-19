@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class DemographicsHandler {
 
     private final DataCacheHandler handler;
+    private final Plan plugin;
 
     /**
      * Class Constructor
@@ -30,6 +31,7 @@ public class DemographicsHandler {
      */
     public DemographicsHandler(Plan plugin, DataCacheHandler h) {
         this.handler = h;
+        this.plugin = plugin;
     }
 
     /**
@@ -42,10 +44,10 @@ public class DemographicsHandler {
      * @param data UserData corresponding to player of this event.
      */
     public void handleChatEvent(AsyncPlayerChatEvent event, UserData data) {
-        List<String> triggers = Arrays.asList("i\'m", "am", "im");
-        List<String> female = Arrays.asList("female", "girl", "gurl", "woman", "gal", "mrs", "she", "miss");
-        List<String> male = Arrays.asList("male", "boy", "man", "boe", "sir", "mr", "guy", "he");
-        List<String> ignore = Arrays.asList("sure", "think", "with", "are");
+        List<String> triggers = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.Trigger").split(", "));
+        List<String> female = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.Female").split(", "));
+        List<String> male = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.Male").split(", "));
+        List<String> ignore = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.IgnoreWhen").split(", "));
 
         String message = event.getMessage();
         String[] messageA = message.toLowerCase().split("\\s+");

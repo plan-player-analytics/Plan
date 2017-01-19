@@ -21,7 +21,7 @@ public class ReloadCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         plugin.reloadConfig();
-        plugin.getHandler().saveCachedData();
+        plugin.getHandler().saveCachedUserData();
         plugin.hookPlanLite();
         sender.sendMessage(ChatColor.GREEN + "[Plan] Reload complete.");
 

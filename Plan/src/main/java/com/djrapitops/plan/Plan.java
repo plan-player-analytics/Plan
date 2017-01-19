@@ -20,6 +20,31 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/* TODO 2.1.0
+Placeholder API
+    Html getter without webserver
+    Webserver off setting
+Immutable InspectCache ?
+    Join-leavers to activity pie.
+Recent players
+    Customizability
+    Colors, chat, analysis
+    Demographics triggers
+Optimize db with batch processing (commanduse, ips, nicks)
+Manage command
+Database cleaning
+    Server & user data saved seperately with different times
+    Alternative ip & webserver off check warning, check for PlanLite too.
+    Fix PlanLite balance.
+PlanLite Top 20 richest
+PlanLite Top 20 most votes
+Top 20 most active
+Clear setting multiper (InspectCache)
+Clear check for existing clear task. (InspectCache)
+ErrorManager
+    (Alternative ui) ? Push data to PlanLite (setting)
+    DataBase init message
+ */
 public class Plan extends JavaPlugin {
 
     private API api;
@@ -61,7 +86,9 @@ public class Plan extends JavaPlugin {
 
         saveConfig();
 
+        log("Database init..");
         initDatabase();
+        log("Database initiated.");
 
         hookPlanLite();
         this.handler = new DataCacheHandler(this);
@@ -76,27 +103,32 @@ public class Plan extends JavaPlugin {
         this.api = new API(this);
         handler.handleReload();
 
-        uiServer = new WebSocketServer(this);
-        uiServer.initServer();
-
-        log("Player Analytics Enabled.");
-
-        if (getConfig().getBoolean("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable")) {
-            log("Analysis | Boot analysis in 30 seconds..");
-            (new BukkitRunnable() {
-                @Override
-                public void run() {
-                    log("Analysis | Starting Boot Analysis..");
-                    analysisCache.updateCache();
-                    this.cancel();
-                }
-            }).runTaskLater(this, 30 * 20);
+        if (getConfig().getBoolean("Settings.WebServer.Enabled")) {
+            uiServer = new WebSocketServer(this);
+            uiServer.initServer();
+            if (getConfig().getBoolean("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable")) {
+                log("Analysis | Boot analysis in 30 seconds..");
+                (new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        log("Analysis | Starting Boot Analysis..");
+                        analysisCache.updateCache();
+                        this.cancel();
+                    }
+                }).runTaskLater(this, 30 * 20);
+            }
+        } else if (!(getConfig().getBoolean("Settings.WebServer.ShowAlternativeServerIP")
+                || (getConfig().getBoolean("Settings.PlanLite.UseAsAlternativeUI")
+                && planLiteHook.isEnabled()))) {
+            Bukkit.getServer().getConsoleSender().sendMessage("[Plan] "
+                    + Phrase.ERROR_NO_DATA_VIEW);
         }
+        log("Player Analytics Enabled.");
     }
 
     public void hookPlanLite() {
         try {
-            planLiteHook = new PlanLiteHook(this);            
+            planLiteHook = new PlanLiteHook(this);
         } catch (NoClassDefFoundError | Exception e) {
 
         }
@@ -106,13 +138,15 @@ public class Plan extends JavaPlugin {
     public void onDisable() {
         uiServer.stop();
         Bukkit.getScheduler().cancelTasks(this);
-        log("Saving cached data..");
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.execute(() -> {
-            handler.saveCacheOnDisable();
-        });
-        scheduler.shutdown();
+        if (handler != null) {
+            log("Saving cached data..");
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler.execute(() -> {
+                handler.saveCacheOnDisable();
+            });
 
+            scheduler.shutdown();
+        }
         log("Player Analytics Disabled.");
     }
 

@@ -4,10 +4,12 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.UserData;
+import com.djrapitops.plan.ui.DataRequestHandler;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.planlite.UUIDFetcher;
 import java.util.Date;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 
 /**
  *
@@ -98,6 +100,8 @@ public class API {
      * Returns the ip:port/player/playername html as a string so it can be
      * integrated into other webserver plugins.
      *
+     * Should use cacheUserDataToInspectCache(UUID uuid) before using this method.
+     * 
      * If UserData of the specified player is not in the Cache returns <h1>404
      * Data was not found in cache</h1>
      *
@@ -105,7 +109,12 @@ public class API {
      * @return html as a string or a single error line html.
      */
     public String getPlayerHtmlAsString(UUID uuid) {
-        return plugin.getUiServer().getDataReqHandler().getDataHtml(uuid);
+        WebSocketServer server = plugin.getUiServer();
+        if (server != null) {
+            return server.getDataReqHandler().getDataHtml(uuid);
+        }
+        DataRequestHandler reqH = new DataRequestHandler(plugin);
+        return reqH.getDataHtml(uuid);
     }
 
     /**
@@ -120,13 +129,20 @@ public class API {
      * Returns the ip:port/server html as a string so it can be integrated into
      * other webserver plugins.
      *
+     * Should use updateAnalysisCache() before using this method.
+     * 
      * If AnalysisData is not in the AnalysisCache: returns <h1>404 Data was not
      * found in cache</h1>
      *
      * @return html as a string or a single error line html.
      */
     public String getAnalysisHtmlAsString() {
-        return plugin.getUiServer().getDataReqHandler().getAnalysisHtml();
+        WebSocketServer server = plugin.getUiServer();
+        if (server != null) {
+            return server.getDataReqHandler().getAnalysisHtml();
+        }
+        DataRequestHandler reqH = new DataRequestHandler(plugin);
+        return reqH.getAnalysisHtml();
     }
 
     /**
@@ -141,6 +157,7 @@ public class API {
 
     /**
      * Returns AnalysisData from the AnalysisCache
+     *
      * @return AnalysisData in the AnalysisCache or null if not found
      */
     public AnalysisData getAnalysisDataFromCache() {

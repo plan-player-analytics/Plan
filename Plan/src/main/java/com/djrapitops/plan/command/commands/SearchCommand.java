@@ -52,8 +52,13 @@ public class SearchCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (!plugin.getConfig().getBoolean("Settings.WebServer.Enabled")) {
+            sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString());
+            return true;
+        }
         if (args.length != 1) {
             sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString());
+            return true;
         }
 
         ChatColor oColor = Phrase.COLOR_MAIN.color();

@@ -91,6 +91,7 @@ public class AnalysisUtils {
         replaceMap.put("%active%", "" + data.getActive());
         replaceMap.put("%banned%", "" + data.getBanned());
         replaceMap.put("%inactive%", "" + data.getInactive());
+        replaceMap.put("%joinleaver%", ""+data.getJoinleaver());
         replaceMap.put("%activitytotal%", "" + data.getTotal());
         replaceMap.put("%playerchartmonth%", data.getPlayersChartImgHtmlMonth());
         replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
@@ -124,8 +125,8 @@ public class AnalysisUtils {
         return false;
     }
 
-    static String createActivityPieChart(int totalBanned, int active, int inactive) {
-        String url = ActivityPieChartCreator.createChart(totalBanned, active, inactive);
+    static String createActivityPieChart(int totalBanned, int active, int inactive, int joinleaver) {
+        String url = ActivityPieChartCreator.createChart(totalBanned, active, inactive, joinleaver);
         return "<img src=\"" + url + "\">";
     }
 

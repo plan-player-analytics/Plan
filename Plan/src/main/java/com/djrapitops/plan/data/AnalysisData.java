@@ -28,6 +28,7 @@ public class AnalysisData {
     private int banned;
     private int active;
     private int inactive;
+    private int joinleaver;
     private int total;
 
     private int totalPlayers;
@@ -41,6 +42,14 @@ public class AnalysisData {
     }
 
     // Getters and setters v---------------------------------v
+
+    public int getJoinleaver() {
+        return joinleaver;
+    }
+
+    public void setJoinleaver(int joinleaver) {
+        this.joinleaver = joinleaver;
+    }
 
     public boolean isPlanLiteEnabled() {
         return planLiteEnabled;
