@@ -21,6 +21,7 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *

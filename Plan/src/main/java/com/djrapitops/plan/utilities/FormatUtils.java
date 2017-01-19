@@ -78,13 +78,16 @@ public class FormatUtils {
      * @return parsed double - for example 1,11
      * @throws NumberFormatException When wrong format
      */
-    public static double parseVersionDouble(String versionString) throws NumberFormatException {
+    public static int parseVersionNumber(String versionString) throws NumberFormatException {
         String[] versionArray = versionString.split("\\.");
         if (versionArray.length != 3) {
             throw new NumberFormatException("Wrong format used");
         }
-        double versionDouble = Double.parseDouble(versionArray[0] + "." + versionArray[1] + versionArray[2]);
-        return versionDouble;
+        int main = Integer.parseInt(versionArray[0]) * 100;
+        int major = Integer.parseInt(versionArray[1]) * 10;
+        int minor = Integer.parseInt(versionArray[2]);
+        int versionNumber = main + major + minor;
+        return versionNumber;
     }
 
     /**

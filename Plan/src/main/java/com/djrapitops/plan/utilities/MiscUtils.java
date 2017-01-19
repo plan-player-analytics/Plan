@@ -42,9 +42,9 @@ public class MiscUtils {
                 }
             }
             String versionString = lineWithVersion.split(": ")[1];
-            double newestVersionNumber = FormatUtils.parseVersionDouble(versionString);
+            int newestVersionNumber = FormatUtils.parseVersionNumber(versionString);
             cVersion = plugin.getDescription().getVersion();
-            double currentVersionNumber = FormatUtils.parseVersionDouble(cVersion);
+            int currentVersionNumber = FormatUtils.parseVersionNumber(cVersion);
             if (newestVersionNumber > currentVersionNumber) {
                 return "New Version (" + versionString + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/";
             } else {

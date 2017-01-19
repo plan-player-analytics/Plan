@@ -22,29 +22,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /* TODO 2.1.0
 Placeholder API
-    Html getter without webserver
-    Webserver off setting
 Immutable InspectCache ?
-    Join-leavers to activity pie.
 Recent players
-    Customizability
-    Colors, chat, analysis
-    Demographics triggers
 Optimize db with batch processing (commanduse, ips, nicks)
 Manage command
 Database cleaning
-    Server & user data saved seperately with different times
-    Alternative ip & webserver off check warning, check for PlanLite too.
-    Fix PlanLite balance.
 PlanLite Top 20 richest
 PlanLite Top 20 most votes
 Top 20 most active
 Clear setting multiper (InspectCache)
 Clear check for existing clear task. (InspectCache)
-ErrorManager
-    (Alternative ui) ? Push data to PlanLite (setting)
-    DataBase init message
+    Update Version checker so it doesn't fail
  */
+
+/**
+ *
+ * @author Rsl1122
+ */
+
 public class Plan extends JavaPlugin {
 
     private API api;
@@ -56,6 +51,11 @@ public class Plan extends JavaPlugin {
     private HashSet<Database> databases;
     private WebSocketServer uiServer;
 
+    /**
+     * OnEnable method.
+     * 
+     * Initiates the plugin with database, webserver, commands & listeners.
+     */
     @Override
     public void onEnable() {
         getDataFolder().mkdirs();
@@ -126,6 +126,9 @@ public class Plan extends JavaPlugin {
         log("Player Analytics Enabled.");
     }
 
+    /**
+     * Hooks PlanLite for UI and/or additional data.
+     */
     public void hookPlanLite() {
         try {
             planLiteHook = new PlanLiteHook(this);
@@ -134,9 +137,16 @@ public class Plan extends JavaPlugin {
         }
     }
 
+    /**
+     * Disables the plugin.
+     * 
+     * Stops the webserver, cancels all tasks and saves cache to the database.     * 
+     */
     @Override
     public void onDisable() {
-        uiServer.stop();
+        if (uiServer != null) {
+            uiServer.stop();
+        }
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
             log("Saving cached data..");
@@ -150,14 +160,25 @@ public class Plan extends JavaPlugin {
         log("Player Analytics Disabled.");
     }
 
+    /**
+     * Logs the message to the console.
+     * @param message
+     */
     public void log(String message) {
         getLogger().info(message);
     }
 
+    /**
+     * Logs an error message to the console.
+     * @param message
+     */
     public void logError(String message) {
         getLogger().severe(message);
     }
 
+    /**
+     * @return Plan API
+     */
     public API getAPI() {
         return api;
     }
@@ -200,26 +221,44 @@ public class Plan extends JavaPlugin {
         return true;
     }
 
+    /**
+     * @return Currnet instance of the AnalysisCacheHandler
+     */
     public AnalysisCacheHandler getAnalysisCache() {
         return analysisCache;
     }
 
+    /**
+     * @return Currnet instance of the InspectCacheHandler
+     */
     public InspectCacheHandler getInspectCache() {
         return inspectCache;
     }
 
+    /**
+     * @return Currnet instance of the DataCacheHandler
+     */
     public DataCacheHandler getHandler() {
         return handler;
     }
 
+    /**
+     * @return PlanLiteHook
+     */
     public PlanLiteHook getPlanLiteHook() {
         return planLiteHook;
     }
 
+    /**
+     * @return the Database
+     */
     public Database getDB() {
         return db;
     }
 
+    /**
+     * @return the Webserver
+     */
     public WebSocketServer getUiServer() {
         return uiServer;
     }
