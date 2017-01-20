@@ -52,6 +52,7 @@ public class AnalysisUtils {
 
     /**
      * Gets the HashMap that is used to replace placeholders.
+     *
      * @param data UserData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
      */
@@ -89,7 +90,11 @@ public class AnalysisUtils {
         replaceMap.put("%op%", data.isOp() ? ", Operator (Op)" : "");
         replaceMap.put("%isonline%", (data.isOnline()) ? "| Online" : "| Offline");
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
+        if (hook != null) {
+            replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
+        } else {
+            replaceMap.put("%planlite%", "");
+        }
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000)
                 ? "<h3>Data might be inaccurate, player has just registered.</h3>" : "");
         return replaceMap;
@@ -102,6 +107,7 @@ public class AnalysisUtils {
 
     /**
      * Gets the HashMap that is used to replace placeholders in Analysis.
+     *
      * @param data AnalysisData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
      */
@@ -129,7 +135,11 @@ public class AnalysisUtils {
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
+        if (hook != null) {
+            replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
+        } else {
+            replaceMap.put("%planlite%", "");
+        }
         return replaceMap;
     }
 

@@ -1,6 +1,7 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
@@ -112,8 +113,14 @@ public class Analysis {
 
                 int ops = 0;
                 List<Integer> ages = new ArrayList<>();
-
-                boolean planLiteEnabled = plugin.getPlanLiteHook().isEnabled();
+                
+                boolean planLiteEnabled;
+                PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
+                if (planLiteHook != null) {
+                    planLiteEnabled = planLiteHook.isEnabled();
+                } else {
+                    planLiteEnabled = false;
+                }
 
                 PlanLiteAnalyzedData plData = new PlanLiteAnalyzedData();
                 HashMap<String, Integer> townMap = new HashMap<>();

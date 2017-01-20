@@ -31,7 +31,11 @@ public class PlanLiteHandler {
     public PlanLiteHandler(Plan plugin) {
         this.plugin = plugin;
         PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-        enabled = planLiteHook.isEnabled();
+        if (planLiteHook != null) {
+            enabled = planLiteHook.isEnabled();
+        } else {
+            enabled = false;
+        }
         if (enabled) {
             hook = planLiteHook;
         }

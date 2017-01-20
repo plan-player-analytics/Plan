@@ -1,17 +1,11 @@
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.data.cache.InspectCacheHandler;
-import com.djrapitops.plan.utilities.AnalysisUtils;
 import com.djrapitops.planlite.PlanLite;
-import com.djrapitops.planlite.UUIDFetcher;
 import com.djrapitops.planlite.api.API;
 import com.djrapitops.planlite.api.DataPoint;
-import com.djrapitops.planlite.api.DataType;
-import com.djrapitops.planlite.api.Hook;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.UUID;
+import main.java.com.djrapitops.plan.data.handlers.PlanLiteDataPushHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,7 +16,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  *
  * @author Rsl1122
  */
-public class PlanLiteHook implements Hook {
+public class PlanLiteHook {
 
     private PlanLite planLite;
     private Plan plugin;
@@ -50,7 +44,7 @@ public class PlanLiteHook implements Hook {
                     enabled = true;
                     planLiteApi = planLite.getAPI();
                     if (config.getBoolean("Settings.PlanLite.UseAsAlternativeUI")) {
-                        planLite.addExtraHook("Plan", this);
+                        planLite.addExtraHook("Plan", new PlanLiteDataPushHook(plugin));
                     }
                 } catch (Exception e) {
                 }
@@ -138,46 +132,5 @@ public class PlanLiteHook implements Hook {
      */
     public boolean hasVault() {
         return getEnabledHooksNames().contains("Vault");
-    }
-
-    /**
-     * Used to send data to PlanLite if it's use as UI is enabled.
-     *
-     * @param playername
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public HashMap<String, DataPoint> getData(String playername) throws Exception {
-        HashMap<String, DataPoint> data = new HashMap<>();
-        try {
-            UUID uuid = UUIDFetcher.getUUIDOf(playername);
-            if (uuid != null) {
-                InspectCacheHandler inspectCache = plugin.getInspectCache();
-                inspectCache.cache(uuid);
-                UserData uData = inspectCache.getFromCache(uuid);
-                HashMap<String, String> userData = AnalysisUtils.getInspectReplaceRules(uData);
-                for (String key : userData.keySet()) {
-                    if (key.equals("%planlite%") || key.equals("%gmpiechart%")) {
-                        continue;
-                    }
-                    data.put("PLA-" + key.toUpperCase().substring(1, key.length() - 1), new DataPoint(userData.get(key), DataType.OTHER));
-                }
-            }
-        } catch (Exception e) {
-        }
-        return data;
-    }
-
-    /**
-     * Used to send data to PlanLite if it's use as UI is enabled.
-     *
-     * @param playername
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public HashMap<String, DataPoint> getAllData(String playername) throws Exception {
-        return getData(playername);
     }
 }

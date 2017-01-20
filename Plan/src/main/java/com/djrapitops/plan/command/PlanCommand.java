@@ -2,6 +2,7 @@ package com.djrapitops.plan.command;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.command.commands.*;
 import com.djrapitops.plan.utilities.FormatUtils;
 
@@ -37,8 +38,11 @@ public class PlanCommand implements CommandExecutor {
         commands.add(new SearchCommand(plugin));
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
-        if (plugin.getPlanLiteHook().isEnabled()) {
-            commands.add(new LiteCommand(plugin));
+        PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
+        if (planLiteHook != null) {
+            if (planLiteHook.isEnabled()) {
+                commands.add(new LiteCommand(plugin));
+            }
         }
     }
 
