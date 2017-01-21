@@ -63,21 +63,21 @@ public class Plan extends JavaPlugin {
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
 
-        for (Database database : databases) {
-            String name = database.getConfigName();
-
-            ConfigurationSection section = getConfig().getConfigurationSection(name);
-
-            if (section == null) {
-                section = getConfig().createSection(name);
-            }
-
-            database.getConfigDefaults(section);
-
-            if (section.getKeys(false).isEmpty()) {
-                getConfig().set(name, null);
-            }
-        }
+//        for (Database database : databases) {
+//            String name = database.getConfigName();
+//
+//            ConfigurationSection section = getConfig().getConfigurationSection(name);
+//
+//            if (section == null) {
+//                section = getConfig().createSection(name);
+//            }
+//
+//            database.getConfigDefaults(section);
+//
+//            if (section.getKeys(false).isEmpty()) {
+//                getConfig().set(name, null);
+//            }
+//        }
 
         getConfig().options().copyDefaults(true);
 

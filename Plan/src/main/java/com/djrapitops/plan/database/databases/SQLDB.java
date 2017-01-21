@@ -27,7 +27,7 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public abstract class SQLDB extends Database {
 
-    private final Plan plugin;
+    final Plan plugin;
 
     private final boolean supportsModification;
 

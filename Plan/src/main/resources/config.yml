@@ -47,3 +47,18 @@ Customization:
 
 database:
   type: sqlite
+  
+mysql:
+  host: localhost
+  port: 3306
+  user: root
+  password: minecraft
+  database: Plan
+  tables:
+    users: plan_users
+    locations: plan_locations
+    nicknames: plan_nicknames
+    gamemodetimes: plan_gamemodetimes
+    ips: plan_ips
+    commandusages: plan_commandusages
+    serverdata: plan_serverdata

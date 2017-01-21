@@ -6,6 +6,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.bukkit.configuration.file.FileConfiguration;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -29,54 +31,55 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     protected Connection getNewConnection() {
-        ConfigurationSection config = getConfigSection();
+        FileConfiguration config = getPlugin(Plan.class).getConfig();
+        
 
-        setUserName(config.getString("tables.users"));
-        setLocationName(config.getString("tables.locations"));
-        setNicknamesName(config.getString("tables.nicknames"));
-        setGamemodetimesName(config.getString("tables.gamemodes"));
-        setIpsName(config.getString("tables.ips"));
-        setCommanduseName(config.getString("tables.commandusages"));
-        setServerdataName(config.getString("tables.serverdata"));
-
+        setUserName(config.getString("mysql.tables.users"));
+        setLocationName(config.getString("mysql.tables.locations"));
+        setNicknamesName(config.getString("mysql.tables.nicknames"));
+        setGamemodetimesName(config.getString("mysql.tables.gamemodetimes"));
+        setIpsName(config.getString("mysql.tables.ips"));
+        setCommanduseName(config.getString("mysql.tables.commandusages"));
+        setServerdataName(config.getString("mysql.tables.serverdata"));
         try {
             Class.forName("com.mysql.jdbc.Driver");
 
-            String url = "jdbc:mysql://" + config.getString("host") + ":" + config.getString("port") + "/" + config.getString("database");
+            String url = "jdbc:mysql://" + config.getString("mysql.host") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
 
-            return DriverManager.getConnection(url, config.getString("user"), config.getString("password"));
+            return DriverManager.getConnection(url, config.getString("mysql.user"), config.getString("mysql.password"));
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
 
-    private ConfigurationSection getSection(ConfigurationSection parent, String childName) {
-        ConfigurationSection child = parent.getConfigurationSection(childName);
-
-        if (child == null) {
-            child = parent.createSection(childName);
-        }
-
-        return child;
-    }
+//    private ConfigurationSection getSection(ConfigurationSection parent, String childName) {
+//        ConfigurationSection child = parent.getConfigurationSection(childName);
+//
+//        if (child == null) {
+//            child = parent.createSection(childName);
+//        }
+//
+//        return child;
+//    }
 
     @Override
     public void getConfigDefaults(ConfigurationSection section) {
-        section.addDefault("host", "localhost");
-        section.addDefault("port", 3306);
-        section.addDefault("user", "root");
-        section.addDefault("password", "minecraft");
-        section.addDefault("database", "Plan");
-
-        ConfigurationSection tables = getSection(section, "tables");
-
-        tables.addDefault("users", "plan_users");
-        tables.addDefault("locations", "plan_locations");
-        tables.addDefault("nicknames", "plan_nicknames");
-        tables.addDefault("gamemodetimes", "plan_gamemodetimes");
-        tables.addDefault("ips", "plan_ips");
-        tables.addDefault("commandusages", "plan_commandusages");
-        tables.addDefault("serverdata", "plan_serverdata");
+//        section.addDefault("host", "localhost");
+//        section.addDefault("port", 3306);
+//        section.addDefault("user", "root");
+//        section.addDefault("password", "minecraft");
+//        section.addDefault("database", "Plan");
+//
+//        ConfigurationSection tables = getSection(section, "tables");
+//
+//        tables.addDefault("users", "plan_users");
+//        tables.addDefault("locations", "plan_locations");
+//        tables.addDefault("nicknames", "plan_nicknames");
+//        tables.addDefault("gamemodetimes", "plan_gamemodetimes");
+//        tables.addDefault("ips", "plan_ips");
+//        tables.addDefault("commandusages", "plan_commandusages");
+//        tables.addDefault("serverdata", "plan_serverdata");
     }
 
     @Override
