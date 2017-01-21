@@ -23,7 +23,7 @@ public class ActivityPieChartCreator {
      */
     public static String createChart(int totalBanned, int active, int inactive, int joinleaver) {
 
-        int total = totalBanned + active + inactive;
+        int total = totalBanned + active + inactive + joinleaver;
 
         int banPerc = (int) ((totalBanned * 1.0 / total) * 100);
         int inacPerc = (int) ((inactive * 1.0 / total) * 100);
