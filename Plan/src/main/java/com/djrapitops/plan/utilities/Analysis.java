@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
+import main.java.com.djrapitops.plan.ui.graphs.HeatMapCreator;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -113,7 +114,7 @@ public class Analysis {
 
                 int ops = 0;
                 List<Integer> ages = new ArrayList<>();
-                
+
                 boolean planLiteEnabled;
                 PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
                 if (planLiteHook != null) {
@@ -149,7 +150,13 @@ public class Analysis {
                     gmZero += gmTimes.get(GameMode.SURVIVAL);
                     gmOne += gmTimes.get(GameMode.CREATIVE);
                     gmTwo += gmTimes.get(GameMode.ADVENTURE);
-                    gmThree += gmTimes.get(GameMode.SPECTATOR);
+                    try {
+                        Long gm = gmTimes.get(GameMode.SPECTATOR);
+                        if (gm != null) {
+                            gmThree += gm;
+                        }
+                    } catch (NoSuchFieldError e) {
+                    }
                     totalPlaytime += uData.getPlayTime();
                     totalLoginTimes += uData.getLoginTimes();
                     int age = uData.getDemData().getAge();
@@ -213,7 +220,10 @@ public class Analysis {
                 totalGmTimes.put(GameMode.SURVIVAL, gmZero);
                 totalGmTimes.put(GameMode.CREATIVE, gmOne);
                 totalGmTimes.put(GameMode.ADVENTURE, gmTwo);
-                totalGmTimes.put(GameMode.SPECTATOR, gmThree);
+                try {
+                    totalGmTimes.put(GameMode.SPECTATOR, gmThree);
+                } catch (NoSuchFieldError e) {
+                }
                 String serverGMChartHtml = AnalysisUtils.createGMPieChart(totalGmTimes, gmTotal);
                 data.setGmTimesChartImgHtml(serverGMChartHtml);
                 data.setGm0Perc((gmZero * 1.0 / gmTotal));

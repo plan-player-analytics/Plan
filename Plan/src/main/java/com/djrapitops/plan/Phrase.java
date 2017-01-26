@@ -8,6 +8,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * @author Rsl1122
  */
 public enum Phrase {
+    CONFIG_HEADER("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/"),
     DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
     DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
     PLANLITE_REG_HOOK("Registered additional hook, passed on to PlanLite: "),

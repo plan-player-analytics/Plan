@@ -155,10 +155,10 @@ public abstract class SQLDB extends Database {
                     return false;
                 }
 
-                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
+//                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
 
 //                boolean newDatabase = set.next();
-                set.close();
+//                set.close();
 
                 query("CREATE TABLE IF NOT EXISTS " + userName + " ("
                         + userColumnID + " integer PRIMARY KEY, "
@@ -173,7 +173,7 @@ public abstract class SQLDB extends Database {
                         + userColumnLastPlayed + " bigint NOT NULL"
                         + ")"
                 );
-                /* Locations Removed from Build 2.0.0 for performance reasons.
+
                 query("CREATE TABLE IF NOT EXISTS " + locationName + " ("
                         + locationColumnID + " integer PRIMARY KEY, "
                         + locationColumnUserID + " integer NOT NULL, "
@@ -183,7 +183,7 @@ public abstract class SQLDB extends Database {
                         + "FOREIGN KEY(" + locationColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                         + ")"
                 );
-                 */
+
                 query("CREATE TABLE IF NOT EXISTS " + gamemodetimesName + " ("
                         + gamemodetimesColumnUserID + " integer NOT NULL, "
                         + gamemodetimesColumnSurvivalTime + " bigint NOT NULL, "
@@ -309,109 +309,6 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public UserData getUserData(UUID uuid) {
-        checkConnection();
-        // Check if user is in the database
-        if (!wasSeenBefore(uuid)) {
-            return null;
-        }
-        List<World> worldList = Bukkit.getServer().getWorlds();
-        World defaultWorld = worldList.get(0);
-        HashMap<String, World> worlds = new HashMap<>();
-        for (World w : worldList) {
-            worlds.put(w.getName(), w);
-        }
-        // Get the data
-        UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData(), this);
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
-            statement.setString(1, uuid.toString());
-            ResultSet set = statement.executeQuery();
-
-            while (set.next()) {
-                data.getDemData().setAge(set.getInt(userColumnDemAge));
-                data.getDemData().setGender(Gender.parse(set.getString(userColumnDemGender)));
-                data.getDemData().setGeoLocation(set.getString(userColumnDemGeoLocation));
-                data.setLastGamemode(GameMode.valueOf(set.getString(userColumnLastGM)));
-                data.setLastGmSwapTime(set.getLong(userColumnLastGMSwapTime));
-                data.setPlayTime(set.getLong(userColumnPlayTime));
-                data.setLoginTimes(set.getInt(userColumnLoginTimes));
-                data.setLastPlayed(set.getLong(userColumnLastPlayed));
-            }
-            set.close();
-            statement.close();
-            String userId = "" + getUserId(uuid.toString());
-
-            /* Locations Removed from Build 2.0.0 for performance reasons.
-            statement = connection.prepareStatement("SELECT * FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, userId);
-            set = statement.executeQuery();
-
-            List<Location> locations = new ArrayList<>();
-            while (set.next()) {
-                locations.add(new Location(worlds.get(set.getString(locationColumnWorld)), set.getInt(locationColumnCoordinatesX), 0, set.getInt(locationColumnCoordinatesZ)));
-            }
-            set.close();
-            statement.close();
-            data.addLocations(locations);
-            
-            if (locations.isEmpty()) {
-                data.setLocation(new Location(defaultWorld, 0, 0, 0));
-            } else {
-                data.setLocation(locations.get(locations.size() - 1));
-            }
-             */
-            data.setLocation(new Location(defaultWorld, 0, 0, 0));
-
-            statement = connection.prepareStatement("SELECT * FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, userId);
-            set = statement.executeQuery();
-
-            List<String> nicknames = new ArrayList<>();
-            while (set.next()) {
-                nicknames.add(set.getString(nicknamesColumnNick));
-            }
-            set.close();
-            statement.close();
-            data.addNicknames(nicknames);
-
-            statement = connection.prepareStatement("SELECT * FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, userId);
-            set = statement.executeQuery();
-
-            List<InetAddress> ips = new ArrayList<>();
-            while (set.next()) {
-                try {
-                    ips.add(InetAddress.getByName(set.getString(ipsColumnIP)));
-                } catch (SQLException | UnknownHostException e) {
-                }
-            }
-            set.close();
-            statement.close();
-            data.addIpAddresses(ips);
-
-            statement = connection.prepareStatement("SELECT * FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, userId);
-            set = statement.executeQuery();
-
-            HashMap<GameMode, Long> times = new HashMap<>();
-            while (set.next()) {
-                times.put(GameMode.SURVIVAL, set.getLong(gamemodetimesColumnSurvivalTime));
-                times.put(GameMode.CREATIVE, set.getLong(gamemodetimesColumnCreativeTime));
-                times.put(GameMode.ADVENTURE, set.getLong(gamemodetimesColumnAdventureTime));
-                times.put(GameMode.SPECTATOR, set.getLong(gamemodetimesColumnSpectatorTime));
-            }
-            set.close();
-            statement.close();
-            data.setGmTimes(times);
-        } catch (SQLException e) {
-            data = null;
-            e.printStackTrace();
-        }
-        return data;
-    }
-
-    @Override
     public HashMap<Long, ServerData> getServerDataHashMap() {
         HashMap<String, Integer> commandUse = getCommandUse();
         HashMap<Long, ServerData> rawServerData = new HashMap<>();
@@ -487,17 +384,21 @@ public abstract class SQLDB extends Database {
                     "DELETE FROM " + commanduseName);
             statement.execute();
             statement.close();
-            for (String key : data.keySet()) {
-                statement = connection.prepareStatement("INSERT INTO " + commanduseName + " ("
-                        + commanduseColumnCommand + ", "
-                        + commanduseColumnTimesUsed
-                        + ") VALUES (?, ?)");
 
+            connection.setAutoCommit(false);
+            statement = connection.prepareStatement("INSERT INTO " + commanduseName + " ("
+                    + commanduseColumnCommand + ", "
+                    + commanduseColumnTimesUsed
+                    + ") VALUES (?, ?)");
+            for (String key : data.keySet()) {
                 statement.setString(1, key);
                 statement.setInt(2, data.get(key));
-                statement.execute();
-                statement.close();
+                statement.addBatch();
             }
+            statement.executeBatch();
+            connection.commit();
+            statement.close();
+            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -536,12 +437,12 @@ public abstract class SQLDB extends Database {
             statement.setString(1, uuid);
             statement.execute();
             statement.close();
-            /* Locations Removed from Build 2.0.0 for performance reasons.
+
             statement = connection.prepareStatement("DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
             statement.close();
-             */
+
             statement = connection.prepareStatement("DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
@@ -555,6 +456,171 @@ public abstract class SQLDB extends Database {
             statement.execute();
             statement.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public UserData getUserData(UUID uuid) {
+        checkConnection();
+        // Check if user is in the database
+        if (!wasSeenBefore(uuid)) {
+            plugin.logError(uuid + " was not found from the database!");
+            return null;
+        }
+        List<World> worldList = Bukkit.getServer().getWorlds();
+        World defaultWorld = worldList.get(0);
+        HashMap<String, World> worlds = new HashMap<>();
+        for (World w : worldList) {
+            worlds.put(w.getName(), w);
+        }
+        // Get the data
+        UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData(), this);
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
+            statement.setString(1, uuid.toString());
+            ResultSet set = statement.executeQuery();
+
+            while (set.next()) {
+                data.getDemData().setAge(set.getInt(userColumnDemAge));
+                data.getDemData().setGender(Gender.parse(set.getString(userColumnDemGender)));
+                data.getDemData().setGeoLocation(set.getString(userColumnDemGeoLocation));
+                data.setLastGamemode(GameMode.valueOf(set.getString(userColumnLastGM)));
+                data.setLastGmSwapTime(set.getLong(userColumnLastGMSwapTime));
+                data.setPlayTime(set.getLong(userColumnPlayTime));
+                data.setLoginTimes(set.getInt(userColumnLoginTimes));
+                data.setLastPlayed(set.getLong(userColumnLastPlayed));
+            }
+            set.close();
+            statement.close();
+            String userId = "" + getUserId(uuid.toString());
+
+            statement = connection.prepareStatement("SELECT * FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
+            statement.setString(1, userId);
+            set = statement.executeQuery();
+
+            List<Location> locations = new ArrayList<>();
+            while (set.next()) {
+                locations.add(new Location(worlds.get(set.getString(locationColumnWorld)), set.getInt(locationColumnCoordinatesX), 0, set.getInt(locationColumnCoordinatesZ)));
+            }
+            set.close();
+            statement.close();
+            data.addLocations(locations);
+
+            if (locations.isEmpty()) {
+                data.setLocation(new Location(defaultWorld, 0, 0, 0));
+            } else {
+                data.setLocation(locations.get(locations.size() - 1));
+            }
+
+            data.setLocation(new Location(defaultWorld, 0, 0, 0));
+
+            statement = connection.prepareStatement("SELECT * FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
+            statement.setString(1, userId);
+            set = statement.executeQuery();
+
+            List<String> nicknames = new ArrayList<>();
+            while (set.next()) {
+                nicknames.add(set.getString(nicknamesColumnNick));
+            }
+            set.close();
+            statement.close();
+            data.addNicknames(nicknames);
+
+            statement = connection.prepareStatement("SELECT * FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
+            statement.setString(1, userId);
+            set = statement.executeQuery();
+
+            List<InetAddress> ips = new ArrayList<>();
+            while (set.next()) {
+                try {
+                    ips.add(InetAddress.getByName(set.getString(ipsColumnIP)));
+                } catch (SQLException | UnknownHostException e) {
+                }
+            }
+            set.close();
+            statement.close();
+            data.addIpAddresses(ips);
+
+            statement = connection.prepareStatement("SELECT * FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");
+            statement.setString(1, userId);
+            set = statement.executeQuery();
+
+            HashMap<GameMode, Long> times = new HashMap<>();
+            while (set.next()) {
+                times.put(GameMode.SURVIVAL, set.getLong(gamemodetimesColumnSurvivalTime));
+                times.put(GameMode.CREATIVE, set.getLong(gamemodetimesColumnCreativeTime));
+                times.put(GameMode.ADVENTURE, set.getLong(gamemodetimesColumnAdventureTime));
+                try {
+                    times.put(GameMode.SPECTATOR, set.getLong(gamemodetimesColumnSpectatorTime));
+                } catch (NoSuchFieldError e) {
+                }
+            }
+            set.close();
+            statement.close();
+            data.setGmTimes(times);
+        } catch (SQLException e) {
+            data = null;
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    @Override
+    public void saveMultipleUserData(List<UserData> data) {
+        List<UserData> saveLast = new ArrayList<>();
+        String uSQL = "UPDATE " + userName + " SET "
+                + userColumnDemAge + "=?, "
+                + userColumnDemGender + "=?, "
+                + userColumnDemGeoLocation + "=?, "
+                + userColumnLastGM + "=?, "
+                + userColumnLastGMSwapTime + "=?, "
+                + userColumnPlayTime + "=?, "
+                + userColumnLoginTimes + "=?, "
+                + userColumnLastPlayed + "=? "
+                + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement uStatement = connection.prepareStatement(uSQL);
+            for (UserData uData : data) {
+                int userId = getUserId(uData.getUuid().toString());
+                if (userId == -1) {
+                    saveLast.add(uData);
+                    continue;
+                }
+                
+                uStatement.setInt(1, uData.getDemData().getAge());
+                uStatement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
+                uStatement.setString(3, uData.getDemData().getGeoLocation());
+                GameMode gm = uData.getLastGamemode();
+                if (gm != null) {
+                    uStatement.setString(4, uData.getLastGamemode().name());
+                } else {
+                    uStatement.setString(4, GameMode.SURVIVAL.name());
+                }
+                uStatement.setLong(5, uData.getLastGmSwapTime());
+                uStatement.setLong(6, uData.getPlayTime());
+                uStatement.setInt(7, uData.getLoginTimes());
+                uStatement.setLong(8, uData.getLastPlayed());
+                uStatement.setString(9, uData.getUuid().toString());
+                uStatement.addBatch();                
+            }
+            uStatement.executeBatch();
+            connection.commit();
+            uStatement.close();
+            connection.setAutoCommit(true);
+            data.removeAll(saveLast);
+            for (UserData uData : data) {
+                int userId = getUserId(uData.getUuid().toString());
+                saveLocationList(userId, uData.getLocations());
+                saveNickList(userId, uData.getNicknames());
+                saveIPList(userId, uData.getIps());
+                saveGMTimes(userId, uData.getGmTimes());
+            }
+            for (UserData userData : saveLast) {
+                saveUserData(userData.getUuid(), userData);
+            }            
+        } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -627,7 +693,7 @@ public abstract class SQLDB extends Database {
                 statement.close();
                 userId = getUserId(uuid.toString());
             }
-            // saveLocationList(userId, data.getLocations());
+            saveLocationList(userId, data.getLocations());
             saveNickList(userId, data.getNicknames());
             saveIPList(userId, data.getIps());
             saveGMTimes(userId, data.getGmTimes());
@@ -638,37 +704,34 @@ public abstract class SQLDB extends Database {
         data.setAccessing(false);
     }
 
-    @Deprecated // Locations Removed from Build 2.0.0 for performance reasons.
     public void saveLocationList(int userId, List<Location> locations) {
-        /*
         try {
-            PreparedStatement statement = connection.prepareStatement(
+            PreparedStatement deleteStatement = connection.prepareStatement(
                     "DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-
+            deleteStatement.setString(1, "" + userId);
+            deleteStatement.execute();
+            deleteStatement.close();
+            connection.setAutoCommit(false);
+            PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
+                    + locationColumnUserID + ", "
+                    + locationColumnCoordinatesX + ", "
+                    + locationColumnCoordinatesZ + ", "
+                    + locationColumnWorld
+                    + ") VALUES (?, ?, ?, ?)");
             for (Location location : locations) {
-                PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
-                        + locationColumnUserID + ", "
-                        + locationColumnCoordinatesX + ", "
-                        + locationColumnCoordinatesZ + ", "
-                        + locationColumnWorld
-                        + ") VALUES (?, ?, ?, ?)");
-
                 saveStatement.setInt(1, userId);
                 saveStatement.setInt(2, (int) location.getBlockX());
                 saveStatement.setInt(3, (int) location.getBlockZ());
                 saveStatement.setString(4, location.getWorld().getName());
-
-                saveStatement.execute();
-                saveStatement.close();
+                saveStatement.addBatch();
             }
-
+            saveStatement.executeBatch();
+            connection.commit();
+            saveStatement.close();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-         */
     }
 
     public void saveNickList(int userId, HashSet<String> names) {
@@ -678,17 +741,20 @@ public abstract class SQLDB extends Database {
             statement.setString(1, "" + userId);
             statement.execute();
 
+            connection.setAutoCommit(false);
+            statement = connection.prepareStatement("INSERT INTO " + nicknamesName + " ("
+                    + nicknamesColumnUserID + ", "
+                    + nicknamesColumnNick
+                    + ") VALUES (?, ?)");
             for (String name : names) {
-                statement = connection.prepareStatement("INSERT INTO " + nicknamesName + " ("
-                        + nicknamesColumnUserID + ", "
-                        + nicknamesColumnNick
-                        + ") VALUES (?, ?)");
-
                 statement.setInt(1, userId);
                 statement.setString(2, name);
-                statement.execute();
-                statement.close();
+                statement.addBatch();
             }
+            statement.executeBatch();
+            connection.commit();
+            statement.close();
+            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -703,17 +769,20 @@ public abstract class SQLDB extends Database {
             statement.execute();
             statement.close();
 
+            connection.setAutoCommit(false);
+            statement = connection.prepareStatement("INSERT INTO " + ipsName + " ("
+                    + ipsColumnUserID + ", "
+                    + ipsColumnIP
+                    + ") VALUES (?, ?)");
             for (InetAddress ip : ips) {
-                statement = connection.prepareStatement("INSERT INTO " + ipsName + " ("
-                        + ipsColumnUserID + ", "
-                        + ipsColumnIP
-                        + ") VALUES (?, ?)");
-
                 statement.setInt(1, userId);
                 statement.setString(2, ip.getHostAddress());
-                statement.execute();
-                statement.close();
+                statement.addBatch();
             }
+            statement.executeBatch();
+            connection.commit();
+            statement.close();
+            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -740,7 +809,16 @@ public abstract class SQLDB extends Database {
             statement.setLong(2, gamemodeTimes.get(GameMode.SURVIVAL));
             statement.setLong(3, gamemodeTimes.get(GameMode.CREATIVE));
             statement.setLong(4, gamemodeTimes.get(GameMode.ADVENTURE));
-            statement.setLong(5, gamemodeTimes.get(GameMode.SPECTATOR));
+            try {
+                Long gm = gamemodeTimes.get(GameMode.SPECTATOR);
+                if (gm != null) {
+                    statement.setLong(5, gm);
+                } else {
+                    statement.setLong(5, 0);
+                }
+            } catch (NoSuchFieldError e) {
+                statement.setLong(5, 0);
+            }
             statement.execute();
             statement.close();
 
@@ -901,151 +979,4 @@ public abstract class SQLDB extends Database {
         return connection;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getLocationName() {
-        return locationName;
-    }
-
-    public String getServerdataName() {
-        return serverdataName;
-    }
-
-    public String getCommanduseName() {
-        return commanduseName;
-    }
-
-    public String getGamemodetimesName() {
-        return gamemodetimesName;
-    }
-
-    public String getNicknamesName() {
-        return nicknamesName;
-    }
-
-    public String getIpsName() {
-        return ipsName;
-    }
-
-    public String getUserColumnUUID() {
-        return userColumnUUID;
-    }
-
-    public String getUserColumnID() {
-        return userColumnID;
-    }
-
-    public String getUserColumnPlayTime() {
-        return userColumnPlayTime;
-    }
-
-    public String getUserColumnDemGeoLocation() {
-        return userColumnDemGeoLocation;
-    }
-
-    public String getUserColumnDemAge() {
-        return userColumnDemAge;
-    }
-
-    public String getUserColumnDemGender() {
-        return userColumnDemGender;
-    }
-
-    public String getUserColumnLastGM() {
-        return userColumnLastGM;
-    }
-
-    public String getUserColumnLastGMSwapTime() {
-        return userColumnLastGMSwapTime;
-    }
-
-    public String getUserColumnLoginTimes() {
-        return userColumnLoginTimes;
-    }
-
-    public String getUserColumnLastPlayed() {
-        return userColumnLastPlayed;
-    }
-
-    public String getLocationColumnUserID() {
-        return locationColumnUserID;
-    }
-
-    public String getLocationColumnID() {
-        return locationColumnID;
-    }
-
-    public String getLocationColumnCoordinatesX() {
-        return locationColumnCoordinatesX;
-    }
-
-    public String getLocationColumnCoordinatesZ() {
-        return locationColumnCoordinatesZ;
-    }
-
-    public String getLocationColumnWorld() {
-        return locationColumnWorld;
-    }
-
-    public String getServerdataColumnDate() {
-        return serverdataColumnDate;
-    }
-
-    public String getServerdataColumnPlayersOnline() {
-        return serverdataColumnPlayersOnline;
-    }
-
-    public String getServerdataColumnNewPlayers() {
-        return serverdataColumnNewPlayers;
-    }
-
-    public String getCommanduseColumnCommand() {
-        return commanduseColumnCommand;
-    }
-
-    public String getCommanduseColumnTimesUsed() {
-        return commanduseColumnTimesUsed;
-    }
-
-    public String getGamemodetimesColumnUserID() {
-        return gamemodetimesColumnUserID;
-    }
-
-    public String getGamemodetimesColumnSurvivalTime() {
-        return gamemodetimesColumnSurvivalTime;
-    }
-
-    public String getGamemodetimesColumnCreativeTime() {
-        return gamemodetimesColumnCreativeTime;
-    }
-
-    public String getGamemodetimesColumnAdventureTime() {
-        return gamemodetimesColumnAdventureTime;
-    }
-
-    public String getGamemodetimesColumnSpectatorTime() {
-        return gamemodetimesColumnSpectatorTime;
-    }
-
-    public String getNicknamesColumnUserID() {
-        return nicknamesColumnUserID;
-    }
-
-    public String getNicknamesColumnNick() {
-        return nicknamesColumnNick;
-    }
-
-    public String getIpsColumnUserID() {
-        return ipsColumnUserID;
-    }
-
-    public String getIpsColumnIP() {
-        return ipsColumnIP;
-    }
-
-    public String getVersionName() {
-        return versionName;
-    }
 }

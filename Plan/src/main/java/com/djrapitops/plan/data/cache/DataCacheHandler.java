@@ -4,8 +4,10 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
 import com.djrapitops.plan.data.handlers.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -147,9 +149,9 @@ public class DataCacheHandler {
      * Saves all data in the cache to Database with AsyncTasks
      */
     public void saveCachedUserData() {
-        dataCache.keySet().stream().forEach((uuid) -> {
-            saveCachedData(uuid);
-        });
+        List<UserData> data = new ArrayList<>();
+        data.addAll(dataCache.values());
+        db.saveMultipleUserData(data);
         timesSaved++;
     }
 
@@ -157,11 +159,14 @@ public class DataCacheHandler {
      * Saves all data in the cache to Database and closes the database down.
      */
     public void saveCacheOnDisable() {
-        dataCache.keySet().stream().forEach((uuid) -> {
-            if (dataCache.get(uuid) != null) {
-                db.saveUserData(uuid, dataCache.get(uuid));
-            }
-        });
+//        dataCache.keySet().stream().forEach((uuid) -> {
+//            if (dataCache.get(uuid) != null) {
+//                db.saveUserData(uuid, dataCache.get(uuid));
+//            }
+//        });
+        List<UserData> data = new ArrayList<>();
+        data.addAll(dataCache.values());
+        db.saveMultipleUserData(data);
         db.saveServerData(serverData);
         db.close();
     }

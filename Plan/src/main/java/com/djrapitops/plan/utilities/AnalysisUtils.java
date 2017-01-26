@@ -73,7 +73,16 @@ public class AnalysisUtils {
         long gmZero = gmTimes.get(GameMode.SURVIVAL);
         long gmOne = gmTimes.get(GameMode.CREATIVE);
         long gmTwo = gmTimes.get(GameMode.ADVENTURE);
-        long gmThree = gmTimes.get(GameMode.SPECTATOR);
+        long gmThree;
+        try {
+            Long gm3 = gmTimes.get(GameMode.SPECTATOR);
+            if (gm3 == null) {
+                gm3 = (long) 0;
+            }
+            gmThree = gm3;
+        } catch (NoSuchFieldError e) {     
+            gmThree = 0;
+        }
         long total = gmZero + gmOne + gmTwo + gmThree;
         replaceMap.put("%gm0%", FormatUtils.formatTimeAmount("" + gmZero));
         replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmOne));

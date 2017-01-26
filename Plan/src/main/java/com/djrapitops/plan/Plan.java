@@ -17,19 +17,19 @@ import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /* TODO 2.1.0
 Placeholder API
 Immutable InspectCache ?
-Recent players
-Optimize db with batch processing (commanduse, ips, nicks)
+Recent players 25%
+    Optimize db with batch processing (commanduse, ips, nicks)
 Manage command
 Database cleaning
-PlanLite Top 20 richest
-PlanLite Top 20 most votes
-Top 20 most active
+PlanLite Top 20 richest 25%
+PlanLite Top 20 most votes 25%
+Top 20 most active 25%
 Clear setting multiper (InspectCache)
 Clear check for existing clear task. (InspectCache)
  */
@@ -63,31 +63,20 @@ public class Plan extends JavaPlugin {
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
 
-//        for (Database database : databases) {
-//            String name = database.getConfigName();
-//
-//            ConfigurationSection section = getConfig().getConfigurationSection(name);
-//
-//            if (section == null) {
-//                section = getConfig().createSection(name);
-//            }
-//
-//            database.getConfigDefaults(section);
-//
-//            if (section.getKeys(false).isEmpty()) {
-//                getConfig().set(name, null);
-//            }
-//        }
-
         getConfig().options().copyDefaults(true);
 
-        getConfig().options().header("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/");
+        getConfig().options().header(Phrase.CONFIG_HEADER + "");
 
         saveConfig();
 
         log("Database init..");
-        initDatabase();
-        log("Database initiated.");
+        if (initDatabase()) {
+            log("Database initiated.");
+        } else {
+            logError(Phrase.DATABASE_FAILURE_DISABLE.toString());
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         hookPlanLite();
         this.handler = new DataCacheHandler(this);
@@ -183,12 +172,12 @@ public class Plan extends JavaPlugin {
     }
 
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new PlanChatListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlanPlayerListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlanGamemodeChangeListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlanCommandPreprocessListener(this), this);
-        // Locations Removed from Build 2.0.0 for performance reasons.
-        // getServer().getPluginManager().registerEvents(new PlanPlayerMoveListener(this), this);
+        final PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new PlanChatListener(this), this);
+        pluginManager.registerEvents(new PlanPlayerListener(this), this);
+        pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
+        pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);        
+        pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
     }
 
     private boolean initDatabase() {

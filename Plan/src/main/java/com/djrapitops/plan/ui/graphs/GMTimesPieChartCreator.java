@@ -24,8 +24,17 @@ public class GMTimesPieChartCreator {
      * @return Url of charts4j image link.
      */
     public static String createChart(HashMap<GameMode, Long> gmTimes) {
+        Long gm3;
+        try {
+            gm3 = gmTimes.get(GameMode.SPECTATOR);
+            if (gm3 == null) {
+                gm3 = (long) 0;
+            }
+        } catch (NoSuchFieldError e) {     
+            gm3 = (long) 0;
+        }
         long total = gmTimes.get(GameMode.SURVIVAL) + gmTimes.get(GameMode.CREATIVE)
-                + gmTimes.get(GameMode.ADVENTURE) + gmTimes.get(GameMode.SPECTATOR);
+                + gmTimes.get(GameMode.ADVENTURE) + gm3;
 
         return createChart(gmTimes, total);
     }
@@ -42,7 +51,15 @@ public class GMTimesPieChartCreator {
         long gmZero = gmTimes.get(GameMode.SURVIVAL);
         long gmOne = gmTimes.get(GameMode.CREATIVE);
         long gmTwo = gmTimes.get(GameMode.ADVENTURE);
-        long gmThree = gmTimes.get(GameMode.SPECTATOR);
+        Long gmThree;
+        try {
+            gmThree = gmTimes.get(GameMode.SPECTATOR);
+            if (gmThree == null) {
+                gmThree = (long) 0;
+            }
+        } catch (NoSuchFieldError e) {     
+            gmThree = (long) 0;
+        }
         int zero = (int) ((gmZero * 1.0 / total) * 100);
         int one = (int) ((gmOne * 1.0 / total) * 100);
         int two = (int) ((gmTwo * 1.0 / total) * 100);

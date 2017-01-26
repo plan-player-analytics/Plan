@@ -36,10 +36,10 @@ public class UserData {
     private boolean isOp;
     private boolean isBanned;
     private DemographicsData demData;
-    
+
     private boolean planLiteFound;
     private PlanLitePlayerData planLiteData;
-    
+
     private String name;
     private boolean isOnline;
 
@@ -60,7 +60,10 @@ public class UserData {
         gmTimes.put(GameMode.SURVIVAL, zero);
         gmTimes.put(GameMode.CREATIVE, zero);
         gmTimes.put(GameMode.ADVENTURE, zero);
-        gmTimes.put(GameMode.SPECTATOR, zero);
+        try {
+            gmTimes.put(GameMode.SPECTATOR, zero);
+        } catch (NoSuchFieldError e) {
+        }
         lastGamemode = player.getGameMode();
         this.demData = demData;
         isBanned = player.isBanned();
@@ -84,7 +87,10 @@ public class UserData {
         gmTimes.put(GameMode.SURVIVAL, zero);
         gmTimes.put(GameMode.CREATIVE, zero);
         gmTimes.put(GameMode.ADVENTURE, zero);
-        gmTimes.put(GameMode.SPECTATOR, zero);
+        try {
+            gmTimes.put(GameMode.SPECTATOR, zero);
+        } catch (NoSuchFieldError e) {
+        }
         this.demData = demData;
         isBanned = player.isBanned();
         name = player.getName();
@@ -102,18 +108,15 @@ public class UserData {
     }
 
     public void addLocation(Location loc) {
-//        locations.add(loc);
+        locations.add(loc);
         location = loc;
     }
 
-    @Deprecated
     public void addLocations(Collection<Location> addLocs) {
-        /*
         locations.addAll(addLocs);
         if (!locations.isEmpty()) {
             location = locations.get(locations.size() - 1);
         }
-         */
     }
 
     public void addNickname(String nick) {
@@ -135,7 +138,10 @@ public class UserData {
         gmTimes.put(GameMode.SURVIVAL, survivalTime);
         gmTimes.put(GameMode.CREATIVE, creativeTime);
         gmTimes.put(GameMode.ADVENTURE, adventureTime);
-        gmTimes.put(GameMode.SPECTATOR, spectatorTime);
+        try {
+            gmTimes.put(GameMode.SPECTATOR, spectatorTime);
+        } catch (NoSuchFieldError e) {
+        }
     }
 
     public void updateBanned(Player p) {
@@ -151,7 +157,6 @@ public class UserData {
     }
 
     // Getters -------------------------------------------------------------
-
     public boolean isPlanLiteFound() {
         return planLiteFound;
     }
@@ -167,17 +172,15 @@ public class UserData {
     public void setPlanLiteData(PlanLitePlayerData planLiteData) {
         this.planLiteData = planLiteData;
     }
-    
+
     public UUID getUuid() {
         return uuid;
     }
 
-    @Deprecated
     public Location getLocation() {
         return location;
     }
 
-    @Deprecated
     public List<Location> getLocations() {
         return locations;
     }
@@ -314,6 +317,5 @@ public class UserData {
     public boolean isOnline() {
         return isOnline;
     }
-    
-    
+
 }

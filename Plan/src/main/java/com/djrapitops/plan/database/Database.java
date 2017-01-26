@@ -50,6 +50,12 @@ public abstract class Database {
     public abstract void saveUserData(UUID uuid, UserData data);
 
     /**
+     * Saves multiple UserData to the Database using batch processing.
+     * @param data List of Data
+     */
+    public abstract void saveMultipleUserData(List<UserData> data);
+    
+    /**
      * Check if the player is found in the database.
      *
      * @param uuid UUID of Player
