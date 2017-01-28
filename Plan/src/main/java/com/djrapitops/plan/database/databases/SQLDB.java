@@ -154,14 +154,13 @@ public abstract class SQLDB extends Database {
                 if (connection == null || connection.isClosed()) {
                     return false;
                 }
-
-//                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
-
-//                boolean newDatabase = set.next();
-//                set.close();
-
+                boolean usingMySQL = getConfigName().toLowerCase().equals("mysql");
+                System.out.println(usingMySQL ? "Using MySQL":"Not using MySQL"+getConfigName());
+                //                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
+                //                boolean newDatabase = set.next();
+                //                set.close();
                 query("CREATE TABLE IF NOT EXISTS " + userName + " ("
-                        + userColumnID + " integer PRIMARY KEY, "
+                        + userColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
                         + userColumnUUID + " varchar(36) NOT NULL, "
                         + userColumnDemAge + " integer NOT NULL, "
                         + userColumnDemGender + " varchar(8) NOT NULL, "
@@ -171,15 +170,17 @@ public abstract class SQLDB extends Database {
                         + userColumnPlayTime + " bigint NOT NULL, "
                         + userColumnLoginTimes + " integer NOT NULL, "
                         + userColumnLastPlayed + " bigint NOT NULL"
+                        + (usingMySQL ? ", PRIMARY KEY (" + userColumnID + ")" : "")
                         + ")"
                 );
 
                 query("CREATE TABLE IF NOT EXISTS " + locationName + " ("
-                        + locationColumnID + " integer PRIMARY KEY, "
+                        + locationColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
                         + locationColumnUserID + " integer NOT NULL, "
                         + locationColumnCoordinatesX + " integer NOT NULL, "
                         + locationColumnCoordinatesZ + " integer NOT NULL, "
                         + locationColumnWorld + " varchar(64) NOT NULL, "
+                        + (usingMySQL ? "PRIMARY KEY (" + userColumnID + "), " : "")
                         + "FOREIGN KEY(" + locationColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                         + ")"
                 );
@@ -390,13 +391,17 @@ public abstract class SQLDB extends Database {
                     + commanduseColumnCommand + ", "
                     + commanduseColumnTimesUsed
                     + ") VALUES (?, ?)");
+            boolean commitRequired = false;
             for (String key : data.keySet()) {
                 statement.setString(1, key);
                 statement.setInt(2, data.get(key));
                 statement.addBatch();
+                commitRequired = true;
             }
             statement.executeBatch();
-            connection.commit();
+            if (commitRequired) {
+                connection.commit();
+            }
             statement.close();
             connection.setAutoCommit(true);
 
@@ -582,13 +587,14 @@ public abstract class SQLDB extends Database {
         try {
             connection.setAutoCommit(false);
             PreparedStatement uStatement = connection.prepareStatement(uSQL);
+            boolean commitRequired = false;
             for (UserData uData : data) {
                 int userId = getUserId(uData.getUuid().toString());
                 if (userId == -1) {
                     saveLast.add(uData);
                     continue;
                 }
-                
+
                 uStatement.setInt(1, uData.getDemData().getAge());
                 uStatement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
                 uStatement.setString(3, uData.getDemData().getGeoLocation());
@@ -603,10 +609,13 @@ public abstract class SQLDB extends Database {
                 uStatement.setInt(7, uData.getLoginTimes());
                 uStatement.setLong(8, uData.getLastPlayed());
                 uStatement.setString(9, uData.getUuid().toString());
-                uStatement.addBatch();                
+                uStatement.addBatch();
+                commitRequired = true;
             }
             uStatement.executeBatch();
-            connection.commit();
+            if (commitRequired) {
+                connection.commit();
+            }
             uStatement.close();
             connection.setAutoCommit(true);
             data.removeAll(saveLast);
@@ -619,7 +628,7 @@ public abstract class SQLDB extends Database {
             }
             for (UserData userData : saveLast) {
                 saveUserData(userData.getUuid(), userData);
-            }            
+            }
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -718,15 +727,19 @@ public abstract class SQLDB extends Database {
                     + locationColumnCoordinatesZ + ", "
                     + locationColumnWorld
                     + ") VALUES (?, ?, ?, ?)");
+            boolean commitRequired = false;
             for (Location location : locations) {
                 saveStatement.setInt(1, userId);
                 saveStatement.setInt(2, (int) location.getBlockX());
                 saveStatement.setInt(3, (int) location.getBlockZ());
                 saveStatement.setString(4, location.getWorld().getName());
                 saveStatement.addBatch();
+                commitRequired = true;
             }
             saveStatement.executeBatch();
-            connection.commit();
+            if (commitRequired) {
+                connection.commit();
+            }
             saveStatement.close();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
@@ -746,13 +759,17 @@ public abstract class SQLDB extends Database {
                     + nicknamesColumnUserID + ", "
                     + nicknamesColumnNick
                     + ") VALUES (?, ?)");
+            boolean commitRequired = false;
             for (String name : names) {
                 statement.setInt(1, userId);
                 statement.setString(2, name);
                 statement.addBatch();
+                commitRequired = true;
             }
             statement.executeBatch();
-            connection.commit();
+            if (commitRequired) {
+                connection.commit();
+            }
             statement.close();
             connection.setAutoCommit(true);
 
@@ -774,13 +791,17 @@ public abstract class SQLDB extends Database {
                     + ipsColumnUserID + ", "
                     + ipsColumnIP
                     + ") VALUES (?, ?)");
+            boolean commitRequired = false;
             for (InetAddress ip : ips) {
                 statement.setInt(1, userId);
                 statement.setString(2, ip.getHostAddress());
                 statement.addBatch();
+                commitRequired = true;
             }
             statement.executeBatch();
-            connection.commit();
+            if (commitRequired) {
+                connection.commit();
+            }
             statement.close();
             connection.setAutoCommit(true);
 
@@ -830,7 +851,7 @@ public abstract class SQLDB extends Database {
     @Override
     public void clean() {
         checkConnection();
-        plugin.log("DATABASE-SQLDB\nCleaning DB not implemented");
+        plugin.log("Database Cleaning has not yet been implemented.");
     }
 
     public void removeAllData() {

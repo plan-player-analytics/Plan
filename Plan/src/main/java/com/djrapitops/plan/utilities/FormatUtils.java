@@ -101,7 +101,7 @@ public class FormatUtils {
     }
 
     /**
-     * Turns the version string into a double
+     * Turns the version string into a integer
      *
      * @param versionString String - number format 1.1.1
      * @return parsed double - for example 1,11

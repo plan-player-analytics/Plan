@@ -1,4 +1,6 @@
 Settings:
+  Data:
+    GatherLocations: true
   Analysis:
     MinutesPlayedUntilConsidiredActive: 10
   Cache:

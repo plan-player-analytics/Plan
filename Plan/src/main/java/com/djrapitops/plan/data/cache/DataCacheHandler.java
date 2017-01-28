@@ -115,11 +115,13 @@ public class DataCacheHandler {
         if (cache) {
             if (dataCache.get(uuid) == null) {
                 UserData uData = db.getUserData(uuid);
-                if (uData.getPlanLiteData() == null) {
-                    getPlanLiteHandler().handleEvents(uData.getName(), uData);
+                if (uData != null) {
+                    if (uData.getPlanLiteData() == null) {
+                        getPlanLiteHandler().handleEvents(uData.getName(), uData);
+                    }
+                    dataCache.put(uuid, uData);
+                    plugin.log("Added " + uuid.toString() + " to Cache.");
                 }
-                dataCache.put(uuid, uData);
-                plugin.log("Added " + uuid.toString() + " to Cache.");
             }
             return dataCache.get(uuid);
         } else {
@@ -127,8 +129,10 @@ public class DataCacheHandler {
                 return dataCache.get(uuid);
             }
             UserData uData = db.getUserData(uuid);
-            if (uData.getPlanLiteData() == null) {
-                getPlanLiteHandler().handleEvents(uData.getName(), uData);
+            if (uData != null) {
+                if (uData.getPlanLiteData() == null) {
+                    getPlanLiteHandler().handleEvents(uData.getName(), uData);
+                }
             }
             return uData;
         }

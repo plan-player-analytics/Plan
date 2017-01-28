@@ -20,7 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/* TODO 2.1.0
+/* TODO 2.2.0
 Placeholder API
 Immutable InspectCache ?
 Recent players 25%
@@ -69,6 +69,7 @@ public class Plan extends JavaPlugin {
 
         saveConfig();
 
+        log(MiscUtils.checkVersion());
         log("Database init..");
         if (initDatabase()) {
             log("Database initiated.");
@@ -83,8 +84,6 @@ public class Plan extends JavaPlugin {
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
         registerListeners();
-
-        log(MiscUtils.checkVersion());
 
         getCommand("plan").setExecutor(new PlanCommand(this));
 
@@ -177,7 +176,9 @@ public class Plan extends JavaPlugin {
         pluginManager.registerEvents(new PlanPlayerListener(this), this);
         pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
         pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);        
-        pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
+        if (getConfig().getBoolean("Settings.Data.GatherLocations")) {
+            pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
+        }
     }
 
     private boolean initDatabase() {
