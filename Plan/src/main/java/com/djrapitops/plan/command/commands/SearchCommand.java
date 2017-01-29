@@ -33,7 +33,7 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", "plan.search", "Search for player", CommandType.CONSOLE_WITH_ARGUMENTS, "<Part of Playername");
+        super("search", "plan.search", "Search for player", CommandType.CONSOLE_WITH_ARGUMENTS, "<part of playername>");
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
     }

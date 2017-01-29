@@ -1,51 +1,44 @@
-package com.djrapitops.plan.command;
+package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.command.commands.*;
+import com.djrapitops.plan.command.CommandType;
+import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.utilities.FormatUtils;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.ArrayList;
-import main.java.com.djrapitops.plan.command.commands.ManageCommand;
+import main.java.com.djrapitops.plan.command.commands.manage.*;
 import org.bukkit.entity.Player;
 
 /**
  *
  * @author Rsl1122
  */
-public class PlanCommand implements CommandExecutor {
+public class ManageCommand extends SubCommand {
 
     private final List<SubCommand> commands;
+    private Plan plugin;
 
     /**
-     * Class Constructor.
-     *
-     * Initializes Subcommands
+     * Subcommand Constructor.
      *
      * @param plugin Current instance of Plan
      */
-    public PlanCommand(Plan plugin) {
+    public ManageCommand(Plan plugin) {
+        super("manage", "plan.manage", "Database managment command", CommandType.CONSOLE, "");
+        this.plugin = plugin;
         commands = new ArrayList<>();
-
-        commands.add(new HelpCommand(plugin, this));
-        commands.add(new InspectCommand(plugin));
-        commands.add(new AnalyzeCommand(plugin));
-        commands.add(new SearchCommand(plugin));
-        commands.add(new InfoCommand(plugin));
-        commands.add(new ReloadCommand(plugin));
-        commands.add(new ManageCommand(plugin));
-        PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-        if (planLiteHook != null) {
-            if (planLiteHook.isEnabled()) {
-                commands.add(new LiteCommand(plugin));
-            }
-        }
+        commands.add(new ManageHelpCommand(plugin, this));
+        commands.add(new ManageMoveCommand(plugin));
+        commands.add(new ManageCombineCommand(plugin));
+        commands.add(new ManageHotswapCommand(plugin));
+        commands.add(new ManageStatusCommand(plugin));
+        commands.add(new ManageRemoveCommand(plugin));
+        commands.add(new ManageClearCommand(plugin));        
     }
 
     /**

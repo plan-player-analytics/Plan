@@ -139,4 +139,9 @@ public abstract class Database {
      * @return HashMap with save date (long in ms) and ServerData.
      */
     public abstract HashMap<Long, ServerData> getServerDataHashMap();
+    
+    public abstract void removeAccount(String uuid);
+    public abstract void removeAllData();
+    public abstract void saveServerDataHashMap(HashMap<Long, ServerData> serverData);
+    public abstract void saveCommandUse(HashMap<String, Integer> data);
 }

@@ -38,6 +38,7 @@ public class InfoCommand extends SubCommand {
             hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics - Info",
             tColor + " " + Phrase.BALL.toString() + oColor + " Version: " + tColor + plugin.getDescription().getVersion(),
             tColor + " " + Phrase.BALL.toString() + tColor + " " + MiscUtils.checkVersion(),
+            tColor + " " + Phrase.BALL.toString() + oColor +" Active Database: "+ tColor + plugin.getDB().getConfigName(),
             hColor + Phrase.ARROWS_RIGHT.toString()
         };
         sender.sendMessage(messages);

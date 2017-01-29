@@ -24,8 +24,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 Placeholder API
 Immutable InspectCache ?
 Recent players 25%
-    Optimize db with batch processing (commanduse, ips, nicks)
-Manage command
+    Manage command
+- Import data from sqlite > mysql and other way around
+- Move data from __
+    - Remove player's data
+- Import data with PlanLite
 Database cleaning
 PlanLite Top 20 richest 25%
 PlanLite Top 20 most votes 25%
@@ -72,7 +75,7 @@ public class Plan extends JavaPlugin {
         log(MiscUtils.checkVersion());
         log("Database init..");
         if (initDatabase()) {
-            log("Database initiated.");
+            log(db.getConfigName()+" Database initiated.");
         } else {
             logError(Phrase.DATABASE_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);
@@ -181,7 +184,7 @@ public class Plan extends JavaPlugin {
         }
     }
 
-    private boolean initDatabase() {
+    public boolean initDatabase() {
         String type = getConfig().getString("database.type");
 
         db = null;
@@ -250,5 +253,9 @@ public class Plan extends JavaPlugin {
      */
     public WebSocketServer getUiServer() {
         return uiServer;
+    }
+
+    public HashSet<Database> getDatabases() {
+        return databases;
     }
 }

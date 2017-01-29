@@ -358,6 +358,37 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
+    public void saveServerDataHashMap(HashMap<Long, ServerData> serverData) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + serverdataName + " ("
+                    + serverdataColumnDate + ", "
+                    + serverdataColumnNewPlayers + ", "
+                    + serverdataColumnPlayersOnline
+                    + ") VALUES (?, ?, ?)");
+
+            boolean commitRequired = false;
+            for (long date : serverData.keySet()) {
+                statement.setLong(1, date);
+                ServerData sData = serverData.get(date);
+                statement.setInt(2, sData.getNewPlayers());
+                statement.setInt(3, sData.getPlayersOnline());
+                statement.addBatch();
+                commitRequired = true;
+            }
+            statement.executeBatch();
+            if (commitRequired) {
+                connection.commit();
+            }
+            statement.close();
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void saveServerData(ServerData data) {
         try {
             saveCommandUse(data.getCommandUsage());
@@ -378,7 +409,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    private void saveCommandUse(HashMap<String, Integer> data) {
+    public void saveCommandUse(HashMap<String, Integer> data) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + commanduseName);
@@ -427,6 +458,7 @@ public abstract class SQLDB extends Database {
         return commandUse;
     }
 
+    @Override
     public void removeAccount(String uuid) {
 
         checkConnection();
@@ -437,11 +469,6 @@ public abstract class SQLDB extends Database {
         }
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("DELETE FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
-            statement.setString(1, uuid);
-            statement.execute();
-            statement.close();
-
             statement = connection.prepareStatement("DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
@@ -457,6 +484,10 @@ public abstract class SQLDB extends Database {
             statement.close();
             statement = connection.prepareStatement("DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnIP + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
+            statement.execute();
+            statement.close();
+            statement = connection.prepareStatement("DELETE FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
+            statement.setString(1, uuid);
             statement.execute();
             statement.close();
         } catch (SQLException e) {
@@ -741,7 +772,7 @@ public abstract class SQLDB extends Database {
                 connection.commit();
             }
             saveStatement.close();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -852,17 +883,18 @@ public abstract class SQLDB extends Database {
         plugin.log("Database Cleaning has not yet been implemented.");
     }
 
+    @Override
     public void removeAllData() {
         checkConnection();
 
-        try {
-            connection.prepareStatement("DELETE FROM " + userName).executeUpdate();
+        try {            
             connection.prepareStatement("DELETE FROM " + locationName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + nicknamesName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + ipsName).executeUpdate();
-            connection.prepareStatement("DELETE FROM " + gamemodetimesName).executeUpdate();
-            connection.prepareStatement("DELETE FROM " + serverdataName).executeUpdate();
+            connection.prepareStatement("DELETE FROM " + gamemodetimesName).executeUpdate();            
             connection.prepareStatement("DELETE FROM " + commanduseName).executeUpdate();
+            connection.prepareStatement("DELETE FROM " + serverdataName).executeUpdate();
+            connection.prepareStatement("DELETE FROM " + userName).executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
