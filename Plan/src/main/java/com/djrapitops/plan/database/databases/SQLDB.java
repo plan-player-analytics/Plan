@@ -155,7 +155,6 @@ public abstract class SQLDB extends Database {
                     return false;
                 }
                 boolean usingMySQL = getConfigName().toLowerCase().equals("mysql");
-                System.out.println(usingMySQL ? "Using MySQL":"Not using MySQL"+getConfigName());
                 //                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
                 //                boolean newDatabase = set.next();
                 //                set.close();
@@ -624,6 +623,7 @@ public abstract class SQLDB extends Database {
                 saveLocationList(userId, uData.getLocations());
                 saveNickList(userId, uData.getNicknames());
                 saveIPList(userId, uData.getIps());
+                connection.setAutoCommit(true);
                 saveGMTimes(userId, uData.getGmTimes());
             }
             for (UserData userData : saveLast) {
@@ -705,8 +705,8 @@ public abstract class SQLDB extends Database {
             saveLocationList(userId, data.getLocations());
             saveNickList(userId, data.getNicknames());
             saveIPList(userId, data.getIps());
+            connection.setAutoCommit(true);
             saveGMTimes(userId, data.getGmTimes());
-
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -741,7 +741,7 @@ public abstract class SQLDB extends Database {
                 connection.commit();
             }
             saveStatement.close();
-            connection.setAutoCommit(true);
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -771,7 +771,6 @@ public abstract class SQLDB extends Database {
                 connection.commit();
             }
             statement.close();
-            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -803,7 +802,6 @@ public abstract class SQLDB extends Database {
                 connection.commit();
             }
             statement.close();
-            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
