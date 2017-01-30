@@ -34,6 +34,8 @@ public enum Phrase {
     ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "[Plan] This command can be only used if the webserver is running on this server."),
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "[Plan] This command can be only used if webserver/planlite is enabled on this server."),
+    MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED+"[Plan] Plugin not supported: "),
+    MANAGE_ERROR_PLUGIN_NOT_ENABLED(ChatColor.RED+"[Plan] Plugin is not enabled: "),
     MANAGE_ERROR_INCORRECT_DB(ChatColor.RED+"[Plan] Incorrect database! (sqlite/mysql accepted): "),
     MANAGE_ERROR_SAME_DB(ChatColor.RED+"[Plan] Can't move to the same database!"),
     MANAGE_DATABASE_FAILURE(ChatColor.RED+"[Plan] One of the databases was not initialized properly."),

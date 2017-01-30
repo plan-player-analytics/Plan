@@ -24,11 +24,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 Placeholder API
 Immutable InspectCache ?
 Recent players 25%
-    Manage command
-- Import data from sqlite > mysql and other way around
-- Move data from __
-    - Remove player's data
-- Import data with PlanLite
 Database cleaning
 PlanLite Top 20 richest 25%
 PlanLite Top 20 most votes 25%

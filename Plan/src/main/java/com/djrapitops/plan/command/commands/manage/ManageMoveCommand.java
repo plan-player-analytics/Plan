@@ -72,7 +72,7 @@ public class ManageMoveCommand extends SubCommand {
             return true;
         }
         if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[1] + "-database will be removed!");
+            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[1] + "-database will be overwritten!");
             return true;
         }
 
@@ -140,7 +140,9 @@ public class ManageMoveCommand extends SubCommand {
                     moveToDB.saveCommandUse(sData.getCommandUsage());
                 }
                 sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS+"");
-                sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER+"");
+                if (!toDB.equals(plugin.getDB().getConfigName())) {
+                    sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER+"");
+                }
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);

@@ -19,6 +19,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>me.edge209</groupId>
+            <artifactId>ontime</artifactId>
+            <version>4.1.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.googlecode.charts4j</groupId>
             <artifactId>charts4j</artifactId>
             <version>1.3</version>

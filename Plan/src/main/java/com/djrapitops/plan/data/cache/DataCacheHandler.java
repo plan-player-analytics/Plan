@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getPlayer;
+import org.bukkit.OfflinePlayer;
 
 /**
  *
@@ -305,6 +306,9 @@ public class DataCacheHandler {
      * @param player Player the new UserData is created for
      */
     public void newPlayer(Player player) {
+        newPlayerCreator.createNewPlayer(player);
+    }
+    public void newPlayer(OfflinePlayer player) {
         newPlayerCreator.createNewPlayer(player);
     }
 

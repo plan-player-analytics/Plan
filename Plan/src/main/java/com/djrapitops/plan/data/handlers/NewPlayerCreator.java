@@ -6,8 +6,8 @@ import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.DemographicsData;
 import com.djrapitops.plan.data.UserData;
 import java.util.Date;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -41,17 +41,16 @@ public class NewPlayerCreator {
      * @param player Player the UserData is created for.
      */
     public void createNewPlayer(Player player) {
+        createNewPlayer((OfflinePlayer) player, player.getGameMode());
+    }
+
+    public void createNewPlayer(OfflinePlayer player) {
+        createNewPlayer(player, GameMode.SURVIVAL);
+    }
+
+    public void createNewPlayer(OfflinePlayer player, GameMode gm) {
         UserData data = new UserData(player, new DemographicsData(), db);
-        if (player.getGameMode() == null) {
-            GameMode defaultGM = Bukkit.getServer().getDefaultGameMode();
-            if (defaultGM != null) {
-                data.setLastGamemode(defaultGM);
-            } else {
-                data.setLastGamemode(GameMode.SURVIVAL);
-            }
-        } else {
-            data.setLastGamemode(player.getGameMode());
-        }
+        data.setLastGamemode(gm);
         data.setLastPlayed(new Date().getTime());
         long zero = Long.parseLong("0");
         data.setPlayTime(zero);

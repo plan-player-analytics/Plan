@@ -74,7 +74,7 @@ public class ManageCombineCommand extends SubCommand {
             return true;
         }
         if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[1] + "-database will be removed!");
+            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[1] + "-database will be rewritten!");
             return true;
         }
 
@@ -140,17 +140,25 @@ public class ManageCombineCommand extends SubCommand {
                 Set<UUID> uuids = new HashSet<>();
                 uuids.addAll(toUUIDS);
                 uuids.addAll(fromUUIDS);
+                
                 List<UserData> combinedUserData = MiscUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
+                
                 HashMap<Long, ServerData> fromServerData = moveFromDB.getServerDataHashMap();
                 HashMap<Long, ServerData> toServerData = moveToDB.getServerDataHashMap();
                 HashMap<Long, ServerData> combinedServerData = MiscUtils.combineServerDatas(fromServerData, toServerData);
+                
                 HashMap<String, Integer> commandUse = MiscUtils.combineCommandUses(getCommandUse(fromServerData), getCommandUse(toServerData));
+                
                 moveToDB.removeAllData();
+                
                 moveToDB.saveServerDataHashMap(combinedServerData);
                 moveToDB.saveMultipleUserData(combinedUserData);
                 moveToDB.saveCommandUse(commandUse);
-                sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS+"");
-                sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER+"");
+                
+                sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
+                if (!toDB.equals(plugin.getDB().getConfigName())) {
+                    sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
+                }
                 this.cancel();
             }
 

@@ -100,5 +100,4 @@ public class GamemodeTimesHandler {
     public void handleLogOut(PlayerQuitEvent event, UserData data) {
         saveToCache(event.getPlayer(), data);
     }
-
 }

@@ -29,7 +29,7 @@ public class ManageCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCommand(Plan plugin) {
-        super("manage", "plan.manage", "Database managment command", CommandType.CONSOLE, "");
+        super("manage, m", "plan.manage", "Database managment command", CommandType.CONSOLE, "");
         this.plugin = plugin;
         commands = new ArrayList<>();
         commands.add(new ManageHelpCommand(plugin, this));
@@ -37,6 +37,7 @@ public class ManageCommand extends SubCommand {
         commands.add(new ManageCombineCommand(plugin));
         commands.add(new ManageHotswapCommand(plugin));
         commands.add(new ManageStatusCommand(plugin));
+        commands.add(new ManageImportCommand(plugin));
         commands.add(new ManageRemoveCommand(plugin));
         commands.add(new ManageClearCommand(plugin));        
     }
@@ -68,10 +69,7 @@ public class ManageCommand extends SubCommand {
     }
 
     private void sendDefaultCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        String command = "inspect";
-        if (args.length < 1) {
-            command = "help";
-        }
+        String command = "help";
         onCommand(sender, cmd, commandLabel, FormatUtils.mergeArrays(new String[]{command}, args));
     }
 
