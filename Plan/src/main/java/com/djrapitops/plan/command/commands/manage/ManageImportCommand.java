@@ -8,7 +8,6 @@ import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *

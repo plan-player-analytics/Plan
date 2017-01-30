@@ -123,25 +123,29 @@ public class ManageMoveCommand extends SubCommand {
         (new BukkitRunnable() {
             @Override
             public void run() {
-                moveToDB.removeAllData();
-                List<UserData> allUserData = new ArrayList<>();
-                for (UUID uuid : uuids) {
-                    allUserData.add(moveFromDB.getUserData(uuid));
-                }
-                moveToDB.saveMultipleUserData(allUserData);
-                HashMap<Long, ServerData> serverData = moveFromDB.getServerDataHashMap();
-                moveToDB.saveServerDataHashMap(serverData);
-                ServerData sData = null;
-                for (long sDataKey : serverData.keySet()) {
-                    sData = serverData.get(sDataKey);
-                    break;
-                }
-                if (sData != null) {
-                    moveToDB.saveCommandUse(sData.getCommandUsage());
-                }
-                sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS+"");
-                if (!toDB.equals(plugin.getDB().getConfigName())) {
-                    sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER+"");
+                try {
+                    moveToDB.removeAllData();
+                    List<UserData> allUserData = new ArrayList<>();
+                    for (UUID uuid : uuids) {
+                        allUserData.add(moveFromDB.getUserData(uuid));
+                    }
+                    moveToDB.saveMultipleUserData(allUserData);
+                    HashMap<Long, ServerData> serverData = moveFromDB.getServerDataHashMap();
+                    moveToDB.saveServerDataHashMap(serverData);
+                    ServerData sData = null;
+                    for (long sDataKey : serverData.keySet()) {
+                        sData = serverData.get(sDataKey);
+                        break;
+                    }
+                    if (sData != null) {
+                        moveToDB.saveCommandUse(sData.getCommandUsage());
+                    }
+                    sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
+                    if (!toDB.equals(plugin.getDB().getConfigName())) {
+                        sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
+                    }
+                } catch (NullPointerException e) {
+                    sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
                 }
                 this.cancel();
             }

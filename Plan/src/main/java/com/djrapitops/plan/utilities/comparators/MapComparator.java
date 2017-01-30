@@ -27,4 +27,13 @@ public class MapComparator {
         return sortedList;
     }
 
+    public static List<String[]> sortByValueLong(HashMap<String, Long> hashMap) {
+        List<String[]> sortedList = new ArrayList<>();
+        hashMap.keySet().stream().forEach((key) -> {
+            sortedList.add(new String[]{"" + hashMap.get(key), key});
+        });
+        Collections.sort(sortedList, (String[] strings, String[] otherStrings) -> (int) (Long.parseLong(strings[0]) - (Long.parseLong(otherStrings[0]))));
+        return sortedList;
+    }
+
 }

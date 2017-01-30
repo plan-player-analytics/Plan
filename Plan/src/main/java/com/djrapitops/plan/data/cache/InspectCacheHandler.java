@@ -2,6 +2,7 @@ package com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,6 +16,7 @@ public class InspectCacheHandler {
     private DataCacheHandler handler;
     private Plan plugin;
     private HashMap<UUID, UserData> cache;
+    private HashMap<UUID, Long> clearTimes;
 
     /**
      * Class constructor
@@ -25,6 +27,7 @@ public class InspectCacheHandler {
         this.handler = plugin.getHandler();
         this.plugin = plugin;
         this.cache = new HashMap<>();
+        this.clearTimes = new HashMap<>();
     }
 
     /**
@@ -34,20 +37,36 @@ public class InspectCacheHandler {
      * @param uuid UUID of the player
      */
     public void cache(UUID uuid) {
-        if (!handler.getDB().wasSeenBefore(uuid)) {
-            return;
-        }
-        cache.put(uuid, handler.getCurrentData(uuid, false));
         int minutes = plugin.getConfig().getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
         if (minutes <= 0) {
             minutes = 3;
         }
-        (new BukkitRunnable() {
-            @Override
-            public void run() {
-                clearFomCache(uuid);
-            }
-        }).runTaskLater(plugin, 60 * 20 * minutes);
+        cache(uuid, minutes);
+    }
+
+    public void cache(UUID uuid, int minutes) {
+        if (!handler.getDB().wasSeenBefore(uuid)) {
+            return;
+        }
+        cache.put(uuid, handler.getCurrentData(uuid, false));
+        long clearTime = new Date().toInstant().getEpochSecond() + (long) 60 * (long) minutes;
+        if (clearTimes.get(uuid) == null) {
+            clearTimes.put(uuid, (long) 0);
+        }
+        if (clearTimes.get(uuid) < clearTime) {
+            clearTimes.put(uuid, clearTime);
+            (new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (new Date().toInstant().getEpochSecond() - clearTimes.get(uuid) < 30) {
+                        clearFomCache(uuid);
+                    } else {
+                        this.cancel();
+                    }
+                    this.cancel();
+                }
+            }).runTaskLater(plugin, 60 * 20 * minutes);
+        }
     }
 
     private void clearFomCache(UUID uuid) {

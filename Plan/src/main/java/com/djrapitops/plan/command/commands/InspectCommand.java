@@ -20,7 +20,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -93,11 +92,12 @@ public class InspectCommand extends SubCommand {
             return true;
         }
 
-        inspectCache.cache(uuid);
+        
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();
         ChatColor hColor = Phrase.COLOR_TER.color();
-
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
+        inspectCache.cache(uuid);
         final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
         final int port = config.getInt("Settings.WebServer.Port");
         final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);

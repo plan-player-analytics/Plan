@@ -1,5 +1,6 @@
 package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.AnalysisData;
@@ -14,9 +15,9 @@ import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
-import main.java.com.djrapitops.plan.ui.graphs.HeatMapCreator;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -48,22 +49,23 @@ public class Analysis {
      *
      * First retrieves all Offlineplayers and checks those that are in the
      * database. Then Runs a new Analysis Task Asyncronously. Saves AnalysisData
-     * to the provided Cache.
+     * to the provided Cache. Saves all UserData to InspectCache for 8 minutes.
      *
      * @param analysisCache Cache that the data is saved to.
      */
     public void analyze(AnalysisCacheHandler analysisCache) {
         rawData.clear();
         added.clear();
-        plugin.log("Analysis | Beginning analysis of user data..");
+        plugin.log(Phrase.ANALYSIS_START + "");
         OfflinePlayer[] offlinePlayers;
         try {
             offlinePlayers = plugin.getServer().getOfflinePlayers();
         } catch (IndexOutOfBoundsException e) {
-            plugin.log("Analysis | Analysis failed, no known players.");
+            plugin.log(Phrase.ANALYSIS_FAIL_NO_PLAYERS + "");
             return;
         }
         final List<UUID> uuids = new ArrayList<>();
+        plugin.log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
         for (OfflinePlayer p : offlinePlayers) {
             UUID uuid = p.getUniqueId();
             if (plugin.getDB().wasSeenBefore(uuid)) {
@@ -71,16 +73,20 @@ public class Analysis {
             }
         }
         if (uuids.isEmpty()) {
-            plugin.log("Analysis | Analysis failed, no data in the database.");
+            plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return;
         }
+        FileConfiguration config = plugin.getConfig();
+        final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
+        final int port = config.getInt("Settings.WebServer.Port");
+        final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
         (new BukkitRunnable() {
             @Override
             public void run() {
                 uuids.stream().forEach((uuid) -> {
-                    inspectCache.cache(uuid);
+                    inspectCache.cache(uuid, 8);
                 });
-                plugin.log("Analysis | Fetching Data..");
+                plugin.log(Phrase.ANALYSIS_FETCH_DATA + "");
                 while (rawData.size() != uuids.size()) {
                     uuids.stream()
                             .filter((uuid) -> (!added.contains(uuid)))
@@ -93,7 +99,7 @@ public class Analysis {
                             });
                 }
                 rawServerData = plugin.getDB().getServerDataHashMap();
-                plugin.log("Analysis | Data Fetched, beginning Analysis of data..");
+                plugin.log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData data = new AnalysisData();
 
                 createPlayerActivityGraphs(data);
@@ -129,6 +135,8 @@ public class Analysis {
                 int totalVotes = 0;
                 int totalMoney = 0;
 
+                HashMap<String, Long> latestLogins = new HashMap<>();
+                HashMap<String, Long> playtimes = new HashMap<>();
                 // Fill Dataset with userdata.
                 for (UserData uData : rawData) {
                     if (planLiteEnabled) {
@@ -157,7 +165,13 @@ public class Analysis {
                         }
                     } catch (NoSuchFieldError e) {
                     }
-                    totalPlaytime += uData.getPlayTime();
+                    long playTime = uData.getPlayTime();
+                    totalPlaytime += playTime;
+                    String playerName = uData.getName();
+                    String url = "<a href=\"http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
+                            + "/player/" + playerName+"\">"+playerName+"</a>";
+                    playtimes.put(url, playTime);
+                    latestLogins.put(url, uData.getLastPlayed());
                     totalLoginTimes += uData.getLoginTimes();
                     int age = uData.getDemData().getAge();
                     if (age != -1) {
@@ -171,13 +185,16 @@ public class Analysis {
                         totalBanned++;
                     } else if (uData.getLoginTimes() == 1) {
                         joinleaver++;
-                    } else if (AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes())) {
+                    } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
                         active++;
                     } else {
                         inactive++;
                     }
                 }
 
+                // Save Dataset to AnalysisData
+                data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(playtimes, 20));
+                data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(latestLogins, 20));
                 if (planLiteEnabled) {
                     plData.setFactionMap(factionMap);
                     plData.setTownMap(townMap);
@@ -246,7 +263,7 @@ public class Analysis {
 
                 data.setRefreshDate(new Date().getTime());
                 analysisCache.cache(data);
-                plugin.log("Analysis | Analysis Complete.");
+                plugin.log(Phrase.ANALYSIS_COMPLETE + "");
                 this.cancel();
             }
 

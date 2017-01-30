@@ -80,7 +80,7 @@ public class AnalysisUtils {
                 gm3 = (long) 0;
             }
             gmThree = gm3;
-        } catch (NoSuchFieldError e) {     
+        } catch (NoSuchFieldError e) {
             gmThree = 0;
         }
         long total = gmZero + gmOne + gmTwo + gmThree;
@@ -143,6 +143,8 @@ public class AnalysisUtils {
         replaceMap.put("%ops%", "" + data.getOps());
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
+        replaceMap.put("%top20mostactive%", data.getTop20ActivePlayers());
+        replaceMap.put("%recentlogins%", data.getRecentPlayers());
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
         if (hook != null) {
             replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
@@ -178,23 +180,67 @@ public class AnalysisUtils {
         return createTableOutOfHashMap(commandUse, 50);
     }
 
+    static String createTableOutOfHashMapLong(HashMap<String, Long> players) {
+        return createActivePlayersTable(players, 20);
+    }
+
     static String createTableOutOfHashMap(HashMap<String, Integer> map, int limit) {
         List<String[]> sorted = MapComparator.sortByValue(map);
         String html = "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
         if (sorted.isEmpty()) {
-            html = "<p>Error Calcuclating Command usages</p>";
+            html = "<p>Error Calcuclating Table usages (sorted data was empty)</p>";
             return html;
         }
         Collections.reverse(sorted);
         int i = 1;
         for (String[] values : sorted) {
-            if (i >= 50) {
+            if (i >= limit) {
                 break;
             }
             html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
             i++;
         }
         html += "</table>";
+        return html;
+    }
+
+    static String createActivePlayersTable(HashMap<String, Long> map, int limit) {
+        List<String[]> sorted = MapComparator.sortByValueLong(map);
+        String html = "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+        if (sorted.isEmpty()) {
+            html = "<p>Error Calculating Active players (sorted list was empty)</p>";
+            return html;
+        }
+        Collections.reverse(sorted);
+        int i = 1;
+        for (String[] values : sorted) {
+            if (i >= limit) {
+                break;
+            }
+            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + FormatUtils.formatTimeAmount(values[0]) + "</td></tr>";
+            i++;
+        }
+        html += "</table>";
+        return html;
+    }
+    
+    static String createListStringOutOfHashMapLong(HashMap<String, Long> map, int limit) {
+        List<String[]> sorted = MapComparator.sortByValueLong(map);
+        String html = "<p>";
+        if (sorted.isEmpty()) {
+            html = "Error Creating List</p>";
+            return html;
+        }
+        Collections.reverse(sorted);
+        int i = 1;
+        for (String[] values : sorted) {
+            if (i >= limit) {
+                break;
+            }
+            html += values[1]+" ";
+            i++;
+        }
+        html += "</p>";
         return html;
     }
 

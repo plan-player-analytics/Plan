@@ -70,7 +70,7 @@ public class Plan extends JavaPlugin {
         log(MiscUtils.checkVersion());
         log("Database init..");
         if (initDatabase()) {
-            log(db.getConfigName()+" Database initiated.");
+            log(db.getConfigName()+"-database connection established.");
         } else {
             logError(Phrase.DATABASE_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);

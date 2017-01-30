@@ -19,6 +19,8 @@ public class AnalysisData {
     private String playersChartImgHtmlDay;
     private String activityChartImgHtml;
     private String top50CommandsListHtml;
+    private String top20ActivePlayers;
+    private String recentPlayers;
 
     private double gm0Perc;
     private double gm1Perc;
@@ -394,5 +396,23 @@ public class AnalysisData {
     public void setOps(int ops) {
         this.ops = ops;
     }
+
+    public String getTop20ActivePlayers() {
+        return top20ActivePlayers;
+    }
+
+    public void setTop20ActivePlayers(String top20ActivePlayers) {
+        this.top20ActivePlayers = top20ActivePlayers;
+    }
+
+    public String getRecentPlayers() {
+        return recentPlayers;
+    }
+
+    public void setRecentPlayers(String recentPlayers) {
+        this.recentPlayers = recentPlayers;
+    }
+    
+    
 
 }

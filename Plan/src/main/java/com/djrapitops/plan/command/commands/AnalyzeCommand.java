@@ -59,6 +59,7 @@ public class AnalyzeCommand extends SubCommand {
                 return true;
             }
         }
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
         if (!analysisCache.isCached()) {
             analysisCache.updateCache();
         } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60000) {

@@ -4,25 +4,9 @@ import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.ServerData;
-import com.djrapitops.plan.data.UserData;
-
 import com.djrapitops.plan.database.Database;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -65,6 +49,19 @@ public class ManageHotswapCommand extends SubCommand {
         String dbToSwapTo = args[0].toLowerCase();
         if (!dbToSwapTo.equals("mysql") && !dbToSwapTo.equals("sqlite")) {
             sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_DB + dbToSwapTo);
+            return true;
+        }
+        try {
+            Database db = null;
+            for (Database database : plugin.getDatabases()) {
+                if (dbToSwapTo.equalsIgnoreCase(database.getConfigName())) {
+                    db = database;
+                    db.init();
+                    db.getNewestServerData();
+                }
+            }
+        } catch (NullPointerException e) {
+            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
             return true;
         }
         plugin.getConfig().set("database.type", dbToSwapTo);

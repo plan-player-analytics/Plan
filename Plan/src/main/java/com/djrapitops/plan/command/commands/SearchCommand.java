@@ -64,7 +64,8 @@ public class SearchCommand extends SubCommand {
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();
         ChatColor hColor = Phrase.COLOR_TER.color();
-
+        
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
         Set<OfflinePlayer> matches = MiscUtils.getMatchingDisplaynames(args[0]);
         Set<UUID> uuids = new HashSet<>();
         for (OfflinePlayer match : matches) {

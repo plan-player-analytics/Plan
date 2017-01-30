@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.utilities.DataCombineUtils;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -110,7 +111,7 @@ public class ManageCombineCommand extends SubCommand {
         }
         final List<UUID> fromUUIDS = new ArrayList<>();
         final List<UUID> toUUIDS = new ArrayList<>();
-        for (OfflinePlayer p : offlinePlayers) {
+        try {for (OfflinePlayer p : offlinePlayers) {
             UUID uuid = p.getUniqueId();
             if (fromDatabase.wasSeenBefore(uuid)) {
                 fromUUIDS.add(uuid);
@@ -141,13 +142,13 @@ public class ManageCombineCommand extends SubCommand {
                 uuids.addAll(toUUIDS);
                 uuids.addAll(fromUUIDS);
                 
-                List<UserData> combinedUserData = MiscUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
+                List<UserData> combinedUserData = DataCombineUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
                 
                 HashMap<Long, ServerData> fromServerData = moveFromDB.getServerDataHashMap();
                 HashMap<Long, ServerData> toServerData = moveToDB.getServerDataHashMap();
-                HashMap<Long, ServerData> combinedServerData = MiscUtils.combineServerDatas(fromServerData, toServerData);
+                HashMap<Long, ServerData> combinedServerData = DataCombineUtils.combineServerDatas(fromServerData, toServerData);
                 
-                HashMap<String, Integer> commandUse = MiscUtils.combineCommandUses(getCommandUse(fromServerData), getCommandUse(toServerData));
+                HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(getCommandUse(fromServerData), getCommandUse(toServerData));
                 
                 moveToDB.removeAllData();
                 
@@ -175,6 +176,9 @@ public class ManageCombineCommand extends SubCommand {
                 return fromCommandUse;
             }
         }).runTaskAsynchronously(plugin);
+        } catch (NullPointerException e) {
+            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE+"");
+        }
         return true;
     }
 }
