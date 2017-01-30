@@ -72,7 +72,7 @@ public abstract class SQLDB extends Database {
     private String ipsColumnIP;
 
     private String versionName;
-
+    
     public SQLDB(Plan plugin, boolean supportsModification) {
         super(plugin);
         this.plugin = plugin;
@@ -124,7 +124,7 @@ public abstract class SQLDB extends Database {
         serverdataColumnPlayersOnline = "players_online";
 
         versionName = "plan_version";
-
+        
         // Maintains Connection.
         (new BukkitRunnable() {
             @Override
@@ -409,6 +409,7 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    @Override
     public void saveCommandUse(HashMap<String, Integer> data) {
         try {
             PreparedStatement statement = connection.prepareStatement(

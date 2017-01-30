@@ -89,17 +89,18 @@ public class DataCacheHandler {
                 if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
+                serverData.updatePlayerCount();
+                saveServerData();
                 handler.clearNulls();
                 timesSaved++;
             }
         }).runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
-        (new BukkitRunnable() {
-            @Override
-            public void run() {
-                serverData.updatePlayerCount();
-                saveServerData();
-            }
-        }).runTaskTimerAsynchronously(plugin, 60 * 20 * sMinutes, 60 * 20 * sMinutes);
+//        (new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                
+//            }
+//        }).runTaskTimerAsynchronously(plugin, 60 * 20 * sMinutes, 60 * 20 * sMinutes);
     }
 
     /**
