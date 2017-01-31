@@ -6,12 +6,11 @@ import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import java.util.Date;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -48,14 +47,13 @@ public class AnalyzeCommand extends SubCommand {
      * @return true in all cases.
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        FileConfiguration config = plugin.getConfig();
-        if (!config.getBoolean("Settings.WebServer.Enabled")) {
-            if (!config.getBoolean("Settings.WebServer.ShowAlternativeServerIP")) {
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {        
+        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
+            if (!Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
                 sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString());
                 return true;
             } else {
-                sendAnalysisMessage(sender, config);
+                sendAnalysisMessage(sender);
                 return true;
             }
         }
@@ -70,7 +68,7 @@ public class AnalyzeCommand extends SubCommand {
             @Override
             public void run() {
                 if (analysisCache.isCached()) {
-                    sendAnalysisMessage(sender, config);
+                    sendAnalysisMessage(sender);
                     this.cancel();
                 }
             }
@@ -81,23 +79,18 @@ public class AnalyzeCommand extends SubCommand {
     /**
      * Used to send the message after /plan analysis.
      * @param sender Command sender.
-     * @param config Plan config.
      * @throws CommandException
      */
-    public void sendAnalysisMessage(CommandSender sender, FileConfiguration config) throws CommandException {
-        ChatColor oColor = Phrase.COLOR_MAIN.color();
-        ChatColor tColor = Phrase.COLOR_SEC.color();
-        ChatColor hColor = Phrase.COLOR_TER.color();
-        final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
-        final int port = config.getInt("Settings.WebServer.Port");
-        final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
-        // Header
-        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor
-                + " Player Analytics - Analysis results");
+    public void sendAnalysisMessage(CommandSender sender) throws CommandException {
+        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        final int port = Settings.WEBSERVER_PORT.getNumber();
+        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+        
+        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER+"");
         // Link
         String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
                 + "/server";
-        String message = tColor + " " + Phrase.BALL.toString() + oColor + " Link: " + hColor;
+        String message = Phrase.CMD_LINK+"";
         boolean console = !(sender instanceof Player);
         if (console) {
             sender.sendMessage(message + url);
@@ -106,10 +99,9 @@ public class AnalyzeCommand extends SubCommand {
             Player player = (Player) sender;
             Bukkit.getServer().dispatchCommand(
                     Bukkit.getConsoleSender(),
-                    "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
+                    "tellraw " + player.getName() + " [\"\",{\"text\":\""+Phrase.CMD_CLICK_ME+"\",\"underlined\":true,"
                     + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
         }
-        // Footer
-        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
+        sender.sendMessage(Phrase.CMD_FOOTER+"");
     }
 }

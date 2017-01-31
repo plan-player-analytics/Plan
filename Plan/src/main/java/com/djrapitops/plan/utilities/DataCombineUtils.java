@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.data.DemographicsData;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
@@ -69,7 +70,7 @@ public class DataCombineUtils {
         if (tDemData.getAge() > fDemData.getAge()) {
             fDemData.setAge(tDemData.getAge());
         }
-        if (fDemData.getGeoLocation().equals("Not Known")) {
+        if (fDemData.getGeoLocation().equals(Phrase.DEM_UNKNOWN+"")) {
             fDemData.setGeoLocation(tDemData.getGeoLocation());
         }
         fData.setDemData(fDemData);

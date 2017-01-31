@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import org.bukkit.GameMode;
@@ -56,7 +57,7 @@ public class Analysis {
     public void analyze(AnalysisCacheHandler analysisCache) {
         rawData.clear();
         added.clear();
-        plugin.log(Phrase.ANALYSIS_START + "");
+        log(Phrase.ANALYSIS_START + "");
         OfflinePlayer[] offlinePlayers;
         try {
             offlinePlayers = plugin.getServer().getOfflinePlayers();
@@ -65,7 +66,7 @@ public class Analysis {
             return;
         }
         final List<UUID> uuids = new ArrayList<>();
-        plugin.log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
+        log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
         for (OfflinePlayer p : offlinePlayers) {
             UUID uuid = p.getUniqueId();
             if (plugin.getDB().wasSeenBefore(uuid)) {
@@ -76,17 +77,16 @@ public class Analysis {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return;
         }
-        FileConfiguration config = plugin.getConfig();
-        final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
-        final int port = config.getInt("Settings.WebServer.Port");
-        final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
+        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        final int port = Settings.WEBSERVER_PORT.getNumber();
+        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         (new BukkitRunnable() {
             @Override
             public void run() {
                 uuids.stream().forEach((uuid) -> {
                     inspectCache.cache(uuid, 8);
                 });
-                plugin.log(Phrase.ANALYSIS_FETCH_DATA + "");
+                log(Phrase.ANALYSIS_FETCH_DATA + "");
                 while (rawData.size() != uuids.size()) {
                     uuids.stream()
                             .filter((uuid) -> (!added.contains(uuid)))
@@ -99,7 +99,7 @@ public class Analysis {
                             });
                 }
                 rawServerData = plugin.getDB().getServerDataHashMap();
-                plugin.log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
+                log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData data = new AnalysisData();
 
                 createPlayerActivityGraphs(data);
@@ -279,5 +279,11 @@ public class Analysis {
                 data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
             }
         }).runTaskAsynchronously(plugin);
+    }
+
+    private void log(String msg) {
+        if (Settings.ANALYSIS_LOG_TO_CONSOLE.isTrue()) {
+            plugin.log(msg);
+        }
     }
 }

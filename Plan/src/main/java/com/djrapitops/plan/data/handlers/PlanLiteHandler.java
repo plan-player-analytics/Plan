@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.handlers;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.UserData;
@@ -8,6 +9,7 @@ import com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.planlite.api.DataPoint;
 import java.util.HashMap;
 import java.util.Set;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -75,7 +77,7 @@ public class PlanLiteHandler {
         PlanLitePlayerData plData = new PlanLitePlayerData();
 
         // Avoiding StackOverFlow
-        if (plugin.getConfig().getBoolean("Settings.PlanLite.UseAsAlternativeUI")
+        if (Settings.USE_ALTERNATIVE_UI.isTrue()
                 && plugin.getPlanLiteHook().isEnabled()) {
             data.setPlanLiteFound(false);
             plData.setTowny(false);
@@ -92,7 +94,7 @@ public class PlanLiteHandler {
             plData.setVault(enabledHooks.contains("Vault"));
             if (plData.hasTowny()) {
                 DataPoint town = liteData.get("TOW-TOWN");
-                plData.setTown((town != null) ? town.data() : "Not in a town");
+                plData.setTown((town != null) ? town.data() : Phrase.NOT_IN_TOWN+"");
                 DataPoint friends = liteData.get("TOW-FRIENDS");
                 plData.setFriends((town != null) ? friends.data() : "");
                 DataPoint perms = liteData.get("TOW-PLOT PERMS");
@@ -102,7 +104,7 @@ public class PlanLiteHandler {
             }
             if (plData.hasFactions()) {
                 DataPoint faction = liteData.get("FAC-FACTION");
-                plData.setFaction((faction != null) ? faction.data() : "Not in a faction");
+                plData.setFaction((faction != null) ? faction.data() : Phrase.NOT_IN_FAC+"");
             }
             if (plData.hasSuperbVote()) {
                 try {

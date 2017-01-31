@@ -1,5 +1,6 @@
 package com.djrapitops.plan.utilities;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.AnalysisData;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
@@ -66,7 +68,7 @@ public class AnalysisUtils {
         replaceMap.put("%active%", AnalysisUtils.isActive(data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes())
                 ? "| Player is Active" : "| Player is inactive");
         int age = data.getDemData().getAge();
-        replaceMap.put("%age%", (age != -1) ? "" + age : "Not known");
+        replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN+"");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
         HashMap<GameMode, Long> gmTimes = data.getGmTimes();
         replaceMap.put("%gmpiechart%", createGMPieChart(gmTimes));
@@ -137,7 +139,7 @@ public class AnalysisUtils {
         replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
         replaceMap.put("%playerchartday%", data.getPlayersChartImgHtmlDay());
         replaceMap.put("%top50commands%", data.getTop50CommandsListHtml());
-        replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : "Not Known");
+        replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN+"");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
         replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
         replaceMap.put("%ops%", "" + data.getOps());
@@ -156,7 +158,7 @@ public class AnalysisUtils {
 
     static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         Plan plugin = getPlugin(Plan.class);
-        int timeToActive = plugin.getConfig().getInt("Settings.Analysis.MinutesPlayedUntilConsidiredActive");
+        int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
             timeToActive = 0;
         }

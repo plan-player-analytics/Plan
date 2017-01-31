@@ -5,6 +5,7 @@ import com.djrapitops.planlite.api.API;
 import com.djrapitops.planlite.api.DataPoint;
 import java.util.HashMap;
 import java.util.Set;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.handlers.PlanLiteDataPushHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -33,8 +34,7 @@ public class PlanLiteHook {
      */
     public PlanLiteHook(Plan plugin) {
         this.plugin = plugin;
-        FileConfiguration config = plugin.getConfig();
-        if (config.getBoolean("Settings.PlanLite.Enabled")) {
+        if (Settings.PLANLITE_ENABLED.isTrue()) {
             if (Bukkit.getPluginManager().isPluginEnabled("PlanLite")) {
                 try {
                     this.planLite = getPlugin(PlanLite.class);
@@ -43,7 +43,7 @@ public class PlanLiteHook {
                     }
                     enabled = true;
                     planLiteApi = planLite.getAPI();
-                    if (config.getBoolean("Settings.PlanLite.UseAsAlternativeUI")) {
+                    if (Settings.USE_ALTERNATIVE_UI.isTrue()) {
                         planLite.addExtraHook("Plan", new PlanLiteDataPushHook(plugin));
                     }
                 } catch (Exception e) {

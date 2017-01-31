@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.handlers;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.Gender;
@@ -11,6 +12,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -44,10 +46,10 @@ public class DemographicsHandler {
      * @param data UserData corresponding to player of this event.
      */
     public void handleChatEvent(AsyncPlayerChatEvent event, UserData data) {
-        List<String> triggers = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.Trigger").split(", "));
-        List<String> female = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.Female").split(", "));
-        List<String> male = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.Male").split(", "));
-        List<String> ignore = Arrays.asList(plugin.getConfig().getString("Customization.DemographicsTriggers.IgnoreWhen").split(", "));
+        List<String> triggers = Arrays.asList(Settings.DEM_TRIGGERS.toString().split(", "));
+        List<String> female = Arrays.asList(Settings.DEM_FEMALE.toString().split(", "));
+        List<String> male = Arrays.asList(Settings.DEM_MALE.toString().split(", "));
+        List<String> ignore = Arrays.asList(Settings.DEM_IGNORE.toString().split(", "));
 
         String message = event.getMessage();
         String[] messageA = message.toLowerCase().split("\\s+");
@@ -127,7 +129,7 @@ public class DemographicsHandler {
                 demData.setGeoLocation(results[2]);
             }
         } catch (Exception e) {
-            demData.setGeoLocation("Not Known");
+            demData.setGeoLocation(Phrase.DEM_UNKNOWN+"");
         }
     }
 }

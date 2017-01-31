@@ -2,6 +2,7 @@ package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,14 +47,14 @@ public class MiscUtils {
             cVersion = plugin.getDescription().getVersion();
             int currentVersionNumber = FormatUtils.parseVersionNumber(cVersion);
             if (newestVersionNumber > currentVersionNumber) {
-                return "New Version (" + versionString + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/";
+                return Phrase.VERSION_NEW_AVAILABLE.parse(versionString);
             } else {
-                return "You're running the latest version";
+                return Phrase.VERSION_LATEST+"";
             }
-        } catch (Exception e) {
-            plugin.logError("Failed to compare versions.");
+        } catch (IOException | NumberFormatException e) {
+            plugin.logError(Phrase.VERSION_CHECK_ERROR+"");
         }
-        return "Failed to get newest version number.";
+        return Phrase.VERSION_FAIL+"";
     }
 
     /**

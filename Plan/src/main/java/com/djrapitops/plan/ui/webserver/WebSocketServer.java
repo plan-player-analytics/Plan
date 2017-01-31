@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -36,7 +37,7 @@ public class WebSocketServer {
      */
     public WebSocketServer(Plan plugin) {
         this.plugin = plugin;
-        this.PORT = plugin.getConfig().getInt("Settings.WebServer.Port");
+        this.PORT = Settings.WEBSERVER_PORT.getNumber();
         shutdown = false;
         dataReqHandler = new DataRequestHandler(plugin);
     }

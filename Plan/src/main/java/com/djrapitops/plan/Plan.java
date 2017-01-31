@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -31,12 +32,10 @@ Top 20 most active 25%
 Clear setting multiper (InspectCache)
 Clear check for existing clear task. (InspectCache)
  */
-
 /**
  *
  * @author Rsl1122
  */
-
 public class Plan extends JavaPlugin {
 
     private API api;
@@ -50,7 +49,7 @@ public class Plan extends JavaPlugin {
 
     /**
      * OnEnable method.
-     * 
+     *
      * Initiates the plugin with database, webserver, commands & listeners.
      */
     @Override
@@ -70,7 +69,7 @@ public class Plan extends JavaPlugin {
         log(MiscUtils.checkVersion());
         log("Database init..");
         if (initDatabase()) {
-            log(db.getConfigName()+"-database connection established.");
+            log(db.getConfigName() + "-database connection established.");
         } else {
             logError(Phrase.DATABASE_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);
@@ -88,27 +87,29 @@ public class Plan extends JavaPlugin {
         this.api = new API(this);
         handler.handleReload();
 
-        if (getConfig().getBoolean("Settings.WebServer.Enabled")) {
+        if (Settings.WEBSERVER_ENABLED.isTrue()) {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
-            if (getConfig().getBoolean("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable")) {
-                log("Analysis | Boot analysis in 30 seconds..");
+            if (Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue()) {
+                log(Phrase.ANALYSIS_BOOT_NOTIFY + "");
                 (new BukkitRunnable() {
                     @Override
                     public void run() {
-                        log("Analysis | Starting Boot Analysis..");
+                        log(Phrase.ANALYSIS_BOOT + "");
                         analysisCache.updateCache();
                         this.cancel();
                     }
                 }).runTaskLater(this, 30 * 20);
             }
-        } else if (!(getConfig().getBoolean("Settings.WebServer.ShowAlternativeServerIP")
-                || (getConfig().getBoolean("Settings.PlanLite.UseAsAlternativeUI")
-                && planLiteHook.isEnabled()))) {
-            Bukkit.getServer().getConsoleSender().sendMessage("[Plan] "
-                    + Phrase.ERROR_NO_DATA_VIEW);
+        } else if (!(Settings.SHOW_ALTERNATIVE_IP.isTrue())
+                || (Settings.USE_ALTERNATIVE_UI.isTrue()
+                && planLiteHook.isEnabled())) {
+            Bukkit.getServer().getConsoleSender().sendMessage(Phrase.PREFIX + "" + Phrase.ERROR_NO_DATA_VIEW);
         }
-        log("Player Analytics Enabled.");
+        if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && getServer().getIp().isEmpty()) {
+            log(Phrase.NOTIFY_EMPTY_IP+"");
+        }
+        log(Phrase.ENABLED+"");
     }
 
     /**
@@ -124,8 +125,8 @@ public class Plan extends JavaPlugin {
 
     /**
      * Disables the plugin.
-     * 
-     * Stops the webserver, cancels all tasks and saves cache to the database.     * 
+     *
+     * Stops the webserver, cancels all tasks and saves cache to the database. *
      */
     @Override
     public void onDisable() {
@@ -134,7 +135,7 @@ public class Plan extends JavaPlugin {
         }
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
-            log("Saving cached data..");
+            log(Phrase.SAVE_CACHE+"");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
@@ -142,11 +143,12 @@ public class Plan extends JavaPlugin {
 
             scheduler.shutdown();
         }
-        log("Player Analytics Disabled.");
+        log(Phrase.DISABLED+"");
     }
 
     /**
      * Logs the message to the console.
+     *
      * @param message
      */
     public void log(String message) {
@@ -155,6 +157,7 @@ public class Plan extends JavaPlugin {
 
     /**
      * Logs an error message to the console.
+     *
      * @param message
      */
     public void logError(String message) {
@@ -173,14 +176,14 @@ public class Plan extends JavaPlugin {
         pluginManager.registerEvents(new PlanChatListener(this), this);
         pluginManager.registerEvents(new PlanPlayerListener(this), this);
         pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
-        pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);        
-        if (getConfig().getBoolean("Settings.Data.GatherLocations")) {
+        pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
+        if (Settings.GATHERLOCATIONS.isTrue()) {
             pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
         }
     }
 
     public boolean initDatabase() {
-        String type = getConfig().getString("database.type");
+        String type = Settings.DB_TYPE+"";
 
         db = null;
 

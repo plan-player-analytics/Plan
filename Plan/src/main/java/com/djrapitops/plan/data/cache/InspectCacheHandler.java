@@ -5,6 +5,7 @@ import com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -37,7 +38,7 @@ public class InspectCacheHandler {
      * @param uuid UUID of the player
      */
     public void cache(UUID uuid) {
-        int minutes = plugin.getConfig().getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
+        int minutes = Settings.CLEAR_INSPECT_CACHE.getNumber();
         if (minutes <= 0) {
             minutes = 3;
         }

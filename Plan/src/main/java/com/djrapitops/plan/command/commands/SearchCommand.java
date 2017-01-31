@@ -10,12 +10,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 /**
@@ -52,7 +51,7 @@ public class SearchCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!plugin.getConfig().getBoolean("Settings.WebServer.Enabled")) {
+        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
             sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString());
             return true;
         }
@@ -61,11 +60,7 @@ public class SearchCommand extends SubCommand {
             return true;
         }
 
-        ChatColor oColor = Phrase.COLOR_MAIN.color();
-        ChatColor tColor = Phrase.COLOR_SEC.color();
-        ChatColor hColor = Phrase.COLOR_TER.color();
-        
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         Set<OfflinePlayer> matches = MiscUtils.getMatchingDisplaynames(args[0]);
         Set<UUID> uuids = new HashSet<>();
         for (OfflinePlayer match : matches) {
@@ -76,32 +71,30 @@ public class SearchCommand extends SubCommand {
             }
         }
 
-        FileConfiguration config = plugin.getConfig();
-        final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
-        final int port = config.getInt("Settings.WebServer.Port");
-        final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
-        int configValue = config.getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
+        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        final int port = Settings.WEBSERVER_PORT.getNumber();
+        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+        int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
         if (configValue <= 0) {
             configValue = 4;
         }
         final int available = configValue;
 
-        // Header
-        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics - Search results for: " + args[0]);
+        sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0]);
         // Results
         if (uuids.isEmpty()) {
-            sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor + "No results for " + tColor + Arrays.toString(args) + oColor + ".");
+            sender.sendMessage(Phrase.CMD_NO_RESULTS.parse(Arrays.toString(args)));
         } else {
             for (OfflinePlayer match : matches) {
                 if (!uuids.contains(match.getUniqueId())) {
                     continue;
                 }
                 String name = match.getName();
-                sender.sendMessage(tColor + " Matching player: " + hColor + name);
+                sender.sendMessage(Phrase.CMD_MATCH + name);
                 // Link
                 String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
                         + "/player/" + name;
-                String message = tColor + " " + Phrase.BALL.toString() + oColor + " Link: " + hColor;
+                String message = Phrase.CMD_LINK+"";
                 boolean console = !(sender instanceof Player);
                 if (console) {
                     sender.sendMessage(message + url);
@@ -115,9 +108,8 @@ public class SearchCommand extends SubCommand {
                 }
             }
         }
-        sender.sendMessage(tColor + "   Results will be available for " + hColor + available + tColor + " minutes.");
-        // Footer
-        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
+        sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available+""));
+        sender.sendMessage(Phrase.CMD_FOOTER+"");
         return true;
     }
 }

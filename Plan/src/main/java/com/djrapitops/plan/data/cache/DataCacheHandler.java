@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data.cache;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
@@ -10,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -65,16 +67,16 @@ public class DataCacheHandler {
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
 
-        int minutes = plugin.getConfig().getInt("Settings.Cache.DataCache.SaveEveryXMinutes");
+        int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
             minutes = 5;
         }
-        int sMinutes = plugin.getConfig().getInt("Settings.Cache.DataCache.SaveServerDataEveryXMinutes");
+        int sMinutes = Settings.SAVE_SERVER_MIN.getNumber();
         if (sMinutes <= 0) {
             sMinutes = 5;
         }
         final int clearAfterXsaves;
-        int configValue = plugin.getConfig().getInt("Settings.Cache.DataCache.ClearCacheEveryXSaves");
+        int configValue = Settings.CLEAR_CACHE_X_SAVES.getNumber();
         if (configValue <= 1) {
             clearAfterXsaves = 2;
         } else {
@@ -122,7 +124,7 @@ public class DataCacheHandler {
                         getPlanLiteHandler().handleEvents(uData.getName(), uData);
                     }
                     dataCache.put(uuid, uData);
-                    plugin.log("Added " + uuid.toString() + " to Cache.");
+                    plugin.log(Phrase.ADD_TO_CACHE.parse(uuid.toString()));
                 }
             }
             return dataCache.get(uuid);

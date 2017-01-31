@@ -1,5 +1,6 @@
 package com.djrapitops.plan.data;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.api.Gender;
 
 /**
@@ -29,7 +30,7 @@ public class DemographicsData {
      * Creates new demographics data object with default parameters.
      */
     public DemographicsData() {
-        this(-1, Gender.UNKNOWN, "Not Known");
+        this(-1, Gender.UNKNOWN, Phrase.DEM_UNKNOWN+"");
     }
 
     /**

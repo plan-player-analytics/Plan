@@ -10,13 +10,12 @@ import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
 
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -57,15 +56,15 @@ public class InspectCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        FileConfiguration config = plugin.getConfig();
-        if (!config.getBoolean("Settings.WebServer.Enabled")) {
-            if (!config.getBoolean("Settings.WebServer.ShowAlternativeServerIP")) {
+        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
+            if (!useAlternativeIP) {
                 PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-                if (config.getBoolean("Settings.PlanLite.UseAsAlternativeUI") && planLiteHook.isEnabled()) {
-                    sender.sendMessage(ChatColor.YELLOW + "[Plan] Passing to PlanLite..");
+                if (Settings.USE_ALTERNATIVE_UI.isTrue() && planLiteHook.isEnabled()) {
+                    sender.sendMessage(Phrase.CMD_PASS_PLANLITE + "");
                     planLiteHook.passCommand(sender, cmd, commandLabel, args);
                 } else {
-                    sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT.toString());
+                    sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT + "");
                 }
                 return true;
             }
@@ -91,17 +90,11 @@ public class InspectCommand extends SubCommand {
             sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
             return true;
         }
-
-        
-        ChatColor oColor = Phrase.COLOR_MAIN.color();
-        ChatColor tColor = Phrase.COLOR_SEC.color();
-        ChatColor hColor = Phrase.COLOR_TER.color();
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         inspectCache.cache(uuid);
-        final boolean useAlternativeIP = config.getBoolean("Settings.WebServer.ShowAlternativeServerIP");
-        final int port = config.getInt("Settings.WebServer.Port");
-        final String alternativeIP = config.getString("Settings.WebServer.AlternativeIP").replaceAll("%port%", "" + port);
-        int configValue = config.getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes");
+        final int port = Settings.WEBSERVER_PORT.getNumber();
+        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+        int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
         if (configValue <= 0) {
             configValue = 4;
         }
@@ -110,13 +103,11 @@ public class InspectCommand extends SubCommand {
             @Override
             public void run() {
                 if (inspectCache.isCached(uuid)) {
-                    // Header
-                    sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor
-                            + " Player Analytics - Inspect results: " + oColor + playerName);
+                    sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
                     // Link
                     String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
                             + "/player/" + playerName;
-                    String message = tColor + " " + Phrase.BALL.toString() + oColor + " Link: " + hColor;
+                    String message = Phrase.CMD_LINK+"";
                     boolean console = !(sender instanceof Player);
                     if (console) {
                         sender.sendMessage(message + url);
@@ -125,13 +116,12 @@ public class InspectCommand extends SubCommand {
                         Player player = (Player) sender;
                         Bukkit.getServer().dispatchCommand(
                                 Bukkit.getConsoleSender(),
-                                "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
+                                "tellraw " + player.getName() + " [\"\",{\"text\":\""+Phrase.CMD_CLICK_ME+"\",\"underlined\":true,"
                                 + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
                     }
 
-                    sender.sendMessage(tColor + "   Results will be available for " + hColor + available + tColor + " minutes.");
-                    // Footer
-                    sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
+                    sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available+""));
+                    sender.sendMessage(Phrase.CMD_FOOTER+"");
                     this.cancel();
                 }
             }

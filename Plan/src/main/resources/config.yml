@@ -2,6 +2,7 @@ Settings:
   Data:
     GatherLocations: true
   Analysis:
+    LogProgressOnConsole: true
     MinutesPlayedUntilConsidiredActive: 10
   Cache:
     AnalysisCache:
