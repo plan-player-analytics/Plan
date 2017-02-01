@@ -16,9 +16,9 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
-import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -168,11 +168,10 @@ public class Analysis {
                     long playTime = uData.getPlayTime();
                     totalPlaytime += playTime;
                     String playerName = uData.getName();
-                    String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
-                            + "/player/" + playerName;
-                    String html = Html.BUTTON.parse(url, playerName);
-                    playtimes.put(html, playTime);
-                    latestLogins.put(html, uData.getLastPlayed());
+                    String url = "<a href=\"http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
+                            + "/player/" + playerName+"\">"+playerName+"</a>";
+                    playtimes.put(url, playTime);
+                    latestLogins.put(url, uData.getLastPlayed());
                     totalLoginTimes += uData.getLoginTimes();
                     int age = uData.getDemData().getAge();
                     if (age != -1) {
@@ -259,7 +258,7 @@ public class Analysis {
                         data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(sData.getCommandUsage()));
                     }
                 } else {
-                    data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
+                    data.setTop50CommandsListHtml("<p>Error Calcuclating Command usages (No usage data)</p>");
                 }
 
                 data.setRefreshDate(new Date().getTime());

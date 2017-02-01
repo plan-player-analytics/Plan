@@ -28,7 +28,6 @@ public class ReloadCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        plugin.reloadConfig();
         plugin.onDisable();
         plugin.onEnable();
         sender.sendMessage(ChatColor.GREEN + "[Plan] Reload complete.");

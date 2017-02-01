@@ -8,20 +8,17 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * @author Rsl1122
  */
 public enum Phrase {
-    REPLACE0("REPLACE0"),
     PREFIX("[Plan] "),
     ENABLED("Player Analytics Enabled."),
     DISABLED("Player Analytics Disabled."),
     SAVE_CACHE("Saving cached data.."),
-    ADD_TO_CACHE("Added REPLACE0 to Cache."),
+    ADD_TO_CACHE("Added #1 to Cache."),
     CONFIG_HEADER("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/"),
-    DB_INIT("Database init.."),
-    DB_ESTABLISHED(REPLACE0 + "-database connection established."),
     DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
     DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
     NOTIFY_EMPTY_IP(ChatColor.YELLOW+""+PREFIX+"IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
     //
-    VERSION_NEW_AVAILABLE("New Version ("+REPLACE0+") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
+    VERSION_NEW_AVAILABLE("New Version (#1) is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
     VERSION_LATEST("You're running the latest version"),
     VERSION_CHECK_ERROR("Failed to compare versions."),
     VERSION_FAIL("Failed to get newest version number."),
@@ -86,8 +83,8 @@ public enum Phrase {
     CMD_CLICK_ME("Click Me"),
     CMD_LINK(COLOR_SEC.color() + " " + BALL + COLOR_MAIN.color() + " Link: " + COLOR_TER.color()),
     CMD_PASS_PLANLITE(ChatColor.YELLOW + "" + PREFIX + "Passing to PlanLite.."),
-    CMD_RESULTS_AVAILABLE(COLOR_SEC.color() + "   Results will be available for " + COLOR_TER.color() + REPLACE0 + COLOR_SEC.color() + " minutes."),
-    CMD_NO_RESULTS(CMD_BALL + " No results for " + COLOR_SEC.color() + REPLACE0 + COLOR_MAIN.color() + "."),
+    CMD_RESULTS_AVAILABLE(COLOR_SEC.color() + "   Results will be available for " + COLOR_TER.color() + "#1" + COLOR_SEC.color() + " minutes."),
+    CMD_NO_RESULTS(CMD_BALL + " No results for " + COLOR_SEC.color() + "#1" + COLOR_MAIN.color() + "."),
     CMD_MATCH(COLOR_SEC.color() + " Matching player: " + COLOR_TER.color()),
     //
     COMMAND_SENDER_NOT_PLAYER(ChatColor.RED + "" + PREFIX + "This command can be only used as a player."),
@@ -96,15 +93,15 @@ public enum Phrase {
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "" + PREFIX + "Command requires one argument."),
     COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission.");
 
-    private String text;
-    private ChatColor color;
+    private final String text;
+    private final ChatColor color;
 
-    private Phrase(String text) {
+    private Phrase(final String text) {
         this.text = text;
         this.color = null;
     }
 
-    private Phrase(ChatColor color) {
+    private Phrase(final ChatColor color) {
         this.color = color;
         this.text = "";
     }
@@ -114,12 +111,8 @@ public enum Phrase {
         return text;
     }
     
-    public String parse(String... p) {
-        String returnValue = this.toString();
-        for (int i = 0; i < p.length; i++) {
-            returnValue = returnValue.replaceAll("REPLACE" + i, p[i]);
-        }
-        return returnValue;
+    public String parse(String replace) {
+        return text.replaceAll("#1", replace);
     }
 
     /**

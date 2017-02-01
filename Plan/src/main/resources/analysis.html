@@ -1,132 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="en">
     <head>
         <meta charset="utf-8">
+
         <title>Plan | Server Analysis</title>
-        <meta name="description" content="Player Analysis window">
+        <meta name="description" content="Server Analysis Window">
         <meta name="author" content="Rsl1122">
-        <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />
-        <style>
-            * {
-                box-sizing: border-box;
-            }
-            img {
-                width: auto;
-            }
-            body {
-                line-height: 140%;
-                font-family: Verdana, Geneva, sans-serif;
-                font-style: normal;
-            }
-            header, footer {
-                line-height: 40%;
-                background-color: #267F00;
-                color: white;
-                padding: 10px 15px 5px 15px;
-                font-family: futura-pt, Futura, Futura-Medium, Verdana, Geneva, sans-serif;
-                font-style: normal;
-            }
-            .column {
-                float: left;
-                padding: 15px;
-            }
-            .warn {
-                padding: 8px;
-                background-color: #ffcc00;
-                color: black;
-                margin: 0;
-            }
-            .clearfix::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
-            .info {
-                width: 40%;
-            }
-            .graphs {
-                width: 60%
-            }
-            .button {
-                padding: 8px 14px;
-                background-color: green;
-                border: none;
-                color: white;
-                outline: 0;
-                text-decoration:none!important;
-            }
-            .button:hover {
-                background-color: darkgreen;
-            }
-            .table {
-                border-collapse: collapse;
-                table-layout: fixed; 
-                border-style: solid; 
-                border-width: 1px; 
-                padding: 8px 14px;
-                width: 70%;
-            }
-            .tableline {
-                text-align: left;
-                border-style: solid;
-                border-width: 1px;
-            }
-            .buttons {
-                line-height: 270%;
-            }
-            .link {
-                color: green;
-                text-decoration:none!important;
-            }
-            .link:hover {
-                color: darkgreen;
-            }
 
-        </style>
+        <!--[if lt IE 9]>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <![endif]-->
     </head>
+
     <body>
-
-        <header>
-            <img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
-            <p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-            <h1>Plan | Server Analysis</h1>
+        <div style="line-height: 55%; font-family: Verdana, Geneva, sans-serif;padding: 2px 4px 2px 3px;">
+            <h1 style="text-decoration: underline;">Plan | Server Analysis</h1>
             <h4>Analysis refreshed %refresh% ago</h4>
-        </header>
-        <div class="clearfix">
-            <div class="column graphs">
-
-                <h4>Player Activity - Last 24h</h4>
-                %playerchartday%
-                <h4>Player Activity - Last 7 days</h4>
-                %playerchartweek%
-                <h4>Player Activity - Last 30 days</h4>
-                %playerchartmonth%
-                <div class="buttons">
-                    <p><b>Most recent logins</b>: %recentlogins%</p>
-                </div>
-                <h4>Top 20 Most Active</h4>
-                %top20mostactive%
-
+            <table>
+                <tr>
+                    <td style="margin-left: 3px; margin-right: auto; 
+                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;
+                        box-shadow: 5px 5px 4px 0px #888888;">
+                        <h4>Player Activity - Last 24h</h4>
+                        %playerchartday%
+                        <h4>Player Activity - Last 7 days</h4>
+                        %playerchartweek%
+                        <h4>Player Activity - Last 30 days</h4>
+                        %playerchartmonth%
+                        <p><b>Most recent logins</b>: %recentlogins%</p>
+                        <h4>Top 20 Most Active</h4>
+                        %top20mostactive%
+                    </td>
+                    <td style="margin-left: 3px; margin-right: auto; 
+                        border-style: groove; border-width: 3px; border-radius: 12px; padding: 2px 4px 2px 3px;
+                        box-shadow: 5px 5px 4px 0px #888888;text-align: left;vertical-align: top;">
+                        <h4>Information</h4>
+                        <p>%activitytotal% players have played on this server.</p>
+                        <p>A Total of %totalplaytime% has been played with the average of %avgplaytime%</p>
+                        <p>Players have joined %totallogins% times.</p>
+                        <p>The average of known player ages is %avgage%.</p>
+                        <br/><h4>Playerbase composition</h4>
+                        %activitypiechart%
+                        <p>Active %active% | Inactive %inactive% | Banned %banned% | Joined once %joinleaver% | Total: %activitytotal%</p>
+                        <br/><h4>Gamemode Usage</h4>
+                        %gmpiechart%
+                        <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
+                        <br/><h4>Top 50 Most used commands</h4>
+                        %top50commands%
+                    </td>
+                </tr>
                 %planlite%
-            </div>
-
-            <div class="column info">
-                <h4>Information</h4>
-                <p>%activitytotal% players have played on this server.<br/>
-                    A Total of %totalplaytime% has been played with the average of %avgplaytime%<br/>
-                    Players have joined %totallogins% times.<br/>
-                    The average of known player ages is %avgage%.</p>
-                <h4>Playerbase composition</h4>
-                %activitypiechart%
-                <p>Active %active% | Inactive %inactive% | Banned %banned% | Joined once %joinleaver% <br/>
-                    Total: %activitytotal%</p>
-                <br/><h4>Gamemode Usage</h4>
-                %gmpiechart%
-                <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
-                <h4>Top 50 Most used commands</h4>
-                %top50commands%
-            </div>
-
+            </table> 
         </div>
     </body>
 </html>

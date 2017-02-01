@@ -76,7 +76,6 @@ public class WebSocketServer {
                             Response response = new Response(output, dataReqHandler);
                             response.setRequest(request);
                             response.sendStaticResource();
-                            socket.close();
                         } catch (IOException e) {
                         }
                     }

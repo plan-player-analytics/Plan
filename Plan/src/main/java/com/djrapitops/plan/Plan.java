@@ -23,14 +23,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /* TODO 2.2.0
 Placeholder API
+Immutable InspectCache ?
+Recent players 25%
 Database cleaning
-Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
-Integrate PlanLite features to Plan and discontinue PlanLite
-Seperate serverdata and userdata saving
-Make Analysis.java readable
-Database Cleaning of useless data
-Fix any bugs that come up
-- New Players not reset if server not restarted
+PlanLite Top 20 richest 25%
+PlanLite Top 20 most votes 25%
+Top 20 most active 25%
+Clear setting multiper (InspectCache)
+Clear check for existing clear task. (InspectCache)
  */
 /**
  *
@@ -67,9 +67,9 @@ public class Plan extends JavaPlugin {
         saveConfig();
 
         log(MiscUtils.checkVersion());
-        log(Phrase.DB_INIT+"");
+        log("Database init..");
         if (initDatabase()) {
-            log(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
+            log(db.getConfigName() + "-database connection established.");
         } else {
             logError(Phrase.DATABASE_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);

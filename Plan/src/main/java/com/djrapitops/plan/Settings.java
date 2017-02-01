@@ -29,23 +29,23 @@ public enum Settings {
     DEM_IGNORE(getPlugin(Plan.class).getConfig().getString("Customization.DemographicsTriggers.IgnoreWhen")),
     ;
 
-    private String text;
-    private boolean bool;
-    private int number;
+    private final String text;
+    private final boolean bool;
+    private final int number;
 
-    private Settings(String text) {
+    private Settings(final String text) {
         this.text = text;
         this.bool = false;
         this.number = -1;
     }
 
-    private Settings(boolean bool) {
+    private Settings(final boolean bool) {
         this.bool = bool;
         this.text = "";
         this.number = -1;
     }
 
-    private Settings(int number) {
+    private Settings(final int number) {
         this.bool = false;
         this.text = "";
         this.number = number;
