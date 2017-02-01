@@ -15,6 +15,7 @@ import java.util.Scanner;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
+import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
@@ -36,7 +37,7 @@ public class AnalysisUtils {
      */
     public static String createGMPieChart(HashMap<GameMode, Long> gmTimes) {
         String url = GMTimesPieChartCreator.createChart(gmTimes);
-        return "<img src=\"" + url + "\">";
+        return Html.IMG.parse(url);
     }
 
     /**
@@ -49,7 +50,7 @@ public class AnalysisUtils {
      */
     public static String createGMPieChart(HashMap<GameMode, Long> gmTimes, long total) {
         String url = GMTimesPieChartCreator.createChart(gmTimes, total);
-        return "<img src=\"" + url + "\">";
+        return Html.IMG.parse(url);
     }
 
     /**
@@ -68,10 +69,11 @@ public class AnalysisUtils {
         replaceMap.put("%active%", AnalysisUtils.isActive(data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes())
                 ? "| Player is Active" : "| Player is inactive");
         int age = data.getDemData().getAge();
-        replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN+"");
+        replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
         HashMap<GameMode, Long> gmTimes = data.getGmTimes();
         replaceMap.put("%gmpiechart%", createGMPieChart(gmTimes));
+
         long gmZero = gmTimes.get(GameMode.SURVIVAL);
         long gmOne = gmTimes.get(GameMode.CREATIVE);
         long gmTwo = gmTimes.get(GameMode.ADVENTURE);
@@ -85,6 +87,7 @@ public class AnalysisUtils {
         } catch (NoSuchFieldError e) {
             gmThree = 0;
         }
+        Plan plugin = getPlugin(Plan.class);
         long total = gmZero + gmOne + gmTwo + gmThree;
         replaceMap.put("%gm0%", FormatUtils.formatTimeAmount("" + gmZero));
         replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmOne));
@@ -92,7 +95,7 @@ public class AnalysisUtils {
         replaceMap.put("%gm3%", FormatUtils.formatTimeAmount("" + gmThree));
         replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount("" + total));
         replaceMap.put("%ips%", data.getIps().toString());
-        replaceMap.put("%nicknames%", data.getNicknames().toString());
+        replaceMap.put("%nicknames%", FormatUtils.swapColorsToSpan(data.getNicknames().toString()));
         replaceMap.put("%name%", data.getName());
         replaceMap.put("%registered%", FormatUtils.formatTimeStamp("" + data.getRegistered()));
         replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
@@ -100,20 +103,21 @@ public class AnalysisUtils {
         replaceMap.put("%banned%", data.isBanned() ? "Banned" : "Not Banned");
         replaceMap.put("%op%", data.isOp() ? ", Operator (Op)" : "");
         replaceMap.put("%isonline%", (data.isOnline()) ? "| Online" : "| Offline");
-        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
+        replaceMap.put("%version%", plugin.getDescription().getVersion());
+        PlanLiteHook hook = plugin.getPlanLiteHook();
         if (hook != null) {
             replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
         } else {
             replaceMap.put("%planlite%", "");
         }
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000)
-                ? "<h3>Data might be inaccurate, player has just registered.</h3>" : "");
+                ? Html.WARN_INACCURATE.parse() : "");
         return replaceMap;
     }
 
     static String createPlayerActivityGraph(HashMap<Long, ServerData> rawServerData, long scale) {
         String url = PlayerActivityGraphCreator.createChart(rawServerData, scale);
-        return "<img src=\"" + url + "\">";
+        return Html.IMG.parse(url);
     }
 
     /**
@@ -139,7 +143,7 @@ public class AnalysisUtils {
         replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
         replaceMap.put("%playerchartday%", data.getPlayersChartImgHtmlDay());
         replaceMap.put("%top50commands%", data.getTop50CommandsListHtml());
-        replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN+"");
+        replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
         replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
         replaceMap.put("%ops%", "" + data.getOps());
@@ -147,7 +151,9 @@ public class AnalysisUtils {
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         replaceMap.put("%top20mostactive%", data.getTop20ActivePlayers());
         replaceMap.put("%recentlogins%", data.getRecentPlayers());
-        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
+        Plan plugin = getPlugin(Plan.class);
+        PlanLiteHook hook = plugin.getPlanLiteHook();
+        replaceMap.put("%version%", plugin.getDescription().getVersion());
         if (hook != null) {
             replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
         } else {
@@ -157,7 +163,6 @@ public class AnalysisUtils {
     }
 
     static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
-        Plan plugin = getPlugin(Plan.class);
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
             timeToActive = 0;
@@ -175,7 +180,7 @@ public class AnalysisUtils {
 
     static String createActivityPieChart(int totalBanned, int active, int inactive, int joinleaver) {
         String url = ActivityPieChartCreator.createChart(totalBanned, active, inactive, joinleaver);
-        return "<img src=\"" + url + "\">";
+        return Html.IMG.parse(url);
     }
 
     static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
@@ -188,9 +193,9 @@ public class AnalysisUtils {
 
     static String createTableOutOfHashMap(HashMap<String, Integer> map, int limit) {
         List<String[]> sorted = MapComparator.sortByValue(map);
-        String html = "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+        String html = Html.TABLE_START.parse();
         if (sorted.isEmpty()) {
-            html = "<p>Error Calcuclating Table usages (sorted data was empty)</p>";
+            html = Html.ERROR_TABLE.parse();
             return html;
         }
         Collections.reverse(sorted);
@@ -199,18 +204,18 @@ public class AnalysisUtils {
             if (i >= limit) {
                 break;
             }
-            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + values[0] + "</td></tr>";
+            html += Html.TABLELINE.parse(values[1], values[0]);
             i++;
         }
-        html += "</table>";
+        html += Html.TABLE_END.parse();
         return html;
     }
 
     static String createActivePlayersTable(HashMap<String, Long> map, int limit) {
         List<String[]> sorted = MapComparator.sortByValueLong(map);
-        String html = "<table style=\"border-collapse: collapse;table-layout: fixed; border-style: solid; border-width: 1px; width: 100%;\">";
+        String html = Html.TABLE_START.parse();
         if (sorted.isEmpty()) {
-            html = "<p>Error Calculating Active players (sorted list was empty)</p>";
+            html = Html.ERROR_TABLE.parse()+Html.TABLE_END.parse();
             return html;
         }
         Collections.reverse(sorted);
@@ -219,13 +224,13 @@ public class AnalysisUtils {
             if (i >= limit) {
                 break;
             }
-            html += "<tr style=\"text-align: center;border-style: solid; border-width: 1px;height: 28px;\"><td><b>" + values[1] + "</b></td>\r\n<td>" + FormatUtils.formatTimeAmount(values[0]) + "</td></tr>";
+            html += Html.TABLELINE.parse(values[1].replaceAll(Html.BUTTON_CLASS.parse(), Html.LINK_CLASS.parse()),FormatUtils.formatTimeAmount(values[0]));
             i++;
         }
-        html += "</table>";
+        html += Html.TABLE_END.parse();
         return html;
     }
-    
+
     static String createListStringOutOfHashMapLong(HashMap<String, Long> map, int limit) {
         List<String[]> sorted = MapComparator.sortByValueLong(map);
         String html = "<p>";
@@ -239,7 +244,7 @@ public class AnalysisUtils {
             if (i >= limit) {
                 break;
             }
-            html += values[1]+" ";
+            html += values[1] + " ";
             i++;
         }
         html += "</p>";
@@ -264,12 +269,12 @@ public class AnalysisUtils {
     private static HashMap<String, String> getPlanLiteAnalysisReplaceRules(PlanLiteAnalyzedData planLiteData) {
         HashMap<String, String> replaceMap = new HashMap<>();
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%townyheader%", hook.hasTowny() ? "<p>Top 20 Towns</p>" : "");
+        replaceMap.put("%townyheader%", hook.hasTowny() ? Html.TOP_TOWNS.parse() : "");
         replaceMap.put("%townylist%", hook.hasTowny() ? createTableOutOfHashMap(planLiteData.getTownMap(), 20) : "");
-        replaceMap.put("%factionheader%", hook.hasFactions() ? "<p>Top 20 Factions</p>" : "");
+        replaceMap.put("%factionheader%", hook.hasFactions() ? Html.TOP_FACTIONS.parse() : "");
         replaceMap.put("%factionlist%", hook.hasFactions() ? createTableOutOfHashMap(planLiteData.getFactionMap(), 20) : "");
-        replaceMap.put("%totalmoneyline%", hook.hasVault() ? "<p>Server Total Balance: " + planLiteData.getTotalMoney() + "</p>" : "");
-        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? "<p>Players have voted total of " + planLiteData.getTotalVotes() + " times.</p>" : "");
+        replaceMap.put("%totalmoneyline%", hook.hasVault() ? Html.TOTAL_BALANCE.parse(planLiteData.getTotalMoney()+"") : "");
+        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? Html.TOTAL_VOTES.parse(planLiteData.getTotalVotes()+"") : "");
         return replaceMap;
     }
 
@@ -291,13 +296,13 @@ public class AnalysisUtils {
     private static HashMap<String, String> getPlanLitePlayerReplaceRules(PlanLitePlayerData planLiteData) {
         HashMap<String, String> replaceMap = new HashMap<>();
         PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%townylinetown%", hook.hasTowny() ? "<p>Town: " + planLiteData.getTown() + "</p>" : "");
+        replaceMap.put("%townylinetown%", hook.hasTowny() ? Html.TOWN.parse(planLiteData.getTown()) : "");
         replaceMap.put("%townylineplotperms%", "");
-        replaceMap.put("%townylineplotoptions%", hook.hasTowny() ? "<p>Plot options: " + planLiteData.getPlotOptions() + "</p>" : "");
-        replaceMap.put("%townylinefriends%", hook.hasTowny() ? "<p>Friends with " + planLiteData.getFriends() + "</p>" : "");
-        replaceMap.put("%factionsline%", hook.hasFactions() ? "<p>Faction: " + planLiteData.getFaction() + "</p>" : "");
-        replaceMap.put("%totalmoneyline%", hook.hasVault() ? "<p>Balance: " + planLiteData.getMoney() + "</p>" : "");
-        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? "<p>Player has voted " + planLiteData.getVotes() + " times.</p>" : "");
+        replaceMap.put("%townylineplotoptions%", hook.hasTowny() ? Html.PLOT_OPTIONS.parse(planLiteData.getPlotOptions()) : "");
+        replaceMap.put("%townylinefriends%", hook.hasTowny() ? Html.FRIENDS.parse(planLiteData.getFriends()) : "");
+        replaceMap.put("%factionsline%", hook.hasFactions() ? Html.FACTION.parse(planLiteData.getFaction()) : "");
+        replaceMap.put("%totalmoneyline%", hook.hasVault() ? Html.BALANCE.parse(planLiteData.getMoney()+"") : "");
+        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? Html.VOTES.parse(planLiteData.getVotes()+"") : "");
         return replaceMap;
     }
 }
