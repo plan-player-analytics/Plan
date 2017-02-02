@@ -8,59 +8,53 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * @author Rsl1122
  */
 public enum Settings {
-    WEBSERVER_ENABLED(getPlugin(Plan.class).getConfig().getBoolean("Settings.WebServer.Enabled")),
-    WEBSERVER_PORT(getPlugin(Plan.class).getConfig().getInt("Settings.WebServer.Port")),
-    ANALYSIS_REFRESH_ON_ENABLE(getPlugin(Plan.class).getConfig().getBoolean("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable")),
-    ANALYSIS_LOG_TO_CONSOLE(getPlugin(Plan.class).getConfig().getBoolean("Settings.Analysis.LogProgressOnConsole")),
-    ANALYSIS_MINUTES_FOR_ACTIVE(getPlugin(Plan.class).getConfig().getInt("Settings.Analysis.MinutesPlayedUntilConsidiredActive")),
-    SHOW_ALTERNATIVE_IP(getPlugin(Plan.class).getConfig().getBoolean("Settings.WebServer.ShowAlternativeServerIP")),
-    ALTERNATIVE_IP(getPlugin(Plan.class).getConfig().getString("Settings.WebServer.AlternativeIP")),
-    USE_ALTERNATIVE_UI(getPlugin(Plan.class).getConfig().getBoolean("Settings.PlanLite.UseAsAlternativeUI")),
-    PLANLITE_ENABLED(getPlugin(Plan.class).getConfig().getBoolean("Settings.PlanLite.Enabled")),
-    GATHERLOCATIONS(getPlugin(Plan.class).getConfig().getBoolean("Settings.Data.GatherLocations")),
-    DB_TYPE(getPlugin(Plan.class).getConfig().getString("database.type")),
-    SAVE_CACHE_MIN(getPlugin(Plan.class).getConfig().getInt("Settings.Cache.DataCache.SaveEveryXMinutes")),
-    SAVE_SERVER_MIN(getPlugin(Plan.class).getConfig().getInt("Settings.Cache.DataCache.SaveServerDataEveryXMinutes")),
-    CLEAR_INSPECT_CACHE(getPlugin(Plan.class).getConfig().getInt("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes")),
-    CLEAR_CACHE_X_SAVES(getPlugin(Plan.class).getConfig().getInt("Settings.Cache.DataCache.ClearCacheEveryXSaves")),
-    DEM_TRIGGERS(getPlugin(Plan.class).getConfig().getString("Customization.DemographicsTriggers.Trigger")),
-    DEM_FEMALE(getPlugin(Plan.class).getConfig().getString("Customization.DemographicsTriggers.Female")),
-    DEM_MALE(getPlugin(Plan.class).getConfig().getString("Customization.DemographicsTriggers.Male")),
-    DEM_IGNORE(getPlugin(Plan.class).getConfig().getString("Customization.DemographicsTriggers.IgnoreWhen")),
-    ;
+    // Boolean
+    WEBSERVER_ENABLED("Settings.WebServer.Enabled"),
+    ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
+    ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
+    SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"), 
+    USE_ALTERNATIVE_UI("Settings.PlanLite.UseAsAlternativeUI"),
+    PLANLITE_ENABLED("Settings.PlanLite.Enabled"),
+    GATHERLOCATIONS("Settings.Data.GatherLocations"),
+    // Integer
+    ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
+    SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
+    SAVE_SERVER_MIN("Settings.Cache.DataCache.SaveServerDataEveryXMinutes"),
+    CLEAR_INSPECT_CACHE("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes"),
+    CLEAR_CACHE_X_SAVES("Settings.Cache.DataCache.ClearCacheEveryXSaves"),
+    WEBSERVER_PORT("Settings.WebServer.Port"),
+    ANALYSIS_AUTO_REFRESH("Settings.Cache.AnalysisCache.RefreshEveryXMinutes"),
+    // String
+    ALTERNATIVE_IP("Settings.WebServer.AlternativeIP"),
+    DB_TYPE("database.type"),
+    DEM_TRIGGERS("Customization.DemographicsTriggers.Trigger"),
+    DEM_FEMALE("Customization.DemographicsTriggers.Female"),
+    DEM_MALE("Customization.DemographicsTriggers.Male"),
+    DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),;
 
-    private String text;
-    private boolean bool;
-    private int number;
+    private String configPath;
 
-    private Settings(String text) {
-        this.text = text;
-        this.bool = false;
-        this.number = -1;
+    private Settings(String path) {
+        this.configPath = path;
     }
 
-    private Settings(boolean bool) {
-        this.bool = bool;
-        this.text = "";
-        this.number = -1;
-    }
-
-    private Settings(int number) {
-        this.bool = false;
-        this.text = "";
-        this.number = number;
+    /**
+     * @return Boolean value of the config setting
+     */
+    public boolean isTrue() {
+        return getPlugin(Plan.class).getConfig().getBoolean(configPath);
     }
 
     @Override
     public String toString() {
-        return text;
+        return getPlugin(Plan.class).getConfig().getString(configPath);
     }
 
-    public boolean isTrue() {
-        return this.bool;
-    }
-
+    /**
+     * @return Integer value of the config setting
+     */
     public int getNumber() {
-        return number;
+        return getPlugin(Plan.class).getConfig().getInt(configPath);
     }
+
 }

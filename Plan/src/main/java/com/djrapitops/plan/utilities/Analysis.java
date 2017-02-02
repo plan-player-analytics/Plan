@@ -65,21 +65,17 @@ public class Analysis {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_PLAYERS + "");
             return;
         }
-        final List<UUID> uuids = new ArrayList<>();
-        log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
-        for (OfflinePlayer p : offlinePlayers) {
-            UUID uuid = p.getUniqueId();
-            if (plugin.getDB().wasSeenBefore(uuid)) {
-                uuids.add(uuid);
-            }
-        }
+        
+        List<UUID> uuids = fetchPlayersInDB(offlinePlayers);        
         if (uuids.isEmpty()) {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return;
         }
+        // Settings for urls
         final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         final int port = Settings.WEBSERVER_PORT.getNumber();
         final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+        // Async task for Analysis
         (new BukkitRunnable() {
             @Override
             public void run() {
@@ -121,14 +117,7 @@ public class Analysis {
                 int ops = 0;
                 List<Integer> ages = new ArrayList<>();
 
-                boolean planLiteEnabled;
-                PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-                if (planLiteHook != null) {
-                    planLiteEnabled = planLiteHook.isEnabled();
-                } else {
-                    planLiteEnabled = false;
-                }
-
+                boolean planLiteEnabled = isPlanLiteEnabled();
                 PlanLiteAnalyzedData plData = new PlanLiteAnalyzedData();
                 HashMap<String, Integer> townMap = new HashMap<>();
                 HashMap<String, Integer> factionMap = new HashMap<>();
@@ -196,6 +185,39 @@ public class Analysis {
                 // Save Dataset to AnalysisData
                 data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(playtimes, 20));
                 data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(latestLogins, 20));
+                
+                addPlanLiteToData(planLiteEnabled, plData, factionMap, townMap, totalVotes, totalMoney, data);
+
+                data.setTotalPlayTime(totalPlaytime);
+                data.setAveragePlayTime(totalPlaytime / rawData.size());
+                data.setTotalLoginTimes(totalLoginTimes);
+
+                createActivityVisalization(totalBanned, active, inactive, joinleaver, data);
+                
+                data.setOps(ops);
+                
+                analyzeAverageAge(ages, data);
+                createGamemodeUsageVisualization(gmZero, gmOne, gmTwo, gmThree, data);
+                createCommandUseTable(data);
+
+                data.setRefreshDate(new Date().getTime());
+                analysisCache.cache(data);
+                plugin.log(Phrase.ANALYSIS_COMPLETE + "");
+                this.cancel();
+            }
+
+            private boolean isPlanLiteEnabled() {
+                boolean planLiteEnabled;
+                PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
+                if (planLiteHook != null) {
+                    planLiteEnabled = planLiteHook.isEnabled();
+                } else {
+                    planLiteEnabled = false;
+                }
+                return planLiteEnabled;
+            }
+
+            private void addPlanLiteToData(boolean planLiteEnabled, PlanLiteAnalyzedData plData, HashMap<String, Integer> factionMap, HashMap<String, Integer> townMap, int totalVotes, int totalMoney, AnalysisData data) {
                 if (planLiteEnabled) {
                     plData.setFactionMap(factionMap);
                     plData.setTownMap(townMap);
@@ -206,21 +228,19 @@ public class Analysis {
                 } else {
                     data.setPlanLiteEnabled(false);
                 }
+            }
 
-                data.setTotalLoginTimes(totalLoginTimes);
-
+            private void createActivityVisalization(int totalBanned, int active, int inactive, int joinleaver, AnalysisData data) {
                 String activityPieChartHtml = AnalysisUtils.createActivityPieChart(totalBanned, active, inactive, joinleaver);
                 data.setActivityChartImgHtml(activityPieChartHtml);
                 data.setActive(active);
                 data.setInactive(inactive);
                 data.setBanned(totalBanned);
                 data.setJoinleaver(joinleaver);
-
                 data.setTotal(offlinePlayers.length);
-                data.setOps(ops);
+            }
 
-                data.setTotalPlayTime(totalPlaytime);
-                data.setAveragePlayTime(totalPlaytime / rawData.size());
+            private void analyzeAverageAge(List<Integer> ages, AnalysisData data) {
                 int totalAge = 0;
                 for (int age : ages) {
                     totalAge += age;
@@ -232,7 +252,24 @@ public class Analysis {
                     averageAge = -1;
                 }
                 data.setAverageAge(averageAge);
+            }
 
+            private void createCommandUseTable(AnalysisData data) {
+                if (rawServerData.keySet().size() > 0) {
+                    ServerData sData = null;
+                    for (long sDataKey : rawServerData.keySet()) {
+                        sData = rawServerData.get(sDataKey);
+                        break;
+                    }
+                    if (sData != null) {
+                        data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(sData.getCommandUsage()));
+                    }
+                } else {
+                    data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
+                }
+            }
+
+            private void createGamemodeUsageVisualization(long gmZero, long gmOne, long gmTwo, long gmThree, AnalysisData data) {
                 long gmTotal = gmZero + gmOne + gmTwo + gmThree;
                 HashMap<GameMode, Long> totalGmTimes = new HashMap<>();
                 totalGmTimes.put(GameMode.SURVIVAL, gmZero);
@@ -248,24 +285,6 @@ public class Analysis {
                 data.setGm1Perc((gmOne * 1.0 / gmTotal));
                 data.setGm2Perc((gmTwo * 1.0 / gmTotal));
                 data.setGm3Perc((gmThree * 1.0 / gmTotal));
-
-                if (rawServerData.keySet().size() > 0) {
-                    ServerData sData = null;
-                    for (long sDataKey : rawServerData.keySet()) {
-                        sData = rawServerData.get(sDataKey);
-                        break;
-                    }
-                    if (sData != null) {
-                        data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(sData.getCommandUsage()));
-                    }
-                } else {
-                    data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
-                }
-
-                data.setRefreshDate(new Date().getTime());
-                analysisCache.cache(data);
-                plugin.log(Phrase.ANALYSIS_COMPLETE + "");
-                this.cancel();
             }
 
             private void createPlayerActivityGraphs(AnalysisData data) {
@@ -280,6 +299,18 @@ public class Analysis {
                 data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
             }
         }).runTaskAsynchronously(plugin);
+    }
+
+    private List<UUID> fetchPlayersInDB(OfflinePlayer[] offlinePlayers) {
+        final List<UUID> uuids = new ArrayList<>();
+        log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
+        for (OfflinePlayer p : offlinePlayers) {
+            UUID uuid = p.getUniqueId();
+            if (plugin.getDB().wasSeenBefore(uuid)) {
+                uuids.add(uuid);
+            }
+        }
+        return uuids;
     }
 
     private void log(String msg) {

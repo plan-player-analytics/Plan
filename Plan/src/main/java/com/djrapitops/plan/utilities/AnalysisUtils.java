@@ -67,7 +67,7 @@ public class AnalysisUtils {
         replaceMap.put("%bed%", FormatUtils.formatLocation(data.getBedLocation()));
         replaceMap.put("%geoloc%", data.getDemData().getGeoLocation());
         replaceMap.put("%active%", AnalysisUtils.isActive(data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes())
-                ? "| Player is Active" : "| Player is inactive");
+                ? Html.ACTIVE.parse() : Html.INACTIVE.parse());
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
@@ -86,8 +86,7 @@ public class AnalysisUtils {
             gmThree = gm3;
         } catch (NoSuchFieldError e) {
             gmThree = 0;
-        }
-        Plan plugin = getPlugin(Plan.class);
+        }        
         long total = gmZero + gmOne + gmTwo + gmThree;
         replaceMap.put("%gm0%", FormatUtils.formatTimeAmount("" + gmZero));
         replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmOne));
@@ -100,9 +99,10 @@ public class AnalysisUtils {
         replaceMap.put("%registered%", FormatUtils.formatTimeStamp("" + data.getRegistered()));
         replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount("" + data.getPlayTime()));
-        replaceMap.put("%banned%", data.isBanned() ? "Banned" : "Not Banned");
-        replaceMap.put("%op%", data.isOp() ? ", Operator (Op)" : "");
-        replaceMap.put("%isonline%", (data.isOnline()) ? "| Online" : "| Offline");
+        replaceMap.put("%banned%", data.isBanned() ? Html.BANNED.parse() : "");
+        replaceMap.put("%op%", data.isOp() ? Html.OPERATOR.parse() : "");
+        replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
+        Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         PlanLiteHook hook = plugin.getPlanLiteHook();
         if (hook != null) {
@@ -235,7 +235,7 @@ public class AnalysisUtils {
         List<String[]> sorted = MapComparator.sortByValueLong(map);
         String html = "<p>";
         if (sorted.isEmpty()) {
-            html = "Error Creating List</p>";
+            html = Html.ERROR_LIST.parse();
             return html;
         }
         Collections.reverse(sorted);

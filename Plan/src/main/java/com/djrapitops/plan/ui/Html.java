@@ -43,7 +43,14 @@ public enum Html {
     FRIENDS("<p>Friends with "+REPLACE0+"</p>"),
     FACTION("<p>Faction: " + REPLACE0 + "</p>"),
     BALANCE("<p>Balance: " + REPLACE0 + "</p>"),
-    VOTES("<p>Player has voted " + REPLACE0 + " times.</p>")
+    VOTES("<p>Player has voted " + REPLACE0 + " times.</p>"),
+    BANNED("| "+SPAN.parse(COLOR_4.parse()+"Banned")),
+    OPERATOR(", Operator (Op)"),
+    ONLINE("| "+SPAN.parse(COLOR_2.parse()+"Online")),
+    OFFLINE("| "+SPAN.parse(COLOR_4.parse()+"Online")),
+    ACTIVE("| Player is Active"),
+    INACTIVE("| Player is inactive"),
+    ERROR_LIST("Error Creating List</p>"),
     ;
 
     private final String html;

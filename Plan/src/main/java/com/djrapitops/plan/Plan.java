@@ -5,11 +5,10 @@ import com.djrapitops.plan.api.API;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.databases.MySQLDB;
-import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.data.cache.InspectCacheHandler;
+import com.djrapitops.plan.database.databases.*;
+import com.djrapitops.plan.data.cache.*;
 import com.djrapitops.plan.data.listeners.*;
+import java.util.Date;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,8 +17,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /* TODO 2.2.0
 Placeholder API
@@ -27,7 +28,6 @@ Database cleaning
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
 Seperate serverdata and userdata saving
-Make Analysis.java readable
 Database Cleaning of useless data
 Fix any bugs that come up
 - New Players not reset if server not restarted
@@ -47,10 +47,15 @@ public class Plan extends JavaPlugin {
     private HashSet<Database> databases;
     private WebSocketServer uiServer;
 
+    private int bootAnalysisTaskID;
+
     /**
      * OnEnable method.
      *
-     * Initiates the plugin with database, webserver, commands & listeners.
+     * Creates the config file. Checks for new version. Initializes Database.
+     * Hooks PlanLite. Initializes DataCaches. Registers Listeners. Registers
+     * Command /plan and initializes API. Enables Webserver & analysis tasks if
+     * enabled in config. Warns about possible mistakes made in config.
      */
     @Override
     public void onEnable() {
@@ -61,13 +66,12 @@ public class Plan extends JavaPlugin {
         databases.add(new SQLiteDB(this));
 
         getConfig().options().copyDefaults(true);
-
         getConfig().options().header(Phrase.CONFIG_HEADER + "");
-
         saveConfig();
 
         log(MiscUtils.checkVersion());
-        log(Phrase.DB_INIT+"");
+
+        log(Phrase.DB_INIT + "");
         if (initDatabase()) {
             log(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
@@ -86,30 +90,29 @@ public class Plan extends JavaPlugin {
 
         this.api = new API(this);
         handler.handleReload();
+        ConsoleCommandSender consoleSender = getServer().getConsoleSender();
 
+        bootAnalysisTaskID = -1;
         if (Settings.WEBSERVER_ENABLED.isTrue()) {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
             if (Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue()) {
-                log(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-                (new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        log(Phrase.ANALYSIS_BOOT + "");
-                        analysisCache.updateCache();
-                        this.cancel();
-                    }
-                }).runTaskLater(this, 30 * 20);
+                startBootRefreshTask();
+            }
+            int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
+            if (analysisRefreshMinutes != -1) {
+                startAnalysisRefreshTask(analysisRefreshMinutes);
             }
         } else if (!(Settings.SHOW_ALTERNATIVE_IP.isTrue())
                 || (Settings.USE_ALTERNATIVE_UI.isTrue()
                 && planLiteHook.isEnabled())) {
-            Bukkit.getServer().getConsoleSender().sendMessage(Phrase.PREFIX + "" + Phrase.ERROR_NO_DATA_VIEW);
+            consoleSender.sendMessage(Phrase.PREFIX + "" + Phrase.ERROR_NO_DATA_VIEW);
         }
         if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && getServer().getIp().isEmpty()) {
-            log(Phrase.NOTIFY_EMPTY_IP+"");
+            consoleSender.sendMessage(Phrase.NOTIFY_EMPTY_IP + "");
         }
-        log(Phrase.ENABLED+"");
+
+        log(Phrase.ENABLED + "");
     }
 
     /**
@@ -126,7 +129,7 @@ public class Plan extends JavaPlugin {
     /**
      * Disables the plugin.
      *
-     * Stops the webserver, cancels all tasks and saves cache to the database. *
+     * Stops the webserver, cancels all tasks and saves cache to the database.
      */
     @Override
     public void onDisable() {
@@ -135,7 +138,7 @@ public class Plan extends JavaPlugin {
         }
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
-            log(Phrase.SAVE_CACHE+"");
+            log(Phrase.SAVE_CACHE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
@@ -143,7 +146,7 @@ public class Plan extends JavaPlugin {
 
             scheduler.shutdown();
         }
-        log(Phrase.DISABLED+"");
+        log(Phrase.DISABLED + "");
     }
 
     /**
@@ -182,8 +185,14 @@ public class Plan extends JavaPlugin {
         }
     }
 
+    /**
+     * Initializes the database according to settings in the config.
+     * 
+     * If database connection can not be established plugin is disabled.
+     * @return true if init was successful, false if not.
+     */
     public boolean initDatabase() {
-        String type = Settings.DB_TYPE+"";
+        String type = Settings.DB_TYPE + "";
 
         db = null;
 
@@ -209,6 +218,32 @@ public class Plan extends JavaPlugin {
         db.setVersion(0);
 
         return true;
+    }
+
+    private void startAnalysisRefreshTask(int analysisRefreshMinutes) throws IllegalStateException, IllegalArgumentException {
+        (new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!analysisCache.isCached()) {
+                    analysisCache.updateCache();
+                } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60000) {
+                    analysisCache.updateCache();
+                }
+            }
+        }).runTaskTimerAsynchronously(this, analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
+    }
+
+    private void startBootRefreshTask() throws IllegalStateException, IllegalArgumentException {
+        log(Phrase.ANALYSIS_BOOT_NOTIFY + "");
+        BukkitTask analysis = (new BukkitRunnable() {
+            @Override
+            public void run() {
+                log(Phrase.ANALYSIS_BOOT + "");
+                analysisCache.updateCache();
+                this.cancel();
+            }
+        }).runTaskLater(this, 30 * 20);
+        bootAnalysisTaskID = analysis.getTaskId();
     }
 
     /**
@@ -253,7 +288,17 @@ public class Plan extends JavaPlugin {
         return uiServer;
     }
 
+    /**
+     * @return Set containing SqLite & MySQL classes.
+     */
     public HashSet<Database> getDatabases() {
         return databases;
+    }
+
+    /**
+     * @return
+     */
+    public int getBootAnalysisTaskID() {
+        return bootAnalysisTaskID;
     }
 }

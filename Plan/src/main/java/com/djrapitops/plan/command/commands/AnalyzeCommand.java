@@ -59,6 +59,10 @@ public class AnalyzeCommand extends SubCommand {
         }
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
         if (!analysisCache.isCached()) {
+            int bootAnID = plugin.getBootAnalysisTaskID();
+            if (bootAnID != -1) {
+                plugin.getServer().getScheduler().cancelTask(bootAnID);
+            }
             analysisCache.updateCache();
         } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60000) {
             analysisCache.updateCache();
