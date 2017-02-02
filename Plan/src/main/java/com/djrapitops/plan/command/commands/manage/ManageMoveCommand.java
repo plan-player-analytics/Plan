@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -98,21 +98,7 @@ public class ManageMoveCommand extends SubCommand {
             plugin.logError(toDB + " was null!");
             return true;
         }
-
-        OfflinePlayer[] offlinePlayers;
-        try {
-            offlinePlayers = plugin.getServer().getOfflinePlayers();
-        } catch (IndexOutOfBoundsException e) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
-            return true;
-        }
-        final List<UUID> uuids = new ArrayList<>();
-        for (OfflinePlayer p : offlinePlayers) {
-            UUID uuid = p.getUniqueId();
-            if (fromDatabase.wasSeenBefore(uuid)) {
-                uuids.add(uuid);
-            }
-        }
+        final Set<UUID> uuids = fromDatabase.getSavedUUIDs();        
         if (uuids.isEmpty()) {
             sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
             return true;

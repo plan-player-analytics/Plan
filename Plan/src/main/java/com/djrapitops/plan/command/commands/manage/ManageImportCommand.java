@@ -23,6 +23,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -93,10 +94,10 @@ public class ManageImportCommand extends SubCommand {
         for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
             uuids.add(p.getUniqueId());
         }
-        HashMap<UUID, Long> data = importPlugins.get(importFromPlugin).grabNumericData(uuids);
+        HashMap<UUID, Long> onTimeData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
         DataCacheHandler handler = plugin.getHandler();
         if (importFromPlugin.equals("ontime")) {
-            importOnTime(data, handler);
+            importOnTime(onTimeData, handler);
         }
         handler.saveCachedUserData();
 
@@ -107,15 +108,14 @@ public class ManageImportCommand extends SubCommand {
         return true;
     }
 
-    private void importOnTime(HashMap<UUID, Long> data, DataCacheHandler handler) {
-        for (UUID uuid : data.keySet()) {
+    private void importOnTime(HashMap<UUID, Long> onTimeData, DataCacheHandler handler) {
+        for (UUID uuid : onTimeData.keySet()) {
             OfflinePlayer player = getOfflinePlayer(uuid);
-            handler.newPlayer(player);
             if (handler.getActivityHandler().isFirstTimeJoin(uuid)) {
                 handler.newPlayer(player);
             }
             UserData uData = handler.getCurrentData(uuid);
-            Long playTime = data.get(uuid);
+            Long playTime = onTimeData.get(uuid);
             if (playTime > uData.getPlayTime()) {
                 uData.setPlayTime(playTime);
                 uData.setLastGamemode(GameMode.SURVIVAL);

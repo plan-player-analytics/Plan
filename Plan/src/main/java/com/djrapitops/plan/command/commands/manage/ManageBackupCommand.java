@@ -7,7 +7,6 @@ import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.SQLiteDB;
-import com.djrapitops.plan.utilities.FormatUtils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
@@ -79,7 +78,7 @@ public class ManageBackupCommand extends SubCommand {
                 public void run() {
                     Date now = new Date();
                     SQLiteDB backupDB = new SQLiteDB(plugin, 
-                            "backup-"+now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
+                            args[0]+"-backup-"+now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
                     
                     if (!backupDB.init()) {
                         sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");

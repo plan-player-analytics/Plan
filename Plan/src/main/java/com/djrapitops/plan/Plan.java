@@ -30,7 +30,6 @@ Integrate PlanLite features to Plan and discontinue PlanLite
 Seperate serverdata and userdata saving
 Database Cleaning of useless data
 Fix any bugs that come up
-- New Players not reset if server not restarted
  */
 /**
  *

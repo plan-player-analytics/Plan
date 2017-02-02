@@ -69,11 +69,18 @@ public class AnalyzeCommand extends SubCommand {
         }
 
         (new BukkitRunnable() {
+            
+            private int timesrun = 0;
+            
             @Override
             public void run() {
+                timesrun++;
                 if (analysisCache.isCached()) {
                     sendAnalysisMessage(sender);
                     this.cancel();
+                }
+                if (timesrun > 45) {
+                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                 }
             }
         }).runTaskTimer(plugin, 1 * 20, 5 * 20);

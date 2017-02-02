@@ -114,4 +114,8 @@ public class ServerData {
     public int getNewPlayers() {
         return newPlayers;
     }
+
+    public void setNewPlayers(int newPlayers) {
+        this.newPlayers = newPlayers;
+    }
 }

@@ -4,6 +4,7 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.api.Gender;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
+import com.djrapitops.plan.utilities.MiscUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -353,7 +354,6 @@ public abstract class SQLDB extends Database {
         HashMap<String, Integer> commandUse = getCommandUse();
         int newPlayers = 0;
         Date now = new Date();
-        Date startOfToday = new Date(now.getTime() - (now.getTime() % 86400000));
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + serverdataName
                     + " ORDER BY " + serverdataColumnDate + " DESC LIMIT 1");
@@ -361,8 +361,7 @@ public abstract class SQLDB extends Database {
             ResultSet set = statement.executeQuery();
             while (set.next()) {
                 Date lastSave = new Date(set.getLong(serverdataColumnDate));
-                Date startOfSaveDay = new Date(lastSave.getTime() - (lastSave.getTime() % 86400000));
-                if (startOfSaveDay == startOfToday) {
+                if (MiscUtils.isOnSameDay(now, lastSave)) {
                     newPlayers = set.getInt(serverdataColumnNewPlayers);
                 }
             }

@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 
 import com.djrapitops.plan.database.Database;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +16,6 @@ import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.utilities.DataCombineUtils;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -101,25 +99,9 @@ public class ManageCombineCommand extends SubCommand {
             return true;
         }
 
-        OfflinePlayer[] offlinePlayers;
+        final Set<UUID> fromUUIDS = fromDatabase.getSavedUUIDs();
+        final Set<UUID> toUUIDS = toDatabase.getSavedUUIDs();
         try {
-            offlinePlayers = plugin.getServer().getOfflinePlayers();
-        } catch (IndexOutOfBoundsException e) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
-            return true;
-        }
-        final List<UUID> fromUUIDS = new ArrayList<>();
-        final List<UUID> toUUIDS = new ArrayList<>();
-        try {
-            for (OfflinePlayer p : offlinePlayers) {
-                UUID uuid = p.getUniqueId();
-                if (fromDatabase.wasSeenBefore(uuid)) {
-                    fromUUIDS.add(uuid);
-                }
-                if (toDatabase.wasSeenBefore(uuid)) {
-                    toUUIDS.add(uuid);
-                }
-            }
             if (fromUUIDS.isEmpty() && toUUIDS.isEmpty()) {
                 sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
                 return true;

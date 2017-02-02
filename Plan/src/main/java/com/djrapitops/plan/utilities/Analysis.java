@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
@@ -304,9 +305,10 @@ public class Analysis {
     private List<UUID> fetchPlayersInDB(OfflinePlayer[] offlinePlayers) {
         final List<UUID> uuids = new ArrayList<>();
         log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
+        Set<UUID> savedUUIDs = plugin.getDB().getSavedUUIDs();
         for (OfflinePlayer p : offlinePlayers) {
             UUID uuid = p.getUniqueId();
-            if (plugin.getDB().wasSeenBefore(uuid)) {
+            if (savedUUIDs.contains(uuid)) {
                 uuids.add(uuid);
             }
         }

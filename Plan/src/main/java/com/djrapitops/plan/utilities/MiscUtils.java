@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -49,12 +50,12 @@ public class MiscUtils {
             if (newestVersionNumber > currentVersionNumber) {
                 return Phrase.VERSION_NEW_AVAILABLE.parse(versionString);
             } else {
-                return Phrase.VERSION_LATEST+"";
+                return Phrase.VERSION_LATEST + "";
             }
         } catch (IOException | NumberFormatException e) {
-            plugin.logError(Phrase.VERSION_CHECK_ERROR+"");
+            plugin.logError(Phrase.VERSION_CHECK_ERROR + "");
         }
-        return Phrase.VERSION_FAIL+"";
+        return Phrase.VERSION_FAIL + "";
     }
 
     /**
@@ -104,5 +105,11 @@ public class MiscUtils {
                     matches.add(player);
                 });
         return matches;
+    }
+
+    public static boolean isOnSameDay(Date first, Date second) {
+        Date startOfFirst = new Date(first.getTime() - (first.getTime() % 86400000));
+        Date startOfSecond = new Date(second.getTime() - (second.getTime() % 86400000));
+        return (startOfFirst != startOfSecond);
     }
 }

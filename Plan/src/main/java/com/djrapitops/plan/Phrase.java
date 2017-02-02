@@ -53,6 +53,7 @@ public enum Phrase {
     NOT_IN_FAC("Not in a faction"),
     //
     ANALYSIS("Analysis | "),
+    COMMAND_TIMEOUT(ChatColor.RED + "" + PREFIX + "REPLACE0 Command timed out! Error most likely on console."),
     ANALYSIS_START(ANALYSIS + "Beginning analysis of user data.."),
     ANALYSIS_BOOT_NOTIFY(ANALYSIS + "Boot analysis in 30 seconds.."),
     ANALYSIS_BOOT(ANALYSIS + "Starting Boot Analysis.."),

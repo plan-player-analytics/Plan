@@ -5,7 +5,9 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
 import com.djrapitops.plan.data.handlers.*;
+import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,8 +17,8 @@ import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getPlayer;
 
 /**
  *
@@ -40,6 +42,7 @@ public class DataCacheHandler {
 
     private int timesSaved;
     private int maxPlayers;
+    private Date lastServerDataSave;
 
     /**
      * Class Constructor.
@@ -66,6 +69,7 @@ public class DataCacheHandler {
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
+        lastServerDataSave = new Date();
 
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
@@ -91,8 +95,13 @@ public class DataCacheHandler {
                 if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
+                Date serverDataSave = new Date();
+                if (MiscUtils.isOnSameDay(serverDataSave, lastServerDataSave)) {
+                    serverData.setNewPlayers(0);
+                }
                 serverData.updatePlayerCount();
                 saveServerData();
+                lastServerDataSave = serverDataSave;
                 handler.clearNulls();
                 timesSaved++;
             }

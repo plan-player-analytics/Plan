@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -100,8 +101,11 @@ public class InspectCommand extends SubCommand {
         }
         final int available = configValue;
         (new BukkitRunnable() {
+            private int timesrun = 0;
+            
             @Override
             public void run() {
+                timesrun++;
                 if (inspectCache.isCached(uuid)) {
                     sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
                     // Link
@@ -123,6 +127,9 @@ public class InspectCommand extends SubCommand {
                     sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available+""));
                     sender.sendMessage(Phrase.CMD_FOOTER+"");
                     this.cancel();
+                }
+                if (timesrun > 45) {
+                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
                 }
             }
         }).runTaskTimer(plugin, 1 * 20, 5 * 20);
