@@ -8,7 +8,6 @@ import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 
 import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -111,74 +110,66 @@ public class ManageCombineCommand extends SubCommand {
         }
         final List<UUID> fromUUIDS = new ArrayList<>();
         final List<UUID> toUUIDS = new ArrayList<>();
-        try {for (OfflinePlayer p : offlinePlayers) {
-            UUID uuid = p.getUniqueId();
-            if (fromDatabase.wasSeenBefore(uuid)) {
-                fromUUIDS.add(uuid);
+        try {
+            for (OfflinePlayer p : offlinePlayers) {
+                UUID uuid = p.getUniqueId();
+                if (fromDatabase.wasSeenBefore(uuid)) {
+                    fromUUIDS.add(uuid);
+                }
+                if (toDatabase.wasSeenBefore(uuid)) {
+                    toUUIDS.add(uuid);
+                }
             }
-            if (toDatabase.wasSeenBefore(uuid)) {
-                toUUIDS.add(uuid);
-            }
-        }
-        if (fromUUIDS.isEmpty() && toUUIDS.isEmpty()) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
-            return true;
-        }
-
-        final Database moveFromDB = fromDatabase;
-        final Database moveToDB = toDatabase;
-        (new BukkitRunnable() {
-            @Override
-            public void run() {
-                HashMap<UUID, UserData> allFromUserData = new HashMap<>();
-                HashMap<UUID, UserData> allToUserData = new HashMap<>();
-                for (UUID uuid : fromUUIDS) {
-                    allFromUserData.put(uuid, moveFromDB.getUserData(uuid));
-                }
-                for (UUID uuid : toUUIDS) {
-                    allToUserData.put(uuid, moveToDB.getUserData(uuid));
-                }
-                Set<UUID> uuids = new HashSet<>();
-                uuids.addAll(toUUIDS);
-                uuids.addAll(fromUUIDS);
-                
-                List<UserData> combinedUserData = DataCombineUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
-                
-                HashMap<Long, ServerData> fromServerData = moveFromDB.getServerDataHashMap();
-                HashMap<Long, ServerData> toServerData = moveToDB.getServerDataHashMap();
-                HashMap<Long, ServerData> combinedServerData = DataCombineUtils.combineServerDatas(fromServerData, toServerData);
-                
-                HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(getCommandUse(fromServerData), getCommandUse(toServerData));
-                
-                moveToDB.removeAllData();
-                
-                moveToDB.saveServerDataHashMap(combinedServerData);
-                moveToDB.saveMultipleUserData(combinedUserData);
-                moveToDB.saveCommandUse(commandUse);
-                
-                sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
-                if (!toDB.equals(plugin.getDB().getConfigName())) {
-                    sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
-                }
-                this.cancel();
+            if (fromUUIDS.isEmpty() && toUUIDS.isEmpty()) {
+                sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
+                return true;
             }
 
-            public HashMap<String, Integer> getCommandUse(HashMap<Long, ServerData> fromServerData) {
-                ServerData sData = null;
-                for (long sDataKey : fromServerData.keySet()) {
-                    sData = fromServerData.get(sDataKey);
-                    break;
+            final Database moveFromDB = fromDatabase;
+            final Database moveToDB = toDatabase;
+            (new BukkitRunnable() {
+                @Override
+                public void run() {
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    HashMap<UUID, UserData> allFromUserData = new HashMap<>();
+                    HashMap<UUID, UserData> allToUserData = new HashMap<>();
+                    for (UUID uuid : fromUUIDS) {
+                        allFromUserData.put(uuid, moveFromDB.getUserData(uuid));
+                    }
+                    for (UUID uuid : toUUIDS) {
+                        allToUserData.put(uuid, moveToDB.getUserData(uuid));
+                    }
+                    Set<UUID> uuids = new HashSet<>();
+                    uuids.addAll(toUUIDS);
+                    uuids.addAll(fromUUIDS);
+
+                    List<UserData> combinedUserData = DataCombineUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
+
+                    HashMap<Long, ServerData> fromServerData = moveFromDB.getServerDataHashMap();
+                    HashMap<Long, ServerData> toServerData = moveToDB.getServerDataHashMap();
+                    HashMap<Long, ServerData> combinedServerData = DataCombineUtils.combineServerDatas(fromServerData, toServerData);
+
+                    HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(DataCombineUtils.getCommandUse(fromServerData), DataCombineUtils.getCommandUse(toServerData));
+
+                    moveToDB.removeAllData();
+
+                    moveToDB.saveServerDataHashMap(combinedServerData);
+                    moveToDB.saveMultipleUserData(combinedUserData);
+                    moveToDB.saveCommandUse(commandUse);
+
+                    sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
+                    if (!toDB.equals(plugin.getDB().getConfigName())) {
+                        sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
+                    }
+                    this.cancel();
                 }
-                HashMap<String, Integer> fromCommandUse = null;
-                if (sData != null) {
-                    fromCommandUse = sData.getCommandUsage();
-                }
-                return fromCommandUse;
-            }
-        }).runTaskAsynchronously(plugin);
+
+            }).runTaskAsynchronously(plugin);
+
         } catch (NullPointerException e) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE+"");
+            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
         }
         return true;
     }
+
 }

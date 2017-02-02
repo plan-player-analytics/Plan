@@ -142,4 +142,17 @@ public class DataCombineUtils {
         return combinedData;
     }
 
+    public static HashMap<String, Integer> getCommandUse(HashMap<Long, ServerData> fromServerData) {
+        ServerData sData = null;
+        for (long sDataKey : fromServerData.keySet()) {
+            sData = fromServerData.get(sDataKey);
+            break;
+        }
+        HashMap<String, Integer> fromCommandUse = null;
+        if (sData != null) {
+            fromCommandUse = sData.getCommandUsage();
+        }
+        return fromCommandUse;
+    }
+
 }

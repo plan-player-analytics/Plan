@@ -16,13 +16,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -95,6 +88,7 @@ public class ManageRemoveCommand extends SubCommand {
         (new BukkitRunnable() {
             @Override
             public void run() {
+                sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                 plugin.getDB().removeAccount(uuid.toString());
                 sender.sendMessage(hColor+""+Phrase.ARROWS_RIGHT+" "+oColor+"Data of "+hColor+playerName+oColor+" was removed from Database "+hColor+plugin.getDB().getConfigName()+oColor+".");
                 this.cancel();

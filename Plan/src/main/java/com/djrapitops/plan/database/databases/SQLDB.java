@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,7 +73,7 @@ public abstract class SQLDB extends Database {
     private String ipsColumnIP;
 
     private String versionName;
-    
+
     public SQLDB(Plan plugin, boolean supportsModification) {
         super(plugin);
         this.plugin = plugin;
@@ -124,7 +125,7 @@ public abstract class SQLDB extends Database {
         serverdataColumnPlayersOnline = "players_online";
 
         versionName = "plan_version";
-        
+
         // Maintains Connection.
         (new BukkitRunnable() {
             @Override
@@ -309,6 +310,22 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
+    public Set<UUID> getSavedUUIDs() {
+        Set<UUID> uuids = new HashSet<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnUUID + " FROM " + userName);
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                uuids.add(UUID.fromString(set.getString(userColumnUUID)));
+            }
+            set.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return uuids;
+    }
+
+    @Override
     public HashMap<Long, ServerData> getServerDataHashMap() {
         HashMap<String, Integer> commandUse = getCommandUse();
         HashMap<Long, ServerData> rawServerData = new HashMap<>();
@@ -423,15 +440,17 @@ public abstract class SQLDB extends Database {
                     + commanduseColumnTimesUsed
                     + ") VALUES (?, ?)");
             boolean commitRequired = false;
-            for (String key : data.keySet()) {
-                statement.setString(1, key);
-                statement.setInt(2, data.get(key));
-                statement.addBatch();
-                commitRequired = true;
-            }
-            statement.executeBatch();
-            if (commitRequired) {
-                connection.commit();
+            if (!data.isEmpty()) {
+                for (String key : data.keySet()) {
+                    statement.setString(1, key);
+                    statement.setInt(2, data.get(key));
+                    statement.addBatch();
+                    commitRequired = true;
+                }
+                statement.executeBatch();
+                if (commitRequired) {
+                    connection.commit();
+                }
             }
             statement.close();
             connection.setAutoCommit(true);
@@ -888,11 +907,11 @@ public abstract class SQLDB extends Database {
     public void removeAllData() {
         checkConnection();
 
-        try {            
+        try {
             connection.prepareStatement("DELETE FROM " + locationName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + nicknamesName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + ipsName).executeUpdate();
-            connection.prepareStatement("DELETE FROM " + gamemodetimesName).executeUpdate();            
+            connection.prepareStatement("DELETE FROM " + gamemodetimesName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + commanduseName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + serverdataName).executeUpdate();
             connection.prepareStatement("DELETE FROM " + userName).executeUpdate();

@@ -76,6 +76,7 @@ public class ManageClearCommand extends SubCommand {
         (new BukkitRunnable() {
             @Override
             public void run() {
+                sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                 clearThisDB.removeAllData();
                 sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS+"");
                 this.cancel();

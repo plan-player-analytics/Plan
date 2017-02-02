@@ -69,13 +69,16 @@ public enum Phrase {
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
     //
     MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED + "" + PREFIX + "Plugin not supported: "),
+    MANAGE_PROCESS_START(ARROWS_RIGHT +""+COLOR_SEC.color() +" Processing data.."),
     MANAGE_ERROR_PLUGIN_NOT_ENABLED(ChatColor.RED + "" + PREFIX + "Plugin is not enabled: "),
     MANAGE_ERROR_INCORRECT_DB(ChatColor.RED + "" + PREFIX + "Incorrect database! (sqlite/mysql accepted): "),
     MANAGE_ERROR_SAME_DB(ChatColor.RED + "" + PREFIX + "Can't move to the same database!"),
     MANAGE_DATABASE_FAILURE(ChatColor.RED + "" + PREFIX + "One of the databases was not initialized properly."),
     MANAGE_DB_CONFIG_REMINDER(ChatColor.YELLOW + "" + PREFIX + "Remember to swap to the new database and reload plugin"),
     MANAGE_ERROR_NO_PLAYERS(ChatColor.RED + "" + PREFIX + "Database has no player data!"),
+    MANAGE_ERROR_BACKUP_FILE_NOT_FOUND(ChatColor.RED + "" + PREFIX + "Backup file doesn't exist!"),
     MANAGE_MOVE_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data moved successfully!"),
+    MANAGE_COPY_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data copied successfully!"),
     MANAGE_CLEAR_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data cleared successfully!"),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
@@ -114,6 +117,10 @@ public enum Phrase {
         return text;
     }
     
+    public String parse() {
+        return this.toString();
+    }
+    
     public String parse(String... p) {
         String returnValue = this.toString();
         for (int i = 0; i < p.length; i++) {
@@ -127,5 +134,13 @@ public enum Phrase {
      */
     public ChatColor color() {
         return color;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setColor(String colorCode) {
+        this.color = ChatColor.getByChar(colorCode);
     }
 }

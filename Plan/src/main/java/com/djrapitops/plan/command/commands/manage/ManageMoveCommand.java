@@ -124,6 +124,7 @@ public class ManageMoveCommand extends SubCommand {
             @Override
             public void run() {
                 try {
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                     moveToDB.removeAllData();
                     List<UserData> allUserData = new ArrayList<>();
                     for (UUID uuid : uuids) {

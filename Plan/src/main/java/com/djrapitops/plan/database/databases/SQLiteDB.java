@@ -15,6 +15,7 @@ import java.sql.SQLException;
 public class SQLiteDB extends SQLDB {
 
     private final Plan plugin;
+    private final String dbName;
 
     /**
      * Class Constructor.
@@ -22,9 +23,14 @@ public class SQLiteDB extends SQLDB {
      * @param plugin Current instance of Plan
      */
     public SQLiteDB(Plan plugin) {
+        this(plugin, "database");
+    }
+    
+    public SQLiteDB(Plan plugin, String dbName) {
         super(plugin, false);
 
         this.plugin = plugin;
+        this.dbName = dbName;
     }
 
     /**
@@ -34,10 +40,14 @@ public class SQLiteDB extends SQLDB {
      */
     @Override
     public Connection getNewConnection() {
+        return getNewConnection(dbName);
+    }
+    
+    public Connection getNewConnection(String dbName) {
         try {
             Class.forName("org.sqlite.JDBC");
 
-            return DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), "database.db").getAbsolutePath());
+            return DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName+".db").getAbsolutePath());
         } catch (ClassNotFoundException | SQLException e) {
             return null;
         }

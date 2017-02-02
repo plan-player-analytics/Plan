@@ -47,7 +47,7 @@ public enum Html {
     BANNED("| "+SPAN.parse(COLOR_4.parse()+"Banned")),
     OPERATOR(", Operator (Op)"),
     ONLINE("| "+SPAN.parse(COLOR_2.parse()+"Online")),
-    OFFLINE("| "+SPAN.parse(COLOR_4.parse()+"Online")),
+    OFFLINE("| "+SPAN.parse(COLOR_4.parse()+"Offline")),
     ACTIVE("| Player is Active"),
     INACTIVE("| Player is inactive"),
     ERROR_LIST("Error Creating List</p>"),

@@ -36,6 +36,8 @@ public class ManageCommand extends SubCommand {
         commands.add(new ManageMoveCommand(plugin));
         commands.add(new ManageCombineCommand(plugin));
         commands.add(new ManageHotswapCommand(plugin));
+        commands.add(new ManageBackupCommand(plugin));
+        commands.add(new ManageRestoreCommand(plugin));
         commands.add(new ManageStatusCommand(plugin));
         commands.add(new ManageImportCommand(plugin));
         commands.add(new ManageRemoveCommand(plugin));
