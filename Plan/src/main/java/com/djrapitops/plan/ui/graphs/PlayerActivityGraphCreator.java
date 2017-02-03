@@ -35,7 +35,6 @@ public class PlayerActivityGraphCreator {
 
         List<Double> xListDate = new ArrayList<>();
         List<Double> pYList = new ArrayList<>();
-        List<Double> nYList = new ArrayList<>();
 
         List<String> xDateAxisLabels = new ArrayList<>();
         List<Double> xDateAxisLabelsLocations = new ArrayList<>();
@@ -46,30 +45,23 @@ public class PlayerActivityGraphCreator {
         long nowMinusScale = now - scale;
 
         int lastPValue = 0;
-        int lastNValue = 0;
         int lastSavedPValue = -1;
-        int lastSavedNValue = -1;
         long lastSaveI = 0;
         for (long i = nowMinusScale; i <= now; i += 1000) {
             if (rawServerData.containsKey(i)) {
                 ServerData serverData = rawServerData.get(i);
                 lastPValue = serverData.getPlayersOnline();
-                lastNValue = serverData.getNewPlayers();
             }
             Double scaledDateValue = ((i - nowMinusScale) * 1.0 / scale) * 100;
             Double scaledPlayerValue = (lastPValue * 1.0 / maxPlayers) * 100;
-            Double scaledNewPValue = (lastNValue * 1.0 / maxPlayers) * 100;
 
-            if (lastSavedPValue != lastPValue || lastSavedNValue != lastNValue || i - lastSaveI > (scale / (long) 50)) {
+            if (lastSavedPValue != lastPValue || i - lastSaveI > (scale / (long) 50)) {
                 lastSaveI = i;
                 xListDate.add(scaledDateValue);
                 pYList.add((lastSavedPValue * 1.0 / maxPlayers) * 100);
-                nYList.add((lastSavedNValue * 1.0 / maxPlayers) * 100);
                 lastSavedPValue = lastPValue;
-                lastSavedNValue = lastNValue;
                 xListDate.add(scaledDateValue);
                 pYList.add(scaledPlayerValue);
-                nYList.add(scaledNewPValue);
             }
         }
 
@@ -90,11 +82,9 @@ public class PlayerActivityGraphCreator {
         AxisLabels xAxisLabels = AxisLabelsFactory.newAxisLabels(xDateAxisLabels, xDateAxisLabelsLocations);
         Data xData = Data.newData(xListDate);
         Data pYData = Data.newData(pYList);
-        Data nYData = Data.newData(nYList);
 
-        XYLine playerLine = Plots.newXYLine(xData, pYData, Color.newColor(Phrase.HCOLOR_ACT_ONL + ""), "Online Players");
-        XYLine newPlayerLine = Plots.newXYLine(xData, nYData, Color.newColor(Phrase.HCOLOR_ACT_NEW + ""), "New Players");
-        LineChart chart = GCharts.newLineChart(playerLine, newPlayerLine);
+        XYLine playerLine = Plots.newXYLine(xData, pYData, Color.newColor(Phrase.HCOLOR_ACT_ONL + ""), "Players Online");
+        LineChart chart = GCharts.newLineChart(playerLine);
         chart.addXAxisLabels(xAxisLabels);
         chart.addTopAxisLabels(AxisLabelsFactory.newAxisLabels("Players", 1));
         chart.addYAxisLabels(AxisLabelsFactory.newAxisLabels(yAxisLabels));

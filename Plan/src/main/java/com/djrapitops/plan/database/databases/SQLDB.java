@@ -778,17 +778,23 @@ public abstract class SQLDB extends Database {
                     + locationColumnWorld
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
-            for (Location location : locations) {
-                saveStatement.setInt(1, userId);
-                saveStatement.setInt(2, (int) location.getBlockX());
-                saveStatement.setInt(3, (int) location.getBlockZ());
-                saveStatement.setString(4, location.getWorld().getName());
-                saveStatement.addBatch();
-                commitRequired = true;
-            }
-            saveStatement.executeBatch();
-            if (commitRequired) {
-                connection.commit();
+            if (!locations.isEmpty()) {
+                for (Location location : locations) {
+                    saveStatement.setInt(1, userId);
+                    saveStatement.setInt(2, (int) location.getBlockX());
+                    saveStatement.setInt(3, (int) location.getBlockZ());
+                    World world = location.getWorld();
+                    if (world == null) {
+                        continue;
+                    }
+                    saveStatement.setString(4, world.getName());
+                    saveStatement.addBatch();
+                    commitRequired = true;
+                }
+                saveStatement.executeBatch();
+                if (commitRequired) {
+                    connection.commit();
+                }
             }
             saveStatement.close();
 

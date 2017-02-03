@@ -142,6 +142,9 @@ public class AnalysisUtils {
         replaceMap.put("%playerchartmonth%", data.getPlayersChartImgHtmlMonth());
         replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
         replaceMap.put("%playerchartday%", data.getPlayersChartImgHtmlDay());
+        replaceMap.put("%npday%", data.getNewPlayersDay()+"");
+        replaceMap.put("%npweek%", data.getNewPlayersWeek()+"");
+        replaceMap.put("%npmonth%", data.getNewPlayersMonth()+"");
         replaceMap.put("%top50commands%", data.getTop50CommandsListHtml());
         replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));

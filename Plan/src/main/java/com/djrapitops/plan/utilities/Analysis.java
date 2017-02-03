@@ -9,6 +9,7 @@ import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,8 +67,8 @@ public class Analysis {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_PLAYERS + "");
             return;
         }
-        
-        List<UUID> uuids = fetchPlayersInDB(offlinePlayers);        
+
+        List<UUID> uuids = fetchPlayersInDB(offlinePlayers);
         if (uuids.isEmpty()) {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return;
@@ -186,7 +187,7 @@ public class Analysis {
                 // Save Dataset to AnalysisData
                 data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(playtimes, 20));
                 data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(latestLogins, 20));
-                
+
                 addPlanLiteToData(planLiteEnabled, plData, factionMap, townMap, totalVotes, totalMoney, data);
 
                 data.setTotalPlayTime(totalPlaytime);
@@ -194,9 +195,9 @@ public class Analysis {
                 data.setTotalLoginTimes(totalLoginTimes);
 
                 createActivityVisalization(totalBanned, active, inactive, joinleaver, data);
-                
+
                 data.setOps(ops);
-                
+
                 analyzeAverageAge(ages, data);
                 createGamemodeUsageVisualization(gmZero, gmOne, gmTwo, gmThree, data);
                 createCommandUseTable(data);
@@ -292,12 +293,60 @@ public class Analysis {
                 long scaleMonth = (long) 2592000 * (long) 1000;
                 String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleMonth);
                 data.setPlayersChartImgHtmlMonth(playerActivityHtmlMonth);
+                data.setNewPlayersMonth(getHighestNPValueForScale(scaleMonth));
                 long scaleWeek = 604800 * 1000;
                 String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleWeek);
                 data.setPlayersChartImgHtmlWeek(playerActivityHtmlWeek);
+                data.setNewPlayersWeek(getHighestNPValueForScale(scaleWeek));
                 long scaleDay = 86400 * 1000;
                 String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleDay);
                 data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
+                data.setNewPlayersDay(getHighestNPValueForScale(scaleDay));
+            }
+
+            private int getHighestNPValueForScale(long scale) {
+                List<List<ServerData>> sDataForEachDay = sortServerDatasByDay(scale);
+                int NPTotalInsideScaleTimeFrame = 0;
+                NPTotalInsideScaleTimeFrame = sDataForEachDay.parallelStream()
+                        .map((serverDataList) -> {
+                            int highestNPValue = 0;
+                            for (ServerData serverData : serverDataList) {
+                                int newPlayers = serverData.getNewPlayers();
+                                if (newPlayers > highestNPValue) {
+                                    highestNPValue = newPlayers;
+                                }
+                            }
+                            return highestNPValue;
+                        }).map((highestNPValue) -> highestNPValue)
+                        .reduce(NPTotalInsideScaleTimeFrame, Integer::sum);
+                return NPTotalInsideScaleTimeFrame;
+            }
+
+            private List<List<ServerData>> sortServerDatasByDay(long scale) {
+                List<List<ServerData>> sDataForEachDay = new ArrayList<>();
+                Date lastStartOfDay = null;
+                List<Long> keys = new ArrayList<>();
+                keys.addAll(rawServerData.keySet());
+                Collections.sort(keys);
+                for (long date : keys) {
+                    Date startOfDate = MiscUtils.getStartOfDate(new Date(date));
+                    if (lastStartOfDay == null) {
+                        sDataForEachDay.add(new ArrayList<>());
+                        lastStartOfDay = startOfDate;
+                    }
+                    // If data is older than one month, ignore
+                    if (new Date().getTime() - startOfDate.getTime() > scale) {
+                        continue;
+                    }
+                    if (startOfDate.getTime() != lastStartOfDay.getTime()) {
+                        sDataForEachDay.add(new ArrayList<>());
+                    }
+                    int lastIndex = sDataForEachDay.size() - 1;
+                    ServerData serverData = rawServerData.get(date);
+                    sDataForEachDay.get(lastIndex).add(serverData);
+                    lastStartOfDay = startOfDate;
+                }
+                return sDataForEachDay;
             }
         }).runTaskAsynchronously(plugin);
     }

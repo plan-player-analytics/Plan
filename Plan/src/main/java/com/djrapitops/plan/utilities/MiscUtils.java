@@ -108,8 +108,13 @@ public class MiscUtils {
     }
 
     public static boolean isOnSameDay(Date first, Date second) {
-        Date startOfFirst = new Date(first.getTime() - (first.getTime() % 86400000));
-        Date startOfSecond = new Date(second.getTime() - (second.getTime() % 86400000));
+        Date startOfFirst = getStartOfDate(first);
+        Date startOfSecond = getStartOfDate(second);
         return (startOfFirst != startOfSecond);
+    }
+
+    public static Date getStartOfDate(Date date) {
+        Date startOfDate = new Date(date.getTime() - (date.getTime() % 86400000));
+        return startOfDate;
     }
 }

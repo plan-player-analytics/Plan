@@ -22,6 +22,10 @@ public class AnalysisData {
     private String top20ActivePlayers;
     private String recentPlayers;
 
+    private int newPlayersMonth;
+    private int newPlayersWeek;
+    private int newPlayersDay;
+
     private double gm0Perc;
     private double gm1Perc;
     private double gm2Perc;
@@ -42,7 +46,7 @@ public class AnalysisData {
 
     /**
      * Class constructor.
-     * 
+     *
      * All data has to be set with setters to avoid NPE.
      */
     public AnalysisData() {
@@ -71,7 +75,8 @@ public class AnalysisData {
     }
 
     /**
-     * @param planLiteEnabled true if PlanLite was enabled at the time of Analysis
+     * @param planLiteEnabled true if PlanLite was enabled at the time of
+     * Analysis
      */
     public void setPlanLiteEnabled(boolean planLiteEnabled) {
         this.planLiteEnabled = planLiteEnabled;
@@ -79,8 +84,9 @@ public class AnalysisData {
 
     /**
      * Retrieve the PlanLiteAnalyzedData.
-     * 
+     *
      * null if planLiteEnabled = false
+     *
      * @return Seperate object used to save PlanLiteData
      */
     public PlanLiteAnalyzedData getPlanLiteData() {
@@ -89,6 +95,7 @@ public class AnalysisData {
 
     /**
      * Set the PlanLiteAnalyzedData.
+     *
      * @param planLiteData Seperate object used to save PlanLiteData
      */
     public void setPlanLiteData(PlanLiteAnalyzedData planLiteData) {
@@ -167,9 +174,9 @@ public class AnalysisData {
 
     /**
      * Retrieve the amount of active players.
-     * 
+     *
      * Activity is determined by AnalysisUtils.isActive()
-     * 
+     *
      * @return Amount of active players
      */
     public int getActive() {
@@ -178,9 +185,9 @@ public class AnalysisData {
 
     /**
      * Set the amount of active players.
-     * 
+     *
      * Activity is determined by AnalysisUtils.isActive()
-     * 
+     *
      * @param active Amount of active players
      */
     public void setActive(int active) {
@@ -250,7 +257,7 @@ public class AnalysisData {
         return gm2Perc;
     }
 
-    /** 
+    /**
      * @param gm2Perc Percentage of Gamemode usage time as a whole
      */
     public void setGm2Perc(double gm2Perc) {
@@ -412,7 +419,28 @@ public class AnalysisData {
     public void setRecentPlayers(String recentPlayers) {
         this.recentPlayers = recentPlayers;
     }
-    
-    
 
+    public int getNewPlayersMonth() {
+        return newPlayersMonth;
+    }
+
+    public void setNewPlayersMonth(int newPlayersMonth) {
+        this.newPlayersMonth = newPlayersMonth;
+    }
+
+    public int getNewPlayersWeek() {
+        return newPlayersWeek;
+    }
+
+    public void setNewPlayersWeek(int newPlayersWeek) {
+        this.newPlayersWeek = newPlayersWeek;
+    }
+
+    public int getNewPlayersDay() {
+        return newPlayersDay;
+    }
+
+    public void setNewPlayersDay(int newPlayersDay) {
+        this.newPlayersDay = newPlayersDay;
+    }
 }
