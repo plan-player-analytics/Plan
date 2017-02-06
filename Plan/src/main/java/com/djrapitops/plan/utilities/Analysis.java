@@ -162,7 +162,7 @@ public class Analysis {
                     String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
                             + "/player/" + playerName;
                     String html = Html.BUTTON.parse(url, playerName);
-                    playtimes.put(html, playTime);
+                    
                     latestLogins.put(html, uData.getLastPlayed());
                     totalLoginTimes += uData.getLoginTimes();
                     int age = uData.getDemData().getAge();
@@ -179,6 +179,7 @@ public class Analysis {
                         joinleaver++;
                     } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
                         active++;
+                        playtimes.put(html, playTime);
                     } else {
                         inactive++;
                     }
