@@ -9,6 +9,12 @@ import com.djrapitops.plan.database.databases.*;
 import com.djrapitops.plan.data.cache.*;
 import com.djrapitops.plan.data.listeners.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -60,17 +66,9 @@ public class Plan extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        File dataFolder = getDataFolder();
-        dataFolder.mkdirs();
+        getDataFolder().mkdirs();
 
-        File localeFile = new File(dataFolder, "locale.txt");
-        if (localeFile.exists()) {
-            Phrase.loadLocale(localeFile);
-        }
-        File htmlLocale = new File(dataFolder, "htmlLocale.txt");
-        if (htmlLocale.exists()) {
-            Html.loadLocale(htmlLocale);
-        }
+        initLocale();
 
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
@@ -312,5 +310,60 @@ public class Plan extends JavaPlugin {
      */
     public int getBootAnalysisTaskID() {
         return bootAnalysisTaskID;
+    }
+
+    private void initLocale() {
+        String locale = Settings.LOCALE.toString().toUpperCase();
+        File localeFile = new File(getDataFolder(), "locale.txt");
+        File htmlLocale = new File(getDataFolder(), "htmlLocale.txt");
+        boolean skipLoc = false;
+        boolean skipHtmlLoc = false;
+        String usingLocale = "";
+        if (localeFile.exists()) {
+            Phrase.loadLocale(localeFile);
+            skipLoc = true;
+            usingLocale = "locale.txt";
+        }
+        if (htmlLocale.exists()) {
+            Html.loadLocale(htmlLocale);
+            skipHtmlLoc = true;
+        }
+        if (!locale.equals("DEFAULT")) {
+            try {
+                if (!skipLoc) {
+                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt");
+                    InputStream inputStream = localeURL.openStream();
+                    OutputStream outputStream = new FileOutputStream(localeFile);
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    Phrase.loadLocale(localeFile);
+                    usingLocale = locale;
+                    localeFile.delete();
+                }
+                if (!skipHtmlLoc) {
+                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/htmlLocale_" + locale + ".txt");
+                    InputStream inputStream = localeURL.openStream();
+                    OutputStream outputStream = new FileOutputStream(htmlLocale);
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    Html.loadLocale(htmlLocale);
+                    htmlLocale.delete();
+                }
+            } catch (FileNotFoundException ex) {
+                logError("Attempted using locale that doesn't exist.");
+                usingLocale = "Default: EN";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            usingLocale = "Default: EN";
+        }
+        log("Using locale: " + usingLocale);
     }
 }

@@ -1,4 +1,5 @@
 Settings:
+  Locale: default
   Data:
     GatherLocations: true
   Analysis:

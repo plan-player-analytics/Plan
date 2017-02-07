@@ -30,9 +30,10 @@ public enum Settings {
     DEM_TRIGGERS("Customization.DemographicsTriggers.Trigger"),
     DEM_FEMALE("Customization.DemographicsTriggers.Female"),
     DEM_MALE("Customization.DemographicsTriggers.Male"),
-    DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),;
+    DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),
+    LOCALE("Settings.Locale");
 
-    private String configPath;
+    private final String configPath;
 
     private Settings(String path) {
         this.configPath = path;
