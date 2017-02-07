@@ -29,7 +29,7 @@ public class AnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis", "plan.analyze", "View the Server Analysis", CommandType.CONSOLE, "");
+        super("analyze, analyse, analysis", "plan.analyze", Phrase.CMD_USG_ANALYZE.parse(), CommandType.CONSOLE, "");
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }

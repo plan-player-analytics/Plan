@@ -19,7 +19,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -36,7 +35,7 @@ public class InspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InspectCommand(Plan plugin) {
-        super("inspect", "plan.inspect", "Inspect Player's Data", CommandType.CONSOLE_WITH_ARGUMENTS, "<player>");
+        super("inspect", "plan.inspect", Phrase.CMD_USG_INSPECT+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER+"");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();

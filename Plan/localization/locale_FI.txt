@@ -1,0 +1,99 @@
+PREFIX <> [Plan] 
+ENABLED <> Player Analytics Käynnistetty.
+DISABLED <> Player Analytics Suljettu.
+RELOAD_COMPLETE <> §a[Plan] Ladattu uudelleen.
+SAVE_CACHE <> Tallennetaan välimuisti tietoja..
+ADD_TO_CACHE <> REPLACE0 lisättiin välimuistiin.
+DB_INIT <> Tietokannan käynnistys..
+WEBSERVER_INIT <> Web-palvelimen käynnistys..
+WEBSERVER_CLOSE <> Sammutetaan Web-palvelin..
+WEBSERVER_RUNNING <> Web-palvelin pyörii PORTILLA REPLACE0
+DB_ESTABLISHED <> REPLACE0-tietokantayhteys muodostettu.
+DATABASE_TYPE_DOES_NOT_EXIST <> Tätä tietokantatyyppiä ei ole olemassa.
+DATABASE_FAILURE_DISABLE <> Tietokannan käynnistys epäonnistui, suljetaan Plan.
+NOTIFY_EMPTY_IP <> §e[Plan] IP server.properties-tiedostossa on tyhjä & AlternativeServerIP-asetus ei ole käytössä, plugin antaa virheellisiä linkkejä!
+VERSION_NEW_AVAILABLE <> Uusi versio (REPLACE0) on saatavilla: https://www.spigotmc.org/resources/plan-player-analytics.32536/
+VERSION_LATEST <> Käytät viimeisintä versiota
+VERSION_CHECK_ERROR <> Versioiden vertaus epäonnistui.
+VERSION_FAIL <> Uusimman version numeron tarkistus epäonnistui.
+USERNAME_NOT_VALID <> §c[Plan] Pelaajaa ei ole olemassa.
+USERNAME_NOT_SEEN <> §c[Plan] Tämä pelaaja ei ole pelannut tällä serverillä.
+USERNAME_NOT_KNOWN <> §c[Plan] Pelaajaa ei löydetty tietokannasta.
+GRABBING_DATA_MESSAGE <> » Haetaan välimuistiin..
+NOT_IN_TOWN <> Ei kylässä
+NOT_IN_FAC <> Ei killassa
+COMMAND_TIMEOUT <> §c[Plan] REPLACE0 Komennon aikakatkaisu. Virheitä luultavasti konsolissa.
+ANALYSIS_START <> Analysis | Aloitetaan pelaaja-datan analysointi..
+ANALYSIS_BOOT_NOTIFY <> Analysis | Käynnistyksen yhteinen analyysi 30 sekunnin kuluttua..
+ANALYSIS_BOOT <> Analysis | Aloitetaan käynnistyksen yhteinen analyysi..
+ANALYSIS_FETCH_PLAYERS <> Analysis | Tarkistetaan saatavilla olevia pelaajia..
+ANALYSIS_FETCH_DATA <> Analysis | Haetaan dataa..
+ANALYSIS_FAIL_NO_PLAYERS <> Analysis | Analyysi epäonnistui, ei pelaajia.
+ANALYSIS_FAIL_NO_DATA <> Analysis | Analyysi epäonnistui, ei dataa tietokannassa.
+ANALYSIS_BEGIN_ANALYSIS <> Analysis | Data haettu, aloitetaan analyysi..
+ANALYSIS_COMPLETE <> Analysis | Analyysi valmis.
+ERROR_NO_DATA_VIEW <> §eNettiserveri poissa käytöstä mutta Alternative IP/PlanLite ei ole käytössä, ei keinoa tarkastella dataa!
+ERROR_WEBSERVER_OFF_ANALYSIS <> §e[Plan] Tätä komentoa voi käyttää vain jos Nettiserveri on kytketty päälle.
+ERROR_WEBSERVER_OFF_INSPECT <> §e[Plan] Tätä komento voi käyttäää vain jos Nettiserveri on kytketty päälle.
+MANAGE_ERROR_INCORRECT_PLUGIN <> §c[Plan] Pluginia ei tueta: 
+MANAGE_PROCESS_START <> »§7 Työstetään tietoa..
+MANAGE_ERROR_PLUGIN_NOT_ENABLED <> §c[Plan] Plugin ei käynnissä: 
+MANAGE_ERROR_INCORRECT_DB <> §c[Plan] Väärä tietokanta! (sqlite/mysql hyväksytään): 
+MANAGE_ERROR_SAME_DB <> §c[Plan] Ei voida siirtää samaan tietokantaan!
+MANAGE_DATABASE_FAILURE <> §c[Plan] Toinen tietokanta ei ole käynnistynyt kunnolla.
+MANAGE_DB_CONFIG_REMINDER <> §e[Plan] Muista vaihtaa uuteen tietokantaan ja ladata Plan uudelleen
+MANAGE_ERROR_NO_PLAYERS <> §c[Plan] Tietokannassa ei ole pelaaja dataa!
+MANAGE_ERROR_BACKUP_FILE_NOT_FOUND <> §c[Plan] Varmuuskopio tiedostoa ei ole olemassa!
+MANAGE_MOVE_SUCCESS <> §a[Plan] Kaikki tieto siirretty onnistuneesti!
+MANAGE_COPY_SUCCESS <> §a[Plan] Kaikki tieto kopioitu onnistuneesti!
+MANAGE_CLEAR_SUCCESS <> §a[Plan] Kaikki tieto poistettu onnistuneesti!
+MANAGE_REMOVE_SUCCESS <> §f» §2Pelaajan §fREPLACE0§2 tiedot poistettiin tietokannasta: §fREPLACE1§2.
+MANAGE_IMPORTING <> §f» §2 Tuodaan dataa..
+MANAGE_SUCCESS <> §f» §2 Onnistui!
+CMD_ANALYZE_HEADER <> §f»§2 Player Analytics - Analyysin tulokset:
+CMD_INSPECT_HEADER <> §f»§2 Player Analytics - Inspect tulokset: 
+CMD_SEARCH_HEADER <> §f»§2 Player Analytics - Haku tulokset haulle: 
+CMD_HELP_HEADER <> §f»§2 Player Analytics - Apu
+CMD_MANAGE_STATUS_HEADER <> §f»§2 Player Analytics - Tietokannan tila
+CMD_MANAGE_STATUS_ACTIVE_DB <> §7 •§2 Nykyinen tietokanta: §7REPLACE0
+CMD_CLICK_ME <> Klikkaa minua
+CMD_LINK <> §7 •§2 Linkki: §f
+CMD_RESULTS_AVAILABLE <> §7   Tiedot ovat saatavilla §fREPLACE0§7 minuuttia.
+CMD_NO_RESULTS <> §7 •§2 Ei tuloksia §7REPLACE0§2.
+CMD_MATCH <> §7 Vastaava pelaaja: §f
+CMD_USG_ANALYZE <> Tarkastele serverin analyysia
+CMD_USG_HELP <> Tarkastele komentoja.
+CMD_USG_INFO <> Tarkasta Plan-versio
+CMD_USG_INSPECT <> Tarkastele pelaajan tietoja
+CMD_USG_MANAGE <> Tietokannan käsittely komento
+CMD_USG_MANAGE_BACKUP <> Varmuuskopioi tietokanta .db tiedostoon
+CMD_USG_MANAGE_RESTORE <> Palauta tietokanta varmuuskopio tiedostosta
+CMD_USG_MANAGE_MOVE <> Kopioi data tietokannasta toiseen ja ylikirjoita vanhat arvot
+CMD_USG_MANAGE_COMBINE <> Kopioi data tietokannasta toiseen ja yhdistä arvot
+CMD_USG_MANAGE_IMPORT <> Tuo tietoja toisista plugineista nykyiseen tietokantaan.
+CMD_USG_MANAGE_CLEAR <> Poista tiedot tietokannasta
+CMD_USG_MANAGE_REMOVE <> Poista pelaajan tiedot nykyisestä tietokannasta.
+CMD_USG_MANAGE_STATUS <> Check the status of the Active Database.
+CMD_USG_RELOAD <> Lataa Plan-Config uudelleen ja käynnistä Plan uudelleen
+CMD_USG_SEARCH <> Hae pelaajan tietoja
+ARG_SEARCH <> <osa pelaajan nimestä>
+ARG_PLAYER <> <pelaaja>
+ARG_RESTORE <> <Tiedostonimi.db> <dbTo> [-a]
+ARG_IMPORT <> <plugin> [-a]
+ARG_MOVE <> <fromDB> <toDB> [-a]
+USE_BACKUP <> Käytä /plan manage backup <DB>
+USE_RESTORE <> Käytä /plan manage restore <Filename.db> <dbTo> [-a]
+USE_MANAGE <> Kokeile /plan manage
+USE_PLAN <> Kokeile /plan
+USE_MOVE <> Käytä /plan manage move <fromDB> <toDB> [-a]
+USE_COMBINE <> Käytä /plan manage combine <fromDB> <toDB> [-a]
+USE_IMPORT <> Käytä /plan manage import <plugin> [-a]
+WARN_REWRITE <> REPLACE0-tietokannan tiedot kirjoitetaan uudelleen!
+WARN_OVERWRITE <> REPLACE0-tietokannan tiedot ylikirjoitetaan!
+WARN_OVERWRITE_SOME <> Osa REPLACE0-tietokannan tiedoista ylikirjoitetaan!
+WARN_REMOVE <> REPLACE0-tietokannan tiedot poistetaan!
+COMMAND_SENDER_NOT_PLAYER <> §c[Plan] Tätä komentoa voi käyttää vain pelaaja.
+COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Komento vaatii argumentteja. REPLACE0
+COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Lisää -a vahvistaaksesi komennon ajo! REPLACE0
+COMMAND_REQUIRES_ARGUMENTS_ONE <> §c[Plan] Komento vaatii yhden argumentin..
+COMMAND_NO_PERMISSION <> §c[Plan] Sinulla ei ole lupaa tuohon.

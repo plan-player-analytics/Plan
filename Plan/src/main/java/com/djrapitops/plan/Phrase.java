@@ -1,5 +1,10 @@
 package com.djrapitops.plan;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import org.bukkit.ChatColor;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -12,16 +17,20 @@ public enum Phrase {
     PREFIX("[Plan] "),
     ENABLED("Player Analytics Enabled."),
     DISABLED("Player Analytics Disabled."),
+    RELOAD_COMPLETE(ChatColor.GREEN + "" + PREFIX + "Reload complete."),
     SAVE_CACHE("Saving cached data.."),
     ADD_TO_CACHE("Added REPLACE0 to Cache."),
     CONFIG_HEADER("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/"),
     DB_INIT("Database init.."),
+    WEBSERVER_INIT("Initializing Webserver.."),
+    WEBSERVER_CLOSE("Shutting down Webserver.."),
+    WEBSERVER_RUNNING("Webserver running on PORT " + REPLACE0),
     DB_ESTABLISHED(REPLACE0 + "-database connection established."),
     DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
     DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
-    NOTIFY_EMPTY_IP(ChatColor.YELLOW+""+PREFIX+"IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
+    NOTIFY_EMPTY_IP(ChatColor.YELLOW + "" + PREFIX + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
     //
-    VERSION_NEW_AVAILABLE("New Version ("+REPLACE0+") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
+    VERSION_NEW_AVAILABLE("New Version (" + REPLACE0 + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
     VERSION_LATEST("You're running the latest version"),
     VERSION_CHECK_ERROR("Failed to compare versions."),
     VERSION_FAIL("Failed to get newest version number."),
@@ -69,8 +78,9 @@ public enum Phrase {
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if the webserver is running on this server."),
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
     //
+    CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
     MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED + "" + PREFIX + "Plugin not supported: "),
-    MANAGE_PROCESS_START(ARROWS_RIGHT +""+COLOR_SEC.color() +" Processing data.."),
+    MANAGE_PROCESS_START(ARROWS_RIGHT + "" + COLOR_SEC.color() + " Processing data.."),
     MANAGE_ERROR_PLUGIN_NOT_ENABLED(ChatColor.RED + "" + PREFIX + "Plugin is not enabled: "),
     MANAGE_ERROR_INCORRECT_DB(ChatColor.RED + "" + PREFIX + "Incorrect database! (sqlite/mysql accepted): "),
     MANAGE_ERROR_SAME_DB(ChatColor.RED + "" + PREFIX + "Can't move to the same database!"),
@@ -81,12 +91,17 @@ public enum Phrase {
     MANAGE_MOVE_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data moved successfully!"),
     MANAGE_COPY_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data copied successfully!"),
     MANAGE_CLEAR_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data cleared successfully!"),
+    MANAGE_REMOVE_SUCCESS(CMD_FOOTER + " " + COLOR_MAIN.color() + "Data of " + COLOR_TER.color() + "REPLACE0" + COLOR_MAIN.color() + " was removed from Database " + COLOR_TER.color() + "REPLACE1" + COLOR_MAIN.color() + "."),
+    MANAGE_IMPORTING(CMD_FOOTER + " " + COLOR_MAIN.color() + " Importing Data.."),
+    MANAGE_SUCCESS(CMD_FOOTER + " " + COLOR_MAIN.color() + " Success!"),
     //
-    CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
     CMD_BALL(COLOR_SEC.color() + " " + Phrase.BALL.toString() + COLOR_MAIN.color()),
     CMD_ANALYZE_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Analysis results"),
     CMD_INSPECT_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Inspect results: "),
     CMD_SEARCH_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Search results for: "),
+    CMD_HELP_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Help"),
+    CMD_MANAGE_STATUS_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Database status"),
+    CMD_MANAGE_STATUS_ACTIVE_DB(CMD_BALL + "" + COLOR_MAIN.color() + " Active Database: " + COLOR_SEC.color() + "REPLACE0"),
     CMD_CLICK_ME("Click Me"),
     CMD_LINK(COLOR_SEC.color() + " " + BALL + COLOR_MAIN.color() + " Link: " + COLOR_TER.color()),
     CMD_PASS_PLANLITE(ChatColor.YELLOW + "" + PREFIX + "Passing to PlanLite.."),
@@ -94,9 +109,43 @@ public enum Phrase {
     CMD_NO_RESULTS(CMD_BALL + " No results for " + COLOR_SEC.color() + REPLACE0 + COLOR_MAIN.color() + "."),
     CMD_MATCH(COLOR_SEC.color() + " Matching player: " + COLOR_TER.color()),
     //
+    CMD_USG_ANALYZE("View the Server Analysis"),
+    CMD_USG_HELP("Show command list."),
+    CMD_USG_INFO("View Version of Plan"),
+    CMD_USG_INSPECT("Inspect Player's Data"),
+    CMD_USG_MANAGE("Database managment command"),
+    CMD_USG_MANAGE_BACKUP("Backup a database to .db file"),
+    CMD_USG_MANAGE_RESTORE("Restore a database from a backup file"),
+    CMD_USG_MANAGE_MOVE("Copy data from one database to another & overwrite values"),
+    CMD_USG_MANAGE_COMBINE("Copy data from one database to another & combine values"),
+    CMD_USG_MANAGE_IMPORT("Import Data from supported plugins to Active Database."),
+    CMD_USG_MANAGE_CLEAR("Clear data from one database"),
+    CMD_USG_MANAGE_REMOVE("Remove players's data from the Active Database."),
+    CMD_USG_MANAGE_STATUS("Check the status of the Active Database."),
+    CMD_USG_RELOAD("Reload plugin config & save cached data"),
+    CMD_USG_SEARCH("Search for player"),
+    ARG_SEARCH("<part of playername>"),
+    ARG_PLAYER("<player>"),
+    ARG_RESTORE("<Filename.db> <dbTo> [-a]"),
+    ARG_IMPORT("<plugin> [-a]"),
+    ARG_MOVE("<fromDB> <toDB> [-a]"),
+    //
+    USE_BACKUP("Use /plan manage backup <DB>"),
+    USE_RESTORE("Use /plan manage restore <Filename.db> <dbTo> [-a]"),
+    USE_MANAGE("Use /plan manage for help"),
+    USE_PLAN("Use /plan for help"),
+    USE_MOVE("Use /plan manage move <fromDB> <toDB> [-a]"),
+    USE_COMBINE("Use /plan manage combine <fromDB> <toDB> [-a]"),
+    USE_IMPORT("Use /plan manage import <plugin> [-a]"),
+    //
+    WARN_REWRITE("Data in REPLACE0-database will be rewritten!"),
+    WARN_OVERWRITE("Data in REPLACE0-database will be overwritten!"),
+    WARN_OVERWRITE_SOME("Some data in REPLACE0-database will be overwritten!"),
+    WARN_REMOVE("Data in REPLACE0-database will be removed!"),
+    //
     COMMAND_SENDER_NOT_PLAYER(ChatColor.RED + "" + PREFIX + "This command can be only used as a player."),
-    COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "" + PREFIX + "Command requires arguments."),
-    COMMAND_ADD_CONFIRMATION_ARGUMENT(ChatColor.RED + "" + PREFIX + "Add -a to confirm execution!"),
+    COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "" + PREFIX + "Command requires arguments. REPLACE0"),
+    COMMAND_ADD_CONFIRMATION_ARGUMENT(ChatColor.RED + "" + PREFIX + "Add -a to confirm execution! REPLACE0"),
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "" + PREFIX + "Command requires one argument."),
     COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission.");
 
@@ -117,11 +166,11 @@ public enum Phrase {
     public String toString() {
         return text;
     }
-    
+
     public String parse() {
         return this.toString();
     }
-    
+
     public String parse(String... p) {
         String returnValue = this.toString();
         for (int i = 0; i < p.length; i++) {
@@ -143,5 +192,28 @@ public enum Phrase {
 
     public void setColor(String colorCode) {
         this.color = ChatColor.getByChar(colorCode);
+    }
+
+    static void loadLocale(File localeFile) {
+        try {
+            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
+            List<String> localeRows = new ArrayList<>();
+            while (localeScanner.hasNextLine()) {
+                String line = localeScanner.nextLine();
+                if (!line.isEmpty()) {
+                    localeRows.add(line);
+                }
+            }
+            for (String localeRow : localeRows) {
+                try {
+                    String[] split = localeRow.split(" <> ");
+                    Phrase.valueOf(split[0]).setText(split[1]);
+                } catch (IllegalArgumentException e) {
+                    getPlugin(Plan.class).logError("There is a miswritten line in locale on line "+localeRows.indexOf(localeRow));
+                }
+            }
+        } catch (IOException e) {
+
+        }
     }
 }

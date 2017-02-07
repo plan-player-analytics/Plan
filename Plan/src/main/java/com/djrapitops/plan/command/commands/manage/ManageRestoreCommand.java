@@ -32,7 +32,7 @@ public class ManageRestoreCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRestoreCommand(Plan plugin) {
-        super("restore", "plan.restore", "Restore a database from a backup file", CommandType.CONSOLE, "<Filename.db> <dbTo> [-a]");
+        super("restore", "plan.restore", Phrase.CMD_USG_MANAGE_RESTORE+"", CommandType.CONSOLE, Phrase.ARG_RESTORE+"");
 
         this.plugin = plugin;
     }
@@ -50,7 +50,7 @@ public class ManageRestoreCommand extends SubCommand {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         try {
             if (args.length < 2) {
-                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.toString() + " Use /plan manage restore <Filename.db> <dbTo> [-a]");
+                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE+""));
                 return true;
             }
             String db = args[1].toLowerCase();
@@ -59,7 +59,7 @@ public class ManageRestoreCommand extends SubCommand {
                 return true;
             }
             if (!Arrays.asList(args).contains("-a")) {
-                sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[1] + "-database will be rewritten!");
+                sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])));
                 return true;
             }
             Database database = null;

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.ui.DataRequestHandler;
 import com.djrapitops.plan.ui.webserver.Request;
@@ -19,12 +20,12 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class WebSocketServer {
 
-    private int PORT;
+    private final int PORT;
     private boolean ENABLED = false;
     private ServerSocket server;
 
-    private Plan plugin;
-    private DataRequestHandler dataReqHandler;
+    private final Plan plugin;
+    private final DataRequestHandler dataReqHandler;
 
     private boolean shutdown;
 
@@ -50,7 +51,7 @@ public class WebSocketServer {
         if (ENABLED) {
             return;
         }
-        plugin.log("Initializing Webserver..");
+        plugin.log(Phrase.WEBSERVER_INIT+"");
         try {
             //Setup server
             try {
@@ -86,7 +87,7 @@ public class WebSocketServer {
 
             ENABLED = true;
 
-            plugin.log("Webserver running on PORT " + server.getLocalPort());
+            plugin.log(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort()+""));
         } catch (Exception e) {
             ENABLED = false;
         }
@@ -96,7 +97,7 @@ public class WebSocketServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        plugin.log("Shutting down Webserver..");
+        plugin.log(Phrase.WEBSERVER_CLOSE+"");
         shutdown = true;
         try {
             server.close();

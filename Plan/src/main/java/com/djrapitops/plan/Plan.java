@@ -8,6 +8,7 @@ import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.*;
 import com.djrapitops.plan.data.cache.*;
 import com.djrapitops.plan.data.listeners.*;
+import java.io.File;
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
@@ -58,7 +60,17 @@ public class Plan extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        getDataFolder().mkdirs();
+        File dataFolder = getDataFolder();
+        dataFolder.mkdirs();
+
+        File localeFile = new File(dataFolder, "locale.txt");
+        if (localeFile.exists()) {
+            Phrase.loadLocale(localeFile);
+        }
+        File htmlLocale = new File(dataFolder, "htmlLocale.txt");
+        if (htmlLocale.exists()) {
+            Html.loadLocale(htmlLocale);
+        }
 
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
@@ -186,8 +198,9 @@ public class Plan extends JavaPlugin {
 
     /**
      * Initializes the database according to settings in the config.
-     * 
+     *
      * If database connection can not be established plugin is disabled.
+     *
      * @return true if init was successful, false if not.
      */
     public boolean initDatabase() {

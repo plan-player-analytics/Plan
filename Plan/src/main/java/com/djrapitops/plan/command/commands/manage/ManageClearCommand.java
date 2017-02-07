@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class ManageClearCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -25,7 +25,7 @@ public class ManageClearCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageClearCommand(Plan plugin) {
-        super("clear", "plan.manage", "Clear data from one database", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
+        super("clear", "plan.manage", Phrase.CMD_USG_MANAGE_CLEAR+"", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
 
         this.plugin = plugin;
     }
@@ -55,7 +55,7 @@ public class ManageClearCommand extends SubCommand {
             return true;
         }
         if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[0] + "-database will be removed!");
+            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[0])));
             return true;
         }
 

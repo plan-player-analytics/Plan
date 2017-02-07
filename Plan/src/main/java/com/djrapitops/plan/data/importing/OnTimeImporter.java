@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.importing;
 
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.UserData;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -16,7 +15,7 @@ import org.bukkit.OfflinePlayer;
  */
 public class OnTimeImporter implements Importer {
 
-    private Plan plugin;
+    private final Plan plugin;
     private boolean enabled;
 
     public OnTimeImporter(Plan plugin) {

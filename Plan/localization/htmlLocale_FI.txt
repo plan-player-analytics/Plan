@@ -1,0 +1,19 @@
+WARN_INACCURATE <> <div class="warn">Tiedot voivat olla viallisia, pelaaja rekisterˆityi vasta</div>
+ERROR_TABLE <> <p class="red">Virhe tehdess‰ taulukkoa (Ei dataa)</p>
+TOP_TOWNS <> <p><b>Top 20 Kyl‰‰</b></p>
+TOP_FACTIONS <> <p><b>Top 20 Kiltaa</b></p>
+TOTAL_BALANCE <> <p>Palvelimen rahan kokonaism‰‰r‰: REPLACE0</p>
+TOTAL_VOTES <> <p>Pelaajat ovat ‰‰nest‰neet REPLACE0 kertaa.</p>
+TOWN <> <p>Kyl‰: REPLACE0</p>
+PLOT_OPTIONS <> <p>Plot asetukset: REPLACE0</p>
+FRIENDS <> <p>Kaverit: REPLACE0</p>
+FACTION <> <p>Kilta: REPLACE0</p>
+BALANCE <> <p>Raham‰‰r‰: REPLACE0</p>
+VOTES <> <p>Pelaaja on ‰‰nest‰nyt REPLACE0 kertaa.</p>
+BANNED <> | <span class="darkred">Banned</span>
+OPERATOR <> , Operator (Op)
+ONLINE <> | <span class="darkgreen">Online</span>
+OFFLINE <> | <span class="darkred">Offline</span>
+ACTIVE <> | Pelaaja on aktiivinen
+INACTIVE <> | Pelaaja on inaktiivinen
+ERROR_LIST <> Virhe luodessa listaa</p>

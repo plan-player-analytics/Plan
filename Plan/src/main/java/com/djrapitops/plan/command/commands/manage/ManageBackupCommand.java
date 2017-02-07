@@ -31,7 +31,7 @@ public class ManageBackupCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageBackupCommand(Plan plugin) {
-        super("backup", "plan.manage", "Backup a database to .db file", CommandType.CONSOLE, "<DB>");
+        super("backup", "plan.manage", Phrase.CMD_USG_MANAGE_BACKUP+"", CommandType.CONSOLE, "<DB>");
 
         this.plugin = plugin;
     }
@@ -49,7 +49,7 @@ public class ManageBackupCommand extends SubCommand {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         try {
             if (args.length < 1) {
-                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.toString() + " Use /plan manage backup <DB>");
+                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_BACKUP+""));
                 return true;
             }
             String db = args[0].toLowerCase();

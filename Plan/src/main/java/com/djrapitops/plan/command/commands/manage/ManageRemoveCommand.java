@@ -10,12 +10,10 @@ import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.Arrays;
 import java.util.UUID;
 
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -24,7 +22,7 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  */
 public class ManageRemoveCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -32,7 +30,7 @@ public class ManageRemoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRemoveCommand(Plan plugin) {
-        super("remove", "plan.manage", "Remove players's data from the Active Database.", CommandType.CONSOLE_WITH_ARGUMENTS, "<player> [-a]");
+        super("remove", "plan.manage", Phrase.CMD_USG_MANAGE_REMOVE+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER+" [-a]");
 
         this.plugin = plugin;
     }
@@ -79,19 +77,16 @@ public class ManageRemoveCommand extends SubCommand {
             return true;
         }
         if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString());
+            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName())));
             return true;
         }
-
-        ChatColor oColor = Phrase.COLOR_MAIN.color();
-        ChatColor hColor = Phrase.COLOR_TER.color();
-
+        
         (new BukkitRunnable() {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                 plugin.getDB().removeAccount(uuid.toString());
-                sender.sendMessage(hColor+""+Phrase.ARROWS_RIGHT+" "+oColor+"Data of "+hColor+playerName+oColor+" was removed from Database "+hColor+plugin.getDB().getConfigName()+oColor+".");
+                sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);

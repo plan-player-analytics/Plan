@@ -24,7 +24,7 @@ public class ManageStatusCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageStatusCommand(Plan plugin) {
-        super("status", "plan.manage", "Check the status of the Active Database.", CommandType.CONSOLE, "");
+        super("status", "plan.manage", Phrase.CMD_USG_MANAGE_STATUS+"", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }
@@ -44,15 +44,12 @@ public class ManageStatusCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-
-        ChatColor oColor = Phrase.COLOR_MAIN.color();
-        ChatColor tColor = Phrase.COLOR_SEC.color();
         ChatColor hColor = Phrase.COLOR_TER.color();
 
         // Header
-        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Player Analytics - Database status");
+        sender.sendMessage(Phrase.CMD_MANAGE_STATUS_HEADER+"");
         
-        sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor +" Active Database: "+ tColor + plugin.getDB().getConfigName());
+        sender.sendMessage(Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()));
         
         // Footer
         sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());

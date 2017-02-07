@@ -29,7 +29,7 @@ public class ManageCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCommand(Plan plugin) {
-        super("manage, m", "plan.manage", "Database managment command", CommandType.CONSOLE, "");
+        super("manage, m", "plan.manage", Phrase.CMD_USG_MANAGE+"", CommandType.CONSOLE, "");
         this.plugin = plugin;
         commands = new ArrayList<>();
         commands.add(new ManageHelpCommand(plugin, this));
@@ -107,7 +107,7 @@ public class ManageCommand extends SubCommand {
         }
 
         if (console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS) {
-            sender.sendMessage("" + Phrase.COMMAND_REQUIRES_ARGUMENTS);
+            sender.sendMessage("" + Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MANAGE+""));
 
             return true;
         }

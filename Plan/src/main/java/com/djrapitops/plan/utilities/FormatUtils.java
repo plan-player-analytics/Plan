@@ -1,6 +1,5 @@
 package com.djrapitops.plan.utilities;
 
-import java.util.Arrays;
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.Location;
@@ -156,7 +155,6 @@ public class FormatUtils {
         Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3, 
             Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9, 
             Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
-        
         
         for (Html html : replacer) {
             string = string.replaceAll("§"+html.name().charAt(6), html.parse());

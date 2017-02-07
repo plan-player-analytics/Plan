@@ -34,7 +34,7 @@ public class ManageCombineCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCombineCommand(Plan plugin) {
-        super("combine", "plan.manage", "Copy data from one database to another & combine values", CommandType.CONSOLE_WITH_ARGUMENTS, "<fromDB> <toDB> [-a]");
+        super("combine", "plan.manage", Phrase.CMD_USG_MANAGE_COMBINE+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE+"");
         this.plugin = plugin;
     }
 
@@ -54,7 +54,7 @@ public class ManageCombineCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.toString() + " Use /plan manage combine <fromDB> <toDB> [-a]");
+            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_COMBINE+""));
             return true;
         }
         String fromDB = args[0].toLowerCase();
@@ -72,7 +72,7 @@ public class ManageCombineCommand extends SubCommand {
             return true;
         }
         if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Data in " + args[1] + "-database will be rewritten!");
+            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])));
             return true;
         }
 

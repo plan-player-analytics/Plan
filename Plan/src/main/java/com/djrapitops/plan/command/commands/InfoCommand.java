@@ -23,7 +23,7 @@ public class InfoCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InfoCommand(Plan plugin) {
-        super("info", "plan.info", "View Version of Plan", CommandType.CONSOLE, "");
+        super("info", "plan.info", Phrase.CMD_USG_INFO+"", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }

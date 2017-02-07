@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 public class SearchCommand extends SubCommand {
 
     private final Plan plugin;
-    private InspectCacheHandler inspectCache;
+    private final InspectCacheHandler inspectCache;
 
     /**
      * Class Constructor.
@@ -32,7 +32,7 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", "plan.search", "Search for player", CommandType.CONSOLE_WITH_ARGUMENTS, "<part of playername>");
+        super("search", "plan.search", Phrase.CMD_USG_SEARCH+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_SEARCH+"");
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
     }

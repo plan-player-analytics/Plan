@@ -114,8 +114,7 @@ public class PlanCommand implements CommandExecutor {
         }
 
         if (console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS) {
-            sender.sendMessage("" + Phrase.COMMAND_REQUIRES_ARGUMENTS);
-
+            sender.sendMessage("" + Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_PLAN+""));
             return true;
         }
 

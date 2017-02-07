@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.UserData;
@@ -17,12 +16,10 @@ import main.java.com.djrapitops.plan.data.importing.Importer;
 import main.java.com.djrapitops.plan.data.importing.OnTimeImporter;
 import org.bukkit.Bukkit;
 
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -31,8 +28,7 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  */
 public class ManageImportCommand extends SubCommand {
 
-    private Plan plugin;
-    private PlanLiteHook hook;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -40,9 +36,8 @@ public class ManageImportCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageImportCommand(Plan plugin) {
-        super("import", "plan.manage", "Import Data from supported plugins to Active Database.", CommandType.CONSOLE, "<plugin> [-a]");
+        super("import", "plan.manage", Phrase.CMD_USG_MANAGE_IMPORT+"", CommandType.CONSOLE, Phrase.ARG_IMPORT+"");
         this.plugin = plugin;
-        hook = plugin.getPlanLiteHook();
     }
 
     /**
@@ -62,7 +57,7 @@ public class ManageImportCommand extends SubCommand {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
         if (args.length < 1) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString() + " Use /plan manage import <plugin> [-a]");
+            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString() + " "+Phrase.USE_IMPORT);
             return true;
         }
 
@@ -81,29 +76,24 @@ public class ManageImportCommand extends SubCommand {
         }
 
         if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.toString() + " Some data in " + plugin.getDB().getConfigName() + "-database will be overwritten!");
+            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_OVERWRITE_SOME.parse(plugin.getDB().getConfigName())));
             return true;
         }
 
-        ChatColor oColor = Phrase.COLOR_MAIN.color();
-        ChatColor hColor = Phrase.COLOR_TER.color();
-
         // Header
-        sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString() + oColor + " Importing Data..");
+        sender.sendMessage(Phrase.MANAGE_IMPORTING+"");
         Set<UUID> uuids = new HashSet<>();
         for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
             uuids.add(p.getUniqueId());
         }
-        HashMap<UUID, Long> onTimeData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
+        HashMap<UUID, Long> numbericData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
         DataCacheHandler handler = plugin.getHandler();
         if (importFromPlugin.equals("ontime")) {
-            importOnTime(onTimeData, handler);
+            importOnTime(numbericData, handler);
         }
         handler.saveCachedUserData();
 
-        // Footer
-        sender.sendMessage(hColor
-                + Phrase.ARROWS_RIGHT.toString() + oColor + " Success!");
+        sender.sendMessage(Phrase.MANAGE_SUCCESS+"");
 
         return true;
     }

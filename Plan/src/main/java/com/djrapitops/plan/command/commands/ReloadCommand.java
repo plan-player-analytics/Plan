@@ -1,9 +1,9 @@
 package com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -21,7 +21,7 @@ public class ReloadCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ReloadCommand(Plan plugin) {
-        super("reload", "plan.reload", "Reload plugin config & save cached data", CommandType.CONSOLE, "");
+        super("reload", "plan.reload", Phrase.CMD_USG_RELOAD+"", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }
@@ -31,7 +31,7 @@ public class ReloadCommand extends SubCommand {
         plugin.reloadConfig();
         plugin.onDisable();
         plugin.onEnable();
-        sender.sendMessage(ChatColor.GREEN + "[Plan] Reload complete.");
+        sender.sendMessage(Phrase.RELOAD_COMPLETE+"");
 
         return true;
     }
