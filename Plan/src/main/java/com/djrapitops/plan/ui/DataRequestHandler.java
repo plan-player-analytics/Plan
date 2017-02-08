@@ -4,10 +4,9 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
-import com.djrapitops.plan.utilities.AnalysisUtils;
-import java.util.HashMap;
-import java.util.Scanner;
+import com.djrapitops.plan.utilities.PlaceholderUtils;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
  *
@@ -52,46 +51,30 @@ public class DataRequestHandler {
         if (data == null) {
             return "<h1>404 Data was not found in cache</h1>";
         }
-        Scanner scanner = new Scanner(plugin.getResource("player.html"));
-        String html = "";
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            html += line + "\r\n";
-        }
-        HashMap<String, String> replaceMap = AnalysisUtils.getInspectReplaceRules(data);
-
-        for (String key : replaceMap.keySet()) {
-            html = html.replaceAll(key, replaceMap.get(key));
-        }
-
-        return html;
+        return HtmlUtils.replacePlaceholders(
+                HtmlUtils.getHtmlStringFromResource("player.html"), 
+                PlaceholderUtils.getInspectReplaceRules(data)
+        );
     }
 
     /**
      * Returns the analysis.html as string with replaced placeholders.
+     *
      * @return the html
      */
     public String getAnalysisHtml() {
         if (!analysisCache.isCached()) {
             return "<h1>404 Data was not found in cache</h1>";
         }
-        Scanner scanner = new Scanner(plugin.getResource("analysis.html"));
-        String html = "";
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            html += line + "\r\n";
-        }
-        HashMap<String, String> replaceMap = AnalysisUtils.getAnalysisReplaceRules(analysisCache.getData());
-
-        for (String key : replaceMap.keySet()) {
-            html = html.replaceAll(key, replaceMap.get(key));
-        }
-
-        return html;
+        return HtmlUtils.replacePlaceholders(
+                HtmlUtils.getHtmlStringFromResource("analysis.html"), 
+                PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData())
+        );
     }
 
     /**
      * Checks if the AnalysisData is cached.
+     *
      * @return true if cached.
      */
     public boolean checkIfAnalysisIsCached() {

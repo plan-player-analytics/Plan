@@ -3,6 +3,7 @@ package com.djrapitops.plan;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import org.bukkit.ChatColor;
@@ -74,6 +75,7 @@ public enum Phrase {
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete."),
     //
     ERROR_PLANLITE("PlanLite not found, if you're have plugins using PlanAPI v1.6.0 download PlanLite."),
+    ERROR_CONSOLE_PLAYER("This point of code should not be accessable on console. Inform author: "+REPLACE0+" Console: REPLACE1"),
     ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if the webserver is running on this server."),
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),

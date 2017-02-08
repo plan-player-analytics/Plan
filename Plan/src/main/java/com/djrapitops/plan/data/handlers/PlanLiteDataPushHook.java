@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.data.handlers;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
-import com.djrapitops.plan.utilities.AnalysisUtils;
+import com.djrapitops.plan.utilities.PlaceholderUtils;
 import com.djrapitops.planlite.UUIDFetcher;
 import com.djrapitops.planlite.api.DataPoint;
 import com.djrapitops.planlite.api.DataType;
@@ -39,7 +39,7 @@ public class PlanLiteDataPushHook implements Hook {
                 InspectCacheHandler inspectCache = plugin.getInspectCache();
                 inspectCache.cache(uuid);
                 UserData uData = inspectCache.getFromCache(uuid);
-                HashMap<String, String> userData = AnalysisUtils.getInspectReplaceRules(uData);
+                HashMap<String, String> userData = PlaceholderUtils.getInspectReplaceRules(uData);
                 for (String key : userData.keySet()) {
                     if (key.equals("%planlite%") || key.equals("%gmpiechart%")) {
                         continue;

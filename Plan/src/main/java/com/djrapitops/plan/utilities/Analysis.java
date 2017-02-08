@@ -162,7 +162,7 @@ public class Analysis {
                     String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
                             + "/player/" + playerName;
                     String html = Html.BUTTON.parse(url, playerName);
-                    
+
                     latestLogins.put(html, uData.getLastPlayed());
                     totalLoginTimes += uData.getLoginTimes();
                     int age = uData.getDemData().getAge();
@@ -172,7 +172,6 @@ public class Analysis {
                     if (uData.isOp()) {
                         ops++;
                     }
-
                     if (uData.isBanned()) {
                         totalBanned++;
                     } else if (uData.getLoginTimes() == 1) {

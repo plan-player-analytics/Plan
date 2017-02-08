@@ -33,11 +33,20 @@ import org.bukkit.scheduler.BukkitTask;
 /* TODO 2.2.0
 Placeholder API
 Database cleaning
+Play session lenght
+- Existing data
+- importing
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
 Seperate serverdata and userdata saving
 Database Cleaning of useless data
 Fix any bugs that come up
+    Localization
+- Combine the two locale files
+Security
+- UUID to address
+- Permission check to Datarequest handler
+- Config settings to disable
  */
 /**
  *

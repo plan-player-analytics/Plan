@@ -1,4 +1,3 @@
-
 package main.java.com.djrapitops.plan.ui.tables;
 
 import com.djrapitops.plan.utilities.FormatUtils;
@@ -61,5 +60,4 @@ public class SortedTableCreator {
     public static String createTableOutOfHashMapLong(HashMap<String, Long> players) {
         return createActivePlayersTable(players, 20);
     }
-    
 }

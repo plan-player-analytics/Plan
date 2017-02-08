@@ -69,9 +69,10 @@ public class MiscUtils {
     public static String getPlayerDisplayname(String[] args, CommandSender sender) {
         String playerName = "";
         Plan plugin = getPlugin(Plan.class);
+        boolean isConsole = !(sender instanceof Player);
         if (args.length > 0) {
             if (sender.hasPermission("plan.inspect.other")
-                    || !(sender instanceof Player)) {
+                    || isConsole) {
                 playerName = args[0];
             } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
                 playerName = sender.getName();
@@ -83,7 +84,7 @@ public class MiscUtils {
                 Player player = plugin.getServer().getPlayer(UUIDFetcher.getUUIDOf(sender.getName()));
                 playerName = player.getName();
             } catch (Exception e) {
-                playerName = "ConsoleNotPlayerErr";
+                plugin.logError(Phrase.ERROR_CONSOLE_PLAYER.parse(Arrays.toString(args),isConsole+""));
             }
         }
         return playerName;
