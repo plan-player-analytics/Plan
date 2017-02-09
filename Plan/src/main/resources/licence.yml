@@ -1,0 +1,104 @@
+Player Analytics (Plan) Licence v.1
+
+Copyright (C) Risto Lahtela / Rsl1122
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+	
+	
+0. Definitions
+
+With 'software' this licence refers to the following:
+Player Analytics (Plan) Bukkit plugin
+Player Analytics Lite (PlanLite) Bukkit plugin
+(https://github.com/Rsl1122/Plan-PlayerAnalytics)
+Player Demographics (Plade) Bukkit plugin
+(https://github.com/Rsl1122/Plan-Player-Demographics)
+& the source code of these that is publicly available.
+
+'visual aspect of software'
+The messages sent with Bukkit API to Player/Console
+Html pages & the included styles
+Images & Videos found on the plugin page
+
+Additional 'resources'
+Provided .yml .html .txt and image files inside the software.
+
+'code modifyer'
+A person modifying the code/resources of the software.
+
+'user'
+A person running the software
+
+
+1. Use & Distribution
+
+This licence grants the end user the rights to run the software & modify it to a certain extent. (detailed in section 3. Modification)
+All versions downloaded from Spigot (https://www.spigotmc.org/resources/authors/rsl1122.122894/) & .jar packages compiled 
+from the source code can be used as a dependency in another project, commercial or not.
+
+You may not sell the software or modified versions of this software.
+
+Modified software can only be distributed if ALL of the following conditions apply:
+    a. the original author and the original work are clearly mentioned & linked in the distribution method or when using the software
+    b. Modified software does not contain harmful code to the user.
+    c. Modified software is free & the modified source code is publicly available.
+    d. Modified software is published under this licence
+    e. The end user is provided a copy of this licence
+	
+    When distributing a modified copy of the software you grant the right for the original author to post a takedown notice, upon which
+    the modified source code and modified software must be removed from distribution.
+	
+2. Commercial use
+
+When using parts of the software with 'Minecraft Server software', the use must comply with EULA provided by Mojang (https://help.mojang.com/customer/en/portal/articles/1590522-minecraft-commercial-use)
+If a project requires end user to obtain a copy of the software, a link must be provided to obtain the software from the author / Spigot.
+You may not include the software inside another software, this falls under redistribution.
+
+
+3. Modification
+
+The code & resources can be modified & run if the following conditions apply:
+    a. The modified version is used only by the modifyer (Person modifying the resources/software) & not distributed/sold. 
+       The modifyer may transfer his right to use the software to another person in following cases:
+        a1: Modifyer was paid to modify part of the software for customization of visual appearance of the software or fix Exceptions & Errors caused
+            by updates to Minecraft Server software.
+
+			
+4. Usage of part of code in another software
+
+Usage of a part of code in another software is allowed if following conditions apply:
+    a. The software falls under this licence
+    b. This licence is accepted by the person using the code inside their software
+    c. The use is not a clear copyright infringement
+    OR
+    a. It can be proven that it is possible to come to the same solution in a resonable time frame of one hour.
+
+	
+5. Revised Versions of this Licence
+
+The author may publish revised and/or new versions of
+this License from time to time. Such new versions will be similar in spirit to the present version, 
+but may differ in detail to address new problems or concerns.
+
+6. Disclaimer of Warranty.
+
+  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+7. Limitation of Liability.
+
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
