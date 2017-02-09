@@ -1,10 +1,10 @@
-Player Analytics (Plan) Licence v.1
+Player Analytics (Plan) Licence v.1.0.1
 
 Copyright (C) Risto Lahtela / Rsl1122
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
-	
-	
+
+
 0. Definitions
 
 With 'software' this licence refers to the following:
@@ -52,7 +52,6 @@ Modified software can only be distributed if ALL of the following conditions app
 
 When using parts of the software with 'Minecraft Server software', the use must comply with EULA provided by Mojang (https://help.mojang.com/customer/en/portal/articles/1590522-minecraft-commercial-use)
 If a project requires end user to obtain a copy of the software, a link must be provided to obtain the software from the author / Spigot.
-You may not include the software inside another software, this falls under redistribution.
 
 
 3. Modification
@@ -71,7 +70,8 @@ Usage of a part of code in another software is allowed if following conditions a
     b. This licence is accepted by the person using the code inside their software
     c. The use is not a clear copyright infringement
     OR
-    a. It can be proven that it is possible to come to the same solution in a resonable time frame of one hour.
+    a. It can be proven that it is possible to come to the same solution independently in a resonable time frame of one hour
+       with no prior access to the software.
 
 	
 5. Revised Versions of this Licence
