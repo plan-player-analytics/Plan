@@ -40,6 +40,10 @@ public class AnalysisData {
     private int totalPlayers;
     private long totalLoginTimes;
     private int ops;
+    
+    private long totalkills;
+    private long totalmobkills;
+    private long totaldeaths;
 
     private boolean planLiteEnabled;
     private PlanLiteAnalyzedData planLiteData;
@@ -442,5 +446,29 @@ public class AnalysisData {
 
     public void setNewPlayersDay(int newPlayersDay) {
         this.newPlayersDay = newPlayersDay;
+    }
+
+    public long getTotalkills() {
+        return totalkills;
+    }
+
+    public long getTotalmobkills() {
+        return totalmobkills;
+    }
+
+    public long getTotaldeaths() {
+        return totaldeaths;
+    }
+
+    public void setTotalkills(long totalkills) {
+        this.totalkills = totalkills;
+    }
+
+    public void setTotalmobkills(long totalmobkills) {
+        this.totalmobkills = totalmobkills;
+    }
+
+    public void setTotaldeaths(long totaldeaths) {
+        this.totaldeaths = totaldeaths;
     }
 }

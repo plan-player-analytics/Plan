@@ -37,6 +37,7 @@ public class DataCacheHandler {
     private final ServerData serverData;
     private final ServerDataHandler serverDataHandler;
     private final PlanLiteHandler planLiteHandler;
+    private final KillHandler killHandler;
     private final Database db;
     private final NewPlayerCreator newPlayerCreator;
 
@@ -66,6 +67,7 @@ public class DataCacheHandler {
         serverDataHandler = new ServerDataHandler(serverData);
         planLiteHandler = new PlanLiteHandler(plugin);
         newPlayerCreator = new NewPlayerCreator(plugin, this);
+        killHandler = new KillHandler(plugin);
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
@@ -380,6 +382,10 @@ public class DataCacheHandler {
         return planLiteHandler;
     }
 
+    public KillHandler getKillHandler() {
+        return killHandler;
+    }
+    
     /**
      * Returns the same value as Plan#getDB().
      *

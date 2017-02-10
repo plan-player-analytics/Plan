@@ -36,6 +36,10 @@ public class UserData {
     private boolean isOp;
     private boolean isBanned;
     private DemographicsData demData;
+    
+    private int mobKills;
+    private int playerKills;
+    private int deaths;
 
     private boolean planLiteFound;
     private PlanLitePlayerData planLiteData;
@@ -318,4 +322,27 @@ public class UserData {
         return isOnline;
     }
 
+    public int getMobKills() {
+        return mobKills;
+    }
+
+    public void setMobKills(int mobKills) {
+        this.mobKills = mobKills;
+    }
+
+    public int getPlayerKills() {
+        return playerKills;
+    }
+
+    public void setPlayerKills(int playerKills) {
+        this.playerKills = playerKills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
+    }
 }

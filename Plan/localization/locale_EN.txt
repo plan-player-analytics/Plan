@@ -97,3 +97,23 @@ COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Command requires arguments. REPLACE0
 COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Add -a to confirm execution! REPLACE0
 COMMAND_REQUIRES_ARGUMENTS_ONE <> §c[Plan] Command requires one argument.
 COMMAND_NO_PERMISSION <> §c[Plan] You do not have the required permmission.
+<<<<<<HTML>>>>>>
+WARN_INACCURATE <> <div class="warn">Data might be inaccurate, player has just registered.</div>
+ERROR_TABLE <> <p class="red">Error Calcuclating Table (No data)</p>
+TOP_TOWNS <> <p><b>Top 20 Towns</b></p>
+TOP_FACTIONS <> <p><b>Top 20 Factions</b></p>
+TOTAL_BALANCE <> <p>Server Total Balance: REPLACE0</p>
+TOTAL_VOTES <> <p>Players have voted total of REPLACE0 times.</p>
+TOWN <> <p>Town: REPLACE0</p>
+PLOT_OPTIONS <> <p>Plot options: REPLACE0</p>
+FRIENDS <> <p>Friends with REPLACE0</p>
+FACTION <> <p>Faction: REPLACE0</p>
+BALANCE <> <p>Balance: REPLACE0</p>
+VOTES <> <p>Player has voted REPLACE0 times.</p>
+BANNED <> | <span class="darkred">Banned</span>
+OPERATOR <> , Operator (Op)
+ONLINE <> | <span class="darkgreen">Online</span>
+OFFLINE <> | <span class="darkred">Offline</span>
+ACTIVE <> | Player is Active
+INACTIVE <> | Player is inactive
+ERROR_LIST <> Error Creating List</p>

@@ -1,4 +1,3 @@
-
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Phrase;
@@ -8,6 +7,7 @@ import com.djrapitops.plan.data.AnalysisData;
 import com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.HashMap;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.ui.Html;
@@ -55,6 +55,9 @@ public class PlaceholderUtils {
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         replaceMap.put("%top20mostactive%", data.getTop20ActivePlayers());
         replaceMap.put("%recentlogins%", data.getRecentPlayers());
+        replaceMap.put("%deaths%", data.getTotaldeaths()+"");
+        replaceMap.put("%playerkills%", data.getTotalkills()+"");
+        replaceMap.put("%mobkills%", data.getTotalmobkills()+"");
         Plan plugin = getPlugin(Plan.class);
         PlanLiteHook hook = plugin.getPlanLiteHook();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
@@ -87,7 +90,8 @@ public class PlaceholderUtils {
      */
     public static HashMap<String, String> getInspectReplaceRules(UserData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
-        replaceMap.put("%uuid%", "" + data.getUuid());
+        boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
+        replaceMap.put("%uuid%", (showIPandUUID ? "" + data.getUuid() : Html.HIDDEN.parse()));
         replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp("" + data.getLastPlayed()));
         replaceMap.put("%logintimes%", "" + data.getLoginTimes());
         replaceMap.put("%bed%", FormatUtils.formatLocation(data.getBedLocation()));
@@ -118,7 +122,7 @@ public class PlaceholderUtils {
         replaceMap.put("%gm2%", FormatUtils.formatTimeAmount("" + gmTwo));
         replaceMap.put("%gm3%", FormatUtils.formatTimeAmount("" + gmThree));
         replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount("" + total));
-        replaceMap.put("%ips%", data.getIps().toString());
+        replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : Html.HIDDEN.parse()));
         replaceMap.put("%nicknames%", FormatUtils.swapColorsToSpan(data.getNicknames().toString()));
         replaceMap.put("%name%", data.getName());
         replaceMap.put("%registered%", FormatUtils.formatTimeStamp("" + data.getRegistered()));
@@ -127,6 +131,10 @@ public class PlaceholderUtils {
         replaceMap.put("%banned%", data.isBanned() ? Html.BANNED.parse() : "");
         replaceMap.put("%op%", data.isOp() ? Html.OPERATOR.parse() : "");
         replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
+        int deaths = data.getDeaths();
+        replaceMap.put("%deaths%", deaths+"");
+        replaceMap.put("%playerkills%", data.getPlayerKills()+"");
+        replaceMap.put("%mobkills%", data.getMobKills()+"");
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         PlanLiteHook hook = plugin.getPlanLiteHook();
@@ -153,14 +161,14 @@ public class PlaceholderUtils {
 
     private static String getPlanLitePlayerHtml(PlanLitePlayerData planLiteData) {
         return HtmlUtils.replacePlaceholders(
-                HtmlUtils.getHtmlStringFromResource("planliteplayer.html"), 
+                HtmlUtils.getHtmlStringFromResource("planliteplayer.html"),
                 PlaceholderUtils.getPlanLitePlayerReplaceRules(planLiteData)
         );
     }
 
     private static String getPlanLiteAnalysisHtml(PlanLiteAnalyzedData planLiteData) {
         return HtmlUtils.replacePlaceholders(
-                HtmlUtils.getHtmlStringFromResource("planlite.html"), 
+                HtmlUtils.getHtmlStringFromResource("planlite.html"),
                 PlaceholderUtils.getPlanLiteAnalysisReplaceRules(planLiteData)
         );
     }

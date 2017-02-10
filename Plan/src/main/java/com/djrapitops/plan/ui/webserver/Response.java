@@ -5,6 +5,7 @@ import com.djrapitops.plan.utilities.UUIDFetcher;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Settings;
 
 /**
  *
@@ -15,7 +16,7 @@ public class Response {
     private OutputStream output;
     private Request request;
 
-    private DataRequestHandler requestHandler;
+    private final DataRequestHandler requestHandler;
 
     /**
      * Class Constructor.
@@ -42,22 +43,33 @@ public class Response {
                 return;
             }
             String[] requestArgs = request.getUri().split("/");
+            boolean forbidden = false;
+            String securityCode = "";
             if (requestArgs.length < 1) {
+                forbidden = true;
+            } else {
+                securityCode = requestArgs[1];
+            }
+            if (!securityCode.equals(Settings.SECURITY_CODE+"")) {
+                forbidden = true;
+            }
+            if (forbidden) {
                 String errorMessage = "HTTP/1.1 403 Forbidden\r\n"
                         + "Content-Type: text/html\r\n"
-                        + "Content-Length: 45\r\n"
+                        + "Content-Length: 38\r\n"
                         + "\r\n"
-                        + "<h1>403 Forbidden - Direct access not allowed</h1>";
+                        + "<h1>403 Forbidden - Access Denied</h1>";
                 output.write(errorMessage.getBytes());
                 return;
             }
-            String command = requestArgs[1].toLowerCase();
+            String command = requestArgs[2].toLowerCase();
             if (command.equals("player")) {
                 if (requestArgs.length >= 3) {
-                    UUID uuid = UUIDFetcher.getUUIDOf(requestArgs[2].trim());
+                    String playerName = requestArgs[3].trim();
+                    UUID uuid = UUIDFetcher.getUUIDOf(playerName);
                     if (uuid == null) {
                         String errorMessage = "HTTP/1.1 404 UUID not Found\r\n"
-                                + "Content-Type: text/html\r\n"
+                                + "Content-Type: text/html;\r\n"
                                 + "Content-Length: 30\r\n"
                                 + "\r\n"
                                 + "<h1>404 - Player doesn't exist</h1>";
@@ -67,7 +79,7 @@ public class Response {
                     if (requestHandler.checkIfCached(uuid)) {
                         String dataHtml = requestHandler.getDataHtml(uuid);
                         String htmlDef = "HTTP/1.1 OK\r\n"
-                                + "Content-Type: text/html\r\n"
+                                + "Content-Type: text/html; charset=utf-8\r\n"
                                 + "Content-Length: " + dataHtml.length() + "\r\n"
                                 + "\r\n";
                         output.write((htmlDef + dataHtml).getBytes());
@@ -78,7 +90,7 @@ public class Response {
                 if (requestHandler.checkIfAnalysisIsCached()) {
                     String analysisHtml = requestHandler.getAnalysisHtml();
                     String htmlDef = "HTTP/1.1 OK\r\n"
-                            + "Content-Type: text/html\r\n"
+                            + "Content-Type: text/html; charset=utf-8\r\n"
                             + "Content-Length: " + analysisHtml.length() + "\r\n"
                             + "\r\n";
                     output.write((htmlDef + analysisHtml).getBytes());

@@ -11,6 +11,7 @@ import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.Bukkit;
 
 import org.bukkit.OfflinePlayer;
@@ -92,8 +93,6 @@ public class InspectCommand extends SubCommand {
         }
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         inspectCache.cache(uuid);
-        final int port = Settings.WEBSERVER_PORT.getNumber();
-        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
         if (configValue <= 0) {
             configValue = 4;
@@ -108,8 +107,7 @@ public class InspectCommand extends SubCommand {
                 if (inspectCache.isCached(uuid)) {
                     sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
                     // Link
-                    String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
-                            + "/player/" + playerName;
+                    String url = HtmlUtils.getInspectUrl(playerName);
                     String message = Phrase.CMD_LINK+"";
                     boolean console = !(sender instanceof Player);
                     if (console) {
@@ -129,6 +127,7 @@ public class InspectCommand extends SubCommand {
                 }
                 if (timesrun > 45) {
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
+                    this.cancel();
                 }
             }
         }).runTaskTimer(plugin, 1 * 20, 5 * 20);

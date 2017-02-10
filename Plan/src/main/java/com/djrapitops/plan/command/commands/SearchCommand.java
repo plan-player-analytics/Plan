@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -71,9 +72,6 @@ public class SearchCommand extends SubCommand {
             }
         }
 
-        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        final int port = Settings.WEBSERVER_PORT.getNumber();
-        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
         if (configValue <= 0) {
             configValue = 4;
@@ -92,8 +90,7 @@ public class SearchCommand extends SubCommand {
                 String name = match.getName();
                 sender.sendMessage(Phrase.CMD_MATCH + name);
                 // Link
-                String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
-                        + "/player/" + name;
+                String url = HtmlUtils.getInspectUrl(name);
                 String message = Phrase.CMD_LINK+"";
                 boolean console = !(sender instanceof Player);
                 if (console) {

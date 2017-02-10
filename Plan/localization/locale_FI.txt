@@ -97,3 +97,23 @@ COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Komento vaatii argumentteja. REPLACE0
 COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Lisää -a vahvistaaksesi komennon ajo! REPLACE0
 COMMAND_REQUIRES_ARGUMENTS_ONE <> §c[Plan] Komento vaatii yhden argumentin..
 COMMAND_NO_PERMISSION <> §c[Plan] Sinulla ei ole lupaa tuohon.
+<<<<<<HTML>>>>>>
+WARN_INACCURATE <> <div class="warn">Tiedot voivat olla viallisia, pelaaja rekisteröityi vasta</div>
+ERROR_TABLE <> <p class="red">Virhe tehdessä taulukkoa (Ei dataa)</p>
+TOP_TOWNS <> <p><b>Top 20 Kylää</b></p>
+TOP_FACTIONS <> <p><b>Top 20 Kiltaa</b></p>
+TOTAL_BALANCE <> <p>Palvelimen rahan kokonaismäärä: REPLACE0</p>
+TOTAL_VOTES <> <p>Pelaajat ovat äänestäneet REPLACE0 kertaa.</p>
+TOWN <> <p>Kylä: REPLACE0</p>
+PLOT_OPTIONS <> <p>Plot asetukset: REPLACE0</p>
+FRIENDS <> <p>Kaverit: REPLACE0</p>
+FACTION <> <p>Kilta: REPLACE0</p>
+BALANCE <> <p>Rahamäärä: REPLACE0</p>
+VOTES <> <p>Pelaaja on äänestänyt REPLACE0 kertaa.</p>
+BANNED <> | <span class="darkred">Banned</span>
+OPERATOR <> , Operator (Op)
+ONLINE <> | <span class="darkgreen">Online</span>
+OFFLINE <> | <span class="darkred">Offline</span>
+ACTIVE <> | Pelaaja on aktiivinen
+INACTIVE <> | Pelaaja on inaktiivinen
+ERROR_LIST <> Virhe luodessa listaa</p>

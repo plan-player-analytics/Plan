@@ -203,6 +203,9 @@ public enum Phrase {
             while (localeScanner.hasNextLine()) {
                 String line = localeScanner.nextLine();
                 if (!line.isEmpty()) {
+                    if (line.equals("<<<<<<HTML>>>>>>")) {
+                        break;
+                    }
                     localeRows.add(line);
                 }
             }

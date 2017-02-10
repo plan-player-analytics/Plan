@@ -58,7 +58,8 @@ public enum Html {
     OFFLINE("| " + SPAN.parse(COLOR_4.parse() + "Offline")),
     ACTIVE("| Player is Active"),
     INACTIVE("| Player is inactive"),
-    ERROR_LIST("Error Creating List</p>"),;
+    ERROR_LIST("Error Creating List</p>"),
+    HIDDEN("Hidden (config)");
 
     private String html;
 
@@ -86,8 +87,17 @@ public enum Html {
         try {
             Scanner localeScanner = new Scanner(localeFile, "UTF-8");
             List<String> localeRows = new ArrayList<>();
+            boolean html = false;
             while (localeScanner.hasNextLine()) {
-                localeRows.add(localeScanner.nextLine());
+                String line = localeScanner.nextLine();
+                if (line.equals("<<<<<<HTML>>>>>>")) {
+                    html = true;
+                    continue;
+                }
+                if (!html) {
+                    continue;
+                }
+                localeRows.add(line);
             }
             for (String localeRow : localeRows) {
                 try {

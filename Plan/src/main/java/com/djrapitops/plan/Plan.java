@@ -1,3 +1,23 @@
+/*
+*    Player Analytics Bukkit plugin for monitoring server activity.
+*    Copyright (C) 2016  Risto Lahtela / Rsl1122
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the Plan License. (licence.yml)
+*    Modified software can only be redistributed if allowed in the licence.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the License
+*    along with this program. 
+*    If not it should be visible on the distribution page.
+*    Or here
+*    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
+*/
+
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.PlanCommand;
@@ -23,6 +43,7 @@ import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.listeners.PlanDeathEventListener;
 import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -30,23 +51,22 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-/* TODO 2.2.0
+/* TODO 2.5.0
 Placeholder API
 Database cleaning
 Play session lenght
 - Existing data
 - importing
+    Kills & Deaths 50%
+    - DB saving & Alter tables
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
 Seperate serverdata and userdata saving
 Database Cleaning of useless data
 Fix any bugs that come up
     Localization
-- Combine the two locale files
-Security
-- UUID to address
-- Permission check to Datarequest handler
-- Config settings to disable
+    - Combine the two locale files
+    Security
  */
 /**
  *
@@ -198,6 +218,7 @@ public class Plan extends JavaPlugin {
         pluginManager.registerEvents(new PlanPlayerListener(this), this);
         pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
         pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
+        pluginManager.registerEvents(new PlanDeathEventListener(this), this);
         if (Settings.GATHERLOCATIONS.isTrue()) {
             pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
         }
@@ -233,8 +254,6 @@ public class Plan extends JavaPlugin {
             setEnabled(false);
             return false;
         }
-
-        db.setVersion(0);
 
         return true;
     }
@@ -324,18 +343,13 @@ public class Plan extends JavaPlugin {
     private void initLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
         File localeFile = new File(getDataFolder(), "locale.txt");
-        File htmlLocale = new File(getDataFolder(), "htmlLocale.txt");
         boolean skipLoc = false;
-        boolean skipHtmlLoc = false;
         String usingLocale = "";
         if (localeFile.exists()) {
             Phrase.loadLocale(localeFile);
+            Html.loadLocale(localeFile);
             skipLoc = true;
             usingLocale = "locale.txt";
-        }
-        if (htmlLocale.exists()) {
-            Html.loadLocale(htmlLocale);
-            skipHtmlLoc = true;
         }
         if (!locale.equals("DEFAULT")) {
             try {
@@ -349,20 +363,9 @@ public class Plan extends JavaPlugin {
                         outputStream.write(bytes, 0, read);
                     }
                     Phrase.loadLocale(localeFile);
+                    Html.loadLocale(localeFile);
                     usingLocale = locale;
                     localeFile.delete();
-                }
-                if (!skipHtmlLoc) {
-                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/htmlLocale_" + locale + ".txt");
-                    InputStream inputStream = localeURL.openStream();
-                    OutputStream outputStream = new FileOutputStream(htmlLocale);
-                    int read = 0;
-                    byte[] bytes = new byte[1024];
-                    while ((read = inputStream.read(bytes)) != -1) {
-                        outputStream.write(bytes, 0, read);
-                    }
-                    Html.loadLocale(htmlLocale);
-                    htmlLocale.delete();
                 }
             } catch (FileNotFoundException ex) {
                 logError("Attempted using locale that doesn't exist.");

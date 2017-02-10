@@ -16,6 +16,7 @@ public enum Settings {
     USE_ALTERNATIVE_UI("Settings.PlanLite.UseAsAlternativeUI"),
     PLANLITE_ENABLED("Settings.PlanLite.Enabled"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
+    SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
@@ -31,7 +32,8 @@ public enum Settings {
     DEM_FEMALE("Customization.DemographicsTriggers.Female"),
     DEM_MALE("Customization.DemographicsTriggers.Male"),
     DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),
-    LOCALE("Settings.Locale");
+    LOCALE("Settings.Locale"),
+    SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode");
 
     private final String configPath;
 

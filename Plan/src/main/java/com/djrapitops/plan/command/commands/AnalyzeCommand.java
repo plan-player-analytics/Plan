@@ -7,6 +7,7 @@ import com.djrapitops.plan.command.SubCommand;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import java.util.Date;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -81,6 +82,7 @@ public class AnalyzeCommand extends SubCommand {
                 }
                 if (timesrun > 45) {
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
+                    this.cancel();
                 }
             }
         }).runTaskTimer(plugin, 1 * 20, 5 * 20);
@@ -93,14 +95,11 @@ public class AnalyzeCommand extends SubCommand {
      * @throws CommandException
      */
     public void sendAnalysisMessage(CommandSender sender) throws CommandException {
-        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        final int port = Settings.WEBSERVER_PORT.getNumber();
-        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+        
         
         sender.sendMessage(Phrase.CMD_ANALYZE_HEADER+"");
         // Link
-        String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
-                + "/server";
+        String url = HtmlUtils.getServerAnalysisUrl();
         String message = Phrase.CMD_LINK+"";
         boolean console = !(sender instanceof Player);
         if (console) {

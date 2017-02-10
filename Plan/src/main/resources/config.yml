@@ -20,6 +20,9 @@ Settings:
     Port: 8804
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
+    Security:
+      DisplayIPsAndUUIDs: true
+      AddressSecurityCode: bAkEd      
   PlanLite:
     Enabled: true
     UseAsAlternativeUI: false

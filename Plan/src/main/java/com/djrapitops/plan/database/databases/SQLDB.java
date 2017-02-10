@@ -53,6 +53,9 @@ public abstract class SQLDB extends Database {
     private String userColumnLastGMSwapTime;
     private String userColumnLoginTimes;
     private String userColumnLastPlayed;
+    private String userColumnMobKills;
+    private String userColumnPlayerKills;
+    private String userColumnDeaths;
     private final String locationColumnUserID;
     private String locationColumnID;
     private String locationColumnCoordinatesX;
@@ -104,6 +107,9 @@ public abstract class SQLDB extends Database {
         userColumnPlayTime = "play_time";
         userColumnLoginTimes = "login_times";
         userColumnLastPlayed = "last_played";
+        userColumnMobKills = "mob_kills";
+        userColumnPlayerKills = "player_kills";
+        userColumnDeaths = "deaths";
 
         locationColumnCoordinatesX = "x";
         locationColumnCoordinatesZ = "z";
@@ -156,10 +162,14 @@ public abstract class SQLDB extends Database {
                 if (connection == null || connection.isClosed()) {
                     return false;
                 }
-                boolean usingMySQL = getConfigName().toLowerCase().equals("mysql");
-                //                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
-                //                boolean newDatabase = set.next();
-                //                set.close();
+                boolean usingMySQL = supportsModification;
+
+                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
+                boolean newDatabase = set.next();
+                set.close();
+                if (newDatabase) {
+                    setVersion(1);
+                }
                 query("CREATE TABLE IF NOT EXISTS " + userName + " ("
                         + userColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
                         + userColumnUUID + " varchar(36) NOT NULL, "
@@ -170,7 +180,10 @@ public abstract class SQLDB extends Database {
                         + userColumnLastGMSwapTime + " bigint NOT NULL, "
                         + userColumnPlayTime + " bigint NOT NULL, "
                         + userColumnLoginTimes + " integer NOT NULL, "
-                        + userColumnLastPlayed + " bigint NOT NULL"
+                        + userColumnLastPlayed + " bigint NOT NULL, "
+                        + userColumnDeaths + " int NOT NULL, "
+                        + userColumnMobKills + " int NOT NULL, "
+                        + userColumnPlayerKills + " int NOT NULL"
                         + (usingMySQL ? ", PRIMARY KEY (" + userColumnID + ")" : "")
                         + ")"
                 );
@@ -227,7 +240,17 @@ public abstract class SQLDB extends Database {
                         + "version integer NOT NULL"
                         + ")"
                 );
-
+                int version = getVersion();
+                version = 0;
+                if (version < 1) {
+                    try {
+                        query("ALTER TABLE " + userName + " ADD " + userColumnDeaths + " integer NOT NULL DEFAULT 0");
+                        query("ALTER TABLE " + userName + " ADD " + userColumnMobKills + " integer NOT NULL DEFAULT 0");
+                        query("ALTER TABLE " + userName + " ADD " + userColumnPlayerKills + " integer NOT NULL DEFAULT 0");
+                    } catch (Exception e) {
+                    }
+                }
+                setVersion(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -544,6 +567,9 @@ public abstract class SQLDB extends Database {
                 data.setPlayTime(set.getLong(userColumnPlayTime));
                 data.setLoginTimes(set.getInt(userColumnLoginTimes));
                 data.setLastPlayed(set.getLong(userColumnLastPlayed));
+                data.setDeaths(set.getInt(userColumnDeaths));
+                data.setMobKills(set.getInt(userColumnMobKills));
+                data.setPlayerKills(set.getInt(userColumnPlayerKills));
             }
             set.close();
             statement.close();
@@ -631,7 +657,10 @@ public abstract class SQLDB extends Database {
                 + userColumnLastGMSwapTime + "=?, "
                 + userColumnPlayTime + "=?, "
                 + userColumnLoginTimes + "=?, "
-                + userColumnLastPlayed + "=? "
+                + userColumnLastPlayed + "=?, "
+                + userColumnDeaths + "=?, "
+                + userColumnMobKills + "=?, "
+                + userColumnPlayerKills + "=? "
                 + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
         try {
             connection.setAutoCommit(false);
@@ -658,6 +687,9 @@ public abstract class SQLDB extends Database {
                 uStatement.setInt(7, uData.getLoginTimes());
                 uStatement.setLong(8, uData.getLastPlayed());
                 uStatement.setString(9, uData.getUuid().toString());
+                uStatement.setInt(10, uData.getDeaths());
+                uStatement.setInt(11, uData.getMobKills());
+                uStatement.setInt(12, uData.getPlayerKills());
                 uStatement.addBatch();
                 commitRequired = true;
             }
@@ -700,7 +732,10 @@ public abstract class SQLDB extends Database {
                         + userColumnLastGMSwapTime + "=?, "
                         + userColumnPlayTime + "=?, "
                         + userColumnLoginTimes + "=?, "
-                        + userColumnLastPlayed + "=? "
+                        + userColumnLastPlayed + "=?, "
+                        + userColumnDeaths + "=?, "
+                        + userColumnMobKills + "=?, "
+                        + userColumnPlayerKills + "=? "
                         + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
 
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -718,6 +753,9 @@ public abstract class SQLDB extends Database {
                 statement.setInt(7, data.getLoginTimes());
                 statement.setLong(8, data.getLastPlayed());
                 statement.setString(9, uuid.toString());
+                statement.setInt(10, data.getDeaths());
+                statement.setInt(11, data.getMobKills());
+                statement.setInt(12, data.getPlayerKills());
                 update = statement.executeUpdate();
             }
             if (update == 0) {
@@ -730,8 +768,11 @@ public abstract class SQLDB extends Database {
                         + userColumnLastGMSwapTime + ", "
                         + userColumnPlayTime + ", "
                         + userColumnLoginTimes + ", "
-                        + userColumnLastPlayed
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + userColumnLastPlayed + ", "
+                        + userColumnDeaths + ", "
+                        + userColumnMobKills + ", "
+                        + userColumnPlayerKills
+                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 statement.setString(1, uuid.toString());
                 statement.setInt(2, data.getDemData().getAge());
@@ -747,6 +788,9 @@ public abstract class SQLDB extends Database {
                 statement.setLong(7, data.getPlayTime());
                 statement.setInt(8, data.getLoginTimes());
                 statement.setLong(9, data.getLastPlayed());
+                statement.setInt(10, data.getDeaths());
+                statement.setInt(11, data.getMobKills());
+                statement.setInt(12, data.getPlayerKills());
 
                 statement.execute();
                 statement.close();

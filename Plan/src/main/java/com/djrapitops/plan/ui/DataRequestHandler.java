@@ -14,9 +14,9 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class DataRequestHandler {
 
-    private Plan plugin;
-    private InspectCacheHandler inspectCache;
-    private AnalysisCacheHandler analysisCache;
+    private final Plan plugin;
+    private final InspectCacheHandler inspectCache;
+    private final AnalysisCacheHandler analysisCache;
 
     /**
      * Class Constructor.

@@ -19,6 +19,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,8 +30,8 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Analysis {
 
-    private Plan plugin;
-    private InspectCacheHandler inspectCache;
+    private final Plan plugin;
+    private final InspectCacheHandler inspectCache;
     private final List<UserData> rawData;
     private HashMap<Long, ServerData> rawServerData;
     private final List<UUID> added;
@@ -73,10 +74,6 @@ public class Analysis {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return;
         }
-        // Settings for urls
-        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        final int port = Settings.WEBSERVER_PORT.getNumber();
-        final String alternativeIP = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         // Async task for Analysis
         (new BukkitRunnable() {
             @Override
@@ -116,6 +113,10 @@ public class Analysis {
                 int joinleaver = 0;
                 int inactive = 0;
 
+                long totalKills = 0;
+                long totalMobKills = 0;
+                long totalDeaths = 0;
+                
                 int ops = 0;
                 List<Integer> ages = new ArrayList<>();
 
@@ -159,8 +160,7 @@ public class Analysis {
                     long playTime = uData.getPlayTime();
                     totalPlaytime += playTime;
                     String playerName = uData.getName();
-                    String url = "http://" + (useAlternativeIP ? alternativeIP : plugin.getServer().getIp() + ":" + port)
-                            + "/player/" + playerName;
+                    String url = HtmlUtils.getInspectUrl(playerName);
                     String html = Html.BUTTON.parse(url, playerName);
 
                     latestLogins.put(html, uData.getLastPlayed());
@@ -182,6 +182,9 @@ public class Analysis {
                     } else {
                         inactive++;
                     }
+                    totalKills += uData.getPlayerKills();
+                    totalMobKills += uData.getMobKills();
+                    totalDeaths += uData.getDeaths();
                 }
 
                 // Save Dataset to AnalysisData
@@ -201,6 +204,10 @@ public class Analysis {
                 analyzeAverageAge(ages, data);
                 createGamemodeUsageVisualization(gmZero, gmOne, gmTwo, gmThree, data);
                 createCommandUseTable(data);
+                
+                data.setTotaldeaths(totalDeaths);
+                data.setTotalkills(totalKills);
+                data.setTotalmobkills(totalMobKills);
 
                 data.setRefreshDate(new Date().getTime());
                 analysisCache.cache(data);
