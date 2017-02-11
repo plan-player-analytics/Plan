@@ -73,6 +73,7 @@ public enum Phrase {
     ANALYSIS_FAIL_NO_DATA(ANALYSIS + "Analysis failed, no data in the database."),
     ANALYSIS_BEGIN_ANALYSIS(ANALYSIS + "Data Fetched, beginning Analysis of data.."),
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete."),
+    DATA_CORRUPTION_WARN("Some data might be corrupted: "+REPLACE0),
     //
     ERROR_PLANLITE("PlanLite not found, if you're have plugins using PlanAPI v1.6.0 download PlanLite."),
     ERROR_CONSOLE_PLAYER("This point of code should not be accessable on console. Inform author: "+REPLACE0+" Console: REPLACE1"),

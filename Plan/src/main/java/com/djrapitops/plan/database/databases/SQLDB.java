@@ -515,7 +515,6 @@ public abstract class SQLDB extends Database {
             statement.setString(1, "" + userId);
             statement.execute();
             statement.close();
-
             statement = connection.prepareStatement("DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
@@ -524,7 +523,7 @@ public abstract class SQLDB extends Database {
             statement.setString(1, "" + userId);
             statement.execute();
             statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnIP + ") LIKE UPPER(?)");
+            statement = connection.prepareStatement("DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
             statement.close();

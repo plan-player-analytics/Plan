@@ -50,7 +50,7 @@ public class Response {
             } else {
                 securityCode = requestArgs[1];
             }
-            if (!securityCode.equals(Settings.SECURITY_CODE+"")) {
+            if (!securityCode.equals(Settings.SECURITY_CODE + "")) {
                 forbidden = true;
             }
             if (forbidden) {
@@ -77,12 +77,22 @@ public class Response {
                         return;
                     }
                     if (requestHandler.checkIfCached(uuid)) {
-                        String dataHtml = requestHandler.getDataHtml(uuid);
-                        String htmlDef = "HTTP/1.1 OK\r\n"
-                                + "Content-Type: text/html; charset=utf-8\r\n"
-                                + "Content-Length: " + dataHtml.length() + "\r\n"
-                                + "\r\n";
-                        output.write((htmlDef + dataHtml).getBytes());
+                        try {
+                            String dataHtml = requestHandler.getDataHtml(uuid);
+                            String htmlDef = "HTTP/1.1 OK\r\n"
+                                    + "Content-Type: text/html; charset=utf-8\r\n"
+                                    + "Content-Length: " + dataHtml.length() + "\r\n"
+                                    + "\r\n";
+                            output.write((htmlDef + dataHtml).getBytes());
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            String errorMessage = "HTTP/1.1 404 Error\r\n"
+                                    + "Content-Type: text/html;\r\n"
+                                    + "Content-Length: 30\r\n"
+                                    + "\r\n"
+                                    + "<h1>404 - Error has occurred..</h1>";
+                            output.write(errorMessage.getBytes());
+                        }
                         return;
                     }
                 }

@@ -80,7 +80,7 @@ public class AnalyzeCommand extends SubCommand {
                     sendAnalysisMessage(sender);
                     this.cancel();
                 }
-                if (timesrun > 45) {
+                if (timesrun > 10) {
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                     this.cancel();
                 }

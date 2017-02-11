@@ -125,7 +125,7 @@ public class InspectCommand extends SubCommand {
                     sender.sendMessage(Phrase.CMD_FOOTER+"");
                     this.cancel();
                 }
-                if (timesrun > 45) {
+                if (timesrun > 10) {
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
                     this.cancel();
                 }

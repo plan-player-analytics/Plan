@@ -9,7 +9,7 @@
 *    This program is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
+*    License for more details.
 *
 *    You should have received a copy of the License
 *    along with this program. 
@@ -51,22 +51,15 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-/* TODO 2.5.0
+/* TODO 2.6.0
 Placeholder API
 Database cleaning
 Play session lenght
-- Existing data
-- importing
-    Kills & Deaths 50%
-    - DB saving & Alter tables
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
 Seperate serverdata and userdata saving
 Database Cleaning of useless data
 Fix any bugs that come up
-    Localization
-    - Combine the two locale files
-    Security
  */
 /**
  *
