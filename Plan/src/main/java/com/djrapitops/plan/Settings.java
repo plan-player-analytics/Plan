@@ -59,5 +59,8 @@ public enum Settings {
     public int getNumber() {
         return getPlugin(Plan.class).getConfig().getInt(configPath);
     }
-
+    
+    public String getPath() {
+        return configPath;
+    }
 }

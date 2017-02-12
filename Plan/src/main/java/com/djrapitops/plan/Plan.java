@@ -54,12 +54,15 @@ import org.bukkit.scheduler.BukkitTask;
 /* TODO 2.6.0
 Placeholder API
 Database cleaning
-Play session lenght
+Play session length
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
 Seperate serverdata and userdata saving
 Database Cleaning of useless data
 Fix any bugs that come up
+- New Players not counted for some reason.
+Sortable player table.
+Add -n argument for nickname search.
  */
 /**
  *
