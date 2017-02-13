@@ -59,7 +59,6 @@ public class NewPlayerCreator {
         data.setLastGmSwapTime(zero);
         data.setDeaths(0);
         data.setMobKills(0);
-        data.setPlayerKills(0);
         db.saveUserData(player.getUniqueId(), data);
     }
 

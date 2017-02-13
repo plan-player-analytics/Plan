@@ -57,7 +57,7 @@ public class ManageHotswapCommand extends SubCommand {
                 if (dbToSwapTo.equalsIgnoreCase(database.getConfigName())) {
                     db = database;
                     db.init();
-                    db.getNewestServerData();
+                    db.getVersion(); //Test db connection
                 }
             }
         } catch (NullPointerException e) {

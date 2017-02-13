@@ -29,6 +29,7 @@ public class RawAnalysisData {
     private HashMap<String, Long> playtimes;
     private List<SessionData> sessiondata;
     private HashMap<String, Integer> commandUse;
+    private List<Long> registered;
 
     public RawAnalysisData() {
         gmZero = 0;
@@ -47,8 +48,9 @@ public class RawAnalysisData {
         ages = new ArrayList<>();
         latestLogins = new HashMap<>();
         playtimes = new HashMap<>();
-        sessiondata = new ArrayList<>();
+        sessiondata = new ArrayList<>();        
         commandUse = new HashMap<>();
+        registered = new ArrayList<>();
     }
 
     public void addToGmZero(long gmZero) {
@@ -185,5 +187,9 @@ public class RawAnalysisData {
 
     public HashMap<String, Integer> getCommandUse() {
         return commandUse;
+    }
+
+    public List<Long> getRegistered() {
+        return registered;
     }
 }

@@ -97,8 +97,10 @@ public class ActivityHandler {
      * @param data UserData matching the Player
      */
     public void handleReload(Player player, UserData data) {
-        long timeNow = new Date().getTime();
+        Date now = new Date();
+        long timeNow = now.getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
         data.setLastPlayed(timeNow);
+        data.startSession(now.toInstant().getEpochSecond() * (long) 1000);
     }
 }

@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.data.DemographicsData;
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,34 +77,6 @@ public class DataCombineUtils {
     }
 
     /**
-     * Combines two conflicting ServerDatasets
-     *
-     * @param fData First Dataset
-     * @param tData Second Dataset
-     * @return Combined ServerDataset
-     */
-    public static HashMap<Long, ServerData> combineServerDatas(HashMap<Long, ServerData> fData, HashMap<Long, ServerData> tData) {
-        HashMap<Long, ServerData> combinedData = new HashMap<>();
-        Set<Long> allDates = new HashSet<>();
-        allDates.addAll(fData.keySet());
-        allDates.addAll(tData.keySet());
-        allDates.parallelStream().forEach((Long date) -> {
-            ServerData fServerData = fData.get(date);
-            ServerData tServerData = tData.get(date);
-            if (fServerData == null) {
-                combinedData.put(date, tServerData);
-            } else if (tServerData == null) {
-                combinedData.put(date, fServerData);
-            } else if (fServerData.getPlayersOnline() > tServerData.getPlayersOnline()) {
-                combinedData.put(date, fServerData);
-            } else {
-                combinedData.put(date, tServerData);
-            }
-        });
-        return combinedData;
-    }
-
-    /**
      * Combines Two conflicting command usage datasets.
      *
      * @param fData First Dataset
@@ -141,18 +112,4 @@ public class DataCombineUtils {
         }
         return combinedData;
     }
-
-    public static HashMap<String, Integer> getCommandUse(HashMap<Long, ServerData> fromServerData) {
-        ServerData sData = null;
-        for (long sDataKey : fromServerData.keySet()) {
-            sData = fromServerData.get(sDataKey);
-            break;
-        }
-        HashMap<String, Integer> fromCommandUse = null;
-        if (sData != null) {
-            fromCommandUse = sData.getCommandUsage();
-        }
-        return fromCommandUse;
-    }
-
 }

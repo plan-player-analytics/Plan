@@ -54,11 +54,6 @@ public class SQLiteDB extends SQLDB {
     }
 
     @Override
-    public void getConfigDefaults(ConfigurationSection section) {
-
-    }
-
-    @Override
     public String getName() {
         return "SQLite";
     }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import org.bukkit.GameMode;
@@ -24,6 +25,7 @@ public class UserData {
     private List<Location> locations;
     private HashSet<InetAddress> ips;
     private HashSet<String> nicknames;
+    private String lastNick;
     private long registered;
     private long lastPlayed;
     private long playTime;
@@ -37,7 +39,7 @@ public class UserData {
     private DemographicsData demData;
 
     private int mobKills;
-    private int playerKills;
+    private List<KillData> playerKills;
     private int deaths;
 
     private boolean planLiteFound;
@@ -72,6 +74,8 @@ public class UserData {
         name = player.getName();
         isOnline = player.isOnline();
         sessions = new ArrayList<>();
+        lastNick = "";
+        playerKills = new ArrayList<>();
     }
 
     public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
@@ -95,6 +99,8 @@ public class UserData {
         name = player.getName();
         isOnline = player.isOnline();
         sessions = new ArrayList<>();
+        lastNick = "";
+        playerKills = new ArrayList<>();
     }
 
     public void addIpAddress(InetAddress ip) {
@@ -119,10 +125,14 @@ public class UserData {
         }
     }
 
-    public void addNickname(String nick) {
+    public boolean addNickname(String nick) {
         if (!nicknames.contains(nick)) {
-            nicknames.add(nick);
+            if (!nick.isEmpty()) {
+                nicknames.add(nick);
+                return true;
+            }
         }
+        return false;
     }
 
     public void addNicknames(Collection<String> addNicks) {
@@ -339,12 +349,16 @@ public class UserData {
         this.mobKills = mobKills;
     }
 
-    public int getPlayerKills() {
+    public List<KillData> getPlayerKills() {
         return playerKills;
     }
 
-    public void setPlayerKills(int playerKills) {
+    public void setPlayerKills(List<KillData> playerKills) {
         this.playerKills = playerKills;
+    }
+    
+    public void addPlayerKill(KillData kill) {
+        playerKills.add(kill);
     }
 
     public int getDeaths() {
@@ -357,5 +371,13 @@ public class UserData {
 
     public List<SessionData> getSessions() {
         return sessions;
+    }
+
+    public String getLastNick() {
+        return lastNick;
+    }
+
+    public void setLastNick(String lastNick) {
+        this.lastNick = lastNick;
     }
 }

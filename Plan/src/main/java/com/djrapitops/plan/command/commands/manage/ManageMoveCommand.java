@@ -4,13 +4,11 @@ import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 
 import com.djrapitops.plan.database.Database;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -33,7 +31,7 @@ public class ManageMoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageMoveCommand(Plan plugin) {
-        super("move", "plan.manage", Phrase.CMD_USG_MANAGE_MOVE+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE+"");
+        super("move", "plan.manage", Phrase.CMD_USG_MANAGE_MOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE + "");
 
         this.plugin = plugin;
     }
@@ -54,7 +52,7 @@ public class ManageMoveCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MOVE+""));
+            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MOVE + ""));
             return true;
         }
         String fromDB = args[0].toLowerCase();
@@ -98,7 +96,7 @@ public class ManageMoveCommand extends SubCommand {
             plugin.logError(toDB + " was null!");
             return true;
         }
-        final Set<UUID> uuids = fromDatabase.getSavedUUIDs();        
+        final Set<UUID> uuids = fromDatabase.getSavedUUIDs();
         if (uuids.isEmpty()) {
             sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
             return true;
@@ -117,16 +115,7 @@ public class ManageMoveCommand extends SubCommand {
                         allUserData.add(moveFromDB.getUserData(uuid));
                     }
                     moveToDB.saveMultipleUserData(allUserData);
-                    HashMap<Long, ServerData> serverData = moveFromDB.getServerDataHashMap();
-                    moveToDB.saveServerDataHashMap(serverData);
-                    ServerData sData = null;
-                    for (long sDataKey : serverData.keySet()) {
-                        sData = serverData.get(sDataKey);
-                        break;
-                    }
-                    if (sData != null) {
-                        moveToDB.saveCommandUse(sData.getCommandUsage());
-                    }
+                    moveToDB.saveCommandUse(moveFromDB.getCommandUse());
                     sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
                     if (!toDB.equals(plugin.getDB().getConfigName())) {
                         sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
@@ -134,9 +123,12 @@ public class ManageMoveCommand extends SubCommand {
                 } catch (NullPointerException e) {
                     sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
                 }
+
                 this.cancel();
             }
+
         }).runTaskAsynchronously(plugin);
+
         return true;
     }
 }

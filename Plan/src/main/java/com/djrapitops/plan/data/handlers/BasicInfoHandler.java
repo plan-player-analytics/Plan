@@ -32,7 +32,10 @@ public class BasicInfoHandler {
      */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
         Player player = event.getPlayer();
-        data.addNickname(player.getDisplayName());
+        String nick = player.getDisplayName();
+        if (data.addNickname(nick)) {
+            data.setLastNick(nick);
+        }
         data.addIpAddress(player.getAddress().getAddress());
     }
 
@@ -43,7 +46,10 @@ public class BasicInfoHandler {
      * @param data UserData matching the Player
      */
     public void handleReload(Player player, UserData data) {
-        data.addNickname(player.getDisplayName());
+        String nick = player.getDisplayName();
+        if (data.addNickname(nick)) {
+            data.setLastNick(nick);
+        }
         data.addIpAddress(player.getAddress().getAddress());
     }
 }

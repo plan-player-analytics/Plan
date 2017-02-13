@@ -3,6 +3,9 @@ package com.djrapitops.plan.data.handlers;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
+import java.util.Date;
+import java.util.UUID;
+import main.java.com.djrapitops.plan.data.KillData;
 
 /**
  *
@@ -15,8 +18,11 @@ public class KillHandler {
         this.plugin = plugin;
     }
     
-    public void handlePlayerKill(UserData data) {
-        data.setPlayerKills(data.getPlayerKills()+1);
+    public void handlePlayerKill(UserData killerData, UserData victim, String weapon) {
+        UUID victimUUID = victim.getUuid();
+        long now = new Date().toInstant().getEpochSecond()*(long)1000;
+        int victimID = plugin.getDB().getUserId(victimUUID+"");
+        killerData.addPlayerKill(new KillData(victimUUID, victimID, weapon, now));
     }
     
     public void handlePlayerDeath(UserData data) {

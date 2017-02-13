@@ -4,19 +4,20 @@ import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.ServerData;
+import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.database.databases.SQLiteDB;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.utilities.DataCombineUtils;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -78,7 +79,7 @@ public class ManageRestoreCommand extends SubCommand {
                 return true;
             }
             final Database copyToDB = database;
-            (new BukkitRunnable() {
+            BukkitTask asyncRestoreTask = (new BukkitRunnable() {
                 @Override
                 public void run() {
                     String backupDBName = args[0];
@@ -101,12 +102,12 @@ public class ManageRestoreCommand extends SubCommand {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                     copyToDB.removeAllData();
                     Set<UUID> uuids = backupDB.getSavedUUIDs();
+                    List<UserData> allUserData = new ArrayList<>();
                     for (UUID uuid : uuids) {
-                        copyToDB.saveUserData(uuid, backupDB.getUserData(uuid));
+                        allUserData.add(backupDB.getUserData(uuid));
                     }
-                    HashMap<Long, ServerData> serverDataHashMap = backupDB.getServerDataHashMap();
-                    copyToDB.saveServerDataHashMap(serverDataHashMap);
-                    copyToDB.saveCommandUse(DataCombineUtils.getCommandUse(serverDataHashMap));
+                    copyToDB.saveMultipleUserData(allUserData);
+                    copyToDB.saveCommandUse(backupDB.getCommandUse());
                     sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
                     this.cancel();
                 }

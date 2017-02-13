@@ -29,7 +29,7 @@ public class PlanPlayerListener implements Listener {
     private final DemographicsHandler demographicH;
     private final RuleBreakingHandler rulebreakH;
     private final PlanLiteHandler planLiteH;
-    private final ServerDataHandler serverHandler;
+    private final CommandUseHandler serverHandler;
 
     /**
      * Class Constructor.
@@ -68,7 +68,6 @@ public class PlanPlayerListener implements Listener {
         if (isNewPlayer) {
             handler.newPlayer(player);
         }
-        serverHandler.handleLogin(isNewPlayer);
         UserData data = handler.getCurrentData(uuid);
         activityH.handleLogin(event, data);
         basicInfoH.handleLogin(event, data);
@@ -98,7 +97,6 @@ public class PlanPlayerListener implements Listener {
         activityH.handleLogOut(event, data);
         locationH.handleLogOut(event, data);
         gmTimesH.handleLogOut(event, data);
-        serverHandler.handleLogout();
         handler.saveCachedData(uuid);
     }
 
@@ -117,7 +115,6 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = event.getPlayer().getUniqueId();
         UserData data = handler.getCurrentData(uuid);
         rulebreakH.handleKick(event, data);
-        serverHandler.handleKick();
         handler.saveCachedData(uuid);
         handler.clearFromCache(uuid);
     }

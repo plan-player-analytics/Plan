@@ -1,7 +1,6 @@
 package com.djrapitops.plan.database;
 
 import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.Plan;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -64,13 +63,6 @@ public abstract class Database {
     public abstract boolean wasSeenBefore(UUID uuid);
 
     /**
-     * Gets the settings to the config for each database type.
-     *
-     * @param section
-     */
-    public abstract void getConfigDefaults(ConfigurationSection section);
-
-    /**
      * Cleans the database.
      */
     public abstract void clean();
@@ -115,35 +107,14 @@ public abstract class Database {
     public abstract void setVersion(int version);
 
     /**
-     * Saves new server data to the table
-     *
-     * @param serverData Current serverdata
-     */
-    public abstract void saveServerData(ServerData serverData);
-
-    /**
-     * Gets the newest serverdata from the database.
-     *
-     * @return ServerData with the highest save date.
-     */
-    public abstract ServerData getNewestServerData();
-
-    /**
      * Closes the database.
      */
     public abstract void close();
-
-    /**
-     * Returns raw data for analysis, contains all of player activity history.
-     *
-     * @return HashMap with save date (long in ms) and ServerData.
-     */
-    public abstract HashMap<Long, ServerData> getServerDataHashMap();
     
     public abstract void removeAccount(String uuid);
     public abstract void removeAllData();
-    public abstract void saveServerDataHashMap(HashMap<Long, ServerData> serverData);
     public abstract void saveCommandUse(HashMap<String, Integer> data);
     public abstract Set<UUID> getSavedUUIDs();
     public abstract HashMap<String, Integer> getCommandUse();
+    public abstract int getUserId(String uuid);
 }

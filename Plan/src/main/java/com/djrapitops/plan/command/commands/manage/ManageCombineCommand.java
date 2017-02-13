@@ -4,7 +4,6 @@ import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.command.CommandType;
 import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 
 import com.djrapitops.plan.database.Database;
@@ -127,15 +126,10 @@ public class ManageCombineCommand extends SubCommand {
 
                     List<UserData> combinedUserData = DataCombineUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
 
-                    HashMap<Long, ServerData> fromServerData = moveFromDB.getServerDataHashMap();
-                    HashMap<Long, ServerData> toServerData = moveToDB.getServerDataHashMap();
-                    HashMap<Long, ServerData> combinedServerData = DataCombineUtils.combineServerDatas(fromServerData, toServerData);
-
-                    HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(DataCombineUtils.getCommandUse(fromServerData), DataCombineUtils.getCommandUse(toServerData));
+                    HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(moveFromDB.getCommandUse(), moveToDB.getCommandUse());
 
                     moveToDB.removeAllData();
 
-                    moveToDB.saveServerDataHashMap(combinedServerData);
                     moveToDB.saveMultipleUserData(combinedUserData);
                     moveToDB.saveCommandUse(commandUse);
 

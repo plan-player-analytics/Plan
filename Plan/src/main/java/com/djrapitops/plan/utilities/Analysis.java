@@ -4,12 +4,10 @@ import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanLiteHook;
 import com.djrapitops.plan.data.AnalysisData;
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.data.UserData;
 import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import com.djrapitops.plan.data.cache.InspectCacheHandler;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.RawAnalysisData;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.GameMode;
@@ -34,7 +33,6 @@ public class Analysis {
     private final Plan plugin;
     private final InspectCacheHandler inspectCache;
     private final List<UserData> rawData;
-    private HashMap<Long, ServerData> rawServerData;
     private final List<UUID> added;
 
     /**
@@ -90,11 +88,8 @@ public class Analysis {
                 // Create empty Dataset
                 final RawAnalysisData raw = new RawAnalysisData();
                 raw.setCommandUse(plugin.getDB().getCommandUse());
-                rawServerData = plugin.getDB().getServerDataHashMap();
                 log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData data = new AnalysisData();
-
-                createPlayerActivityGraphs(data);
 
                 // DEPRECATED - WILL BE REMOVED
                 boolean planLiteEnabled = isPlanLiteEnabled();
@@ -142,16 +137,19 @@ public class Analysis {
                         } else {
                             raw.addInactive(1);
                         }
-                        raw.addTotalKills(uData.getPlayerKills());
+                        raw.addTotalKills(uData.getPlayerKills().size());
                         raw.addTotalMobKills(uData.getMobKills());
                         raw.addTotalDeaths(uData.getDeaths());
                         raw.getSessiondata().addAll(uData.getSessions());
+                        raw.getRegistered().add(uData.getRegistered());
                     } catch (NullPointerException e) {
                         plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                     }
                 });
 
                 // Analyze & Save RawAnalysisData to AnalysisData
+                createPlayerActivityGraphs(data, raw.getSessiondata(), raw.getRegistered());
+
                 data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(raw.getPlaytimes(), 20));
                 data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(raw.getLatestLogins(), 20));
 
@@ -254,64 +252,20 @@ public class Analysis {
                 data.setGm3Perc((gmThree * 1.0 / gmTotal));
             }
 
-            private void createPlayerActivityGraphs(AnalysisData data) {
+            private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered) {
+                long now = new Date().toInstant().getEpochSecond() * (long) 1000;
                 long scaleMonth = (long) 2592000 * (long) 1000;
-                String playerActivityHtmlMonth = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleMonth);
-                data.setPlayersChartImgHtmlMonth(playerActivityHtmlMonth);
-                data.setNewPlayersMonth(getHighestNPValueForScale(scaleMonth));
+                String[] urlAndNumber = AnalysisUtils.analyzeSessionData(sData, registered, scaleMonth, now);
+                data.setPlayersChartImgHtmlMonth(urlAndNumber[0]);
+                data.setNewPlayersMonth(Integer.parseInt(urlAndNumber[1]));
                 long scaleWeek = 604800 * 1000;
-                String playerActivityHtmlWeek = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleWeek);
-                data.setPlayersChartImgHtmlWeek(playerActivityHtmlWeek);
-                data.setNewPlayersWeek(getHighestNPValueForScale(scaleWeek));
+                urlAndNumber = AnalysisUtils.analyzeSessionData(sData, registered, scaleWeek, now);
+                data.setPlayersChartImgHtmlWeek(urlAndNumber[0]);
+                data.setNewPlayersWeek(Integer.parseInt(urlAndNumber[1]));
                 long scaleDay = 86400 * 1000;
-                String playerActivityHtmlDay = AnalysisUtils.createPlayerActivityGraph(rawServerData, scaleDay);
-                data.setPlayersChartImgHtmlDay(playerActivityHtmlDay);
-                data.setNewPlayersDay(getHighestNPValueForScale(scaleDay));
-            }
-
-            private int getHighestNPValueForScale(long scale) {
-                List<List<ServerData>> sDataForEachDay = sortServerDatasByDay(scale);
-                int NPTotalInsideScaleTimeFrame = 0;
-                NPTotalInsideScaleTimeFrame = sDataForEachDay.parallelStream()
-                        .map((serverDataList) -> {
-                            int highestNPValue = 0;
-                            for (ServerData serverData : serverDataList) {
-                                int newPlayers = serverData.getNewPlayers();
-                                if (newPlayers > highestNPValue) {
-                                    highestNPValue = newPlayers;
-                                }
-                            }
-                            return highestNPValue;
-                        }).map((highestNPValue) -> highestNPValue)
-                        .reduce(NPTotalInsideScaleTimeFrame, Integer::sum);
-                return NPTotalInsideScaleTimeFrame;
-            }
-
-            private List<List<ServerData>> sortServerDatasByDay(long scale) {
-                List<List<ServerData>> sDataForEachDay = new ArrayList<>();
-                Date lastStartOfDay = null;
-                List<Long> keys = new ArrayList<>();
-                keys.addAll(rawServerData.keySet());
-                Collections.sort(keys);
-                for (long date : keys) {
-                    Date startOfDate = MiscUtils.getStartOfDate(new Date(date));
-                    if (lastStartOfDay == null) {
-                        sDataForEachDay.add(new ArrayList<>());
-                        lastStartOfDay = startOfDate;
-                    }
-                    // If data is older than one month, ignore
-                    if (new Date().getTime() - startOfDate.getTime() > scale) {
-                        continue;
-                    }
-                    if (startOfDate.getTime() != lastStartOfDay.getTime()) {
-                        sDataForEachDay.add(new ArrayList<>());
-                    }
-                    int lastIndex = sDataForEachDay.size() - 1;
-                    ServerData serverData = rawServerData.get(date);
-                    sDataForEachDay.get(lastIndex).add(serverData);
-                    lastStartOfDay = startOfDate;
-                }
-                return sDataForEachDay;
+                urlAndNumber = AnalysisUtils.analyzeSessionData(sData, registered, scaleDay, now);
+                data.setPlayersChartImgHtmlDay(urlAndNumber[0]);
+                data.setNewPlayersDay(Integer.parseInt(urlAndNumber[1]));
             }
         }).runTaskAsynchronously(plugin);
     }

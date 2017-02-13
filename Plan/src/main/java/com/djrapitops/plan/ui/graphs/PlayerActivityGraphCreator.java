@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.ui.graphs;
 
 import com.djrapitops.plan.Phrase;
 import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.utilities.FormatUtils;
 import com.googlecode.charts4j.AxisLabels;
 import com.googlecode.charts4j.AxisLabelsFactory;
@@ -14,8 +13,8 @@ import com.googlecode.charts4j.Plots;
 import com.googlecode.charts4j.XYLine;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import main.java.com.djrapitops.plan.data.SessionData;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -27,12 +26,19 @@ public class PlayerActivityGraphCreator {
     /**
      * Creates a new url for a PlayerActivity graph.
      *
-     * @param rawServerData HashMap of all ServerData
+     * @param sessionData SessionData of Players in scale.
      * @param scale Long in ms, time the graph will be limited to.
      * @return Url of charts4j image link.
      */
-    public static String createChart(HashMap<Long, ServerData> rawServerData, long scale) {
+    public static String createChart(List<SessionData> sessionData, long scale) {
 
+        List<Long> sessionStarts = new ArrayList<>();
+        List<Long> sessionEnds = new ArrayList<>();
+        sessionData.parallelStream().forEach(
+                (session) -> {
+                    sessionEnds.add(session.getSessionEnd());
+                    sessionStarts.add(session.getSessionStart());
+                });
         List<Double> xListDate = new ArrayList<>();
         List<Double> pYList = new ArrayList<>();
 
@@ -48,14 +54,28 @@ public class PlayerActivityGraphCreator {
         int lastSavedPValue = -1;
         long lastSaveI = 0;
         for (long i = nowMinusScale; i <= now; i += 1000) {
-            if (rawServerData.containsKey(i)) {
-                ServerData serverData = rawServerData.get(i);
-                lastPValue = serverData.getPlayersOnline();
+            if (sessionStarts.contains(i)) {
+                int amount = 0;
+                for (long start : sessionStarts) {
+                    if (start == i) {
+                        amount++;
+                    }
+                }
+                lastPValue += amount;
+            }
+            if (sessionEnds.contains(i)) {
+                int amount = 0;
+                for (long end : sessionEnds) {
+                    if (end == i) {
+                        amount++;
+                    }
+                }
+                lastPValue -= amount;
             }
             Double scaledDateValue = ((i - nowMinusScale) * 1.0 / scale) * 100;
             Double scaledPlayerValue = (lastPValue * 1.0 / maxPlayers) * 100;
 
-            if (lastSavedPValue != lastPValue || i - lastSaveI > (scale / (long) 50)) {
+            if (lastSavedPValue != lastPValue || i - lastSaveI > (scale / (long) 100)) {
                 lastSaveI = i;
                 xListDate.add(scaledDateValue);
                 pYList.add((lastSavedPValue * 1.0 / maxPlayers) * 100);

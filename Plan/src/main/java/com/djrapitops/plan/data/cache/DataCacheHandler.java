@@ -5,7 +5,6 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.database.Database;
 import com.djrapitops.plan.data.*;
 import com.djrapitops.plan.data.handlers.*;
-import com.djrapitops.plan.utilities.MiscUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,8 +33,8 @@ public class DataCacheHandler {
     private final DemographicsHandler demographicsHandler;
     private final BasicInfoHandler basicInfoHandler;
     private final RuleBreakingHandler ruleBreakingHandler;
-    private final ServerData serverData;
-    private final ServerDataHandler serverDataHandler;
+    private final HashMap<String, Integer> commandUse;
+    private final CommandUseHandler commandUseHandler;
     private final PlanLiteHandler planLiteHandler;
     private final KillHandler killHandler;
     private final Database db;
@@ -43,7 +42,6 @@ public class DataCacheHandler {
 
     private int timesSaved;
     private int maxPlayers;
-    private Date lastServerDataSave;
 
     /**
      * Class Constructor.
@@ -63,15 +61,14 @@ public class DataCacheHandler {
         demographicsHandler = new DemographicsHandler(plugin, this);
         basicInfoHandler = new BasicInfoHandler(plugin, this);
         ruleBreakingHandler = new RuleBreakingHandler(plugin, this);
-        serverData = db.getNewestServerData();
-        serverDataHandler = new ServerDataHandler(serverData);
+        commandUse = db.getCommandUse();
+        commandUseHandler = new CommandUseHandler(commandUse);
         planLiteHandler = new PlanLiteHandler(plugin);
         newPlayerCreator = new NewPlayerCreator(plugin, this);
         killHandler = new KillHandler(plugin);
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
-        lastServerDataSave = new Date();
 
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
@@ -97,13 +94,7 @@ public class DataCacheHandler {
                 if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
-                Date serverDataSave = new Date();
-                if (MiscUtils.isOnSameDay(serverDataSave, lastServerDataSave)) {
-                    serverData.setNewPlayers(0);
-                }
-                serverData.updatePlayerCount();
-                saveServerData();
-                lastServerDataSave = serverDataSave;
+                saveCommandUse();
                 handler.clearNulls();
                 timesSaved++;
             }
@@ -185,8 +176,12 @@ public class DataCacheHandler {
 //        });
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
+        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+        for (UserData userData : data) {
+            userData.endSession(now);
+        }
         db.saveMultipleUserData(data);
-        db.saveServerData(serverData);
+        db.saveCommandUse(commandUse);
         db.close();
     }
 
@@ -213,11 +208,11 @@ public class DataCacheHandler {
      *
      * Data is saved on a new line with a long value matching current Date
      */
-    public void saveServerData() {
+    public void saveCommandUse() {
         (new BukkitRunnable() {
             @Override
             public void run() {
-                db.saveServerData(serverData);
+                db.saveCommandUse(commandUse);
             }
         }).runTaskAsynchronously(plugin);
     }
@@ -395,21 +390,15 @@ public class DataCacheHandler {
         return db;
     }
 
-    /**
-     * Updates the player count and returns cached ServerData.
-     *
-     * @return Cached serverData
-     */
-    public ServerData getServerData() {
-        serverData.updatePlayerCount();
-        return serverData;
+    public HashMap<String, Integer> getCommandUse() {
+        return commandUse;
     }
-
+    
     /**
      * @return Current instance of ServerDataHandler
      */
-    public ServerDataHandler getServerDataHandler() {
-        return serverDataHandler;
+    public CommandUseHandler getServerDataHandler() {
+        return commandUseHandler;
     }
 
     /**
@@ -424,7 +413,6 @@ public class DataCacheHandler {
             if (isNewPlayer) {
                 newPlayer(player);
             }
-            serverDataHandler.handleLogin(isNewPlayer);
             UserData data = getCurrentData(uuid);
             activityHandler.handleReload(player, data);
             basicInfoHandler.handleReload(player, data);

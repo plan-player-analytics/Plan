@@ -45,7 +45,8 @@ public class PlanDeathEventListener implements Listener {
             Player killed = (Player) dead;
             UserData killedsData = handler.getCurrentData(killed.getUniqueId());
             if (killerIsPlayer) {
-                kH.handlePlayerKill(killersData);
+                String weaponName = killer.getInventory().getItemInMainHand().getType().name();
+                kH.handlePlayerKill(killersData, killedsData, weaponName);
             }
             kH.handlePlayerDeath(killedsData);
         } else if (killerIsPlayer) {

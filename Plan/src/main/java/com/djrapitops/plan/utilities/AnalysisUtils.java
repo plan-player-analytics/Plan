@@ -1,12 +1,13 @@
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.data.ServerData;
 import com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
@@ -45,12 +46,10 @@ public class AnalysisUtils {
         return Html.IMG.parse(url);
     }
 
-
-    static String createPlayerActivityGraph(HashMap<Long, ServerData> rawServerData, long scale) {
-        String url = PlayerActivityGraphCreator.createChart(rawServerData, scale);
+    static String createPlayerActivityGraph(List<SessionData> sessionData, long scale) {
+        String url = PlayerActivityGraphCreator.createChart(sessionData, scale);
         return Html.IMG.parse(url);
     }
-
 
     static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
@@ -107,5 +106,24 @@ public class AnalysisUtils {
         }
         html += "</p>";
         return html;
+    }
+
+    static String[] analyzeSessionData(List<SessionData> sessionData, List<Long> registered, long scale, long now) {
+        String[] returnA = new String[2];
+        List<SessionData> inScale = new ArrayList<>();
+        sessionData.stream()
+                .filter((s) -> (s.getSessionStart() > now - scale))
+                .forEach((s) -> {
+                    inScale.add(s);
+                });
+        returnA[0] = createPlayerActivityGraph(inScale, scale);
+
+        int newPlayers = 0;
+        // Filters out register dates before scale
+        newPlayers = registered.stream()
+                .filter((reg) -> (reg > now - scale))
+                .map((_item) -> 1).reduce(newPlayers, Integer::sum);
+        returnA[1] = "" + newPlayers;
+        return returnA;
     }
 }

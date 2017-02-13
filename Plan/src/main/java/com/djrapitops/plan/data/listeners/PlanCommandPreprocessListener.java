@@ -2,7 +2,7 @@ package com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.data.handlers.ServerDataHandler;
+import com.djrapitops.plan.data.handlers.CommandUseHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,7 +16,7 @@ public class PlanCommandPreprocessListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final ServerDataHandler serverH;
+    private final CommandUseHandler serverH;
 
     /**
      * Class Constructor.
