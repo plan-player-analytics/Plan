@@ -17,12 +17,13 @@ import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
-import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
+import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -68,7 +69,7 @@ public class Analysis {
             return;
         }
         // Async task for Analysis
-        (new BukkitRunnable() {
+        BukkitTask asyncAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 uuids.stream().forEach((uuid) -> {
@@ -86,130 +87,105 @@ public class Analysis {
                                 }
                             });
                 }
+                // Create empty Dataset
+                final RawAnalysisData raw = new RawAnalysisData();
+                raw.setCommandUse(plugin.getDB().getCommandUse());
                 rawServerData = plugin.getDB().getServerDataHashMap();
                 log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData data = new AnalysisData();
 
                 createPlayerActivityGraphs(data);
 
-                // Create empty Dataset
-                long gmZero = 0;
-                long gmOne = 0;
-                long gmTwo = 0;
-                long gmThree = 0;
-
-                long totalLoginTimes = 0;
-                long totalPlaytime = 0;
-
-                int totalBanned = 0;
-                int active = 0;
-                int joinleaver = 0;
-                int inactive = 0;
-
-                long totalKills = 0;
-                long totalMobKills = 0;
-                long totalDeaths = 0;
-
-                int ops = 0;
-                List<Integer> ages = new ArrayList<>();
-
+                // DEPRECATED - WILL BE REMOVED
                 boolean planLiteEnabled = isPlanLiteEnabled();
                 PlanLiteAnalyzedData plData = new PlanLiteAnalyzedData();
                 HashMap<String, Integer> townMap = new HashMap<>();
                 HashMap<String, Integer> factionMap = new HashMap<>();
                 int totalVotes = 0;
                 int totalMoney = 0;
-
-                HashMap<String, Long> latestLogins = new HashMap<>();
-                HashMap<String, Long> playtimes = new HashMap<>();
                 // Fill Dataset with userdata.
-                for (UserData uData : rawData) {
+                rawData.parallelStream().forEach((uData) -> {
                     try {
-                        if (planLiteEnabled) {
-                            PlanLitePlayerData litePlayerData = uData.getPlanLiteData();
-                            String town = litePlayerData.getTown();
-                            if (!townMap.containsKey(town)) {
-                                townMap.put(town, 0);
-                            }
-                            townMap.replace(town, townMap.get(town) + 1);
-                            String faction = litePlayerData.getFaction();
-                            if (!factionMap.containsKey(faction)) {
-                                factionMap.put(faction, 0);
-                            }
-                            factionMap.replace(faction, factionMap.get(faction) + 1);
-                            totalVotes += litePlayerData.getVotes();
-                            totalMoney += litePlayerData.getMoney();
-                        }
                         HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
-                        gmZero += gmTimes.get(GameMode.SURVIVAL);
-                        gmOne += gmTimes.get(GameMode.CREATIVE);
-                        gmTwo += gmTimes.get(GameMode.ADVENTURE);
+                        raw.addToGmZero(gmTimes.get(GameMode.SURVIVAL));
+                        raw.addToGmOne(gmTimes.get(GameMode.CREATIVE));
+                        raw.addToGmTwo(gmTimes.get(GameMode.ADVENTURE));
                         try {
                             Long gm = gmTimes.get(GameMode.SPECTATOR);
                             if (gm != null) {
-                                gmThree += gm;
+                                raw.addGmThree(gm);
                             }
                         } catch (NoSuchFieldError e) {
                         }
                         long playTime = uData.getPlayTime();
-                        totalPlaytime += playTime;
+                        raw.addTotalPlaytime(playTime);
                         String playerName = uData.getName();
                         String url = HtmlUtils.getInspectUrl(playerName);
                         String html = Html.BUTTON.parse(url, playerName);
 
-                        latestLogins.put(html, uData.getLastPlayed());
-                        totalLoginTimes += uData.getLoginTimes();
+                        raw.getLatestLogins().put(html, uData.getLastPlayed());
+                        raw.addTotalLoginTimes(uData.getLoginTimes());
                         int age = uData.getDemData().getAge();
                         if (age != -1) {
-                            ages.add(age);
+                            raw.getAges().add(age);
                         }
                         if (uData.isOp()) {
-                            ops++;
+                            raw.addOps(1);
                         }
                         if (uData.isBanned()) {
-                            totalBanned++;
+                            raw.addTotalBanned(1);
                         } else if (uData.getLoginTimes() == 1) {
-                            joinleaver++;
+                            raw.addJoinleaver(1);
                         } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
-                            active++;
-                            playtimes.put(html, playTime);
+                            raw.addActive(1);
+                            raw.getPlaytimes().put(html, playTime);
                         } else {
-                            inactive++;
+                            raw.addInactive(1);
                         }
-                        totalKills += uData.getPlayerKills();
-                        totalMobKills += uData.getMobKills();
-                        totalDeaths += uData.getDeaths();
+                        raw.addTotalKills(uData.getPlayerKills());
+                        raw.addTotalMobKills(uData.getMobKills());
+                        raw.addTotalDeaths(uData.getDeaths());
+                        raw.getSessiondata().addAll(uData.getSessions());
                     } catch (NullPointerException e) {
                         plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                     }
-                }
+                });
 
-                // Save Dataset to AnalysisData
-                data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(playtimes, 20));
-                data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(latestLogins, 20));
+                // Analyze & Save RawAnalysisData to AnalysisData
+                data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(raw.getPlaytimes(), 20));
+                data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(raw.getLatestLogins(), 20));
 
                 addPlanLiteToData(planLiteEnabled, plData, factionMap, townMap, totalVotes, totalMoney, data);
 
+                long totalPlaytime = raw.getTotalPlaytime();
                 data.setTotalPlayTime(totalPlaytime);
                 data.setAveragePlayTime(totalPlaytime / rawData.size());
-                data.setTotalLoginTimes(totalLoginTimes);
+                data.setTotalLoginTimes(raw.getTotalLoginTimes());
 
-                createActivityVisalization(totalBanned, active, inactive, joinleaver, data);
+                createActivityVisalization(raw.getTotalBanned(), raw.getActive(), raw.getInactive(), raw.getJoinleaver(), data);
 
-                data.setOps(ops);
+                data.setOps(raw.getOps());
 
-                analyzeAverageAge(ages, data);
-                createGamemodeUsageVisualization(gmZero, gmOne, gmTwo, gmThree, data);
-                createCommandUseTable(data);
+                analyzeAverageAge(raw.getAges(), data);
+                createGamemodeUsageVisualization(raw.getGmZero(), raw.getGmOne(), raw.getGmTwo(), raw.getGmThree(), data);
+                createCommandUseTable(raw, data);
 
-                data.setTotaldeaths(totalDeaths);
-                data.setTotalkills(totalKills);
-                data.setTotalmobkills(totalMobKills);
+                data.setTotaldeaths(raw.getTotalDeaths());
+                data.setTotalkills(raw.getTotalKills());
+                data.setTotalmobkills(raw.getTotalMobKills());
 
                 data.setRefreshDate(new Date().getTime());
                 analysisCache.cache(data);
                 plugin.log(Phrase.ANALYSIS_COMPLETE + "");
                 this.cancel();
+            }
+
+            private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
+                if (!raw.getCommandUse().isEmpty()) {
+                    data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(raw.getCommandUse()));
+                } else {
+                    data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
+                }
             }
 
             private boolean isPlanLiteEnabled() {
@@ -258,21 +234,6 @@ public class Analysis {
                     averageAge = -1;
                 }
                 data.setAverageAge(averageAge);
-            }
-
-            private void createCommandUseTable(AnalysisData data) {
-                if (rawServerData.keySet().size() > 0) {
-                    ServerData sData = null;
-                    for (long sDataKey : rawServerData.keySet()) {
-                        sData = rawServerData.get(sDataKey);
-                        break;
-                    }
-                    if (sData != null) {
-                        data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(sData.getCommandUsage()));
-                    }
-                } else {
-                    data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
-                }
             }
 
             private void createGamemodeUsageVisualization(long gmZero, long gmOne, long gmTwo, long gmThree, AnalysisData data) {

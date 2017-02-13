@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @author Rsl1122
  */
 public class ActivityHandler {
-
+    
     private final Plan plugin;
     private final DataCacheHandler handler;
 
@@ -63,10 +63,12 @@ public class ActivityHandler {
      * @param data UserData matching the Player
      */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
-        data.setLastPlayed(new Date().getTime());
+        Date now = new Date();
+        data.setLastPlayed(now.getTime());
         Player player = event.getPlayer();
         data.updateBanned(player);
         data.setLoginTimes(data.getLoginTimes() + 1);
+        data.startSession(now.toInstant().getEpochSecond() * (long) 1000);
 //        handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
     }
 
@@ -79,9 +81,11 @@ public class ActivityHandler {
      * @param data UserData matching the Player
      */
     public void handleLogOut(PlayerQuitEvent event, UserData data) {
-        long timeNow = new Date().getTime();
+        Date now = new Date();
+        long timeNow = now.getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
         data.setLastPlayed(timeNow);
+        data.endSession(now.toInstant().getEpochSecond() * (long) 1000);
     }
 
     /**

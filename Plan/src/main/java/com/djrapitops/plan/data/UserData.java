@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
+import main.java.com.djrapitops.plan.data.SessionData;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -34,7 +35,7 @@ public class UserData {
     private boolean isOp;
     private boolean isBanned;
     private DemographicsData demData;
-    
+
     private int mobKills;
     private int playerKills;
     private int deaths;
@@ -44,6 +45,9 @@ public class UserData {
 
     private String name;
     private boolean isOnline;
+
+    private SessionData currentSession;
+    private List<SessionData> sessions;
 
     public UserData(Player player, DemographicsData demData, Database db) {
         uuid = player.getUniqueId();
@@ -67,6 +71,7 @@ public class UserData {
         isBanned = player.isBanned();
         name = player.getName();
         isOnline = player.isOnline();
+        sessions = new ArrayList<>();
     }
 
     public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
@@ -89,6 +94,7 @@ public class UserData {
         isBanned = player.isBanned();
         name = player.getName();
         isOnline = player.isOnline();
+        sessions = new ArrayList<>();
     }
 
     public void addIpAddress(InetAddress ip) {
@@ -135,6 +141,27 @@ public class UserData {
         try {
             gmTimes.put(GameMode.SPECTATOR, spectatorTime);
         } catch (NoSuchFieldError e) {
+        }
+    }
+
+    public void addSession(SessionData session) {
+        sessions.add(session);
+    }
+
+    public void addSessions(Collection<SessionData> sessions) {
+        this.sessions.addAll(sessions);
+    }
+
+    public void startSession(long startTime) {
+        currentSession = new SessionData(startTime);
+    }
+
+    public void endSession(long endTime) {
+        if (currentSession != null) {
+            currentSession.endSession(endTime);
+            addSession(currentSession);
+        } else {
+            System.out.println("Player's session was initialized in a wrong way! (" + name + ")");
         }
     }
 
@@ -326,5 +353,9 @@ public class UserData {
 
     public void setDeaths(int deaths) {
         this.deaths = deaths;
+    }
+
+    public List<SessionData> getSessions() {
+        return sessions;
     }
 }

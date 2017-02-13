@@ -482,7 +482,8 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    private HashMap<String, Integer> getCommandUse() {
+    @Override
+    public HashMap<String, Integer> getCommandUse() {
         HashMap<String, Integer> commandUse = new HashMap<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + commanduseName);

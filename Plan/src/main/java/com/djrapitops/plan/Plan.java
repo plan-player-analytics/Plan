@@ -38,7 +38,6 @@ import java.net.URL;
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -63,6 +62,21 @@ Fix any bugs that come up
 - New Players not counted for some reason.
 Sortable player table.
 Add -n argument for nickname search.
+Online activity revamp
+    - Create new SessionData
+    - Data saved to UserData
+- Database table
+- Data saved to database
+- Data retrieval from db
+- Remove ServerData
+-> Move commanduse responsibility to a new handler
+- Online player analysis
+- New player analysis (Registered)
+Kill table
+- weapon
+- KillData
+- Saving
+- DB
  */
 /**
  *
