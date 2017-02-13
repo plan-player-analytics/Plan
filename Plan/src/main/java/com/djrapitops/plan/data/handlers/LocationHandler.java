@@ -5,7 +5,6 @@ import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.data.UserData;
 import java.util.Collection;
 import java.util.UUID;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -68,6 +67,5 @@ public class LocationHandler {
         if (bedSpawnLocation == null) {
             return;
         }
-        handler.getCurrentData(p.getUniqueId()).setBedLocation(bedSpawnLocation);
     }
 }

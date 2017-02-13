@@ -20,8 +20,8 @@ import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -61,15 +61,8 @@ public class Analysis {
         rawData.clear();
         added.clear();
         log(Phrase.ANALYSIS_START + "");
-        OfflinePlayer[] offlinePlayers;
-        try {
-            offlinePlayers = plugin.getServer().getOfflinePlayers();
-        } catch (IndexOutOfBoundsException e) {
-            plugin.log(Phrase.ANALYSIS_FAIL_NO_PLAYERS + "");
-            return;
-        }
 
-        List<UUID> uuids = fetchPlayersInDB(offlinePlayers);
+        List<UUID> uuids = fetchPlayersInDB();
         if (uuids.isEmpty()) {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return;
@@ -187,7 +180,7 @@ public class Analysis {
                         totalMobKills += uData.getMobKills();
                         totalDeaths += uData.getDeaths();
                     } catch (NullPointerException e) {
-                        plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid()+""));
+                        plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                     }
                 }
 
@@ -250,7 +243,7 @@ public class Analysis {
                 data.setInactive(inactive);
                 data.setBanned(totalBanned);
                 data.setJoinleaver(joinleaver);
-                data.setTotal(offlinePlayers.length);
+                data.setTotal(uuids.size());
             }
 
             private void analyzeAverageAge(List<Integer> ages, AnalysisData data) {
@@ -362,16 +355,15 @@ public class Analysis {
         }).runTaskAsynchronously(plugin);
     }
 
-    private List<UUID> fetchPlayersInDB(OfflinePlayer[] offlinePlayers) {
+    private List<UUID> fetchPlayersInDB() {
         final List<UUID> uuids = new ArrayList<>();
         log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
         Set<UUID> savedUUIDs = plugin.getDB().getSavedUUIDs();
-        for (OfflinePlayer p : offlinePlayers) {
-            UUID uuid = p.getUniqueId();
-            if (savedUUIDs.contains(uuid)) {
-                uuids.add(uuid);
-            }
-        }
+        savedUUIDs.parallelStream()
+                .filter((uuid) -> (getOfflinePlayer(uuid).hasPlayedBefore()))
+                .forEach((uuid) -> {
+                    uuids.add(uuid);
+                });
         return uuids;
     }
 

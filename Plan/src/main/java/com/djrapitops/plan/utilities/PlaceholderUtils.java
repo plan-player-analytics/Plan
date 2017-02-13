@@ -94,7 +94,6 @@ public class PlaceholderUtils {
         replaceMap.put("%uuid%", (showIPandUUID ? "" + data.getUuid() : Html.HIDDEN.parse()));
         replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp("" + data.getLastPlayed()));
         replaceMap.put("%logintimes%", "" + data.getLoginTimes());
-        replaceMap.put("%bed%", FormatUtils.formatLocation(data.getBedLocation()));
         replaceMap.put("%geoloc%", data.getDemData().getGeoLocation());
         boolean isActive = AnalysisUtils.isActive(data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
         replaceMap.put("%active%", isActive ? Html.ACTIVE.parse() : Html.INACTIVE.parse());

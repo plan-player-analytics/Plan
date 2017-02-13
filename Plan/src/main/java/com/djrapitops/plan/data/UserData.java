@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -22,7 +21,6 @@ public class UserData {
     private UUID uuid;
     private Location location;
     private List<Location> locations;
-    private Location bedLocation;
     private HashSet<InetAddress> ips;
     private HashSet<String> nicknames;
     private long registered;
@@ -49,10 +47,6 @@ public class UserData {
 
     public UserData(Player player, DemographicsData demData, Database db) {
         uuid = player.getUniqueId();
-        bedLocation = player.getBedSpawnLocation();
-        if (bedLocation == null) {
-            bedLocation = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0, 0);
-        }
         registered = player.getFirstPlayed();
         location = player.getLocation();
         isOp = player.isOp();
@@ -77,10 +71,6 @@ public class UserData {
 
     public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
         uuid = player.getUniqueId();
-        bedLocation = player.getBedSpawnLocation();
-        if (bedLocation == null) {
-            bedLocation = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0, 0);
-        }
         registered = player.getFirstPlayed();
         isOp = player.isOp();
         locations = new ArrayList<>();
@@ -189,10 +179,6 @@ public class UserData {
         return locations;
     }
 
-    public Location getBedLocation() {
-        return bedLocation;
-    }
-
     public HashSet<InetAddress> getIps() {
         return ips;
     }
@@ -260,10 +246,6 @@ public class UserData {
 
     public void setLocations(List<Location> locations) {
         this.locations = locations;
-    }
-
-    public void setBedLocation(Location bedLocation) {
-        this.bedLocation = bedLocation;
     }
 
     public void setIps(HashSet<InetAddress> ips) {
