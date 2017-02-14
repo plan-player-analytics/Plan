@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
-import main.java.com.djrapitops.plan.Phrase;
 import com.googlecode.charts4j.Color;
 import com.googlecode.charts4j.GCharts;
 import com.googlecode.charts4j.PieChart;
 import com.googlecode.charts4j.Slice;
 import java.util.HashMap;
+import main.java.com.djrapitops.plan.Phrase;
 import org.bukkit.GameMode;
 
 /**

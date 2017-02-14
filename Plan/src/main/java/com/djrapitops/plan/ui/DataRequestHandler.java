@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.ui;
 
+import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
-import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
  *

@@ -1,11 +1,10 @@
 package main.java.com.djrapitops.plan.data.importing;
 
-import main.java.com.djrapitops.plan.Plan;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
 import me.edge209.OnTime.OnTimeAPI;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 

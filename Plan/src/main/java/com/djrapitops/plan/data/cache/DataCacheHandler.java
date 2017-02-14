@@ -1,24 +1,22 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.handlers.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.handlers.SessionHandler;
+import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.handlers.*;
+import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.Bukkit;
+import static org.bukkit.Bukkit.getPlayer;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.OfflinePlayer;
-import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.scheduler.BukkitTask;
 
 /**

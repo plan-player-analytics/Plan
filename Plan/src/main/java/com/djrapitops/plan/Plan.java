@@ -20,14 +20,6 @@
 
 package main.java.com.djrapitops.plan;
 
-import main.java.com.djrapitops.plan.command.PlanCommand;
-import main.java.com.djrapitops.plan.api.API;
-import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.databases.*;
-import main.java.com.djrapitops.plan.data.cache.*;
-import main.java.com.djrapitops.plan.data.listeners.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,16 +28,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Date;
-import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
-import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import main.java.com.djrapitops.plan.data.listeners.PlanDeathEventListener;
+import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.command.PlanCommand;
+import main.java.com.djrapitops.plan.data.cache.*;
+import main.java.com.djrapitops.plan.data.listeners.*;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.*;
 import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -363,7 +361,6 @@ public class Plan extends JavaPlugin {
                 logError("Attempted using locale that doesn't exist.");
                 usingLocale = "Default: EN";
             } catch (IOException e) {
-                e.printStackTrace();
             }
         } else {
             usingLocale = "Default: EN";

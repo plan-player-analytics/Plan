@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data;
 
-import main.java.com.djrapitops.plan.database.Database;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,9 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

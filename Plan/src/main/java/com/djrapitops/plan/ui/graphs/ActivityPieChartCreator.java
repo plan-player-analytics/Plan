@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
-import main.java.com.djrapitops.plan.Phrase;
 import com.googlecode.charts4j.Color;
 import com.googlecode.charts4j.GCharts;
 import com.googlecode.charts4j.PieChart;
 import com.googlecode.charts4j.Slice;
+import main.java.com.djrapitops.plan.Phrase;
 
 /**
  *

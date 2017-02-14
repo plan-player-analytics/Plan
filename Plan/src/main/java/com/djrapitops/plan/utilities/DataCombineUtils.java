@@ -1,14 +1,14 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.data.DemographicsData;
-import main.java.com.djrapitops.plan.data.UserData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.GameMode;
 
 /**

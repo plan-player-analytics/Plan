@@ -1,13 +1,10 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import main.java.com.djrapitops.plan.Plan;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 

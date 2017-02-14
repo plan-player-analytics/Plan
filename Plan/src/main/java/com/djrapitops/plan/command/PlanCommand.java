@@ -1,18 +1,15 @@
 package main.java.com.djrapitops.plan.command;
 
+import java.util.ArrayList;
+import java.util.List;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.command.commands.*;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
-import java.util.ArrayList;
-import main.java.com.djrapitops.plan.command.commands.ManageCommand;
 import org.bukkit.entity.Player;
 
 /**

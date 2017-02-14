@@ -1,8 +1,5 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import com.googlecode.charts4j.AxisLabels;
 import com.googlecode.charts4j.AxisLabelsFactory;
 import com.googlecode.charts4j.Color;
@@ -14,7 +11,10 @@ import com.googlecode.charts4j.XYLine;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**

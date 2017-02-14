@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
-import java.util.Date;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

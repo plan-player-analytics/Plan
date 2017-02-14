@@ -32,7 +32,6 @@ public class Request {
         try {
             i = input.read(buffer);
         } catch (IOException e) {
-            e.printStackTrace();
             i = -1;
         }
 

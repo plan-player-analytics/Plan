@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import java.util.Date;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import java.util.Date;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

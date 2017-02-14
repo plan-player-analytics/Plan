@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  *

@@ -1,17 +1,15 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.ui.DataRequestHandler;
-import main.java.com.djrapitops.plan.ui.webserver.Request;
-import main.java.com.djrapitops.plan.ui.webserver.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**

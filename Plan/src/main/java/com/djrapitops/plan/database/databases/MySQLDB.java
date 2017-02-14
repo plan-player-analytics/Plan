@@ -1,11 +1,10 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.configuration.file.FileConfiguration;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -40,7 +39,7 @@ public class MySQLDB extends SQLDB {
 
             return DriverManager.getConnection(url, config.getString("mysql.user"), config.getString("mysql.password"));
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            getPlugin(Plan.class).logError(Phrase.DB_CONNECTION_FAIL.parse(getConfigName(), e.getMessage()));
             return null;
         }
     }

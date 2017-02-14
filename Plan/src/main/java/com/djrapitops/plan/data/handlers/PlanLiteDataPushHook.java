@@ -1,15 +1,15 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
-import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 import com.djrapitops.planlite.UUIDFetcher;
 import com.djrapitops.planlite.api.DataPoint;
 import com.djrapitops.planlite.api.DataType;
 import com.djrapitops.planlite.api.Hook;
 import java.util.HashMap;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
  *

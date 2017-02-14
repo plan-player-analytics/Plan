@@ -1,17 +1,16 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import java.util.Date;
+import java.util.HashMap;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanLiteHook;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.UserData;
-import java.util.Date;
-import java.util.HashMap;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.GameMode;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 

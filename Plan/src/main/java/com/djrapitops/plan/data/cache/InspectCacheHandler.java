@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**

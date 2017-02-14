@@ -1,16 +1,16 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanLiteHook;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.planlite.api.DataPoint;
 import java.util.HashMap;
 import java.util.Set;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 

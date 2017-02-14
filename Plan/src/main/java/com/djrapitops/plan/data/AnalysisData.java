@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan.data;
 
-import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
-
 /**
  *
  * @author Rsl1122

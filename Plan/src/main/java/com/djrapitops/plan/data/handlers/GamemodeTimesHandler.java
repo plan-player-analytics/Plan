@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import java.util.HashMap;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import java.util.HashMap;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;

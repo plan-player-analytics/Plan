@@ -25,6 +25,7 @@ public enum Phrase {
     WEBSERVER_INIT("Initializing Webserver.."),
     WEBSERVER_CLOSE("Shutting down Webserver.."),
     WEBSERVER_RUNNING("Webserver running on PORT " + REPLACE0),
+    DB_CONNECTION_FAIL("REPLACE0-Database Connection failed: REPLACE1"),
     DB_ESTABLISHED(REPLACE0 + "-database connection established."),
     DATABASE_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
     DATABASE_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),

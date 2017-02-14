@@ -1,12 +1,10 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import main.java.com.djrapitops.plan.Plan;
 
 /**
  *

@@ -5,12 +5,10 @@ import com.djrapitops.planlite.api.API;
 import com.djrapitops.planlite.api.DataPoint;
 import java.util.HashMap;
 import java.util.Set;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.handlers.PlanLiteDataPushHook;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**

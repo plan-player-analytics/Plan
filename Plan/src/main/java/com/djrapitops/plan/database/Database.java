@@ -1,10 +1,9 @@
 package main.java.com.djrapitops.plan.database;
 
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.*;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  *

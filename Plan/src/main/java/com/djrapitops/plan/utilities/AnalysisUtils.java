@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import main.java.com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,6 +9,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
+import main.java.com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortedTableCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;

@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.ui;
 
-import main.java.com.djrapitops.plan.Plan;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import main.java.com.djrapitops.plan.Plan;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**

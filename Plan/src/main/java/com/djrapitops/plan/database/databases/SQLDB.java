@@ -1,9 +1,5 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.Gender;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.data.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -16,14 +12,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.Gender;
+import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.Bukkit;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public abstract class SQLDB extends Database {
 

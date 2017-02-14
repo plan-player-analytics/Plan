@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan;
 
-import main.java.com.djrapitops.plan.Plan;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
