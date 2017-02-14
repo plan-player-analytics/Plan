@@ -1,7 +1,7 @@
-package com.djrapitops.plan.data.cache;
+package main.java.com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;

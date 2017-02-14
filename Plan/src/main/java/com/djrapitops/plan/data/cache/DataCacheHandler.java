@@ -1,10 +1,10 @@
-package com.djrapitops.plan.data.cache;
+package main.java.com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.data.*;
-import com.djrapitops.plan.data.handlers.*;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.handlers.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.handlers.SessionHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.OfflinePlayer;
 import static org.bukkit.Bukkit.getPlayer;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -37,6 +39,7 @@ public class DataCacheHandler {
     private final CommandUseHandler commandUseHandler;
     private final PlanLiteHandler planLiteHandler;
     private final KillHandler killHandler;
+    private final SessionHandler sessionHandler;
     private final Database db;
     private final NewPlayerCreator newPlayerCreator;
 
@@ -66,6 +69,7 @@ public class DataCacheHandler {
         planLiteHandler = new PlanLiteHandler(plugin);
         newPlayerCreator = new NewPlayerCreator(plugin, this);
         killHandler = new KillHandler(plugin);
+        sessionHandler = new SessionHandler(plugin);
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
@@ -74,10 +78,6 @@ public class DataCacheHandler {
         if (minutes <= 0) {
             minutes = 5;
         }
-        int sMinutes = Settings.SAVE_SERVER_MIN.getNumber();
-        if (sMinutes <= 0) {
-            sMinutes = 5;
-        }
         final int clearAfterXsaves;
         int configValue = Settings.CLEAR_CACHE_X_SAVES.getNumber();
         if (configValue <= 1) {
@@ -85,7 +85,7 @@ public class DataCacheHandler {
         } else {
             clearAfterXsaves = configValue;
         }
-        (new BukkitRunnable() {
+        BukkitTask asyncPeriodicCacheSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 DataCacheHandler handler = plugin.getHandler();
@@ -159,27 +159,27 @@ public class DataCacheHandler {
      * Saves all data in the cache to Database with AsyncTasks
      */
     public void saveCachedUserData() {
-        List<UserData> data = new ArrayList<>();
-        data.addAll(dataCache.values());
-        db.saveMultipleUserData(data);
-        timesSaved++;
+        BukkitTask asyncFullCacheSaveTask = (new BukkitRunnable() {
+            @Override
+            public void run() {
+                List<UserData> data = new ArrayList<>();
+                data.addAll(dataCache.values());
+                db.saveMultipleUserData(data);
+                timesSaved++;
+                this.cancel();
+            }
+        }).runTaskAsynchronously(plugin);
     }
 
     /**
      * Saves all data in the cache to Database and closes the database down.
      */
     public void saveCacheOnDisable() {
-//        dataCache.keySet().stream().forEach((uuid) -> {
-//            if (dataCache.get(uuid) != null) {
-//                db.saveUserData(uuid, dataCache.get(uuid));
-//            }
-//        });
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
-        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
-        for (UserData userData : data) {
-            userData.endSession(now);
-        }
+        data.parallelStream().forEach((userData) -> {
+            sessionHandler.endSession(userData);
+        });
         db.saveMultipleUserData(data);
         db.saveCommandUse(commandUse);
         db.close();
@@ -191,7 +191,7 @@ public class DataCacheHandler {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        (new BukkitRunnable() {
+        BukkitTask asyncCachedUserSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 if (dataCache.get(uuid) != null) {
@@ -209,7 +209,7 @@ public class DataCacheHandler {
      * Data is saved on a new line with a long value matching current Date
      */
     public void saveCommandUse() {
-        (new BukkitRunnable() {
+        BukkitTask asyncCommandUseSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 db.saveCommandUse(commandUse);
@@ -317,6 +317,7 @@ public class DataCacheHandler {
     public void newPlayer(Player player) {
         newPlayerCreator.createNewPlayer(player);
     }
+
     public void newPlayer(OfflinePlayer player) {
         newPlayerCreator.createNewPlayer(player);
     }
@@ -380,7 +381,7 @@ public class DataCacheHandler {
     public KillHandler getKillHandler() {
         return killHandler;
     }
-    
+
     /**
      * Returns the same value as Plan#getDB().
      *
@@ -393,7 +394,7 @@ public class DataCacheHandler {
     public HashMap<String, Integer> getCommandUse() {
         return commandUse;
     }
-    
+
     /**
      * @return Current instance of ServerDataHandler
      */
@@ -401,6 +402,10 @@ public class DataCacheHandler {
         return commandUseHandler;
     }
 
+    public SessionHandler getSessionHandler() {
+        return sessionHandler;
+    }
+    
     /**
      * If /reload is run this treats every online player as a new login.
      *
@@ -417,8 +422,8 @@ public class DataCacheHandler {
             activityHandler.handleReload(player, data);
             basicInfoHandler.handleReload(player, data);
             gamemodeTimesHandler.handleReload(player, data);
-            saveCachedData(uuid);
         }
+        saveCachedUserData();
     }
 
     /**

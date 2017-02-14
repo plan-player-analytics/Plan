@@ -1,7 +1,7 @@
-package com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
-package com.djrapitops.plan.data;
+package main.java.com.djrapitops.plan.data;
 
-import com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.Database;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -162,17 +162,8 @@ public class UserData {
         this.sessions.addAll(sessions);
     }
 
-    public void startSession(long startTime) {
-        currentSession = new SessionData(startTime);
-    }
-
-    public void endSession(long endTime) {
-        if (currentSession != null) {
-            currentSession.endSession(endTime);
-            addSession(currentSession);
-        } else {
-            System.out.println("Player's session was initialized in a wrong way! (" + name + ")");
-        }
+    public void setCurrentSession(SessionData session) {
+        currentSession = session;
     }
 
     public void updateBanned(Player p) {

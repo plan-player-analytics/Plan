@@ -1,10 +1,10 @@
-package com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.data.AnalysisData;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
+import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.HashMap;
 import main.java.com.djrapitops.plan.Settings;

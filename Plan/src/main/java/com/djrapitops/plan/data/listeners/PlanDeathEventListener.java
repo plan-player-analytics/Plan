@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.data.handlers.KillHandler;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.handlers.KillHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

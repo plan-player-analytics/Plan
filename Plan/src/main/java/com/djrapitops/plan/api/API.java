@@ -1,11 +1,11 @@
-package com.djrapitops.plan.api;
+package main.java.com.djrapitops.plan.api;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.data.AnalysisData;
-import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.ui.DataRequestHandler;
-import com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
+import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.ui.DataRequestHandler;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.planlite.UUIDFetcher;
 import java.util.Date;
 import java.util.UUID;

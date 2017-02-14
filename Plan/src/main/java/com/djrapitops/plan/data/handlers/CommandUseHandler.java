@@ -1,4 +1,4 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
 import java.util.HashMap;
 

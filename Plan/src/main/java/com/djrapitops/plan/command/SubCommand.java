@@ -1,4 +1,4 @@
-package com.djrapitops.plan.command;
+package main.java.com.djrapitops.plan.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

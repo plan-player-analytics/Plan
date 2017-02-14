@@ -13,7 +13,6 @@ Settings:
       ClearFromInspectCacheAfterXMinutes: 5
     DataCache:
       SaveEveryXMinutes: 2
-      SaveServerDataEveryXMinutes: 1
       ClearCacheEveryXSaves: 5
   WebServer:
     Enabled: true

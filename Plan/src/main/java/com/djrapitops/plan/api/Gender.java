@@ -1,4 +1,4 @@
-package com.djrapitops.plan.api;
+package main.java.com.djrapitops.plan.api;
 
 public enum Gender {
     MALE, FEMALE, OTHER, UNKNOWN;

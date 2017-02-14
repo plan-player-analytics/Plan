@@ -1,7 +1,7 @@
-package com.djrapitops.plan.ui.webserver;
+package main.java.com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.plan.ui.DataRequestHandler;
-import com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.ui.DataRequestHandler;
+import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;

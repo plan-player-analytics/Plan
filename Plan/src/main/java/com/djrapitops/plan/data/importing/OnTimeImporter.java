@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.importing;
 
-import com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Plan;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;

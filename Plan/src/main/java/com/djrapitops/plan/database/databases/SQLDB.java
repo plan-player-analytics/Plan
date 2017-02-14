@@ -1,9 +1,9 @@
-package com.djrapitops.plan.database.databases;
+package main.java.com.djrapitops.plan.database.databases;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.Gender;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.Gender;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.data.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -654,8 +654,10 @@ public abstract class SQLDB extends Database {
                 lastNick = nickname;
             }
         }
-        nicknames.remove(lastNick);
-        nicknames.add(lastNick);
+        if (!lastNick.isEmpty()) {
+            nicknames.remove(lastNick);
+            nicknames.add(lastNick);
+        }
         set.close();
         statement.close();
         return nicknames;

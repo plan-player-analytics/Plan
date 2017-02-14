@@ -1,9 +1,9 @@
-package com.djrapitops.plan.data.listeners;
+package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.data.handlers.DemographicsHandler;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.handlers.DemographicsHandler;
+import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,7 +43,10 @@ public class PlanChatListener implements Listener {
         }
         Player p = event.getPlayer();
         UserData data = handler.getCurrentData(p.getUniqueId());
-        data.addNickname(p.getDisplayName());
+        String nickname = p.getDisplayName();
+        if (!nickname.isEmpty()) {
+            data.addNickname(nickname);
+        }
         demographicsHandler.handleChatEvent(event, data);
     }
 }

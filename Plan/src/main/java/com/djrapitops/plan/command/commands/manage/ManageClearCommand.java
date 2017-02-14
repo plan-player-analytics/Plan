@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.CommandType;
-import com.djrapitops.plan.command.SubCommand;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.SubCommand;
 
-import com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.Database;
 import java.util.Arrays;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.data.DemographicsData;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

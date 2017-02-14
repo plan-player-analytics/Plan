@@ -1,10 +1,10 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.data.DemographicsData;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;

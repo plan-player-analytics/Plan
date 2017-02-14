@@ -1,8 +1,8 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -32,9 +32,11 @@ public class BasicInfoHandler {
      */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
         Player player = event.getPlayer();
-        String nick = player.getDisplayName();
-        if (data.addNickname(nick)) {
-            data.setLastNick(nick);
+        String nickname = player.getDisplayName();
+        if (!nickname.isEmpty()) {
+            if (data.addNickname(nickname)) {
+                data.setLastNick(nickname);
+            }
         }
         data.addIpAddress(player.getAddress().getAddress());
     }
@@ -46,9 +48,11 @@ public class BasicInfoHandler {
      * @param data UserData matching the Player
      */
     public void handleReload(Player player, UserData data) {
-        String nick = player.getDisplayName();
-        if (data.addNickname(nick)) {
-            data.setLastNick(nick);
+        String nickname = player.getDisplayName();
+        if (!nickname.isEmpty()) {
+            if (data.addNickname(nickname)) {
+                data.setLastNick(nickname);
+            }
         }
         data.addIpAddress(player.getAddress().getAddress());
     }

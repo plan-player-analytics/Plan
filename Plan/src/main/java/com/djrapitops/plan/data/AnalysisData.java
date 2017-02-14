@@ -1,4 +1,4 @@
-package com.djrapitops.plan.data;
+package main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 

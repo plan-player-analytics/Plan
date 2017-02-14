@@ -1,7 +1,7 @@
-package com.djrapitops.plan.data;
+package main.java.com.djrapitops.plan.data;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.api.Gender;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.api.Gender;
 
 /**
  *

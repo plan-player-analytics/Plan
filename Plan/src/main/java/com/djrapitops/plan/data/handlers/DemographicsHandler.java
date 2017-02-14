@@ -1,11 +1,11 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.api.Gender;
-import com.djrapitops.plan.data.DemographicsData;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.Gender;
+import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;

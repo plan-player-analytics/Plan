@@ -1,10 +1,10 @@
-package com.djrapitops.plan.command.commands;
+package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.CommandType;
-import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.SubCommand;
+import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import java.util.Date;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -14,6 +14,7 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -69,8 +70,7 @@ public class AnalyzeCommand extends SubCommand {
             analysisCache.updateCache();
         }
 
-        (new BukkitRunnable() {
-            
+        BukkitTask analysisMessageSenderTask = (new BukkitRunnable() {            
             private int timesrun = 0;
             
             @Override

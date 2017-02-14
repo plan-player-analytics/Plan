@@ -10,7 +10,7 @@
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    License for more details.
-*
+* 
 *    You should have received a copy of the License
 *    along with this program. 
 *    If not it should be visible on the distribution page.
@@ -18,16 +18,16 @@
 *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
 */
 
-package com.djrapitops.plan;
+package main.java.com.djrapitops.plan;
 
-import com.djrapitops.plan.command.PlanCommand;
-import com.djrapitops.plan.api.API;
-import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.databases.*;
-import com.djrapitops.plan.data.cache.*;
-import com.djrapitops.plan.data.listeners.*;
+import main.java.com.djrapitops.plan.command.PlanCommand;
+import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.*;
+import main.java.com.djrapitops.plan.data.cache.*;
+import main.java.com.djrapitops.plan.data.listeners.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,7 +41,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.listeners.PlanDeathEventListener;
 import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.Bukkit;
@@ -56,27 +55,10 @@ Database cleaning
 Play session length
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
-Seperate serverdata and userdata saving
 Database Cleaning of useless data
 Fix any bugs that come up
-- New Players not counted for some reason.
 Sortable player table.
 Add -n argument for nickname search.
-Online activity revamp
-    - Create new SessionData
-    - Data saved to UserData
-- Database table
-- Data saved to database
-- Data retrieval from db
-- Remove ServerData
--> Move commanduse responsibility to a new handler
-- Online player analysis
-- New player analysis (Registered)
-Kill table
-- weapon
-- KillData
-- Saving
-- DB
  */
 /**
  *
@@ -145,7 +127,7 @@ public class Plan extends JavaPlugin {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
             if (Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue()) {
-                startBootRefreshTask();
+                startBootAnalysisTask();
             }
             int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
             if (analysisRefreshMinutes != -1) {
@@ -269,7 +251,7 @@ public class Plan extends JavaPlugin {
     }
 
     private void startAnalysisRefreshTask(int analysisRefreshMinutes) throws IllegalStateException, IllegalArgumentException {
-        (new BukkitRunnable() {
+        BukkitTask asyncPeriodicalAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 if (!analysisCache.isCached()) {
@@ -281,9 +263,9 @@ public class Plan extends JavaPlugin {
         }).runTaskTimerAsynchronously(this, analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
     }
 
-    private void startBootRefreshTask() throws IllegalStateException, IllegalArgumentException {
+    private void startBootAnalysisTask() throws IllegalStateException, IllegalArgumentException {
         log(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-        BukkitTask analysis = (new BukkitRunnable() {
+        BukkitTask bootAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 log(Phrase.ANALYSIS_BOOT + "");
@@ -291,7 +273,7 @@ public class Plan extends JavaPlugin {
                 this.cancel();
             }
         }).runTaskLater(this, 30 * 20);
-        bootAnalysisTaskID = analysis.getTaskId();
+        bootAnalysisTaskID = bootAnalysisTask.getTaskId();
     }
 
     /**

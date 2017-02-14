@@ -1,9 +1,8 @@
-package com.djrapitops.plan;
+package main.java.com.djrapitops.plan;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import org.bukkit.ChatColor;

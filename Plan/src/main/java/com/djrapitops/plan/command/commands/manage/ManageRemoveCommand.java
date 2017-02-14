@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.utilities.UUIDFetcher;
-import com.djrapitops.plan.command.CommandType;
-import com.djrapitops.plan.command.SubCommand;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.SubCommand;
 
-import com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import java.util.Arrays;
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.ui;
 
-import com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Plan;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

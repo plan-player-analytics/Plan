@@ -1,4 +1,4 @@
-package com.djrapitops.plan.command;
+package main.java.com.djrapitops.plan.command;
 
 public enum CommandType {
     CONSOLE,

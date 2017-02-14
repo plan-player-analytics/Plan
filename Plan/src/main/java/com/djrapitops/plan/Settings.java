@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Plan;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -20,7 +20,6 @@ public enum Settings {
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
-    SAVE_SERVER_MIN("Settings.Cache.DataCache.SaveServerDataEveryXMinutes"),
     CLEAR_INSPECT_CACHE("Settings.Cache.InspectCache.ClearFromInspectCacheAfterXMinutes"),
     CLEAR_CACHE_X_SAVES("Settings.Cache.DataCache.ClearCacheEveryXSaves"),
     WEBSERVER_PORT("Settings.WebServer.Port"),

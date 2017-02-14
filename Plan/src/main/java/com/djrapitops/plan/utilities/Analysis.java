@@ -1,12 +1,12 @@
-package com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.data.AnalysisData;
-import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
+import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -86,10 +86,10 @@ public class Analysis {
                             });
                 }
                 // Create empty Dataset
-                final RawAnalysisData raw = new RawAnalysisData();
-                raw.setCommandUse(plugin.getDB().getCommandUse());
+                final RawAnalysisData sorted = new RawAnalysisData();
+                sorted.setCommandUse(plugin.getDB().getCommandUse());
                 log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
-                AnalysisData data = new AnalysisData();
+                AnalysisData analysisData = new AnalysisData();
 
                 // DEPRECATED - WILL BE REMOVED
                 boolean planLiteEnabled = isPlanLiteEnabled();
@@ -102,78 +102,78 @@ public class Analysis {
                 rawData.parallelStream().forEach((uData) -> {
                     try {
                         HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
-                        raw.addToGmZero(gmTimes.get(GameMode.SURVIVAL));
-                        raw.addToGmOne(gmTimes.get(GameMode.CREATIVE));
-                        raw.addToGmTwo(gmTimes.get(GameMode.ADVENTURE));
+                        sorted.addToGmZero(gmTimes.get(GameMode.SURVIVAL));
+                        sorted.addToGmOne(gmTimes.get(GameMode.CREATIVE));
+                        sorted.addToGmTwo(gmTimes.get(GameMode.ADVENTURE));
                         try {
                             Long gm = gmTimes.get(GameMode.SPECTATOR);
                             if (gm != null) {
-                                raw.addGmThree(gm);
+                                sorted.addGmThree(gm);
                             }
                         } catch (NoSuchFieldError e) {
                         }
                         long playTime = uData.getPlayTime();
-                        raw.addTotalPlaytime(playTime);
+                        sorted.addTotalPlaytime(playTime);
                         String playerName = uData.getName();
                         String url = HtmlUtils.getInspectUrl(playerName);
                         String html = Html.BUTTON.parse(url, playerName);
 
-                        raw.getLatestLogins().put(html, uData.getLastPlayed());
-                        raw.addTotalLoginTimes(uData.getLoginTimes());
+                        sorted.getLatestLogins().put(html, uData.getLastPlayed());
+                        sorted.addTotalLoginTimes(uData.getLoginTimes());
                         int age = uData.getDemData().getAge();
                         if (age != -1) {
-                            raw.getAges().add(age);
+                            sorted.getAges().add(age);
                         }
                         if (uData.isOp()) {
-                            raw.addOps(1);
+                            sorted.addOps(1);
                         }
                         if (uData.isBanned()) {
-                            raw.addTotalBanned(1);
+                            sorted.addTotalBanned(1);
                         } else if (uData.getLoginTimes() == 1) {
-                            raw.addJoinleaver(1);
+                            sorted.addJoinleaver(1);
                         } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
-                            raw.addActive(1);
-                            raw.getPlaytimes().put(html, playTime);
+                            sorted.addActive(1);
+                            sorted.getPlaytimes().put(html, playTime);
                         } else {
-                            raw.addInactive(1);
+                            sorted.addInactive(1);
                         }
-                        raw.addTotalKills(uData.getPlayerKills().size());
-                        raw.addTotalMobKills(uData.getMobKills());
-                        raw.addTotalDeaths(uData.getDeaths());
-                        raw.getSessiondata().addAll(uData.getSessions());
-                        raw.getRegistered().add(uData.getRegistered());
+                        sorted.addTotalKills(uData.getPlayerKills().size());
+                        sorted.addTotalMobKills(uData.getMobKills());
+                        sorted.addTotalDeaths(uData.getDeaths());
+                        sorted.getSessiondata().addAll(uData.getSessions());
+                        sorted.getRegistered().add(uData.getRegistered());
                     } catch (NullPointerException e) {
                         plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                     }
                 });
 
                 // Analyze & Save RawAnalysisData to AnalysisData
-                createPlayerActivityGraphs(data, raw.getSessiondata(), raw.getRegistered());
+                createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
 
-                data.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(raw.getPlaytimes(), 20));
-                data.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(raw.getLatestLogins(), 20));
+                analysisData.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(sorted.getPlaytimes(), 20));
+                analysisData.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(sorted.getLatestLogins(), 20));
 
-                addPlanLiteToData(planLiteEnabled, plData, factionMap, townMap, totalVotes, totalMoney, data);
+                addPlanLiteToData(planLiteEnabled, plData, factionMap, townMap, totalVotes, totalMoney, analysisData);
 
-                long totalPlaytime = raw.getTotalPlaytime();
-                data.setTotalPlayTime(totalPlaytime);
-                data.setAveragePlayTime(totalPlaytime / rawData.size());
-                data.setTotalLoginTimes(raw.getTotalLoginTimes());
+                long totalPlaytime = sorted.getTotalPlaytime();
+                analysisData.setTotalPlayTime(totalPlaytime);
+                analysisData.setAveragePlayTime(totalPlaytime / rawData.size());
+                analysisData.setTotalLoginTimes(sorted.getTotalLoginTimes());
 
-                createActivityVisalization(raw.getTotalBanned(), raw.getActive(), raw.getInactive(), raw.getJoinleaver(), data);
+                createActivityVisalization(sorted.getTotalBanned(), sorted.getActive(), sorted.getInactive(), sorted.getJoinleaver(), analysisData);
 
-                data.setOps(raw.getOps());
+                analysisData.setOps(sorted.getOps());
 
-                analyzeAverageAge(raw.getAges(), data);
-                createGamemodeUsageVisualization(raw.getGmZero(), raw.getGmOne(), raw.getGmTwo(), raw.getGmThree(), data);
-                createCommandUseTable(raw, data);
+                analyzeAverageAge(sorted.getAges(), analysisData);
+                createGamemodeUsageVisualization(sorted.getGmZero(), sorted.getGmOne(), sorted.getGmTwo(), sorted.getGmThree(), analysisData);
+                createCommandUseTable(sorted, analysisData);
 
-                data.setTotaldeaths(raw.getTotalDeaths());
-                data.setTotalkills(raw.getTotalKills());
-                data.setTotalmobkills(raw.getTotalMobKills());
+                analysisData.setTotaldeaths(sorted.getTotalDeaths());
+                analysisData.setTotalkills(sorted.getTotalKills());
+                analysisData.setTotalmobkills(sorted.getTotalMobKills());
 
-                data.setRefreshDate(new Date().getTime());
-                analysisCache.cache(data);
+                analysisData.setRefreshDate(new Date().getTime());
+                analysisCache.cache(analysisData);
                 plugin.log(Phrase.ANALYSIS_COMPLETE + "");
                 this.cancel();
             }

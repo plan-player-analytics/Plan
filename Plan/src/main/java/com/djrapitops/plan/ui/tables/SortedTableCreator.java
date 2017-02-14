@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.ui.tables;
 
-import com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

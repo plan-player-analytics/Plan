@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import com.googlecode.charts4j.AxisLabels;
 import com.googlecode.charts4j.AxisLabelsFactory;
 import com.googlecode.charts4j.Color;

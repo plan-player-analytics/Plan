@@ -1,4 +1,4 @@
-package com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities;
 
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.Html;

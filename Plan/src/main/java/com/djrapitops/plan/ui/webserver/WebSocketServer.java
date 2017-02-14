@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.ui.DataRequestHandler;
-import com.djrapitops.plan.ui.webserver.Request;
-import com.djrapitops.plan.ui.webserver.Response;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.ui.DataRequestHandler;
+import main.java.com.djrapitops.plan.ui.webserver.Request;
+import main.java.com.djrapitops.plan.ui.webserver.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

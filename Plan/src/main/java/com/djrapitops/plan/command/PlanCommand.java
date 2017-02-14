@@ -1,10 +1,10 @@
-package com.djrapitops.plan.command;
+package main.java.com.djrapitops.plan.command;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.command.commands.*;
-import com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
+import main.java.com.djrapitops.plan.command.commands.*;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

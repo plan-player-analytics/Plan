@@ -1,9 +1,9 @@
-package com.djrapitops.plan.command.commands;
+package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.CommandType;
-import com.djrapitops.plan.command.SubCommand;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

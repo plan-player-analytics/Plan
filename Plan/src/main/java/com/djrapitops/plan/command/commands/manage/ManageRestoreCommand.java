@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.command.CommandType;
-import com.djrapitops.plan.command.SubCommand;
-import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.database.Database;
-import com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.SubCommand;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

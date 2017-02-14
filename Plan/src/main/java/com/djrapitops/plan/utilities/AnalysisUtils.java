@@ -1,6 +1,6 @@
-package com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
+import main.java.com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;

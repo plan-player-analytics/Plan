@@ -1,8 +1,8 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerKickEvent;

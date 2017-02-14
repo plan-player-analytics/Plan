@@ -1,8 +1,8 @@
-package com.djrapitops.plan.data.cache;
+package main.java.com.djrapitops.plan.data.cache;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.AnalysisData;
-import com.djrapitops.plan.utilities.Analysis;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.utilities.Analysis;
 
 /**
  *

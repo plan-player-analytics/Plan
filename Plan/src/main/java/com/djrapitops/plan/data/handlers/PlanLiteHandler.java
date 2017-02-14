@@ -1,11 +1,11 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.data.UserData;
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import com.djrapitops.planlite.api.DataPoint;
 import java.util.HashMap;
 import java.util.Set;

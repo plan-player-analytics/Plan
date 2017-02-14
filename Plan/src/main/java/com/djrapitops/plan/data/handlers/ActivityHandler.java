@@ -1,8 +1,8 @@
-package com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.handlers;
 
-import com.djrapitops.plan.data.cache.DataCacheHandler;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import java.util.Date;
 import java.util.UUID;
 import org.bukkit.entity.Player;
@@ -63,12 +63,11 @@ public class ActivityHandler {
      * @param data UserData matching the Player
      */
     public void handleLogin(PlayerJoinEvent event, UserData data) {
-        Date now = new Date();
-        data.setLastPlayed(now.getTime());
+        data.setLastPlayed(new Date().getTime());
         Player player = event.getPlayer();
         data.updateBanned(player);
         data.setLoginTimes(data.getLoginTimes() + 1);
-        data.startSession(now.toInstant().getEpochSecond() * (long) 1000);
+        
 //        handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
     }
 
@@ -85,7 +84,7 @@ public class ActivityHandler {
         long timeNow = now.getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
         data.setLastPlayed(timeNow);
-        data.endSession(now.toInstant().getEpochSecond() * (long) 1000);
+        handler.getSessionHandler().endSession(data);
     }
 
     /**
@@ -101,6 +100,6 @@ public class ActivityHandler {
         long timeNow = now.getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
         data.setLastPlayed(timeNow);
-        data.startSession(now.toInstant().getEpochSecond() * (long) 1000);
+        handler.getSessionHandler().startSession(data);
     }
 }

@@ -1,4 +1,4 @@
-package com.djrapitops.plan.ui.webserver;
+package main.java.com.djrapitops.plan.ui.webserver;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package com.djrapitops.plan;
+package main.java.com.djrapitops.plan;
 
 import com.djrapitops.planlite.PlanLite;
 import com.djrapitops.planlite.api.API;

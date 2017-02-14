@@ -1,14 +1,14 @@
-package com.djrapitops.plan.command.commands;
+package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plan.Phrase;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plan.PlanLiteHook;
-import com.djrapitops.plan.utilities.UUIDFetcher;
-import com.djrapitops.plan.command.CommandType;
-import com.djrapitops.plan.command.SubCommand;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanLiteHook;
+import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.SubCommand;
 
-import com.djrapitops.plan.data.cache.InspectCacheHandler;
-import com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -20,6 +20,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -98,7 +99,7 @@ public class InspectCommand extends SubCommand {
             configValue = 4;
         }
         final int available = configValue;
-        (new BukkitRunnable() {
+        BukkitTask inspectMessageSenderTask = (new BukkitRunnable() {
             private int timesrun = 0;
             
             @Override
@@ -118,7 +119,7 @@ public class InspectCommand extends SubCommand {
                         Bukkit.getServer().dispatchCommand(
                                 Bukkit.getConsoleSender(),
                                 "tellraw " + player.getName() + " [\"\",{\"text\":\""+Phrase.CMD_CLICK_ME+"\",\"underlined\":true,"
-                                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
                     }
 
                     sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available+""));
