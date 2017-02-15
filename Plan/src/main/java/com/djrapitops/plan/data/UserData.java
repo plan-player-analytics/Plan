@@ -39,9 +39,6 @@ public class UserData {
     private List<KillData> playerKills;
     private int deaths;
 
-    private boolean planLiteFound;
-    private PlanLitePlayerData planLiteData;
-
     private String name;
     private boolean isOnline;
 
@@ -176,21 +173,6 @@ public class UserData {
     }
 
     // Getters -------------------------------------------------------------
-    public boolean isPlanLiteFound() {
-        return planLiteFound;
-    }
-
-    public void setPlanLiteFound(boolean planLiteFound) {
-        this.planLiteFound = planLiteFound;
-    }
-
-    public PlanLitePlayerData getPlanLiteData() {
-        return planLiteData;
-    }
-
-    public void setPlanLiteData(PlanLitePlayerData planLiteData) {
-        this.planLiteData = planLiteData;
-    }
 
     public UUID getUuid() {
         return uuid;

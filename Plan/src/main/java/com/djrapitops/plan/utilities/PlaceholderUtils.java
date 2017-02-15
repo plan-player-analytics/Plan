@@ -1,14 +1,12 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
-import main.java.com.djrapitops.plan.data.PlanLitePlayerData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.GameMode;
@@ -54,30 +52,12 @@ public class PlaceholderUtils {
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         replaceMap.put("%top20mostactive%", data.getTop20ActivePlayers());
         replaceMap.put("%recentlogins%", data.getRecentPlayers());
-        replaceMap.put("%deaths%", data.getTotaldeaths()+"");
-        replaceMap.put("%playerkills%", data.getTotalkills()+"");
-        replaceMap.put("%mobkills%", data.getTotalmobkills()+"");
+        replaceMap.put("%deaths%", data.getTotaldeaths() + "");
+        replaceMap.put("%playerkills%", data.getTotalkills() + "");
+        replaceMap.put("%mobkills%", data.getTotalmobkills() + "");
         Plan plugin = getPlugin(Plan.class);
-        PlanLiteHook hook = plugin.getPlanLiteHook();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
-        if (hook != null) {
-            replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLiteAnalysisHtml(data.getPlanLiteData()) : "");
-        } else {
-            replaceMap.put("%planlite%", "");
-        }
-        return replaceMap;
-    }
-
-    public static HashMap<String, String> getPlanLitePlayerReplaceRules(PlanLitePlayerData planLiteData) {
-        HashMap<String, String> replaceMap = new HashMap<>();
-        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%townylinetown%", hook.hasTowny() ? Html.TOWN.parse(planLiteData.getTown()) : "");
-        replaceMap.put("%townylineplotperms%", "");
-        replaceMap.put("%townylineplotoptions%", hook.hasTowny() ? Html.PLOT_OPTIONS.parse(planLiteData.getPlotOptions()) : "");
-        replaceMap.put("%townylinefriends%", hook.hasTowny() ? Html.FRIENDS.parse(planLiteData.getFriends()) : "");
-        replaceMap.put("%factionsline%", hook.hasFactions() ? Html.FACTION.parse(planLiteData.getFaction()) : "");
-        replaceMap.put("%totalmoneyline%", hook.hasVault() ? Html.BALANCE.parse(planLiteData.getMoney() + "") : "");
-        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? Html.VOTES.parse(planLiteData.getVotes() + "") : "");
+        replaceMap.put("%planlite%", "");
         return replaceMap;
     }
 
@@ -86,8 +66,9 @@ public class PlaceholderUtils {
      *
      * @param data UserData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
+     * @throws java.io.FileNotFoundException if planliteplayer.html is not found
      */
-    public static HashMap<String, String> getInspectReplaceRules(UserData data) {
+    public static HashMap<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         replaceMap.put("%uuid%", (showIPandUUID ? "" + data.getUuid() : Html.HIDDEN.parse()));
@@ -130,44 +111,13 @@ public class PlaceholderUtils {
         replaceMap.put("%op%", data.isOp() ? Html.OPERATOR.parse() : "");
         replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
         int deaths = data.getDeaths();
-        replaceMap.put("%deaths%", deaths+"");
-        replaceMap.put("%playerkills%", data.getPlayerKills()+"");
-        replaceMap.put("%mobkills%", data.getMobKills()+"");
+        replaceMap.put("%deaths%", deaths + "");
+        replaceMap.put("%playerkills%", data.getPlayerKills() + "");
+        replaceMap.put("%mobkills%", data.getMobKills() + "");
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
-        PlanLiteHook hook = plugin.getPlanLiteHook();
-        if (hook != null) {
-            replaceMap.put("%planlite%", hook.isEnabled() ? getPlanLitePlayerHtml(data.getPlanLiteData()) : "");
-        } else {
-            replaceMap.put("%planlite%", "");
-        }
+        replaceMap.put("%planlite%", "");
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
         return replaceMap;
-    }
-
-    public static HashMap<String, String> getPlanLiteAnalysisReplaceRules(PlanLiteAnalyzedData planLiteData) {
-        HashMap<String, String> replaceMap = new HashMap<>();
-        PlanLiteHook hook = getPlugin(Plan.class).getPlanLiteHook();
-        replaceMap.put("%townyheader%", hook.hasTowny() ? Html.TOP_TOWNS.parse() : "");
-        replaceMap.put("%townylist%", hook.hasTowny() ? AnalysisUtils.createTableOutOfHashMap(planLiteData.getTownMap(), 20) : "");
-        replaceMap.put("%factionheader%", hook.hasFactions() ? Html.TOP_FACTIONS.parse() : "");
-        replaceMap.put("%factionlist%", hook.hasFactions() ? AnalysisUtils.createTableOutOfHashMap(planLiteData.getFactionMap(), 20) : "");
-        replaceMap.put("%totalmoneyline%", hook.hasVault() ? Html.TOTAL_BALANCE.parse(planLiteData.getTotalMoney() + "") : "");
-        replaceMap.put("%totalvotesline%", hook.hasSuperbVote() ? Html.TOTAL_VOTES.parse(planLiteData.getTotalVotes() + "") : "");
-        return replaceMap;
-    }
-
-    private static String getPlanLitePlayerHtml(PlanLitePlayerData planLiteData) {
-        return HtmlUtils.replacePlaceholders(
-                HtmlUtils.getHtmlStringFromResource("planliteplayer.html"),
-                PlaceholderUtils.getPlanLitePlayerReplaceRules(planLiteData)
-        );
-    }
-
-    private static String getPlanLiteAnalysisHtml(PlanLiteAnalyzedData planLiteData) {
-        return HtmlUtils.replacePlaceholders(
-                HtmlUtils.getHtmlStringFromResource("planlite.html"),
-                PlaceholderUtils.getPlanLiteAnalysisReplaceRules(planLiteData)
-        );
     }
 }

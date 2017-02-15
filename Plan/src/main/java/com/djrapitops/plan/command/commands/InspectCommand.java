@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.command.commands;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
@@ -59,10 +58,9 @@ public class InspectCommand extends SubCommand {
         final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (!Settings.WEBSERVER_ENABLED.isTrue()) {
             if (!useAlternativeIP) {
-                PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-                if (Settings.USE_ALTERNATIVE_UI.isTrue() && planLiteHook.isEnabled()) {
+                if (Settings.USE_ALTERNATIVE_UI.isTrue()) {
                     sender.sendMessage(Phrase.CMD_PASS_PLANLITE + "");
-                    planLiteHook.passCommand(sender, cmd, commandLabel, args);
+                    //TODO CREATE TEXT UI
                 } else {
                     sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT + "");
                 }

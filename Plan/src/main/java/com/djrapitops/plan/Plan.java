@@ -16,8 +16,7 @@
 *    If not it should be visible on the distribution page.
 *    Or here
 *    https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml
-*/
-
+ */
 package main.java.com.djrapitops.plan;
 
 import java.io.File;
@@ -65,7 +64,6 @@ Add -n argument for nickname search.
 public class Plan extends JavaPlugin {
 
     private API api;
-    private PlanLiteHook planLiteHook;
     private DataCacheHandler handler;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
@@ -108,7 +106,6 @@ public class Plan extends JavaPlugin {
             return;
         }
 
-        hookPlanLite();
         this.handler = new DataCacheHandler(this);
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
@@ -132,8 +129,7 @@ public class Plan extends JavaPlugin {
                 startAnalysisRefreshTask(analysisRefreshMinutes);
             }
         } else if (!(Settings.SHOW_ALTERNATIVE_IP.isTrue())
-                || (Settings.USE_ALTERNATIVE_UI.isTrue()
-                && planLiteHook.isEnabled())) {
+                || (Settings.USE_ALTERNATIVE_UI.isTrue())) {
             consoleSender.sendMessage(Phrase.PREFIX + "" + Phrase.ERROR_NO_DATA_VIEW);
         }
         if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && getServer().getIp().isEmpty()) {
@@ -141,17 +137,6 @@ public class Plan extends JavaPlugin {
         }
 
         log(Phrase.ENABLED + "");
-    }
-
-    /**
-     * Hooks PlanLite for UI and/or additional data.
-     */
-    public void hookPlanLite() {
-        try {
-            planLiteHook = new PlanLiteHook(this);
-        } catch (NoClassDefFoundError | Exception e) {
-
-        }
     }
 
     /**
@@ -293,13 +278,6 @@ public class Plan extends JavaPlugin {
      */
     public DataCacheHandler getHandler() {
         return handler;
-    }
-
-    /**
-     * @return PlanLiteHook
-     */
-    public PlanLiteHook getPlanLiteHook() {
-        return planLiteHook;
     }
 
     /**

@@ -8,10 +8,8 @@ import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.PlanLiteAnalyzedData;
 import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -90,13 +88,6 @@ public class Analysis {
                 log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData analysisData = new AnalysisData();
 
-                // DEPRECATED - WILL BE REMOVED
-                boolean planLiteEnabled = isPlanLiteEnabled();
-                PlanLiteAnalyzedData plData = new PlanLiteAnalyzedData();
-                HashMap<String, Integer> townMap = new HashMap<>();
-                HashMap<String, Integer> factionMap = new HashMap<>();
-                int totalVotes = 0;
-                int totalMoney = 0;
                 // Fill Dataset with userdata.
                 rawData.parallelStream().forEach((uData) -> {
                     try {
@@ -152,8 +143,6 @@ public class Analysis {
                 analysisData.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(sorted.getPlaytimes(), 20));
                 analysisData.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(sorted.getLatestLogins(), 20));
 
-                addPlanLiteToData(planLiteEnabled, plData, factionMap, townMap, totalVotes, totalMoney, analysisData);
-
                 long totalPlaytime = sorted.getTotalPlaytime();
                 analysisData.setTotalPlayTime(totalPlaytime);
                 analysisData.setAveragePlayTime(totalPlaytime / rawData.size());
@@ -182,30 +171,6 @@ public class Analysis {
                     data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(raw.getCommandUse()));
                 } else {
                     data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
-                }
-            }
-
-            private boolean isPlanLiteEnabled() {
-                boolean planLiteEnabled;
-                PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-                if (planLiteHook != null) {
-                    planLiteEnabled = planLiteHook.isEnabled();
-                } else {
-                    planLiteEnabled = false;
-                }
-                return planLiteEnabled;
-            }
-
-            private void addPlanLiteToData(boolean planLiteEnabled, PlanLiteAnalyzedData plData, HashMap<String, Integer> factionMap, HashMap<String, Integer> townMap, int totalVotes, int totalMoney, AnalysisData data) {
-                if (planLiteEnabled) {
-                    plData.setFactionMap(factionMap);
-                    plData.setTownMap(townMap);
-                    plData.setTotalVotes(totalVotes);
-                    plData.setTotalMoney(totalMoney);
-                    data.setPlanLiteEnabled(true);
-                    data.setPlanLiteData(plData);
-                } else {
-                    data.setPlanLiteEnabled(false);
                 }
             }
 

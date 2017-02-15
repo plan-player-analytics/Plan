@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.command.commands.*;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import org.bukkit.command.Command;
@@ -37,12 +36,6 @@ public class PlanCommand implements CommandExecutor {
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
         commands.add(new ManageCommand(plugin));
-        PlanLiteHook planLiteHook = plugin.getPlanLiteHook();
-        if (planLiteHook != null) {
-            if (planLiteHook.isEnabled()) {
-                commands.add(new LiteCommand(plugin));
-            }
-        }
     }
 
     /**

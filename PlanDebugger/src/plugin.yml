@@ -1,7 +1,0 @@
-name: PlanDebugger
-main: com.djrapitops.plandebugger.PlanDebugger
-author: Rsl1122
-version: 2.5.1
-    
-depend:
-- Plan

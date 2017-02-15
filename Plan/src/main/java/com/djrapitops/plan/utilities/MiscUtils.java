@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -106,16 +105,5 @@ public class MiscUtils {
                     matches.add(player);
                 });
         return matches;
-    }
-
-    public static boolean isOnSameDay(Date first, Date second) {
-        Date startOfFirst = getStartOfDate(first);
-        Date startOfSecond = getStartOfDate(second);
-        return (startOfFirst != startOfSecond);
-    }
-
-    public static Date getStartOfDate(Date date) {
-        Date startOfDate = new Date(date.getTime() - (date.getTime() % 86400000));
-        return startOfDate;
     }
 }

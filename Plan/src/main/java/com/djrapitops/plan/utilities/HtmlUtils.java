@@ -14,16 +14,12 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class HtmlUtils {
 
-    public static String getHtmlStringFromResource(String fileName) {
+    public static String getHtmlStringFromResource(String fileName) throws FileNotFoundException {
         Plan plugin = getPlugin(Plan.class);
-        File localFile = new File(plugin.getDataFolder(), fileName);        
+        File localFile = new File(plugin.getDataFolder(), fileName);
         Scanner scanner = new Scanner(plugin.getResource(fileName));
         if (localFile.exists()) {
-            try {
-                scanner = new Scanner(localFile, "UTF-8");
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            }
+            scanner = new Scanner(localFile, "UTF-8");
         }
         String html = "";
         while (scanner.hasNextLine()) {

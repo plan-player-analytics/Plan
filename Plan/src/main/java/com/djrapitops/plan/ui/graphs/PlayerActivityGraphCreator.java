@@ -11,6 +11,8 @@ import com.googlecode.charts4j.XYLine;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -32,10 +34,22 @@ public class PlayerActivityGraphCreator {
      */
     public static String createChart(List<SessionData> sessionData, long scale) {
 
-        List<Long> sessionStarts = new ArrayList<>();
-        List<Long> sessionEnds = new ArrayList<>();
-        sessionData.parallelStream().forEach(
-                (session) -> {
+        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+        long nowMinusScale = now - scale;
+        CopyOnWriteArrayList<Long> sessionStarts = new CopyOnWriteArrayList<>();
+        CopyOnWriteArrayList<Long> sessionEnds = new CopyOnWriteArrayList<>();
+        CopyOnWriteArrayList<SessionData> s = new CopyOnWriteArrayList(sessionData);
+//        List<Long> sessionStarts = sessionData.parallelStream()
+//                .filter((session) -> (session.getSessionStart() > nowMinusScale))
+//                .map(SessionData::getSessionStart)
+//                .collect(Collectors.toList());
+//        List<Long> sessionEnds = sessionData.parallelStream()
+//                .filter((session) -> (session.getSessionStart() > nowMinusScale))
+//                .map(SessionData::getSessionEnd)
+//                .collect(Collectors.toList());
+        s.parallelStream()
+                .filter((session) -> (session.getSessionStart() > nowMinusScale))
+                .forEach((session) -> {
                     sessionEnds.add(session.getSessionEnd());
                     sessionStarts.add(session.getSessionStart());
                 });
@@ -47,29 +61,26 @@ public class PlayerActivityGraphCreator {
         Plan plugin = getPlugin(Plan.class);
 
         int maxPlayers = plugin.getHandler().getMaxPlayers();
-        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
-        long nowMinusScale = now - scale;
 
         int lastPValue = 0;
         int lastSavedPValue = -1;
         long lastSaveI = 0;
         for (long i = nowMinusScale; i <= now; i += 1000) {
+            final long j = i;
             if (sessionStarts.contains(i)) {
                 int amount = 0;
-                for (long start : sessionStarts) {
-                    if (start == i) {
-                        amount++;
-                    }
-                }
+                amount = sessionStarts.parallelStream()
+                        .filter((start) -> (start == j))
+                        .map((_item) -> 1)
+                        .reduce(amount, Integer::sum);
                 lastPValue += amount;
             }
             if (sessionEnds.contains(i)) {
                 int amount = 0;
-                for (long end : sessionEnds) {
-                    if (end == i) {
-                        amount++;
-                    }
-                }
+                amount = sessionEnds.parallelStream()
+                        .filter((end) -> (end == j))
+                        .map((_item) -> 1)
+                        .reduce(amount, Integer::sum);
                 lastPValue -= amount;
             }
             Double scaledDateValue = ((i - nowMinusScale) * 1.0 / scale) * 100;

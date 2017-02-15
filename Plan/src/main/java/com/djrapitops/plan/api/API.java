@@ -4,7 +4,6 @@ import com.djrapitops.planlite.UUIDFetcher;
 import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanLiteHook;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
@@ -18,7 +17,6 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 public class API {
 
     private Plan plugin;
-    private PlanLiteHook hook;
 
     /**
      * Class Construcor.
@@ -27,7 +25,6 @@ public class API {
      */
     public API(Plan plugin) {
         this.plugin = plugin;
-        hook = plugin.getPlanLiteHook();
     }
 
     /**

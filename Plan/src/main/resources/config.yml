@@ -1,5 +1,6 @@
 Settings:
   Locale: default
+  UseTextUI: false
   Data:
     GatherLocations: true
   Analysis:
@@ -21,10 +22,7 @@ Settings:
     AlternativeIP: your.ip.here:%port%
     Security:
       DisplayIPsAndUUIDs: true
-      AddressSecurityCode: bAkEd      
-  PlanLite:
-    Enabled: true
-    UseAsAlternativeUI: false
+      AddressSecurityCode: bAkEd
 
 Customization:
   Colors:

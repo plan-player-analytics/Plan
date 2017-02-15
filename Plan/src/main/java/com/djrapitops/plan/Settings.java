@@ -12,8 +12,7 @@ public enum Settings {
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"), 
-    USE_ALTERNATIVE_UI("Settings.PlanLite.UseAsAlternativeUI"),
-    PLANLITE_ENABLED("Settings.PlanLite.Enabled"),
+    USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     // Integer

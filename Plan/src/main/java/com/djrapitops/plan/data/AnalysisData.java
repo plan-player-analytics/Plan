@@ -43,9 +43,6 @@ public class AnalysisData {
     private long totalmobkills;
     private long totaldeaths;
 
-    private boolean planLiteEnabled;
-    private PlanLiteAnalyzedData planLiteData;
-
     /**
      * Class constructor.
      *
@@ -67,41 +64,6 @@ public class AnalysisData {
      */
     public void setJoinleaver(int joinleaver) {
         this.joinleaver = joinleaver;
-    }
-
-    /**
-     * @return true if PlanLite was enabled at the time of Analysis
-     */
-    public boolean isPlanLiteEnabled() {
-        return planLiteEnabled;
-    }
-
-    /**
-     * @param planLiteEnabled true if PlanLite was enabled at the time of
-     * Analysis
-     */
-    public void setPlanLiteEnabled(boolean planLiteEnabled) {
-        this.planLiteEnabled = planLiteEnabled;
-    }
-
-    /**
-     * Retrieve the PlanLiteAnalyzedData.
-     *
-     * null if planLiteEnabled = false
-     *
-     * @return Seperate object used to save PlanLiteData
-     */
-    public PlanLiteAnalyzedData getPlanLiteData() {
-        return planLiteData;
-    }
-
-    /**
-     * Set the PlanLiteAnalyzedData.
-     *
-     * @param planLiteData Seperate object used to save PlanLiteData
-     */
-    public void setPlanLiteData(PlanLiteAnalyzedData planLiteData) {
-        this.planLiteData = planLiteData;
     }
 
     /**

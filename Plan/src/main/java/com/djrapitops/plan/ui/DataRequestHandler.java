@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui;
 
+import java.io.FileNotFoundException;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -47,14 +48,18 @@ public class DataRequestHandler {
      * @return The html
      */
     public String getDataHtml(UUID uuid) {
-        UserData data = inspectCache.getFromCache(uuid);
-        if (data == null) {
-            return "<h1>404 Data was not found in cache</h1>";
+        try {
+            UserData data = inspectCache.getFromCache(uuid);
+            if (data == null) {
+                return "<h1>404 Data was not found in cache</h1>";
+            }
+            return HtmlUtils.replacePlaceholders(
+                    HtmlUtils.getHtmlStringFromResource("player.html"),
+                    PlaceholderUtils.getInspectReplaceRules(data)
+            );
+        } catch (FileNotFoundException ex) {
+            return "<h1>404 player.html was not found. </h1>";
         }
-        return HtmlUtils.replacePlaceholders(
-                HtmlUtils.getHtmlStringFromResource("player.html"), 
-                PlaceholderUtils.getInspectReplaceRules(data)
-        );
     }
 
     /**
@@ -63,13 +68,17 @@ public class DataRequestHandler {
      * @return the html
      */
     public String getAnalysisHtml() {
-        if (!analysisCache.isCached()) {
-            return "<h1>404 Data was not found in cache</h1>";
+        try {
+            if (!analysisCache.isCached()) {
+                return "<h1>404 Data was not found in cache</h1>";
+            }
+            return HtmlUtils.replacePlaceholders(
+                    HtmlUtils.getHtmlStringFromResource("analysis.html"),
+                    PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData())
+            );
+        } catch (FileNotFoundException ex) {
+            return "<h1>404 analysis.html was not found</h1>";
         }
-        return HtmlUtils.replacePlaceholders(
-                HtmlUtils.getHtmlStringFromResource("analysis.html"), 
-                PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData())
-        );
     }
 
     /**

@@ -28,7 +28,6 @@ public class PlanPlayerListener implements Listener {
     private final LocationHandler locationH;
     private final DemographicsHandler demographicH;
     private final RuleBreakingHandler rulebreakH;
-    private final PlanLiteHandler planLiteH;
     private final CommandUseHandler serverHandler;
 
     /**
@@ -48,7 +47,6 @@ public class PlanPlayerListener implements Listener {
         demographicH = handler.getDemographicsHandler();
         locationH = handler.getLocationHandler();
         rulebreakH = handler.getRuleBreakingHandler();
-        planLiteH = handler.getPlanLiteHandler();
         serverHandler = handler.getServerDataHandler();
     }
 
@@ -73,7 +71,6 @@ public class PlanPlayerListener implements Listener {
         basicInfoH.handleLogin(event, data);
         gmTimesH.handleLogin(event, data);
         demographicH.handleLogin(event, data);
-        planLiteH.handleLogin(event, data);
         (new BukkitRunnable() {
             @Override
             public void run() {

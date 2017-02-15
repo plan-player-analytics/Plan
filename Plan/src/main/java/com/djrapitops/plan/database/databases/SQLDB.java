@@ -415,6 +415,9 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void saveCommandUse(HashMap<String, Integer> data) {
+        if (data.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + commanduseName);
@@ -695,6 +698,9 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void saveMultipleUserData(List<UserData> data) {
+        if (data.isEmpty()) {
+            return;
+        }
         List<UserData> saveLast = new ArrayList<>();
         String uSQL = "UPDATE " + userName + " SET "
                 + userColumnDemAge + "=?, "
@@ -713,6 +719,7 @@ public abstract class SQLDB extends Database {
             PreparedStatement uStatement = connection.prepareStatement(uSQL);
             boolean commitRequired = false;
             for (UserData uData : data) {
+                uData.setAccessing(true);
                 int userId = getUserId(uData.getUuid().toString());
                 if (userId == -1) {
                     saveLast.add(uData);
@@ -738,8 +745,10 @@ public abstract class SQLDB extends Database {
                     uStatement.addBatch();
                 } catch (SQLException | NullPointerException e) {
                     saveLast.add(uData);
+                    uData.setAccessing(false);
                     continue;
                 }
+                uData.setAccessing(false);
                 commitRequired = true;
             }
             uStatement.executeBatch();
@@ -750,6 +759,7 @@ public abstract class SQLDB extends Database {
             connection.setAutoCommit(true);
             data.removeAll(saveLast);
             for (UserData uData : data) {
+                uData.setAccessing(true);
                 int userId = getUserId(uData.getUuid().toString());
                 saveLocationList(userId, uData.getLocations());
                 saveNickList(userId, uData.getNicknames(), uData.getLastNick());
@@ -758,6 +768,7 @@ public abstract class SQLDB extends Database {
                 savePlayerKills(userId, uData.getPlayerKills());
                 connection.setAutoCommit(true);
                 saveGMTimes(userId, uData.getGmTimes());
+                uData.setAccessing(false);
             }
             for (UserData userData : saveLast) {
                 saveUserData(userData.getUuid(), userData);
@@ -857,6 +868,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void saveLocationList(int userId, List<Location> locations) {
+        if (locations.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement deleteStatement = connection.prepareStatement(
                     "DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
@@ -897,6 +911,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void saveNickList(int userId, HashSet<String> names, String lastNick) {
+        if (names.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
@@ -929,6 +946,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void saveSessionList(int userId, List<SessionData> sessions) {
+        if (sessions.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
@@ -961,6 +981,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void savePlayerKills(int userId, List<KillData> kills) {
+        if (kills.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + killsName + " WHERE UPPER(" + killsColumnKillerUserID + ") LIKE UPPER(?)");
@@ -995,6 +1018,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void saveIPList(int userId, HashSet<InetAddress> ips) {
+        if (ips.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
@@ -1026,6 +1052,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) {
+        if (gamemodeTimes.isEmpty()) {
+            return;
+        }
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");

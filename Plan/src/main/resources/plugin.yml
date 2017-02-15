@@ -1,6 +1,6 @@
 name: Plan
 author: Rsl1122
-main: com.djrapitops.plan.Plan
+main: main.java.com.djrapitops.plan.Plan
 version: 2.5.2
 
 commands:
@@ -23,9 +23,6 @@ commands:
     usage: /plan manage <manage subcommand>
     description: manage the database
   
-softdepend:
-- PlanLite
-
 permissions:
   plan.?:
     description: Help command

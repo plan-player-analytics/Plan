@@ -12,6 +12,10 @@ import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
  * @author Rsl1122
  */
 public class SortedTableCreator {
+    
+    public static String createCommandUseTable(HashMap<String, Integer> commandUse) {
+        return "Not Implemented yet";
+    }
 
     public static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
         return createTableOutOfHashMap(commandUse, 50);

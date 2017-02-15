@@ -35,7 +35,6 @@ public class DataCacheHandler {
     private final RuleBreakingHandler ruleBreakingHandler;
     private final HashMap<String, Integer> commandUse;
     private final CommandUseHandler commandUseHandler;
-    private final PlanLiteHandler planLiteHandler;
     private final KillHandler killHandler;
     private final SessionHandler sessionHandler;
     private final Database db;
@@ -64,7 +63,6 @@ public class DataCacheHandler {
         ruleBreakingHandler = new RuleBreakingHandler(plugin, this);
         commandUse = db.getCommandUse();
         commandUseHandler = new CommandUseHandler(commandUse);
-        planLiteHandler = new PlanLiteHandler(plugin);
         newPlayerCreator = new NewPlayerCreator(plugin, this);
         killHandler = new KillHandler(plugin);
         sessionHandler = new SessionHandler(plugin);
@@ -120,9 +118,6 @@ public class DataCacheHandler {
             if (dataCache.get(uuid) == null) {
                 UserData uData = db.getUserData(uuid);
                 if (uData != null) {
-                    if (uData.getPlanLiteData() == null) {
-                        getPlanLiteHandler().handleEvents(uData.getName(), uData);
-                    }
                     dataCache.put(uuid, uData);
                     plugin.log(Phrase.ADD_TO_CACHE.parse(uuid.toString()));
                 }
@@ -133,11 +128,6 @@ public class DataCacheHandler {
                 return dataCache.get(uuid);
             }
             UserData uData = db.getUserData(uuid);
-            if (uData != null) {
-                if (uData.getPlanLiteData() == null) {
-                    getPlanLiteHandler().handleEvents(uData.getName(), uData);
-                }
-            }
             return uData;
         }
     }
@@ -367,13 +357,6 @@ public class DataCacheHandler {
      */
     public GamemodeTimesHandler getGamemodeTimesHandler() {
         return gamemodeTimesHandler;
-    }
-
-    /**
-     * @return Current instance of PlanLiteHandler
-     */
-    public PlanLiteHandler getPlanLiteHandler() {
-        return planLiteHandler;
     }
 
     public KillHandler getKillHandler() {
