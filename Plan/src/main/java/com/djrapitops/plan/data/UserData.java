@@ -46,6 +46,7 @@ public class UserData {
     private List<SessionData> sessions;
 
     public UserData(Player player, DemographicsData demData, Database db) {
+        accessing = 0;
         uuid = player.getUniqueId();
         registered = player.getFirstPlayed();
         location = player.getLocation();
@@ -73,6 +74,7 @@ public class UserData {
     }
 
     public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
+        accessing = 0;
         uuid = player.getUniqueId();
         registered = player.getFirstPlayed();
         isOp = player.isOp();
