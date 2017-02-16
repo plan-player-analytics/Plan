@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.database;
 import java.util.*;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -35,10 +36,11 @@ public abstract class Database {
      * Returns the UserData fetched from the Database.
      *
      * @param uuid UUID of Player
-     * @return UserData of Player
+     * @param processors The DBCallableProcessor Objects used to process data after async
+     * get task is complete.
      */
-    public abstract UserData getUserData(UUID uuid);
-
+    public abstract void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors);
+    
     /**
      * Saves the UserData to the Database.
      *
@@ -49,10 +51,11 @@ public abstract class Database {
 
     /**
      * Saves multiple UserData to the Database using batch processing.
+     *
      * @param data List of Data
      */
     public abstract void saveMultipleUserData(List<UserData> data);
-    
+
     /**
      * Check if the player is found in the database.
      *
@@ -109,11 +112,16 @@ public abstract class Database {
      * Closes the database.
      */
     public abstract void close();
-    
+
     public abstract void removeAccount(String uuid);
+
     public abstract void removeAllData();
+
     public abstract void saveCommandUse(HashMap<String, Integer> data);
+
     public abstract Set<UUID> getSavedUUIDs();
+
     public abstract HashMap<String, Integer> getCommandUse();
+
     public abstract int getUserId(String uuid);
 }

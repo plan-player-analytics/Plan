@@ -18,6 +18,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *

@@ -1,14 +1,9 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
 import java.util.Collection;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  *
@@ -16,26 +11,24 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class LocationHandler {
 
-    private final DataCacheHandler handler;
+    private Plan plugin;
 
     /**
      * Class Constructor.
      *
      * @param plugin Current instance of Plan
-     * @param h Current instance of DataCacheHandler
      */
-    public LocationHandler(Plan plugin, DataCacheHandler h) {
-        this.handler = h;
+    public LocationHandler(Plan plugin) {
+        this.plugin = plugin;
     }
 
     /**
      * Adds location to the UserData if it is not being saved.
      *
-     * @param uuid UUID of the matching Player
+     * @param data UserData of player
      * @param loc Location from the MoveEvent listener.
      */
-    public void addLocation(UUID uuid, Location loc) {
-        UserData data = handler.getCurrentData(uuid);
+    public void addLocation(UserData data, Location loc) {
         if (!data.isAccessed()) {
             data.addLocation(loc);
         } else {
@@ -46,26 +39,12 @@ public class LocationHandler {
     /**
      * Adds multiple locaitons to the UserData.
      *
-     * @param uuid UUID of the matching Player
+     * @param data Userdata of Player
      * @param locs The Locations that are added.
      */
-    public void addLocations(UUID uuid, Collection<Location> locs) {
-        handler.getCurrentData(uuid).addLocations(locs);
-    }
-
-    /**
-     * Handles QuitEvent by updating BedLocation.
-     *
-     * Uses OfflinePlayer to prevent null bedlocation.
-     *
-     * @param event QuitEvent from Listener.
-     * @param data UserData matching Player.
-     */
-    public void handleLogOut(PlayerQuitEvent event, UserData data) {
-        OfflinePlayer p = getOfflinePlayer(event.getPlayer().getUniqueId());
-        Location bedSpawnLocation = p.getBedSpawnLocation();
-        if (bedSpawnLocation == null) {
-            return;
+    public void addLocations(UserData data, Collection<Location> locs) {
+        if (!data.isAccessed()) {
+            data.addLocations(locs);
         }
     }
 }

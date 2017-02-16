@@ -110,12 +110,11 @@ public class DemographicsHandler {
      * @param event JoinEvent to get the InetAddress
      * @param data UserData corresponding the player
      */
-    public void handleLogin(PlayerJoinEvent event, UserData data) {
-        InetAddress address = event.getPlayer().getAddress().getAddress();
+    public void handleLogin(InetAddress ip, UserData data) {
         DemographicsData demData = data.getDemData();
         try {
             String result = "";
-            URL url = new URL("http://freegeoip.net/csv/" + address.getHostAddress());
+            URL url = new URL("http://freegeoip.net/csv/" + ip.getHostAddress());
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
             String resultline;

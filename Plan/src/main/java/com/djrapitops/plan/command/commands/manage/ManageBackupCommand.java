@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import org.bukkit.command.Command;
@@ -30,7 +31,7 @@ public class ManageBackupCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageBackupCommand(Plan plugin) {
-        super("backup", "plan.manage", Phrase.CMD_USG_MANAGE_BACKUP+"", CommandType.CONSOLE, "<DB>");
+        super("backup", "plan.manage", Phrase.CMD_USG_MANAGE_BACKUP + "", CommandType.CONSOLE, "<DB>");
 
         this.plugin = plugin;
     }
@@ -48,7 +49,7 @@ public class ManageBackupCommand extends SubCommand {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         try {
             if (args.length < 1) {
-                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_BACKUP+""));
+                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_BACKUP + ""));
                 return true;
             }
             String db = args[0].toLowerCase();
@@ -76,9 +77,9 @@ public class ManageBackupCommand extends SubCommand {
                 @Override
                 public void run() {
                     Date now = new Date();
-                    SQLiteDB backupDB = new SQLiteDB(plugin, 
-                            args[0]+"-backup-"+now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
-                    
+                    SQLiteDB backupDB = new SQLiteDB(plugin,
+                            args[0] + "-backup-" + now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
+
                     if (!backupDB.init()) {
                         sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
                         this.cancel();
@@ -86,10 +87,18 @@ public class ManageBackupCommand extends SubCommand {
                     }
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                     backupDB.removeAllData();
-                    Set<UUID> uuids = copyFromDB.getSavedUUIDs();                    
+                    Set<UUID> uuids = copyFromDB.getSavedUUIDs();
                     List<UserData> allUserData = new ArrayList<>();
                     for (UUID uuid : uuids) {
-                        allUserData.add(copyFromDB.getUserData(uuid));
+                        copyFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                            @Override
+                            public void process(UserData data) {
+                                allUserData.add(data);
+                            }
+                        });
+                    }
+                    while (uuids.size() > allUserData.size()) {
+                        
                     }
                     backupDB.saveMultipleUserData(allUserData);
                     backupDB.saveCommandUse(copyFromDB.getCommandUse());

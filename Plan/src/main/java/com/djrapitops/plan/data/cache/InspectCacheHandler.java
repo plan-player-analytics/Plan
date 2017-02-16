@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -49,14 +50,20 @@ public class InspectCacheHandler {
         if (!handler.getDB().wasSeenBefore(uuid)) {
             return;
         }
-        cache.put(uuid, handler.getCurrentData(uuid, false));
+        DBCallableProcessor cacher = new DBCallableProcessor() {
+            @Override
+            public void process(UserData data) {
+                cache.put(uuid, data);
+            }
+        };
+        handler.getUserDataForProcessing(cacher, uuid, false);
         long clearTime = new Date().toInstant().getEpochSecond() + (long) 60 * (long) minutes;
         if (clearTimes.get(uuid) == null) {
             clearTimes.put(uuid, (long) 0);
         }
         if (clearTimes.get(uuid) < clearTime) {
             clearTimes.put(uuid, clearTime);
-            (new BukkitRunnable() {
+            BukkitTask timedInspectCacheClearTask = (new BukkitRunnable() {
                 @Override
                 public void run() {
                     if (new Date().toInstant().getEpochSecond() - clearTimes.get(uuid) < 30) {

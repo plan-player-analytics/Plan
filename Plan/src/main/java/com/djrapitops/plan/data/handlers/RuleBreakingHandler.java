@@ -27,23 +27,21 @@ public class RuleBreakingHandler {
     }
 
     /**
-     * Update if player is banned or not.
+     * Update if player is banned or not on logout.
      *
-     * @param event QuitEvent given by Listener
+     * @param isBanned
      * @param data UserData matching Player
      */
-    public void handleLogout(PlayerQuitEvent event, UserData data) {
-        Player player = event.getPlayer();
-        data.updateBanned(player);
+    public void handleLogout(boolean isBanned, UserData data) {
+        data.updateBanned(isBanned);
     }
 
     /**
-     * Update if player is banned or not.
+     * Update if player is banned or not on kick.
      *
-     * @param event KickEvent given by Listener
      * @param data UserData matching Player
      */
-    public void handleKick(PlayerKickEvent event, UserData data) {
+    public void handleKick(UserData data) {
         data.setTimesKicked(data.getTimesKicked() + 1);
         data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
         data.setLastPlayed(new Date().getTime());

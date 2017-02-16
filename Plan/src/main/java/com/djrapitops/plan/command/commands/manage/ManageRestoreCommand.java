@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import org.bukkit.command.Command;
@@ -103,7 +104,15 @@ public class ManageRestoreCommand extends SubCommand {
                     Set<UUID> uuids = backupDB.getSavedUUIDs();
                     List<UserData> allUserData = new ArrayList<>();
                     for (UUID uuid : uuids) {
-                        allUserData.add(backupDB.getUserData(uuid));
+                        backupDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                            @Override
+                            public void process(UserData data) {
+                                allUserData.add(data);
+                            }
+                        });
+                    }
+                    while(uuids.size() > allUserData.size()) {
+                        
                     }
                     copyToDB.saveMultipleUserData(allUserData);
                     copyToDB.saveCommandUse(backupDB.getCommandUse());

@@ -43,13 +43,13 @@ public class PlanPlayerMoveListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        Player p = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
         if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
             return;
         }
+        Player p = event.getPlayer();
         Location savedLocation = to.getBlock().getLocation();
-        locationH.addLocation(p.getUniqueId(), savedLocation);
+//        locationH.addLocation(uData, savedLocation);
     }
 }

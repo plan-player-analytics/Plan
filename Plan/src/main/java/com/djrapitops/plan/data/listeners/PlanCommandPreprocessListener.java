@@ -26,7 +26,7 @@ public class PlanCommandPreprocessListener implements Listener {
     public PlanCommandPreprocessListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        serverH = handler.getServerDataHandler();
+        serverH = handler.getCommandUseHandler();
     }
 
     /**

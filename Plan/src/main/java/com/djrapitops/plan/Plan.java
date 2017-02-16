@@ -195,7 +195,7 @@ public class Plan extends JavaPlugin {
         pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
         pluginManager.registerEvents(new PlanDeathEventListener(this), this);
         if (Settings.GATHERLOCATIONS.isTrue()) {
-            pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
+//            pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
         }
     }
 

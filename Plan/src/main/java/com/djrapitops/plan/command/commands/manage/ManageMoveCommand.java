@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -110,7 +111,15 @@ public class ManageMoveCommand extends SubCommand {
                     moveToDB.removeAllData();
                     List<UserData> allUserData = new ArrayList<>();
                     for (UUID uuid : uuids) {
-                        allUserData.add(moveFromDB.getUserData(uuid));
+                        moveFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                            @Override
+                            public void process(UserData data) {
+                                allUserData.add(data);
+                            }
+                        });
+                    }
+                    while(uuids.size() > allUserData.size()) {
+                        
                     }
                     moveToDB.saveMultipleUserData(allUserData);
                     moveToDB.saveCommandUse(moveFromDB.getCommandUse());

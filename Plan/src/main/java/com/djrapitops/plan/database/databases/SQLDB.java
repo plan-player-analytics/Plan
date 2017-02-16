@@ -15,13 +15,14 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public abstract class SQLDB extends Database {
 
@@ -30,6 +31,7 @@ public abstract class SQLDB extends Database {
     private final boolean supportsModification;
 
     private Connection connection;
+    private int transactionsActive;
 
     private final String userName;
     private final String locationName;
@@ -91,6 +93,7 @@ public abstract class SQLDB extends Database {
         super(plugin);
         this.plugin = plugin;
         this.supportsModification = supportsModification;
+        transactionsActive = 0;
 
         userName = "plan_users";
         locationName = "plan_locations";
@@ -438,11 +441,11 @@ public abstract class SQLDB extends Database {
                     commitRequired = true;
                 }
                 statement.executeBatch();
+                statement.close();
                 if (commitRequired) {
                     connection.commit();
                 }
             }
-            statement.close();
             connection.setAutoCommit(true);
 
         } catch (SQLException e) {
@@ -515,12 +518,12 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public UserData getUserData(UUID uuid) {
+    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) {
         checkConnection();
         // Check if user is in the database
         if (!wasSeenBefore(uuid)) {
             plugin.logError(uuid + " was not found from the database!");
-            return null;
+            return;
         }
         List<World> worldList = Bukkit.getServer().getWorlds();
         World defaultWorld = worldList.get(0);
@@ -573,11 +576,12 @@ public abstract class SQLDB extends Database {
 
             data.addSessions(getSessionData(userId));
             data.setPlayerKills(getPlayerKills(userId));
+            for (DBCallableProcessor processor : processors) {
+                processor.process(data);
+            }
         } catch (SQLException e) {
-            data = null;
             e.printStackTrace();
         }
-        return data;
     }
 
     private HashMap<GameMode, Long> getGMTimes(String userId) throws SQLException {
@@ -718,8 +722,9 @@ public abstract class SQLDB extends Database {
             connection.setAutoCommit(false);
             PreparedStatement uStatement = connection.prepareStatement(uSQL);
             boolean commitRequired = false;
+            transactionsActive++;
             for (UserData uData : data) {
-                uData.setAccessing(true);
+                uData.access();
                 int userId = getUserId(uData.getUuid().toString());
                 if (userId == -1) {
                     saveLast.add(uData);
@@ -745,30 +750,35 @@ public abstract class SQLDB extends Database {
                     uStatement.addBatch();
                 } catch (SQLException | NullPointerException e) {
                     saveLast.add(uData);
-                    uData.setAccessing(false);
+                    uData.stopAccessing();
                     continue;
                 }
-                uData.setAccessing(false);
+                uData.stopAccessing();
                 commitRequired = true;
             }
             uStatement.executeBatch();
+            uStatement.close();
+            transactionsActive--;
             if (commitRequired) {
                 connection.commit();
             }
-            uStatement.close();
-            connection.setAutoCommit(true);
+            if (noActiveTransaction()) {
+                connection.setAutoCommit(true);
+            }
             data.removeAll(saveLast);
             for (UserData uData : data) {
-                uData.setAccessing(true);
+                uData.access();
                 int userId = getUserId(uData.getUuid().toString());
                 saveLocationList(userId, uData.getLocations());
                 saveNickList(userId, uData.getNicknames(), uData.getLastNick());
                 saveIPList(userId, uData.getIps());
                 saveSessionList(userId, uData.getSessions());
                 savePlayerKills(userId, uData.getPlayerKills());
-                connection.setAutoCommit(true);
+                if (noActiveTransaction()) {
+                    connection.setAutoCommit(true);
+                }
                 saveGMTimes(userId, uData.getGmTimes());
-                uData.setAccessing(false);
+                uData.stopAccessing();
             }
             for (UserData userData : saveLast) {
                 saveUserData(userData.getUuid(), userData);
@@ -781,7 +791,7 @@ public abstract class SQLDB extends Database {
     @Override
     public void saveUserData(UUID uuid, UserData data) {
         checkConnection();
-        data.setAccessing(true);
+        data.access();
         int userId = getUserId(uuid.toString());
         try {
             int update = 0;
@@ -854,30 +864,33 @@ public abstract class SQLDB extends Database {
                 statement.close();
                 userId = getUserId(uuid.toString());
             }
+            connection.setAutoCommit(false);
             saveLocationList(userId, data.getLocations());
             saveNickList(userId, data.getNicknames(), data.getLastNick());
             saveIPList(userId, data.getIps());
             saveSessionList(userId, data.getSessions());
             savePlayerKills(userId, data.getPlayerKills());
-            connection.setAutoCommit(true);
+            if (noActiveTransaction()) {
+                connection.setAutoCommit(true);
+            }
             saveGMTimes(userId, data.getGmTimes());
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
-        data.setAccessing(false);
+        data.stopAccessing();
     }
 
     public void saveLocationList(int userId, List<Location> locations) {
         if (locations.isEmpty()) {
             return;
         }
+        transactionsActive++;
         try {
             PreparedStatement deleteStatement = connection.prepareStatement(
                     "DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
             deleteStatement.setString(1, "" + userId);
             deleteStatement.execute();
             deleteStatement.close();
-            connection.setAutoCommit(false);
             PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
                     + locationColumnUserID + ", "
                     + locationColumnCoordinatesX + ", "
@@ -908,19 +921,19 @@ public abstract class SQLDB extends Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        transactionsActive--;
     }
 
     public void saveNickList(int userId, HashSet<String> names, String lastNick) {
         if (names.isEmpty()) {
             return;
         }
+        transactionsActive++;
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
-
-            connection.setAutoCommit(false);
             statement = connection.prepareStatement("INSERT INTO " + nicknamesName + " ("
                     + nicknamesColumnUserID + ", "
                     + nicknamesColumnCurrent + ", "
@@ -943,19 +956,19 @@ public abstract class SQLDB extends Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        transactionsActive--;
     }
 
     public void saveSessionList(int userId, List<SessionData> sessions) {
         if (sessions.isEmpty()) {
             return;
         }
+        transactionsActive++;
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
-
-            connection.setAutoCommit(false);
             statement = connection.prepareStatement("INSERT INTO " + sessionName + " ("
                     + sessionColumnUserID + ", "
                     + sessionColumnSessionStart + ", "
@@ -978,19 +991,19 @@ public abstract class SQLDB extends Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        transactionsActive--;
     }
 
     public void savePlayerKills(int userId, List<KillData> kills) {
         if (kills.isEmpty()) {
             return;
         }
+        transactionsActive++;
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + killsName + " WHERE UPPER(" + killsColumnKillerUserID + ") LIKE UPPER(?)");
             statement.setString(1, "" + userId);
             statement.execute();
-
-            connection.setAutoCommit(false);
             statement = connection.prepareStatement("INSERT INTO " + killsName + " ("
                     + killsColumnKillerUserID + ", "
                     + killsColumnVictimUserID + ", "
@@ -1015,12 +1028,14 @@ public abstract class SQLDB extends Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        transactionsActive--;
     }
 
     public void saveIPList(int userId, HashSet<InetAddress> ips) {
         if (ips.isEmpty()) {
             return;
         }
+        transactionsActive++;
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
@@ -1028,7 +1043,6 @@ public abstract class SQLDB extends Database {
             statement.execute();
             statement.close();
 
-            connection.setAutoCommit(false);
             statement = connection.prepareStatement("INSERT INTO " + ipsName + " ("
                     + ipsColumnUserID + ", "
                     + ipsColumnIP
@@ -1049,6 +1063,7 @@ public abstract class SQLDB extends Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        transactionsActive--;
     }
 
     public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) {
@@ -1126,6 +1141,10 @@ public abstract class SQLDB extends Database {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    private boolean noActiveTransaction() {
+        return transactionsActive == 0;
     }
 
 }

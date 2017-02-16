@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
+import java.net.InetAddress;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  *
@@ -27,33 +27,32 @@ public class BasicInfoHandler {
     /**
      * Adds new nicknames and IPs to UserData
      *
-     * @param event JoinEvent to get the Player
+     * @param nickname Displayname of player
+     * @param ip IP of player
      * @param data UserData matching the Player
      */
-    public void handleLogin(PlayerJoinEvent event, UserData data) {
-        Player player = event.getPlayer();
-        String nickname = player.getDisplayName();
-        if (!nickname.isEmpty()) {
-            if (data.addNickname(nickname)) {
-                data.setLastNick(nickname);
-            }
-        }
-        data.addIpAddress(player.getAddress().getAddress());
+    public void handleLogin(String nickname, InetAddress ip, UserData data) {
+        addNickname(nickname, data);
+        data.addIpAddress(ip);
     }
 
     /**
      * Adds new nicknames and IPs to UserData in case of /reload
      *
-     * @param player A player that is online when /reload is run
+     * @param nickname Displayname of player
+     * @param ip IP of player
      * @param data UserData matching the Player
      */
-    public void handleReload(Player player, UserData data) {
-        String nickname = player.getDisplayName();
+    public void handleReload(String nickname, InetAddress ip, UserData data) {
+        addNickname(nickname, data);
+        data.addIpAddress(ip);
+    }
+
+    public void addNickname(String nickname, UserData data) {
         if (!nickname.isEmpty()) {
             if (data.addNickname(nickname)) {
                 data.setLastNick(nickname);
             }
         }
-        data.addIpAddress(player.getAddress().getAddress());
     }
 }

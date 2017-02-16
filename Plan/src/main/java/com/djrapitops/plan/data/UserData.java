@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 public class UserData {
 
-    private boolean isAccessed;
+    private int accessing;
 
     private UUID uuid;
     private Location location;
@@ -160,16 +160,20 @@ public class UserData {
         currentSession = session;
     }
 
-    public void updateBanned(Player p) {
-        isBanned = p.isBanned();
+    public void updateBanned(boolean isBanned) {
+        this.isBanned = isBanned;
     }
 
     public boolean isAccessed() {
-        return isAccessed;
+        return accessing > 0;
     }
 
-    public void setAccessing(boolean value) {
-        isAccessed = value;
+    public void access() {
+        accessing++;
+    }
+    
+    public void stopAccessing() {
+        accessing--;
     }
 
     // Getters -------------------------------------------------------------

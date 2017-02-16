@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handlers.KillHandler;
 import org.bukkit.entity.LivingEntity;
@@ -37,18 +38,33 @@ public class PlanDeathEventListener implements Listener {
         LivingEntity dead = event.getEntity();
         Player killer = dead.getKiller();
         boolean killerIsPlayer = killer != null;
-        UserData killersData = null;
         if (killerIsPlayer) {
-            killersData = handler.getCurrentData(killer.getUniqueId());
+            DBCallableProcessor deathProcess = new DBCallableProcessor() {
+                @Override
+                public void process(UserData killersData) {
+                    continueProcessing(dead, killerIsPlayer, killer, killersData);
+                }
+            };
+            handler.getUserDataForProcessing(deathProcess, killer.getUniqueId());
+        } else {
+            continueProcessing(dead, false, null, null);
         }
+    }
+
+    public void continueProcessing(LivingEntity dead, boolean killerIsPlayer, Player killer, UserData killersData) {
         if (dead instanceof Player) {
             Player killed = (Player) dead;
-            UserData killedsData = handler.getCurrentData(killed.getUniqueId());
-            if (killerIsPlayer) {
-                String weaponName = killer.getInventory().getItemInMainHand().getType().name();
-                kH.handlePlayerKill(killersData, killedsData, weaponName);
-            }
-            kH.handlePlayerDeath(killedsData);
+            DBCallableProcessor deathProcess = new DBCallableProcessor() {
+                @Override
+                public void process(UserData killedsData) {
+                    if (killerIsPlayer) {
+                        String weaponName = killer.getInventory().getItemInMainHand().getType().name();
+                        kH.handlePlayerKill(killersData, killed.getUniqueId(), weaponName);
+                    }
+                    kH.handlePlayerDeath(killedsData);
+                }
+            };
+            handler.getUserDataForProcessing(deathProcess, killed.getUniqueId());
         } else if (killerIsPlayer) {
             kH.handleMobKill(killersData);
         }

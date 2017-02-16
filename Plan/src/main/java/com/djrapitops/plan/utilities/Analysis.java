@@ -16,10 +16,10 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.Html;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -74,9 +74,9 @@ public class Analysis {
                 while (rawData.size() != uuids.size()) {
                     uuids.stream()
                             .filter((uuid) -> (!added.contains(uuid)))
-                            .forEach((uuid) -> {
-                                UserData userData = inspectCache.getFromCache(uuid);
-                                if (userData != null) {
+                            .forEach((uuid) -> {                                
+                                if (inspectCache.isCached(uuid)) {
+                                    UserData userData = inspectCache.getFromCache(uuid);
                                     rawData.add(userData);
                                     added.add(uuid);
                                 }

@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.DataCombineUtils;
 import org.bukkit.command.Command;
@@ -31,7 +32,7 @@ public class ManageCombineCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCombineCommand(Plan plugin) {
-        super("combine", "plan.manage", Phrase.CMD_USG_MANAGE_COMBINE+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE+"");
+        super("combine", "plan.manage", Phrase.CMD_USG_MANAGE_COMBINE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE + "");
         this.plugin = plugin;
     }
 
@@ -51,7 +52,7 @@ public class ManageCombineCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_COMBINE+""));
+            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_COMBINE + ""));
             return true;
         }
         String fromDB = args[0].toLowerCase();
@@ -113,10 +114,23 @@ public class ManageCombineCommand extends SubCommand {
                     HashMap<UUID, UserData> allFromUserData = new HashMap<>();
                     HashMap<UUID, UserData> allToUserData = new HashMap<>();
                     for (UUID uuid : fromUUIDS) {
-                        allFromUserData.put(uuid, moveFromDB.getUserData(uuid));
+                        moveFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                            @Override
+                            public void process(UserData data) {
+                                allFromUserData.put(uuid, data);
+                            }
+                        });
                     }
                     for (UUID uuid : toUUIDS) {
-                        allToUserData.put(uuid, moveToDB.getUserData(uuid));
+                        moveToDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                            @Override
+                            public void process(UserData data) {
+                                allToUserData.put(uuid, data);
+                            }
+                        });
+                    }
+                    while (fromUUIDS.size() > allFromUserData.size() || toUUIDS.size() > allToUserData.size()) {
+                        
                     }
                     Set<UUID> uuids = new HashSet<>();
                     uuids.addAll(toUUIDS);

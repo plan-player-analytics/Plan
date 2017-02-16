@@ -1,8 +1,10 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import java.net.InetAddress;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handlers.*;
 import org.bukkit.entity.Player;
@@ -25,10 +27,8 @@ public class PlanPlayerListener implements Listener {
     private final ActivityHandler activityH;
     private final BasicInfoHandler basicInfoH;
     private final GamemodeTimesHandler gmTimesH;
-    private final LocationHandler locationH;
     private final DemographicsHandler demographicH;
     private final RuleBreakingHandler rulebreakH;
-    private final CommandUseHandler serverHandler;
 
     /**
      * Class Constructor.
@@ -45,9 +45,7 @@ public class PlanPlayerListener implements Listener {
         basicInfoH = handler.getBasicInfoHandler();
         gmTimesH = handler.getGamemodeTimesHandler();
         demographicH = handler.getDemographicsHandler();
-        locationH = handler.getLocationHandler();
         rulebreakH = handler.getRuleBreakingHandler();
-        serverHandler = handler.getServerDataHandler();
     }
 
     /**
@@ -66,17 +64,18 @@ public class PlanPlayerListener implements Listener {
         if (isNewPlayer) {
             handler.newPlayer(player);
         }
-        UserData data = handler.getCurrentData(uuid);
-        activityH.handleLogin(event, data);
-        basicInfoH.handleLogin(event, data);
-        gmTimesH.handleLogin(event, data);
-        demographicH.handleLogin(event, data);
-        (new BukkitRunnable() {
+        DBCallableProcessor loginProcessor = new DBCallableProcessor() {
             @Override
-            public void run() {
+            public void process(UserData data) {
+                activityH.handleLogin(player.isBanned(), data);
+                InetAddress ip = player.getAddress().getAddress();
+                basicInfoH.handleLogin(player.getDisplayName(), ip, data);
+                gmTimesH.handleLogin(player.getGameMode(), data);
+                demographicH.handleLogin(ip, data);
                 handler.saveCachedData(uuid);
             }
-        }).runTaskLater(plugin, 15 * 20);
+        };
+        handler.getUserDataForProcessing(loginProcessor, uuid);
     }
 
     /**
@@ -89,12 +88,17 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
-        UserData data = handler.getCurrentData(uuid);
-        activityH.handleLogOut(event, data);
-        locationH.handleLogOut(event, data);
-        gmTimesH.handleLogOut(event, data);
-        handler.saveCachedData(uuid);
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        DBCallableProcessor logoutProcessor = new DBCallableProcessor() {
+            @Override
+            public void process(UserData data) {
+                activityH.handleLogOut(data);
+                gmTimesH.handleLogOut(player.getGameMode(), data);
+                handler.saveCachedData(uuid);
+            }
+        };
+        handler.getUserDataForProcessing(logoutProcessor, uuid);
     }
 
     /**
@@ -110,9 +114,14 @@ public class PlanPlayerListener implements Listener {
             return;
         }
         UUID uuid = event.getPlayer().getUniqueId();
-        UserData data = handler.getCurrentData(uuid);
-        rulebreakH.handleKick(event, data);
-        handler.saveCachedData(uuid);
-        handler.clearFromCache(uuid);
+        DBCallableProcessor kickProcessor = new DBCallableProcessor() {
+            @Override
+            public void process(UserData data) {
+                rulebreakH.handleKick(data);
+                handler.saveCachedData(uuid);
+                handler.clearFromCache(uuid);
+            }
+        };
+        handler.getUserDataForProcessing(kickProcessor, uuid);
     }
 }

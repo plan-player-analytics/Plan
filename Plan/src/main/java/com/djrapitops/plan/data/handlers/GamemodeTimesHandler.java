@@ -33,11 +33,11 @@ public class GamemodeTimesHandler {
     /**
      * Updates lastGamemode to current gamemode on Login
      *
-     * @param event JoinEvent from listener
+     * @param gm Gamemode upon login
      * @param data UserData matching the Player
      */
-    public void handleLogin(PlayerJoinEvent event, UserData data) {
-        data.setLastGamemode(event.getPlayer().getGameMode());
+    public void handleLogin(GameMode gm, UserData data) {
+        data.setLastGamemode(gm);
     }
 
     /**
@@ -45,19 +45,18 @@ public class GamemodeTimesHandler {
      *
      * Updates GMTimes with new values and sets lastSwap and lastGM.
      *
-     * @param event GMChangeEvent from Listener
+     * @param newGM the GameMode player changed to
      * @param data UserData matching the Player
      */
-    public void handleChangeEvent(PlayerGameModeChangeEvent event, UserData data) {
+    public void handleChangeEvent(GameMode newGM, UserData data) {
         HashMap<GameMode, Long> times = data.getGmTimes();
-        handler.getActivityHandler().saveToCache(event.getPlayer(), data);
+        handler.getActivityHandler().saveToCache(data);
 
         long lastSwap = data.getLastGmSwapTime();
         long playTime = data.getPlayTime();
         GameMode oldGM = data.getLastGamemode();
         data.setGMTime(oldGM, times.get(oldGM) + (playTime - lastSwap));
 
-        GameMode newGM = event.getNewGameMode();
         data.setLastGamemode(newGM);
 
         data.setLastGmSwapTime(playTime);
@@ -66,16 +65,15 @@ public class GamemodeTimesHandler {
     /**
      * Updates GMTimes with new values and saves it to cache.
      *
-     * @param player Player whose data is being saved
+     * @param currentGM Current Gamemode of the Player
      * @param data UserData matching the Player
      */
-    public void saveToCache(Player player, UserData data) {
+    public void saveToCache(GameMode currentGM, UserData data) {
         HashMap<GameMode, Long> times = data.getGmTimes();
-        handler.getActivityHandler().saveToCache(player, data);
+        handler.getActivityHandler().saveToCache(data);
 
         long lastSwap = data.getLastGmSwapTime();
         long playtime = data.getPlayTime();
-        GameMode currentGM = player.getGameMode();
         data.setGMTime(currentGM, times.get(currentGM) + (playtime - lastSwap));
 
         data.setLastGmSwapTime(playtime);
@@ -84,20 +82,20 @@ public class GamemodeTimesHandler {
     /**
      * Updates GMTImes for player who is online when /reload is run.
      *
-     * @param player Player whose data is updated
+     * @param currentGM Gamemode if online during reload
      * @param data UserData matching Player
      */
-    public void handleReload(Player player, UserData data) {
-        saveToCache(player, data);
+    public void handleReload(GameMode currentGM, UserData data) {
+        saveToCache(currentGM, data);
     }
 
     /**
      * Updates GMTimes on Logout.
      *
-     * @param event QuitEvent from Listener
+     * @param currentGM Current gamemode at logout
      * @param data UserData matching Player
      */
-    public void handleLogOut(PlayerQuitEvent event, UserData data) {
-        saveToCache(event.getPlayer(), data);
+    public void handleLogOut(GameMode currentGM, UserData data) {
+        saveToCache(currentGM, data);
     }
 }

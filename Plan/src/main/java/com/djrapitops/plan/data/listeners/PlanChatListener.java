@@ -2,7 +2,9 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.handlers.BasicInfoHandler;
 import main.java.com.djrapitops.plan.data.handlers.DemographicsHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +21,7 @@ public class PlanChatListener implements Listener {
     private final Plan plugin;
     private final DataCacheHandler handler;
     private final DemographicsHandler demographicsHandler;
+    private final BasicInfoHandler basicInfoH;
 
     /**
      * Class Constructor.
@@ -29,6 +32,7 @@ public class PlanChatListener implements Listener {
         this.plugin = plugin;
         handler = plugin.getHandler();
         demographicsHandler = handler.getDemographicsHandler();
+        basicInfoH = handler.getBasicInfoHandler();
     }
 
     /**
@@ -42,11 +46,13 @@ public class PlanChatListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        UserData data = handler.getCurrentData(p.getUniqueId());
-        String nickname = p.getDisplayName();
-        if (!nickname.isEmpty()) {
-            data.addNickname(nickname);
-        }
-        demographicsHandler.handleChatEvent(event, data);
+        DBCallableProcessor chatProcessor = new DBCallableProcessor() {
+            @Override
+            public void process(UserData data) {
+                basicInfoH.addNickname(p.getDisplayName(), data);
+                demographicsHandler.handleChatEvent(event, data);
+            }
+        };
+        handler.getUserDataForProcessing(chatProcessor, p.getUniqueId());
     }
 }

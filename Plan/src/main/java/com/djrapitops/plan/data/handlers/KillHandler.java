@@ -17,8 +17,7 @@ public class KillHandler {
         this.plugin = plugin;
     }
     
-    public void handlePlayerKill(UserData killerData, UserData victim, String weapon) {
-        UUID victimUUID = victim.getUuid();
+    public void handlePlayerKill(UserData killerData, UUID victimUUID, String weapon) {
         long now = new Date().toInstant().getEpochSecond()*(long)1000;
         int victimID = plugin.getDB().getUserId(victimUUID+"");
         killerData.addPlayerKill(new KillData(victimUUID, victimID, weapon, now));

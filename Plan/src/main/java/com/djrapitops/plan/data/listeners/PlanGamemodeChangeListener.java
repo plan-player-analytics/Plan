@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handlers.GamemodeTimesHandler;
 import org.bukkit.entity.Player;
@@ -42,7 +43,12 @@ public class PlanGamemodeChangeListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        UserData data = handler.getCurrentData(p.getUniqueId());
-        gmTimesH.handleChangeEvent(event, data);
+        DBCallableProcessor gmProcessor = new DBCallableProcessor() {
+            @Override
+            public void process(UserData data) {
+                gmTimesH.handleChangeEvent(event.getNewGameMode(), data);
+            }
+        };
+        handler.getUserDataForProcessing(gmProcessor, p.getUniqueId());
     }
 }

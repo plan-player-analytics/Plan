@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @author Rsl1122
  */
 public class ActivityHandler {
-    
+
     private final Plan plugin;
     private final DataCacheHandler handler;
 
@@ -44,10 +44,9 @@ public class ActivityHandler {
      *
      * lastPlayed is set to long matching current Date.
      *
-     * @param player Player which data is being saved
      * @param data UserData matching the Player
      */
-    public void saveToCache(Player player, UserData data) {
+    public void saveToCache(UserData data) {
         long timeNow = new Date().getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
         data.setLastPlayed(timeNow);
@@ -59,15 +58,14 @@ public class ActivityHandler {
      * Updates if player is banned or not, Adds one to login times, Adds current
      * location to location list.
      *
-     * @param event JoinEvent from listener
+     * @param isBanned is the player banned?
      * @param data UserData matching the Player
      */
-    public void handleLogin(PlayerJoinEvent event, UserData data) {
+    public void handleLogin(boolean isBanned, UserData data) {
         data.setLastPlayed(new Date().getTime());
-        Player player = event.getPlayer();
-        data.updateBanned(player);
+        data.updateBanned(isBanned);
         data.setLoginTimes(data.getLoginTimes() + 1);
-        
+        handler.getSessionHandler().startSession(data);
 //        handler.getLocationHandler().addLocation(player.getUniqueId(), player.getLocation());
     }
 
@@ -76,10 +74,9 @@ public class ActivityHandler {
      *
      * Saves PlayTime, Set's LastPlayed value to long matching current Date
      *
-     * @param event QuitEvent from Listener
      * @param data UserData matching the Player
      */
-    public void handleLogOut(PlayerQuitEvent event, UserData data) {
+    public void handleLogOut(UserData data) {
         Date now = new Date();
         long timeNow = now.getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
@@ -92,10 +89,9 @@ public class ActivityHandler {
      *
      * Updates PlayTime, Sets LastPlayed value to long matching current Date
      *
-     * @param player Player who is online
      * @param data UserData matching the Player
      */
-    public void handleReload(Player player, UserData data) {
+    public void handleReload(UserData data) {
         Date now = new Date();
         long timeNow = now.getTime();
         data.setPlayTime(data.getPlayTime() + (timeNow - data.getLastPlayed()));
