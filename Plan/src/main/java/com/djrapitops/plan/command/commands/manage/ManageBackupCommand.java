@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +77,7 @@ public class ManageBackupCommand extends SubCommand {
             (new BukkitRunnable() {
                 @Override
                 public void run() {
+                    try {
                     Date now = new Date();
                     SQLiteDB backupDB = new SQLiteDB(plugin,
                             args[0] + "-backup-" + now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
@@ -103,6 +105,10 @@ public class ManageBackupCommand extends SubCommand {
                     backupDB.saveMultipleUserData(allUserData);
                     backupDB.saveCommandUse(copyFromDB.getCommandUse());
                     sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
+                    } catch (SQLException e) {
+                        plugin.toLog(this.getClass().getName(), e);
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                    }
                     this.cancel();
                 }
             }).runTaskAsynchronously(plugin);

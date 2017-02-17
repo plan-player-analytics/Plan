@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
@@ -12,7 +13,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -29,7 +29,7 @@ public class ManageRemoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRemoveCommand(Plan plugin) {
-        super("remove", "plan.manage", Phrase.CMD_USG_MANAGE_REMOVE+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER+" [-a]");
+        super("remove", "plan.manage", Phrase.CMD_USG_MANAGE_REMOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + " [-a]");
 
         this.plugin = plugin;
     }
@@ -79,14 +79,22 @@ public class ManageRemoveCommand extends SubCommand {
             sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName())));
             return true;
         }
-        
+
         (new BukkitRunnable() {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                plugin.getHandler().clearFromCache(uuid);
-                plugin.getDB().removeAccount(uuid.toString());
-                sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
+                try {
+                    plugin.getHandler().clearFromCache(uuid);
+                    if (plugin.getDB().removeAccount(uuid.toString())) {
+                        sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
+                    } else {
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                    }
+                } catch (SQLException e) {
+                    plugin.toLog(this.getClass().getName(), e);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                }
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);

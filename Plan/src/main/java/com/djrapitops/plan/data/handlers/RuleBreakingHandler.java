@@ -1,12 +1,8 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
-import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  *
@@ -43,7 +39,6 @@ public class RuleBreakingHandler {
      */
     public void handleKick(UserData data) {
         data.setTimesKicked(data.getTimesKicked() + 1);
-        data.setPlayTime(data.getPlayTime() + (new Date().getTime() - data.getLastPlayed()));
-        data.setLastPlayed(new Date().getTime());
+        handler.getActivityHandler().handleLogOut(data);
     }
 }

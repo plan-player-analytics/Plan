@@ -73,13 +73,14 @@ public enum Phrase {
     ANALYSIS_FAIL_NO_DATA(ANALYSIS + "Analysis failed, no data in the database."),
     ANALYSIS_BEGIN_ANALYSIS(ANALYSIS + "Data Fetched, beginning Analysis of data.."),
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete."),
-    DATA_CORRUPTION_WARN("Some data might be corrupted: "+REPLACE0),
+    DATA_CORRUPTION_WARN("Some data might be corrupted: " + REPLACE0),
     //
     ERROR_PLANLITE("PlanLite not found, if you're have plugins using PlanAPI v1.6.0 download PlanLite."),
-    ERROR_CONSOLE_PLAYER("This point of code should not be accessable on console. Inform author: "+REPLACE0+" Console: REPLACE1"),
+    ERROR_CONSOLE_PLAYER("This point of code should not be accessable on console. Inform author: " + REPLACE0 + " Console: REPLACE1"),
     ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if the webserver is running on this server."),
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
+    ERROR_LOGGED("Ran into an error. It has been logged to the Errors.txt"),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
     MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED + "" + PREFIX + "Plugin not supported: "),
@@ -93,6 +94,7 @@ public enum Phrase {
     MANAGE_ERROR_BACKUP_FILE_NOT_FOUND(ChatColor.RED + "" + PREFIX + "Backup file doesn't exist!"),
     MANAGE_MOVE_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data moved successfully!"),
     MANAGE_COPY_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data copied successfully!"),
+    MANAGE_PROCESS_FAIL(ChatColor.RED + "" + PREFIX + "Something went wrong while processing the data!"),
     MANAGE_CLEAR_SUCCESS(ChatColor.GREEN + "" + PREFIX + "All data cleared successfully!"),
     MANAGE_REMOVE_SUCCESS(CMD_FOOTER + " " + COLOR_MAIN.color() + "Data of " + COLOR_TER.color() + "REPLACE0" + COLOR_MAIN.color() + " was removed from Database " + COLOR_TER.color() + "REPLACE1" + COLOR_MAIN.color() + "."),
     MANAGE_IMPORTING(CMD_FOOTER + " " + COLOR_MAIN.color() + " Importing Data.."),
@@ -215,7 +217,7 @@ public enum Phrase {
                     String[] split = localeRow.split(" <> ");
                     Phrase.valueOf(split[0]).setText(split[1]);
                 } catch (IllegalArgumentException e) {
-                    getPlugin(Plan.class).logError("There is a miswritten line in locale on line "+localeRows.indexOf(localeRow));
+                    getPlugin(Plan.class).logError("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
                 }
             }
         } catch (IOException e) {

@@ -13,8 +13,6 @@ import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  *
@@ -42,16 +40,15 @@ public class DemographicsHandler {
      * If message contains triggerwords and words that define data important,
      * informatino will be saved in the DemographicsData of UserData provided
      *
-     * @param event The Chat event passed by listener
+     * @param message Chat Message
      * @param data UserData corresponding to player of this event.
      */
-    public void handleChatEvent(AsyncPlayerChatEvent event, UserData data) {
+    public void handleChatEvent(String message, UserData data) {
         List<String> triggers = Arrays.asList(Settings.DEM_TRIGGERS.toString().split(", "));
         List<String> female = Arrays.asList(Settings.DEM_FEMALE.toString().split(", "));
         List<String> male = Arrays.asList(Settings.DEM_MALE.toString().split(", "));
         List<String> ignore = Arrays.asList(Settings.DEM_IGNORE.toString().split(", "));
 
-        String message = event.getMessage();
         String[] messageA = message.toLowerCase().split("\\s+");
 
         boolean trigger = false;

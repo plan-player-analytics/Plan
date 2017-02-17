@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,7 +96,14 @@ public class ManageMoveCommand extends SubCommand {
             plugin.logError(toDB + " was null!");
             return true;
         }
-        final Set<UUID> uuids = fromDatabase.getSavedUUIDs();
+        final Set<UUID> uuids;
+        try {
+            uuids = fromDatabase.getSavedUUIDs();
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+            return true;
+        }
         if (uuids.isEmpty()) {
             sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
             return true;
@@ -118,8 +126,8 @@ public class ManageMoveCommand extends SubCommand {
                             }
                         });
                     }
-                    while(uuids.size() > allUserData.size()) {
-                        
+                    while (uuids.size() > allUserData.size()) {
+
                     }
                     moveToDB.saveMultipleUserData(allUserData);
                     moveToDB.saveCommandUse(moveFromDB.getCommandUse());
@@ -127,8 +135,9 @@ public class ManageMoveCommand extends SubCommand {
                     if (!toDB.equals(plugin.getDB().getConfigName())) {
                         sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
                     }
-                } catch (NullPointerException e) {
-                    sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+                } catch (SQLException | NullPointerException e) {
+                    plugin.toLog(this.getClass().getName(), e);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                 }
 
                 this.cancel();

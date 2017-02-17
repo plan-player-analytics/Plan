@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,8 +33,8 @@ public class DataCacheHandler {
     private final DemographicsHandler demographicsHandler;
     private final BasicInfoHandler basicInfoHandler;
     private final RuleBreakingHandler ruleBreakingHandler;
-    private final HashMap<String, Integer> commandUse;
-    private final CommandUseHandler commandUseHandler;
+    private HashMap<String, Integer> commandUse;
+    private CommandUseHandler commandUseHandler;
     private final KillHandler killHandler;
     private final SessionHandler sessionHandler;
     private final Database db;
@@ -60,15 +61,21 @@ public class DataCacheHandler {
         demographicsHandler = new DemographicsHandler(plugin, this);
         basicInfoHandler = new BasicInfoHandler(plugin, this);
         ruleBreakingHandler = new RuleBreakingHandler(plugin, this);
-        commandUse = db.getCommandUse();
-        commandUseHandler = new CommandUseHandler(commandUse);
+
         newPlayerCreator = new NewPlayerCreator(plugin, this);
         killHandler = new KillHandler(plugin);
         sessionHandler = new SessionHandler(plugin);
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
-
+        try {
+            commandUse = db.getCommandUse();
+            commandUseHandler = new CommandUseHandler(commandUse);
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            plugin.logError(Phrase.DATABASE_FAILURE_DISABLE + "");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+        }
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
             minutes = 5;
@@ -90,7 +97,6 @@ public class DataCacheHandler {
                     handler.clearCache();
                 }
                 saveCommandUse();
-                handler.clearNulls();
                 timesSaved++;
             }
         }).runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
@@ -122,7 +128,12 @@ public class DataCacheHandler {
                             }
                         }
                     };
-                    db.giveUserDataToProcessors(uuid, cacher, processor);
+                    try {
+                        db.giveUserDataToProcessors(uuid, cacher, processor);
+                    } catch (SQLException e) {
+                        plugin.toLog(this.getClass().getName(), e);
+                        this.cancel();
+                    }
                 } else {
                     processor.process(uData);
                 }
@@ -147,12 +158,17 @@ public class DataCacheHandler {
      * Saves all data in the cache to Database with AsyncTasks
      */
     public void saveCachedUserData() {
+        clearNulls();
         BukkitTask asyncFullCacheSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 List<UserData> data = new ArrayList<>();
                 data.addAll(dataCache.values());
-                db.saveMultipleUserData(data);
+                try {
+                    db.saveMultipleUserData(data);
+                } catch (SQLException ex) {
+                    plugin.toLog(this.getClass().getName(), ex);
+                }
                 timesSaved++;
                 this.cancel();
             }
@@ -163,14 +179,19 @@ public class DataCacheHandler {
      * Saves all data in the cache to Database and closes the database down.
      */
     public void saveCacheOnDisable() {
+        clearNulls();
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
         data.parallelStream().forEach((userData) -> {
             sessionHandler.endSession(userData);
         });
-        db.saveMultipleUserData(data);
-        db.saveCommandUse(commandUse);
-        db.close();
+        try {
+            db.saveMultipleUserData(data);
+            db.saveCommandUse(commandUse);
+            db.close();
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
     }
 
     /**
@@ -179,11 +200,16 @@ public class DataCacheHandler {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
+        clearNulls();
         BukkitTask asyncCachedUserSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 if (dataCache.get(uuid) != null) {
-                    db.saveUserData(uuid, dataCache.get(uuid));
+                    try {
+                        db.saveUserData(uuid, dataCache.get(uuid));
+                    } catch (SQLException e) {
+                        plugin.toLog(this.getClass().getName(), e);
+                    }
                 }
                 this.cancel();
             }
@@ -197,7 +223,11 @@ public class DataCacheHandler {
      * Data is saved on a new line with a long value matching current Date
      */
     public void saveCommandUse() {
-        db.saveCommandUse(commandUse);
+        try {
+            db.saveCommandUse(commandUse);
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
     }
 
     // Should only be called from Async thread
@@ -270,7 +300,7 @@ public class DataCacheHandler {
                     (new BukkitRunnable() {
                         @Override
                         public void run() {
-                            if (entry.getValue().isAccessed()) {
+                            if (!entry.getValue().isAccessed()) {
                                 entry.setValue(null);
                                 plugin.log("Cleared " + entry.getKey().toString() + " from Cache. (Delay task)");
                                 this.cancel();

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -15,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author Rsl1122
  */
 public class ManageClearCommand extends SubCommand {
-
+    
     private final Plan plugin;
 
     /**
@@ -24,8 +25,8 @@ public class ManageClearCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageClearCommand(Plan plugin) {
-        super("clear", "plan.manage", Phrase.CMD_USG_MANAGE_CLEAR+"", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
-
+        super("clear", "plan.manage", Phrase.CMD_USG_MANAGE_CLEAR + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
+        
         this.plugin = plugin;
     }
 
@@ -57,7 +58,7 @@ public class ManageClearCommand extends SubCommand {
             sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[0])));
             return true;
         }
-
+        
         Database clearDB = null;
         for (Database database : plugin.getDatabases()) {
             if (dbToClear.equalsIgnoreCase(database.getConfigName())) {
@@ -70,14 +71,22 @@ public class ManageClearCommand extends SubCommand {
             plugin.logError(dbToClear + " was null!");
             return true;
         }
-
+        
         final Database clearThisDB = clearDB;
         (new BukkitRunnable() {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                clearThisDB.removeAllData();
-                sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS+"");
+                try {
+                    if (clearThisDB.removeAllData()) {
+                        sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS + "");
+                    } else {
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                    }
+                } catch (SQLException e) {
+                    plugin.toLog(this.getClass().getName(), e);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                }
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);

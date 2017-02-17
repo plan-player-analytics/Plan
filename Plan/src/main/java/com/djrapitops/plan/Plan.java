@@ -22,10 +22,13 @@ package main.java.com.djrapitops.plan;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
@@ -38,6 +41,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -180,6 +184,42 @@ public class Plan extends JavaPlugin {
         getLogger().severe(message);
     }
 
+    public void toLog(String source, Exception e) {
+        logError(Phrase.ERROR_LOGGED + "");
+        toLog(source + " Caught " + e);
+        for (StackTraceElement x : e.getStackTrace()) {
+            toLog("  " + x);
+        }
+        toLog("");
+    }
+
+    public void toLog(String source, Collection<Exception> e) {
+        for (Exception ex : e) {
+            toLog(source, ex);
+        }
+    }
+
+    public void toLog(String message) {
+        File folder = getDataFolder();
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        File log = new File(getDataFolder(), "Errors.txt");
+        try {
+            if (!log.exists()) {
+                log.createNewFile();
+            }
+            FileWriter fw = new FileWriter(log, true);
+            try (PrintWriter pw = new PrintWriter(fw)) {
+                String timestamp = FormatUtils.formatTimeStamp(new Date().getTime() + "");
+                pw.println("[" + timestamp + "] " + message);
+                pw.flush();
+            }
+        } catch (IOException e) {
+            getLogger().severe("Failed to create DBerrors.txt file");
+        }
+    }
+
     /**
      * @return Plan API
      */
@@ -210,7 +250,6 @@ public class Plan extends JavaPlugin {
         String type = Settings.DB_TYPE + "";
 
         db = null;
-
         for (Database database : databases) {
             if (type.equalsIgnoreCase(database.getConfigName())) {
                 this.db = database;
@@ -218,12 +257,10 @@ public class Plan extends JavaPlugin {
                 break;
             }
         }
-
         if (db == null) {
             log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST.toString());
             return false;
         }
-
         if (!db.init()) {
             log(Phrase.DATABASE_FAILURE_DISABLE.toString());
             setEnabled(false);

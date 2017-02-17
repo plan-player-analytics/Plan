@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import main.java.com.djrapitops.plan.utilities.DataCombineUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -96,10 +98,9 @@ public class ManageCombineCommand extends SubCommand {
             plugin.logError(toDB + " was null!");
             return true;
         }
-
-        final Set<UUID> fromUUIDS = fromDatabase.getSavedUUIDs();
-        final Set<UUID> toUUIDS = toDatabase.getSavedUUIDs();
         try {
+            final Set<UUID> fromUUIDS = fromDatabase.getSavedUUIDs();
+            final Set<UUID> toUUIDS = toDatabase.getSavedUUIDs();
             if (fromUUIDS.isEmpty() && toUUIDS.isEmpty()) {
                 sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
                 return true;
@@ -107,55 +108,60 @@ public class ManageCombineCommand extends SubCommand {
 
             final Database moveFromDB = fromDatabase;
             final Database moveToDB = toDatabase;
-            (new BukkitRunnable() {
+            BukkitTask asyncDBCombineTask = (new BukkitRunnable() {
                 @Override
                 public void run() {
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                    HashMap<UUID, UserData> allFromUserData = new HashMap<>();
-                    HashMap<UUID, UserData> allToUserData = new HashMap<>();
-                    for (UUID uuid : fromUUIDS) {
-                        moveFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                            @Override
-                            public void process(UserData data) {
-                                allFromUserData.put(uuid, data);
-                            }
-                        });
-                    }
-                    for (UUID uuid : toUUIDS) {
-                        moveToDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                            @Override
-                            public void process(UserData data) {
-                                allToUserData.put(uuid, data);
-                            }
-                        });
-                    }
-                    while (fromUUIDS.size() > allFromUserData.size() || toUUIDS.size() > allToUserData.size()) {
-                        
-                    }
-                    Set<UUID> uuids = new HashSet<>();
-                    uuids.addAll(toUUIDS);
-                    uuids.addAll(fromUUIDS);
+                    try {
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                        HashMap<UUID, UserData> allFromUserData = new HashMap<>();
+                        HashMap<UUID, UserData> allToUserData = new HashMap<>();
+                        for (UUID uuid : fromUUIDS) {
+                            moveFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                                @Override
+                                public void process(UserData data) {
+                                    allFromUserData.put(uuid, data);
+                                }
+                            });
+                        }
+                        for (UUID uuid : toUUIDS) {
+                            moveToDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
+                                @Override
+                                public void process(UserData data) {
+                                    allToUserData.put(uuid, data);
+                                }
+                            });
+                        }
+                        while (fromUUIDS.size() > allFromUserData.size() || toUUIDS.size() > allToUserData.size()) {
 
-                    List<UserData> combinedUserData = DataCombineUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
+                        }
+                        Set<UUID> uuids = new HashSet<>();
+                        uuids.addAll(toUUIDS);
+                        uuids.addAll(fromUUIDS);
 
-                    HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(moveFromDB.getCommandUse(), moveToDB.getCommandUse());
+                        List<UserData> combinedUserData = DataCombineUtils.combineUserDatas(allFromUserData, allToUserData, uuids);
 
-                    moveToDB.removeAllData();
+                        HashMap<String, Integer> commandUse = DataCombineUtils.combineCommandUses(moveFromDB.getCommandUse(), moveToDB.getCommandUse());
 
-                    moveToDB.saveMultipleUserData(combinedUserData);
-                    moveToDB.saveCommandUse(commandUse);
+                        moveToDB.removeAllData();
 
-                    sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
-                    if (!toDB.equals(plugin.getDB().getConfigName())) {
-                        sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
+                        moveToDB.saveMultipleUserData(combinedUserData);
+                        moveToDB.saveCommandUse(commandUse);
+
+                        sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
+                        if (!toDB.equals(plugin.getDB().getConfigName())) {
+                            sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
+                        }
+                    } catch (SQLException | NullPointerException e) {
+                        plugin.toLog(this.getClass().getName(), e);
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                     }
                     this.cancel();
                 }
 
             }).runTaskAsynchronously(plugin);
-
-        } catch (NullPointerException e) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+        } catch (SQLException | NullPointerException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
         }
         return true;
     }

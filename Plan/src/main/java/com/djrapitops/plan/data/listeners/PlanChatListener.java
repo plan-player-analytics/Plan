@@ -50,7 +50,7 @@ public class PlanChatListener implements Listener {
             @Override
             public void process(UserData data) {
                 basicInfoH.addNickname(p.getDisplayName(), data);
-                demographicsHandler.handleChatEvent(event, data);
+                demographicsHandler.handleChatEvent(event.getMessage(), data);
             }
         };
         handler.getUserDataForProcessing(chatProcessor, p.getUniqueId());

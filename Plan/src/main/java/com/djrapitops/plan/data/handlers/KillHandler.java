@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
@@ -19,7 +20,13 @@ public class KillHandler {
     
     public void handlePlayerKill(UserData killerData, UUID victimUUID, String weapon) {
         long now = new Date().toInstant().getEpochSecond()*(long)1000;
-        int victimID = plugin.getDB().getUserId(victimUUID+"");
+        int victimID;
+        try {
+            victimID = plugin.getDB().getUserId(victimUUID+"");
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            return;
+        }
         killerData.addPlayerKill(new KillData(victimUUID, victimID, weapon, now));
     }
     

@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import org.bukkit.entity.Player;
 
 /**
  *

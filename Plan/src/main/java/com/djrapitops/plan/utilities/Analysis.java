@@ -74,7 +74,7 @@ public class Analysis {
                 while (rawData.size() != uuids.size()) {
                     uuids.stream()
                             .filter((uuid) -> (!added.contains(uuid)))
-                            .forEach((uuid) -> {                                
+                            .forEach((uuid) -> {
                                 if (inspectCache.isCached(uuid)) {
                                     UserData userData = inspectCache.getFromCache(uuid);
                                     rawData.add(userData);
@@ -84,7 +84,7 @@ public class Analysis {
                 }
                 // Create empty Dataset
                 final RawAnalysisData sorted = new RawAnalysisData();
-                sorted.setCommandUse(plugin.getDB().getCommandUse());
+                sorted.setCommandUse(plugin.getHandler().getCommandUse());
                 log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData analysisData = new AnalysisData();
 
@@ -134,6 +134,7 @@ public class Analysis {
                         sorted.getRegistered().add(uData.getRegistered());
                     } catch (NullPointerException e) {
                         plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
+                        plugin.toLog(this.getClass().getName(), e);
                     }
                 });
 
@@ -237,12 +238,16 @@ public class Analysis {
     private List<UUID> fetchPlayersInDB() {
         final List<UUID> uuids = new ArrayList<>();
         log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
-        Set<UUID> savedUUIDs = plugin.getDB().getSavedUUIDs();
-        savedUUIDs.parallelStream()
-                .filter((uuid) -> (getOfflinePlayer(uuid).hasPlayedBefore()))
-                .forEach((uuid) -> {
-                    uuids.add(uuid);
-                });
+        try {
+            Set<UUID> savedUUIDs = plugin.getDB().getSavedUUIDs();
+            savedUUIDs.parallelStream()
+                    .filter((uuid) -> (getOfflinePlayer(uuid).hasPlayedBefore()))
+                    .forEach((uuid) -> {
+                        uuids.add(uuid);
+                    });
+        } catch (Exception e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
         return uuids;
     }
 

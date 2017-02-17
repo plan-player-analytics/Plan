@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.handlers;
 
+import java.sql.SQLException;
 import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
@@ -59,7 +60,11 @@ public class NewPlayerCreator {
         data.setLastGmSwapTime(zero);
         data.setDeaths(0);
         data.setMobKills(0);
-        db.saveUserData(player.getUniqueId(), data);
+        try {
+            db.saveUserData(player.getUniqueId(), data);
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
     }
 
 }

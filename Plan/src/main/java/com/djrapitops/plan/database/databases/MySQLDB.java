@@ -36,8 +36,9 @@ public class MySQLDB extends SQLDB {
             Class.forName("com.mysql.jdbc.Driver");
 
             String url = "jdbc:mysql://" + config.getString("mysql.host") + ":" + config.getString("mysql.port") + "/" + config.getString("mysql.database");
-
-            return DriverManager.getConnection(url, config.getString("mysql.user"), config.getString("mysql.password"));
+            Connection connection = DriverManager.getConnection(url, config.getString("mysql.user"), config.getString("mysql.password"));
+            
+            return connection;
         } catch (ClassNotFoundException | SQLException e) {
             getPlugin(Plan.class).logError(Phrase.DB_CONNECTION_FAIL.parse(getConfigName(), e.getMessage()));
             return null;

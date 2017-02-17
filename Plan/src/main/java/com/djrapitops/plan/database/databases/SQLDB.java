@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +32,6 @@ public abstract class SQLDB extends Database {
     private final boolean supportsModification;
 
     private Connection connection;
-    private int transactionsActive;
 
     private final String userName;
     private final String locationName;
@@ -93,7 +93,6 @@ public abstract class SQLDB extends Database {
         super(plugin);
         this.plugin = plugin;
         this.supportsModification = supportsModification;
-        transactionsActive = 0;
 
         userName = "plan_users";
         locationName = "plan_locations";
@@ -171,140 +170,140 @@ public abstract class SQLDB extends Database {
     @Override
     public boolean init() {
         super.init();
-        return checkConnection();
+        try {
+            return checkConnection();
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            return false;
+        }
     }
 
-    public boolean checkConnection() {
-        try {
+    public boolean checkConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = getNewConnection();
+
             if (connection == null || connection.isClosed()) {
-                connection = getNewConnection();
-
-                if (connection == null || connection.isClosed()) {
-                    return false;
-                }
-                boolean usingMySQL = supportsModification;
-
-                ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
-                boolean newDatabase = set.next();
-                set.close();
-                if (newDatabase) {
-                    setVersion(1);
-                }
-                query("CREATE TABLE IF NOT EXISTS " + userName + " ("
-                        + userColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
-                        + userColumnUUID + " varchar(36) NOT NULL, "
-                        + userColumnDemAge + " integer NOT NULL, "
-                        + userColumnDemGender + " varchar(8) NOT NULL, "
-                        + userColumnDemGeoLocation + " varchar(50) NOT NULL, "
-                        + userColumnLastGM + " varchar(15) NOT NULL, "
-                        + userColumnLastGMSwapTime + " bigint NOT NULL, "
-                        + userColumnPlayTime + " bigint NOT NULL, "
-                        + userColumnLoginTimes + " integer NOT NULL, "
-                        + userColumnLastPlayed + " bigint NOT NULL, "
-                        + userColumnDeaths + " int NOT NULL, "
-                        + userColumnMobKills + " int NOT NULL, "
-                        + userColumnPlayerKills + " int NOT NULL"
-                        + (usingMySQL ? ", PRIMARY KEY (" + userColumnID + ")" : "")
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + locationName + " ("
-                        + locationColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
-                        + locationColumnUserID + " integer NOT NULL, "
-                        + locationColumnCoordinatesX + " integer NOT NULL, "
-                        + locationColumnCoordinatesZ + " integer NOT NULL, "
-                        + locationColumnWorld + " varchar(64) NOT NULL, "
-                        + (usingMySQL ? "PRIMARY KEY (" + userColumnID + "), " : "")
-                        + "FOREIGN KEY(" + locationColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + gamemodetimesName + " ("
-                        + gamemodetimesColumnUserID + " integer NOT NULL, "
-                        + gamemodetimesColumnSurvivalTime + " bigint NOT NULL, "
-                        + gamemodetimesColumnCreativeTime + " bigint NOT NULL, "
-                        + gamemodetimesColumnAdventureTime + " bigint NOT NULL, "
-                        + gamemodetimesColumnSpectatorTime + " bigint NOT NULL, "
-                        + "FOREIGN KEY(" + gamemodetimesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + ipsName + " ("
-                        + ipsColumnUserID + " integer NOT NULL, "
-                        + ipsColumnIP + " varchar(20) NOT NULL, "
-                        + "FOREIGN KEY(" + ipsColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + nicknamesName + " ("
-                        + nicknamesColumnUserID + " integer NOT NULL, "
-                        + nicknamesColumnNick + " varchar(30) NOT NULL, "
-                        + "FOREIGN KEY(" + nicknamesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
-                        + ")"
-                );
-                query("CREATE TABLE IF NOT EXISTS " + sessionName + " ("
-                        + sessionColumnUserID + " integer NOT NULL, "
-                        + sessionColumnSessionStart + " bigint NOT NULL, "
-                        + sessionColumnSessionEnd + " bigint NOT NULL, "
-                        + "FOREIGN KEY(" + sessionColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + killsName + " ("
-                        + killsColumnKillerUserID + " integer NOT NULL, "
-                        + killsColumnVictimUserID + " integer NOT NULL, "
-                        + killsColumnWeapon + " varchar(30) NOT NULL, "
-                        + killsColumnDate + " bigint NOT NULL, "
-                        + "FOREIGN KEY(" + killsColumnKillerUserID + ") REFERENCES " + userName + "(" + userColumnID + "), "
-                        + "FOREIGN KEY(" + killsColumnVictimUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + commanduseName + " ("
-                        + commanduseColumnCommand + " varchar(20) NOT NULL, "
-                        + commanduseColumnTimesUsed + " integer NOT NULL"
-                        + ")"
-                );
-
-                query("CREATE TABLE IF NOT EXISTS " + versionName + " ("
-                        + "version integer NOT NULL"
-                        + ")"
-                );
-                int version = getVersion();
-                version = 1;
-                if (version < 1) {
-                    String[] queries = new String[]{
-                        "ALTER TABLE " + userName + " ADD " + userColumnDeaths + " integer NOT NULL DEFAULT 0",
-                        "ALTER TABLE " + userName + " ADD " + userColumnMobKills + " integer NOT NULL DEFAULT 0",
-                        "ALTER TABLE " + nicknamesName + " ADD " + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT (false)",
-                        "DROP TABLE IF EXISTS " + serverdataName
-                    };
-                    for (String query : queries) {
-                        try {
-                            query(query);
-                        } catch (Exception e) {
-                        }
-                    }
-                    setVersion(1);
-                } else if (version < 2) {
-                    String[] queries = new String[]{
-                        "ALTER TABLE " + userName + " DROP INDEX " + userColumnPlayerKills,
-                        "ALTER TABLE " + nicknamesName + " ADD " + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT 0",
-                        "DROP TABLE IF EXISTS " + serverdataName
-                    };
-                    for (String query : queries) {
-                        try {
-                            query(query);
-                        } catch (Exception e) {
-                        }
-                    }
-                    setVersion(2);
-                }
-
+                return false;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            boolean usingMySQL = supportsModification;
+
+            ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
+            boolean newDatabase = set.next();
+            set.close();            
+            query("CREATE TABLE IF NOT EXISTS " + userName + " ("
+                    + userColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
+                    + userColumnUUID + " varchar(36) NOT NULL, "
+                    + userColumnDemAge + " integer NOT NULL, "
+                    + userColumnDemGender + " varchar(8) NOT NULL, "
+                    + userColumnDemGeoLocation + " varchar(50) NOT NULL, "
+                    + userColumnLastGM + " varchar(15) NOT NULL, "
+                    + userColumnLastGMSwapTime + " bigint NOT NULL, "
+                    + userColumnPlayTime + " bigint NOT NULL, "
+                    + userColumnLoginTimes + " integer NOT NULL, "
+                    + userColumnLastPlayed + " bigint NOT NULL, "
+                    + userColumnDeaths + " int NOT NULL, "
+                    + userColumnMobKills + " int NOT NULL"
+                    + (usingMySQL ? ", PRIMARY KEY (" + userColumnID + ")" : "")
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + locationName + " ("
+                    + locationColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
+                    + locationColumnUserID + " integer NOT NULL, "
+                    + locationColumnCoordinatesX + " integer NOT NULL, "
+                    + locationColumnCoordinatesZ + " integer NOT NULL, "
+                    + locationColumnWorld + " varchar(64) NOT NULL, "
+                    + (usingMySQL ? "PRIMARY KEY (" + userColumnID + "), " : "")
+                    + "FOREIGN KEY(" + locationColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + gamemodetimesName + " ("
+                    + gamemodetimesColumnUserID + " integer NOT NULL, "
+                    + gamemodetimesColumnSurvivalTime + " bigint NOT NULL, "
+                    + gamemodetimesColumnCreativeTime + " bigint NOT NULL, "
+                    + gamemodetimesColumnAdventureTime + " bigint NOT NULL, "
+                    + gamemodetimesColumnSpectatorTime + " bigint NOT NULL, "
+                    + "FOREIGN KEY(" + gamemodetimesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + ipsName + " ("
+                    + ipsColumnUserID + " integer NOT NULL, "
+                    + ipsColumnIP + " varchar(20) NOT NULL, "
+                    + "FOREIGN KEY(" + ipsColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + nicknamesName + " ("
+                    + nicknamesColumnUserID + " integer NOT NULL, "
+                    + nicknamesColumnNick + " varchar(30) NOT NULL, "
+                    + "FOREIGN KEY(" + nicknamesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
+                    + ")"
+            );
+            query("CREATE TABLE IF NOT EXISTS " + sessionName + " ("
+                    + sessionColumnUserID + " integer NOT NULL, "
+                    + sessionColumnSessionStart + " bigint NOT NULL, "
+                    + sessionColumnSessionEnd + " bigint NOT NULL, "
+                    + "FOREIGN KEY(" + sessionColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + killsName + " ("
+                    + killsColumnKillerUserID + " integer NOT NULL, "
+                    + killsColumnVictimUserID + " integer NOT NULL, "
+                    + killsColumnWeapon + " varchar(30) NOT NULL, "
+                    + killsColumnDate + " bigint NOT NULL, "
+                    + "FOREIGN KEY(" + killsColumnKillerUserID + ") REFERENCES " + userName + "(" + userColumnID + "), "
+                    + "FOREIGN KEY(" + killsColumnVictimUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + commanduseName + " ("
+                    + commanduseColumnCommand + " varchar(20) NOT NULL, "
+                    + commanduseColumnTimesUsed + " integer NOT NULL"
+                    + ")"
+            );
+
+            query("CREATE TABLE IF NOT EXISTS " + versionName + " ("
+                    + "version integer NOT NULL"
+                    + ")"
+            );
+            if (newDatabase) {
+                setVersion(2);
+            }
+            int version = getVersion();
+            if (version < 1) {
+                String[] queries = new String[]{
+                    "ALTER TABLE " + userName + " ADD " + userColumnDeaths + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + userName + " ADD " + userColumnMobKills + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + nicknamesName + " ADD " + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT (false)",
+                    "DROP TABLE IF EXISTS " + serverdataName
+                };
+                for (String query : queries) {
+                    try {
+                        query(query);
+                    } catch (Exception e) {
+                    }
+                }
+                setVersion(1);
+            } else if (version < 2) {
+                String[] queries = new String[]{
+                    "ALTER TABLE " + nicknamesName + " ADD " + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT 0",
+                    "DROP TABLE IF EXISTS " + serverdataName
+                };
+                for (String query : queries) {
+                    try {
+                        query(query);
+                    } catch (Exception e) {
+                    }
+                }
+                if (usingMySQL) {
+                    query("ALTER TABLE " + userName + " DROP INDEX " + userColumnPlayerKills);
+                }
+                setVersion(2);
+            }
+
         }
         return true;
     }
@@ -312,28 +311,23 @@ public abstract class SQLDB extends Database {
     protected abstract Connection getNewConnection();
 
     public boolean query(String sql) throws SQLException {
-        return connection.createStatement().execute(sql);
+        boolean success = connection.createStatement().execute(sql);        
+        return success;
     }
 
     @Override
-    public void close() {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void close() throws SQLException {
+        if (connection != null) {
+            connection.close();
         }
     }
 
     @Override
     public int getVersion() {
-        checkConnection();
-
         int version = 0;
-
         try {
-            ResultSet set = connection.prepareStatement("SELECT * from " + versionName).executeQuery();
+            checkConnection();
+            ResultSet set = connection.prepareStatement("SELECT * FROM " + versionName).executeQuery();
 
             if (set.next()) {
                 version = set.getInt("version");
@@ -343,183 +337,180 @@ public abstract class SQLDB extends Database {
 
             return version;
         } catch (Exception e) {
-            e.printStackTrace();
-
+            plugin.toLog(this.getClass().getName(), e);
             return version;
         }
     }
 
     @Override
-    public void setVersion(int version) {
+    public void setVersion(int version) throws SQLException {
         checkConnection();
-
-        try {
-            connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
-
-            connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
+        connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
+        
     }
 
     @Override
     public boolean wasSeenBefore(UUID uuid) {
-        return getUserId(uuid.toString()) != -1;
+        try {
+            return getUserId(uuid.toString()) != -1;
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            return false;
+        }
     }
 
     @Override
-    public int getUserId(String uuid) {
+    public int getUserId(String uuid) throws SQLException {
         int userId = -1;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnID + " FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
-            statement.setString(1, uuid);
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                userId = set.getInt(userColumnID);
-            }
-            set.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            checkConnection();
+        } catch (Exception e) {
+            plugin.toLog(this.getClass().getName(), e);
         }
+        PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnID + " FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
+        statement.setString(1, uuid);
+        ResultSet set = statement.executeQuery();
+        while (set.next()) {
+            userId = set.getInt(userColumnID);
+        }
+        set.close();
         return userId;
     }
 
-    private UUID getUserUUID(String userID) {
-        UUID uuid = null;
+    private UUID getUserUUID(String userID) throws SQLException {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnUUID + " FROM " + userName + " WHERE UPPER(" + userColumnID + ") LIKE UPPER(?)");
-            statement.setString(1, userID);
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                uuid = UUID.fromString(set.getString(userColumnUUID));
-            }
-            set.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            checkConnection();
+        } catch (Exception e) {
+            plugin.toLog(this.getClass().getName(), e);
         }
+        UUID uuid = null;
+        PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnUUID + " FROM " + userName + " WHERE UPPER(" + userColumnID + ") LIKE UPPER(?)");
+        statement.setString(1, userID);
+        ResultSet set = statement.executeQuery();
+        while (set.next()) {
+            uuid = UUID.fromString(set.getString(userColumnUUID));
+        }
+        set.close();
         return uuid;
     }
 
     @Override
-    public Set<UUID> getSavedUUIDs() {
+    public Set<UUID> getSavedUUIDs() throws SQLException {
         Set<UUID> uuids = new HashSet<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnUUID + " FROM " + userName);
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                uuids.add(UUID.fromString(set.getString(userColumnUUID)));
-            }
-            set.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnUUID + " FROM " + userName);
+        ResultSet set = statement.executeQuery();
+        while (set.next()) {
+            uuids.add(UUID.fromString(set.getString(userColumnUUID)));
         }
+        set.close();
         return uuids;
     }
 
     @Override
-    public void saveCommandUse(HashMap<String, Integer> data) {
+    public void saveCommandUse(HashMap<String, Integer> data) throws SQLException {
         if (data.isEmpty()) {
             return;
         }
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM " + commanduseName);
-            statement.execute();
-            statement.close();
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM " + commanduseName);
+        statement.execute();
+        statement.close();
+        
 
-            connection.setAutoCommit(false);
-            statement = connection.prepareStatement("INSERT INTO " + commanduseName + " ("
-                    + commanduseColumnCommand + ", "
-                    + commanduseColumnTimesUsed
-                    + ") VALUES (?, ?)");
-            boolean commitRequired = false;
-            if (!data.isEmpty()) {
-                for (String key : data.keySet()) {
-                    statement.setString(1, key);
-                    statement.setInt(2, data.get(key));
-                    statement.addBatch();
-                    commitRequired = true;
-                }
+        statement = connection.prepareStatement("INSERT INTO " + commanduseName + " ("
+                + commanduseColumnCommand + ", "
+                + commanduseColumnTimesUsed
+                + ") VALUES (?, ?)");
+        boolean commitRequired = false;
+        if (!data.isEmpty()) {
+            for (String key : data.keySet()) {
+                statement.setString(1, key);
+                statement.setInt(2, data.get(key));
+                statement.addBatch();
+                commitRequired = true;
+            }            
+            
+            if (commitRequired) {
                 statement.executeBatch();
-                statement.close();
-                if (commitRequired) {
-                    connection.commit();
-                }
+                
             }
-            connection.setAutoCommit(true);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            statement.close();
         }
     }
 
     @Override
-    public HashMap<String, Integer> getCommandUse() {
+    public HashMap<String, Integer> getCommandUse() throws SQLException {
         HashMap<String, Integer> commandUse = new HashMap<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + commanduseName);
 
-            ResultSet set = statement.executeQuery();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + commanduseName);
 
-            while (set.next()) {
-                commandUse.put(set.getString(commanduseColumnCommand), set.getInt(commanduseColumnTimesUsed));
-            }
-            set.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ResultSet set = statement.executeQuery();
+
+        while (set.next()) {
+            commandUse.put(set.getString(commanduseColumnCommand), set.getInt(commanduseColumnTimesUsed));
         }
+        set.close();
+        statement.close();
         return commandUse;
     }
 
     @Override
-    public void removeAccount(String uuid) {
-
-        checkConnection();
+    public boolean removeAccount(String uuid) throws SQLException {
+        try {
+            checkConnection();
+        } catch (Exception e) {
+            plugin.toLog(this.getClass().getName(), e);
+            return false;
+        }
 
         int userId = getUserId(uuid);
         if (userId == -1) {
-            return;
+            return false;
         }
         PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement("DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + killsName + " WHERE " + killsColumnKillerUserID + " = ? OR " + killsColumnVictimUserID + " = ?");
-            statement.setString(1, "" + userId);
-            statement.setString(2, "" + userId);
-            statement.execute();
-            statement.close();
-            statement = connection.prepareStatement("DELETE FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
-            statement.setString(1, uuid);
-            statement.execute();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        statement = connection.prepareStatement("DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        statement = connection.prepareStatement("DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        statement = connection.prepareStatement("DELETE FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        statement = connection.prepareStatement("DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        statement = connection.prepareStatement("DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        statement = connection.prepareStatement("DELETE FROM " + killsName + " WHERE " + killsColumnKillerUserID + " = ? OR " + killsColumnVictimUserID + " = ?");
+        statement.setString(1, "" + userId);
+        statement.setString(2, "" + userId);
+        statement.execute();
+        statement.close();
+        statement = connection.prepareStatement("DELETE FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
+        statement.setString(1, uuid);
+        statement.execute();
+        statement.close();
+        
+        return true;
     }
 
     @Override
-    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) {
-        checkConnection();
+    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException {
+        try {
+            checkConnection();
+        } catch (Exception e) {
+            plugin.toLog("Preparing for Exception report - Processors: " + Arrays.toString(processors));
+            plugin.toLog(this.getClass().getName(), e);
+            return;
+        }
         // Check if user is in the database
         if (!wasSeenBefore(uuid)) {
             plugin.logError(uuid + " was not found from the database!");
@@ -533,54 +524,51 @@ public abstract class SQLDB extends Database {
         }
         // Get the data
         UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData(), this);
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
-            statement.setString(1, uuid.toString());
-            ResultSet set = statement.executeQuery();
 
-            while (set.next()) {
-                data.getDemData().setAge(set.getInt(userColumnDemAge));
-                data.getDemData().setGender(Gender.parse(set.getString(userColumnDemGender)));
-                data.getDemData().setGeoLocation(set.getString(userColumnDemGeoLocation));
-                data.setLastGamemode(GameMode.valueOf(set.getString(userColumnLastGM)));
-                data.setLastGmSwapTime(set.getLong(userColumnLastGMSwapTime));
-                data.setPlayTime(set.getLong(userColumnPlayTime));
-                data.setLoginTimes(set.getInt(userColumnLoginTimes));
-                data.setLastPlayed(set.getLong(userColumnLastPlayed));
-                data.setDeaths(set.getInt(userColumnDeaths));
-                data.setMobKills(set.getInt(userColumnMobKills));
-            }
-            set.close();
-            statement.close();
-            String userId = "" + getUserId(uuid.toString());
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
+        statement.setString(1, uuid.toString());
+        ResultSet set = statement.executeQuery();
 
-            List<Location> locations = getLocations(userId, worlds);
-            data.addLocations(locations);
-            if (locations.isEmpty()) {
-                data.setLocation(new Location(defaultWorld, 0, 0, 0));
-            } else {
-                data.setLocation(locations.get(locations.size() - 1));
-            }
+        while (set.next()) {
+            data.getDemData().setAge(set.getInt(userColumnDemAge));
+            data.getDemData().setGender(Gender.parse(set.getString(userColumnDemGender)));
+            data.getDemData().setGeoLocation(set.getString(userColumnDemGeoLocation));
+            data.setLastGamemode(GameMode.valueOf(set.getString(userColumnLastGM)));
+            data.setLastGmSwapTime(set.getLong(userColumnLastGMSwapTime));
+            data.setPlayTime(set.getLong(userColumnPlayTime));
+            data.setLoginTimes(set.getInt(userColumnLoginTimes));
+            data.setLastPlayed(set.getLong(userColumnLastPlayed));
+            data.setDeaths(set.getInt(userColumnDeaths));
+            data.setMobKills(set.getInt(userColumnMobKills));
+        }
+        set.close();
+        statement.close();
+        String userId = "" + getUserId(uuid.toString());
 
-            List<String> nicknames = getNicknames(userId);
-            data.addNicknames(nicknames);
-            if (nicknames.size() > 0) {
-                data.setLastNick(nicknames.get(nicknames.size() - 1));
-            }
+        List<Location> locations = getLocations(userId, worlds);
+        data.addLocations(locations);
+        if (locations.isEmpty()) {
+            data.setLocation(new Location(defaultWorld, 0, 0, 0));
+        } else {
+            data.setLocation(locations.get(locations.size() - 1));
+        }
 
-            List<InetAddress> ips = getIPAddresses(userId);
-            data.addIpAddresses(ips);
+        List<String> nicknames = getNicknames(userId);
+        data.addNicknames(nicknames);
+        if (nicknames.size() > 0) {
+            data.setLastNick(nicknames.get(nicknames.size() - 1));
+        }
 
-            HashMap<GameMode, Long> times = getGMTimes(userId);
-            data.setGmTimes(times);
+        List<InetAddress> ips = getIPAddresses(userId);
+        data.addIpAddresses(ips);
 
-            data.addSessions(getSessionData(userId));
-            data.setPlayerKills(getPlayerKills(userId));
-            for (DBCallableProcessor processor : processors) {
-                processor.process(data);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        HashMap<GameMode, Long> times = getGMTimes(userId);
+        data.setGmTimes(times);
+
+        data.addSessions(getSessionData(userId));
+        data.setPlayerKills(getPlayerKills(userId));
+        for (DBCallableProcessor processor : processors) {
+            processor.process(data);
         }
     }
 
@@ -615,7 +603,7 @@ public abstract class SQLDB extends Database {
         while (set.next()) {
             try {
                 ips.add(InetAddress.getByName(set.getString(ipsColumnIP)));
-            } catch (SQLException | UnknownHostException e) {
+            } catch (UnknownHostException e) {
             }
         }
         set.close();
@@ -631,10 +619,7 @@ public abstract class SQLDB extends Database {
         set = statement.executeQuery();
         List<SessionData> sessions = new ArrayList<>();
         while (set.next()) {
-            try {
-                sessions.add(new SessionData(set.getLong(sessionColumnSessionStart), set.getLong(sessionColumnSessionEnd)));
-            } catch (SQLException e) {
-            }
+            sessions.add(new SessionData(set.getLong(sessionColumnSessionStart), set.getLong(sessionColumnSessionEnd)));
         }
         set.close();
         statement.close();
@@ -705,6 +690,7 @@ public abstract class SQLDB extends Database {
         if (data.isEmpty()) {
             return;
         }
+        Set<Exception> exceptions = new HashSet<>();
         List<UserData> saveLast = new ArrayList<>();
         String uSQL = "UPDATE " + userName + " SET "
                 + userColumnDemAge + "=?, "
@@ -718,19 +704,22 @@ public abstract class SQLDB extends Database {
                 + userColumnDeaths + "=?, "
                 + userColumnMobKills + "=? "
                 + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
+
         try {
-            connection.setAutoCommit(false);
             PreparedStatement uStatement = connection.prepareStatement(uSQL);
             boolean commitRequired = false;
-            transactionsActive++;
             for (UserData uData : data) {
-                uData.access();
-                int userId = getUserId(uData.getUuid().toString());
-                if (userId == -1) {
-                    saveLast.add(uData);
-                    continue;
-                }
                 try {
+                    if (uData == null) {
+                        throw new IllegalStateException("UserData is null somehow!");
+                    }
+                    uData.access();
+                    int userId = getUserId(uData.getUuid().toString());
+                    if (userId == -1) {
+                        saveLast.add(uData);
+                        continue;
+                    }
+
                     uStatement.setInt(1, uData.getDemData().getAge());
                     uStatement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
                     uStatement.setString(3, uData.getDemData().getGeoLocation());
@@ -751,388 +740,361 @@ public abstract class SQLDB extends Database {
                 } catch (SQLException | NullPointerException e) {
                     saveLast.add(uData);
                     uData.stopAccessing();
+                    exceptions.add(e);
                     continue;
                 }
                 uData.stopAccessing();
                 commitRequired = true;
             }
-            uStatement.executeBatch();
-            uStatement.close();
-            transactionsActive--;
             if (commitRequired) {
-                connection.commit();
+                uStatement.executeBatch();
+                
             }
-            if (noActiveTransaction()) {
-                connection.setAutoCommit(true);
-            }
+            uStatement.close();
             data.removeAll(saveLast);
-            for (UserData uData : data) {
-                uData.access();
+        } catch (Exception ex) {
+            exceptions.add(ex);
+        }
+        for (UserData uData : data) {
+            if (uData == null) {
+                throw new IllegalStateException("UserData is null somehow!");
+            }
+            uData.access();
+            try {
                 int userId = getUserId(uData.getUuid().toString());
                 saveLocationList(userId, uData.getLocations());
                 saveNickList(userId, uData.getNicknames(), uData.getLastNick());
                 saveIPList(userId, uData.getIps());
                 saveSessionList(userId, uData.getSessions());
                 savePlayerKills(userId, uData.getPlayerKills());
-                if (noActiveTransaction()) {
-                    connection.setAutoCommit(true);
-                }
+
                 saveGMTimes(userId, uData.getGmTimes());
-                uData.stopAccessing();
+            } catch (Exception e) {
+                exceptions.add(e);
             }
-            for (UserData userData : saveLast) {
+            uData.stopAccessing();
+        }
+        for (UserData userData : saveLast) {
+            try {
                 saveUserData(userData.getUuid(), userData);
+            } catch (SQLException e) {
+                exceptions.add(e);
             }
-        } catch (SQLException | NullPointerException e) {
-            e.printStackTrace();
+        }
+        if (!exceptions.isEmpty()) {
+            plugin.logError("SEVERE: MULTIPLE ERRORS OCCURRED: " + exceptions.size());
+            plugin.toLog(this.getClass().getName(), exceptions);
         }
     }
 
     @Override
-    public void saveUserData(UUID uuid, UserData data) {
+    public void saveUserData(UUID uuid, UserData data) throws SQLException {
         checkConnection();
         data.access();
         int userId = getUserId(uuid.toString());
-        try {
-            int update = 0;
-            if (userId != -1) {
-                String sql = "UPDATE " + userName + " SET "
-                        + userColumnDemAge + "=?, "
-                        + userColumnDemGender + "=?, "
-                        + userColumnDemGeoLocation + "=?, "
-                        + userColumnLastGM + "=?, "
-                        + userColumnLastGMSwapTime + "=?, "
-                        + userColumnPlayTime + "=?, "
-                        + userColumnLoginTimes + "=?, "
-                        + userColumnLastPlayed + "=?, "
-                        + userColumnDeaths + "=?, "
-                        + userColumnMobKills + "=? "
-                        + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
+        int update = 0;
+        if (userId != -1) {
+            String sql = "UPDATE " + userName + " SET "
+                    + userColumnDemAge + "=?, "
+                    + userColumnDemGender + "=?, "
+                    + userColumnDemGeoLocation + "=?, "
+                    + userColumnLastGM + "=?, "
+                    + userColumnLastGMSwapTime + "=?, "
+                    + userColumnPlayTime + "=?, "
+                    + userColumnLoginTimes + "=?, "
+                    + userColumnLastPlayed + "=?, "
+                    + userColumnDeaths + "=?, "
+                    + userColumnMobKills + "=? "
+                    + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
 
-                PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setInt(1, data.getDemData().getAge());
-                statement.setString(2, data.getDemData().getGender().toString().toLowerCase());
-                statement.setString(3, data.getDemData().getGeoLocation());
-                GameMode gm = data.getLastGamemode();
-                if (gm != null) {
-                    statement.setString(4, data.getLastGamemode().name());
-                } else {
-                    statement.setString(4, GameMode.SURVIVAL.name());
-                }
-                statement.setLong(5, data.getLastGmSwapTime());
-                statement.setLong(6, data.getPlayTime());
-                statement.setInt(7, data.getLoginTimes());
-                statement.setLong(8, data.getLastPlayed());
-                statement.setString(9, uuid.toString());
-                statement.setInt(10, data.getDeaths());
-                statement.setInt(11, data.getMobKills());
-                update = statement.executeUpdate();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, data.getDemData().getAge());
+            statement.setString(2, data.getDemData().getGender().toString().toLowerCase());
+            statement.setString(3, data.getDemData().getGeoLocation());
+            GameMode gm = data.getLastGamemode();
+            if (gm != null) {
+                statement.setString(4, data.getLastGamemode().name());
+            } else {
+                statement.setString(4, GameMode.SURVIVAL.name());
             }
-            if (update == 0) {
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO " + userName + " ("
-                        + userColumnUUID + ", "
-                        + userColumnDemAge + ", "
-                        + userColumnDemGender + ", "
-                        + userColumnDemGeoLocation + ", "
-                        + userColumnLastGM + ", "
-                        + userColumnLastGMSwapTime + ", "
-                        + userColumnPlayTime + ", "
-                        + userColumnLoginTimes + ", "
-                        + userColumnLastPlayed + ", "
-                        + userColumnDeaths + ", "
-                        + userColumnMobKills
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-                statement.setString(1, uuid.toString());
-                statement.setInt(2, data.getDemData().getAge());
-                statement.setString(3, data.getDemData().getGender().toString().toLowerCase());
-                statement.setString(4, data.getDemData().getGeoLocation());
-                GameMode gm = data.getLastGamemode();
-                if (gm != null) {
-                    statement.setString(5, data.getLastGamemode().name());
-                } else {
-                    statement.setString(5, GameMode.SURVIVAL.name());
-                }
-                statement.setLong(6, data.getLastGmSwapTime());
-                statement.setLong(7, data.getPlayTime());
-                statement.setInt(8, data.getLoginTimes());
-                statement.setLong(9, data.getLastPlayed());
-                statement.setInt(10, data.getDeaths());
-                statement.setInt(11, data.getMobKills());
-
-                statement.execute();
-                statement.close();
-                userId = getUserId(uuid.toString());
-            }
-            connection.setAutoCommit(false);
-            saveLocationList(userId, data.getLocations());
-            saveNickList(userId, data.getNicknames(), data.getLastNick());
-            saveIPList(userId, data.getIps());
-            saveSessionList(userId, data.getSessions());
-            savePlayerKills(userId, data.getPlayerKills());
-            if (noActiveTransaction()) {
-                connection.setAutoCommit(true);
-            }
-            saveGMTimes(userId, data.getGmTimes());
-        } catch (SQLException | NullPointerException e) {
-            e.printStackTrace();
+            statement.setLong(5, data.getLastGmSwapTime());
+            statement.setLong(6, data.getPlayTime());
+            statement.setInt(7, data.getLoginTimes());
+            statement.setLong(8, data.getLastPlayed());
+            statement.setString(9, uuid.toString());
+            statement.setInt(10, data.getDeaths());
+            statement.setInt(11, data.getMobKills());
+            update = statement.executeUpdate();
         }
+        if (update == 0) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + userName + " ("
+                    + userColumnUUID + ", "
+                    + userColumnDemAge + ", "
+                    + userColumnDemGender + ", "
+                    + userColumnDemGeoLocation + ", "
+                    + userColumnLastGM + ", "
+                    + userColumnLastGMSwapTime + ", "
+                    + userColumnPlayTime + ", "
+                    + userColumnLoginTimes + ", "
+                    + userColumnLastPlayed + ", "
+                    + userColumnDeaths + ", "
+                    + userColumnMobKills
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+            statement.setString(1, uuid.toString());
+            statement.setInt(2, data.getDemData().getAge());
+            statement.setString(3, data.getDemData().getGender().toString().toLowerCase());
+            statement.setString(4, data.getDemData().getGeoLocation());
+            GameMode gm = data.getLastGamemode();
+            if (gm != null) {
+                statement.setString(5, data.getLastGamemode().name());
+            } else {
+                statement.setString(5, GameMode.SURVIVAL.name());
+            }
+            statement.setLong(6, data.getLastGmSwapTime());
+            statement.setLong(7, data.getPlayTime());
+            statement.setInt(8, data.getLoginTimes());
+            statement.setLong(9, data.getLastPlayed());
+            statement.setInt(10, data.getDeaths());
+            statement.setInt(11, data.getMobKills());
+
+            statement.execute();
+            statement.close();
+            userId = getUserId(uuid.toString());
+        }
+        
+        saveLocationList(userId, data.getLocations());
+        saveNickList(userId, data.getNicknames(), data.getLastNick());
+        saveIPList(userId, data.getIps());
+        saveSessionList(userId, data.getSessions());
+        savePlayerKills(userId, data.getPlayerKills());
+        saveGMTimes(userId, data.getGmTimes());
         data.stopAccessing();
     }
 
-    public void saveLocationList(int userId, List<Location> locations) {
+    public void saveLocationList(int userId, List<Location> locations) throws SQLException {
         if (locations.isEmpty()) {
             return;
         }
-        transactionsActive++;
-        try {
-            PreparedStatement deleteStatement = connection.prepareStatement(
-                    "DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
-            deleteStatement.setString(1, "" + userId);
-            deleteStatement.execute();
-            deleteStatement.close();
-            PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
-                    + locationColumnUserID + ", "
-                    + locationColumnCoordinatesX + ", "
-                    + locationColumnCoordinatesZ + ", "
-                    + locationColumnWorld
-                    + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
-            if (!locations.isEmpty()) {
-                for (Location location : locations) {
-                    saveStatement.setInt(1, userId);
-                    saveStatement.setInt(2, (int) location.getBlockX());
-                    saveStatement.setInt(3, (int) location.getBlockZ());
-                    World world = location.getWorld();
-                    if (world == null) {
-                        continue;
-                    }
-                    saveStatement.setString(4, world.getName());
-                    saveStatement.addBatch();
-                    commitRequired = true;
+        PreparedStatement deleteStatement = connection.prepareStatement(
+                "DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
+        deleteStatement.setString(1, "" + userId);
+        deleteStatement.execute();
+        deleteStatement.close();
+        
+        PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
+                + locationColumnUserID + ", "
+                + locationColumnCoordinatesX + ", "
+                + locationColumnCoordinatesZ + ", "
+                + locationColumnWorld
+                + ") VALUES (?, ?, ?, ?)");
+        boolean commitRequired = false;
+        if (!locations.isEmpty()) {
+            for (Location location : locations) {
+                saveStatement.setInt(1, userId);
+                saveStatement.setInt(2, (int) location.getBlockX());
+                saveStatement.setInt(3, (int) location.getBlockZ());
+                World world = location.getWorld();
+                if (world == null) {
+                    continue;
                 }
-                saveStatement.executeBatch();
-                if (commitRequired) {
-                    connection.commit();
-                }
+                saveStatement.setString(4, world.getName());
+                saveStatement.addBatch();
+                commitRequired = true;
             }
-            saveStatement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            if (commitRequired) {
+                saveStatement.executeBatch();
+                
+            }
         }
-        transactionsActive--;
+        saveStatement.close();
     }
 
-    public void saveNickList(int userId, HashSet<String> names, String lastNick) {
+    public void saveNickList(int userId, HashSet<String> names, String lastNick) throws SQLException {
         if (names.isEmpty()) {
             return;
         }
-        transactionsActive++;
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement = connection.prepareStatement("INSERT INTO " + nicknamesName + " ("
-                    + nicknamesColumnUserID + ", "
-                    + nicknamesColumnCurrent + ", "
-                    + nicknamesColumnNick
-                    + ") VALUES (?, ?, ?)");
-            boolean commitRequired = false;
-            for (String name : names) {
-                statement.setInt(1, userId);
-                statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
-                statement.setString(3, name);
-                statement.addBatch();
-                commitRequired = true;
-            }
-            statement.executeBatch();
-            if (commitRequired) {
-                connection.commit();
-            }
-            statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        
+        statement = connection.prepareStatement("INSERT INTO " + nicknamesName + " ("
+                + nicknamesColumnUserID + ", "
+                + nicknamesColumnCurrent + ", "
+                + nicknamesColumnNick
+                + ") VALUES (?, ?, ?)");
+        boolean commitRequired = false;
+        for (String name : names) {
+            statement.setInt(1, userId);
+            statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
+            statement.setString(3, name);
+            statement.addBatch();
+            commitRequired = true;
         }
-        transactionsActive--;
+        if (commitRequired) {
+            statement.executeBatch();
+            
+        }
+        statement.close();
     }
 
-    public void saveSessionList(int userId, List<SessionData> sessions) {
+    public void saveSessionList(int userId, List<SessionData> sessions) throws SQLException {
         if (sessions.isEmpty()) {
             return;
         }
-        transactionsActive++;
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement = connection.prepareStatement("INSERT INTO " + sessionName + " ("
-                    + sessionColumnUserID + ", "
-                    + sessionColumnSessionStart + ", "
-                    + sessionColumnSessionEnd
-                    + ") VALUES (?, ?, ?)");
-            boolean commitRequired = false;
-            for (SessionData session : sessions) {
-                statement.setInt(1, userId);
-                statement.setLong(2, session.getSessionStart());
-                statement.setLong(3, session.getSessionEnd());
-                statement.addBatch();
-                commitRequired = true;
-            }
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        
+        statement = connection.prepareStatement("INSERT INTO " + sessionName + " ("
+                + sessionColumnUserID + ", "
+                + sessionColumnSessionStart + ", "
+                + sessionColumnSessionEnd
+                + ") VALUES (?, ?, ?)");
+        boolean commitRequired = false;
+        for (SessionData session : sessions) {
+            statement.setInt(1, userId);
+            statement.setLong(2, session.getSessionStart());
+            statement.setLong(3, session.getSessionEnd());
+            statement.addBatch();
+            commitRequired = true;
+        }        
+        if (commitRequired) {
             statement.executeBatch();
-            if (commitRequired) {
-                connection.commit();
-            }
-            statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
         }
-        transactionsActive--;
+        statement.close();
     }
 
-    public void savePlayerKills(int userId, List<KillData> kills) {
+    public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
         if (kills.isEmpty()) {
             return;
         }
-        transactionsActive++;
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM " + killsName + " WHERE UPPER(" + killsColumnKillerUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement = connection.prepareStatement("INSERT INTO " + killsName + " ("
-                    + killsColumnKillerUserID + ", "
-                    + killsColumnVictimUserID + ", "
-                    + killsColumnWeapon + ", "
-                    + killsColumnDate
-                    + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
-            for (KillData kill : kills) {
-                statement.setInt(1, userId);
-                statement.setInt(2, kill.getVictimUserID());
-                statement.setString(2, kill.getWeapon());
-                statement.setLong(4, kill.getDate());
-                statement.addBatch();
-                commitRequired = true;
-            }
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM " + killsName + " WHERE UPPER(" + killsColumnKillerUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        
+        statement = connection.prepareStatement("INSERT INTO " + killsName + " ("
+                + killsColumnKillerUserID + ", "
+                + killsColumnVictimUserID + ", "
+                + killsColumnWeapon + ", "
+                + killsColumnDate
+                + ") VALUES (?, ?, ?, ?)");
+        boolean commitRequired = false;
+        for (KillData kill : kills) {
+            statement.setInt(1, userId);
+            statement.setInt(2, kill.getVictimUserID());
+            statement.setString(2, kill.getWeapon());
+            statement.setLong(4, kill.getDate());
+            statement.addBatch();
+            commitRequired = true;
+        }        
+        if (commitRequired) {
             statement.executeBatch();
-            if (commitRequired) {
-                connection.commit();
-            }
-            statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
         }
-        transactionsActive--;
+        statement.close();
     }
 
-    public void saveIPList(int userId, HashSet<InetAddress> ips) {
+    public void saveIPList(int userId, HashSet<InetAddress> ips) throws SQLException {
         if (ips.isEmpty()) {
             return;
         }
-        transactionsActive++;
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-
-            statement = connection.prepareStatement("INSERT INTO " + ipsName + " ("
-                    + ipsColumnUserID + ", "
-                    + ipsColumnIP
-                    + ") VALUES (?, ?)");
-            boolean commitRequired = false;
-            for (InetAddress ip : ips) {
-                statement.setInt(1, userId);
-                statement.setString(2, ip.getHostAddress());
-                statement.addBatch();
-                commitRequired = true;
-            }
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM " + ipsName + " WHERE UPPER(" + ipsColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        
+        statement = connection.prepareStatement("INSERT INTO " + ipsName + " ("
+                + ipsColumnUserID + ", "
+                + ipsColumnIP
+                + ") VALUES (?, ?)");
+        boolean commitRequired = false;
+        for (InetAddress ip : ips) {
+            statement.setInt(1, userId);
+            statement.setString(2, ip.getHostAddress());
+            statement.addBatch();
+            commitRequired = true;
+        }        
+        if (commitRequired) {
             statement.executeBatch();
-            if (commitRequired) {
-                connection.commit();
-            }
-            statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
         }
-        transactionsActive--;
+        statement.close();
     }
 
-    public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) {
+    public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) throws SQLException {
         if (gamemodeTimes.isEmpty()) {
             return;
         }
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");
+        statement.setString(1, "" + userId);
+        statement.execute();
+        statement.close();
+        
+        statement = connection.prepareStatement("INSERT INTO " + gamemodetimesName + " ("
+                + gamemodetimesColumnUserID + ", "
+                + gamemodetimesColumnSurvivalTime + ", "
+                + gamemodetimesColumnCreativeTime + ", "
+                + gamemodetimesColumnAdventureTime + ", "
+                + gamemodetimesColumnSpectatorTime
+                + ") VALUES (?, ?, ?, ?, ?)");
+
+        statement.setInt(1, userId);
+        statement.setLong(2, gamemodeTimes.get(GameMode.SURVIVAL));
+        statement.setLong(3, gamemodeTimes.get(GameMode.CREATIVE));
+        statement.setLong(4, gamemodeTimes.get(GameMode.ADVENTURE));
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM " + gamemodetimesName + " WHERE UPPER(" + gamemodetimesColumnUserID + ") LIKE UPPER(?)");
-            statement.setString(1, "" + userId);
-            statement.execute();
-            statement.close();
-
-            statement = connection.prepareStatement("INSERT INTO " + gamemodetimesName + " ("
-                    + gamemodetimesColumnUserID + ", "
-                    + gamemodetimesColumnSurvivalTime + ", "
-                    + gamemodetimesColumnCreativeTime + ", "
-                    + gamemodetimesColumnAdventureTime + ", "
-                    + gamemodetimesColumnSpectatorTime
-                    + ") VALUES (?, ?, ?, ?, ?)");
-
-            statement.setInt(1, userId);
-            statement.setLong(2, gamemodeTimes.get(GameMode.SURVIVAL));
-            statement.setLong(3, gamemodeTimes.get(GameMode.CREATIVE));
-            statement.setLong(4, gamemodeTimes.get(GameMode.ADVENTURE));
-            try {
-                Long gm = gamemodeTimes.get(GameMode.SPECTATOR);
-                if (gm != null) {
-                    statement.setLong(5, gm);
-                } else {
-                    statement.setLong(5, 0);
-                }
-            } catch (NoSuchFieldError e) {
+            Long gm = gamemodeTimes.get(GameMode.SPECTATOR);
+            if (gm != null) {
+                statement.setLong(5, gm);
+            } else {
                 statement.setLong(5, 0);
             }
-            statement.execute();
-            statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (NoSuchFieldError e) {
+            statement.setLong(5, 0);
         }
+        statement.execute();
+        statement.close();
+        
     }
 
     @Override
     public void clean() {
-        checkConnection();
         try {
+            checkConnection();
             query("DROP TABLE " + serverdataName);
-        } catch (Exception e) {
-
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
         }
     }
 
     @Override
-    public void removeAllData() {
-        checkConnection();
-
+    public boolean removeAllData() {
         try {
-            query("DROP TABLE " + locationName);
-            query("DROP TABLE " + ipsName);
-            query("DROP TABLE " + gamemodetimesName);
-            query("DROP TABLE " + nicknamesName);
-            query("DROP TABLE " + killsName);
-            query("DROP TABLE " + sessionName);
-            query("DROP TABLE " + commanduseName);
-            query("DROP TABLE " + userName);
+            checkConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            plugin.toLog(this.getClass().getName(), e);
+            return false;
         }
+        String[] queries = new String[]{
+            locationName, ipsName, gamemodetimesName, nicknamesName, killsName, sessionName, commanduseName, userName
+        };
+        boolean success = true;
+        for (String tableName : queries) {
+            try {
+                query("DROP TABLE " + tableName);
+            } catch (SQLException e) {
+                plugin.toLog(this.getClass().getName(), e);
+                success = false;
+            }
+        }        
+        return success;
     }
 
     public boolean supportsModification() {
@@ -1142,9 +1104,4 @@ public abstract class SQLDB extends Database {
     public Connection getConnection() {
         return connection;
     }
-
-    private boolean noActiveTransaction() {
-        return transactionsActive == 0;
-    }
-
 }
