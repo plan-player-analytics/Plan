@@ -1,16 +1,19 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortedTableCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
 import org.bukkit.GameMode;
@@ -51,7 +54,7 @@ public class AnalysisUtils {
         return Html.IMG.parse(url);
     }
 
-    static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
+    public static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
             timeToActive = 0;
@@ -86,6 +89,10 @@ public class AnalysisUtils {
 
     static String createActivePlayersTable(HashMap<String, Long> map, int limit) {
         return SortedTableCreator.createActivePlayersTable(map, limit);
+    }
+    
+    static String createSortablePlayersTable(Collection<UserData> data) {
+        return SortablePlayersTableCreator.createSortablePlayersTable(data);
     }
 
     static String createListStringOutOfHashMapLong(HashMap<String, Long> map, int limit) {

@@ -12,10 +12,11 @@
             <version>1.10.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+<!--        SoftDepended Plugins-->
         <dependency>
-            <groupId>com.djrapitops</groupId>
-            <artifactId>plan.lite</artifactId>
-            <version>1.6.3</version>
+            <groupId>com.hm</groupId>
+            <artifactId>advanced.achievements</artifactId>
+            <version>4.1.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -24,6 +25,31 @@
             <version>4.1.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.earth2me</groupId>
+            <artifactId>essentials</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.minimum</groupId>
+            <artifactId>superbvote</artifactId>
+            <version>0.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>factions</artifactId>
+            <version>2.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>mcore</artifactId>
+            <version>2.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+<!--         -->
         <dependency>
             <groupId>com.googlecode.charts4j</groupId>
             <artifactId>charts4j</artifactId>

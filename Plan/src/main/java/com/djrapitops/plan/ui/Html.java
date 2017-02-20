@@ -36,6 +36,7 @@ public enum Html {
     SPAN("" + REPLACE0 + "</span>"),
     BUTTON("<a class=\"button\" href=\"" + REPLACE0 + "\">" + REPLACE1 + "</a>"),
     BUTTON_CLASS("class=\"button\""),
+    LINK("<a class=\"link\" href=\"" + REPLACE0 + "\">" + REPLACE1 + "</a>"),
     LINK_CLASS("class=\"link\""),
     TABLE_START("<table class=\"table\">"),
     TABLE_END("</table>"),

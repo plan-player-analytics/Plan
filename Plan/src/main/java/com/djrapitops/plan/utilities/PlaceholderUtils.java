@@ -120,4 +120,13 @@ public class PlaceholderUtils {
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
         return replaceMap;
     }
+
+    public static HashMap<String, String> getPlayersReplaceRules(AnalysisData data) {
+        HashMap<String, String> replaceMap = new HashMap<>();
+        Plan plugin = getPlugin(Plan.class);
+        replaceMap.put("%version%", plugin.getDescription().getVersion());
+        replaceMap.put("%total%", "" + data.getTotal());
+        replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
+        return replaceMap;
+    }
 }

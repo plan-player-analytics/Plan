@@ -3,9 +3,11 @@ package main.java.com.djrapitops.plan.ui.webserver;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -78,14 +80,14 @@ public class Response {
                     }
                     if (requestHandler.checkIfCached(uuid)) {
                         try {
-                            String dataHtml = requestHandler.getDataHtml(uuid);
+                            String dataHtml = requestHandler.getInspectHtml(uuid);
                             String htmlDef = "HTTP/1.1 OK\r\n"
                                     + "Content-Type: text/html; charset=utf-8\r\n"
                                     + "Content-Length: " + dataHtml.length() + "\r\n"
                                     + "\r\n";
                             output.write((htmlDef + dataHtml).getBytes());
                         } catch (NullPointerException e) {
-                            e.printStackTrace();
+                            getPlugin(Plan.class).toLog(this.getClass().getName(), e);
                             String errorMessage = "HTTP/1.1 404 Error\r\n"
                                     + "Content-Type: text/html;\r\n"
                                     + "Content-Length: 30\r\n"
@@ -106,6 +108,16 @@ public class Response {
                     output.write((htmlDef + analysisHtml).getBytes());
                     return;
                 }
+            } else if (command.equals("players")) {
+                if (requestHandler.checkIfAnalysisIsCached()) {
+                    String playersHtml = requestHandler.getPlayersHtml();
+                    String htmlDef = "HTTP/1.1 OK\r\n"
+                            + "Content-Type: text/html; charset=utf-8\r\n"
+                            + "Content-Length: " + playersHtml.length() + "\r\n"
+                            + "\r\n";
+                    output.write((htmlDef + playersHtml).getBytes());
+                    return;
+                }
             }
             String errorMessage = "HTTP/1.1 404 UserData not Found\r\n"
                     + "Content-Type: text/html\r\n"
@@ -113,9 +125,8 @@ public class Response {
                     + "\r\n"
                     + "<h1>404 Data was not found in cache</h1>";
             output.write(errorMessage.getBytes());
-
         } catch (Exception e) {
-            e.printStackTrace();
+            getPlugin(Plan.class).toLog(this.getClass().getName(), e);
         }
     }
 

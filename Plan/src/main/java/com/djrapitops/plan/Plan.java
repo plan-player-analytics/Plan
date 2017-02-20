@@ -52,14 +52,20 @@ import org.bukkit.scheduler.BukkitTask;
 
 /* TODO 2.6.0
 Placeholder API
-Database cleaning
 Play session length
+- Playtime month
+- Playtime week
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
 Integrate PlanLite features to Plan and discontinue PlanLite
+- Towny hook
+- Text interface
 Database Cleaning of useless data
-Fix any bugs that come up
 Sortable player table.
+- Players page
+- Navigation (Security req)
 Add -n argument for nickname search.
+Location saving & getting seperately
+Fix any bugs that come up
  */
 /**
  *

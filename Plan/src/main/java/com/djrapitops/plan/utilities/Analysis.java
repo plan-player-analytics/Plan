@@ -87,7 +87,7 @@ public class Analysis {
                 sorted.setCommandUse(plugin.getHandler().getCommandUse());
                 log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
                 AnalysisData analysisData = new AnalysisData();
-
+                analysisData.setSortablePlayersTable(AnalysisUtils.createSortablePlayersTable(rawData));
                 // Fill Dataset with userdata.
                 rawData.parallelStream().forEach((uData) -> {
                     try {

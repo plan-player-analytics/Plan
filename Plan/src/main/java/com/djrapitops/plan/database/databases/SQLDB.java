@@ -238,6 +238,7 @@ public abstract class SQLDB extends Database {
             query("CREATE TABLE IF NOT EXISTS " + nicknamesName + " ("
                     + nicknamesColumnUserID + " integer NOT NULL, "
                     + nicknamesColumnNick + " varchar(30) NOT NULL, "
+                    + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT (0), "
                     + "FOREIGN KEY(" + nicknamesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                     + ")"
             );
@@ -523,7 +524,7 @@ public abstract class SQLDB extends Database {
             worlds.put(w.getName(), w);
         }
         // Get the data
-        UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData(), this);
+        UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData());
 
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + userName + " WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)");
         statement.setString(1, uuid.toString());

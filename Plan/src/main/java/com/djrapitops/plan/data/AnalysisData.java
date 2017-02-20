@@ -19,6 +19,7 @@ public class AnalysisData {
     private String top50CommandsListHtml;
     private String top20ActivePlayers;
     private String recentPlayers;
+    private String sortablePlayersTable;
 
     private int newPlayersMonth;
     private int newPlayersWeek;
@@ -38,7 +39,7 @@ public class AnalysisData {
     private int totalPlayers;
     private long totalLoginTimes;
     private int ops;
-    
+
     private long totalkills;
     private long totalmobkills;
     private long totaldeaths;
@@ -49,9 +50,26 @@ public class AnalysisData {
      * All data has to be set with setters to avoid NPE.
      */
     public AnalysisData() {
+        sortablePlayersTable = "Error: Replace rule was not set";
+        gmTimesChartImgHtml = "Error: Replace rule was not set";
+        playersChartImgHtmlMonth = "Error: Replace rule was not set";
+        playersChartImgHtmlWeek = "Error: Replace rule was not set";
+        playersChartImgHtmlDay = "Error: Replace rule was not set";
+        activityChartImgHtml = "Error: Replace rule was not set";
+        top50CommandsListHtml = "Error: Replace rule was not set";
+        top20ActivePlayers = "Error: Replace rule was not set";
+        recentPlayers = "Error: Replace rule was not set";
     }
 
     // Getters and setters v---------------------------------v
+    public String getSortablePlayersTable() {
+        return sortablePlayersTable;
+    }
+
+    public void setSortablePlayersTable(String sortablePlayersTable) {
+        this.sortablePlayersTable = sortablePlayersTable;
+    }
+
     /**
      * @return The Amount of players who have joined only once
      */

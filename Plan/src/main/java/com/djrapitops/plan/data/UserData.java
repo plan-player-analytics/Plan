@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -44,8 +43,9 @@ public class UserData {
 
     private SessionData currentSession;
     private List<SessionData> sessions;
+    private AdditionalData additionalData;
 
-    public UserData(Player player, DemographicsData demData, Database db) {
+    public UserData(Player player, DemographicsData demData) {
         accessing = 0;
         uuid = player.getUniqueId();
         registered = player.getFirstPlayed();
@@ -71,9 +71,10 @@ public class UserData {
         sessions = new ArrayList<>();
         lastNick = "";
         playerKills = new ArrayList<>();
+        additionalData = new AdditionalData();
     }
 
-    public UserData(OfflinePlayer player, DemographicsData demData, Database db) {
+    public UserData(OfflinePlayer player, DemographicsData demData) {
         accessing = 0;
         uuid = player.getUniqueId();
         registered = player.getFirstPlayed();
@@ -97,8 +98,13 @@ public class UserData {
         sessions = new ArrayList<>();
         lastNick = "";
         playerKills = new ArrayList<>();
+        additionalData = new AdditionalData();
     }
 
+    public AdditionalData getAdditionalData() {
+        return additionalData;
+    }
+    
     public void addIpAddress(InetAddress ip) {
         if (!ips.contains(ip)) {
             ips.add(ip);

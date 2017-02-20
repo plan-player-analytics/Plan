@@ -17,7 +17,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -79,7 +78,7 @@ public class InspectCommand extends SubCommand {
             sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
             return true;
         }
-        OfflinePlayer p = getOfflinePlayer(uuid);
+        OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
         if (!p.hasPlayedBefore()) {
             sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
             return true;

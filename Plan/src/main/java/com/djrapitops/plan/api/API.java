@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.api;
 
-import com.djrapitops.planlite.UUIDFetcher;
 import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
@@ -9,6 +8,7 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
 
 /**
  *
@@ -108,10 +108,10 @@ public class API {
     public String getPlayerHtmlAsString(UUID uuid) {
         WebSocketServer server = plugin.getUiServer();
         if (server != null) {
-            return server.getDataReqHandler().getDataHtml(uuid);
+            return server.getDataReqHandler().getInspectHtml(uuid);
         }
         DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getDataHtml(uuid);
+        return reqH.getInspectHtml(uuid);
     }
 
     /**

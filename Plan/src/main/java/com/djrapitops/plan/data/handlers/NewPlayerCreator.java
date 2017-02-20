@@ -50,7 +50,7 @@ public class NewPlayerCreator {
     }
 
     public void createNewPlayer(OfflinePlayer player, GameMode gm) {
-        UserData data = new UserData(player, new DemographicsData(), db);
+        UserData data = new UserData(player, new DemographicsData());
         data.setLastGamemode(gm);
         data.setLastPlayed(new Date().getTime());
         long zero = Long.parseLong("0");
