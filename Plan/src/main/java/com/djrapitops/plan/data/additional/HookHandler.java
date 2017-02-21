@@ -32,12 +32,12 @@ public class HookHandler {
     }
 
     private void hook() {
-        advancedAchievementsHook = new AdvancedAchievementsHook(plan);
-        essentialsHook = new EssentialsHook(plan);
-        superbVoteHook = new SuperbVoteHook(plan);
-        factionsHook = new FactionsHook(plan);
-        townyHook = new TownyHook(plan);
-        onTimeHook = new OnTimeHook(plan);
+        try {advancedAchievementsHook = new AdvancedAchievementsHook(plan);} catch (NoClassDefFoundError e) {}
+        try {essentialsHook = new EssentialsHook(plan);} catch (NoClassDefFoundError e) {}
+        try {superbVoteHook = new SuperbVoteHook(plan);} catch (NoClassDefFoundError e) {}
+        try {factionsHook = new FactionsHook(plan);} catch (NoClassDefFoundError e) {}
+        try {townyHook = new TownyHook(plan);} catch (NoClassDefFoundError e) {}
+        try {onTimeHook = new OnTimeHook(plan);} catch (NoClassDefFoundError e) {}
     }
 
     public AdvancedAchievementsHook getAdvancedAchievementsHook() {

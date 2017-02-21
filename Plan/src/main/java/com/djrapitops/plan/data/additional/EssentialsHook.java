@@ -25,7 +25,7 @@ public class EssentialsHook extends Hook {
      *
      * @param plugin
      */
-    public EssentialsHook(Plan plugin) {
+    public EssentialsHook(Plan plugin) throws NoClassDefFoundError{
         super("com.earth2me.essentials.Essentials");
         this.plugin = plugin;
         if (super.isEnabled()) {

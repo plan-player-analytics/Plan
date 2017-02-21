@@ -21,7 +21,7 @@ public class AdvancedAchievementsHook extends Hook {
      *
      * @param plugin
      */
-    public AdvancedAchievementsHook(Plan plugin) {
+    public AdvancedAchievementsHook(Plan plugin) throws NoClassDefFoundError {
         super("com.hm.achievement.AdvancedAchievements");
         this.plugin = plugin;
         if (super.isEnabled()) {

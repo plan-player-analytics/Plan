@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
-import me.edge209.OnTime.OnTime;
 import me.edge209.OnTime.OnTimeAPI;
 import org.bukkit.Bukkit;
 
@@ -21,7 +20,7 @@ public class OnTimeHook extends Hook {
      * Hooks to OnTime plugin
      * @param plugin
      */
-    public OnTimeHook(Plan plugin) {
+    public OnTimeHook(Plan plugin) throws NoClassDefFoundError{
         super("me.edge209.OnTime.OnTime");
         this.plugin = plugin;        
     }

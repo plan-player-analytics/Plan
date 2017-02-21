@@ -19,7 +19,7 @@ public class SuperbVoteHook extends Hook {
      *
      * @param plugin
      */
-    public SuperbVoteHook(Plan plugin) {
+    public SuperbVoteHook(Plan plugin) throws NoClassDefFoundError {
         super("io.minimum.minecraft.superbvote.SuperbVote");
         this.plugin = plugin;
     }

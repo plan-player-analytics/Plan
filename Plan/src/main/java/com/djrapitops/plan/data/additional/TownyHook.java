@@ -30,7 +30,7 @@ public class TownyHook extends Hook {
      *
      * @param plugin
      */
-    public TownyHook(Plan plugin) {
+    public TownyHook(Plan plugin) throws NoClassDefFoundError {
         super("com.palmergames.bukkit.towny.Towny");
         this.plugin = plugin;
         this.towny = getPlugin(Towny.class);
