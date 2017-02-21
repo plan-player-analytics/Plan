@@ -108,16 +108,6 @@ public class Response {
                     output.write((htmlDef + analysisHtml).getBytes());
                     return;
                 }
-            } else if (command.equals("players")) {
-                if (requestHandler.checkIfAnalysisIsCached()) {
-                    String playersHtml = requestHandler.getPlayersHtml();
-                    String htmlDef = "HTTP/1.1 OK\r\n"
-                            + "Content-Type: text/html; charset=utf-8\r\n"
-                            + "Content-Length: " + playersHtml.length() + "\r\n"
-                            + "\r\n";
-                    output.write((htmlDef + playersHtml).getBytes());
-                    return;
-                }
             }
             String errorMessage = "HTTP/1.1 404 UserData not Found\r\n"
                     + "Content-Type: text/html\r\n"

@@ -3,12 +3,14 @@ package main.java.com.djrapitops.plan.utilities;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.tables.SortabeSessionTableCreator;
 import org.bukkit.GameMode;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -43,7 +45,7 @@ public class PlaceholderUtils {
         replaceMap.put("%npday%", data.getNewPlayersDay() + "");
         replaceMap.put("%npweek%", data.getNewPlayersWeek() + "");
         replaceMap.put("%npmonth%", data.getNewPlayersMonth() + "");
-        replaceMap.put("%top50commands%", data.getTop50CommandsListHtml());
+        replaceMap.put("%commanduse%", data.getTop50CommandsListHtml());
         replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
         replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
@@ -58,6 +60,8 @@ public class PlaceholderUtils {
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
+        replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
+        replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
         return replaceMap;
     }
 
@@ -71,7 +75,8 @@ public class PlaceholderUtils {
     public static HashMap<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
-        replaceMap.put("%uuid%", (showIPandUUID ? "" + data.getUuid() : Html.HIDDEN.parse()));
+        UUID uuid = data.getUuid();
+        replaceMap.put("%uuid%", (showIPandUUID ? "" + uuid : Html.HIDDEN.parse()));
         replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp("" + data.getLastPlayed()));
         replaceMap.put("%logintimes%", "" + data.getLoginTimes());
         replaceMap.put("%geoloc%", data.getDemData().getGeoLocation());
@@ -112,21 +117,14 @@ public class PlaceholderUtils {
         replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
         int deaths = data.getDeaths();
         replaceMap.put("%deaths%", deaths + "");
-        replaceMap.put("%playerkills%", data.getPlayerKills() + "");
+        replaceMap.put("%playerkills%", data.getPlayerKills().size() + "");
         replaceMap.put("%mobkills%", data.getMobKills() + "");
+        replaceMap.put("%sessionstable%", SortabeSessionTableCreator.createSortedSessionDataTable5(data.getSessions()));
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
-        return replaceMap;
-    }
-
-    public static HashMap<String, String> getPlayersReplaceRules(AnalysisData data) {
-        HashMap<String, String> replaceMap = new HashMap<>();
-        Plan plugin = getPlugin(Plan.class);
-        replaceMap.put("%version%", plugin.getDescription().getVersion());
-        replaceMap.put("%total%", "" + data.getTotal());
-        replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
+        replaceMap.putAll(plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid));
         return replaceMap;
     }
 }

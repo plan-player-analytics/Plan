@@ -49,6 +49,12 @@
             <version>2.10.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.palmergames</groupId>
+            <artifactId>towny</artifactId>
+            <version>0.91.4.0</version>
+            <scope>provided</scope>
+        </dependency>
 <!--         -->
         <dependency>
             <groupId>com.googlecode.charts4j</groupId>

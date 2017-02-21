@@ -22,13 +22,13 @@ public class AdvancedAchievementsHook extends Hook {
      * @param plugin
      */
     public AdvancedAchievementsHook(Plan plugin) {
-        super(AdvancedAchievements.class);
+        super("com.hm.achievement.AdvancedAchievements");
         this.plugin = plugin;
-        if (isEnabled()) {
+        if (super.isEnabled()) {
             try {
                 totalAchievements = calcTotalAchievements();
             } catch (Exception | NoClassDefFoundError e) {
-                setEnabled(false);
+                super.setEnabled(false);
             }
         }
     }

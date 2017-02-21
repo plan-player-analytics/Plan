@@ -22,7 +22,7 @@ public class OnTimeHook extends Hook {
      * @param plugin
      */
     public OnTimeHook(Plan plugin) {
-        super(OnTime.class);
+        super("me.edge209.OnTime.OnTime");
         this.plugin = plugin;        
     }
 

@@ -32,7 +32,7 @@ public class MapComparator {
         hashMap.keySet().stream().forEach((key) -> {
             sortedList.add(new String[]{"" + hashMap.get(key), key});
         });
-        Collections.sort(sortedList, (String[] strings, String[] otherStrings) -> (int) (Long.parseLong(strings[0]) - (Long.parseLong(otherStrings[0]))));
+        Collections.sort(sortedList, (String[] strings, String[] otherStrings) -> Long.valueOf(strings[0]).compareTo(Long.valueOf(otherStrings[0])));
         return sortedList;
     }
 

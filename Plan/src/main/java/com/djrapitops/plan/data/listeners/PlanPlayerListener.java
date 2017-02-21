@@ -28,6 +28,7 @@ public class PlanPlayerListener implements Listener {
     private final GamemodeTimesHandler gmTimesH;
     private final DemographicsHandler demographicH;
     private final RuleBreakingHandler rulebreakH;
+    private final LocationHandler locationH;
 
     /**
      * Class Constructor.
@@ -45,6 +46,7 @@ public class PlanPlayerListener implements Listener {
         gmTimesH = handler.getGamemodeTimesHandler();
         demographicH = handler.getDemographicsHandler();
         rulebreakH = handler.getRuleBreakingHandler();
+        locationH = handler.getLocationHandler();
     }
 
     /**
@@ -94,7 +96,9 @@ public class PlanPlayerListener implements Listener {
             public void process(UserData data) {
                 activityH.handleLogOut(data);
                 gmTimesH.handleLogOut(player.getGameMode(), data);
+                data.addLocations(locationH.getLocationsForSaving(uuid));
                 handler.saveCachedData(uuid);
+                locationH.clearLocations(uuid);
             }
         };
         handler.getUserDataForProcessing(logoutProcessor, uuid);
@@ -117,7 +121,9 @@ public class PlanPlayerListener implements Listener {
             @Override
             public void process(UserData data) {
                 rulebreakH.handleKick(data);
+                data.addLocations(locationH.getLocationsForSaving(uuid));
                 handler.saveCachedData(uuid);
+                locationH.clearLocations(uuid);
                 handler.clearFromCache(uuid);
             }
         };

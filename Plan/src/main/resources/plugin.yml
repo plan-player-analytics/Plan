@@ -1,7 +1,16 @@
 name: Plan
 author: Rsl1122
 main: main.java.com.djrapitops.plan.Plan
-version: 2.5.2
+version: 2.6.0
+
+softdepend:
+- OnTime
+- EssentialsX
+- Towny
+- Vault
+- Factions
+- SuperbVote
+- AdvancedAchievements
 
 commands:
   plan:

@@ -13,8 +13,8 @@ import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
-import main.java.com.djrapitops.plan.ui.tables.SortedTableCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
 import org.bukkit.GameMode;
 
@@ -76,19 +76,7 @@ public class AnalysisUtils {
     }
 
     static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
-        return SortedTableCreator.createTableOutOfHashMap(commandUse);
-    }
-
-    static String createTableOutOfHashMapLong(HashMap<String, Long> players) {
-        return SortedTableCreator.createTableOutOfHashMapLong(players);
-    }
-
-    static String createTableOutOfHashMap(HashMap<String, Integer> map, int limit) {
-        return SortedTableCreator.createTableOutOfHashMap(map, limit);
-    }
-
-    static String createActivePlayersTable(HashMap<String, Long> map, int limit) {
-        return SortedTableCreator.createActivePlayersTable(map, limit);
+        return SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
     }
     
     static String createSortablePlayersTable(Collection<UserData> data) {

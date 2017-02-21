@@ -43,7 +43,6 @@ public class UserData {
 
     private SessionData currentSession;
     private List<SessionData> sessions;
-    private AdditionalData additionalData;
 
     public UserData(Player player, DemographicsData demData) {
         accessing = 0;
@@ -71,7 +70,6 @@ public class UserData {
         sessions = new ArrayList<>();
         lastNick = "";
         playerKills = new ArrayList<>();
-        additionalData = new AdditionalData();
     }
 
     public UserData(OfflinePlayer player, DemographicsData demData) {
@@ -98,12 +96,8 @@ public class UserData {
         sessions = new ArrayList<>();
         lastNick = "";
         playerKills = new ArrayList<>();
-        additionalData = new AdditionalData();
     }
 
-    public AdditionalData getAdditionalData() {
-        return additionalData;
-    }
     
     public void addIpAddress(InetAddress ip) {
         if (!ips.contains(ip)) {

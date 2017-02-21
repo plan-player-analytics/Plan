@@ -79,26 +79,7 @@ public class DataRequestHandler {
         } catch (FileNotFoundException ex) {
             return "<h1>404 analysis.html was not found</h1>";
         }
-    }
-    
-    /**
-     * Returns the players.html as string with replaced placeholders.
-     *
-     * @return the html
-     */
-    public String getPlayersHtml() {
-        try {
-            if (!analysisCache.isCached()) {
-                return "<h1>404 Data was not found in cache</h1>";
-            }
-            return HtmlUtils.replacePlaceholders(
-                    HtmlUtils.getHtmlStringFromResource("players.html"),
-                    PlaceholderUtils.getPlayersReplaceRules(analysisCache.getData())
-            );
-        } catch (FileNotFoundException ex) {
-            return "<h1>404 players.html was not found</h1>";
-        }
-    }
+    }    
 
     /**
      * Checks if the AnalysisData is cached.

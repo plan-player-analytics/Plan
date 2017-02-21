@@ -35,6 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.*;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
@@ -56,16 +57,12 @@ Play session length
 - Playtime month
 - Playtime week
 Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
-Integrate PlanLite features to Plan and discontinue PlanLite
-- Towny hook
-- Text interface
+Text interface
 Database Cleaning of useless data
-Sortable player table.
-- Players page
-- Navigation (Security req)
 Add -n argument for nickname search.
 Location saving & getting seperately
 Fix any bugs that come up
+Random security code generation
  */
 /**
  *
@@ -80,6 +77,7 @@ public class Plan extends JavaPlugin {
     private Database db;
     private HashSet<Database> databases;
     private WebSocketServer uiServer;
+    private HookHandler hookHandler;
 
     private int bootAnalysisTaskID;
 
@@ -146,6 +144,7 @@ public class Plan extends JavaPlugin {
             consoleSender.sendMessage(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
+        hookHandler = new HookHandler(this);
         log(Phrase.ENABLED + "");
     }
 
@@ -241,7 +240,7 @@ public class Plan extends JavaPlugin {
         pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
         pluginManager.registerEvents(new PlanDeathEventListener(this), this);
         if (Settings.GATHERLOCATIONS.isTrue()) {
-//            pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
+            pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
         }
     }
 
@@ -335,6 +334,10 @@ public class Plan extends JavaPlugin {
      */
     public WebSocketServer getUiServer() {
         return uiServer;
+    }
+
+    public HookHandler getHookHandler() {
+        return hookHandler;
     }
 
     /**

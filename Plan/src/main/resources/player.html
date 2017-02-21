@@ -6,6 +6,7 @@
         <meta name="description" content="Player inspect window">
         <meta name="author" content="Rsl1122">
         <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />
+        <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
         <style>
             * {
                 box-sizing: border-box;
@@ -44,7 +45,24 @@
             .info {
                 width: 50%;
             }
-
+            .table {
+                border-collapse: collapse;
+                table-layout: fixed; 
+                border-style: solid; 
+                border-width: 1px; 
+                padding: 8px 14px;
+                width: 100%;
+            }
+            table.sortable thead {
+                background-color: #267F00;
+                color:white;
+                font-weight: bold;
+                cursor: default;
+                width: 100%;
+            }
+            table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+                content: " \25B4\25BE" 
+            }
             .black {
                 color: #000000;
             }
@@ -108,15 +126,17 @@
             <div class="column info">
 
                 <h4>Information</h4>
-                <p>Last seen: %lastseen% %active% %isonline%<br/>
+                <p>Last seen: %lastseen% %active% %isonline% %essentials%<br/>
                     Nicknames: %nicknames% | Has connected from ips: %ips%<br/>
                     Geolocation: %geoloc%<br/>
                     Playtime: %playtime%<br/>
                     Has logged in %logintimes% times. | Has been kicked %timeskicked% times.<br/>
                     Age: %age% | Gender: %gender%<br/>
                     Player kills: %playerkills% | Mob kills: %mobkills% | Deaths: %deaths%<br/>
-                    UUID: %uuid%</p>
-                %planlite%
+                    UUID: %uuid%
+                    %achievements%%votes%%faction%%town%</p>
+                <h4>Last 5 Play Sessions</h4>
+                %sessionstable%
             </div>
 
             <div class="column info">

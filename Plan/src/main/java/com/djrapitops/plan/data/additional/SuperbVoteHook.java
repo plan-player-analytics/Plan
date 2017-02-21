@@ -20,7 +20,7 @@ public class SuperbVoteHook extends Hook {
      * @param plugin
      */
     public SuperbVoteHook(Plan plugin) {
-        super(SuperbVote.class);
+        super("io.minimum.minecraft.superbvote.SuperbVote");
         this.plugin = plugin;
     }
 

@@ -141,7 +141,6 @@ public class Analysis {
                 // Analyze & Save RawAnalysisData to AnalysisData
                 createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
 
-                analysisData.setTop20ActivePlayers(AnalysisUtils.createActivePlayersTable(sorted.getPlaytimes(), 20));
                 analysisData.setRecentPlayers(AnalysisUtils.createListStringOutOfHashMapLong(sorted.getLatestLogins(), 20));
 
                 long totalPlaytime = sorted.getTotalPlaytime();

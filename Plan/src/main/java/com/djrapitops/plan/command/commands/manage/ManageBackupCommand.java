@@ -82,11 +82,6 @@ public class ManageBackupCommand extends SubCommand {
                     SQLiteDB backupDB = new SQLiteDB(plugin,
                             args[0] + "-backup-" + now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
 
-                    if (!backupDB.init()) {
-                        sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-                        this.cancel();
-                        return;
-                    }
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                     backupDB.removeAllData();
                     Set<UUID> uuids = copyFromDB.getSavedUUIDs();

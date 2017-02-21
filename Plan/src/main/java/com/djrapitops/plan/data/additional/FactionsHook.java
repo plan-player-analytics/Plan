@@ -28,7 +28,7 @@ public class FactionsHook extends Hook {
      * @param plugin
      */
     public FactionsHook(Plan plugin) {
-        super(Factions.class);
+        super("com.massivecraft.factions.Factions");
         this.plugin = plugin;
     }
 
@@ -61,24 +61,31 @@ public class FactionsHook extends Hook {
         info.put("LAND", faction.getPower());
         return info;
     }
-    
-    /**
-     * Grab power of player. isEnabled() should be called before this
-     * method.
-     * @param uuid UUID of player
-     * @return Faction power of player
-     */
-    public double getPower(UUID uuid) {
-        return MPlayer.get(uuid).getPower();
-    }
 
     /**
-     * Grab Max power of player. isEnabled() should be called before this
+     * Grab info about a Player. isEnabled() should be called before this
      * method.
-     * @param uuid UUID of player
-     * @return Faction Max power of player
+     *
+     * @param uuid UUID of the player
+     * @return HashMap containing boolean, number & string: POWER int, MAXPOWER
+     * int, FACTION String
      */
-    public double getMaxPower(UUID uuid) {
-        return MPlayer.get(uuid).getPowerMax();
+    public HashMap<String, Serializable> getPlayerInfo(UUID uuid) {
+        HashMap<String, Serializable> info = new HashMap<>();
+        MPlayer mPlayer = MPlayer.get(uuid);
+        if (mPlayer != null) {
+            info.put("POWER", mPlayer.getPower());
+            info.put("MAXPOWER", mPlayer.getPowerMax());
+            if (mPlayer.hasFaction()) {
+                info.put("FACTION", mPlayer.getFactionName());
+            } else {
+                info.put("FACTION", "Not in faction");
+            }
+        } else {
+            info.put("POWER",0);
+            info.put("MAXPOWER", 0);
+            info.put("FACTION", "Not in faction");
+        }
+        return info;
     }
 }

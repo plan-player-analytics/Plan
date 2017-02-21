@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 public abstract class SQLDB extends Database {
 
@@ -189,10 +190,10 @@ public abstract class SQLDB extends Database {
 
             ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
             boolean newDatabase = set.next();
-            set.close();            
+            set.close();
             query("CREATE TABLE IF NOT EXISTS " + userName + " ("
                     + userColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
-                    + userColumnUUID + " varchar(36) NOT NULL, "
+                    + userColumnUUID + " varchar(36) NOT NULL UNIQUE, "
                     + userColumnDemAge + " integer NOT NULL, "
                     + userColumnDemGender + " varchar(8) NOT NULL, "
                     + userColumnDemGeoLocation + " varchar(50) NOT NULL, "
@@ -238,7 +239,7 @@ public abstract class SQLDB extends Database {
             query("CREATE TABLE IF NOT EXISTS " + nicknamesName + " ("
                     + nicknamesColumnUserID + " integer NOT NULL, "
                     + nicknamesColumnNick + " varchar(30) NOT NULL, "
-                    + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT (0), "
+                    + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT 0, "
                     + "FOREIGN KEY(" + nicknamesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                     + ")"
             );
@@ -312,7 +313,7 @@ public abstract class SQLDB extends Database {
     protected abstract Connection getNewConnection();
 
     public boolean query(String sql) throws SQLException {
-        boolean success = connection.createStatement().execute(sql);        
+        boolean success = connection.createStatement().execute(sql);
         return success;
     }
 
@@ -348,7 +349,7 @@ public abstract class SQLDB extends Database {
         checkConnection();
         connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
         connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
-        
+
     }
 
     @Override
@@ -417,7 +418,6 @@ public abstract class SQLDB extends Database {
                 "DELETE FROM " + commanduseName);
         statement.execute();
         statement.close();
-        
 
         statement = connection.prepareStatement("INSERT INTO " + commanduseName + " ("
                 + commanduseColumnCommand + ", "
@@ -430,11 +430,11 @@ public abstract class SQLDB extends Database {
                 statement.setInt(2, data.get(key));
                 statement.addBatch();
                 commitRequired = true;
-            }            
-            
+            }
+
             if (commitRequired) {
                 statement.executeBatch();
-                
+
             }
             statement.close();
         }
@@ -499,7 +499,7 @@ public abstract class SQLDB extends Database {
         statement.setString(1, uuid);
         statement.execute();
         statement.close();
-        
+
         return true;
     }
 
@@ -545,14 +545,6 @@ public abstract class SQLDB extends Database {
         set.close();
         statement.close();
         String userId = "" + getUserId(uuid.toString());
-
-        List<Location> locations = getLocations(userId, worlds);
-        data.addLocations(locations);
-        if (locations.isEmpty()) {
-            data.setLocation(new Location(defaultWorld, 0, 0, 0));
-        } else {
-            data.setLocation(locations.get(locations.size() - 1));
-        }
 
         List<String> nicknames = getNicknames(userId);
         data.addNicknames(nicknames);
@@ -687,7 +679,8 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public void saveMultipleUserData(List<UserData> data) {
+    public void saveMultipleUserData(List<UserData> data) throws SQLException {
+        checkConnection();
         if (data.isEmpty()) {
             return;
         }
@@ -704,7 +697,7 @@ public abstract class SQLDB extends Database {
                 + userColumnLastPlayed + "=?, "
                 + userColumnDeaths + "=?, "
                 + userColumnMobKills + "=? "
-                + "WHERE UPPER(" + userColumnUUID + ") LIKE UPPER(?)";
+                + "WHERE " + userColumnUUID + "=?";
 
         try {
             PreparedStatement uStatement = connection.prepareStatement(uSQL);
@@ -734,9 +727,9 @@ public abstract class SQLDB extends Database {
                     uStatement.setLong(6, uData.getPlayTime());
                     uStatement.setInt(7, uData.getLoginTimes());
                     uStatement.setLong(8, uData.getLastPlayed());
-                    uStatement.setString(9, uData.getUuid().toString());
-                    uStatement.setInt(10, uData.getDeaths());
-                    uStatement.setInt(11, uData.getMobKills());
+                    uStatement.setInt(9, uData.getDeaths());
+                    uStatement.setInt(10, uData.getMobKills());
+                    uStatement.setString(11, uData.getUuid().toString());
                     uStatement.addBatch();
                 } catch (SQLException | NullPointerException e) {
                     saveLast.add(uData);
@@ -749,11 +742,11 @@ public abstract class SQLDB extends Database {
             }
             if (commitRequired) {
                 uStatement.executeBatch();
-                
+
             }
             uStatement.close();
             data.removeAll(saveLast);
-        } catch (Exception ex) {
+        } catch (SQLException | IllegalStateException ex) {
             exceptions.add(ex);
         }
         for (UserData uData : data) {
@@ -763,7 +756,7 @@ public abstract class SQLDB extends Database {
             uData.access();
             try {
                 int userId = getUserId(uData.getUuid().toString());
-                saveLocationList(userId, uData.getLocations());
+                saveAdditionalLocationsList(userId, uData.getLocations());
                 saveNickList(userId, uData.getNicknames(), uData.getLastNick());
                 saveIPList(userId, uData.getIps());
                 saveSessionList(userId, uData.getSessions());
@@ -822,9 +815,9 @@ public abstract class SQLDB extends Database {
             statement.setLong(6, data.getPlayTime());
             statement.setInt(7, data.getLoginTimes());
             statement.setLong(8, data.getLastPlayed());
-            statement.setString(9, uuid.toString());
-            statement.setInt(10, data.getDeaths());
-            statement.setInt(11, data.getMobKills());
+            statement.setInt(9, data.getDeaths());
+            statement.setInt(10, data.getMobKills());
+            statement.setString(11, uuid.toString());
             update = statement.executeUpdate();
         }
         if (update == 0) {
@@ -863,8 +856,8 @@ public abstract class SQLDB extends Database {
             statement.close();
             userId = getUserId(uuid.toString());
         }
-        
-        saveLocationList(userId, data.getLocations());
+
+        saveAdditionalLocationsList(userId, data.getLocations());
         saveNickList(userId, data.getNicknames(), data.getLastNick());
         saveIPList(userId, data.getIps());
         saveSessionList(userId, data.getSessions());
@@ -873,16 +866,10 @@ public abstract class SQLDB extends Database {
         data.stopAccessing();
     }
 
-    public void saveLocationList(int userId, List<Location> locations) throws SQLException {
+    public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
         if (locations.isEmpty()) {
             return;
         }
-        PreparedStatement deleteStatement = connection.prepareStatement(
-                "DELETE FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
-        deleteStatement.setString(1, "" + userId);
-        deleteStatement.execute();
-        deleteStatement.close();
-        
         PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
                 + locationColumnUserID + ", "
                 + locationColumnCoordinatesX + ", "
@@ -905,7 +892,7 @@ public abstract class SQLDB extends Database {
             }
             if (commitRequired) {
                 saveStatement.executeBatch();
-                
+
             }
         }
         saveStatement.close();
@@ -919,7 +906,7 @@ public abstract class SQLDB extends Database {
                 "DELETE FROM " + nicknamesName + " WHERE UPPER(" + nicknamesColumnUserID + ") LIKE UPPER(?)");
         statement.setString(1, "" + userId);
         statement.execute();
-        
+
         statement = connection.prepareStatement("INSERT INTO " + nicknamesName + " ("
                 + nicknamesColumnUserID + ", "
                 + nicknamesColumnCurrent + ", "
@@ -935,7 +922,7 @@ public abstract class SQLDB extends Database {
         }
         if (commitRequired) {
             statement.executeBatch();
-            
+
         }
         statement.close();
     }
@@ -948,7 +935,7 @@ public abstract class SQLDB extends Database {
                 "DELETE FROM " + sessionName + " WHERE UPPER(" + sessionColumnUserID + ") LIKE UPPER(?)");
         statement.setString(1, "" + userId);
         statement.execute();
-        
+
         statement = connection.prepareStatement("INSERT INTO " + sessionName + " ("
                 + sessionColumnUserID + ", "
                 + sessionColumnSessionStart + ", "
@@ -961,10 +948,10 @@ public abstract class SQLDB extends Database {
             statement.setLong(3, session.getSessionEnd());
             statement.addBatch();
             commitRequired = true;
-        }        
+        }
         if (commitRequired) {
             statement.executeBatch();
-            
+
         }
         statement.close();
     }
@@ -977,7 +964,7 @@ public abstract class SQLDB extends Database {
                 "DELETE FROM " + killsName + " WHERE UPPER(" + killsColumnKillerUserID + ") LIKE UPPER(?)");
         statement.setString(1, "" + userId);
         statement.execute();
-        
+
         statement = connection.prepareStatement("INSERT INTO " + killsName + " ("
                 + killsColumnKillerUserID + ", "
                 + killsColumnVictimUserID + ", "
@@ -992,10 +979,10 @@ public abstract class SQLDB extends Database {
             statement.setLong(4, kill.getDate());
             statement.addBatch();
             commitRequired = true;
-        }        
+        }
         if (commitRequired) {
             statement.executeBatch();
-            
+
         }
         statement.close();
     }
@@ -1009,7 +996,7 @@ public abstract class SQLDB extends Database {
         statement.setString(1, "" + userId);
         statement.execute();
         statement.close();
-        
+
         statement = connection.prepareStatement("INSERT INTO " + ipsName + " ("
                 + ipsColumnUserID + ", "
                 + ipsColumnIP
@@ -1020,10 +1007,10 @@ public abstract class SQLDB extends Database {
             statement.setString(2, ip.getHostAddress());
             statement.addBatch();
             commitRequired = true;
-        }        
+        }
         if (commitRequired) {
             statement.executeBatch();
-            
+
         }
         statement.close();
     }
@@ -1037,7 +1024,7 @@ public abstract class SQLDB extends Database {
         statement.setString(1, "" + userId);
         statement.execute();
         statement.close();
-        
+
         statement = connection.prepareStatement("INSERT INTO " + gamemodetimesName + " ("
                 + gamemodetimesColumnUserID + ", "
                 + gamemodetimesColumnSurvivalTime + ", "
@@ -1062,7 +1049,7 @@ public abstract class SQLDB extends Database {
         }
         statement.execute();
         statement.close();
-        
+
     }
 
     @Override
@@ -1089,12 +1076,18 @@ public abstract class SQLDB extends Database {
         boolean success = true;
         for (String tableName : queries) {
             try {
-                query("DROP TABLE " + tableName);
+                query("DELETE FROM " + tableName);
             } catch (SQLException e) {
                 plugin.toLog(this.getClass().getName(), e);
                 success = false;
             }
-        }        
+        }
+        try {
+            checkConnection();
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+            return false;
+        }
         return success;
     }
 

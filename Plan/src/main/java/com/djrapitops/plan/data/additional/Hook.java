@@ -15,9 +15,10 @@ public abstract class Hook {
      *
      * @param plugin
      */
-    public Hook(Class<? extends JavaPlugin> plugin) {
-        JavaPlugin hookedPlugin = getPlugin(plugin);
+    public Hook(String plugin) {
         try {
+            Class<? extends JavaPlugin> pluginClass = (Class<? extends JavaPlugin>) Class.forName(plugin);
+            JavaPlugin hookedPlugin = getPlugin(pluginClass);
             enabled = hookedPlugin.isEnabled();
         } catch (Exception | NoClassDefFoundError e) {
             enabled = false;

@@ -16,14 +16,15 @@ public class SortablePlayersTableCreator {
 
     public static String createSortablePlayersTable(Collection<UserData> data) {
         String html = "";
-        Date now = new Date();
         for (UserData uData : data) {
             html += "<tr>"
-                    + "<td>" + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()),uData.getName())+"</td>"
-                    + "<td>" + AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes()) + "</td>"
-                    + "<td>" + FormatUtils.formatTimeAmount(uData.getPlayTime() + "") + "</td>"
+                    + "<td>" + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()) + "</td>"
+                    + "<td>" + (uData.isBanned() ? "Banned" : (AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes())
+                    ? "Active" : "Inactive")) + "</td>"
+                    + "<td sorttable_customkey=\""+uData.getPlayTime()+"\">" + FormatUtils.formatTimeAmount(uData.getPlayTime() + "") + "</td>"
                     + "<td>" + uData.getLoginTimes() + "</td>"
-                    + "<td>" + FormatUtils.formatTimeAmountSinceString(uData.getLastPlayed() + "", now) + "</td>"
+                    + "<td sorttable_customkey=\""+uData.getRegistered()+"\">" + FormatUtils.formatTimeStamp(uData.getRegistered() + "") + "</td>"
+                    + "<td sorttable_customkey=\""+uData.getLastPlayed()+"\">" + FormatUtils.formatTimeStamp(uData.getLastPlayed() + "") + "</td>"
                     + "<td>" + uData.getDemData().getGeoLocation() + "</td>"
                     + "</tr>";
         }

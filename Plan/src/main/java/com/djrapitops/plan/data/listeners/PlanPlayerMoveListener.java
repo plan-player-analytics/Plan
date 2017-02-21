@@ -1,10 +1,12 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handlers.LocationHandler;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -48,8 +50,8 @@ public class PlanPlayerMoveListener implements Listener {
         if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
             return;
         }
-        Player p = event.getPlayer();
+        UUID uuid = event.getPlayer().getUniqueId();
         Location savedLocation = to.getBlock().getLocation();
-//        locationH.addLocation(uData, savedLocation);
+        locationH.addLocation(uuid, savedLocation);
     }
 }
