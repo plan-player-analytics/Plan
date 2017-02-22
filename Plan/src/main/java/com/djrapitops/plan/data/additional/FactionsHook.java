@@ -31,18 +31,21 @@ public class FactionsHook extends Hook {
         super("com.massivecraft.factions.Factions");
         this.plugin = plugin;
     }
-    
+
     public FactionsHook() {
         super();
-        plugin = null;        
+        plugin = null;
     }
-    
+
     /**
      * @return List of Faction names sorted by power
      */
     public List<String> getTopFactions() {
         List<Faction> topFactions = new ArrayList<>();
         topFactions.addAll(FactionColl.get().getAll());
+        topFactions.remove(FactionColl.get().getWarzone());
+        topFactions.remove(FactionColl.get().getSafezone());
+        topFactions.remove(FactionColl.get().getNone());
         Collections.sort(topFactions, new FactionComparator());
         List<String> factionNames = topFactions.stream()
                 .map(faction -> faction.getName())
@@ -61,9 +64,20 @@ public class FactionsHook extends Hook {
     public HashMap<String, Serializable> getFactionInfo(String factionName) {
         HashMap<String, Serializable> info = new HashMap<>();
         Faction faction = FactionColl.get().getByName(factionName);
-        info.put("LEADER", faction.getLeader().getNameAndSomething("", ""));
-        info.put("POWER", faction.getPower());
-        info.put("LAND", faction.getPower());
+        if (faction != null) {
+            MPlayer leader = faction.getLeader();
+            if (leader != null) {
+                info.put("LEADER", leader.getNameAndSomething("", ""));
+            } else {
+                info.put("LEADER", "No leader");
+            }
+            info.put("POWER", faction.getPower());
+            info.put("LAND", faction.getPower());
+        } else {
+            info.put("LEADER", "Faction not found");
+            info.put("POWER", "Faction not found");
+            info.put("LAND", "Faction not found");
+        }
         return info;
     }
 
@@ -87,7 +101,7 @@ public class FactionsHook extends Hook {
                 info.put("FACTION", "Not in faction");
             }
         } else {
-            info.put("POWER",0);
+            info.put("POWER", 0);
             info.put("MAXPOWER", 0);
             info.put("FACTION", "Not in faction");
         }

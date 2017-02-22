@@ -292,11 +292,13 @@ public abstract class SQLDB extends Database {
                     try {
                         query(query);
                     } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
-                if (usingMySQL) {
-                    query("ALTER TABLE " + userName + " DROP INDEX " + userColumnPlayerKills);
+                try {
+                    if (usingMySQL) {
+                        query("ALTER TABLE " + userName + " DROP INDEX " + userColumnPlayerKills);
+                    }
+                } catch (Exception e) {
                 }
                 setVersion(3);
             }
