@@ -32,12 +32,36 @@ public class HookHandler {
     }
 
     private void hook() {
-        try {advancedAchievementsHook = new AdvancedAchievementsHook(plan);} catch (NoClassDefFoundError e) {}
-        try {essentialsHook = new EssentialsHook(plan);} catch (NoClassDefFoundError e) {}
-        try {superbVoteHook = new SuperbVoteHook(plan);} catch (NoClassDefFoundError e) {}
-        try {factionsHook = new FactionsHook(plan);} catch (NoClassDefFoundError e) {}
-        try {townyHook = new TownyHook(plan);} catch (NoClassDefFoundError e) {}
-        try {onTimeHook = new OnTimeHook(plan);} catch (NoClassDefFoundError e) {}
+        try {
+            advancedAchievementsHook = new AdvancedAchievementsHook(plan);
+        } catch (NoClassDefFoundError e) {
+            advancedAchievementsHook = new AdvancedAchievementsHook();
+        }
+        try {
+            essentialsHook = new EssentialsHook(plan);
+        } catch (NoClassDefFoundError e) {
+            essentialsHook = new EssentialsHook();
+        }
+        try {
+            superbVoteHook = new SuperbVoteHook(plan);
+        } catch (NoClassDefFoundError e) {
+            superbVoteHook = new SuperbVoteHook();
+        }
+        try {
+            factionsHook = new FactionsHook(plan);
+        } catch (NoClassDefFoundError e) {
+            factionsHook = new FactionsHook();
+        }
+        try {
+            townyHook = new TownyHook(plan);
+        } catch (NoClassDefFoundError e) {
+            townyHook = new TownyHook();
+        }
+        try {
+            onTimeHook = new OnTimeHook(plan);
+        } catch (NoClassDefFoundError e) {
+            onTimeHook = new OnTimeHook();
+        }
     }
 
     public AdvancedAchievementsHook getAdvancedAchievementsHook() {
@@ -73,7 +97,7 @@ public class HookHandler {
         TownyHook tH = townyHook;
         addReplace.put("%towntable%", tH.isEnabled() ? SortableTownTableCreator.createSortableTownsTable(tH.getTopTowns(), tH) : "");
         addReplace.put("%factionstable%", fH.isEnabled() ? SortableFactionsTableCreator.createSortableFactionsTable(fH.getTopFactions(), fH) : "");
-        addReplace.put("%essentialswarps%", eH.isEnabled() ? "<br/>Warps: "+eH.getWarps().toString() : "");
+        addReplace.put("%essentialswarps%", eH.isEnabled() ? "<br/>Warps: " + eH.getWarps().toString() : "");
         return addReplace;
     }
 

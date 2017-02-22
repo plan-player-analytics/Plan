@@ -24,6 +24,10 @@ public abstract class Hook {
             enabled = false;
         }
     }
+    
+    public Hook() {
+        enabled = false;
+    } 
 
     /**
      * @return Whether or not the plugin was successfully hooked.

@@ -33,7 +33,7 @@ public class InspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InspectCommand(Plan plugin) {
-        super("inspect", "plan.inspect", Phrase.CMD_USG_INSPECT+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER+"");
+        super("inspect", "plan.inspect", Phrase.CMD_USG_INSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -67,66 +67,73 @@ public class InspectCommand extends SubCommand {
             }
         }
         String playerName = MiscUtils.getPlayerDisplayname(args, sender);
-
-        UUID uuid;
-        try {
-            uuid = UUIDFetcher.getUUIDOf(playerName);
-            if (uuid == null) {
-                throw new Exception("Username doesn't exist.");
-            }
-        } catch (Exception e) {
-            sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
-            return true;
-        }
-        OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        if (!p.hasPlayedBefore()) {
-            sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
-            return true;
-        }
-        if (!plugin.getDB().wasSeenBefore(uuid)) {
-            sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
-            return true;
-        }
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-        inspectCache.cache(uuid);
-        int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
-        if (configValue <= 0) {
-            configValue = 4;
-        }
-        final int available = configValue;
-        BukkitTask inspectMessageSenderTask = (new BukkitRunnable() {
-            private int timesrun = 0;
-            
+        BukkitTask inspectTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                timesrun++;
-                if (inspectCache.isCached(uuid)) {
-                    sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
-                    // Link
-                    String url = HtmlUtils.getInspectUrl(playerName);
-                    String message = Phrase.CMD_LINK+"";
-                    boolean console = !(sender instanceof Player);
-                    if (console) {
-                        sender.sendMessage(message + url);
-                    } else {
-                        sender.sendMessage(message);
-                        Player player = (Player) sender;
-                        Bukkit.getServer().dispatchCommand(
-                                Bukkit.getConsoleSender(),
-                                "tellraw " + player.getName() + " [\"\",{\"text\":\""+Phrase.CMD_CLICK_ME+"\",\"underlined\":true,"
-                                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                UUID uuid;
+                try {
+                    uuid = UUIDFetcher.getUUIDOf(playerName);
+                    if (uuid == null) {
+                        throw new Exception("Username doesn't exist.");
                     }
+                } catch (Exception e) {
+                    sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
+                    this.cancel();
+                    return;
+                }
+                OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
+                if (!p.hasPlayedBefore()) {
+                    sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
+                    this.cancel();
+                    return;
+                }
+                if (!plugin.getDB().wasSeenBefore(uuid)) {
+                    sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
+                    this.cancel();
+                    return;
+                }
+                sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+                inspectCache.cache(uuid);
+                int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
+                if (configValue <= 0) {
+                    configValue = 4;
+                }
+                final int available = configValue;
+                BukkitTask inspectMessageSenderTask = (new BukkitRunnable() {
+                    private int timesrun = 0;
 
-                    sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available+""));
-                    sender.sendMessage(Phrase.CMD_FOOTER+"");
-                    this.cancel();
-                }
-                if (timesrun > 10) {
-                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
-                    this.cancel();
-                }
+                    @Override
+                    public void run() {
+                        timesrun++;
+                        if (inspectCache.isCached(uuid)) {
+                            sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
+                            // Link
+                            String url = HtmlUtils.getInspectUrl(playerName);
+                            String message = Phrase.CMD_LINK + "";
+                            boolean console = !(sender instanceof Player);
+                            if (console) {
+                                sender.sendMessage(message + url);
+                            } else {
+                                sender.sendMessage(message);
+                                Player player = (Player) sender;
+                                Bukkit.getServer().dispatchCommand(
+                                        Bukkit.getConsoleSender(),
+                                        "tellraw " + player.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
+                                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                            }
+
+                            sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available + ""));
+                            sender.sendMessage(Phrase.CMD_FOOTER + "");
+                            this.cancel();
+                        }
+                        if (timesrun > 10) {
+                            sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
+                            this.cancel();
+                        }
+                    }
+                }).runTaskTimer(plugin, 1 * 20, 5 * 20);
             }
-        }).runTaskTimer(plugin, 1 * 20, 5 * 20);
+        }).runTaskAsynchronously(plugin);
         return true;
     }
 }

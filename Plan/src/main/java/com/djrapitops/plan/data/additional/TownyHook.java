@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.additional;
 
 import com.palmergames.bukkit.towny.Towny;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
@@ -23,7 +22,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 public class TownyHook extends Hook {
 
     private final Plan plugin;
-    private final Towny towny;
+    private Towny towny;
 
     /**
      * Hooks to Factions plugin
@@ -34,6 +33,11 @@ public class TownyHook extends Hook {
         super("com.palmergames.bukkit.towny.Towny");
         this.plugin = plugin;
         this.towny = getPlugin(Towny.class);
+    }
+    
+    public TownyHook() {
+        super();
+        plugin = null;        
     }
 
     /**
@@ -62,7 +66,7 @@ public class TownyHook extends Hook {
             info.put("RESIDENTS", town.getNumResidents());
             info.put("MAYOR", town.getMayor().getName());
             info.put("LAND", town.getPurchasedBlocks());
-        } catch (NotRegisteredException ex) {
+        } catch (Exception ex) {
         }
         return info;
     }
@@ -85,7 +89,7 @@ public class TownyHook extends Hook {
                 info.put("TOWN", "Not in town");
             }
             info.put("FRIENDS", res.getFriends().toString());
-        } catch (NotRegisteredException ex) {
+        } catch (Exception ex) {
         }
         return info;
     }

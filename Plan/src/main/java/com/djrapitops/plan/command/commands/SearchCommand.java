@@ -17,6 +17,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -33,7 +35,7 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", "plan.search", Phrase.CMD_USG_SEARCH+"", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_SEARCH+"");
+        super("search", "plan.search", Phrase.CMD_USG_SEARCH + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_SEARCH + "");
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
     }
@@ -63,50 +65,55 @@ public class SearchCommand extends SubCommand {
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         Set<OfflinePlayer> matches = MiscUtils.getMatchingDisplaynames(args[0]);
-        Set<UUID> uuids = new HashSet<>();
-        for (OfflinePlayer match : matches) {
-            UUID uuid = match.getUniqueId();
-            if (plugin.getDB().wasSeenBefore(uuid)) {
-                uuids.add(uuid);
-                inspectCache.cache(uuid);
-            }
-        }
-
-        int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
-        if (configValue <= 0) {
-            configValue = 4;
-        }
-        final int available = configValue;
-
-        sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0]);
-        // Results
-        if (uuids.isEmpty()) {
-            sender.sendMessage(Phrase.CMD_NO_RESULTS.parse(Arrays.toString(args)));
-        } else {
-            for (OfflinePlayer match : matches) {
-                if (!uuids.contains(match.getUniqueId())) {
-                    continue;
+        BukkitTask searchTask = (new BukkitRunnable() {
+            @Override
+            public void run() {
+                Set<UUID> uuids = new HashSet<>();
+                for (OfflinePlayer match : matches) {
+                    UUID uuid = match.getUniqueId();
+                    if (plugin.getDB().wasSeenBefore(uuid)) {
+                        uuids.add(uuid);
+                        inspectCache.cache(uuid);
+                    }
                 }
-                String name = match.getName();
-                sender.sendMessage(Phrase.CMD_MATCH + name);
-                // Link
-                String url = HtmlUtils.getInspectUrl(name);
-                String message = Phrase.CMD_LINK+"";
-                boolean console = !(sender instanceof Player);
-                if (console) {
-                    sender.sendMessage(message + url);
+
+                int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
+                if (configValue <= 0) {
+                    configValue = 4;
+                }
+                final int available = configValue;
+
+                sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0]);
+                // Results
+                if (uuids.isEmpty()) {
+                    sender.sendMessage(Phrase.CMD_NO_RESULTS.parse(Arrays.toString(args)));
                 } else {
-                    sender.sendMessage(message);
-                    Player player = (Player) sender;
-                    Bukkit.getServer().dispatchCommand(
-                            Bukkit.getConsoleSender(),
-                            "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
-                            + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                    for (OfflinePlayer match : matches) {
+                        if (!uuids.contains(match.getUniqueId())) {
+                            continue;
+                        }
+                        String name = match.getName();
+                        sender.sendMessage(Phrase.CMD_MATCH + name);
+                        // Link
+                        String url = HtmlUtils.getInspectUrl(name);
+                        String message = Phrase.CMD_LINK + "";
+                        boolean console = !(sender instanceof Player);
+                        if (console) {
+                            sender.sendMessage(message + url);
+                        } else {
+                            sender.sendMessage(message);
+                            Player player = (Player) sender;
+                            Bukkit.getServer().dispatchCommand(
+                                    Bukkit.getConsoleSender(),
+                                    "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
+                                    + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                        }
+                    }
                 }
+                sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available + ""));
+                sender.sendMessage(Phrase.CMD_FOOTER + "");
             }
-        }
-        sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available+""));
-        sender.sendMessage(Phrase.CMD_FOOTER+"");
+        }).runTaskAsynchronously(plugin);
         return true;
     }
 }

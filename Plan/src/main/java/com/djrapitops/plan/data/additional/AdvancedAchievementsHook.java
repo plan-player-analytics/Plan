@@ -33,6 +33,11 @@ public class AdvancedAchievementsHook extends Hook {
         }
     }
 
+    public AdvancedAchievementsHook() {
+        super();
+        plugin = null;        
+    }
+    
     private int calcTotalAchievements() throws Exception, NoClassDefFoundError {
         int total = 0;
         for (NormalAchievements category : NormalAchievements.values()) {

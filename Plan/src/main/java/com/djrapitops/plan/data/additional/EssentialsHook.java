@@ -32,6 +32,11 @@ public class EssentialsHook extends Hook {
             ess = getPlugin(Essentials.class);
         }
     }
+    
+    public EssentialsHook() {
+        super();
+        plugin = null;        
+    }
 
     /**
      * Grabs information not provided by Player class or Plan from Essentials.

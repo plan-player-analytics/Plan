@@ -25,6 +25,11 @@ public class OnTimeHook extends Hook {
         this.plugin = plugin;        
     }
 
+    public OnTimeHook() {
+        super();
+        plugin = null;        
+    }
+    
     /**
      * Grabs information not provided by Player class or Plan from OnTime.
      * isEnabled() should be called before this method.

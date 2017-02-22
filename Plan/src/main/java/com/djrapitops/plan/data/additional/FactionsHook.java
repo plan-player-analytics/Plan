@@ -31,7 +31,12 @@ public class FactionsHook extends Hook {
         super("com.massivecraft.factions.Factions");
         this.plugin = plugin;
     }
-
+    
+    public FactionsHook() {
+        super();
+        plugin = null;        
+    }
+    
     /**
      * @return List of Faction names sorted by power
      */

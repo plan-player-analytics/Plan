@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -188,9 +189,12 @@ public abstract class SQLDB extends Database {
             }
             boolean usingMySQL = supportsModification;
 
-            ResultSet set = connection.prepareStatement(supportsModification ? ("SHOW TABLES LIKE '" + userName + "'") : "SELECT name FROM sqlite_master WHERE type='table' AND name='" + userName + "'").executeQuery();
-            boolean newDatabase = set.next();
-            set.close();
+            boolean newDatabase = true;
+            try {
+                getVersion();
+                newDatabase = false;
+            } catch (Exception e) {
+            }
             query("CREATE TABLE IF NOT EXISTS " + userName + " ("
                     + userColumnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
                     + userColumnUUID + " varchar(36) NOT NULL UNIQUE, "
@@ -272,38 +276,29 @@ public abstract class SQLDB extends Database {
                     + ")"
             );
             if (newDatabase) {
-                setVersion(2);
+                plugin.log("New Database created.");
+                setVersion(3);
             }
             int version = getVersion();
-            if (version < 1) {
+            if (version < 3) {
+                String sqlite = usingMySQL ? "" : "COLUMN ";
                 String[] queries = new String[]{
-                    "ALTER TABLE " + userName + " ADD " + userColumnDeaths + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + userName + " ADD " + userColumnMobKills + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + nicknamesName + " ADD " + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT (false)",
+                    "ALTER TABLE " + userName + " ADD " + sqlite + userColumnDeaths + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + userName + " ADD " + sqlite + userColumnMobKills + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + nicknamesName + " ADD " + sqlite + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT 0",
                     "DROP TABLE IF EXISTS " + serverdataName
                 };
                 for (String query : queries) {
                     try {
                         query(query);
                     } catch (Exception e) {
-                    }
-                }
-                setVersion(1);
-            } else if (version < 2) {
-                String[] queries = new String[]{
-                    "ALTER TABLE " + nicknamesName + " ADD " + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT 0",
-                    "DROP TABLE IF EXISTS " + serverdataName
-                };
-                for (String query : queries) {
-                    try {
-                        query(query);
-                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 if (usingMySQL) {
                     query("ALTER TABLE " + userName + " DROP INDEX " + userColumnPlayerKills);
                 }
-                setVersion(2);
+                setVersion(3);
             }
 
         }
@@ -514,7 +509,6 @@ public abstract class SQLDB extends Database {
         }
         // Check if user is in the database
         if (!wasSeenBefore(uuid)) {
-            plugin.logError(uuid + " was not found from the database!");
             return;
         }
         List<World> worldList = Bukkit.getServer().getWorlds();
@@ -705,7 +699,7 @@ public abstract class SQLDB extends Database {
             for (UserData uData : data) {
                 try {
                     if (uData == null) {
-                        throw new IllegalStateException("UserData is null somehow!");
+                        continue;
                     }
                     uData.access();
                     int userId = getUserId(uData.getUuid().toString());
@@ -751,7 +745,7 @@ public abstract class SQLDB extends Database {
         }
         for (UserData uData : data) {
             if (uData == null) {
-                throw new IllegalStateException("UserData is null somehow!");
+                continue;
             }
             uData.access();
             try {
@@ -867,7 +861,9 @@ public abstract class SQLDB extends Database {
     }
 
     public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
-        if (locations.isEmpty()) {
+        List<Location> newLocations = new ArrayList<>();
+        newLocations.addAll(locations);
+        if (newLocations.isEmpty()) {
             return;
         }
         PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
@@ -877,8 +873,8 @@ public abstract class SQLDB extends Database {
                 + locationColumnWorld
                 + ") VALUES (?, ?, ?, ?)");
         boolean commitRequired = false;
-        if (!locations.isEmpty()) {
-            for (Location location : locations) {
+        if (!newLocations.isEmpty()) {
+            for (Location location : newLocations) {
                 saveStatement.setInt(1, userId);
                 saveStatement.setInt(2, (int) location.getBlockX());
                 saveStatement.setInt(3, (int) location.getBlockZ());

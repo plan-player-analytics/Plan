@@ -24,6 +24,11 @@ public class SuperbVoteHook extends Hook {
         this.plugin = plugin;
     }
 
+    public SuperbVoteHook() {
+        super();
+        plugin = null;        
+    }
+    
     /**
      * Grabs votes from SuperbVote.
      * isEnabled() should be called before this

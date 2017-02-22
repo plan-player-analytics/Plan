@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  *
@@ -61,22 +63,28 @@ public class PlanPlayerListener implements Listener {
     public void onPlayerLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        boolean isNewPlayer = activityH.isFirstTimeJoin(uuid);
-        if (isNewPlayer) {
-            handler.newPlayer(player);
-        }
-        DBCallableProcessor loginProcessor = new DBCallableProcessor() {
+        BukkitTask asyncLoginSaveTask = (new BukkitRunnable() {
             @Override
-            public void process(UserData data) {
-                activityH.handleLogin(player.isBanned(), data);
-                InetAddress ip = player.getAddress().getAddress();
-                basicInfoH.handleLogin(player.getDisplayName(), ip, data);
-                gmTimesH.handleLogin(player.getGameMode(), data);
-                demographicH.handleLogin(ip, data);
-                handler.saveCachedData(uuid);
+            public void run() {
+                boolean isNewPlayer = activityH.isFirstTimeJoin(uuid);
+                if (isNewPlayer) {
+                    handler.newPlayer(player);
+                }
+                DBCallableProcessor loginProcessor = new DBCallableProcessor() {
+                    @Override
+                    public void process(UserData data) {
+                        activityH.handleLogin(player.isBanned(), data);
+                        InetAddress ip = player.getAddress().getAddress();
+                        basicInfoH.handleLogin(player.getDisplayName(), ip, data);
+                        gmTimesH.handleLogin(player.getGameMode(), data);
+                        demographicH.handleLogin(ip, data);
+                        handler.saveCachedData(uuid);
+                    }
+                };
+                handler.getUserDataForProcessing(loginProcessor, uuid);
+                this.cancel();
             }
-        };
-        handler.getUserDataForProcessing(loginProcessor, uuid);
+        }).runTaskAsynchronously(plugin);
     }
 
     /**
