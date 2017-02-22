@@ -47,7 +47,7 @@ public class Response {
             String[] requestArgs = request.getUri().split("/");
             boolean forbidden = false;
             String securityCode = "";
-            if (requestArgs.length < 1) {
+            if (requestArgs.length < 2) {
                 forbidden = true;
             } else {
                 securityCode = requestArgs[1];

@@ -973,7 +973,7 @@ public abstract class SQLDB extends Database {
         for (KillData kill : kills) {
             statement.setInt(1, userId);
             statement.setInt(2, kill.getVictimUserID());
-            statement.setString(2, kill.getWeapon());
+            statement.setString(3, kill.getWeapon());
             statement.setLong(4, kill.getDate());
             statement.addBatch();
             commitRequired = true;

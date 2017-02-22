@@ -72,7 +72,7 @@ public class FactionsHook extends Hook {
                 info.put("LEADER", "No leader");
             }
             info.put("POWER", faction.getPower());
-            info.put("LAND", faction.getPower());
+            info.put("LAND", faction.getLandCount());
         } else {
             info.put("LEADER", "Faction not found");
             info.put("POWER", "Faction not found");
