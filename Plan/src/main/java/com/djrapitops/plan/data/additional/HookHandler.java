@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.tables.SortableFactionsTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableTownTableCreator;
 
@@ -97,7 +98,7 @@ public class HookHandler {
         TownyHook tH = townyHook;
         addReplace.put("%towntable%", tH.isEnabled() ? SortableTownTableCreator.createSortableTownsTable(tH.getTopTowns(), tH) : "");
         addReplace.put("%factionstable%", fH.isEnabled() ? SortableFactionsTableCreator.createSortableFactionsTable(fH.getTopFactions(), fH) : "");
-        addReplace.put("%essentialswarps%", eH.isEnabled() ? "<br/>Warps: " + eH.getWarps().toString() : "");
+        addReplace.put("%essentialswarps%", eH.isEnabled() ?  Html.WARPS.parse(eH.getWarps().toString()) : "");
         return addReplace;
     }
 
@@ -108,25 +109,25 @@ public class HookHandler {
         SuperbVoteHook sH = superbVoteHook;
         FactionsHook fH = factionsHook;
         TownyHook tH = townyHook;
-        addReplace.put("%achievements%", (aH.isEnabled() ? "<br/>Achievements: " + aH.getPlayerAchievements(uuid) + "/" + aH.getTotalAchievements() : ""));
+        addReplace.put("%achievements%", (aH.isEnabled() ? Html.ACHIEVEMENTS.parse(aH.getPlayerAchievements(uuid)+"",aH.getTotalAchievements()+"") : ""));
         if (eH.isEnabled()) {
             HashMap<String, Serializable> essData = eH.getEssentialsData(uuid);
-            addReplace.put("%essentials%", ((boolean) essData.get("JAILED") ? "| Jailed" : "")
-                    + " " + ((boolean) essData.get("MUTED") ? "| Muted" : ""));
+            addReplace.put("%essentials%", ((boolean) essData.get("JAILED") ? Html.JAILED.parse() : "")
+                    + " " + ((boolean) essData.get("MUTED") ? Html.MUTED.parse() : ""));
         } else {
             addReplace.put("%essentials%", "");
         }
 
-        addReplace.put("%votes%", sH.isEnabled() ? "<br/>Has voted " + sH.getVotes(uuid) + "times" : "");
+        addReplace.put("%votes%", sH.isEnabled() ? Html.VOTES.parse(sH.getVotes(uuid)+"") : "");
         if (fH.isEnabled()) {
             HashMap<String, Serializable> facInfo = fH.getPlayerInfo(uuid);
-            addReplace.put("%faction%", "<br/>Faction: " + facInfo.get("FACTION") + " | Power: " + facInfo.get("POWER") + "/" + facInfo.get("MAXPOWER"));
+            addReplace.put("%faction%", Html.FACTION.parse(facInfo.get("FACTION")+"",facInfo.get("POWER")+"",facInfo.get("MAXPOWER")+""));
         } else {
             addReplace.put("%faction%", "");
         }
         if (tH.isEnabled()) {
             HashMap<String, Serializable> townInfo = tH.getPlayerInfo(uuid);
-            addReplace.put("%town%", "<br/>Town: " + townInfo.get("TOWN"));
+            addReplace.put("%town%", Html.TOWN.parse(townInfo.get("TOWN")+""));
         } else {
             addReplace.put("%town%", "");
         }

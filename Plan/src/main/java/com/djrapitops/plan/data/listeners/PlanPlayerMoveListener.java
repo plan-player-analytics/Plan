@@ -2,8 +2,6 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handlers.LocationHandler;
 import org.bukkit.Location;

@@ -60,7 +60,6 @@ Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api
 Text interface
 Database Cleaning of useless data
 Add -n argument for nickname search.
-Location saving & getting seperately
 Fix any bugs that come up
 Random security code generation
  */
@@ -109,7 +108,7 @@ public class Plan extends JavaPlugin {
         if (initDatabase()) {
             log(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
-            logError(Phrase.DATABASE_FAILURE_DISABLE.toString());
+            logError(Phrase.DB_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -160,7 +159,7 @@ public class Plan extends JavaPlugin {
         }
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
-            log(Phrase.SAVE_CACHE + "");
+            log(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
@@ -263,11 +262,11 @@ public class Plan extends JavaPlugin {
             }
         }
         if (db == null) {
-            log(Phrase.DATABASE_TYPE_DOES_NOT_EXIST.toString());
+            log(Phrase.DB_TYPE_DOES_NOT_EXIST.toString());
             return false;
         }
         if (!db.init()) {
-            log(Phrase.DATABASE_FAILURE_DISABLE.toString());
+            log(Phrase.DB_FAILURE_DISABLE.toString());
             setEnabled(false);
             return false;
         }

@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
@@ -11,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.comparators.FactionComparator;
 
 /**
@@ -69,14 +70,14 @@ public class FactionsHook extends Hook {
             if (leader != null) {
                 info.put("LEADER", leader.getNameAndSomething("", ""));
             } else {
-                info.put("LEADER", "No leader");
+                info.put("LEADER", Html.FACTION_NO_LEADER.parse());
             }
             info.put("POWER", faction.getPower());
             info.put("LAND", faction.getLandCount());
         } else {
-            info.put("LEADER", "Faction not found");
-            info.put("POWER", "Faction not found");
-            info.put("LAND", "Faction not found");
+            info.put("LEADER", Html.FACTION_NOT_FOUND.parse());
+            info.put("POWER", Html.FACTION_NOT_FOUND.parse());
+            info.put("LAND", Html.FACTION_NOT_FOUND.parse());
         }
         return info;
     }
@@ -98,12 +99,12 @@ public class FactionsHook extends Hook {
             if (mPlayer.hasFaction()) {
                 info.put("FACTION", mPlayer.getFactionName());
             } else {
-                info.put("FACTION", "Not in faction");
+                info.put("FACTION", Phrase.NOT_IN_FAC+"");
             }
         } else {
             info.put("POWER", 0);
             info.put("MAXPOWER", 0);
-            info.put("FACTION", "Not in faction");
+            info.put("FACTION", Phrase.NOT_IN_FAC+"");
         }
         return info;
     }

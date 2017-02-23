@@ -118,6 +118,7 @@ public class ManageImportCommand extends SubCommand {
                             }
                         }
                     };
+                    handler.getUserDataForProcessing(importer, uuid);
                 }                
                 handler.saveCachedUserData();
                 sender.sendMessage(Phrase.MANAGE_SUCCESS + "");

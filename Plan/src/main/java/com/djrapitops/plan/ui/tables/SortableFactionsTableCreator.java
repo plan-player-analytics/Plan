@@ -14,27 +14,22 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 public class SortableFactionsTableCreator {
 
     public static String createSortableFactionsTable(Collection<String> factionList, FactionsHook fHook) {
-        String html = "<table class=\"sortable table\"><thead><tr>"
-                + "<th>Faction</th>"
-                + "<th>Power</th>"
-                + "<th>Land</th>"
-                + "<th>Leader</th>"
-                + "</tr></thead>"
-                + "<tbody>";
+        String html = Html.TABLE_FACTIONS_START.parse();
         if (factionList.isEmpty()) {
-            html += "<tr><td>No Factions</td><td></td><td></td><td></td></tr>";
+            html += Html.TABLELINE_4.parse(Html.FACTION_NO_FACTIONS.parse(), "", "", "");
         } else {
             for (String factionName : factionList) {
                 HashMap<String, Serializable> info = fHook.getFactionInfo(factionName);
-                html += "<tr>"
-                        + "<td>" + factionName + "</td>"
-                        + "<td>" + info.get("POWER") + "</td>"
-                        + "<td>" + info.get("LAND") + "</td>"
-                        + "<td>" + Html.LINK.parse(HtmlUtils.getInspectUrl((String) info.get("LEADER")), (String) info.get("LEADER")) + "</td>"
-                        + "</tr>";
+                String leader = (String) info.get("LEADER");
+                html += Html.TABLELINE_4.parse(
+                        factionName, 
+                        info.get("POWER")+"", 
+                        info.get("LAND")+"", 
+                        Html.LINK.parse(HtmlUtils.getInspectUrl(leader), leader)
+                );                    
             }
         }
-        html += "</tbody></table>";
+        html += Html.TABLE_END.parse();
         return html;
     }
 }

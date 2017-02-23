@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.ui.tables;
 
 import java.util.Collection;
-import java.util.Date;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
@@ -17,16 +16,17 @@ public class SortablePlayersTableCreator {
     public static String createSortablePlayersTable(Collection<UserData> data) {
         String html = "";
         for (UserData uData : data) {
-            html += "<tr>"
-                    + "<td>" + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()) + "</td>"
-                    + "<td>" + (uData.isBanned() ? "Banned" : (AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes())
-                    ? "Active" : "Inactive")) + "</td>"
-                    + "<td sorttable_customkey=\""+uData.getPlayTime()+"\">" + FormatUtils.formatTimeAmount(uData.getPlayTime() + "") + "</td>"
-                    + "<td>" + uData.getLoginTimes() + "</td>"
-                    + "<td sorttable_customkey=\""+uData.getRegistered()+"\">" + FormatUtils.formatTimeStamp(uData.getRegistered() + "") + "</td>"
-                    + "<td sorttable_customkey=\""+uData.getLastPlayed()+"\">" + FormatUtils.formatTimeStamp(uData.getLastPlayed() + "") + "</td>"
-                    + "<td>" + uData.getDemData().getGeoLocation() + "</td>"
-                    + "</tr>";
+            String bORaORi = uData.isBanned() ? Html.GRAPH_BANNED.parse() : 
+                    (AnalysisUtils.isActive(uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes()) 
+                    ? Html.GRAPH_ACTIVE.parse() : Html.GRAPH_INACTIVE.parse());
+            
+            html += Html.TABLELINE_PLAYERS.parse(Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()), bORaORi,
+                    uData.getPlayTime() + "", FormatUtils.formatTimeAmount(uData.getPlayTime() + ""),
+                    uData.getLoginTimes()+"",
+                    uData.getRegistered() + "", FormatUtils.formatTimeStamp(uData.getRegistered() + ""),
+                    uData.getLastPlayed() + "", FormatUtils.formatTimeStamp(uData.getLastPlayed() + ""),
+                    uData.getDemData().getGeoLocation()
+            );
         }
         return html;
     }

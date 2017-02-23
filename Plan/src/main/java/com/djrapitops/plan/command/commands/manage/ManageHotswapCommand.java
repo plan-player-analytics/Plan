@@ -23,18 +23,15 @@ public class ManageHotswapCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageHotswapCommand(Plan plugin) {
-        super("hotswap", "plan.manage", "Hotswap to another database & restart the plugin", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB>");
+        super("hotswap", "plan.manage", Phrase.CMD_USG_MANAGE_HOTSWAP+"", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB>");
 
         this.plugin = plugin;
     }
 
     /**
-     * Subcommand inspect.
-     *
-     * Adds player's data from DataCache/DB to the InspectCache for amount of
-     * time specified in the config, and clears the data from Cache with a timer
-     * task.
-     *
+     * Subcommand hotswap.
+     * Swaps db type and reloads plugin if the connection works.
+     * 
      * @param sender
      * @param cmd
      * @param commandLabel

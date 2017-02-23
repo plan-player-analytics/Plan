@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.comparators.TownComparator;
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -86,7 +87,7 @@ public class TownyHook extends Hook {
             if (res.hasTown()) {
                 info.put("TOWN", res.getTown().getName());
             } else {
-                info.put("TOWN", "Not in town");
+                info.put("TOWN", Phrase.NOT_IN_TOWN+"");
             }
             info.put("FRIENDS", res.getFriends().toString());
         } catch (Exception ex) {

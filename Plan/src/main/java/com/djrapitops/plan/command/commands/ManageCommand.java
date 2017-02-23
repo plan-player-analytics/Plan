@@ -123,7 +123,6 @@ public class ManageCommand extends SubCommand {
         }
 
         if (!command.onCommand(sender, cmd, commandLabel, realArgs)) {
-//            Phrase.TRY_COMMAND.sendWithPrefix( sender, parse( commandLabel, command ) );
         }
         return true;
     }

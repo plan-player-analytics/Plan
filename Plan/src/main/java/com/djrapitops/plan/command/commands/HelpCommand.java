@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-//import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;

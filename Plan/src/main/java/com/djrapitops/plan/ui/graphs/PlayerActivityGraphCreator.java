@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -38,14 +39,6 @@ public class PlayerActivityGraphCreator {
         CopyOnWriteArrayList<Long> sessionStarts = new CopyOnWriteArrayList<>();
         CopyOnWriteArrayList<Long> sessionEnds = new CopyOnWriteArrayList<>();
         CopyOnWriteArrayList<SessionData> s = new CopyOnWriteArrayList(sessionData);
-//        List<Long> sessionStarts = sessionData.parallelStream()
-//                .filter((session) -> (session.getSessionStart() > nowMinusScale))
-//                .map(SessionData::getSessionStart)
-//                .collect(Collectors.toList());
-//        List<Long> sessionEnds = sessionData.parallelStream()
-//                .filter((session) -> (session.getSessionStart() > nowMinusScale))
-//                .map(SessionData::getSessionEnd)
-//                .collect(Collectors.toList());
         s.parallelStream()
                 .filter((session) -> (session.getSessionStart() > nowMinusScale))
                 .forEach((session) -> {
@@ -112,13 +105,13 @@ public class PlayerActivityGraphCreator {
         AxisLabels xAxisLabels = AxisLabelsFactory.newAxisLabels(xDateAxisLabels, xDateAxisLabelsLocations);
         Data xData = Data.newData(xListDate);
         Data pYData = Data.newData(pYList);
-
-        XYLine playerLine = Plots.newXYLine(xData, pYData, Color.newColor(Phrase.HCOLOR_ACT_ONL + ""), "Players Online");
+        
+        XYLine playerLine = Plots.newXYLine(xData, pYData, Color.newColor(Phrase.HCOLOR_ACT_ONL + ""), Html.GRAPH_ONLINE.parse());
         LineChart chart = GCharts.newLineChart(playerLine);
         chart.addXAxisLabels(xAxisLabels);
-        chart.addTopAxisLabels(AxisLabelsFactory.newAxisLabels("Players", 1));
+        chart.addTopAxisLabels(AxisLabelsFactory.newAxisLabels(Html.GRAPH_PLAYERS.parse(), 1));
         chart.addYAxisLabels(AxisLabelsFactory.newAxisLabels(yAxisLabels));
-        chart.addRightAxisLabels(AxisLabelsFactory.newAxisLabels("Date", 4));
+        chart.addRightAxisLabels(AxisLabelsFactory.newAxisLabels(Html.GRAPH_DATE.parse(), 4));
         chart.setSize(1000, 250);
         return chart.toURLString();
     }

@@ -86,7 +86,7 @@ public class WebSocketServer {
             ENABLED = true;
 
             plugin.log(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort()+""));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             ENABLED = false;
         }
     }
@@ -100,7 +100,7 @@ public class WebSocketServer {
         try {
             server.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            plugin.toLog(this.getClass().getName(), e);
         }
     }
 

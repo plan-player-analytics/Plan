@@ -73,7 +73,7 @@ public class DataCacheHandler {
             commandUseHandler = new CommandUseHandler(commandUse);
         } catch (SQLException e) {
             plugin.toLog(this.getClass().getName(), e);
-            plugin.logError(Phrase.DATABASE_FAILURE_DISABLE + "");
+            plugin.logError(Phrase.DB_FAILURE_DISABLE + "");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
         }
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
@@ -124,7 +124,7 @@ public class DataCacheHandler {
                         public void process(UserData data) {
                             if (cache) {
                                 dataCache.put(uuid, data);
-                                plugin.log(Phrase.ADD_TO_CACHE.parse(uuid.toString()));
+                                plugin.log(Phrase.CACHE_ADD.parse(uuid.toString()));
                             }
                         }
                     };
@@ -280,7 +280,7 @@ public class DataCacheHandler {
                 }).runTaskTimer(plugin, 30 * 20, 30 * 20);
             } else {
                 dataCache.remove(uuid);
-                plugin.log("Cleared " + uuid.toString() + " from Cache.");
+                plugin.log(Phrase.CACHE_REMOVE+"");
             }
         }
     }

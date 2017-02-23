@@ -104,7 +104,7 @@ public class DemographicsHandler {
      * Uses ip-api.com to locate the IP address If too many calls are made to
      * the API the IP will be blocked from further calls.
      *
-     * @param event JoinEvent to get the InetAddress
+     * @param ip Player's IP address
      * @param data UserData corresponding the player
      */
     public void handleLogin(InetAddress ip, UserData data) {

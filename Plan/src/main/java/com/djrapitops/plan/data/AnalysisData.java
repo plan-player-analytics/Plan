@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
+import main.java.com.djrapitops.plan.ui.Html;
+
 /**
  *
  * @author Rsl1122
@@ -50,15 +52,15 @@ public class AnalysisData {
      * All data has to be set with setters to avoid NPE.
      */
     public AnalysisData() {
-        sortablePlayersTable = "Error: Replace rule was not set";
-        gmTimesChartImgHtml = "Error: Replace rule was not set";
-        playersChartImgHtmlMonth = "Error: Replace rule was not set";
-        playersChartImgHtmlWeek = "Error: Replace rule was not set";
-        playersChartImgHtmlDay = "Error: Replace rule was not set";
-        activityChartImgHtml = "Error: Replace rule was not set";
-        top50CommandsListHtml = "Error: Replace rule was not set";
-        top20ActivePlayers = "Error: Replace rule was not set";
-        recentPlayers = "Error: Replace rule was not set";
+        sortablePlayersTable = Html.ERROR_NOT_SET+"";
+        gmTimesChartImgHtml = Html.ERROR_NOT_SET+"";
+        playersChartImgHtmlMonth = Html.ERROR_NOT_SET+"";
+        playersChartImgHtmlWeek = Html.ERROR_NOT_SET+"";
+        playersChartImgHtmlDay = Html.ERROR_NOT_SET+"";
+        activityChartImgHtml = Html.ERROR_NOT_SET+"";
+        top50CommandsListHtml = Html.ERROR_NOT_SET+"";
+        top20ActivePlayers = Html.ERROR_NOT_SET+"";
+        recentPlayers = Html.ERROR_NOT_SET+"";
     }
 
     // Getters and setters v---------------------------------v

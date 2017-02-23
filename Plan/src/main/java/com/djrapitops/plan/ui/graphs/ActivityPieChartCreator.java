@@ -5,6 +5,7 @@ import com.googlecode.charts4j.GCharts;
 import com.googlecode.charts4j.PieChart;
 import com.googlecode.charts4j.Slice;
 import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.ui.Html;
 
 /**
  *
@@ -35,11 +36,15 @@ public class ActivityPieChartCreator {
         while (banPerc + inacPerc + actPerc + joinlPerc > 100) {
             actPerc--;
         }
+        String labelBanned = Html.GRAPH_BANNED.parse();
+        String labelUnknown = Html.GRAPH_UNKNOWN.parse();
+        String labelInactive = Html.GRAPH_INACTIVE.parse();
+        String labelActive = Html.GRAPH_ACTIVE.parse();
 
-        Slice bannedSlice = Slice.newSlice((int) (banPerc), Color.newColor(Phrase.HCOLOR_ACTP_BAN + ""), "Banned", "Banned");
-        Slice joinLeaverSlice = Slice.newSlice((int) (joinlPerc), Color.newColor(Phrase.HCOLOR_ACTP_JON + ""), "Unknown", "Unknown");
-        Slice inactiveSlice = Slice.newSlice((int) (inacPerc), Color.newColor(Phrase.HCOLOR_ACTP_INA + ""), "Inactive", "Inactive");
-        Slice activeSlice = Slice.newSlice((int) (actPerc), Color.newColor(Phrase.HCOLOR_ACTP_ACT + ""), "Active", "Active");
+        Slice bannedSlice = Slice.newSlice((int) (banPerc), Color.newColor(Phrase.HCOLOR_ACTP_BAN + ""), labelBanned, labelBanned);
+        Slice joinLeaverSlice = Slice.newSlice((int) (joinlPerc), Color.newColor(Phrase.HCOLOR_ACTP_JON + ""), labelUnknown, labelUnknown);
+        Slice inactiveSlice = Slice.newSlice((int) (inacPerc), Color.newColor(Phrase.HCOLOR_ACTP_INA + ""), labelInactive, labelInactive);
+        Slice activeSlice = Slice.newSlice((int) (actPerc), Color.newColor(Phrase.HCOLOR_ACTP_ACT + ""), labelActive, labelActive);
 
         PieChart refChart = GCharts.newPieChart(activeSlice, bannedSlice, inactiveSlice, joinLeaverSlice);
         refChart.setSize(400, 150);

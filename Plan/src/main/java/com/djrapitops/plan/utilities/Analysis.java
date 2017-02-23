@@ -170,7 +170,7 @@ public class Analysis {
                 if (!raw.getCommandUse().isEmpty()) {
                     data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(raw.getCommandUse()));
                 } else {
-                    data.setTop50CommandsListHtml(Html.ERROR_TABLE.parse());
+                    data.setTop50CommandsListHtml(Html.ERROR_TABLE_2.parse());
                 }
             }
 

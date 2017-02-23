@@ -58,9 +58,9 @@ public class Response {
             if (forbidden) {
                 String errorMessage = "HTTP/1.1 403 Forbidden\r\n"
                         + "Content-Type: text/html\r\n"
-                        + "Content-Length: 38\r\n"
+                        + "Content-Length: 100\r\n"
                         + "\r\n"
-                        + "<h1>403 Forbidden - Access Denied</h1>";
+                        + "<h1>403 Forbidden - Access Denied</h1><p>Make sure you're accessing the link given by a command</p>";
                 output.write(errorMessage.getBytes());
                 return;
             }

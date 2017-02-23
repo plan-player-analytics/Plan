@@ -54,7 +54,7 @@ public class UserData {
         nicknames = new HashSet<>();
         ips = new HashSet<>();
         gmTimes = new HashMap<>();
-        long zero = Long.parseLong("0");
+        long zero = 0;
         gmTimes.put(GameMode.SURVIVAL, zero);
         gmTimes.put(GameMode.CREATIVE, zero);
         gmTimes.put(GameMode.ADVENTURE, zero);
@@ -81,7 +81,7 @@ public class UserData {
         nicknames = new HashSet<>();
         ips = new HashSet<>();
         gmTimes = new HashMap<>();
-        long zero = Long.parseLong("0");
+        long zero = 0;
         gmTimes.put(GameMode.SURVIVAL, zero);
         gmTimes.put(GameMode.CREATIVE, zero);
         gmTimes.put(GameMode.ADVENTURE, zero);

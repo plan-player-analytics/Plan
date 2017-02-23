@@ -16,12 +16,12 @@ public class SortableCommandUseTableCreator {
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
         String html = "";
         if (sorted.isEmpty()) {
-            html = Html.ERROR_TABLE.parse();
+            html = Html.ERROR_TABLE_2.parse();
             return html;
         }
         Collections.reverse(sorted);
         for (String[] values : sorted) {            
-            html += Html.TABLELINE.parse(values[1], values[0]);
+            html += Html.TABLELINE_2.parse(values[1], values[0]);
         }
         return html;
     }
