@@ -1,28 +1,31 @@
-PREFIX <> [Plan] 
 ENABLED <> Player Analytics Enabled.
 DISABLED <> Player Analytics Disabled.
-RELOAD_COMPLETE <> Â§a[Plan] Reload complete.
-SAVE_CACHE <> Saving cached data..
-ADD_TO_CACHE <> Added REPLACE0 to Cache.
+RELOAD_COMPLETE <> §a[Plan] Reload complete.
+CACHE_SAVE <> Saving cached data..
+CACHE_ADD <> Added REPLACE0 to Cache.
+CACHE_REMOVE <> Cleared REPLACE0 from Cache.
+CONFIG_HEADER <> Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/
 DB_INIT <> Database init..
 WEBSERVER_INIT <> Initializing Webserver..
 WEBSERVER_CLOSE <> Shutting down Webserver..
 WEBSERVER_RUNNING <> Webserver running on PORT REPLACE0
+DB_CONNECTION_FAIL <> REPLACE0-Database Connection failed: REPLACE1
 DB_ESTABLISHED <> REPLACE0-database connection established.
-DATABASE_TYPE_DOES_NOT_EXIST <> That database type doesn't exist.
-DATABASE_FAILURE_DISABLE <> Database initialization has failed, disabling Plan.
-NOTIFY_EMPTY_IP <> Â§e[Plan] IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!
+DB_TYPE_DOES_NOT_EXIST <> That database type doesn't exist.
+DB_FAILURE_DISABLE <> Database initialization has failed, disabling Plan.
+NOTIFY_EMPTY_IP <> §e[Plan] IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!
 VERSION_NEW_AVAILABLE <> New Version (REPLACE0) is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/
 VERSION_LATEST <> You're running the latest version
 VERSION_CHECK_ERROR <> Failed to compare versions.
 VERSION_FAIL <> Failed to get newest version number.
-USERNAME_NOT_VALID <> Â§c[Plan] This Player doesn't exist.
-USERNAME_NOT_SEEN <> Â§c[Plan] This Player has not played on this server.
-USERNAME_NOT_KNOWN <> Â§c[Plan] Player not found from the database.
-GRABBING_DATA_MESSAGE <> Â» Fetching data to cache..
+USERNAME_NOT_VALID <> §c[Plan] This Player doesn't exist.
+USERNAME_NOT_SEEN <> §c[Plan] This Player has not played on this server.
+USERNAME_NOT_KNOWN <> §c[Plan] Player not found from the database.
+GRABBING_DATA_MESSAGE <> »§2 Fetching data to cache..
+DEM_UNKNOWN <> Not Known
 NOT_IN_TOWN <> Not in a town
 NOT_IN_FAC <> Not in a faction
-COMMAND_TIMEOUT <> Â§c[Plan] REPLACE0 Command timed out! Error most likely on console.
+COMMAND_TIMEOUT <> §c[Plan] REPLACE0 Command timed out! Error most likely on console.
 ANALYSIS_START <> Analysis | Beginning analysis of user data..
 ANALYSIS_BOOT_NOTIFY <> Analysis | Boot analysis in 30 seconds..
 ANALYSIS_BOOT <> Analysis | Starting Boot Analysis..
@@ -32,35 +35,40 @@ ANALYSIS_FAIL_NO_PLAYERS <> Analysis | Analysis failed, no known players.
 ANALYSIS_FAIL_NO_DATA <> Analysis | Analysis failed, no data in the database.
 ANALYSIS_BEGIN_ANALYSIS <> Analysis | Data Fetched, beginning Analysis of data..
 ANALYSIS_COMPLETE <> Analysis | Analysis Complete.
-ERROR_NO_DATA_VIEW <> Â§eWebserver disabled but Alternative IP/PlanLite not used, no way to view data!
-ERROR_WEBSERVER_OFF_ANALYSIS <> Â§e[Plan] This command can be only used if the webserver is running on this server.
-ERROR_WEBSERVER_OFF_INSPECT <> Â§e[Plan] This command can be only used if webserver/planlite is enabled on this server.
-MANAGE_ERROR_INCORRECT_PLUGIN <> Â§c[Plan] Plugin not supported: 
-MANAGE_PROCESS_START <> Â»Â§7 Processing data..
-MANAGE_ERROR_PLUGIN_NOT_ENABLED <> Â§c[Plan] Plugin is not enabled: 
-MANAGE_ERROR_INCORRECT_DB <> Â§c[Plan] Incorrect database! (sqlite/mysql accepted): 
-MANAGE_ERROR_SAME_DB <> Â§c[Plan] Can't move to the same database!
-MANAGE_DATABASE_FAILURE <> Â§c[Plan] One of the databases was not initialized properly.
-MANAGE_DB_CONFIG_REMINDER <> Â§e[Plan] Remember to swap to the new database and reload plugin
-MANAGE_ERROR_NO_PLAYERS <> Â§c[Plan] Database has no player data!
-MANAGE_ERROR_BACKUP_FILE_NOT_FOUND <> Â§c[Plan] Backup file doesn't exist!
-MANAGE_MOVE_SUCCESS <> Â§a[Plan] All data moved successfully!
-MANAGE_COPY_SUCCESS <> Â§a[Plan] All data copied successfully!
-MANAGE_CLEAR_SUCCESS <> Â§a[Plan] All data cleared successfully!
-MANAGE_REMOVE_SUCCESS <> Â§fÂ» Â§2Data of Â§fREPLACE0Â§2 was removed from Database Â§fREPLACE1Â§2.
-MANAGE_IMPORTING <> Â§fÂ» Â§2 Importing Data..
-MANAGE_SUCCESS <> Â§fÂ» Â§2 Success!
-CMD_ANALYZE_HEADER <> Â§fÂ»Â§2 Player Analytics - Analysis results
-CMD_INSPECT_HEADER <> Â§fÂ»Â§2 Player Analytics - Inspect results: 
-CMD_SEARCH_HEADER <> Â§fÂ»Â§2 Player Analytics - Search results for: 
-CMD_HELP_HEADER <> Â§fÂ»Â§2 Player Analytics - Help
-CMD_MANAGE_STATUS_HEADER <> Â§fÂ»Â§2 Player Analytics - Database status
-CMD_MANAGE_STATUS_ACTIVE_DB <> Â§7 â€¢Â§2 Active Database: Â§7REPLACE0
+DATA_CORRUPTION_WARN <> Some data might be corrupted: REPLACE0
+ERROR_NO_DATA_VIEW <> §eWebserver disabled but Alternative IP/PlanLite not used, no way to view data!
+ERROR_WEBSERVER_OFF_ANALYSIS <> §e[Plan] This command can be only used if the webserver is running on this server.
+ERROR_WEBSERVER_OFF_INSPECT <> §e[Plan] This command can be only used if webserver/planlite is enabled on this server.
+MANAGE_ERROR_INCORRECT_PLUGIN <> §c[Plan] Plugin not supported: 
+MANAGE_PROCESS_START <> »§7 Processing data..
+MANAGE_ERROR_PLUGIN_NOT_ENABLED <> §c[Plan] Plugin is not enabled: 
+MANAGE_ERROR_INCORRECT_DB <> §c[Plan] Incorrect database! (sqlite/mysql accepted): 
+MANAGE_ERROR_SAME_DB <> §c[Plan] Can't move to the same database!
+MANAGE_DATABASE_FAILURE <> §c[Plan] One of the databases was not initialized properly.
+MANAGE_DB_CONFIG_REMINDER <> §e[Plan] Remember to swap to the new database and reload plugin
+MANAGE_ERROR_NO_PLAYERS <> §c[Plan] Database has no player data!
+MANAGE_ERROR_BACKUP_FILE_NOT_FOUND <> §c[Plan] Backup file doesn't exist!
+MANAGE_MOVE_SUCCESS <> §a[Plan] All data moved successfully!
+MANAGE_COPY_SUCCESS <> §a[Plan] All data copied successfully!
+MANAGE_PROCESS_FAIL <> §c[Plan] Something went wrong while processing the data!
+MANAGE_CLEAR_SUCCESS <> §a[Plan] All data cleared successfully!
+MANAGE_REMOVE_SUCCESS <> §f» §2Data of §fREPLACE0§2 was removed from Database §fREPLACE1§2.
+MANAGE_IMPORTING <> §f» §2 Importing Data..
+MANAGE_SUCCESS <> §f» §2 Success!
+CMD_ANALYZE_HEADER <> §f»§2 Player Analytics - Analysis results
+CMD_INSPECT_HEADER <> §f»§2 Player Analytics - Inspect results: 
+CMD_INFO_HEADER <> §f»§2 Player Analytics - Info
+CMD_INFO_VERSION <> §7 •§2§2 Version: §7REPLACE0
+CMD_SEARCH_HEADER <> §f»§2 Player Analytics - Search results for: 
+CMD_HELP_HEADER <> §f»§2 Player Analytics - Help
+CMD_MANAGE_HELP_HEADER <> §f»§2 Player Analytics - Managment Help
+CMD_MANAGE_STATUS_HEADER <> §f»§2 Player Analytics - Database status
+CMD_MANAGE_STATUS_ACTIVE_DB <> §7 •§2§2 Active Database: §7REPLACE0
 CMD_CLICK_ME <> Click Me
-CMD_LINK <> Â§7 â€¢Â§2 Link: Â§f
-CMD_RESULTS_AVAILABLE <> Â§7   Results will be available for Â§fREPLACE0Â§7 minutes.
-CMD_NO_RESULTS <> Â§7 â€¢Â§2 No results for Â§7REPLACE0Â§2.
-CMD_MATCH <> Â§7 Matching player: Â§f
+CMD_LINK <> §7 •§2 Link: §f
+CMD_RESULTS_AVAILABLE <> §7   Results will be available for §fREPLACE0§7 minutes.
+CMD_NO_RESULTS <> §7 •§2 No results for §7REPLACE0§2.
+CMD_MATCH <> §7 Matching player: §f
 CMD_USG_ANALYZE <> View the Server Analysis
 CMD_USG_HELP <> Show command list.
 CMD_USG_INFO <> View Version of Plan
@@ -74,6 +82,8 @@ CMD_USG_MANAGE_IMPORT <> Import Data from supported plugins to Active Database.
 CMD_USG_MANAGE_CLEAR <> Clear data from one database
 CMD_USG_MANAGE_REMOVE <> Remove players's data from the Active Database.
 CMD_USG_MANAGE_STATUS <> Check the status of the Active Database.
+CMD_USG_MANAGE_HELP <> Show managment help.
+CMD_USG_MANAGE_HOTSWAP <> Hotswap to another database & restart the plugin
 CMD_USG_RELOAD <> Reload plugin config & save cached data
 CMD_USG_SEARCH <> Search for player
 ARG_SEARCH <> <part of playername>
@@ -81,7 +91,6 @@ ARG_PLAYER <> <player>
 ARG_RESTORE <> <Filename.db> <dbTo> [-a]
 ARG_IMPORT <> <plugin> [-a]
 ARG_MOVE <> <fromDB> <toDB> [-a]
-USE_BACKUP <> Use /plan manage backup <DB>
 USE_RESTORE <> Use /plan manage restore <Filename.db> <dbTo> [-a]
 USE_MANAGE <> Use /plan manage for help
 USE_PLAN <> Use /plan for help
@@ -92,24 +101,13 @@ WARN_REWRITE <> Data in REPLACE0-database will be rewritten!
 WARN_OVERWRITE <> Data in REPLACE0-database will be overwritten!
 WARN_OVERWRITE_SOME <> Some data in REPLACE0-database will be overwritten!
 WARN_REMOVE <> Data in REPLACE0-database will be removed!
-COMMAND_SENDER_NOT_PLAYER <> Â§c[Plan] This command can be only used as a player.
-COMMAND_REQUIRES_ARGUMENTS <> Â§c[Plan] Command requires arguments. REPLACE0
-COMMAND_ADD_CONFIRMATION_ARGUMENT <> Â§c[Plan] Add -a to confirm execution! REPLACE0
-COMMAND_REQUIRES_ARGUMENTS_ONE <> Â§c[Plan] Command requires one argument.
-COMMAND_NO_PERMISSION <> Â§c[Plan] You do not have the required permmission.
+COMMAND_SENDER_NOT_PLAYER <> §c[Plan] This command can be only used as a player.
+COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Command requires arguments. REPLACE0
+COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Add -a to confirm execution! REPLACE0
+COMMAND_REQUIRES_ARGUMENTS_ONE <> §c[Plan] Command requires one argument.
+COMMAND_NO_PERMISSION <> §c[Plan] You do not have the required permmission.
 <<<<<<HTML>>>>>>
 WARN_INACCURATE <> <div class="warn">Data might be inaccurate, player has just registered.</div>
-ERROR_TABLE <> <p class="red">Error Calcuclating Table (No data)</p>
-TOP_TOWNS <> <p><b>Top 20 Towns</b></p>
-TOP_FACTIONS <> <p><b>Top 20 Factions</b></p>
-TOTAL_BALANCE <> <p>Server Total Balance: REPLACE0</p>
-TOTAL_VOTES <> <p>Players have voted total of REPLACE0 times.</p>
-TOWN <> <p>Town: REPLACE0</p>
-PLOT_OPTIONS <> <p>Plot options: REPLACE0</p>
-FRIENDS <> <p>Friends with REPLACE0</p>
-FACTION <> <p>Faction: REPLACE0</p>
-BALANCE <> <p>Balance: REPLACE0</p>
-VOTES <> <p>Player has voted REPLACE0 times.</p>
 BANNED <> | <span class="darkred">Banned</span>
 OPERATOR <> , Operator (Op)
 ONLINE <> | <span class="darkgreen">Online</span>
@@ -117,3 +115,24 @@ OFFLINE <> | <span class="darkred">Offline</span>
 ACTIVE <> | Player is Active
 INACTIVE <> | Player is inactive
 ERROR_LIST <> Error Creating List</p>
+HIDDEN <> Hidden (config)
+FACTION_NOT_FOUND <> Faction not found
+FACTION_NO_LEADER <> No leader
+FACTION_NO_FACTIONS <> No Factions
+WARPS <> <br/>Warps: REPLACE0
+ACHIEVEMENTS <> <br/>Achievements: REPLACE0/REPLACE1
+JAILED <> | Jailed
+MUTED <> | Muted
+VOTES <> <br/>Has voted REPLACE0times
+FACTION <> <br/>Faction: REPLACE0 | Power: REPLACE1/REPLACE2
+TOWN <> <br/>Town: REPLACE0
+TOWN_NO_TOWNS <> No Towns
+GRAPH_BANNED <> Banned
+GRAPH_UNKNOWN <> Unknown
+GRAPH_INACTIVE <> Inactive
+GRAPH_ACTIVE <> Active
+TABLE_SESSIONS_START <> <table class="sortable table"><thead><tr><th>Session Started</th><th>Session Ended</th><th>Session Length</th></tr></thead><tbody>
+TABLE_FACTIONS_START <> <table class="sortable table"><thead><tr><th>Faction</th><th>Power</th><th>Land</th><th>Leader</th></tr></thead><tbody>
+TABLE_TOWNS_START <> <table class="sortable table"><thead><tr><th>Town</th><th>Residents</th><th>Land</th><th>Mayor</th></tr></thead><tbody>
+ERROR_TABLE_2 <> <tr><td><b>No data</b></td><td>No data</td></tr>
+SESSIONDATA_NONE <> No Session Data available

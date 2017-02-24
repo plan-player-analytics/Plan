@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -355,6 +357,23 @@ public class Plan extends JavaPlugin {
 
     private void initLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
+        /*File genLocale = new File(getDataFolder(), "locale_EN.txt");
+        try {
+            genLocale.createNewFile();
+            FileWriter fw = new FileWriter(genLocale, true);
+            PrintWriter pw = new PrintWriter(fw);
+            for (Phrase p : Phrase.values()) {                
+                pw.println(p.name()+" <> "+p.parse());
+                pw.flush();            
+            }
+            pw.println("<<<<<<HTML>>>>>>");
+            for (Html h : Html.values()) {                
+                pw.println(h.name()+" <> "+h.parse());
+                pw.flush();            
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         File localeFile = new File(getDataFolder(), "locale.txt");
         boolean skipLoc = false;
         String usingLocale = "";
