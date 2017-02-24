@@ -13,15 +13,11 @@ public class AnalysisData {
     private long averagePlayTime;
     private long totalPlayTime;
     private double averageAge;
-    private String gmTimesChartImgHtml;
-    private String playersChartImgHtmlMonth;
-    private String playersChartImgHtmlWeek;
-    private String playersChartImgHtmlDay;
-    private String activityChartImgHtml;
     private String top50CommandsListHtml;
     private String top20ActivePlayers;
     private String recentPlayers;
     private String sortablePlayersTable;
+    private String[] playersDataArray;
 
     private int newPlayersMonth;
     private int newPlayersWeek;
@@ -53,14 +49,10 @@ public class AnalysisData {
      */
     public AnalysisData() {
         sortablePlayersTable = Html.ERROR_NOT_SET+"";
-        gmTimesChartImgHtml = Html.ERROR_NOT_SET+"";
-        playersChartImgHtmlMonth = Html.ERROR_NOT_SET+"";
-        playersChartImgHtmlWeek = Html.ERROR_NOT_SET+"";
-        playersChartImgHtmlDay = Html.ERROR_NOT_SET+"";
-        activityChartImgHtml = Html.ERROR_NOT_SET+"";
         top50CommandsListHtml = Html.ERROR_NOT_SET+"";
         top20ActivePlayers = Html.ERROR_NOT_SET+"";
         recentPlayers = Html.ERROR_NOT_SET+"";
+        playersDataArray = new String[]{"[0]","[\"No data\"]","[0]","[\"No data\"]","[0]","[\"No data\"]"};
     }
 
     // Getters and setters v---------------------------------v
@@ -85,49 +77,7 @@ public class AnalysisData {
     public void setJoinleaver(int joinleaver) {
         this.joinleaver = joinleaver;
     }
-
-    /**
-     * @return HTML String of the Month Activity graph
-     */
-    public String getPlayersChartImgHtmlMonth() {
-        return playersChartImgHtmlMonth;
-    }
-
-    /**
-     * @param playersChartImgHtmlMonth HTML String of the Month Activity graph
-     */
-    public void setPlayersChartImgHtmlMonth(String playersChartImgHtmlMonth) {
-        this.playersChartImgHtmlMonth = playersChartImgHtmlMonth;
-    }
-
-    /**
-     * @return HTML String of the Week Activity graph
-     */
-    public String getPlayersChartImgHtmlWeek() {
-        return playersChartImgHtmlWeek;
-    }
-
-    /**
-     * @param playersChartImgHtmlWeek HTML String of the Week Activity graph
-     */
-    public void setPlayersChartImgHtmlWeek(String playersChartImgHtmlWeek) {
-        this.playersChartImgHtmlWeek = playersChartImgHtmlWeek;
-    }
-
-    /**
-     * @return HTML String of the Day Activity graph
-     */
-    public String getPlayersChartImgHtmlDay() {
-        return playersChartImgHtmlDay;
-    }
-
-    /**
-     * @param playersChartImgHtmlDay HTML String of the Day Activity graph
-     */
-    public void setPlayersChartImgHtmlDay(String playersChartImgHtmlDay) {
-        this.playersChartImgHtmlDay = playersChartImgHtmlDay;
-    }
-
+    
     /**
      * @return HTML String of the Top50CommandsList
      */
@@ -312,20 +262,6 @@ public class AnalysisData {
     }
 
     /**
-     * @return HTML String of the GMTimes Piechart
-     */
-    public String getGmTimesChartImgHtml() {
-        return gmTimesChartImgHtml;
-    }
-
-    /**
-     * @return HTML String of the Activity Piechart
-     */
-    public String getActivityChartImgHtml() {
-        return activityChartImgHtml;
-    }
-
-    /**
      * @return How many times players have joined.
      */
     public long getTotalLoginTimes() {
@@ -358,20 +294,6 @@ public class AnalysisData {
      */
     public void setAverageAge(double averageAge) {
         this.averageAge = averageAge;
-    }
-
-    /**
-     * @param gmTimesChartImgHtml HTML String of the GMTimes Piechart
-     */
-    public void setGmTimesChartImgHtml(String gmTimesChartImgHtml) {
-        this.gmTimesChartImgHtml = gmTimesChartImgHtml;
-    }
-
-    /**
-     * @param activityChartImgHtml HTML String of the Activity Piechart
-     */
-    public void setActivityChartImgHtml(String activityChartImgHtml) {
-        this.activityChartImgHtml = activityChartImgHtml;
     }
 
     /**
@@ -450,5 +372,13 @@ public class AnalysisData {
 
     public void setTotaldeaths(long totaldeaths) {
         this.totaldeaths = totaldeaths;
+    }
+
+    public String[] getPlayersDataArray() {
+        return playersDataArray;
+    }
+
+    public void setPlayersDataArray(String[] playersDataArray) {
+        this.playersDataArray = playersDataArray;
     }
 }

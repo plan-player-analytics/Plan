@@ -33,6 +33,7 @@ Customization:
     HTML:
       ActivityGraph:
         OnlinePlayers: '1E90FF'
+        OnlinePlayersFill: '75BBFF'
         NewPlayers: '228B22'
       GamemodePie:
         Survival: '951800'

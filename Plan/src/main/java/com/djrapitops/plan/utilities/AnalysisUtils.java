@@ -10,8 +10,6 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
-import main.java.com.djrapitops.plan.ui.graphs.ActivityPieChartCreator;
-import main.java.com.djrapitops.plan.ui.graphs.GMTimesPieChartCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
@@ -23,36 +21,6 @@ import org.bukkit.GameMode;
  * @author Rsl1122
  */
 public class AnalysisUtils {
-
-    /**
-     * Creates a GMTimesPieChart image HTML.
-     *
-     * @param gmTimes HashMap of gamemodes and time in ms how long has been
-     * played in them.
-     * @return Html img tag with url.
-     */
-    public static String createGMPieChart(HashMap<GameMode, Long> gmTimes) {
-        String url = GMTimesPieChartCreator.createChart(gmTimes);
-        return Html.IMG.parse(url);
-    }
-
-    /**
-     * Creates a GMTimesPieChart image HTML.
-     *
-     * @param gmTimes HashMap of gamemodes and time in ms how long has been
-     * played in them.
-     * @param total Total time played in all gamemodes
-     * @return Html img tag with url.
-     */
-    public static String createGMPieChart(HashMap<GameMode, Long> gmTimes, long total) {
-        String url = GMTimesPieChartCreator.createChart(gmTimes, total);
-        return Html.IMG.parse(url);
-    }
-
-    static String createPlayerActivityGraph(List<SessionData> sessionData, long scale) {
-        String url = PlayerActivityGraphCreator.createChart(sessionData, scale);
-        return Html.IMG.parse(url);
-    }
 
     public static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
@@ -68,11 +36,6 @@ public class AnalysisUtils {
             }
         }
         return false;
-    }
-
-    static String createActivityPieChart(int totalBanned, int active, int inactive, int joinleaver) {
-        String url = ActivityPieChartCreator.createChart(totalBanned, active, inactive, joinleaver);
-        return Html.IMG.parse(url);
     }
 
     static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
@@ -103,22 +66,12 @@ public class AnalysisUtils {
         return html;
     }
 
-    static String[] analyzeSessionData(List<SessionData> sessionData, List<Long> registered, long scale, long now) {
-        String[] returnA = new String[2];
-        List<SessionData> inScale = new ArrayList<>();
-        sessionData.stream()
-                .filter((s) -> (s.getSessionStart() > now - scale))
-                .forEach((s) -> {
-                    inScale.add(s);
-                });
-        returnA[0] = createPlayerActivityGraph(inScale, scale);
-
+    static int getNewPlayers(List<Long> registered, long scale, long now) {        
         int newPlayers = 0;
         // Filters out register dates before scale
         newPlayers = registered.stream()
                 .filter((reg) -> (reg > now - scale))
                 .map((_item) -> 1).reduce(newPlayers, Integer::sum);
-        returnA[1] = "" + newPlayers;
-        return returnA;
+        return newPlayers;
     }
 }

@@ -16,9 +16,11 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -175,8 +177,6 @@ public class Analysis {
             }
 
             private void createActivityVisalization(int totalBanned, int active, int inactive, int joinleaver, AnalysisData data) {
-                String activityPieChartHtml = AnalysisUtils.createActivityPieChart(totalBanned, active, inactive, joinleaver);
-                data.setActivityChartImgHtml(activityPieChartHtml);
                 data.setActive(active);
                 data.setInactive(inactive);
                 data.setBanned(totalBanned);
@@ -208,8 +208,6 @@ public class Analysis {
                     totalGmTimes.put(GameMode.SPECTATOR, gmThree);
                 } catch (NoSuchFieldError e) {
                 }
-                String serverGMChartHtml = AnalysisUtils.createGMPieChart(totalGmTimes, gmTotal);
-                data.setGmTimesChartImgHtml(serverGMChartHtml);
                 data.setGm0Perc((gmZero * 1.0 / gmTotal));
                 data.setGm1Perc((gmOne * 1.0 / gmTotal));
                 data.setGm2Perc((gmTwo * 1.0 / gmTotal));
@@ -218,18 +216,20 @@ public class Analysis {
 
             private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered) {
                 long now = new Date().toInstant().getEpochSecond() * (long) 1000;
-                long scaleMonth = (long) 2592000 * (long) 1000;
-                String[] urlAndNumber = AnalysisUtils.analyzeSessionData(sData, registered, scaleMonth, now);
-                data.setPlayersChartImgHtmlMonth(urlAndNumber[0]);
-                data.setNewPlayersMonth(Integer.parseInt(urlAndNumber[1]));
-                long scaleWeek = 604800 * 1000;
-                urlAndNumber = AnalysisUtils.analyzeSessionData(sData, registered, scaleWeek, now);
-                data.setPlayersChartImgHtmlWeek(urlAndNumber[0]);
-                data.setNewPlayersWeek(Integer.parseInt(urlAndNumber[1]));
+                
                 long scaleDay = 86400 * 1000;
-                urlAndNumber = AnalysisUtils.analyzeSessionData(sData, registered, scaleDay, now);
-                data.setPlayersChartImgHtmlDay(urlAndNumber[0]);
-                data.setNewPlayersDay(Integer.parseInt(urlAndNumber[1]));
+                long scaleWeek = 604800 * 1000;
+                long scaleMonth = (long) 2592000 * (long) 1000;                
+                
+                data.setNewPlayersDay(AnalysisUtils.getNewPlayers(registered, scaleDay, now));
+                data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
+                data.setNewPlayersMonth(AnalysisUtils.getNewPlayers(registered, scaleMonth, now));
+                
+                String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleDay);
+                String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleWeek);
+                String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleMonth);
+                
+                data.setPlayersDataArray(new String[]{dayArray[0], dayArray[1], weekArray[0], weekArray[1], monthArray[0], monthArray[1]});
             }
         }).runTaskAsynchronously(plugin);
     }

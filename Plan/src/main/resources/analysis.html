@@ -5,9 +5,7 @@
         <title>Plan | Server Analysis</title>
         <meta name="description" content="Player Analysis window">
         <meta name="author" content="Rsl1122">
-        <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />
-        <!--<script src="http://puu.sh/ubCTc/7e611ffe42.js"></script>-->
-        <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+        <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />        
         <style>
             * {
                 box-sizing: border-box;
@@ -84,6 +82,7 @@
                 font-weight: bold;
                 cursor: default;
                 width: 100%;
+                overflow: hidden;
             }
             table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
                 content: " \25B4\25BE" 
@@ -159,7 +158,7 @@
                     <div class="content">
                         <div class="column" style="width: 60%;">
                             <h4>Player Activity | Last 24h - New Players: %npday%</h4>
-                            %playerchartday%
+                            <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>
                             <div class="buttons">
                                 <p><b>Most recent logins</b>: %recentlogins%</p>
                             </div>
@@ -176,24 +175,23 @@
                                 The average of known player ages is %avgage%.
                                 %essentialswarps%</p>
                             <h4>Gamemode Usage</h4>
-                            %gmpiechart%
+                            <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
                             <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
                         </div>                        
                     </div>
                     <div class="content">                        
                         <div class="column" style="width: 60%;">
                             <h4>Player Activity | Last 24h - New Players: %npday%</h4>
-                            %playerchartday%
+                            <canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
                             <h4>Player Activity | Last 7 days - New Players: %npweek%</h4>
-                            %playerchartweek%
+                            <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
                             <h4>Player Activity | Last 30 days - New Players: %npmonth%</h4>
-                            %playerchartmonth%                            
+                            <canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
                         </div>
                         <div class="column" style="width: 40%;">
-                            <h4>Playerbase composition</h4>
-                            %activitypiechart%
-                            <p>Active %active% | Inactive %inactive% | Banned %banned% | Joined once %joinleaver% <br/>
-                                Total: %activitytotal%</p> 
+                            <h4>Playerbase composition - Total: %activitytotal%</h4>
+                            <p>Active %active% | Inactive %inactive% | Banned %banned% | Joined once %joinleaver%</p> 
+                            <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas>                            
                             <div class="buttons">
                                 <p><b>Most recent logins</b>: %recentlogins%</p>
                             </div>
@@ -233,15 +231,193 @@
                 </div>
             </div></div>
     </body>
+    <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
     <script>
-        // just querying the DOM...like a boss!
+        // Script for All charts using Chart.js
+        var ctxday = document.getElementById("playerChartDay");        
+        var ctxday2 = document.getElementById("playerChartDay2");        
+        var ctxweek = document.getElementById("playerChartWeek");        
+        var ctxmonth = document.getElementById("playerChartMonth");        
+        var ctxactivitypie = document.getElementById("activityPie");        
+        var ctxgmpie = document.getElementById("gmPie");        
+        var dataday = {
+            labels: %labelsday%,
+            datasets: [
+                {
+                label: "Players Online",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#%playersgraphfill%",
+                borderColor: "#%playersgraphcolor%",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#%playersgraphcolor%",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#%playersgraphcolor%",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %dataday%,
+            }]
+        }
+        var dataweek = {
+            labels: %labelsweek%,
+            datasets: [
+                {
+                label: "Players Online",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#%playersgraphfill%",
+                borderColor: "#%playersgraphcolor%",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#%playersgraphcolor%",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#%playersgraphcolor%",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %dataweek%,
+            }]
+        }
+        var datamonth = {
+            labels: %labelsmonth%,
+            datasets: [
+                {
+                label: "Players Online",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#%playersgraphfill%",
+                borderColor: "#%playersgraphcolor%",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#%playersgraphcolor%",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#%playersgraphcolor%",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %datamonth%,
+            }]
+        }
+        var dataActivityPie = {
+            labels: %labelsactivity%,
+            datasets: [
+                {
+                    data: %activitydata%,
+                    backgroundColor: [%activitycolors%],
+                    hoverBackgroundColor: [%activitycolors%]
+                }
+            ]
+        }
+        var ActivityPie = new Chart(ctxactivitypie, {
+           type: 'doughnut',
+           data: dataActivityPie,
+           options: {
+               legend: {
+                   position: 'right',
+                   labels: {
+                       padding: 7
+                   }
+               }
+           }
+        });
+        var dataGmPie = {
+            labels: %gmlabels%,
+            datasets: [
+                {
+                    data: %gmdata%,
+                    backgroundColor: [%gmcolors%],
+                    hoverBackgroundColor: [%gmcolors%]
+                }
+            ]
+        }
+        var GMPie = new Chart(ctxgmpie, {
+           type: 'doughnut',
+           data: dataGmPie,
+           options: {
+               legend: {
+                   position: 'right',
+                   labels: {
+                       padding: 7
+                   }
+               }
+           }
+        });
+        var playersChartDay = new Chart(ctxday, {
+            type: 'line',
+            data: dataday,
+            options: {
+                scales: {
+                    xAxes: [{
+                            display: false
+                    }]
+                }
+            }
+        });
+        var playersChartDay2 = new Chart(ctxday2, {
+            type: 'line',
+            data: dataday,
+            options: {
+                scales: {
+                    xAxes: [{
+                            display: false
+                    }]
+                }
+            }
+        });
+        var playersChartWeek = new Chart(ctxweek, {
+            type: 'line',
+            data: dataweek,
+            options: {
+                scales: {
+                    xAxes: [{
+                            display: false
+                    }]
+                }
+            }
+        });
+        var playersChartMonth = new Chart(ctxmonth, {
+            type: 'line',
+            data: datamonth,
+            options: {
+                scales: {
+                    xAxes: [{
+                            display: false
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
+        // Script for the page navigation buttons
         var links = document.querySelectorAll(".itemLinks");
         var wrapper = document.querySelector("#wrapper");
 
-// the activeLink provides a pointer to the currently displayed item
+        // the activeLink provides a pointer to the currently displayed item
         var activeLink = 0;
 
-// setup the event listeners
+        // setup the event listeners
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
             link.addEventListener('click', setClickedItem, false);
@@ -250,7 +426,7 @@
             link.itemID = i;
         }
 
-// set first item as active
+        // set first item as active
         links[activeLink].classList.add("active");
 
         function setClickedItem(e) {
@@ -267,8 +443,8 @@
                 links[i].classList.remove("active");
             }
         }
-// Handle changing the slider position as well as ensure
-// the correct link is highlighted as being active
+        // Handle changing the slider position as well as ensure
+        // the correct link is highlighted as being active
         function changePosition(link) {
             var position = link.getAttribute("data-pos");
 

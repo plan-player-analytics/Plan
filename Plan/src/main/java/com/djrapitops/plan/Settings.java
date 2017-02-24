@@ -30,7 +30,18 @@ public enum Settings {
     DEM_MALE("Customization.DemographicsTriggers.Male"),
     DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),
     LOCALE("Settings.Locale"),
-    SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode");
+    SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode"),
+    //
+    HCOLOR_ACT_ONL("Customization.Colors.HTML.ActivityGraph.OnlinePlayers"),
+    HCOLOR_ACT_ONL_FILL("Customization.Colors.HTML.ActivityGraph.OnlinePlayersFill"),
+    HCOLOR_ACTP_ACT("Customization.Colors.HTML.ActivityPie.Active"),
+    HCOLOR_ACTP_BAN("Customization.Colors.HTML.ActivityPie.Banned"),
+    HCOLOR_ACTP_INA("Customization.Colors.HTML.ActivityPie.Inactive"),
+    HCOLOR_ACTP_JON("Customization.Colors.HTML.ActivityPie.JoinedOnce"),
+    HCOLOR_GMP_0("Customization.Colors.HTML.GamemodePie.Survival"),
+    HCOLOR_GMP_1("Customization.Colors.HTML.GamemodePie.Creative"),
+    HCOLOR_GMP_2("Customization.Colors.HTML.GamemodePie.Adventure"),
+    HCOLOR_GMP_3("Customization.Colors.HTML.GamemodePie.Spectator");  
 
     private final String configPath;
 

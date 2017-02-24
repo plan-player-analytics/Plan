@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -28,8 +29,6 @@ public class PlaceholderUtils {
      */
     public static HashMap<String, String> getAnalysisReplaceRules(AnalysisData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
-        replaceMap.put("%activitypiechart%", data.getActivityChartImgHtml());
-        replaceMap.put("%gmpiechart%", data.getGmTimesChartImgHtml());
         replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
         replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
         replaceMap.put("%gm2%", (int) (data.getGm2Perc() * 100) + "%");
@@ -39,9 +38,6 @@ public class PlaceholderUtils {
         replaceMap.put("%inactive%", "" + data.getInactive());
         replaceMap.put("%joinleaver%", "" + data.getJoinleaver());
         replaceMap.put("%activitytotal%", "" + data.getTotal());
-        replaceMap.put("%playerchartmonth%", data.getPlayersChartImgHtmlMonth());
-        replaceMap.put("%playerchartweek%", data.getPlayersChartImgHtmlWeek());
-        replaceMap.put("%playerchartday%", data.getPlayersChartImgHtmlDay());
         replaceMap.put("%npday%", data.getNewPlayersDay() + "");
         replaceMap.put("%npweek%", data.getNewPlayersWeek() + "");
         replaceMap.put("%npmonth%", data.getNewPlayersMonth() + "");
@@ -61,6 +57,35 @@ public class PlaceholderUtils {
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
+        replaceMap.put("%dataday%", data.getPlayersDataArray()[0]);
+        replaceMap.put("%labelsday%", data.getPlayersDataArray()[1]);
+        replaceMap.put("%dataweek%", data.getPlayersDataArray()[2]);
+        replaceMap.put("%labelsweek%", data.getPlayersDataArray()[3]);
+        replaceMap.put("%datamonth%", data.getPlayersDataArray()[4]);
+        replaceMap.put("%labelsmonth%", data.getPlayersDataArray()[5]);
+        replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
+        replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
+        String[] activityLabels = new String[]{
+            "\"" + Html.GRAPH_ACTIVE.parse() + "\"",
+            "\"" + Html.GRAPH_INACTIVE.parse() + "\"",
+            "\"" + Html.GRAPH_UNKNOWN.parse() + "\"",
+            "\"" + Html.GRAPH_BANNED.parse() + "\""            
+        };
+        replaceMap.put("%labelsactivity%", Arrays.toString(activityLabels));
+        String[] activityData = new String[]{data.getActive() + "", data.getInactive() + "", data.getJoinleaver()+ "", data.getBanned() + ""};
+        replaceMap.put("%activitydata%", Arrays.toString(activityData));
+        replaceMap.put("%activitycolors%", "\"#" + Settings.HCOLOR_ACTP_ACT
+                + "\",\"#" + Settings.HCOLOR_ACTP_INA + "\",\"#" + Settings.HCOLOR_ACTP_JON + "\",\"#" + Settings.HCOLOR_ACTP_BAN + "\"");
+        String[] gmData = new String[]{
+            (data.getGm0Perc() * 100) + "",
+            (data.getGm1Perc() * 100) + "",
+            (data.getGm2Perc() * 100) + "",
+            (data.getGm3Perc() * 100) + ""
+        };
+        replaceMap.put("%gmdata%", Arrays.toString(gmData));
+        replaceMap.put("%gmlabels%", "[\"Survival\", \"Creative\", \"Adventure\", \"Spectator\"]");
+        replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
+                + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
         replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
         return replaceMap;
     }
@@ -86,10 +111,6 @@ public class PlaceholderUtils {
         replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
         HashMap<GameMode, Long> gmTimes = data.getGmTimes();
-        replaceMap.put("%gmpiechart%", AnalysisUtils.createGMPieChart(gmTimes));
-        long gmZero = gmTimes.get(GameMode.SURVIVAL);
-        long gmOne = gmTimes.get(GameMode.CREATIVE);
-        long gmTwo = gmTimes.get(GameMode.ADVENTURE);
         long gmThree;
         try {
             Long gm3 = gmTimes.get(GameMode.SPECTATOR);
@@ -100,11 +121,21 @@ public class PlaceholderUtils {
         } catch (NoSuchFieldError e) {
             gmThree = 0;
         }
-        long total = gmZero + gmOne + gmTwo + gmThree;
-        replaceMap.put("%gm0%", FormatUtils.formatTimeAmount("" + gmZero));
-        replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmOne));
-        replaceMap.put("%gm2%", FormatUtils.formatTimeAmount("" + gmTwo));
-        replaceMap.put("%gm3%", FormatUtils.formatTimeAmount("" + gmThree));
+        long[] gmData = new long[]{
+            gmTimes.get(GameMode.SURVIVAL),
+            gmTimes.get(GameMode.CREATIVE),
+            gmTimes.get(GameMode.ADVENTURE),
+            gmThree
+        };
+        long total = gmData[0] + gmData[1] + gmData[2] + gmData[3];
+        replaceMap.put("%gm0%", FormatUtils.formatTimeAmount("" + gmData[0]));
+        replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmData[1]));
+        replaceMap.put("%gm2%", FormatUtils.formatTimeAmount("" + gmData[2]));
+        replaceMap.put("%gm3%", FormatUtils.formatTimeAmount("" + gmData[3]));
+        replaceMap.put("%gmdata%", Arrays.toString(gmData));
+        replaceMap.put("%gmlabels%", "[\"Survival\", \"Creative\", \"Adventure\", \"Spectator\"]");
+        replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
+                + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
         replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount("" + total));
         replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : Html.HIDDEN.parse()));
         replaceMap.put("%nicknames%", FormatUtils.swapColorsToSpan(data.getNicknames().toString()));
