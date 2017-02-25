@@ -24,6 +24,7 @@ public class PlayerActivityGraphCreator {
         CopyOnWriteArrayList<Long> sessionEnds = new CopyOnWriteArrayList<>();
         CopyOnWriteArrayList<SessionData> s = new CopyOnWriteArrayList(sessionData);
         s.parallelStream()
+                .filter(session -> (session != null))
                 .filter((session) -> (session.getSessionStart() > nowMinusScale))
                 .forEach((session) -> {
                     sessionEnds.add(session.getSessionEnd());

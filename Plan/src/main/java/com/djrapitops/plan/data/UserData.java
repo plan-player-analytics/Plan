@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -151,11 +152,16 @@ public class UserData {
     }
 
     public void addSession(SessionData session) {
-        sessions.add(session);
+        if (session != null) {
+            sessions.add(session);
+        }
     }
 
     public void addSessions(Collection<SessionData> sessions) {
-        this.sessions.addAll(sessions);
+        Collection<SessionData> filteredSessions = sessions.parallelStream()
+                .filter(session -> session != null)
+                .collect(Collectors.toList());
+        this.sessions.addAll(filteredSessions);
     }
 
     public void setCurrentSession(SessionData session) {
