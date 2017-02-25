@@ -47,6 +47,7 @@ public class MiscUtils {
             cVersion = plugin.getDescription().getVersion();
             int currentVersionNumber = FormatUtils.parseVersionNumber(cVersion);
             if (newestVersionNumber > currentVersionNumber) {
+                plugin.getConfig().set("Settins.Locale", "default");
                 return Phrase.VERSION_NEW_AVAILABLE.parse(versionString);
             } else {
                 return Phrase.VERSION_LATEST + "";

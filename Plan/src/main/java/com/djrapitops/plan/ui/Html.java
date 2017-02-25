@@ -75,6 +75,7 @@ public enum Html {
     TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>REPLACE0</th><th>REPLACE1</th><th>REPLACE2</th></tr></thead><tbody>"),
     TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>REPLACE0</th><th>REPLACE1</th><th>REPLACE2</th><th>REPLACE3</th></tr></thead><tbody>"),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
+    TABLE_KILLS_START(TABLE_START_3.parse("Date", "Killed", "With")),
     TABLE_FACTIONS_START(TABLE_START_4.parse("Faction", "Power", "Land", "Leader")),
     TABLE_TOWNS_START(TABLE_START_4.parse("Town", "Residents", "Land", "Mayor")),
     TABLELINE_2("<tr><td><b>" + REPLACE0 + "</b></td><td>" + REPLACE1 + "</td></tr>"),
@@ -82,9 +83,11 @@ public enum Html {
     TABLELINE_4("<tr><td><b>" + REPLACE0 + "</b></td><td>" + REPLACE1 + "</td><td>REPLACE2</td><td>REPLACE3</td></tr>"),
     TABLELINE_PLAYERS("<tr><td>REPLACE0</td><td>REPLACE1</td><td sorttable_customkey=\"REPLACE2\">REPLACE3</td><td>REPLACE4</td><td sorttable_customkey=\"REPLACE5\">REPLACE6</td>" + "<td sorttable_customkey=\"REPLACE7\">REPLACE8</td><td>REPLACE9</td></tr>"),
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td sorttable_customkey=\"REPLACE2\">REPLACE3</td><td sorttable_customkey=\"REPLACE4\">REPLACE5</td></tr>"),
+    TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td>REPLACE2</td><td>REPLACE3</td></tr>"),
     ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
     TABLE_END("</tbody></table>"),
-    SESSIONDATA_NONE("No Session Data available"),;
+    SESSIONDATA_NONE("No Session Data available"),
+    KILLDATA_NONE("No Kills"),;
 
     private String html;
 

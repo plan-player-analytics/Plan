@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;

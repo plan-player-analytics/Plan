@@ -11,7 +11,9 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
-import main.java.com.djrapitops.plan.ui.tables.SortabeSessionTableCreator;
+import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortableKillsTableCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortableSessionTableCreator;
 import org.bukkit.GameMode;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -150,10 +152,16 @@ public class PlaceholderUtils {
         replaceMap.put("%deaths%", deaths + "");
         replaceMap.put("%playerkills%", data.getPlayerKills().size() + "");
         replaceMap.put("%mobkills%", data.getMobKills() + "");
-        replaceMap.put("%sessionstable%", SortabeSessionTableCreator.createSortedSessionDataTable5(data.getSessions()));
+        replaceMap.put("%sessionstable%", SortableSessionTableCreator.createSortedSessionDataTable10(data.getSessions()));
+        replaceMap.put("%killstable%", SortableKillsTableCreator.createSortedSessionDataTable10(data.getPlayerKills()));
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
+        String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000);
+        replaceMap.put("%dataweek%", playersDataArray[0].replace("20]", "2]"));
+        replaceMap.put("%labelsweek%", playersDataArray[1]);
+        replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
+        replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
         replaceMap.putAll(plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid));
         return replaceMap;

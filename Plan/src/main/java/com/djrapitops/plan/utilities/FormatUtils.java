@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.Html;
 import org.bukkit.Location;
@@ -152,18 +154,23 @@ public class FormatUtils {
     }
 
     static String swapColorsToSpan(String string) {
-        Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3, 
-            Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9, 
+        Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
+            Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,
             Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
-        
+
         for (Html html : replacer) {
-            string = string.replaceAll("§"+html.name().charAt(6), html.parse());
+            string = string.replaceAll("§" + html.name().charAt(6), html.parse());
         }
-        int spans = string.split("<span").length-1;
+        int spans = string.split("<span").length - 1;
         for (int i = 0; i < spans; i++) {
             string = Html.SPAN.parse(string);
         }
         return string.replaceAll("§r", "");
     }
 
+    public static String cutDecimals(double d) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        return df.format(d);
+    }
 }

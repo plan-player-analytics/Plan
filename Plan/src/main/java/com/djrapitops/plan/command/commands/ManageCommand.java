@@ -32,7 +32,6 @@ public class ManageCommand extends SubCommand {
         commands = new ArrayList<>();
         commands.add(new ManageHelpCommand(plugin, this));
         commands.add(new ManageMoveCommand(plugin));
-        commands.add(new ManageCombineCommand(plugin));
         commands.add(new ManageHotswapCommand(plugin));
         commands.add(new ManageBackupCommand(plugin));
         commands.add(new ManageRestoreCommand(plugin));

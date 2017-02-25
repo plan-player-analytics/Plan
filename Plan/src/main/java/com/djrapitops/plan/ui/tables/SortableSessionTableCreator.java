@@ -11,9 +11,9 @@ import main.java.com.djrapitops.plan.utilities.comparators.SessionDataComparator
  *
  * @author Rsl1122
  */
-public class SortabeSessionTableCreator {
+public class SortableSessionTableCreator {
 
-    public static String createSortedSessionDataTable5(List<SessionData> sessionData) {
+    public static String createSortedSessionDataTable10(List<SessionData> sessionData) {
         String html = Html.TABLE_SESSIONS_START.parse();
         if (sessionData.isEmpty()) {
             html += Html.TABLELINE_3.parse(Html.SESSIONDATA_NONE.parse(), "", "");
@@ -22,7 +22,7 @@ public class SortabeSessionTableCreator {
             Collections.reverse(sessionData);
             int i = 0;
             for (SessionData session : sessionData) {
-                if (i > 4) {
+                if (i >= 10) {
                     break;
                 }
                 long start = session.getSessionStart();
@@ -33,6 +33,7 @@ public class SortabeSessionTableCreator {
                         end+"", FormatUtils.formatTimeStamp(end+""), 
                         length+"", FormatUtils.formatTimeAmount(length+"")
                 );
+                i++;
             }
         }
         html += Html.TABLE_END.parse();

@@ -126,8 +126,7 @@
         <div class="clearfix">
             %inaccuratedatawarning%
             <div class="column info">
-
-                <h4>Information</h4>
+                <h4>Information</h4> <img style="float: right; padding: 5px" alt="%name%" src="http://cravatar.eu/head/%name%/128.png">
                 <p>Last seen: %lastseen% %active% %isonline% %essentials%<br/>
                     Nicknames: %nicknames% | Has connected from ips: %ips%<br/>
                     Geolocation: %geoloc%<br/>
@@ -137,11 +136,15 @@
                     Player kills: %playerkills% | Mob kills: %mobkills% | Deaths: %deaths%<br/>
                     UUID: %uuid%
                     %achievements%%votes%%faction%%town%</p>
-                <h4>Last 5 Play Sessions</h4>
+                <h4>Last 10 Play Sessions</h4>
                 %sessionstable%
+                <h4>Last 10 Player Kills</h4>
+                %killstable%
             </div>
 
             <div class="column graphs">
+                <h4>Player Activity | Last 7 days</h4>
+                <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
                 <h4>Gamemode Usage - Total: %gmtotal%</h4>
                 <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
                 <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>                
@@ -154,27 +157,64 @@
         <script>
             // Script for All charts using Chart.js
             var ctxgmpie = document.getElementById("gmPie");
+            var ctxweek = document.getElementById("playerChartWeek");
             var dataGmPie = {
-                labels: %gmlabels%,
-                datasets: [
+            labels: %gmlabels% ,
+                    datasets: [
                     {
-                        data: %gmdata%,
-                        backgroundColor: [%gmcolors%],
-                        hoverBackgroundColor: [%gmcolors%]
+                    data: %gmdata% ,
+                            backgroundColor: [ %gmcolors% ],
+                            hoverBackgroundColor: [ %gmcolors% ]
                     }
-                ]
+                    ]
             }
             var GMPie = new Chart(ctxgmpie, {
-               type: 'doughnut',
-               data: dataGmPie,
-               options: {
-                   legend: {
-                       position: 'right',
-                       labels: {
-                           padding: 7
-                       }
-                   }
-               }
+            type: 'doughnut',
+                    data: dataGmPie,
+                    options: {
+                    legend: {
+                    position: 'right',
+                            labels: {
+                            padding: 7
+                            }
+                    }
+                    }
+            });
+            var dataweek = {
+            labels: %labelsweek% ,
+                    datasets: [
+                    {
+                    label: "Players Online",
+                            fill: true,
+                            lineTension: 0.1,
+                            backgroundColor: "#%playersgraphfill%",
+                            borderColor: "#%playersgraphcolor%",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "#%playersgraphcolor%",
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "#%playersgraphcolor%",
+                            pointHoverBorderColor: "#8fabc6",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            spanGaps: false,
+                            data: %dataweek% ,
+                    }]};
+            var playersChartWeek = new Chart(ctxweek, {
+            type: 'line',
+                    data: dataweek,
+                    options: {
+                    scales: {
+                    xAxes: [{
+                    display: false
+                    }]
+                    }
+                    }
             });
         </script>
     </body>

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.FactionComparator;
 
 /**
@@ -60,7 +61,7 @@ public class FactionsHook extends Hook {
      *
      * @param factionName Name of the faction.
      * @return HashMap containing boolean, number & string: LEADER String, POWER
-     * double, LAND int
+     * String, LAND int
      */
     public HashMap<String, Serializable> getFactionInfo(String factionName) {
         HashMap<String, Serializable> info = new HashMap<>();
@@ -72,7 +73,8 @@ public class FactionsHook extends Hook {
             } else {
                 info.put("LEADER", Html.FACTION_NO_LEADER.parse());
             }
-            info.put("POWER", faction.getPower());
+            
+            info.put("POWER", FormatUtils.cutDecimals(faction.getPower()));
             info.put("LAND", faction.getLandCount());
         } else {
             info.put("LEADER", Html.FACTION_NOT_FOUND.parse());
@@ -94,17 +96,17 @@ public class FactionsHook extends Hook {
         HashMap<String, Serializable> info = new HashMap<>();
         MPlayer mPlayer = MPlayer.get(uuid);
         if (mPlayer != null) {
-            info.put("POWER", mPlayer.getPower());
+            info.put("POWER", FormatUtils.cutDecimals(mPlayer.getPower()));
             info.put("MAXPOWER", mPlayer.getPowerMax());
             if (mPlayer.hasFaction()) {
                 info.put("FACTION", mPlayer.getFactionName());
             } else {
-                info.put("FACTION", Phrase.NOT_IN_FAC+"");
+                info.put("FACTION", Phrase.NOT_IN_FAC + "");
             }
         } else {
             info.put("POWER", 0);
             info.put("MAXPOWER", 0);
-            info.put("FACTION", Phrase.NOT_IN_FAC+"");
+            info.put("FACTION", Phrase.NOT_IN_FAC + "");
         }
         return info;
     }
