@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +18,6 @@ import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -240,7 +239,7 @@ public abstract class SQLDB extends Database {
 
             query("CREATE TABLE IF NOT EXISTS " + nicknamesName + " ("
                     + nicknamesColumnUserID + " integer NOT NULL, "
-                    + nicknamesColumnNick + " varchar(30) NOT NULL, "
+                    + nicknamesColumnNick + " varchar(75) NOT NULL, "
                     + nicknamesColumnCurrent + " boolean NOT NULL DEFAULT 0, "
                     + "FOREIGN KEY(" + nicknamesColumnUserID + ") REFERENCES " + userName + "(" + userColumnID + ")"
                     + ")"
@@ -320,28 +319,21 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public int getVersion() {
+    public int getVersion() throws SQLException {
         int version = 0;
-        try {
-            checkConnection();
-            ResultSet set = connection.prepareStatement("SELECT * FROM " + versionName).executeQuery();
+        ResultSet set = connection.prepareStatement("SELECT * FROM " + versionName).executeQuery();
 
-            if (set.next()) {
-                version = set.getInt("version");
-            }
-
-            set.close();
-
-            return version;
-        } catch (Exception e) {
-            plugin.toLog(this.getClass().getName(), e);
-            return version;
+        if (set.next()) {
+            version = set.getInt("version");
         }
+
+        set.close();
+
+        return version;
     }
 
     @Override
-    public void setVersion(int version) throws SQLException {
-        checkConnection();
+    public void setVersion(int version) throws SQLException {        
         connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
         connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
 
@@ -405,7 +397,7 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public void saveCommandUse(HashMap<String, Integer> data) throws SQLException {
+    public void saveCommandUse(HashMap<String, Integer> data) throws SQLException, NullPointerException {
         if (data.isEmpty()) {
             return;
         }
@@ -499,23 +491,17 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException {
+    public void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException {
         try {
             checkConnection();
         } catch (Exception e) {
-            plugin.toLog("Preparing for Exception report - Processors: " + Arrays.toString(processors));
+            plugin.toLog("Preparing for Exception report - Processors: " + processors.toString());
             plugin.toLog(this.getClass().getName(), e);
             return;
         }
         // Check if user is in the database
         if (!wasSeenBefore(uuid)) {
             return;
-        }
-        List<World> worldList = Bukkit.getServer().getWorlds();
-        World defaultWorld = worldList.get(0);
-        HashMap<String, World> worlds = new HashMap<>();
-        for (World w : worldList) {
-            worlds.put(w.getName(), w);
         }
         // Get the data
         UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData());
@@ -767,6 +753,7 @@ public abstract class SQLDB extends Database {
                 saveUserData(userData.getUuid(), userData);
             } catch (SQLException e) {
                 exceptions.add(e);
+            } catch (NullPointerException e) {
             }
         }
         if (!exceptions.isEmpty()) {

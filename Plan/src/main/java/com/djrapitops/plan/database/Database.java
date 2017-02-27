@@ -21,7 +21,12 @@ public abstract class Database {
     public boolean init(){
         return false;
     }
-    public abstract void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException;
+    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException {
+        List<DBCallableProcessor> coll = new ArrayList<>();
+        coll.addAll(Arrays.asList(processors));
+        giveUserDataToProcessors(uuid, coll);
+    }
+    public abstract void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException;
     public abstract void saveUserData(UUID uuid, UserData data) throws SQLException;
     public abstract void saveMultipleUserData(List<UserData> data) throws SQLException;
     public abstract boolean wasSeenBefore(UUID uuid);
@@ -38,7 +43,7 @@ public abstract class Database {
     public abstract void close() throws SQLException;
     public abstract boolean removeAccount(String uuid) throws SQLException;
     public abstract boolean removeAllData() throws SQLException;
-    public abstract void saveCommandUse(HashMap<String, Integer> data) throws SQLException;
+    public abstract void saveCommandUse(HashMap<String, Integer> data) throws SQLException, NullPointerException;
     public abstract Set<UUID> getSavedUUIDs() throws SQLException;
     public abstract HashMap<String, Integer> getCommandUse() throws SQLException;
     public abstract int getUserId(String uuid) throws SQLException;

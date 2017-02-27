@@ -51,7 +51,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-/* TODO 2.6.0
+/* TODO
 Placeholder API
 Play session length
 - Playtime month

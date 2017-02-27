@@ -5,10 +5,7 @@ import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**

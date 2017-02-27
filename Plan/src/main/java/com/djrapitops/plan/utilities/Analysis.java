@@ -21,7 +21,6 @@ import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -70,7 +69,7 @@ public class Analysis {
             @Override
             public void run() {
                 uuids.stream().forEach((uuid) -> {
-                    inspectCache.cache(uuid, 8);
+                    inspectCache.cache(uuid, 15);
                 });
                 log(Phrase.ANALYSIS_FETCH_DATA + "");
                 while (rawData.size() != uuids.size()) {
@@ -79,8 +78,10 @@ public class Analysis {
                             .forEach((uuid) -> {
                                 if (inspectCache.isCached(uuid)) {
                                     UserData userData = inspectCache.getFromCache(uuid);
-                                    rawData.add(userData);
-                                    added.add(uuid);
+                                    if (userData != null) {
+                                        rawData.add(userData);
+                                        added.add(uuid);
+                                    }
                                 }
                             });
                 }
@@ -216,19 +217,19 @@ public class Analysis {
 
             private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered) {
                 long now = new Date().toInstant().getEpochSecond() * (long) 1000;
-                
+
                 long scaleDay = 86400 * 1000;
                 long scaleWeek = 604800 * 1000;
-                long scaleMonth = (long) 2592000 * (long) 1000;                
-                
+                long scaleMonth = (long) 2592000 * (long) 1000;
+
                 data.setNewPlayersDay(AnalysisUtils.getNewPlayers(registered, scaleDay, now));
                 data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
                 data.setNewPlayersMonth(AnalysisUtils.getNewPlayers(registered, scaleMonth, now));
-                
+
                 String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleDay);
                 String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleWeek);
                 String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleMonth);
-                
+
                 data.setPlayersDataArray(new String[]{dayArray[0], dayArray[1], weekArray[0], weekArray[1], monthArray[0], monthArray[1]});
             }
         }).runTaskAsynchronously(plugin);

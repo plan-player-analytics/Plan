@@ -158,7 +158,7 @@ public class PlaceholderUtils {
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000);
-        replaceMap.put("%dataweek%", playersDataArray[0].replace("20]", "2]"));
+        replaceMap.put("%dataweek%", playersDataArray[0].replace(plugin.getHandler().getMaxPlayers()+"]", "2]"));
         replaceMap.put("%labelsweek%", playersDataArray[1]);
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
         replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");

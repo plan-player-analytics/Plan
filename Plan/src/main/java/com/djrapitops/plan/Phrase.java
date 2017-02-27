@@ -32,6 +32,10 @@ public enum Phrase {
     DB_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
     NOTIFY_EMPTY_IP(ChatColor.YELLOW + "" + PREFIX + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
     //
+    CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),        
+    CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),        
+    CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),        
+    //
     VERSION_NEW_AVAILABLE("New Version (" + REPLACE0 + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
     VERSION_LATEST("You're running the latest version"),
     VERSION_CHECK_ERROR("Failed to compare versions."),

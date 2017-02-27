@@ -47,9 +47,6 @@ public class InspectCacheHandler {
     }
 
     public void cache(UUID uuid, int minutes) {
-        if (!handler.getDB().wasSeenBefore(uuid)) {
-            return;
-        }
         DBCallableProcessor cacher = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {

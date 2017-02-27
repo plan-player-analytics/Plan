@@ -132,7 +132,7 @@ public class PlanPlayerListener implements Listener {
                 data.addLocations(locationH.getLocationsForSaving(uuid));
                 handler.saveCachedData(uuid);
                 locationH.clearLocations(uuid);
-                handler.clearFromCache(uuid);
+                handler.scheludeForClear(uuid);
             }
         };
         handler.getUserDataForProcessing(kickProcessor, uuid);

@@ -85,7 +85,7 @@ public class ManageRemoveCommand extends SubCommand {
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                 try {
-                    plugin.getHandler().clearFromCache(uuid);
+                    plugin.getHandler().scheludeForClear(uuid);
                     if (plugin.getDB().removeAccount(uuid.toString())) {
                         sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
                     } else {

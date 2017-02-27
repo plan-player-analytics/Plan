@@ -1,11 +1,10 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -25,21 +24,31 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class DataCacheHandler {
 
+    // Cache
     private final HashMap<UUID, UserData> dataCache;
+    private HashMap<String, Integer> commandUse;
+
+    // Plan
     private final Plan plugin;
+    private final Database db;
+
+    // Handlers
     private final ActivityHandler activityHandler;
     private final GamemodeTimesHandler gamemodeTimesHandler;
     private final LocationHandler locationHandler;
     private final DemographicsHandler demographicsHandler;
     private final BasicInfoHandler basicInfoHandler;
     private final RuleBreakingHandler ruleBreakingHandler;
-    private HashMap<String, Integer> commandUse;
     private CommandUseHandler commandUseHandler;
     private final KillHandler killHandler;
     private final SessionHandler sessionHandler;
-    private final Database db;
-    private final NewPlayerCreator newPlayerCreator;
 
+    // Queues
+    private final DataCacheSaveQueue saveTask;
+    private final DataCacheClearQueue clearTask;
+    private final DataCacheGetQueue getTask;
+
+    // Variables
     private int timesSaved;
     private int maxPlayers;
 
@@ -62,9 +71,12 @@ public class DataCacheHandler {
         basicInfoHandler = new BasicInfoHandler(plugin, this);
         ruleBreakingHandler = new RuleBreakingHandler(plugin, this);
 
-        newPlayerCreator = new NewPlayerCreator(plugin, this);
         killHandler = new KillHandler(plugin);
         sessionHandler = new SessionHandler(plugin);
+
+        getTask = new DataCacheGetQueue(plugin);
+        clearTask = new DataCacheClearQueue(plugin, this);
+        saveTask = new DataCacheSaveQueue(plugin);
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
@@ -114,32 +126,25 @@ public class DataCacheHandler {
      * of DataCacheHandler
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid, boolean cache) {
-        BukkitTask asyncCacheTask = (new BukkitRunnable() {
-            @Override
-            public void run() {
-                UserData uData = dataCache.get(uuid);
-                if (uData == null) {
-                    DBCallableProcessor cacher = new DBCallableProcessor() {
-                        @Override
-                        public void process(UserData data) {
-                            if (cache) {
-                                dataCache.put(uuid, data);
-                                plugin.log(Phrase.CACHE_ADD.parse(uuid.toString()));
-                            }
-                        }
-                    };
-                    try {
-                        db.giveUserDataToProcessors(uuid, cacher, processor);
-                    } catch (SQLException e) {
-                        plugin.toLog(this.getClass().getName(), e);
-                        this.cancel();
+        UserData uData = dataCache.get(uuid);
+        if (uData == null) {
+            if (cache) {
+                DBCallableProcessor cacher = new DBCallableProcessor() {
+                    @Override
+                    public void process(UserData data) {
+
+                        dataCache.put(uuid, data);
+                        plugin.log(Phrase.CACHE_ADD.parse(uuid.toString()));
+
                     }
-                } else {
-                    processor.process(uData);
-                }
-                this.cancel();
+                };
+                getTask.scheduleForGet(uuid, cacher, processor);
+            } else {
+                getTask.scheduleForGet(uuid, processor);
             }
-        }).runTaskAsynchronously(plugin);
+        } else {
+            processor.process(uData);
+        }
     }
 
     /**
@@ -155,31 +160,27 @@ public class DataCacheHandler {
     }
 
     /**
-     * Saves all data in the cache to Database with AsyncTasks
+     * Saves all data in the cache to Database. Should only be called from Async
+     * thread
      */
     public void saveCachedUserData() {
-        clearNulls();
-        BukkitTask asyncFullCacheSaveTask = (new BukkitRunnable() {
-            @Override
-            public void run() {
-                List<UserData> data = new ArrayList<>();
-                data.addAll(dataCache.values());
-                try {
-                    db.saveMultipleUserData(data);
-                } catch (SQLException ex) {
-                    plugin.toLog(this.getClass().getName(), ex);
-                }
-                timesSaved++;
-                this.cancel();
-            }
-        }).runTaskAsynchronously(plugin);
+        List<UserData> data = new ArrayList<>();
+        data.addAll(dataCache.values());
+        try {
+            db.saveMultipleUserData(data);
+        } catch (SQLException ex) {
+            plugin.toLog(this.getClass().getName(), ex);
+        }
     }
 
     /**
      * Saves all data in the cache to Database and closes the database down.
+     * Closes save clear and get tasks.
      */
     public void saveCacheOnDisable() {
-        clearNulls();
+        saveTask.stop();
+        getTask.stop();
+        clearTask.stop();
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
         data.parallelStream().forEach((userData) -> {
@@ -200,38 +201,26 @@ public class DataCacheHandler {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        clearNulls();
-        BukkitTask asyncCachedUserSaveTask = (new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (dataCache.get(uuid) != null) {
-                    try {
-                        db.saveUserData(uuid, dataCache.get(uuid));
-                    } catch (SQLException e) {
-                        plugin.toLog(this.getClass().getName(), e);
-                    }
-                }
-                this.cancel();
-            }
-        }).runTaskAsynchronously(plugin);
-
+        UserData data = dataCache.get(uuid);
+        if (data != null) {
+            saveTask.scheduleForSave(data);
+        }
     }
 
     /**
-     * Saves the cached ServerData with AsyncTask
+     * Scheludes the cached CommandUsage to be saved.
      *
-     * Data is saved on a new line with a long value matching current Date
      */
     public void saveCommandUse() {
         try {
             db.saveCommandUse(commandUse);
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             plugin.toLog(this.getClass().getName(), e);
         }
     }
 
     // Should only be called from Async thread
-    private void saveHandlerDataToCache() {
+    public void saveHandlerDataToCache() {
         Bukkit.getServer().getOnlinePlayers().parallelStream().forEach((p) -> {
             saveHandlerDataToCache(p);
         });
@@ -253,10 +242,7 @@ public class DataCacheHandler {
      * Clears all UserData from the HashMap
      */
     public void clearCache() {
-        Iterator<Map.Entry<UUID, UserData>> clearIterator = dataCache.entrySet().iterator();
-        while (clearIterator.hasNext()) {
-            clearFromCache(clearIterator.next());
-        }
+        clearTask.scheduleForClear(dataCache.keySet());
     }
 
     /**
@@ -265,54 +251,20 @@ public class DataCacheHandler {
      * @param uuid Player's UUID
      */
     public void clearFromCache(UUID uuid) {
-        UserData userData = dataCache.get(uuid);
-        if (userData != null) {
-            if (userData.isAccessed()) {
-                (new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (!userData.isAccessed()) {
-                            dataCache.remove(uuid);
-                            plugin.log("Cleared " + uuid.toString() + " from Cache. (Delay task)");
-                            this.cancel();
-                        }
-                    }
-                }).runTaskTimer(plugin, 30 * 20, 30 * 20);
-            } else {
-                dataCache.remove(uuid);
-                plugin.log(Phrase.CACHE_REMOVE+"");
-            }
-        }
+        dataCache.remove(uuid);
+        plugin.log(Phrase.CACHE_REMOVE.parse(uuid.toString()));
     }
 
-    /**
-     * Setting entry value to null, clearing it from memory.
-     *
-     * This method is used to avoid ConcurrentModificationException when
-     * clearing the cache.
-     *
-     * @param entry An entry from the cache HashMap that is being iterated over.
-     */
-    public void clearFromCache(Map.Entry<UUID, UserData> entry) {
-        if (entry != null) {
-            if (entry.getValue() != null) {
-                if (entry.getValue().isAccessed()) {
-                    (new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (!entry.getValue().isAccessed()) {
-                                entry.setValue(null);
-                                plugin.log("Cleared " + entry.getKey().toString() + " from Cache. (Delay task)");
-                                this.cancel();
-                            }
-                        }
-                    }).runTaskTimer(plugin, 30 * 20, 30 * 20);
-                } else {
-                    entry.setValue(null);
-                    plugin.log("Cleared " + entry.getKey().toString() + " from Cache.");
-                }
-            }
+    public void scheludeForClear(UUID uuid) {
+        clearTask.scheduleForClear(uuid);
+    }
+
+    public boolean isDataAccessed(UUID uuid) {
+        UserData userData = dataCache.get(uuid);
+        if (userData != null) {
+            return userData.isAccessed();
         }
+        return false;
     }
 
     /**
@@ -321,11 +273,11 @@ public class DataCacheHandler {
      * @param player Player the new UserData is created for
      */
     public void newPlayer(Player player) {
-        newPlayerCreator.createNewPlayer(player);
+        saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
     public void newPlayer(OfflinePlayer player) {
-        newPlayerCreator.createNewPlayer(player);
+        saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
     /**
@@ -426,14 +378,14 @@ public class DataCacheHandler {
                             activityHandler.handleReload(data);
                             basicInfoHandler.handleReload(player.getDisplayName(), player.getAddress().getAddress(), data);
                             gamemodeTimesHandler.handleReload(player.getGameMode(), data);
+                            saveCachedUserData();
                         }
                     };
                     getUserDataForProcessing(cacheUpdater, player.getUniqueId());
                 }
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);
-        saveCachedUserData();
+        }).runTaskAsynchronously(plugin);        
     }
 
     /**
@@ -443,14 +395,5 @@ public class DataCacheHandler {
      */
     public int getMaxPlayers() {
         return maxPlayers;
-    }
-
-    private void clearNulls() {
-        Iterator<UUID> clearIterator = dataCache.keySet().iterator();
-        while (clearIterator.hasNext()) {
-            if (dataCache.get(clearIterator.next()) == null) {
-                clearIterator.remove();
-            }
-        }
     }
 }
