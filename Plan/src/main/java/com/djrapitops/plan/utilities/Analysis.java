@@ -68,7 +68,7 @@ public class Analysis {
         BukkitTask asyncAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                uuids.stream().forEach((uuid) -> {
+                uuids.stream().filter(uuid -> uuid != null).forEach((uuid) -> {
                     inspectCache.cache(uuid, 15);
                 });
                 log(Phrase.ANALYSIS_FETCH_DATA + "");

@@ -51,18 +51,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-/* TODO
-Placeholder API
-Play session length
-- Playtime month
-- Playtime week
-Location Analysis to view meaningful locations on Dynmap (Investigate dynmap api)
-Text interface
-Database Cleaning of useless data
-Add -n argument for nickname search.
-Fix any bugs that come up
-Random security code generation
- */
 /**
  *
  * @author Rsl1122
@@ -189,7 +177,7 @@ public class Plan extends JavaPlugin {
     }
 
     public void toLog(String source, Exception e) {
-        logError(Phrase.ERROR_LOGGED + "");
+        logError(Phrase.ERROR_LOGGED.parse(e.toString()));
         toLog(source + " Caught " + e);
         for (StackTraceElement x : e.getStackTrace()) {
             toLog("  " + x);
@@ -220,7 +208,7 @@ public class Plan extends JavaPlugin {
                 pw.flush();
             }
         } catch (IOException e) {
-            getLogger().severe("Failed to create DBerrors.txt file");
+            getLogger().severe("Failed to create Errors.txt file");
         }
     }
 

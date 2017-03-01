@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
 import main.java.com.djrapitops.plan.Plan;

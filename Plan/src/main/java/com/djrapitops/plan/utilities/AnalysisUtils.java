@@ -64,10 +64,13 @@ public class AnalysisUtils {
 
     static int getNewPlayers(List<Long> registered, long scale, long now) {        
         int newPlayers = 0;
-        // Filters out register dates before scale
-        newPlayers = registered.stream()
+        if (!registered.isEmpty()) {
+           newPlayers = registered.stream()
                 .filter((reg) -> (reg > now - scale))
                 .map((_item) -> 1).reduce(newPlayers, Integer::sum);
+        }
+        // Filters out register dates before scale
+        
         return newPlayers;
     }
 }

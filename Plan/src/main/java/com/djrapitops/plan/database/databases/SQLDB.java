@@ -333,7 +333,7 @@ public abstract class SQLDB extends Database {
     }
 
     @Override
-    public void setVersion(int version) throws SQLException {        
+    public void setVersion(int version) throws SQLException {
         connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
         connection.prepareStatement("INSERT INTO " + versionName + " (version) VALUES (" + version + ")").executeUpdate();
 
@@ -390,7 +390,11 @@ public abstract class SQLDB extends Database {
         PreparedStatement statement = connection.prepareStatement("SELECT " + userColumnUUID + " FROM " + userName);
         ResultSet set = statement.executeQuery();
         while (set.next()) {
-            uuids.add(UUID.fromString(set.getString(userColumnUUID)));
+            UUID uuid = UUID.fromString(set.getString(userColumnUUID));
+            if (uuid == null) {
+                continue;
+            }
+            uuids.add(uuid);
         }
         set.close();
         return uuids;
@@ -413,6 +417,9 @@ public abstract class SQLDB extends Database {
         boolean commitRequired = false;
         if (!data.isEmpty()) {
             for (String key : data.keySet()) {
+                if (key.length() > 20) {
+                    continue;
+                }
                 statement.setString(1, key);
                 statement.setInt(2, data.get(key));
                 statement.addBatch();
@@ -687,8 +694,13 @@ public abstract class SQLDB extends Database {
                     if (uData == null) {
                         continue;
                     }
+                    UUID uuid = uData.getUuid();
+                    if (uuid == null) {
+                        continue;
+                    }
                     uData.access();
-                    int userId = getUserId(uData.getUuid().toString());
+
+                    int userId = getUserId(uuid.toString());
                     if (userId == -1) {
                         saveLast.add(uData);
                         continue;
@@ -749,8 +761,12 @@ public abstract class SQLDB extends Database {
             uData.stopAccessing();
         }
         for (UserData userData : saveLast) {
+            UUID uuid = userData.getUuid();
+            if (uuid == null) {
+                continue;
+            }
             try {
-                saveUserData(userData.getUuid(), userData);
+                saveUserData(uuid, userData);
             } catch (SQLException e) {
                 exceptions.add(e);
             } catch (NullPointerException e) {
@@ -764,6 +780,9 @@ public abstract class SQLDB extends Database {
 
     @Override
     public void saveUserData(UUID uuid, UserData data) throws SQLException {
+        if (uuid == null) {
+            return;
+        }
         checkConnection();
         data.access();
         int userId = getUserId(uuid.toString());

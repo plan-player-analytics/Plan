@@ -66,6 +66,9 @@ class GetConsumer implements Runnable {
     void consume(HashMap<UUID, List<DBCallableProcessor>> processors) {
         try {
             for (UUID uuid : processors.keySet()) {
+                if (uuid == null) {
+                    continue;
+                }
                 List<DBCallableProcessor> processorsList = processors.get(uuid);
                 if (processorsList != null) {
                     try {
