@@ -8,10 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 public class UserData {
 
@@ -65,7 +67,13 @@ public class UserData {
         }
         lastGamemode = player.getGameMode();
         this.demData = demData;
-        isBanned = player.isBanned();
+        try {
+            isBanned = player.isBanned();
+        } catch (Exception e) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logError("Error getting ban date from Bukkit files. "+uuid.toString());
+            plugin.toLog(this.getClass().getName(), e);
+        }
         name = player.getName();
         isOnline = player.isOnline();
         sessions = new ArrayList<>();
@@ -91,7 +99,13 @@ public class UserData {
         } catch (NoSuchFieldError e) {
         }
         this.demData = demData;
-        isBanned = player.isBanned();
+        try {
+            isBanned = player.isBanned();
+        } catch (Exception e) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logError("Error getting ban date from Bukkit files. "+uuid.toString());
+            plugin.toLog(this.getClass().getName(), e);
+        }
         name = player.getName();
         isOnline = player.isOnline();
         sessions = new ArrayList<>();
