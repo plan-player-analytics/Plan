@@ -135,21 +135,73 @@
                 outline-width: 7px;
             }
             .itemLinks {}
+            .box-area {
+                width: 100%;
+                text-align: center;
+                margin: 0px;
+                padding: 0px;
+            }
+            .infobox {
+                color: white;   
+                display: inline-block;
+                background-color: #267F00;
+                padding: 8px 14px;
+                border-radius: 10px;
+            }
+            .info-text {
+                float: right;
+                width: 70%;
+                text-align: right;
+            }
+            .info-number {
+                font-size: x-large;
+                float: right;
+            }
+            .info-label {
+                float: right;
+                font-size: medium;
+            }
+            .info-icon {
+                font-size: xx-large;
+                float: left;
+                width: 20%;
+            }
+            .headerbox {
+                color: #267F00; 
+                display: inline-block;
+                border-style: solid;
+                border-color: #267F00;
+                padding: 8px 14px;
+                border-radius: 10px;
+                width: 100%;
+            }
+            .header-icon {
+                font-size: xx-large;
+                float: left;
+                width: 60%;                
+            }
+            .header-text {
+                font-size: x-large;
+            }
+            .header-label {
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }
         </style>
     </head>
     <body>
-
         <header>
             <img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
             <p style="float: right; text-align: right;">Player Analytics v.%version%</p>
             <h1>Plan | Server Analysis</h1>
             <h4>Analysis refreshed %refresh% ago</h4>
         </header>
-        <div class="clearfix">
+        <div class="clearfix">            
             <div id="navLinks">
                 <ul>
                     <li class="itemLinks" data-pos="0px"><i class="fa fa-info" aria-hidden="true"></i> Information</li>
-                    <li class="itemLinks" data-pos="-25%"><i class="fa fa-pie-chart" aria-hidden="true"></i> Online Activity</li>
+                    <li class="itemLinks" data-pos="-25%"><i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity</li>
                     <li class="itemLinks" data-pos="-50%"><i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist</li>
                     <li class="itemLinks" data-pos="-75%"><i class="fa fa-terminal" aria-hidden="true"></i> Command usage</li>
                 </ul>
@@ -158,7 +210,24 @@
                 <div id="wrapper">
                     <div class="content">
                         <div class="column" style="width: 60%;">
-                            <h4>Player Activity | Last 24h - New Players: %npday%</h4>
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
+                                </div>
+                                <div class="infobox" style="float: right;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %npday%
+                                        </div>
+                                        <div class="info-label">
+                                            New Players
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>
                             <div class="buttons">
                                 <p><b>Most recent logins</b>: %recentlogins%</p>
@@ -167,31 +236,221 @@
                             %factionstable%
                         </div>
                         <div class="column" style="width: 40%;">
-                            <h4>Information</h4>
-                            <p>%activitytotal% players have played on this server.<br/>
-                                A Total of %totalplaytime% has been played with the average of %avgplaytime%<br/>
+                            <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-info" aria-hidden="true"></i><span class="header-text"> Information</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-users" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %activitytotal%
+                                    </div>
+                                    <div class="info-label">
+                                        Total Players
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <p>A Total of %totalplaytime% has been played with the average of %avgplaytime%<br/>
                                 Players have joined %totallogins% times.<br/>
                                 Players have died %deaths% times, of which %playerkills% were caused by another Player.<br/>
                                 A Total of %mobkills% mobs have been slain.<br/>
                                 The average of known player ages is %avgage%.
                                 %essentialswarps%</p>
-                            <h4>Gamemode Usage</h4>
+                            <p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Gamemode Usage</span></p><br/>
+                            <div class="box-area">                                
+                                <div class="infobox" style="background-color: #%gm0col%; width: 23%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-fire" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %gm0%
+                                        </div>
+                                        <div class="info-label">
+                                            Survival
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infobox" style="background-color: #%gm1col%; width: 23%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-cube" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %gm1%
+                                        </div>
+                                        <div class="info-label">
+                                            Creative
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="infobox" style="background-color: #%gm2col%; width: 23%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %gm2%
+                                        </div>
+                                        <div class="info-label">
+                                            Adventure
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infobox" style="background-color: #%gm3col%; width: 23%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-binoculars" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %gm3%
+                                        </div>
+                                        <div class="info-label">
+                                            Spectator
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br/>
                             <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
-                            <p>Survival: %gm0% | Creative: %gm1% | Adventure: %gm2% | Spectator: %gm3%</p>
                         </div>                        
                     </div>
                     <div class="content">                        
                         <div class="column" style="width: 60%;">
-                            <h4>Player Activity | Last 24h - New Players: %npday%</h4>
-                            <canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
-                            <h4>Player Activity | Last 7 days - New Players: %npweek%</h4>
-                            <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
-                            <h4>Player Activity | Last 30 days - New Players: %npmonth%</h4>
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
+                                </div>
+                                <div class="infobox" style="float: right;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %npday%
+                                        </div>
+                                        <div class="info-label">
+                                            New Players
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas><br/>
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 7d</span></div>
+                                </div>
+                                <div class="infobox" style="float: right;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %npweek%
+                                        </div>
+                                        <div class="info-label">
+                                            New Players
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas><br/>
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 30d</span></div>
+                                </div>
+                                <div class="infobox" style="float: right;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %npmonth%
+                                        </div>
+                                        <div class="info-label">
+                                            New Players
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
                         </div>
                         <div class="column" style="width: 40%;">
-                            <h4>Playerbase composition - Total: %activitytotal%</h4>                        
-                            <p>Active %active% | Inactive %inactive% | Banned %banned% | Joined once %joinleaver%</p> 
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Playerbase Composition</span></div>
+                                </div>
+                                <div class="infobox" style="float: right;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-users" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %activitytotal%
+                                        </div>
+                                        <div class="info-label">
+                                            Total Players
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-area">                                
+                                <div class="infobox" style="background-color: #%activecol%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %active%
+                                        </div>
+                                        <div class="info-label">
+                                            <span style="color: #%activecol%;">__</span>Active
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infobox" style="background-color: #%inactivecol%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %inactive%
+                                        </div>
+                                        <div class="info-label">
+                                            Inactive
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="infobox" style="background-color: #%joinleavecol%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user-secret" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %joinleaver%
+                                        </div>
+                                        <div class="info-label">
+                                            Single join
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infobox" style="background-color: #%bancol%;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-ban" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %banned%
+                                        </div>
+                                        <div class="info-label">
+                                            Banned
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br/>
                             <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas>                            
                             <div class="buttons">
                                 <p><b>Most recent logins</b>: %recentlogins%</p>
@@ -199,6 +458,24 @@
                         </div>
                     </div>
                     <div class="content column">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-list-alt" aria-hidden="true"></i><span class="header-text"> Playerlist</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-users" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %activitytotal%
+                                    </div>
+                                    <div class="info-label">
+                                        Total Players
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <table class="sortable table">
                             <thead>
                                 <tr>
@@ -217,6 +494,24 @@
                         </table>
                     </div>
                     <div class="content column">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-terminal" aria-hidden="true"></i><span class="header-text"> Command usage</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-terminal" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %totalcommands%
+                                    </div>
+                                    <div class="info-label">
+                                        Commands
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <table class="sortable table">
                             <thead>
                                 <tr>

@@ -21,6 +21,9 @@ import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -170,10 +173,13 @@ public class Analysis {
             }
 
             private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
-                if (!raw.getCommandUse().isEmpty()) {
-                    data.setTop50CommandsListHtml(AnalysisUtils.createTableOutOfHashMap(raw.getCommandUse()));
+                HashMap<String, Integer> commandUse = raw.getCommandUse();
+                if (!commandUse.isEmpty()) {
+                    data.setCommandUseTableHtml(AnalysisUtils.createTableOutOfHashMap(commandUse));
+                    data.setTotalCommands(commandUse.size());
                 } else {
-                    data.setTop50CommandsListHtml(Html.ERROR_TABLE_2.parse());
+                    data.setCommandUseTableHtml(Html.ERROR_TABLE_2.parse());
+                    data.setTotalCommands(0);
                 }
             }
 

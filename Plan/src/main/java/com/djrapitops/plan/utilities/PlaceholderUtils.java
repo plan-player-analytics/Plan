@@ -44,6 +44,7 @@ public class PlaceholderUtils {
         replaceMap.put("%npweek%", data.getNewPlayersWeek() + "");
         replaceMap.put("%npmonth%", data.getNewPlayersMonth() + "");
         replaceMap.put("%commanduse%", data.getTop50CommandsListHtml());
+        replaceMap.put("%totalcommands%", data.getTotalCommands()+"");        
         replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
         replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
@@ -78,6 +79,14 @@ public class PlaceholderUtils {
         replaceMap.put("%activitydata%", Arrays.toString(activityData));
         replaceMap.put("%activitycolors%", "\"#" + Settings.HCOLOR_ACTP_ACT
                 + "\",\"#" + Settings.HCOLOR_ACTP_INA + "\",\"#" + Settings.HCOLOR_ACTP_JON + "\",\"#" + Settings.HCOLOR_ACTP_BAN + "\"");
+        replaceMap.put("%activecol%", Settings.HCOLOR_ACTP_ACT+"");
+        replaceMap.put("%inactivecol%", Settings.HCOLOR_ACTP_INA+"");
+        replaceMap.put("%joinleavecol%", Settings.HCOLOR_ACTP_JON+"");
+        replaceMap.put("%bancol%", Settings.HCOLOR_ACTP_BAN+"");
+        replaceMap.put("%gm0col%", Settings.HCOLOR_GMP_0+"");
+        replaceMap.put("%gm1col%", Settings.HCOLOR_GMP_1+"");
+        replaceMap.put("%gm2col%", Settings.HCOLOR_GMP_2+"");
+        replaceMap.put("%gm3col%", Settings.HCOLOR_GMP_3+"");
         String[] gmData = new String[]{
             (data.getGm0Perc() * 100) + "",
             (data.getGm1Perc() * 100) + "",

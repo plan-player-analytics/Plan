@@ -13,7 +13,8 @@ public class AnalysisData {
     private long averagePlayTime;
     private long totalPlayTime;
     private double averageAge;
-    private String top50CommandsListHtml;
+    private String commandUseTableHtml;
+    private long totalCommands;
     private String top20ActivePlayers;
     private String recentPlayers;
     private String sortablePlayersTable;
@@ -49,7 +50,7 @@ public class AnalysisData {
      */
     public AnalysisData() {
         sortablePlayersTable = Html.ERROR_NOT_SET+"";
-        top50CommandsListHtml = Html.ERROR_NOT_SET+"";
+        commandUseTableHtml = Html.ERROR_NOT_SET+"";
         top20ActivePlayers = Html.ERROR_NOT_SET+"";
         recentPlayers = Html.ERROR_NOT_SET+"";
         playersDataArray = new String[]{"[0]","[\"No data\"]","[0]","[\"No data\"]","[0]","[\"No data\"]"};
@@ -82,14 +83,14 @@ public class AnalysisData {
      * @return HTML String of the Top50CommandsList
      */
     public String getTop50CommandsListHtml() {
-        return top50CommandsListHtml;
+        return commandUseTableHtml;
     }
 
     /**
      * @param top50CommandsListHtml HTML String of the Top50CommandsList
      */
-    public void setTop50CommandsListHtml(String top50CommandsListHtml) {
-        this.top50CommandsListHtml = top50CommandsListHtml;
+    public void setCommandUseTableHtml(String top50CommandsListHtml) {
+        this.commandUseTableHtml = top50CommandsListHtml;
     }
 
     /**
@@ -380,5 +381,13 @@ public class AnalysisData {
 
     public void setPlayersDataArray(String[] playersDataArray) {
         this.playersDataArray = playersDataArray;
+    }
+
+    public void setTotalCommands(long totalCommands) {
+        this.totalCommands = totalCommands;
+    }
+
+    public long getTotalCommands() {
+        return totalCommands;
     }
 }
