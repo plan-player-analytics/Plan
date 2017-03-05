@@ -22,6 +22,10 @@ public class PlanDeathEventListener implements Listener {
     private final DataCacheHandler handler;
     private final KillHandler kH;
 
+    /**
+     *
+     * @param plugin
+     */
     public PlanDeathEventListener(Plan plugin) {
         this.plugin = plugin;
         this.handler = plugin.getHandler();
@@ -51,6 +55,13 @@ public class PlanDeathEventListener implements Listener {
         }
     }
 
+    /**
+     *
+     * @param dead
+     * @param killerIsPlayer
+     * @param killer
+     * @param killersData
+     */
     public void continueProcessing(LivingEntity dead, boolean killerIsPlayer, Player killer, UserData killersData) {
         if (dead instanceof Player) {
             Player killed = (Player) dead;

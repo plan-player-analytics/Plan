@@ -14,6 +14,11 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class SortableCommandUseTableCreator {
 
+    /**
+     *
+     * @param commandUse
+     * @return
+     */
     public static String createSortedCommandUseTable(HashMap<String, Integer> commandUse) {
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
         String html = "";

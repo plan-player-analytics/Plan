@@ -33,6 +33,9 @@ public class EssentialsHook extends Hook {
         }
     }
     
+    /**
+     *
+     */
     public EssentialsHook() {
         super();
         plugin = null;        

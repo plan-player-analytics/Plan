@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
 import main.java.com.djrapitops.plan.Plan;
@@ -15,6 +14,12 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class HtmlUtils {
 
+    /**
+     *
+     * @param fileName
+     * @return
+     * @throws FileNotFoundException
+     */
     public static String getHtmlStringFromResource(String fileName) throws FileNotFoundException {
         Plan plugin = getPlugin(Plan.class);
         File localFile = new File(plugin.getDataFolder(), fileName);
@@ -30,6 +35,12 @@ public class HtmlUtils {
         return html;
     }
 
+    /**
+     *
+     * @param html
+     * @param replaceMap
+     * @return
+     */
     public static String replacePlaceholders(String html, HashMap<String, String> replaceMap) {
         for (String key : replaceMap.keySet()) {
             html = html.replaceAll(key, replaceMap.get(key));
@@ -37,6 +48,10 @@ public class HtmlUtils {
         return html;
     }
 
+    /**
+     *
+     * @return
+     */
     public static String getServerAnalysisUrl() {
         int port = Settings.WEBSERVER_PORT.getNumber();
         String ip = getPlugin(Plan.class).getServer().getIp() + ":" + port;
@@ -49,6 +64,11 @@ public class HtmlUtils {
         return url;
     }
 
+    /**
+     *
+     * @param playerName
+     * @return
+     */
     public static String getInspectUrl(String playerName) {
         int port = Settings.WEBSERVER_PORT.getNumber();
         String ip = getPlugin(Plan.class).getServer().getIp() + ":" + port;
@@ -59,5 +79,12 @@ public class HtmlUtils {
         }
         String url = "http://" + ip + "/" + securityCode + "/player/" + playerName;
         return url;
+    }
+
+    static String removeXSS(String string) {
+        return string.replaceAll("<!--", "")
+                .replaceAll("-->", "")
+                .replaceAll("<script>", "")
+                .replaceAll("</script>", "");
     }
 }

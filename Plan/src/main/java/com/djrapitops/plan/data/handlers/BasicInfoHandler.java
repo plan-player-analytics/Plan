@@ -47,6 +47,11 @@ public class BasicInfoHandler {
         data.addIpAddress(ip);
     }
 
+    /**
+     *
+     * @param nickname
+     * @param data
+     */
     public void addNickname(String nickname, UserData data) {
         if (!nickname.isEmpty()) {
             if (data.addNickname(nickname)) {

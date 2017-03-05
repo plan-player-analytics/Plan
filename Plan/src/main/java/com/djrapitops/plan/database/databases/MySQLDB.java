@@ -45,6 +45,10 @@ public class MySQLDB extends SQLDB {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getName() {
         return "MySQL";

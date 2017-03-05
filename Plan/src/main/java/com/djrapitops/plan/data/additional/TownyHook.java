@@ -36,6 +36,9 @@ public class TownyHook extends Hook {
         this.towny = getPlugin(Towny.class);
     }
     
+    /**
+     *
+     */
     public TownyHook() {
         super();
         plugin = null;        

@@ -23,6 +23,9 @@ public class SuperbVoteHook extends Hook {
         this.plugin = plugin;
     }
 
+    /**
+     *
+     */
     public SuperbVoteHook() {
         super();
         plugin = null;        

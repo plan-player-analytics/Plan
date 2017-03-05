@@ -33,6 +33,9 @@ public class AdvancedAchievementsHook extends Hook {
         }
     }
 
+    /**
+     *
+     */
     public AdvancedAchievementsHook() {
         super();
         plugin = null;        

@@ -53,6 +53,11 @@ public class LocationHandler {
         locations.get(uuid).addAll(locs);
     }
     
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public List<Location> getLocationsForSaving(UUID uuid) {
         if (!locations.containsKey(uuid)) {
             return new ArrayList<>();
@@ -60,6 +65,10 @@ public class LocationHandler {
         return locations.get(uuid);
     }
     
+    /**
+     *
+     * @param uuid
+     */
     public void clearLocations(UUID uuid) {
         locations.remove(uuid);
     }

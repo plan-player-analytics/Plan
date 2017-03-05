@@ -14,6 +14,11 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  */
 public class SortableKillsTableCreator {
 
+    /**
+     *
+     * @param killData
+     * @return
+     */
     public static String createSortedSessionDataTable10(List<KillData> killData) {
         String html = Html.TABLE_KILLS_START.parse();
         if (killData.isEmpty()) {

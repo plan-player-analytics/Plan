@@ -46,6 +46,11 @@ public class InspectCacheHandler {
         cache(uuid, minutes);
     }
 
+    /**
+     *
+     * @param uuid
+     * @param minutes
+     */
     public void cache(UUID uuid, int minutes) {
         DBCallableProcessor cacher = new DBCallableProcessor() {
             @Override

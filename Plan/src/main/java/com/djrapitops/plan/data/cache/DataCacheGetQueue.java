@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.database.Database;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -21,12 +22,21 @@ public class DataCacheGetQueue {
     private BlockingQueue<HashMap<UUID, List<DBCallableProcessor>>> q;
     private GetSetup s;
 
+    /**
+     *
+     * @param plugin
+     */
     public DataCacheGetQueue(Plan plugin) {
-        q = new ArrayBlockingQueue(1000);
+        q = new ArrayBlockingQueue(Settings.PROCESS_GET_LIMIT.getNumber());
         s = new GetSetup();
         s.go(q, plugin.getDB());
     }
 
+    /**
+     *
+     * @param uuid
+     * @param processors
+     */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
         HashMap<UUID, List<DBCallableProcessor>> map = new HashMap<>();
         if (map.get(uuid) == null) {
@@ -36,6 +46,9 @@ public class DataCacheGetQueue {
         q.add(map);
     }
 
+    /**
+     *
+     */
     public void stop() {
         s.stop();
     }

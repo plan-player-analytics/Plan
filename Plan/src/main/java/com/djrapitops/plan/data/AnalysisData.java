@@ -42,6 +42,8 @@ public class AnalysisData {
     private long totalkills;
     private long totalmobkills;
     private long totaldeaths;
+    
+    private long sessionAverage;
 
     /**
      * Class constructor.
@@ -57,10 +59,19 @@ public class AnalysisData {
     }
 
     // Getters and setters v---------------------------------v
+
+    /**
+     *
+     * @return
+     */
     public String getSortablePlayersTable() {
         return sortablePlayersTable;
     }
 
+    /**
+     *
+     * @param sortablePlayersTable
+     */
     public void setSortablePlayersTable(String sortablePlayersTable) {
         this.sortablePlayersTable = sortablePlayersTable;
     }
@@ -82,7 +93,7 @@ public class AnalysisData {
     /**
      * @return HTML String of the Top50CommandsList
      */
-    public String getTop50CommandsListHtml() {
+    public String getCommandUseListHtml() {
         return commandUseTableHtml;
     }
 
@@ -311,83 +322,179 @@ public class AnalysisData {
         this.ops = ops;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTop20ActivePlayers() {
         return top20ActivePlayers;
     }
 
+    /**
+     *
+     * @param top20ActivePlayers
+     */
     public void setTop20ActivePlayers(String top20ActivePlayers) {
         this.top20ActivePlayers = top20ActivePlayers;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getRecentPlayers() {
         return recentPlayers;
     }
 
+    /**
+     *
+     * @param recentPlayers
+     */
     public void setRecentPlayers(String recentPlayers) {
         this.recentPlayers = recentPlayers;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNewPlayersMonth() {
         return newPlayersMonth;
     }
 
+    /**
+     *
+     * @param newPlayersMonth
+     */
     public void setNewPlayersMonth(int newPlayersMonth) {
         this.newPlayersMonth = newPlayersMonth;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNewPlayersWeek() {
         return newPlayersWeek;
     }
 
+    /**
+     *
+     * @param newPlayersWeek
+     */
     public void setNewPlayersWeek(int newPlayersWeek) {
         this.newPlayersWeek = newPlayersWeek;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNewPlayersDay() {
         return newPlayersDay;
     }
 
+    /**
+     *
+     * @param newPlayersDay
+     */
     public void setNewPlayersDay(int newPlayersDay) {
         this.newPlayersDay = newPlayersDay;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getTotalkills() {
         return totalkills;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getTotalmobkills() {
         return totalmobkills;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getTotaldeaths() {
         return totaldeaths;
     }
 
+    /**
+     *
+     * @param totalkills
+     */
     public void setTotalkills(long totalkills) {
         this.totalkills = totalkills;
     }
 
+    /**
+     *
+     * @param totalmobkills
+     */
     public void setTotalmobkills(long totalmobkills) {
         this.totalmobkills = totalmobkills;
     }
 
+    /**
+     *
+     * @param totaldeaths
+     */
     public void setTotaldeaths(long totaldeaths) {
         this.totaldeaths = totaldeaths;
     }
 
+    /**
+     *
+     * @return
+     */
     public String[] getPlayersDataArray() {
         return playersDataArray;
     }
 
+    /**
+     *
+     * @param playersDataArray
+     */
     public void setPlayersDataArray(String[] playersDataArray) {
         this.playersDataArray = playersDataArray;
     }
 
+    /**
+     *
+     * @param totalCommands
+     */
     public void setTotalCommands(long totalCommands) {
         this.totalCommands = totalCommands;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getTotalCommands() {
         return totalCommands;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public long getSessionAverage() {
+        return sessionAverage;
+    }
+
+    /**
+     *
+     * @param sessionAverage
+     */
+    public void setSessionAverage(long sessionAverage) {
+        this.sessionAverage = sessionAverage;
     }
 }

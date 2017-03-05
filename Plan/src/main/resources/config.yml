@@ -7,6 +7,10 @@ Settings:
     LogProgressOnConsole: false
     MinutesPlayedUntilConsidiredActive: 10
   Cache:
+    Processing:
+      GetLimit: 2000
+      SaveLimit: 1000
+      ClearLimit: 1000
     AnalysisCache:
       RefreshAnalysisCacheOnEnable: true
       RefreshEveryXMinutes: -1

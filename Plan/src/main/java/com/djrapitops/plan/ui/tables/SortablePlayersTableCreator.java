@@ -13,6 +13,11 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class SortablePlayersTableCreator {
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static String createSortablePlayersTable(Collection<UserData> data) {
         String html = "";
         for (UserData uData : data) {

@@ -24,6 +24,11 @@ public class SQLiteDB extends SQLDB {
         this(plugin, "database");
     }
     
+    /**
+     *
+     * @param plugin
+     * @param dbName
+     */
     public SQLiteDB(Plan plugin, String dbName) {
         super(plugin, false);
 
@@ -41,6 +46,11 @@ public class SQLiteDB extends SQLDB {
         return getNewConnection(dbName);
     }
     
+    /**
+     *
+     * @param dbName
+     * @return
+     */
     public Connection getNewConnection(String dbName) {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -52,6 +62,10 @@ public class SQLiteDB extends SQLDB {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getName() {
         return "SQLite";

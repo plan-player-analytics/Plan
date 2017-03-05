@@ -18,12 +18,20 @@ public class SessionHandler {
     private final DataCacheHandler handler;
     private final Plan plugin;
 
+    /**
+     *
+     * @param plugin
+     */
     public SessionHandler(Plan plugin) {
         this.plugin = plugin;
         this.handler = plugin.getHandler();
         this.activeSessions = new HashMap<>();    
     }
     
+    /**
+     *
+     * @param data
+     */
     public void startSession(UserData data) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         SessionData session = new SessionData(now);
@@ -31,6 +39,10 @@ public class SessionHandler {
         data.setCurrentSession(session);
     }
     
+    /**
+     *
+     * @param data
+     */
     public void endSession (UserData data) {
         UUID uuid = data.getUuid();
         SessionData currentSession = activeSessions.get(uuid);

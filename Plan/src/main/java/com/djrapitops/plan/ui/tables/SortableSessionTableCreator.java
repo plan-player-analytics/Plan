@@ -13,6 +13,11 @@ import main.java.com.djrapitops.plan.utilities.comparators.SessionDataComparator
  */
 public class SortableSessionTableCreator {
 
+    /**
+     *
+     * @param sessionData
+     * @return
+     */
     public static String createSortedSessionDataTable10(List<SessionData> sessionData) {
         String html = Html.TABLE_SESSIONS_START.parse();
         if (sessionData.isEmpty()) {

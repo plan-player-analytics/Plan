@@ -25,6 +25,9 @@ public class OnTimeHook extends Hook {
         this.plugin = plugin;        
     }
 
+    /**
+     *
+     */
     public OnTimeHook() {
         super();
         plugin = null;        

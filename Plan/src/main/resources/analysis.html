@@ -200,7 +200,7 @@
         <div class="clearfix">            
             <div id="navLinks">
                 <ul>
-                    <li class="itemLinks" data-pos="0px"><i class="fa fa-info" aria-hidden="true"></i> Information</li>
+                    <li class="itemLinks" data-pos="0px"><i class="fa fa-info-circle" aria-hidden="true"></i> Information</li>
                     <li class="itemLinks" data-pos="-25%"><i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity</li>
                     <li class="itemLinks" data-pos="-50%"><i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist</li>
                     <li class="itemLinks" data-pos="-75%"><i class="fa fa-terminal" aria-hidden="true"></i> Command usage</li>
@@ -228,9 +228,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>
-                            <div class="buttons">
-                                <p><b>Most recent logins</b>: %recentlogins%</p>
+                            <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas><br/>
+                            <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
+                            <div class="buttons">                                
+                                %recentlogins%
                             </div>
                             %towntable%<br/>
                             %factionstable%
@@ -238,7 +239,7 @@
                         <div class="column" style="width: 40%;">
                             <div class="headerbox">
                             <div class="header-icon">
-                                <div class="header-label"><i class="fa fa-info" aria-hidden="true"></i><span class="header-text"> Information</span></div>
+                                <div class="header-label"><i class="fa fa-info-circle" aria-hidden="true"></i><span class="header-text"> Information</span></div>
                             </div>
                             <div class="infobox" style="float: right;">
                                 <div class="info-icon">
@@ -254,11 +255,11 @@
                                 </div>
                             </div>
                         </div>
-                            <p>A Total of %totalplaytime% has been played with the average of %avgplaytime%<br/>
-                                Players have joined %totallogins% times.<br/>
-                                Players have died %deaths% times, of which %playerkills% were caused by another Player.<br/>
-                                A Total of %mobkills% mobs have been slain.<br/>
-                                The average of known player ages is %avgage%.
+                            <p><i class="fa fa-clock-o" aria-hidden="true"></i> Total Playtime: %totalplaytime% | <i class="fa fa-clock-o" aria-hidden="true"></i> Player Average: %avgplaytime%<br/>
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> Average Session Length: %sessionaverage%<br/>
+                                <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times: %totallogins%<br/>                                
+                                <b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%<br/> 
+                                
                                 %essentialswarps%</p>
                             <p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Gamemode Usage</span></p><br/>
                             <div class="box-area">                                
@@ -451,9 +452,10 @@
                                     </div>
                                 </div>
                             </div><br/>
-                            <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas>                            
+                            <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas><br/>                     
+                            <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
                             <div class="buttons">
-                                <p><b>Most recent logins</b>: %recentlogins%</p>
+                                %recentlogins%
                             </div>
                         </div>
                     </div>
@@ -507,7 +509,7 @@
                                         %totalcommands%
                                     </div>
                                     <div class="info-label">
-                                        Commands
+                                        Unique
                                     </div>
                                 </div>
                             </div>

@@ -13,6 +13,13 @@ public class KillData {
     private long date;
     private String weapon;
 
+    /**
+     *
+     * @param victim
+     * @param victimID
+     * @param weapon
+     * @param date
+     */
     public KillData(UUID victim, int victimID, String weapon, long date) {
         this.victim = victim;
         this.weapon = weapon;
@@ -20,18 +27,34 @@ public class KillData {
         this.date = date;
     }
 
+    /**
+     *
+     * @return
+     */
     public UUID getVictim() {
         return victim;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getDate() {
         return date;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getWeapon() {
         return weapon;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getVictimUserID() {
         return victimUserID;
     }

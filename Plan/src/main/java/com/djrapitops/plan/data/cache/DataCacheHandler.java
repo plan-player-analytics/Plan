@@ -220,6 +220,10 @@ public class DataCacheHandler {
     }
 
     // Should only be called from Async thread
+
+    /**
+     *
+     */
     public void saveHandlerDataToCache() {
         Bukkit.getServer().getOnlinePlayers().parallelStream().forEach((p) -> {
             saveHandlerDataToCache(p);
@@ -255,10 +259,19 @@ public class DataCacheHandler {
         plugin.log(Phrase.CACHE_REMOVE.parse(uuid.toString()));
     }
 
+    /**
+     *
+     * @param uuid
+     */
     public void scheludeForClear(UUID uuid) {
         clearTask.scheduleForClear(uuid);
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public boolean isDataAccessed(UUID uuid) {
         UserData userData = dataCache.get(uuid);
         if (userData != null) {
@@ -276,6 +289,10 @@ public class DataCacheHandler {
         saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
+    /**
+     *
+     * @param player
+     */
     public void newPlayer(OfflinePlayer player) {
         saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
     }
@@ -329,6 +346,10 @@ public class DataCacheHandler {
         return gamemodeTimesHandler;
     }
 
+    /**
+     *
+     * @return
+     */
     public KillHandler getKillHandler() {
         return killHandler;
     }
@@ -342,6 +363,10 @@ public class DataCacheHandler {
         return db;
     }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<String, Integer> getCommandUse() {
         return commandUse;
     }
@@ -353,6 +378,10 @@ public class DataCacheHandler {
         return commandUseHandler;
     }
 
+    /**
+     *
+     * @return
+     */
     public SessionHandler getSessionHandler() {
         return sessionHandler;
     }

@@ -21,9 +21,6 @@ import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -152,6 +149,7 @@ public class Analysis {
                 long totalPlaytime = sorted.getTotalPlaytime();
                 analysisData.setTotalPlayTime(totalPlaytime);
                 analysisData.setAveragePlayTime(totalPlaytime / rawData.size());
+                analysisData.setSessionAverage(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(sorted.getSessiondata())));
                 analysisData.setTotalLoginTimes(sorted.getTotalLoginTimes());
 
                 createActivityVisalization(sorted.getTotalBanned(), sorted.getActive(), sorted.getInactive(), sorted.getJoinleaver(), analysisData);

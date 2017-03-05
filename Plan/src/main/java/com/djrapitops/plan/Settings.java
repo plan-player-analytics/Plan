@@ -22,6 +22,9 @@ public enum Settings {
     CLEAR_CACHE_X_SAVES("Settings.Cache.DataCache.ClearCacheEveryXSaves"),
     WEBSERVER_PORT("Settings.WebServer.Port"),
     ANALYSIS_AUTO_REFRESH("Settings.Cache.AnalysisCache.RefreshEveryXMinutes"),
+    PROCESS_GET_LIMIT("Settings.Cache.Processing.GetLimit"),
+    PROCESS_SAVE_LIMIT("Settings.Cache.Processing.SaveLimit"),
+    PROCESS_CLEAR_LIMIT("Settings.Cache.Processing.ClearLimit"),
     // String
     ALTERNATIVE_IP("Settings.WebServer.AlternativeIP"),
     DB_TYPE("database.type"),
@@ -68,6 +71,9 @@ public enum Settings {
         return getPlugin(Plan.class).getConfig().getInt(configPath);
     }
     
+    /**
+     * @return Path of the config setting.
+     */
     public String getPath() {
         return configPath;
     }

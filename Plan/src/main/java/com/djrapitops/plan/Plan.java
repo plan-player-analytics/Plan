@@ -72,9 +72,9 @@ public class Plan extends JavaPlugin {
      * OnEnable method.
      *
      * Creates the config file. Checks for new version. Initializes Database.
-     * Hooks PlanLite. Initializes DataCaches. Registers Listeners. Registers
-     * Command /plan and initializes API. Enables Webserver & analysis tasks if
-     * enabled in config. Warns about possible mistakes made in config.
+     * Hooks to Supported plugins. Initializes DataCaches. Registers Listeners.
+     * Registers Command /plan and initializes API. Enables Webserver & analysis
+     * tasks if enabled in config. Warns about possible mistakes made in config.
      */
     @Override
     public void onEnable() {
@@ -176,7 +176,13 @@ public class Plan extends JavaPlugin {
         getLogger().severe(message);
     }
 
-    public void toLog(String source, Exception e) {
+    /**
+     * Logs trace of caught Exception to Errors.txt & notifies on console.
+     *
+     * @param source Class name the exception was caught in.
+     * @param e Throwable, eg NullPointerException
+     */
+    public void toLog(String source, Throwable e) {
         logError(Phrase.ERROR_LOGGED.parse(e.toString()));
         toLog(source + " Caught " + e);
         for (StackTraceElement x : e.getStackTrace()) {
@@ -185,12 +191,23 @@ public class Plan extends JavaPlugin {
         toLog("");
     }
 
-    public void toLog(String source, Collection<Exception> e) {
-        for (Exception ex : e) {
+    /**
+     * Logs multiple caught Errors to Errors.txt.
+     *
+     * @param source Class name the exception was caught in.
+     * @param e Collection of Throwables, eg NullPointerException
+     */
+    public void toLog(String source, Collection<Throwable> e) {
+        for (Throwable ex : e) {
             toLog(source, ex);
         }
     }
 
+    /**
+     * Logs a message to the Errors.txt with a timestamp.
+     *
+     * @param message Message to log to Errors.txt
+     */
     public void toLog(String message) {
         File folder = getDataFolder();
         if (!folder.exists()) {
@@ -296,21 +313,21 @@ public class Plan extends JavaPlugin {
     }
 
     /**
-     * @return Currnet instance of the InspectCacheHandler
+     * @return Current instance of the InspectCacheHandler
      */
     public InspectCacheHandler getInspectCache() {
         return inspectCache;
     }
 
     /**
-     * @return Currnet instance of the DataCacheHandler
+     * @return Current instance of the DataCacheHandler
      */
     public DataCacheHandler getHandler() {
         return handler;
     }
 
     /**
-     * @return the Database
+     * @return the Current Database
      */
     public Database getDB() {
         return db;
@@ -323,19 +340,22 @@ public class Plan extends JavaPlugin {
         return uiServer;
     }
 
+    /**
+     * @return HookHandler that manages Hooks to other plugins.
+     */
     public HookHandler getHookHandler() {
         return hookHandler;
     }
 
     /**
-     * @return Set containing SqLite & MySQL classes.
+     * @return Set containing the SqLite & MySQL classes.
      */
     public HashSet<Database> getDatabases() {
         return databases;
     }
 
     /**
-     * @return
+     * @return ID of the bootAnalysisTask
      */
     public int getBootAnalysisTaskID() {
         return bootAnalysisTaskID;
@@ -343,7 +363,8 @@ public class Plan extends JavaPlugin {
 
     private void initLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
-        /*File genLocale = new File(getDataFolder(), "locale_EN.txt");
+        /*// Used to write a new Locale file
+        File genLocale = new File(getDataFolder(), "locale_EN.txt");
         try {
             genLocale.createNewFile();
             FileWriter fw = new FileWriter(genLocale, true);

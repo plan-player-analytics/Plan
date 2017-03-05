@@ -1,11 +1,13 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
@@ -18,6 +20,13 @@ import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
  */
 public class AnalysisUtils {
 
+    /**
+     *
+     * @param lastPlayed
+     * @param playTime
+     * @param loginTimes
+     * @return
+     */
     public static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
@@ -72,5 +81,24 @@ public class AnalysisUtils {
         // Filters out register dates before scale
         
         return newPlayers;
+    }
+    
+    static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
+        List<Long> list = new ArrayList<>();
+        data.stream().forEach((sData) -> {
+            list.add(sData.getSessionEnd()-sData.getSessionStart());
+        });
+        return list;
+    }
+    
+    static long average(Collection<Long> list) {
+        if (list.isEmpty()) {
+            return 0;
+        }
+        long total = 0;
+        for (Long long1 : list) {
+            total += long1;
+        }
+        return total / list.size();
     }
 }

@@ -168,6 +168,11 @@ public class FormatUtils {
         return string.replaceAll("§r", "");
     }
 
+    /**
+     *
+     * @param d
+     * @return
+     */
     public static String cutDecimals(double d) {
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);

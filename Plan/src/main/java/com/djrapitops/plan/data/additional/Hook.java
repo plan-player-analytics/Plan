@@ -25,6 +25,9 @@ public abstract class Hook {
         }
     }
     
+    /**
+     *
+     */
     public Hook() {
         enabled = false;
     } 
@@ -36,6 +39,10 @@ public abstract class Hook {
         return enabled;
     }
 
+    /**
+     *
+     * @param enabled
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

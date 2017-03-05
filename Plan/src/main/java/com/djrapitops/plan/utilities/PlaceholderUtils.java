@@ -43,7 +43,7 @@ public class PlaceholderUtils {
         replaceMap.put("%npday%", data.getNewPlayersDay() + "");
         replaceMap.put("%npweek%", data.getNewPlayersWeek() + "");
         replaceMap.put("%npmonth%", data.getNewPlayersMonth() + "");
-        replaceMap.put("%commanduse%", data.getTop50CommandsListHtml());
+        replaceMap.put("%commanduse%", HtmlUtils.removeXSS(data.getCommandUseListHtml()));
         replaceMap.put("%totalcommands%", data.getTotalCommands()+"");        
         replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
@@ -98,6 +98,7 @@ public class PlaceholderUtils {
         replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
                 + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
         replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
+        replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage()+""));
         return replaceMap;
     }
 
@@ -143,13 +144,9 @@ public class PlaceholderUtils {
         replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmData[1]));
         replaceMap.put("%gm2%", FormatUtils.formatTimeAmount("" + gmData[2]));
         replaceMap.put("%gm3%", FormatUtils.formatTimeAmount("" + gmData[3]));
-        replaceMap.put("%gmdata%", Arrays.toString(gmData));
-        replaceMap.put("%gmlabels%", "[\"Survival\", \"Creative\", \"Adventure\", \"Spectator\"]");
-        replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
-                + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
         replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount("" + total));
         replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : Html.HIDDEN.parse()));
-        replaceMap.put("%nicknames%", FormatUtils.swapColorsToSpan(data.getNicknames().toString()));
+        replaceMap.put("%nicknames%", HtmlUtils.removeXSS(FormatUtils.swapColorsToSpan(data.getNicknames().toString())));
         replaceMap.put("%name%", data.getName());
         replaceMap.put("%registered%", FormatUtils.formatTimeStamp("" + data.getRegistered()));
         replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
@@ -162,6 +159,7 @@ public class PlaceholderUtils {
         replaceMap.put("%playerkills%", data.getPlayerKills().size() + "");
         replaceMap.put("%mobkills%", data.getMobKills() + "");
         replaceMap.put("%sessionstable%", SortableSessionTableCreator.createSortedSessionDataTable10(data.getSessions()));
+        replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(data.getSessions()))+""));
         replaceMap.put("%killstable%", SortableKillsTableCreator.createSortedSessionDataTable10(data.getPlayerKills()));
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
@@ -171,6 +169,10 @@ public class PlaceholderUtils {
         replaceMap.put("%labelsweek%", playersDataArray[1]);
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
         replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
+        replaceMap.put("%gm0col%", Settings.HCOLOR_GMP_0+"");
+        replaceMap.put("%gm1col%", Settings.HCOLOR_GMP_1+"");
+        replaceMap.put("%gm2col%", Settings.HCOLOR_GMP_2+"");
+        replaceMap.put("%gm3col%", Settings.HCOLOR_GMP_3+"");
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
         replaceMap.putAll(plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid));
         return replaceMap;

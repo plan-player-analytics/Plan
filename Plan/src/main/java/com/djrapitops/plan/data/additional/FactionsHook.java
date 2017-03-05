@@ -34,6 +34,9 @@ public class FactionsHook extends Hook {
         this.plugin = plugin;
     }
 
+    /**
+     *
+     */
     public FactionsHook() {
         super();
         plugin = null;

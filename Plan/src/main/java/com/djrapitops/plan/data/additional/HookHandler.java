@@ -23,11 +23,18 @@ public class HookHandler {
     private OnTimeHook onTimeHook;
     private TownyHook townyHook;
 
+    /**
+     *
+     * @param plan
+     */
     public HookHandler(Plan plan) {
         this.plan = plan;
         hook();
     }
 
+    /**
+     *
+     */
     public void reloadHooks() {
         hook();
     }
@@ -65,30 +72,58 @@ public class HookHandler {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public AdvancedAchievementsHook getAdvancedAchievementsHook() {
         return advancedAchievementsHook;
     }
 
+    /**
+     *
+     * @return
+     */
     public EssentialsHook getEssentialsHook() {
         return essentialsHook;
     }
 
+    /**
+     *
+     * @return
+     */
     public SuperbVoteHook getSuperbVoteHook() {
         return superbVoteHook;
     }
 
+    /**
+     *
+     * @return
+     */
     public FactionsHook getFactionsHook() {
         return factionsHook;
     }
 
+    /**
+     *
+     * @return
+     */
     public TownyHook getTownyHook() {
         return townyHook;
     }
 
+    /**
+     *
+     * @return
+     */
     public OnTimeHook getOnTimeHook() {
         return onTimeHook;
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<String, String> getAdditionalAnalysisReplaceRules() {
         Map<String, String> addReplace = new HashMap<>();
         AdvancedAchievementsHook aH = advancedAchievementsHook;
@@ -102,6 +137,11 @@ public class HookHandler {
         return addReplace;
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public Map<String, String> getAdditionalInspectReplaceRules(UUID uuid) {
         Map<String, String> addReplace = new HashMap<>();
         AdvancedAchievementsHook aH = advancedAchievementsHook;

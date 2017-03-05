@@ -13,6 +13,12 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class SortableTownTableCreator {
 
+    /**
+     *
+     * @param townNames
+     * @param tHook
+     * @return
+     */
     public static String createSortableTownsTable(Collection<String> townNames, TownyHook tHook) {
         String html = Html.TABLE_TOWNS_START.parse();
         if (townNames.isEmpty()) {

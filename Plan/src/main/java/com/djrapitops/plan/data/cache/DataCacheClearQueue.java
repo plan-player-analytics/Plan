@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
@@ -17,20 +18,36 @@ public class DataCacheClearQueue {
     private BlockingQueue<UUID> q;
     private ClearSetup s;
 
+    /**
+     *
+     * @param plugin
+     * @param handler
+     */
     public DataCacheClearQueue(Plan plugin, DataCacheHandler handler) {
-        q = new ArrayBlockingQueue(1000);
+        q = new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber());
         s = new ClearSetup();
         s.go(q, handler);
     }
 
+    /**
+     *
+     * @param uuid
+     */
     public void scheduleForClear(UUID uuid) {
         q.add(uuid);
     }
 
+    /**
+     *
+     * @param uuids
+     */
     public void scheduleForClear(Collection<UUID> uuids) {
         q.addAll(uuids);
     }
 
+    /**
+     *
+     */
     public void stop() {
         s.stop();
     }

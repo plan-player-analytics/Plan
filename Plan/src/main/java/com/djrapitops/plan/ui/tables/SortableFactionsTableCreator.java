@@ -13,6 +13,12 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class SortableFactionsTableCreator {
 
+    /**
+     *
+     * @param factionList
+     * @param fHook
+     * @return
+     */
     public static String createSortableFactionsTable(Collection<String> factionList, FactionsHook fHook) {
         String html = Html.TABLE_FACTIONS_START.parse();
         if (factionList.isEmpty()) {

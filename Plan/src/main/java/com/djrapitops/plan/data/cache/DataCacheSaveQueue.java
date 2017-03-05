@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
@@ -18,24 +19,43 @@ public class DataCacheSaveQueue {
     private BlockingQueue<UserData> q;
     private SaveSetup s;
 
+    /**
+     *
+     * @param plugin
+     */
     public DataCacheSaveQueue(Plan plugin) {
-        q = new ArrayBlockingQueue(1000);
+        q = new ArrayBlockingQueue(Settings.PROCESS_SAVE_LIMIT.getNumber());
         s = new SaveSetup();
         s.go(q, plugin.getDB());
     }
 
+    /**
+     *
+     * @param data
+     */
     public void scheduleForSave(UserData data) {
         q.add(data);
     }
 
+    /**
+     *
+     * @param data
+     */
     public void scheduleForSave(Collection<UserData> data) {
         q.addAll(data);
     }
 
+    /**
+     *
+     * @param data
+     */
     public void scheduleNewPlayer(UserData data) {
         q.add(data);
     }
     
+    /**
+     *
+     */
     public void stop() {
         s.stop();
     }

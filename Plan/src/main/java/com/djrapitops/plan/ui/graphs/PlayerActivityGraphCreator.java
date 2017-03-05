@@ -15,6 +15,12 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class PlayerActivityGraphCreator {
 
+    /**
+     *
+     * @param sessionData
+     * @param scale
+     * @return
+     */
     public static String[] generateDataArray(List<SessionData> sessionData, long scale) {
         Plan plugin = getPlugin(Plan.class);
         int maxPlayers = plugin.getHandler().getMaxPlayers();

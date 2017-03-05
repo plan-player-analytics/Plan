@@ -24,6 +24,10 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public abstract class SQLDB extends Database {
 
     final Plan plugin;
@@ -88,6 +92,11 @@ public abstract class SQLDB extends Database {
 
     private String versionName;
 
+    /**
+     *
+     * @param plugin
+     * @param supportsModification
+     */
     public SQLDB(Plan plugin, boolean supportsModification) {
         super(plugin);
         this.plugin = plugin;
@@ -166,6 +175,10 @@ public abstract class SQLDB extends Database {
         }).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean init() {
         super.init();
@@ -177,6 +190,11 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public boolean checkConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = getNewConnection();
@@ -304,13 +322,27 @@ public abstract class SQLDB extends Database {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     protected abstract Connection getNewConnection();
 
+    /**
+     *
+     * @param sql
+     * @return
+     * @throws SQLException
+     */
     public boolean query(String sql) throws SQLException {
         boolean success = connection.createStatement().execute(sql);
         return success;
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Override
     public void close() throws SQLException {
         if (connection != null) {
@@ -318,6 +350,11 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public int getVersion() throws SQLException {
         int version = 0;
@@ -332,6 +369,11 @@ public abstract class SQLDB extends Database {
         return version;
     }
 
+    /**
+     *
+     * @param version
+     * @throws SQLException
+     */
     @Override
     public void setVersion(int version) throws SQLException {
         connection.prepareStatement("DELETE FROM " + versionName).executeUpdate();
@@ -339,6 +381,11 @@ public abstract class SQLDB extends Database {
 
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     @Override
     public boolean wasSeenBefore(UUID uuid) {
         try {
@@ -349,6 +396,12 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
     @Override
     public int getUserId(String uuid) throws SQLException {
         int userId = -1;
@@ -384,6 +437,11 @@ public abstract class SQLDB extends Database {
         return uuid;
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Set<UUID> getSavedUUIDs() throws SQLException {
         Set<UUID> uuids = new HashSet<>();
@@ -400,6 +458,12 @@ public abstract class SQLDB extends Database {
         return uuids;
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     * @throws NullPointerException
+     */
     @Override
     public void saveCommandUse(HashMap<String, Integer> data) throws SQLException, NullPointerException {
         if (data.isEmpty()) {
@@ -434,6 +498,11 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public HashMap<String, Integer> getCommandUse() throws SQLException {
         HashMap<String, Integer> commandUse = new HashMap<>();
@@ -450,6 +519,12 @@ public abstract class SQLDB extends Database {
         return commandUse;
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean removeAccount(String uuid) throws SQLException {
         try {
@@ -497,6 +572,12 @@ public abstract class SQLDB extends Database {
         return true;
     }
 
+    /**
+     *
+     * @param uuid
+     * @param processors
+     * @throws SQLException
+     */
     @Override
     public void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException {
         try {
@@ -665,13 +746,18 @@ public abstract class SQLDB extends Database {
         return killData;
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     */
     @Override
     public void saveMultipleUserData(List<UserData> data) throws SQLException {
         checkConnection();
         if (data.isEmpty()) {
             return;
         }
-        Set<Exception> exceptions = new HashSet<>();
+        Set<Throwable> exceptions = new HashSet<>();
         List<UserData> saveLast = new ArrayList<>();
         String uSQL = "UPDATE " + userName + " SET "
                 + userColumnDemAge + "=?, "
@@ -778,6 +864,12 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    /**
+     *
+     * @param uuid
+     * @param data
+     * @throws SQLException
+     */
     @Override
     public void saveUserData(UUID uuid, UserData data) throws SQLException {
         if (uuid == null) {
@@ -866,6 +958,12 @@ public abstract class SQLDB extends Database {
         data.stopAccessing();
     }
 
+    /**
+     *
+     * @param userId
+     * @param locations
+     * @throws SQLException
+     */
     public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
         List<Location> newLocations = new ArrayList<>();
         newLocations.addAll(locations);
@@ -900,6 +998,13 @@ public abstract class SQLDB extends Database {
         saveStatement.close();
     }
 
+    /**
+     *
+     * @param userId
+     * @param names
+     * @param lastNick
+     * @throws SQLException
+     */
     public void saveNickList(int userId, HashSet<String> names, String lastNick) throws SQLException {
         if (names.isEmpty()) {
             return;
@@ -929,6 +1034,12 @@ public abstract class SQLDB extends Database {
         statement.close();
     }
 
+    /**
+     *
+     * @param userId
+     * @param sessions
+     * @throws SQLException
+     */
     public void saveSessionList(int userId, List<SessionData> sessions) throws SQLException {
         if (sessions.isEmpty()) {
             return;
@@ -958,6 +1069,12 @@ public abstract class SQLDB extends Database {
         statement.close();
     }
 
+    /**
+     *
+     * @param userId
+     * @param kills
+     * @throws SQLException
+     */
     public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
         if (kills.isEmpty()) {
             return;
@@ -989,6 +1106,12 @@ public abstract class SQLDB extends Database {
         statement.close();
     }
 
+    /**
+     *
+     * @param userId
+     * @param ips
+     * @throws SQLException
+     */
     public void saveIPList(int userId, HashSet<InetAddress> ips) throws SQLException {
         if (ips.isEmpty()) {
             return;
@@ -1017,6 +1140,12 @@ public abstract class SQLDB extends Database {
         statement.close();
     }
 
+    /**
+     *
+     * @param userId
+     * @param gamemodeTimes
+     * @throws SQLException
+     */
     public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) throws SQLException {
         if (gamemodeTimes.isEmpty()) {
             return;
@@ -1054,6 +1183,9 @@ public abstract class SQLDB extends Database {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void clean() {
         try {
@@ -1064,6 +1196,10 @@ public abstract class SQLDB extends Database {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean removeAllData() {
         try {
@@ -1093,10 +1229,18 @@ public abstract class SQLDB extends Database {
         return success;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean supportsModification() {
         return supportsModification;
     }
 
+    /**
+     *
+     * @return
+     */
     public Connection getConnection() {
         return connection;
     }

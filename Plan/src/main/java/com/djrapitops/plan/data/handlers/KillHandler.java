@@ -14,10 +14,20 @@ import main.java.com.djrapitops.plan.data.UserData;
 public class KillHandler {
     private Plan plugin;
 
+    /**
+     *
+     * @param plugin
+     */
     public KillHandler(Plan plugin) {
         this.plugin = plugin;
     }
     
+    /**
+     *
+     * @param killerData
+     * @param victimUUID
+     * @param weapon
+     */
     public void handlePlayerKill(UserData killerData, UUID victimUUID, String weapon) {
         long now = new Date().toInstant().getEpochSecond()*(long)1000;
         int victimID;
@@ -30,10 +40,18 @@ public class KillHandler {
         killerData.addPlayerKill(new KillData(victimUUID, victimID, weapon, now));
     }
     
+    /**
+     *
+     * @param data
+     */
     public void handlePlayerDeath(UserData data) {
         data.setDeaths(data.getDeaths()+1);
     }
     
+    /**
+     *
+     * @param data
+     */
     public void handleMobKill(UserData data) {
         data.setMobKills(data.getMobKills()+1);
     }
