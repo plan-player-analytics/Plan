@@ -174,7 +174,7 @@
         <header>
             <img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Inspect %name%">
             <p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-            <h1>Plan | Inspect Player %name%</h1>
+            <h1>Plan | Inspect Player %name%%op%</h1>
             <h4>Has Connected from ips: %ips%</h4>
         </header>
         %inaccuratedatawarning%
@@ -204,11 +204,11 @@
                     </div>
                 </div>
                 <img style="float: right; padding: 5px" alt="%name%" src="http://cravatar.eu/head/%name%/128.png">
-                <p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline% %essentials% %banned%%op%<br/>
+                <p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline%%banned% %essentials%<br/>
                     <i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>                    
                     <i class="fa fa-clock-o" aria-hidden="true"></i> Playtime: %playtime%<br/>
-                    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times %logintimes%<br/>
-                    <i class="fa fa-gavel" aria-hidden="true"></i> Times kicked %timeskicked%<br/>
+                    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times: %logintimes%<br/>
+                    <i class="fa fa-gavel" aria-hidden="true"></i> Times kicked: %timeskicked%<br/>
                     <i class="fa fa-crosshairs" aria-hidden="true"></i> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%<br/>
                     <br/>
                     <i class="fa fa-globe" aria-hidden="true"></i> Geolocation: %geoloc%<br/>
@@ -233,58 +233,63 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-area">                                
-                    <div class="infobox" style="background-color: #%gm0col%; width: 23%;">
-                        <div class="info-icon">
-                            <i class="fa fa-fire" aria-hidden="true"></i>
-                        </div>
-                        <div class="info-text">
-                            <div class="info-number">
-                                %gm0%
+                <div>                    
+                    <div class="box-area">                                
+                        <div class="infobox" style="background-color: #%gm0col%; width: 23%;">
+                            <div class="info-icon">
+                                <i class="fa fa-fire" aria-hidden="true"></i>
                             </div>
-                            <div class="info-label">
-                                Survival
+                            <div class="info-text">
+                                <div class="info-number">
+                                    %gm0%
+                                </div>
+                                <div class="info-label">
+                                    Survival
+                                </div>
+                            </div>
+                        </div>
+                        <div class="infobox" style="background-color: #%gm1col%; width: 23%;">
+                            <div class="info-icon">
+                                <i class="fa fa-cube" aria-hidden="true"></i>
+                            </div>
+                            <div class="info-text">
+                                <div class="info-number">
+                                    %gm1%
+                                </div>
+                                <div class="info-label">
+                                    Creative
+                                </div>
+                            </div>
+                        </div>                                
+                        <div class="infobox" style="background-color: #%gm2col%; width: 23%;">
+                            <div class="info-icon">
+                                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                            </div>
+                            <div class="info-text">
+                                <div class="info-number">
+                                    %gm2%
+                                </div>
+                                <div class="info-label">
+                                    Adventure
+                                </div>
+                            </div>
+                        </div>
+                        <div class="infobox" style="background-color: #%gm3col%; width: 23%;">
+                            <div class="info-icon">
+                                <i class="fa fa-binoculars" aria-hidden="true"></i>
+                            </div>
+                            <div class="info-text">
+                                <div class="info-number">
+                                    %gm3%
+                                </div>
+                                <div class="info-label">
+                                    Spectator
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="infobox" style="background-color: #%gm1col%; width: 23%;">
-                        <div class="info-icon">
-                            <i class="fa fa-cube" aria-hidden="true"></i>
-                        </div>
-                        <div class="info-text">
-                            <div class="info-number">
-                                %gm1%
-                            </div>
-                            <div class="info-label">
-                                Creative
-                            </div>
-                        </div>
-                    </div>                                
-                    <div class="infobox" style="background-color: #%gm2col%; width: 23%;">
-                        <div class="info-icon">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        </div>
-                        <div class="info-text">
-                            <div class="info-number">
-                                %gm2%
-                            </div>
-                            <div class="info-label">
-                                Adventure
-                            </div>
-                        </div>
-                    </div>
-                    <div class="infobox" style="background-color: #%gm3col%; width: 23%;">
-                        <div class="info-icon">
-                            <i class="fa fa-binoculars" aria-hidden="true"></i>
-                        </div>
-                        <div class="info-text">
-                            <div class="info-number">
-                                %gm3%
-                            </div>
-                            <div class="info-label">
-                                Spectator
-                            </div>
-                        </div>
+                    <div class="column info">
+                        <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                 </div>
             </div>
@@ -356,6 +361,29 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
         <script>
             // Script for All charts using Chart.js
+            var ctxgmpie = document.getElementById("gmPie");
+            var dataGmPie = {
+            labels: %gmlabels% ,
+                    datasets: [
+                    {
+                    data: %gmdata% ,
+                            backgroundColor: [ %gmcolors% ],
+                            hoverBackgroundColor: [ %gmcolors% ]
+                    }
+                    ]
+            }
+            var GMPie = new Chart(ctxgmpie, {
+            type: 'doughnut',
+                    data: dataGmPie,
+                    options: {
+                    legend: {
+                    position: 'right',
+                            labels: {
+                            padding: 7
+                            }
+                    }
+                    }
+            });
             var ctxweek = document.getElementById("playerChartWeek");            
             var dataweek = {
             labels: %labelsweek% ,
