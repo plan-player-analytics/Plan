@@ -5,6 +5,12 @@
     <artifactId>Plan</artifactId>
     <version>2.0.0</version>
     <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <id>org.bukkit</id>
+            <url>org/bukkit/craftbukkit/1.10.2-R0.1-SNAPSHOT/craftbukkit-1.10.2-R0.1-SNAPSHOT.jar</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
