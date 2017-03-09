@@ -6,9 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.Gender;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -127,6 +129,43 @@ public class UserData {
         playerKills = new ArrayList<>();
     }
 
+    /**
+     * Creates a new UserData object with copied values.
+     * @param data UserData to copy into the new object.
+     */
+    public UserData(UserData data) {
+        this.accessing = 0;
+        this.uuid = data.getUuid();
+        this.location = data.getLocation();
+        this.locations = new ArrayList<>();
+        locations.addAll(data.getLocations());
+        this.ips = new HashSet<>();
+        ips.addAll(data.getIps());
+        this.nicknames = new HashSet<>();
+        nicknames.addAll(data.getNicknames());
+        this.lastNick = data.getLastNick();
+        this.registered = data.getRegistered();
+        this.lastPlayed = data.getLastPlayed();
+        this.playTime = data.getPlayTime();
+        this.loginTimes = data.getLoginTimes();
+        this.timesKicked = data.getTimesKicked();
+        this.lastGmSwapTime = data.getLastGmSwapTime();
+        this.lastGamemode = data.getLastGamemode();
+        this.gmTimes = new HashMap<>();
+        gmTimes.putAll(data.getGmTimes());
+        this.isOp = data.isOp();
+        this.isBanned = data.isBanned();
+        DemographicsData dem = data.getDemData();
+        this.demData = new DemographicsData(dem.getAge(), dem.getGender(), dem.getGeoLocation());
+        this.mobKills = data.getMobKills();
+        this.playerKills = data.getPlayerKills();
+        this.deaths = data.getDeaths();
+        this.name = data.getName();
+        this.isOnline = data.isOnline();
+        this.sessions = new ArrayList<>();
+        sessions.addAll(data.getSessions());
+    }
+    
     /**
      *
      * @param ip
@@ -630,4 +669,75 @@ public class UserData {
     public void setLastNick(String lastNick) {
         this.lastNick = lastNick;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UserData other = (UserData) obj;
+        if (this.accessing != other.accessing) {
+            return false;
+        }
+        if (this.registered != other.registered) {
+            return false;
+        }
+        if (this.lastPlayed != other.lastPlayed) {
+            return false;
+        }
+        if (this.playTime != other.playTime) {
+            return false;
+        }
+        if (this.loginTimes != other.loginTimes) {
+            return false;
+        }
+        if (this.timesKicked != other.timesKicked) {
+            return false;
+        }
+        if (this.lastGmSwapTime != other.lastGmSwapTime) {
+            return false;
+        }
+        if (this.mobKills != other.mobKills) {
+            return false;
+        }
+        if (this.deaths != other.deaths) {
+            return false;
+        }
+        if (!Objects.equals(this.lastNick, other.lastNick)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.uuid, other.uuid)) {
+            return false;
+        }
+        if (!Objects.equals(this.ips, other.ips)) {
+            return false;
+        }
+        if (!Objects.equals(this.nicknames, other.nicknames)) {
+            return false;
+        }
+        if (this.lastGamemode != other.lastGamemode) {
+            return false;
+        }
+        if (!Objects.equals(this.gmTimes, other.gmTimes)) {
+            return false;
+        }
+        if (!Objects.equals(this.playerKills, other.playerKills)) {
+            return false;
+        }
+        if (!Objects.equals(this.sessions, other.sessions)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

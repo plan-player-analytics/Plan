@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -30,8 +31,6 @@ public class Analysis {
 
     private final Plan plugin;
     private final InspectCacheHandler inspectCache;
-    private final List<UserData> rawData;
-    private final List<UUID> added;
 
     /**
      * Class Constructor.
@@ -40,9 +39,7 @@ public class Analysis {
      */
     public Analysis(Plan plugin) {
         this.plugin = plugin;
-        this.inspectCache = plugin.getInspectCache();
-        rawData = new ArrayList<>();
-        added = new ArrayList<>();
+        this.inspectCache = plugin.getInspectCache();        
     }
 
     /**
@@ -50,13 +47,13 @@ public class Analysis {
      *
      * First retrieves all Offlineplayers and checks those that are in the
      * database. Then Runs a new Analysis Task Asyncronously. Saves AnalysisData
-     * to the provided Cache. Saves all UserData to InspectCache for 8 minutes.
+     * to the provided Cache. Saves all UserData to InspectCache for 15 minutes.
      *
      * @param analysisCache Cache that the data is saved to.
      */
     public void analyze(AnalysisCacheHandler analysisCache) {
-        rawData.clear();
-        added.clear();
+        List<UserData> rawData = new ArrayList<>();
+        List<UUID> added = new ArrayList<>();
         log(Phrase.ANALYSIS_START + "");
 
         List<UUID> uuids = fetchPlayersInDB();
@@ -68,7 +65,7 @@ public class Analysis {
         BukkitTask asyncAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                uuids.stream().filter(uuid -> uuid != null).forEach((uuid) -> {
+                uuids.stream().forEach((uuid) -> {
                     inspectCache.cache(uuid, 15);
                 });
                 log(Phrase.ANALYSIS_FETCH_DATA + "");
@@ -80,6 +77,7 @@ public class Analysis {
                                     UserData userData = inspectCache.getFromCache(uuid);
                                     if (userData != null) {
                                         rawData.add(userData);
+                                        userData.access();
                                         added.add(uuid);
                                     }
                                 }
@@ -135,12 +133,12 @@ public class Analysis {
                         sorted.addTotalDeaths(uData.getDeaths());
                         sorted.getSessiondata().addAll(uData.getSessions());
                         sorted.getRegistered().add(uData.getRegistered());
+                        uData.stopAccessing();
                     } catch (NullPointerException e) {
                         plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                         plugin.toLog(this.getClass().getName(), e);
                     }
                 });
-
                 // Analyze & Save RawAnalysisData to AnalysisData
                 createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
 
@@ -166,7 +164,7 @@ public class Analysis {
 
                 analysisData.setRefreshDate(new Date().getTime());
                 analysisCache.cache(analysisData);
-                plugin.log(Phrase.ANALYSIS_COMPLETE + "");
+                plugin.log(Phrase.ANALYSIS_COMPLETE + "");                
                 this.cancel();
             }
 
@@ -240,19 +238,19 @@ public class Analysis {
     }
 
     private List<UUID> fetchPlayersInDB() {
-        final List<UUID> uuids = new ArrayList<>();
-        log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
         try {
+//        final List<UUID> uuids = new ArrayList<>();
+        log(Phrase.ANALYSIS_FETCH_PLAYERS + "");        
             Set<UUID> savedUUIDs = plugin.getDB().getSavedUUIDs();
-            savedUUIDs.parallelStream()
+            List<UUID> uuids = savedUUIDs.parallelStream()
+                    .filter(uuid -> uuid != null)
                     .filter((uuid) -> (getOfflinePlayer(uuid).hasPlayedBefore()))
-                    .forEach((uuid) -> {
-                        uuids.add(uuid);
-                    });
+                    .collect(Collectors.toList());
+            return uuids;
         } catch (Exception e) {
             plugin.toLog(this.getClass().getName(), e);
         }
-        return uuids;
+        return new ArrayList<>();
     }
 
     private void log(String msg) {

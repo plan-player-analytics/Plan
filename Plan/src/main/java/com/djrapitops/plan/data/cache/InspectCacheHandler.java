@@ -55,7 +55,7 @@ public class InspectCacheHandler {
         DBCallableProcessor cacher = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
-                cache.put(uuid, data);
+                cache.put(uuid, new UserData(data));
             }
         };
         handler.getUserDataForProcessing(cacher, uuid, false);
@@ -69,7 +69,9 @@ public class InspectCacheHandler {
                 @Override
                 public void run() {
                     if (new Date().toInstant().getEpochSecond() - clearTimes.get(uuid) < 30) {
-                        clearFomCache(uuid);
+                        if (!cache.get(uuid).isAccessed()) {
+                            clearFomCache(uuid);
+                        }
                     } else {
                         this.cancel();
                     }

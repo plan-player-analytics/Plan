@@ -75,6 +75,7 @@ public class AnalysisUtils {
         int newPlayers = 0;
         if (!registered.isEmpty()) {
            newPlayers = registered.stream()
+                .filter((reg) -> (reg != null))
                 .filter((reg) -> (reg > now - scale))
                 .map((_item) -> 1).reduce(newPlayers, Integer::sum);
         }
