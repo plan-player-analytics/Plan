@@ -50,10 +50,10 @@ Customization:
         Inactive: 'A9A9A9'
         JoinedOnce: '808080'
   DemographicsTriggers:
-    Trigger: "i'm, am, im"
-    Female: 'female, girl, gurl, woman, gal, mrs, she, miss'
-    Male: 'male, boy, man, boe, sir, mr, guy, he'
-    IgnoreWhen: 'sure, think, with, are, you'
+    Trigger: "i'm, am, im, bin"
+    Female: 'female, girl, gurl, woman, gal, mrs, she, miss, feminin, weiblich, mädchen, frau'
+    Male: 'male, boy, man, boe, sir, mr, guy, he, männlich, maskulin, junge, mann'
+    IgnoreWhen: 'sure, think, with, are, you, din'
 
 database:
   type: sqlite

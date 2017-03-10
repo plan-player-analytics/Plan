@@ -69,12 +69,15 @@ public class InspectCacheHandler {
                 @Override
                 public void run() {
                     if (new Date().toInstant().getEpochSecond() - clearTimes.get(uuid) < 30) {
-                        if (!cache.get(uuid).isAccessed()) {
+                        UserData uData = cache.get(uuid);
+                        if (uData == null) {
+                            this.cancel();
+                            return;
+                        }
+                        if (!uData.isAccessed()) {
                             clearFomCache(uuid);
                         }
-                    } else {
-                        this.cancel();
-                    }
+                    } 
                     this.cancel();
                 }
             }).runTaskLater(plugin, 60 * 20 * minutes);

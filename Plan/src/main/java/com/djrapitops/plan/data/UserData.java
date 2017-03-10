@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.Gender;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

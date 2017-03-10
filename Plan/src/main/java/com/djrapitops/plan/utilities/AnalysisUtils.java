@@ -71,7 +71,7 @@ public class AnalysisUtils {
         return html;
     }
 
-    static int getNewPlayers(List<Long> registered, long scale, long now) {        
+    public static int getNewPlayers(List<Long> registered, long scale, long now) {        
         int newPlayers = 0;
         if (!registered.isEmpty()) {
            newPlayers = registered.stream()
@@ -84,7 +84,7 @@ public class AnalysisUtils {
         return newPlayers;
     }
     
-    static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
+    public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
         List<Long> list = new ArrayList<>();
         data.stream().forEach((sData) -> {
             list.add(sData.getSessionEnd()-sData.getSessionStart());
@@ -92,7 +92,7 @@ public class AnalysisUtils {
         return list;
     }
     
-    static long average(Collection<Long> list) {
+    public static long average(Collection<Long> list) {
         if (list.isEmpty()) {
             return 0;
         }
