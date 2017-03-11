@@ -85,8 +85,9 @@ public class AnalysisUtils {
     }
     
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
+        List<SessionData> d = new ArrayList<>(data);
         List<Long> list = new ArrayList<>();
-        data.stream().forEach((sData) -> {
+        d.stream().forEach((sData) -> {
             list.add(sData.getSessionEnd()-sData.getSessionStart());
         });
         return list;
