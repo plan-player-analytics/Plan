@@ -681,15 +681,12 @@ public class UserData {
             return false;
         }
         final UserData other = (UserData) obj;
-        if (this.accessing != other.accessing) {
-            return false;
-        }
         if (this.registered != other.registered) {
             return false;
         }
-        if (this.lastPlayed != other.lastPlayed) {
-            return false;
-        }
+//        if (this.lastPlayed != other.lastPlayed) {
+//            return false;
+//        }
         if (this.playTime != other.playTime) {
             return false;
         }

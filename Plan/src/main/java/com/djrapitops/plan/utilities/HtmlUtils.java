@@ -43,7 +43,7 @@ public class HtmlUtils {
      */
     public static String replacePlaceholders(String html, HashMap<String, String> replaceMap) {
         for (String key : replaceMap.keySet()) {
-            html = html.replaceAll(key, replaceMap.get(key));
+            html = html.replace(key, replaceMap.get(key));
         }
         return html;
     }
@@ -81,7 +81,7 @@ public class HtmlUtils {
         return url;
     }
 
-    static String removeXSS(String string) {
+    public static String removeXSS(String string) {
         return string.replaceAll("<!--", "")
                 .replaceAll("-->", "")
                 .replaceAll("<script>", "")

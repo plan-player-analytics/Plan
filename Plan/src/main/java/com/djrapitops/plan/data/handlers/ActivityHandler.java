@@ -33,7 +33,7 @@ public class ActivityHandler {
      * @return true if data is not found.
      */
     public boolean isFirstTimeJoin(UUID uuid) {
-        return !handler.getDB().wasSeenBefore(uuid);
+        return !plugin.getDB().wasSeenBefore(uuid);
     }
 
     /**

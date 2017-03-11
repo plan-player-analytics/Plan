@@ -355,15 +355,6 @@ public class DataCacheHandler {
     }
 
     /**
-     * Returns the same value as Plan#getDB().
-     *
-     * @return Current instance of the Database,
-     */
-    public Database getDB() {
-        return db;
-    }
-
-    /**
      *
      * @return
      */
