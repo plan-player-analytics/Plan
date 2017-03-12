@@ -179,7 +179,7 @@ public enum Phrase {
     public String parse(String... p) {
         String returnValue = this.toString();
         for (int i = 0; i < p.length; i++) {
-            returnValue = returnValue.replaceAll("REPLACE" + i, p[i]);
+            returnValue = returnValue.replace("REPLACE" + i, p[i]);
         }
         return returnValue;
     }

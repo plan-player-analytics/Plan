@@ -81,7 +81,7 @@ public class UserData {
             isBanned = player.isBanned();
         } catch (Exception e) {
             Plan plugin = getPlugin(Plan.class);
-            plugin.logError("Error getting ban date from Bukkit files. "+uuid.toString());
+            plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
             plugin.toLog(this.getClass().getName(), e);
         }
         name = player.getName();
@@ -118,7 +118,7 @@ public class UserData {
             isBanned = player.isBanned();
         } catch (Exception e) {
             Plan plugin = getPlugin(Plan.class);
-            plugin.logError("Error getting ban date from Bukkit files. "+uuid.toString());
+            plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
             plugin.toLog(this.getClass().getName(), e);
         }
         name = player.getName();
@@ -130,6 +130,7 @@ public class UserData {
 
     /**
      * Creates a new UserData object with copied values.
+     *
      * @param data UserData to copy into the new object.
      */
     public UserData(UserData data) {
@@ -164,7 +165,7 @@ public class UserData {
         this.sessions = new ArrayList<>();
         sessions.addAll(data.getSessions());
     }
-    
+
     /**
      *
      * @param ip
@@ -210,9 +211,11 @@ public class UserData {
      */
     public boolean addNickname(String nick) {
         if (!nicknames.contains(nick)) {
-            if (!nick.isEmpty()) {
-                nicknames.add(nick);
-                return true;
+            if (nick != null) {
+                if (!nick.isEmpty()) {
+                    nicknames.add(nick);
+                    return true;
+                }
             }
         }
         return false;
@@ -304,7 +307,7 @@ public class UserData {
     public void access() {
         accessing++;
     }
-    
+
     /**
      *
      */
@@ -313,12 +316,10 @@ public class UserData {
     }
 
     // Getters -------------------------------------------------------------
-
     /**
      *
      * @return
      */
-
     public UUID getUuid() {
         return uuid;
     }
@@ -452,7 +453,6 @@ public class UserData {
     }
 
     // Setters -------------------------------------------------------------
-
     /**
      *
      * @param uuid
@@ -620,7 +620,7 @@ public class UserData {
     public void setPlayerKills(List<KillData> playerKills) {
         this.playerKills = playerKills;
     }
-    
+
     /**
      *
      * @param kill
@@ -734,6 +734,5 @@ public class UserData {
         }
         return true;
     }
-    
-    
+
 }

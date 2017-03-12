@@ -5,6 +5,8 @@ import java.util.*;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -164,4 +166,5 @@ public abstract class Database {
      * @throws SQLException
      */
     public abstract int getUserId(String uuid) throws SQLException;
+    public abstract List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException;
 }

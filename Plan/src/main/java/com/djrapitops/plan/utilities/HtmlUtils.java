@@ -82,9 +82,9 @@ public class HtmlUtils {
     }
 
     public static String removeXSS(String string) {
-        return string.replaceAll("<!--", "")
-                .replaceAll("-->", "")
-                .replaceAll("<script>", "")
-                .replaceAll("</script>", "");
+        return string.replace("<!--", "")
+                .replace("-->", "")
+                .replace("<script>", "")
+                .replace("</script>", "");
     }
 }

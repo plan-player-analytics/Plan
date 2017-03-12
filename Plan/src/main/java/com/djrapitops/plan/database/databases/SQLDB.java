@@ -714,7 +714,8 @@ public abstract class SQLDB extends Database {
         return nicknames;
     }
 
-    private List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException {
+    @Override
+    public List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException {
         PreparedStatement statement;
         ResultSet set;
         statement = connection.prepareStatement("SELECT * FROM " + locationName + " WHERE UPPER(" + locationColumnUserID + ") LIKE UPPER(?)");
@@ -965,11 +966,11 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
-        List<Location> newLocations = new ArrayList<>();
-        newLocations.addAll(locations);
-        if (newLocations.isEmpty()) {
+        if (locations == null || locations.isEmpty()) {
             return;
         }
+        List<Location> newLocations = new ArrayList<>();
+        newLocations.addAll(locations);        
         PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
                 + locationColumnUserID + ", "
                 + locationColumnCoordinatesX + ", "
@@ -979,6 +980,9 @@ public abstract class SQLDB extends Database {
         boolean commitRequired = false;
         if (!newLocations.isEmpty()) {
             for (Location location : newLocations) {
+                if (location == null) {
+                    continue;
+                }
                 saveStatement.setInt(1, userId);
                 saveStatement.setInt(2, (int) location.getBlockX());
                 saveStatement.setInt(3, (int) location.getBlockZ());
@@ -1006,7 +1010,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     public void saveNickList(int userId, HashSet<String> names, String lastNick) throws SQLException {
-        if (names.isEmpty()) {
+        if (names == null || names.isEmpty()) {
             return;
         }
         PreparedStatement statement = connection.prepareStatement(
@@ -1056,9 +1060,14 @@ public abstract class SQLDB extends Database {
                 + ") VALUES (?, ?, ?)");
         boolean commitRequired = false;
         for (SessionData session : sessions) {
+            long end = session.getSessionEnd();
+            long start = session.getSessionStart();
+            if (end < start) {
+                continue;
+            }
             statement.setInt(1, userId);
-            statement.setLong(2, session.getSessionStart());
-            statement.setLong(3, session.getSessionEnd());
+            statement.setLong(2, start);
+            statement.setLong(3, end);
             statement.addBatch();
             commitRequired = true;
         }
@@ -1076,7 +1085,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
-        if (kills.isEmpty()) {
+        if (kills == null || kills.isEmpty()) {
             return;
         }
         PreparedStatement statement = connection.prepareStatement(
@@ -1092,6 +1101,9 @@ public abstract class SQLDB extends Database {
                 + ") VALUES (?, ?, ?, ?)");
         boolean commitRequired = false;
         for (KillData kill : kills) {
+            if (kill == null) {
+                continue;
+            }
             statement.setInt(1, userId);
             statement.setInt(2, kill.getVictimUserID());
             statement.setString(3, kill.getWeapon());
@@ -1101,7 +1113,6 @@ public abstract class SQLDB extends Database {
         }
         if (commitRequired) {
             statement.executeBatch();
-
         }
         statement.close();
     }
@@ -1113,7 +1124,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     public void saveIPList(int userId, HashSet<InetAddress> ips) throws SQLException {
-        if (ips.isEmpty()) {
+        if (ips == null || ips.isEmpty()) {
             return;
         }
         PreparedStatement statement = connection.prepareStatement(
@@ -1128,6 +1139,9 @@ public abstract class SQLDB extends Database {
                 + ") VALUES (?, ?)");
         boolean commitRequired = false;
         for (InetAddress ip : ips) {
+            if (ip == null) {
+                continue;
+            }
             statement.setInt(1, userId);
             statement.setString(2, ip.getHostAddress());
             statement.addBatch();
@@ -1147,7 +1161,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes.isEmpty()) {
+        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;
         }
         PreparedStatement statement = connection.prepareStatement(
