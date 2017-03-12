@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.importing.Importer;
 import main.java.com.djrapitops.plan.data.importing.OnTimeImporter;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -22,6 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -90,40 +92,17 @@ public class ManageImportCommand extends SubCommand {
         }
         HashMap<UUID, Long> numbericData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
         DataCacheHandler handler = plugin.getHandler();
-        if (importFromPlugin.equals("ontime")) {
-            importOnTime(numbericData, handler, sender);
-        }
-
-        return true;
-    }
-
-    private void importOnTime(HashMap<UUID, Long> onTimeData, DataCacheHandler handler, CommandSender sender) {
-        BukkitTask asyncOnTimeImportTask = (new BukkitRunnable() {
+        BukkitTask asyncImportTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                for (UUID uuid : onTimeData.keySet()) {
-                    OfflinePlayer player = getOfflinePlayer(uuid);
-                    if (handler.getActivityHandler().isFirstTimeJoin(uuid)) {
-                        handler.newPlayer(player);
+                if (importFromPlugin.equals("ontime")) {
+                    if (ManageUtils.importOnTime(numbericData, handler)) {
+                        sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
                     }
-                    DBCallableProcessor importer = new DBCallableProcessor() {
-                        @Override
-                        public void process(UserData data) {
-                            Long playTime = onTimeData.get(uuid);
-                            if (playTime > data.getPlayTime()) {
-                                data.setPlayTime(playTime);
-                                data.setLastGamemode(GameMode.SURVIVAL);
-                                data.setAllGMTimes(playTime, 0, 0, 0);
-                                data.setLastGmSwapTime(playTime);
-                            }
-                        }
-                    };
-                    handler.getUserDataForProcessing(importer, uuid);
-                }                
-                handler.saveCachedUserData();
-                sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
+                }
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
+        return true;
     }
 }

@@ -33,6 +33,9 @@ public class SortableSessionTableCreator {
                 long start = session.getSessionStart();
                 long end = session.getSessionEnd();
                 long length = end - start;
+                if (length < 0) {
+                    continue;
+                }
                 html += Html.TABLELINE_3_CUSTOMKEY.parse(
                         start+"", FormatUtils.formatTimeStamp(start+""), 
                         end+"", FormatUtils.formatTimeStamp(end+""), 

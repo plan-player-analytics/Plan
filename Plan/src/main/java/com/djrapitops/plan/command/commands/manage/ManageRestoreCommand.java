@@ -1,20 +1,16 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
 import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -83,45 +79,34 @@ public class ManageRestoreCommand extends SubCommand {
             BukkitTask asyncRestoreTask = (new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        String backupDBName = args[0];
+                    String backupDBName = args[0];
 
-                        File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (backupDBName.contains(".db") ? "" : ".db"));
-                        if (!backupDBFile.exists()) {
-                            sender.sendMessage(Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0]);
-                            this.cancel();
-                            return;
-                        }
-                        if (backupDBName.contains(".db")) {
-                            backupDBName = backupDBName.replace(".db", "");
-                        }
-                        SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
-                        if (!backupDB.init()) {
-                            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-                            this.cancel();
-                            return;
-                        }
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                        copyToDB.removeAllData();
-                        Set<UUID> uuids = backupDB.getSavedUUIDs();
-                        List<UserData> allUserData = new ArrayList<>();
-                        for (UUID uuid : uuids) {
-                            backupDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                                @Override
-                                public void process(UserData data) {
-                                    allUserData.add(data);
-                                }
-                            });
-                        }
-                        while (uuids.size() > allUserData.size()) {
-
-                        }
-                        copyToDB.saveMultipleUserData(allUserData);
-                        copyToDB.saveCommandUse(backupDB.getCommandUse());
+                    File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (backupDBName.contains(".db") ? "" : ".db"));
+                    if (!backupDBFile.exists()) {
+                        sender.sendMessage(Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0]);
+                        this.cancel();
+                        return;
+                    }
+                    if (backupDBName.contains(".db")) {
+                        backupDBName = backupDBName.replace(".db", "");
+                    }
+                    SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
+                    if (!backupDB.init()) {
+                        sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+                        this.cancel();
+                        return;
+                    }
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    final Collection<UUID> uuids = ManageUtils.getUUIDS(backupDB);
+                    if (uuids.isEmpty()) {
+                        sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")");
+                        this.cancel();
+                        return;
+                    }
+                    if (ManageUtils.clearAndCopy(copyToDB, backupDB, uuids)) {
                         sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
-                    } catch (SQLException | NullPointerException e) {
-                        plugin.toLog(this.getClass().getName(), e);
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                    } else {
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
                     }
                     this.cancel();
                 }

@@ -52,17 +52,12 @@ public class UserData {
     private SessionData currentSession;
     private List<SessionData> sessions;
 
-    /**
-     *
-     * @param player
-     * @param demData
-     */
-    public UserData(Player player, DemographicsData demData) {
+    public UserData(UUID uuid, long reg, Location loc, boolean op, GameMode lastGM, DemographicsData demData, String name, boolean online) {
         accessing = 0;
-        uuid = player.getUniqueId();
-        registered = player.getFirstPlayed();
-        location = player.getLocation();
-        isOp = player.isOp();
+        this.uuid = uuid;
+        registered = reg;
+        location = loc;
+        isOp = op;
         locations = new ArrayList<>();
         nicknames = new HashSet<>();
         ips = new HashSet<>();
@@ -75,17 +70,10 @@ public class UserData {
             gmTimes.put(GameMode.SPECTATOR, zero);
         } catch (NoSuchFieldError e) {
         }
-        lastGamemode = player.getGameMode();
+        lastGamemode = lastGM;
         this.demData = demData;
-        try {
-            isBanned = player.isBanned();
-        } catch (Exception e) {
-            Plan plugin = getPlugin(Plan.class);
-            plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
-            plugin.toLog(this.getClass().getName(), e);
-        }
-        name = player.getName();
-        isOnline = player.isOnline();
+        this.name = name;
+        isOnline = online;
         sessions = new ArrayList<>();
         lastNick = "";
         playerKills = new ArrayList<>();
@@ -96,36 +84,33 @@ public class UserData {
      * @param player
      * @param demData
      */
-    public UserData(OfflinePlayer player, DemographicsData demData) {
-        accessing = 0;
-        uuid = player.getUniqueId();
-        registered = player.getFirstPlayed();
-        isOp = player.isOp();
-        locations = new ArrayList<>();
-        nicknames = new HashSet<>();
-        ips = new HashSet<>();
-        gmTimes = new HashMap<>();
-        long zero = 0;
-        gmTimes.put(GameMode.SURVIVAL, zero);
-        gmTimes.put(GameMode.CREATIVE, zero);
-        gmTimes.put(GameMode.ADVENTURE, zero);
-        try {
-            gmTimes.put(GameMode.SPECTATOR, zero);
-        } catch (NoSuchFieldError e) {
-        }
-        this.demData = demData;
+    public UserData(Player player, DemographicsData demData) {
+        this(player.getUniqueId(), player.getFirstPlayed(), player.getLocation(), player.isOp(), player.getGameMode(), demData, player.getName(), player.isOnline());
         try {
             isBanned = player.isBanned();
         } catch (Exception e) {
             Plan plugin = getPlugin(Plan.class);
             plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
             plugin.toLog(this.getClass().getName(), e);
+            isBanned = false;
         }
-        name = player.getName();
-        isOnline = player.isOnline();
-        sessions = new ArrayList<>();
-        lastNick = "";
-        playerKills = new ArrayList<>();
+    }
+
+    /**
+     *
+     * @param player
+     * @param demData
+     */
+    public UserData(OfflinePlayer player, DemographicsData demData) {
+        this(player.getUniqueId(), player.getFirstPlayed(), null, player.isOp(), GameMode.SURVIVAL, demData, player.getName(), player.isOnline());
+        try {
+            isBanned = player.isBanned();
+        } catch (Exception e) {
+            Plan plugin = getPlugin(Plan.class);
+            plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
+            plugin.toLog(this.getClass().getName(), e);
+            isBanned = false;
+        }
     }
 
     /**

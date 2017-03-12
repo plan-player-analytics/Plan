@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -77,31 +78,10 @@ public class ManageBackupCommand extends SubCommand {
             (new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                    Date now = new Date();
-                    SQLiteDB backupDB = new SQLiteDB(plugin,
-                            args[0] + "-backup-" + now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
-
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                    backupDB.removeAllData();
-                    Set<UUID> uuids = copyFromDB.getSavedUUIDs();
-                    List<UserData> allUserData = new ArrayList<>();
-                    for (UUID uuid : uuids) {
-                        copyFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                            @Override
-                            public void process(UserData data) {
-                                allUserData.add(data);
-                            }
-                        });
-                    }
-                    while (uuids.size() > allUserData.size()) {
-                        
-                    }
-                    backupDB.saveMultipleUserData(allUserData);
-                    backupDB.saveCommandUse(copyFromDB.getCommandUse());
-                    sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
-                    } catch (SQLException e) {
-                        plugin.toLog(this.getClass().getName(), e);
+                    if (ManageUtils.backup(args[0], copyFromDB)) {
+                        sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
+                    } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
                     }
                     this.cancel();

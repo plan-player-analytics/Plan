@@ -18,6 +18,7 @@ import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -192,8 +193,7 @@ public abstract class SQLDB extends Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public boolean checkConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
@@ -352,8 +352,7 @@ public abstract class SQLDB extends Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     @Override
     public int getVersion() throws SQLException {
@@ -439,8 +438,7 @@ public abstract class SQLDB extends Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     @Override
     public Set<UUID> getSavedUUIDs() throws SQLException {
@@ -500,8 +498,7 @@ public abstract class SQLDB extends Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     @Override
     public HashMap<String, Integer> getCommandUse() throws SQLException {
@@ -783,10 +780,17 @@ public abstract class SQLDB extends Database {
                     }
                     UUID uuid = uData.getUuid();
                     if (uuid == null) {
+                        try {
+                            uData.setUuid(UUIDFetcher.getUUIDOf(uData.getName()));
+                        } catch (Exception ex) {
+                            continue;
+                        }
+                    }
+                    uuid = uData.getUuid();
+                    if (uuid == null) {
                         continue;
                     }
                     uData.access();
-
                     int userId = getUserId(uuid.toString());
                     if (userId == -1) {
                         saveLast.add(uData);
@@ -831,6 +835,17 @@ public abstract class SQLDB extends Database {
         for (UserData uData : data) {
             if (uData == null) {
                 continue;
+            }
+            UUID uuid = uData.getUuid();
+            if (uuid == null) {
+                try {
+                    uData.setUuid(UUIDFetcher.getUUIDOf(uData.getName()));
+                    if (uData.getUuid() == null) {
+                        continue;
+                    }
+                } catch (Exception ex) {
+                    continue;
+                }
             }
             uData.access();
             try {
@@ -970,7 +985,7 @@ public abstract class SQLDB extends Database {
             return;
         }
         List<Location> newLocations = new ArrayList<>();
-        newLocations.addAll(locations);        
+        newLocations.addAll(locations);
         PreparedStatement saveStatement = connection.prepareStatement("INSERT INTO " + locationName + " ("
                 + locationColumnUserID + ", "
                 + locationColumnCoordinatesX + ", "

@@ -51,26 +51,6 @@ public class AnalysisUtils {
         return SortablePlayersTableCreator.createSortablePlayersTable(data);
     }
 
-    static String createListStringOutOfHashMapLong(HashMap<String, Long> map, int limit) {
-        List<String[]> sorted = MapComparator.sortByValueLong(map);
-        String html = "<p>";
-        if (sorted.isEmpty()) {
-            html = Html.ERROR_LIST.parse();
-            return html;
-        }
-        Collections.reverse(sorted);
-        int i = 1;
-        for (String[] values : sorted) {
-            if (i >= limit) {
-                break;
-            }
-            html += values[1] + " ";
-            i++;
-        }
-        html += "</p>";
-        return html;
-    }
-
     public static int getNewPlayers(List<Long> registered, long scale, long now) {        
         int newPlayers = 0;
         if (!registered.isEmpty()) {

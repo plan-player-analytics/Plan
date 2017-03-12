@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -96,53 +98,29 @@ public class ManageMoveCommand extends SubCommand {
             plugin.logError(toDB + " was null!");
             return true;
         }
-        final Set<UUID> uuids;
-        try {
-            uuids = fromDatabase.getSavedUUIDs();
-        } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
-            sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
-            return true;
-        }
-        if (uuids.isEmpty()) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
-            return true;
-        }
-
+        
         final Database moveFromDB = fromDatabase;
         final Database moveToDB = toDatabase;
         (new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                    moveToDB.removeAllData();
-                    List<UserData> allUserData = new ArrayList<>();
-                    for (UUID uuid : uuids) {
-                        moveFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                            @Override
-                            public void process(UserData data) {
-                                allUserData.add(data);
-                            }
-                        });
-                    }
-                    while (uuids.size() > allUserData.size()) {
-
-                    }
-                    moveToDB.saveMultipleUserData(allUserData);
-                    moveToDB.saveCommandUse(moveFromDB.getCommandUse());
+                final Collection<UUID> uuids = ManageUtils.getUUIDS(moveFromDB);
+                if (uuids.isEmpty()) {
+                    sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
+                    this.cancel();
+                    return;
+                }
+                sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                if (ManageUtils.clearAndCopy(moveToDB, moveFromDB, uuids)) {
                     sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
                     if (!toDB.equals(plugin.getDB().getConfigName())) {
                         sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
                     }
-                } catch (SQLException | NullPointerException e) {
-                    plugin.toLog(this.getClass().getName(), e);
+                } else {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                 }
-
                 this.cancel();
             }
-
         }).runTaskAsynchronously(plugin);
 
         return true;

@@ -31,7 +31,7 @@ public class AnalysisCacheHandler {
      */
     public void updateCache() {
         cache = null;
-        analysis.analyze(this);
+        analysis.runAnalysis(this);
     }
 
     /**
