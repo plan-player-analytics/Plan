@@ -75,4 +75,10 @@ public class DemographicsData {
         this.geoLocation = geoLocation;
     }
 
+    @Override
+    public String toString() {
+        return "{" + "age:" + age + "|gender:" + gender + "|geoLocation:" + geoLocation + '}';
+    }
+
+    
 }

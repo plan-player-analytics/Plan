@@ -51,10 +51,10 @@ public class GamemodeTimesHandler {
         long lastSwap = data.getLastGmSwapTime();
         long playTime = data.getPlayTime();
         GameMode oldGM = data.getLastGamemode();
-        data.setGMTime(oldGM, times.get(oldGM) + (playTime - lastSwap));
-
+        if (oldGM != null) {
+            data.setGMTime(oldGM, times.get(oldGM) + (playTime - lastSwap));
+        }
         data.setLastGamemode(newGM);
-
         data.setLastGmSwapTime(playTime);
     }
 
