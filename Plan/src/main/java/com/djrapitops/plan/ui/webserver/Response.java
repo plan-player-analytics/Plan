@@ -47,7 +47,7 @@ public class Response {
             String[] requestArgs = request.getUri().split("/");
             boolean forbidden = false;
             String securityCode = "";
-            if (requestArgs.length < 2) {
+            if (requestArgs.length <= 2) {
                 forbidden = true;
             } else {
                 securityCode = requestArgs[1];
@@ -81,7 +81,7 @@ public class Response {
                     if (requestHandler.checkIfCached(uuid)) {
                         try {
                             String dataHtml = requestHandler.getInspectHtml(uuid);
-                            String htmlDef = "HTTP/1.1 OK\r\n"
+                            String htmlDef = "HTTP/1.1 200 OK\r\n"
                                     + "Content-Type: text/html; charset=utf-8\r\n"
                                     + "Content-Length: " + dataHtml.length() + "\r\n"
                                     + "\r\n";
@@ -101,7 +101,7 @@ public class Response {
             } else if (command.equals("server")) {
                 if (requestHandler.checkIfAnalysisIsCached()) {
                     String analysisHtml = requestHandler.getAnalysisHtml();
-                    String htmlDef = "HTTP/1.1 OK\r\n"
+                    String htmlDef = "HTTP/1.1 200 OK\r\n"
                             + "Content-Type: text/html; charset=utf-8\r\n"
                             + "Content-Length: " + analysisHtml.length() + "\r\n"
                             + "\r\n";

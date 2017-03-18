@@ -7,6 +7,7 @@
         <meta name="author" content="Rsl1122">
         <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />        
         <script src="https://use.fontawesome.com/df48eb908b.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <style>
             * {
                 box-sizing: border-box;
@@ -89,13 +90,13 @@
                 content: " \25B4\25BE" 
             }
             #wrapper {
-                width: 400%;
+                width: 500%;
                 transform: translate3d(0, 0, 0);
                 transition: transform .5s ease-in-out;
             }
             .content {
                 float: left;
-                width: 25%;
+                width: 20%;
                 height: 100%;
                 white-space: normal;
                 background-repeat: no-repeat;
@@ -201,9 +202,10 @@
             <div id="navLinks">
                 <ul>
                     <li class="itemLinks" data-pos="0px"><i class="fa fa-info-circle" aria-hidden="true"></i> Information</li>
-                    <li class="itemLinks" data-pos="-25%"><i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity</li>
-                    <li class="itemLinks" data-pos="-50%"><i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist</li>
-                    <li class="itemLinks" data-pos="-75%"><i class="fa fa-terminal" aria-hidden="true"></i> Command usage</li>
+                    <li class="itemLinks" data-pos="-20%"><i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity</li>
+                    <li class="itemLinks" data-pos="-40%"><i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist</li>
+                    <li class="itemLinks" data-pos="-60%"><i class="fa fa-terminal" aria-hidden="true"></i> Command usage</li>
+                    <li class="itemLinks" data-pos="-80%"><i class="fa fa-globe" aria-hidden="true"></i> Demographics</li>
                 </ul>
             </div>
             <div id="contentContainer">
@@ -526,8 +528,31 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div></div>
+                    <div class="content">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-globe" aria-hidden="true"></i><span class="header-text"> Demographics</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-globe" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        0
+                                    </div>
+                                    <div class="info-label">
+                                        Temp
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column" style="width:50%;">
+                            <div style="width:100%;"><div id="cloropleth"></div></div>                            
+                        </div>                        
+                    </div>
+                </div> <!--wrapper-->
+            </div></div> <!--contentcontainer, clearfix-->
     </body>
     <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
@@ -706,6 +731,47 @@
                 }
             }
         });
+    </script>
+    <script>
+        CLOROPLETH = document.getElementById('cloropleth');
+           var data = [{
+                type: 'choropleth',
+                locationmode: "country names",
+                locations: %geomapcountries%,
+                z: %geomapz%,
+                text: %geomapcodes%,
+                colorscale: [
+                    [0,'rgb(38, 127, 0)'],[1,'rgb(220, 220, 220)']],
+                autocolorscale: false,
+                reversescale: true,
+                marker: {
+                    line: {
+                        color: 'rgb(100,100,100)',
+                        width: 0.5
+                    }
+                },
+                tick0: 0,
+                zmin: 0,
+                dtick: 1000,
+                colorbar: {
+                    autotic: false,
+                    tickprefix: '',
+                    title: 'Players'
+                }
+          }];
+
+          var layout = {
+              title: 'Geographic locations',
+              autosize: true, 
+              geo:{
+                  showframe: false,
+                  showcoastlines: false,
+                  projection:{
+                      type: 'mercator'
+                  }
+              }
+          };
+          Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
     </script>
     <script>
         // Script for the page navigation buttons

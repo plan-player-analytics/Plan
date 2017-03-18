@@ -99,6 +99,9 @@ public class PlaceholderUtils {
                 + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
         replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage() + ""));
+        replaceMap.put("%geomapcountries%", data.getGeomapCountries());
+        replaceMap.put("%geomapz%", data.getGeomapZ());
+        replaceMap.put("%geomapcodes%", data.getGeomapCodes());
         return replaceMap;
     }
 

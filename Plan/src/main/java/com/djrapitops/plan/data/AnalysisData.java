@@ -44,6 +44,10 @@ public class AnalysisData {
     private long totaldeaths;
     
     private long sessionAverage;
+    
+    private String geomapCountries;
+    private String geomapZ;
+    private String geomapCodes;
 
     /**
      * Class constructor.
@@ -55,11 +59,38 @@ public class AnalysisData {
         commandUseTableHtml = Html.ERROR_NOT_SET+"";
         top20ActivePlayers = Html.ERROR_NOT_SET+"";
         recentPlayers = Html.ERROR_NOT_SET+"";
+        geomapCountries = Html.ERROR_NOT_SET+"";
+        geomapZ = Html.ERROR_NOT_SET+"";
+        geomapCodes = Html.ERROR_NOT_SET+"";
         playersDataArray = new String[]{"[0]","[\"No data\"]","[0]","[\"No data\"]","[0]","[\"No data\"]"};
     }
 
     // Getters and setters v---------------------------------v
 
+    public String getGeomapCountries() {
+        return geomapCountries;
+    }
+
+    public void setGeomapCountries(String geomapCountries) {
+        this.geomapCountries = geomapCountries;
+    }
+
+    public String getGeomapZ() {
+        return geomapZ;
+    }
+
+    public void setGeomapZ(String geomapZ) {
+        this.geomapZ = geomapZ;
+    }
+
+    public String getGeomapCodes() {
+        return geomapCodes;
+    }
+
+    public void setGeomapCodes(String geomapCodes) {
+        this.geomapCodes = geomapCodes;
+    }
+    
     /**
      *
      * @return

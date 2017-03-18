@@ -74,7 +74,7 @@ public enum Phrase {
     ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if the webserver is running on this server."),
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
-    ERROR_LOGGED("Caugth "+REPLACE0+". It has been logged to the Errors.txt"),
+    ERROR_LOGGED("Caught "+REPLACE0+". It has been logged to the Errors.txt"),
     ERROR_SESSIONDATA_INITIALIZATION("Player's session was initialized in a wrong way! (" + REPLACE0 + ")"),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),

@@ -92,7 +92,8 @@ public class Analysis {
     /**
      * Caches analyzed data of db to the provided cache analysisCache.
      *
-     * @param analysisCache Cache that will contain AnalysisData result of this method.
+     * @param analysisCache Cache that will contain AnalysisData result of this
+     * method.
      * @param db Database which data will be analyzed.
      * @return Whether or not analysis was successful.
      */
@@ -132,6 +133,7 @@ public class Analysis {
         log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
         AnalysisData analysisData = new AnalysisData();
         analysisData.setSortablePlayersTable(AnalysisUtils.createSortablePlayersTable(rawData));
+        sorted.fillGeolocations();
         // Fill Dataset with userdata.
         rawData.parallelStream().forEach((uData) -> {
             try {
@@ -176,12 +178,14 @@ public class Analysis {
                 sorted.addTotalDeaths(uData.getDeaths());
                 sorted.getSessiondata().addAll(uData.getSessions());
                 sorted.getRegistered().add(uData.getRegistered());
+                sorted.addGeoloc(uData.getDemData().getGeoLocation());
                 uData.stopAccessing();
             } catch (NullPointerException e) {
                 plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                 plugin.toLog(this.getClass().getName(), e);
             }
-        });
+        });        
+        createCloroplethMap(analysisData, sorted.getGeolocations(), sorted.getGeocodes());
         // Analyze & Save RawAnalysisData to AnalysisData
         createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
         analysisData.setRecentPlayers(RecentPlayersButtonsCreator.createRecentLoginsButtons(sorted.getLatestLogins(), 20));
@@ -275,5 +279,27 @@ public class Analysis {
         if (Settings.ANALYSIS_LOG_TO_CONSOLE.isTrue()) {
             plugin.log(msg);
         }
+    }
+
+    private void createCloroplethMap(AnalysisData aData, HashMap<String, Integer> geolocations, HashMap<String, String> geocodes) {
+        String locations = "[";
+        String z = "[";
+        String text = "[";
+        for (String c : geolocations.keySet()) {
+            locations += "\""+c+"\"" + ",";
+            z += geolocations.get(c) + ",";
+            String code = geocodes.get(c);
+            if (code != null) {
+                text += "\""+code+"\"" + ",";
+            } else {
+                text += "\"UNK\",";
+            }
+        }
+        locations += "]";
+        z += "]";
+        text += "]";
+        aData.setGeomapCountries(locations.replace(",]", "]"));
+        aData.setGeomapZ(z.replace(",]", "]"));
+        aData.setGeomapCodes(text.replace(",]", "]"));
     }
 }
