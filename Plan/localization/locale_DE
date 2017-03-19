@@ -1,7 +1,7 @@
 ENABLED <> Player Analytics aktiviert.
 DISABLED <> Player Analytics deaktiviert.
 RELOAD_COMPLETE <> §a[Plan] Reload abgeschlossen.
-CACHE_SAVE <> Daten im cache werden gespeichert...
+CACHE_SAVE <> Daten im Cache werden gespeichert...
 CACHE_ADD <> REPLACE0 wurde zum Cache hinzugefügt.
 CACHE_REMOVE <> REPLACE0 wurde aus dem Cache gelöscht.
 CONFIG_HEADER <> Plan Config | Mehr Informationen auf https://www.spigotmc.org/wiki/plan-configuration/
