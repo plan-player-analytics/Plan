@@ -1,0 +1,138 @@
+ENABLED <> Player Analytics aktiviert.
+DISABLED <> Player Analytics deaktiviert.
+RELOAD_COMPLETE <> §a[Plan] Reload abgeschlossen.
+CACHE_SAVE <> Daten im cache werden gespeichert...
+CACHE_ADD <> REPLACE0 wurde zum Cache hinzugefügt.
+CACHE_REMOVE <> REPLACE0 wurde aus dem Cache gelöscht.
+CONFIG_HEADER <> Plan Config | Mehr Informationen auf https://www.spigotmc.org/wiki/plan-configuration/
+DB_INIT <> Datenbank Initialisierung...
+WEBSERVER_INIT <> Initialisiere Webserver...
+WEBSERVER_CLOSE <> Webserver wird heruntergefahren...
+WEBSERVER_RUNNING <> Webserver läuft auf PORT REPLACE0
+DB_CONNECTION_FAIL <> REPLACE0-Datenbank Verbindung fehlgeschlagen: REPLACE1
+DB_ESTABLISHED <> REPLACE0-Datenbank Verbindung hergestellt.
+DB_TYPE_DOES_NOT_EXIST <> Dieser Datenbank Typ existiert nicht.
+DB_FAILURE_DISABLE <> Datenbank Initialisierung fehlgeschlagen, deaktiviere Plan.
+NOTIFY_EMPTY_IP <> §e[Plan] IP in server.properties ist leer & Alternative ServerIP wird nicht benutzt, fehlerhafte Links werden ausgegeben!
+VERSION_NEW_AVAILABLE <> Eine neue Version (REPLACE0) ist verfügbar auf https://www.spigotmc.org/resources/plan-player-analytics.32536/
+VERSION_LATEST <> Du benutzt die neueste Version.
+VERSION_CHECK_ERROR <> Versionen konnten nicht abgeglichen werden.
+VERSION_FAIL <> Die neueste Versionsnummer konnte nicht abgerufen werden.
+USERNAME_NOT_VALID <> §c[Plan] Dieser Spieler existiert nicht.
+USERNAME_NOT_SEEN <> §c[Plan] Dieser Spieler war noch nie auf diesem Server.
+USERNAME_NOT_KNOWN <> §c[Plan] Der Spielername konnte in der Datenbank nicht gefunden werden.
+GRABBING_DATA_MESSAGE <> »§2 Hole Daten ins Cache...
+DEM_UNKNOWN <> Nicht bekannt
+NOT_IN_TOWN <> Nicht in einem Dorf
+NOT_IN_FAC <> Nicht in einer Faction
+COMMAND_TIMEOUT <> §c[Plan] REPLACE0 Befehl ausgetimed! Der Error befindest sich vermutlich in der Serverkonsole.
+ANALYSIS_START <> Analyse | Beginne die Analyse der Spieler Daten...
+ANALYSIS_BOOT_NOTIFY <> Analyse | Boot Analyse in 30 Sekunden...
+ANALYSIS_BOOT <> Analyse | Starte Boot Analyse...
+ANALYSIS_FETCH_PLAYERS <> Analyse | Suche nach verfügbaren Spieler...
+ANALYSIS_FETCH_DATA <> Analyse | Hole Daten...
+ANALYSIS_FAIL_NO_PLAYERS <> Analyse | Analyse fehlgeschlagen, keine bekannten Spieler.
+ANALYSIS_FAIL_NO_DATA <> Analyse | Analyse fehlgeschlagen, keine Daten in der Datenbank.
+ANALYSIS_BEGIN_ANALYSIS <> Analyse | Daten geholt, beginne mit der Analyse der Daten...
+ANALYSIS_COMPLETE <> Analyse | Analyse vollständig.
+DATA_CORRUPTION_WARN <> Einige Daten könnten beschädigt sein: REPLACE0
+ERROR_NO_DATA_VIEW <> §eWebserver deaktiviert aber Alternative IP/PlanLite wird nicht benutzt, Daten können nicht angezeigt werden!
+ERROR_WEBSERVER_OFF_ANALYSIS <> §e[Plan] Dieser Befehl kann nur benutzt werden wenn der Webserver auf diesem Server läuft...
+ERROR_WEBSERVER_OFF_INSPECT <> §e[Plan] Dieser Befehl kann nur benutzt werden wenn Webserver/Planlite auf dem Server aktiviert ist.
+MANAGE_ERROR_INCORRECT_PLUGIN <> §c[Plan] Plugin nicht unterstützt: 
+MANAGE_PROCESS_START <> »§7 Verarbeite Daten...
+MANAGE_ERROR_PLUGIN_NOT_ENABLED <> §c[Plan] Plugin ist nicht aktiviert: 
+MANAGE_ERROR_INCORRECT_DB <> §c[Plan] Falsche Datenbank! (SQlite/MySQL wird unterstützt): 
+MANAGE_ERROR_SAME_DB <> §c[Plan] Kann nicht zur selben Datenbank bewegen!
+MANAGE_DATABASE_FAILURE <> §c[Plan] Eine der Datenbanken wurde nicht richtig initialisiert.
+MANAGE_DB_CONFIG_REMINDER <> §e[Plan] Vergiss nicht zur neuen Datenbank zu wechseln und das Plugin neu zu laden
+MANAGE_ERROR_NO_PLAYERS <> §c[Plan] Datenbank hat keine Spieler Daten!
+MANAGE_ERROR_BACKUP_FILE_NOT_FOUND <> §c[Plan] Sicherheitskopie existiert nicht!
+MANAGE_MOVE_SUCCESS <> §a[Plan] Alle Daten wurden erfolgreich verschoben!
+MANAGE_COPY_SUCCESS <> §a[Plan] Alle Daten wurden erfolgreich kopiert!
+MANAGE_PROCESS_FAIL <> §c[Plan] Irgendwas lief schief während die Daten verarbeitet wurden!
+MANAGE_CLEAR_SUCCESS <> §a[Plan] Alle Daten wurden erfolgreich gesäubert!
+MANAGE_REMOVE_SUCCESS <> §f» §2Daten von §fREPLACE0§2 wurden aus dieser Datenbank entfernt §fREPLACE1§2.
+MANAGE_IMPORTING <> §f» §2 Importiere Daten...
+MANAGE_SUCCESS <> §f» §2 Erfolgreich!
+CMD_ANALYZE_HEADER <> §f»§2 Player Analytics - Analyse Ergebnisse
+CMD_INSPECT_HEADER <> §f»§2 Player Analytics - Überprüfe die Ergebnisse: 
+CMD_INFO_HEADER <> §f»§2 Player Analytics - Info
+CMD_INFO_VERSION <> §7 •§2§2 Version: §7REPLACE0
+CMD_SEARCH_HEADER <> §f»§2 Player Analytics - Suchergebnisse für: 
+CMD_HELP_HEADER <> §f»§2 Player Analytics - Hilfe
+CMD_MANAGE_HELP_HEADER <> §f»§2 Player Analytics - Management Hilfe
+CMD_MANAGE_STATUS_HEADER <> §f»§2 Player Analytics - Datenbank Status
+CMD_MANAGE_STATUS_ACTIVE_DB <> §7 •§2§2 Aktive Datenbank: §7REPLACE0
+CMD_CLICK_ME <> Klick Mich
+CMD_LINK <> §7 •§2 Link: §f
+CMD_RESULTS_AVAILABLE <> §7   Die Ergebnisse werden für §fREPLACE0§7 Minuten erreichbar sein.
+CMD_NO_RESULTS <> §7 •§2 Keine Ergebnisse für §7REPLACE0§2.
+CMD_MATCH <> §7 Übereinstimmender Spieler: §f
+CMD_USG_ANALYZE <> Zeige die Server Analyse
+CMD_USG_HELP <> Zeige die Befehlsliste.
+CMD_USG_INFO <> Zeige die Version von Plan
+CMD_USG_INSPECT <> Prüfe Spieler Daten
+CMD_USG_MANAGE <> Datenbank Management Befehl
+CMD_USG_MANAGE_BACKUP <> Erstelle eine Sicherheitskopie der Datenbank als .db Datei
+CMD_USG_MANAGE_RESTORE <> Stelle eine Sicherheitskopie einer Datenbank aus einer Datei wieder her.
+CMD_USG_MANAGE_MOVE <> Kopiere Daten von einer Datenbank zur anderen & überschreibe die Werte
+CMD_USG_MANAGE_COMBINE <> Kopiere Daten von einer Datenbank zur anderen & kombiniere die Werte
+CMD_USG_MANAGE_IMPORT <> Importiere Daten von unterstützten Plugins zur aktiven Datenbank.
+CMD_USG_MANAGE_CLEAR <> Leere Daten aus einer Datenbank
+CMD_USG_MANAGE_REMOVE <> Entferne die Spieler Daten aus der aktiven Datenbank.
+CMD_USG_MANAGE_STATUS <> Überprüfe den Status der aktiven Datenbank.
+CMD_USG_MANAGE_HELP <> Zeige die Management Hilfe.
+CMD_USG_MANAGE_HOTSWAP <> Wechsle zu einer anderen Datenbank & starte das Plugin neu
+CMD_USG_RELOAD <> Lade die Plugin Konfiguration neu und & speichere die Daten aus dem Cache
+CMD_USG_SEARCH <> Suche nach einem Spieler
+ARG_SEARCH <> <Teil des Spielernamens>
+ARG_PLAYER <> <Spieler>
+ARG_RESTORE <> <Dateiname.db> <dbTo> [-a]
+ARG_IMPORT <> <Plugin> [-a]
+ARG_MOVE <> <vonDB> <nachDB> [-a]
+USE_RESTORE <> Nutze /plan manage restore <Dateiname.db> <dbTo> [-a]
+USE_MANAGE <> Nutze /plan manage für Hilfe
+USE_PLAN <> Nutze /plan für Hilfe
+USE_MOVE <> Nutze /plan manage move <vonDB> <nachDB> [-a]
+USE_COMBINE <> Nutze /plan manage combine <vonDB> <nachDB> [-a]
+USE_IMPORT <> Nutze /plan manage import <Plugin> [-a]
+WARN_REWRITE <> Daten in REPLACE0-Datenbank werden neu geschrieben!
+WARN_OVERWRITE <> Daten in REPLACE0-Datenbank werden überschrieben!
+WARN_OVERWRITE_SOME <> Einige Daten in REPLACE0-Datenbank werden überschrieben!
+WARN_REMOVE <> Daten in REPLACE0-Datenbank werden entfernt!
+COMMAND_SENDER_NOT_PLAYER <> §c[Plan] Dieser Befehl kann nur als Spieler benutzt werden.
+COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Dieser Befehl erfordert Argumente. REPLACE0
+COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! REPLACE0
+COMMAND_REQUIRES_ARGUMENTS_ONE <> §c[Plan] Der Befehl benötigt ein Argument.
+COMMAND_NO_PERMISSION <> §c[Plan] Du hast nicht die benötigte Berechtigung.
+<<<<<<HTML>>>>>>
+WARN_INACCURATE <> <div class="warn">Daten könnten ungenau sein, der Spieler hat sich erst registriert.</div>
+BANNED <> | <span class="darkred">Gesperrt</span>
+OPERATOR <> , Operator (Op)
+ONLINE <> | <span class="darkgreen">Online</span>
+OFFLINE <> | <span class="darkred">Offline</span>
+ACTIVE <> | Spieler ist aktiv
+INACTIVE <> | Spieler ist inaktiv
+ERROR_LIST <> Error beim erstellen der Liste</p>
+HIDDEN <> Versteckt (config)
+FACTION_NOT_FOUND <> Faction nicht gefunden
+FACTION_NO_LEADER <> Kein Anführer
+FACTION_NO_FACTIONS <> Keine Factions
+WARPS <> <br/>Warps: REPLACE0
+ACHIEVEMENTS <> <br/>Errungenschaften: REPLACE0/REPLACE1
+JAILED <> | Eingesperrt
+MUTED <> | Stummgeschaltet
+VOTES <> <br/>Hat REPLACE0 mal gevoted
+FACTION <> <br/>Faction: REPLACE0 | Power: REPLACE1/REPLACE2
+TOWN <> <br/>Dorf: REPLACE0
+TOWN_NO_TOWNS <> Keine Dörfer
+GRAPH_BANNED <> Gesperrt
+GRAPH_UNKNOWN <> Unbekannt
+GRAPH_INACTIVE <> Inaktiv
+GRAPH_ACTIVE <> Aktiv
+TABLE_SESSIONS_START <> <table class="sortable table"><thead><tr><th>Session Started</th><th>Session Ended</th><th>Session Length</th></tr></thead><tbody>
+TABLE_FACTIONS_START <> <table class="sortable table"><thead><tr><th>Faction</th><th>Power</th><th>Land</th><th>Leader</th></tr></thead><tbody>
+TABLE_TOWNS_START <> <table class="sortable table"><thead><tr><th>Town</th><th>Residents</th><th>Land</th><th>Mayor</th></tr></thead><tbody>
+ERROR_TABLE_2 <> <tr><td><b>No data</b></td><td>No data</td></tr>
+SESSIONDATA_NONE <> Keine Session Daten verfügbar
