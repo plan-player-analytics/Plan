@@ -33,7 +33,7 @@ public class GamemodeTimesHandler {
      * @param data UserData matching the Player
      */
     public void handleLogin(GameMode gm, UserData data) {
-        data.setLastGamemode(gm);
+        handleChangeEvent(gm, data);
     }
 
     /**
@@ -45,15 +45,19 @@ public class GamemodeTimesHandler {
      * @param data UserData matching the Player
      */
     public void handleChangeEvent(GameMode newGM, UserData data) {
+        if (newGM == null) {
+            return;
+        }
+        if (data.getLastGamemode() == null) {
+            data.setLastGamemode(GameMode.SURVIVAL);
+        }
+        GameMode oldGM = data.getLastGamemode();
         HashMap<GameMode, Long> times = data.getGmTimes();
+        Long currentGMTime = times.get(oldGM);
         handler.getActivityHandler().saveToCache(data);
-
         long lastSwap = data.getLastGmSwapTime();
         long playTime = data.getPlayTime();
-        GameMode oldGM = data.getLastGamemode();
-        if (oldGM != null) {
-            data.setGMTime(oldGM, times.get(oldGM) + (playTime - lastSwap));
-        }
+        data.setGMTime(oldGM, currentGMTime + (playTime - lastSwap));
         data.setLastGamemode(newGM);
         data.setLastGmSwapTime(playTime);
     }
@@ -65,13 +69,14 @@ public class GamemodeTimesHandler {
      * @param data UserData matching the Player
      */
     public void saveToCache(GameMode currentGM, UserData data) {
+        if (currentGM == null) {
+            return;
+        }
         HashMap<GameMode, Long> times = data.getGmTimes();
         handler.getActivityHandler().saveToCache(data);
-
         long lastSwap = data.getLastGmSwapTime();
         long playtime = data.getPlayTime();
         data.setGMTime(currentGM, times.get(currentGM) + (playtime - lastSwap));
-
         data.setLastGmSwapTime(playtime);
     }
 

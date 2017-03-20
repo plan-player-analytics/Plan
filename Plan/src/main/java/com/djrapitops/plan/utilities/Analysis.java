@@ -176,7 +176,10 @@ public class Analysis {
                 sorted.addTotalKills(uData.getPlayerKills().size());
                 sorted.addTotalMobKills(uData.getMobKills());
                 sorted.addTotalDeaths(uData.getDeaths());
-                sorted.getSessiondata().addAll(uData.getSessions());
+                List<SessionData> sessions = uData.getSessions();
+                if (!sessions.isEmpty()) {
+                    sorted.getSessiondata().addAll(sessions);
+                }
                 sorted.getRegistered().add(uData.getRegistered());
                 sorted.addGeoloc(uData.getDemData().getGeoLocation());
                 uData.stopAccessing();

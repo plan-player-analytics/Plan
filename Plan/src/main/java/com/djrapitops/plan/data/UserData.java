@@ -225,6 +225,9 @@ public class UserData {
      * @param time
      */
     public void setGMTime(GameMode gm, long time) {
+        if (gmTimes == null) {
+            gmTimes = new HashMap<>();
+        }
         gmTimes.put(gm, time);
     }
 

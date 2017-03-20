@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -43,33 +44,33 @@ public class AnalysisUtils {
     static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
         return SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
     }
-    
+
     static String createSortablePlayersTable(Collection<UserData> data) {
         return SortablePlayersTableCreator.createSortablePlayersTable(data);
     }
 
-    public static int getNewPlayers(List<Long> registered, long scale, long now) {        
+    public static int getNewPlayers(List<Long> registered, long scale, long now) {
         int newPlayers = 0;
         if (!registered.isEmpty()) {
-           newPlayers = registered.stream()
-                .filter((reg) -> (reg != null))
-                .filter((reg) -> (reg > now - scale))
-                .map((_item) -> 1).reduce(newPlayers, Integer::sum);
+            newPlayers = registered.stream()
+                    .filter((reg) -> (reg != null))
+                    .filter((reg) -> (reg > now - scale))
+                    .map((_item) -> 1).reduce(newPlayers, Integer::sum);
         }
         // Filters out register dates before scale
-        
+
         return newPlayers;
     }
-    
+
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
-        List<SessionData> d = new ArrayList<>(data);
-        List<Long> list = new ArrayList<>();
-        d.stream().forEach((sData) -> {
-            list.add(sData.getSessionEnd()-sData.getSessionStart());
-        });
+        List<Long> list = data.stream()
+                .filter(session -> session != null)
+                .filter(session -> session.getSessionEnd() > session.getSessionStart())
+                .map(session -> session.getSessionEnd() - session.getSessionStart())
+                .collect(Collectors.toList());
         return list;
     }
-    
+
     public static long average(Collection<Long> list) {
         if (list.isEmpty()) {
             return 0;
