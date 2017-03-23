@@ -32,6 +32,7 @@ public class RawAnalysisData {
     private HashMap<String, Integer> geolocations;
     private HashMap<String, String> geocodes;
     private List<Long> registered;
+    private int[] genders;
 
     /**
      *
@@ -58,6 +59,7 @@ public class RawAnalysisData {
         geolocations = new HashMap<>();
         geocodes = new HashMap<>();
         registered = new ArrayList<>();
+        genders = new int[]{0, 0, 0};
     }
 
     public void addGeoloc(String country) {
@@ -367,5 +369,17 @@ public class RawAnalysisData {
      */
     public List<Long> getRegistered() {
         return registered;
+    }
+
+    public int[] getGenders() {
+        return genders;
+    }
+
+    public void setGenders(int[] gender) {
+        this.genders = gender;
+    }
+    
+    public void addToGender(int i, int amount) {
+        this.genders[i] = this.genders[i]+amount;
     }
 }

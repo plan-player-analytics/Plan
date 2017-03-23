@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -23,6 +25,9 @@ import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -127,6 +132,10 @@ public class Analysis {
             plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
+        return analyzeData(rawData, uuids, analysisCache);
+    }
+
+    public boolean analyzeData(List<UserData> rawData, List<UUID> uuids, AnalysisCacheHandler analysisCache) {
         // Create empty Dataset
         final RawAnalysisData sorted = new RawAnalysisData();
         sorted.setCommandUse(plugin.getHandler().getCommandUse());
@@ -156,7 +165,8 @@ public class Analysis {
 
                 sorted.getLatestLogins().put(html, uData.getLastPlayed());
                 sorted.addTotalLoginTimes(uData.getLoginTimes());
-                int age = uData.getDemData().getAge();
+                DemographicsData demData = uData.getDemData();
+                int age = demData.getAge();
                 if (age != -1) {
                     sorted.getAges().add(age);
                 }
@@ -181,8 +191,16 @@ public class Analysis {
                     sorted.getSessiondata().addAll(sessions);
                 }
                 sorted.getRegistered().add(uData.getRegistered());
-                sorted.addGeoloc(uData.getDemData().getGeoLocation());
+                sorted.addGeoloc(demData.getGeoLocation());
                 uData.stopAccessing();
+                Gender gender = demData.getGender();
+                if (gender == Gender.MALE) {
+                    sorted.addToGender(0, 1);
+                } else if (gender == Gender.FEMALE) {
+                    sorted.addToGender(1, 1);
+                } else {
+                    sorted.addToGender(2, 1);
+                }
             } catch (NullPointerException e) {
                 plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
                 plugin.toLog(this.getClass().getName(), e);
@@ -206,6 +224,7 @@ public class Analysis {
         analysisData.setTotalkills(sorted.getTotalKills());
         analysisData.setTotalmobkills(sorted.getTotalMobKills());
         analysisData.setRefreshDate(new Date().getTime());
+        analysisData.setGenderData(sorted.getGenders());
         analysisCache.cache(analysisData);
         plugin.log(Phrase.ANALYSIS_COMPLETE + "");
         return true;

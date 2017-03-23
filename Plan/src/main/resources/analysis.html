@@ -528,28 +528,62 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="content">
-                        <div class="headerbox">
-                            <div class="header-icon">
-                                <div class="header-label"><i class="fa fa-globe" aria-hidden="true"></i><span class="header-text"> Demographics</span></div>
-                            </div>
-                            <div class="infobox" style="float: right;">
-                                <div class="info-icon">
-                                    <i class="fa fa-globe" aria-hidden="true"></i>
+                    <div class="content">                        
+                        <div class="column" style="width:50%;">
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-globe" aria-hidden="true"></i><span class="header-text"> Geolocations</span></div>
                                 </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        0
+                                <div class="infobox" style="float: right;">
+                                    <div class="info-icon">
+                                        <i class="fa fa-users" aria-hidden="true"></i>
                                     </div>
-                                    <div class="info-label">
-                                        Temp
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %activitytotal%
+                                        </div>
+                                        <div class="info-label">
+                                            Total Players
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div style="width:100%;"><div id="cloropleth"></div></div>                            
                         </div>
                         <div class="column" style="width:50%;">
-                            <div style="width:100%;"><div id="cloropleth"></div></div>                            
-                        </div>                        
+                            <div class="headerbox">
+                                <div class="header-icon">
+                                    <div class="header-label"><i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i><span class="header-text"> Gender Distribution</span></div>
+                                </div>                                
+                                <div class="infobox" style="float: right; background-color: %genderfcolor%">
+                                    <div class="info-icon">
+                                        <i class="fa fa-female" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %genderfemale%
+                                        </div>
+                                        <div class="info-label">
+                                            Female
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infobox" style="float: right; background-color: %gendermcolor%">
+                                    <div class="info-icon">
+                                        <i class="fa fa-male" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        <div class="info-number">
+                                            %gendermale%
+                                        </div>
+                                        <div class="info-label">
+                                            Male
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <canvas id="genderPie" width="1000" height="600" style="width: 95%;"></canvas>
+                        </div>
                     </div>
                 </div> <!--wrapper-->
             </div></div> <!--contentcontainer, clearfix-->
@@ -565,6 +599,7 @@
         var ctxmonth = document.getElementById("playerChartMonth");        
         var ctxactivitypie = document.getElementById("activityPie");        
         var ctxgmpie = document.getElementById("gmPie");        
+        var ctxgenderpie = document.getElementById("genderPie");        
         var dataday = {
             labels: %labelsday%,
             datasets: [
@@ -687,6 +722,28 @@
                }
            }
         });
+        var dataGenderPie = {
+            labels: %genderlabels%,
+            datasets: [
+                {
+                    data: %genderdata%,
+                    backgroundColor: [%gendercolors%],
+                    hoverBackgroundColor: [%gendercolors%]
+                }
+            ]
+        }
+        var GenderPie = new Chart(ctxgenderpie, {
+           type: 'doughnut',
+           data: dataGenderPie,
+           options: {
+               legend: {
+                   position: 'right',
+                   labels: {
+                       padding: 7
+                   }
+               }
+           }
+        });
         var playersChartDay = new Chart(ctxday, {
             type: 'line',
             data: dataday,
@@ -761,7 +818,7 @@
           }];
 
           var layout = {
-              title: 'Geographic locations',
+              title: '',
               autosize: true, 
               geo:{
                   showframe: false,

@@ -48,6 +48,8 @@ public class AnalysisData {
     private String geomapCountries;
     private String geomapZ;
     private String geomapCodes;
+    
+    private int[] genderData;
 
     /**
      * Class constructor.
@@ -63,6 +65,7 @@ public class AnalysisData {
         geomapZ = Html.ERROR_NOT_SET+"";
         geomapCodes = Html.ERROR_NOT_SET+"";
         playersDataArray = new String[]{"[0]","[\"No data\"]","[0]","[\"No data\"]","[0]","[\"No data\"]"};
+        genderData = new int[]{0,0,0};
     }
 
     // Getters and setters v---------------------------------v
@@ -527,5 +530,13 @@ public class AnalysisData {
      */
     public void setSessionAverage(long sessionAverage) {
         this.sessionAverage = sessionAverage;
+    }
+
+    public int[] getGenderData() {
+        return genderData;
+    }
+
+    public void setGenderData(int[] genderData) {
+        this.genderData = genderData;
     }
 }

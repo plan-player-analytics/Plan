@@ -97,6 +97,14 @@ public class PlaceholderUtils {
         replaceMap.put("%gmlabels%", "[\"Survival\", \"Creative\", \"Adventure\", \"Spectator\"]");
         replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
                 + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
+        replaceMap.put("%genderdata%", Arrays.toString(data.getGenderData()));
+        replaceMap.put("%gendermale%", data.getGenderData()[0]+"");
+        replaceMap.put("%genderfemale%", data.getGenderData()[1]+"");
+        replaceMap.put("%genderlabels%", "[\"Male\", \"Female\", \"Unknown\"]");
+        replaceMap.put("%gendercolors%", "\"#" + Settings.HCOLOR_GENP_M + "\",\"#" + Settings.HCOLOR_GENP_F
+                + "\",\"#" + Settings.HCOLOR_GENP_U + "\"");
+        replaceMap.put("%genderfcolor%", "#" +Settings.HCOLOR_GENP_F);
+        replaceMap.put("%gendermcolor%", "#" +Settings.HCOLOR_GENP_M);
         replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage() + ""));
         replaceMap.put("%geomapcountries%", data.getGeomapCountries());

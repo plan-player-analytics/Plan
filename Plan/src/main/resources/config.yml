@@ -49,6 +49,10 @@ Customization:
         Banned: '951800'
         Inactive: 'A9A9A9'
         JoinedOnce: '808080'
+      GenderPie:
+        Female: ED97E3
+        Male: 7CB9D6
+        Unknown: A9A9A9
   DemographicsTriggers:
     Trigger: "i'm, am, im, bin"
     Female: 'female, girl, gurl, woman, gal, mrs, she, miss, feminin, weiblich, mädchen, frau'

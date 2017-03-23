@@ -11,7 +11,7 @@ public enum Settings {
     WEBSERVER_ENABLED("Settings.WebServer.Enabled"),
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
-    SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"), 
+    SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
@@ -43,8 +43,11 @@ public enum Settings {
     HCOLOR_ACTP_JON("Customization.Colors.HTML.ActivityPie.JoinedOnce"),
     HCOLOR_GMP_0("Customization.Colors.HTML.GamemodePie.Survival"),
     HCOLOR_GMP_1("Customization.Colors.HTML.GamemodePie.Creative"),
-    HCOLOR_GMP_2("Customization.Colors.HTML.GamemodePie.Adventure"),
-    HCOLOR_GMP_3("Customization.Colors.HTML.GamemodePie.Spectator");  
+    HCOLOR_GMP_2("Customization.Colors.HTML.GamemodePie.Adventure"),    
+    HCOLOR_GMP_3("Customization.Colors.HTML.GamemodePie.Spectator"),
+    HCOLOR_GENP_M("Customization.Colors.HTML.GenderPie.Male"),
+    HCOLOR_GENP_F("Customization.Colors.HTML.GenderPie.Female"),
+    HCOLOR_GENP_U("Customization.Colors.HTML.GenderPie.Unknown");
 
     private final String configPath;
 
@@ -70,7 +73,7 @@ public enum Settings {
     public int getNumber() {
         return getPlugin(Plan.class).getConfig().getInt(configPath);
     }
-    
+
     /**
      * @return Path of the config setting.
      */
