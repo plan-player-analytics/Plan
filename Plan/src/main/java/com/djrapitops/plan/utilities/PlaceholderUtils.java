@@ -141,13 +141,13 @@ public class PlaceholderUtils {
                 gm3 = (long) 0;
             }
             gmThree = gm3;
-        } catch (NoSuchFieldError e) {
+        } catch (NoSuchFieldError | NullPointerException e) {
             gmThree = 0;
         }
         long[] gmData = new long[]{
-            gmTimes.get(GameMode.SURVIVAL),
-            gmTimes.get(GameMode.CREATIVE),
-            gmTimes.get(GameMode.ADVENTURE),
+            (gmTimes.get(GameMode.SURVIVAL) != null ? gmTimes.get(GameMode.SURVIVAL):0L),
+            (gmTimes.get(GameMode.CREATIVE) != null ? gmTimes.get(GameMode.CREATIVE):0L),
+            (gmTimes.get(GameMode.ADVENTURE) != null ? gmTimes.get(GameMode.ADVENTURE):0L),
             gmThree
         };
         long total = gmData[0] + gmData[1] + gmData[2] + gmData[3];

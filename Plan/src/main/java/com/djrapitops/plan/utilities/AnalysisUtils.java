@@ -1,10 +1,9 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -41,7 +40,7 @@ public class AnalysisUtils {
         return false;
     }
 
-    static String createTableOutOfHashMap(HashMap<String, Integer> commandUse) {
+    static String createTableOutOfMap(Map<String, Integer> commandUse) {
         return SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
     }
 

@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
+import java.util.Arrays;
+import java.util.Objects;
 import main.java.com.djrapitops.plan.ui.Html;
 
 /**
@@ -67,8 +69,118 @@ public class AnalysisData {
         playersDataArray = new String[]{"[0]","[\"No data\"]","[0]","[\"No data\"]","[0]","[\"No data\"]"};
         genderData = new int[]{0,0,0};
     }
-
+    
     // Getters and setters v---------------------------------v
+    @Override    
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AnalysisData other = (AnalysisData) obj;
+        if (this.averagePlayTime != other.averagePlayTime) {
+            return false;
+        }
+        if (this.totalPlayTime != other.totalPlayTime) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.averageAge) != Double.doubleToLongBits(other.averageAge)) {
+            return false;
+        }
+        if (this.totalCommands != other.totalCommands) {
+            return false;
+        }
+        if (this.newPlayersMonth != other.newPlayersMonth) {
+            return false;
+        }
+        if (this.newPlayersWeek != other.newPlayersWeek) {
+            return false;
+        }
+        if (this.newPlayersDay != other.newPlayersDay) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.gm0Perc) != Double.doubleToLongBits(other.gm0Perc)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.gm1Perc) != Double.doubleToLongBits(other.gm1Perc)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.gm2Perc) != Double.doubleToLongBits(other.gm2Perc)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.gm3Perc) != Double.doubleToLongBits(other.gm3Perc)) {
+            return false;
+        }
+        if (this.banned != other.banned) {
+            return false;
+        }
+        if (this.active != other.active) {
+            return false;
+        }
+        if (this.inactive != other.inactive) {
+            return false;
+        }
+        if (this.joinleaver != other.joinleaver) {
+            return false;
+        }
+        if (this.total != other.total) {
+            return false;
+        }
+        if (this.totalPlayers != other.totalPlayers) {
+            return false;
+        }
+        if (this.totalLoginTimes != other.totalLoginTimes) {
+            return false;
+        }
+        if (this.ops != other.ops) {
+            return false;
+        }
+        if (this.totalkills != other.totalkills) {
+            return false;
+        }
+        if (this.totalmobkills != other.totalmobkills) {
+            return false;
+        }
+        if (this.totaldeaths != other.totaldeaths) {
+            return false;
+        }
+        if (this.sessionAverage != other.sessionAverage) {
+            return false;
+        }
+        if (!Objects.equals(this.commandUseTableHtml, other.commandUseTableHtml)) {
+            return false;
+        }
+        if (!Objects.equals(this.top20ActivePlayers, other.top20ActivePlayers)) {
+            return false;
+        }
+        if (!Objects.equals(this.recentPlayers, other.recentPlayers)) {
+            return false;
+        }
+        if (!Objects.equals(this.sortablePlayersTable, other.sortablePlayersTable)) {
+            return false;
+        }
+        if (!Objects.equals(this.geomapCountries, other.geomapCountries)) {
+            return false;
+        }
+        if (!Objects.equals(this.geomapZ, other.geomapZ)) {
+            return false;
+        }
+        if (!Objects.equals(this.geomapCodes, other.geomapCodes)) {
+            return false;
+        }
+        if (!Arrays.deepEquals(this.playersDataArray, other.playersDataArray)) {
+            return false;
+        }
+        if (!Arrays.equals(this.genderData, other.genderData)) {
+            return false;
+        }
+        return true;
+    }
 
     public String getGeomapCountries() {
         return geomapCountries;

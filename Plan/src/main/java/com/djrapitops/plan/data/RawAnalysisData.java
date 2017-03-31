@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -25,12 +26,12 @@ public class RawAnalysisData {
     private long totalDeaths;
     private int ops;
     private List<Integer> ages;
-    private HashMap<String, Long> latestLogins;
-    private HashMap<String, Long> playtimes;
+    private Map<String, Long> latestLogins;
+    private Map<String, Long> playtimes;
     private List<SessionData> sessiondata;
-    private HashMap<String, Integer> commandUse;
-    private HashMap<String, Integer> geolocations;
-    private HashMap<String, String> geocodes;
+    private Map<String, Integer> commandUse;
+    private Map<String, Integer> geolocations;
+    private Map<String, String> geocodes;
     private List<Long> registered;
     private int[] genders;
 
@@ -83,11 +84,11 @@ public class RawAnalysisData {
         }
     }
 
-    public HashMap<String, Integer> getGeolocations() {
+    public Map<String, Integer> getGeolocations() {
         return geolocations;
     }
 
-    public HashMap<String, String> getGeocodes() {
+    public Map<String, String> getGeocodes() {
         return geocodes;
     }
     
@@ -327,7 +328,7 @@ public class RawAnalysisData {
      *
      * @return
      */
-    public HashMap<String, Long> getLatestLogins() {
+    public Map<String, Long> getLatestLogins() {
         return latestLogins;
     }
 
@@ -335,7 +336,7 @@ public class RawAnalysisData {
      *
      * @return
      */
-    public HashMap<String, Long> getPlaytimes() {
+    public Map<String, Long> getPlaytimes() {
         return playtimes;
     }
 
@@ -359,7 +360,7 @@ public class RawAnalysisData {
      *
      * @return
      */
-    public HashMap<String, Integer> getCommandUse() {
+    public Map<String, Integer> getCommandUse() {
         return commandUse;
     }
 

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -34,7 +35,11 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleForSave(UserData data) {
-        q.add(data);
+        try {
+            q.add(data);
+        } catch (IllegalStateException e) {
+            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+        }
     }
 
     /**
@@ -42,7 +47,11 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleForSave(Collection<UserData> data) {
-        q.addAll(data);
+        try {
+            q.addAll(data);
+        } catch (IllegalStateException e) {
+            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+        }
     }
 
     /**
@@ -50,9 +59,13 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleNewPlayer(UserData data) {
-        q.add(data);
+        try {
+            q.add(data);
+        } catch (IllegalStateException e) {
+            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+        }
     }
-    
+
     /**
      *
      */

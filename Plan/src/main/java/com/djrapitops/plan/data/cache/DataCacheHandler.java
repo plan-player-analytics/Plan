@@ -44,9 +44,9 @@ public class DataCacheHandler {
     private final SessionHandler sessionHandler;
 
     // Queues
-    private final DataCacheSaveQueue saveTask;
-    private final DataCacheClearQueue clearTask;
-    private final DataCacheGetQueue getTask;
+    private DataCacheSaveQueue saveTask;
+    private DataCacheClearQueue clearTask;
+    private DataCacheGetQueue getTask;
 
     // Variables
     private int timesSaved;
@@ -220,7 +220,6 @@ public class DataCacheHandler {
     }
 
     // Should only be called from Async thread
-
     /**
      *
      */
@@ -405,7 +404,7 @@ public class DataCacheHandler {
                 }
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);        
+        }).runTaskAsynchronously(plugin);
     }
 
     /**

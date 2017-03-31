@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.database.Database;
@@ -38,12 +39,16 @@ public class DataCacheGetQueue {
      * @param processors
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
-        HashMap<UUID, List<DBCallableProcessor>> map = new HashMap<>();
-        if (map.get(uuid) == null) {
-            map.put(uuid, new ArrayList<>());
+        try {
+            HashMap<UUID, List<DBCallableProcessor>> map = new HashMap<>();
+            if (map.get(uuid) == null) {
+                map.put(uuid, new ArrayList<>());
+            }
+            map.get(uuid).addAll(Arrays.asList(processors));
+            q.add(map);
+        } catch (IllegalStateException e) {
+            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber()+""));
         }
-        map.get(uuid).addAll(Arrays.asList(processors));
-        q.add(map);
     }
 
     /**

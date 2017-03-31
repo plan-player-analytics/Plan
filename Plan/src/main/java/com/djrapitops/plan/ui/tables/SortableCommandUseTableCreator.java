@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.ui.tables;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
@@ -19,7 +19,7 @@ public class SortableCommandUseTableCreator {
      * @param commandUse
      * @return
      */
-    public static String createSortedCommandUseTable(HashMap<String, Integer> commandUse) {
+    public static String createSortedCommandUseTable(Map<String, Integer> commandUse) {
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
         String html = "";
         if (sorted.isEmpty()) {

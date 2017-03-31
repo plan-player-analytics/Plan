@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -42,7 +43,11 @@ public class DataCacheClearQueue {
      * @param uuids
      */
     public void scheduleForClear(Collection<UUID> uuids) {
-        q.addAll(uuids);
+        try {
+            q.addAll(uuids);
+        } catch (IllegalStateException e) {
+            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber() + ""));
+        }
     }
 
     /**

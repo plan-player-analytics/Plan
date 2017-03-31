@@ -12,7 +12,7 @@
             <version>1.10.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-<!--        SoftDepended Plugins-->
+        <!--        SoftDepended Plugins-->
         <dependency>
             <groupId>com.hm</groupId>
             <artifactId>advanced.achievements</artifactId>
@@ -55,7 +55,7 @@
             <version>0.91.4.0</version>
             <scope>provided</scope>
         </dependency>
-<!--         -->
+        <!--         -->        
     </dependencies>
     <build>
         <defaultGoal>clean package install</defaultGoal>
@@ -104,7 +104,7 @@
                 </configuration>
             </plugin>
             
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.1</version>

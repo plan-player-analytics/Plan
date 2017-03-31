@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.ui;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
 
 /**
@@ -18,7 +18,7 @@ public class RecentPlayersButtonsCreator {
      * @param limit How many playes will be shown
      * @return html p-tag list of recent logins.
      */
-    public static String createRecentLoginsButtons(HashMap<String, Long> map, int limit) {
+    public static String createRecentLoginsButtons(Map<String, Long> map, int limit) {
         List<String[]> sorted = MapComparator.sortByValueLong(map);
         String html = "<p>";
         if (sorted.isEmpty()) {

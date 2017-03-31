@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -25,9 +27,6 @@ import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -144,12 +143,22 @@ public class Analysis {
         analysisData.setSortablePlayersTable(AnalysisUtils.createSortablePlayersTable(rawData));
         sorted.fillGeolocations();
         // Fill Dataset with userdata.
-        rawData.parallelStream().forEach((uData) -> {
-            try {
-                HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
-                sorted.addToGmZero(gmTimes.get(GameMode.SURVIVAL));
-                sorted.addToGmOne(gmTimes.get(GameMode.CREATIVE));
-                sorted.addToGmTwo(gmTimes.get(GameMode.ADVENTURE));
+        rawData.stream().forEach((uData) -> {
+//            try {
+            HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
+            if (gmTimes != null) {
+                Long survival = gmTimes.get(GameMode.SURVIVAL);
+                if (survival != null) {
+                    sorted.addToGmZero(survival);
+                }
+                Long creative = gmTimes.get(GameMode.CREATIVE);
+                if (creative != null) {
+                    sorted.addToGmOne(creative);
+                }
+                Long adventure = gmTimes.get(GameMode.ADVENTURE);
+                if (adventure != null) {
+                    sorted.addToGmTwo(adventure);
+                }
                 try {
                     Long gm = gmTimes.get(GameMode.SPECTATOR);
                     if (gm != null) {
@@ -157,55 +166,68 @@ public class Analysis {
                     }
                 } catch (NoSuchFieldError e) {
                 }
-                long playTime = uData.getPlayTime();
-                sorted.addTotalPlaytime(playTime);
-                String playerName = uData.getName();
-                String url = HtmlUtils.getInspectUrl(playerName);
-                String html = Html.BUTTON.parse(url, playerName);
-
-                sorted.getLatestLogins().put(html, uData.getLastPlayed());
-                sorted.addTotalLoginTimes(uData.getLoginTimes());
-                DemographicsData demData = uData.getDemData();
-                int age = demData.getAge();
-                if (age != -1) {
-                    sorted.getAges().add(age);
-                }
-                if (uData.isOp()) {
-                    sorted.addOps(1);
-                }
-                if (uData.isBanned()) {
-                    sorted.addTotalBanned(1);
-                } else if (uData.getLoginTimes() == 1) {
-                    sorted.addJoinleaver(1);
-                } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
-                    sorted.addActive(1);
-                    sorted.getPlaytimes().put(html, playTime);
-                } else {
-                    sorted.addInactive(1);
-                }
-                sorted.addTotalKills(uData.getPlayerKills().size());
-                sorted.addTotalMobKills(uData.getMobKills());
-                sorted.addTotalDeaths(uData.getDeaths());
-                List<SessionData> sessions = uData.getSessions();
-                if (!sessions.isEmpty()) {
-                    sorted.getSessiondata().addAll(sessions);
-                }
-                sorted.getRegistered().add(uData.getRegistered());
-                sorted.addGeoloc(demData.getGeoLocation());
-                uData.stopAccessing();
-                Gender gender = demData.getGender();
-                if (gender == Gender.MALE) {
-                    sorted.addToGender(0, 1);
-                } else if (gender == Gender.FEMALE) {
-                    sorted.addToGender(1, 1);
-                } else {
-                    sorted.addToGender(2, 1);
-                }
-            } catch (NullPointerException e) {
-                plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
-                plugin.toLog(this.getClass().getName(), e);
             }
-        });        
+            long playTime = uData.getPlayTime();
+            sorted.addTotalPlaytime(playTime);
+            String playerName = uData.getName();
+            String url = HtmlUtils.getInspectUrl(playerName);
+            String html = Html.BUTTON.parse(url, playerName);
+
+            sorted.getLatestLogins().put(html, uData.getLastPlayed());
+            sorted.addTotalLoginTimes(uData.getLoginTimes());
+            DemographicsData demData = uData.getDemData();
+            if (demData == null) {
+                demData = new DemographicsData();
+            }
+            int age = demData.getAge();
+            if (age != -1) {
+                sorted.getAges().add(age);
+            }
+            if (uData.isOp()) {
+                sorted.addOps(1);
+            }
+            if (uData.isBanned()) {
+                sorted.addTotalBanned(1);
+            } else if (uData.getLoginTimes() == 1) {
+                sorted.addJoinleaver(1);
+            } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
+                sorted.addActive(1);
+                sorted.getPlaytimes().put(html, playTime);
+            } else {
+                sorted.addInactive(1);
+            }
+            List<KillData> playerKills = uData.getPlayerKills();
+            if (playerKills != null) {
+                sorted.addTotalKills(playerKills.size());
+            }
+            sorted.addTotalMobKills(uData.getMobKills());
+            sorted.addTotalDeaths(uData.getDeaths());
+            List<SessionData> sessions = uData.getSessions();
+            if (!sessions.isEmpty()) {
+                sorted.getSessiondata().addAll(sessions);
+            }
+            sorted.getRegistered().add(uData.getRegistered());
+            sorted.addGeoloc(demData.getGeoLocation());
+            uData.stopAccessing();
+            Gender gender = demData.getGender();
+            if (null != gender) {
+                switch (gender) {
+                    case MALE:
+                        sorted.addToGender(0, 1);
+                        break;
+                    case FEMALE:
+                        sorted.addToGender(1, 1);
+                        break;
+                    default:
+                        sorted.addToGender(2, 1);
+                        break;
+                }
+            }
+            //} catch (NullPointerException e) {
+//                plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
+//                plugin.toLog(this.getClass().getName(), e);
+//            }
+        });
         createCloroplethMap(analysisData, sorted.getGeolocations(), sorted.getGeocodes());
         // Analyze & Save RawAnalysisData to AnalysisData
         createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
@@ -231,9 +253,9 @@ public class Analysis {
     }
 
     private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
-        HashMap<String, Integer> commandUse = raw.getCommandUse();
+        Map<String, Integer> commandUse = raw.getCommandUse();
         if (!commandUse.isEmpty()) {
-            data.setCommandUseTableHtml(AnalysisUtils.createTableOutOfHashMap(commandUse));
+            data.setCommandUseTableHtml(AnalysisUtils.createTableOutOfMap(commandUse));
             data.setTotalCommands(commandUse.size());
         } else {
             data.setCommandUseTableHtml(Html.ERROR_TABLE_2.parse());
@@ -303,16 +325,16 @@ public class Analysis {
         }
     }
 
-    private void createCloroplethMap(AnalysisData aData, HashMap<String, Integer> geolocations, HashMap<String, String> geocodes) {
+    private void createCloroplethMap(AnalysisData aData, Map<String, Integer> geolocations, Map<String, String> geocodes) {
         String locations = "[";
         String z = "[";
         String text = "[";
         for (String c : geolocations.keySet()) {
-            locations += "\""+c+"\"" + ",";
+            locations += "\"" + c + "\"" + ",";
             z += geolocations.get(c) + ",";
             String code = geocodes.get(c);
             if (code != null) {
-                text += "\""+code+"\"" + ",";
+                text += "\"" + code + "\"" + ",";
             } else {
                 text += "\"UNK\",";
             }

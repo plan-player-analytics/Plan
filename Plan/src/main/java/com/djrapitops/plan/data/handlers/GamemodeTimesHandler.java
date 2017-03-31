@@ -54,6 +54,9 @@ public class GamemodeTimesHandler {
         GameMode oldGM = data.getLastGamemode();
         HashMap<GameMode, Long> times = data.getGmTimes();
         Long currentGMTime = times.get(oldGM);
+        if (currentGMTime == null) {
+            currentGMTime = 0L;
+        }
         handler.getActivityHandler().saveToCache(data);
         long lastSwap = data.getLastGmSwapTime();
         long playTime = data.getPlayTime();
@@ -74,9 +77,13 @@ public class GamemodeTimesHandler {
         }
         HashMap<GameMode, Long> times = data.getGmTimes();
         handler.getActivityHandler().saveToCache(data);
+        Long currentGMTime = times.get(currentGM);
+        if (currentGMTime == null) {
+            currentGMTime = 0L;
+        }
         long lastSwap = data.getLastGmSwapTime();
         long playtime = data.getPlayTime();
-        data.setGMTime(currentGM, times.get(currentGM) + (playtime - lastSwap));
+        data.setGMTime(currentGM, currentGMTime + (playtime - lastSwap));
         data.setLastGmSwapTime(playtime);
     }
 

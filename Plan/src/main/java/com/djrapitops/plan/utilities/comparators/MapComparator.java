@@ -2,8 +2,8 @@ package main.java.com.djrapitops.plan.utilities.comparators;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -18,7 +18,7 @@ public class MapComparator {
      * @return List with String Array, where first value is the value and second
      * is the key.
      */
-    public static List<String[]> sortByValue(HashMap<String, Integer> hashMap) {
+    public static List<String[]> sortByValue(Map<String, Integer> hashMap) {
         List<String[]> sortedList = new ArrayList<>();
         hashMap.keySet().stream().forEach((key) -> {
             sortedList.add(new String[]{"" + hashMap.get(key), key});
@@ -32,7 +32,7 @@ public class MapComparator {
      * @param hashMap
      * @return
      */
-    public static List<String[]> sortByValueLong(HashMap<String, Long> hashMap) {
+    public static List<String[]> sortByValueLong(Map<String, Long> hashMap) {
         List<String[]> sortedList = new ArrayList<>();
         hashMap.keySet().stream().forEach((key) -> {
             sortedList.add(new String[]{"" + hashMap.get(key), key});

@@ -152,7 +152,8 @@ public enum Phrase {
     COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "" + PREFIX + "Command requires arguments. REPLACE0"),
     COMMAND_ADD_CONFIRMATION_ARGUMENT(ChatColor.RED + "" + PREFIX + "Add -a to confirm execution! REPLACE0"),
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "" + PREFIX + "Command requires one argument."),
-    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission.");
+    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission."), 
+    ERROR_TOO_SMALL_QUEUE("Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)");
 
     private String text;
     private ChatColor color;
