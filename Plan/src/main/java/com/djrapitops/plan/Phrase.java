@@ -32,9 +32,9 @@ public enum Phrase {
     DB_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
     NOTIFY_EMPTY_IP(ChatColor.YELLOW + "" + PREFIX + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
     //
-    CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),        
-    CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),        
-    CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),        
+    CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),
+    CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),
+    CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),
     //
     VERSION_NEW_AVAILABLE("New Version (" + REPLACE0 + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
     VERSION_LATEST("You're running the latest version"),
@@ -45,9 +45,9 @@ public enum Phrase {
     USERNAME_NOT_SEEN(ChatColor.RED + "" + PREFIX + "This Player has not played on this server."),
     USERNAME_NOT_KNOWN(ChatColor.RED + "" + PREFIX + "Player not found from the database."),
     //
-    COLOR_MAIN(ChatColor.getByChar(getPlugin(Plan.class).getConfig().getString("Customization.Colors.Commands.Main").charAt(1))),
-    COLOR_SEC(ChatColor.getByChar(getPlugin(Plan.class).getConfig().getString("Customization.Colors.Commands.Secondary").charAt(1))),
-    COLOR_TER(ChatColor.getByChar(getPlugin(Plan.class).getConfig().getString("Customization.Colors.Commands.Highlight").charAt(1))),
+    COLOR_MAIN(""),
+    COLOR_SEC(""),
+    COLOR_TER(""),
     //
     ARROWS_RIGHT("»"),
     BALL("•"),
@@ -74,7 +74,7 @@ public enum Phrase {
     ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if the webserver is running on this server."),
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
-    ERROR_LOGGED("Caught "+REPLACE0+". It has been logged to the Errors.txt"),
+    ERROR_LOGGED("Caught " + REPLACE0 + ". It has been logged to the Errors.txt"),
     ERROR_SESSIONDATA_INITIALIZATION("Player's session was initialized in a wrong way! (" + REPLACE0 + ")"),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
@@ -152,7 +152,7 @@ public enum Phrase {
     COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "" + PREFIX + "Command requires arguments. REPLACE0"),
     COMMAND_ADD_CONFIRMATION_ARGUMENT(ChatColor.RED + "" + PREFIX + "Add -a to confirm execution! REPLACE0"),
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "" + PREFIX + "Command requires one argument."),
-    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission."), 
+    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission."),
     ERROR_TOO_SMALL_QUEUE("Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)");
 
     private String text;

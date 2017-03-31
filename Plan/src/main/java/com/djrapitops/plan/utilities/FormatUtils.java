@@ -115,8 +115,8 @@ public class FormatUtils {
         if (versionArray.length != 3) {
             throw new NumberFormatException("Wrong format used");
         }
-        int main = Integer.parseInt(versionArray[0]) * 100;
-        int major = Integer.parseInt(versionArray[1]) * 10;
+        int main = Integer.parseInt(versionArray[0]) * 10000;
+        int major = Integer.parseInt(versionArray[1]) * 100;
         int minor = Integer.parseInt(versionArray[2]);
         int versionNumber = main + major + minor;
         return versionNumber;
@@ -175,7 +175,7 @@ public class FormatUtils {
      */
     public static String cutDecimals(double d) {
         DecimalFormat df = new DecimalFormat("#.##");
-        df.setRoundingMode(RoundingMode.CEILING);
+//        df.setRoundingMode(RoundingMode.CEILING);
         return df.format(d);
     }
 }

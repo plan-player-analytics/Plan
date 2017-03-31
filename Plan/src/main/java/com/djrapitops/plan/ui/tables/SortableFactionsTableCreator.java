@@ -28,11 +28,11 @@ public class SortableFactionsTableCreator {
                 HashMap<String, Serializable> info = fHook.getFactionInfo(factionName);
                 String leader = (String) info.get("LEADER");
                 html += Html.TABLELINE_4.parse(
-                        factionName, 
-                        info.get("POWER")+"", 
-                        info.get("LAND")+"", 
+                        factionName,
+                        info.get("POWER") + "",
+                        info.get("LAND") + "",
                         Html.LINK.parse(HtmlUtils.getInspectUrl(leader), leader)
-                );                    
+                );
             }
         }
         html += Html.TABLE_END.parse();

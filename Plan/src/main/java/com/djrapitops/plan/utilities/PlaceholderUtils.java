@@ -98,13 +98,13 @@ public class PlaceholderUtils {
         replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
                 + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
         replaceMap.put("%genderdata%", Arrays.toString(data.getGenderData()));
-        replaceMap.put("%gendermale%", data.getGenderData()[0]+"");
-        replaceMap.put("%genderfemale%", data.getGenderData()[1]+"");
+        replaceMap.put("%gendermale%", data.getGenderData()[0] + "");
+        replaceMap.put("%genderfemale%", data.getGenderData()[1] + "");
         replaceMap.put("%genderlabels%", "[\"Male\", \"Female\", \"Unknown\"]");
         replaceMap.put("%gendercolors%", "\"#" + Settings.HCOLOR_GENP_M + "\",\"#" + Settings.HCOLOR_GENP_F
                 + "\",\"#" + Settings.HCOLOR_GENP_U + "\"");
-        replaceMap.put("%genderfcolor%", "#" +Settings.HCOLOR_GENP_F);
-        replaceMap.put("%gendermcolor%", "#" +Settings.HCOLOR_GENP_M);
+        replaceMap.put("%genderfcolor%", "#" + Settings.HCOLOR_GENP_F);
+        replaceMap.put("%gendermcolor%", "#" + Settings.HCOLOR_GENP_M);
         replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage() + ""));
         replaceMap.put("%geomapcountries%", data.getGeomapCountries());
@@ -145,9 +145,9 @@ public class PlaceholderUtils {
             gmThree = 0;
         }
         long[] gmData = new long[]{
-            (gmTimes.get(GameMode.SURVIVAL) != null ? gmTimes.get(GameMode.SURVIVAL):0L),
-            (gmTimes.get(GameMode.CREATIVE) != null ? gmTimes.get(GameMode.CREATIVE):0L),
-            (gmTimes.get(GameMode.ADVENTURE) != null ? gmTimes.get(GameMode.ADVENTURE):0L),
+            (gmTimes.get(GameMode.SURVIVAL) != null ? gmTimes.get(GameMode.SURVIVAL) : 0L),
+            (gmTimes.get(GameMode.CREATIVE) != null ? gmTimes.get(GameMode.CREATIVE) : 0L),
+            (gmTimes.get(GameMode.ADVENTURE) != null ? gmTimes.get(GameMode.ADVENTURE) : 0L),
             gmThree
         };
         long total = gmData[0] + gmData[1] + gmData[2] + gmData[3];

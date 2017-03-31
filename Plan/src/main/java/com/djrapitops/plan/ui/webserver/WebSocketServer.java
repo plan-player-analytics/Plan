@@ -49,7 +49,7 @@ public class WebSocketServer {
         if (ENABLED) {
             return;
         }
-        plugin.log(Phrase.WEBSERVER_INIT+"");
+        plugin.log(Phrase.WEBSERVER_INIT + "");
         try {
             //Setup server
             try {
@@ -85,7 +85,7 @@ public class WebSocketServer {
 
             ENABLED = true;
 
-            plugin.log(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort()+""));
+            plugin.log(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort() + ""));
         } catch (IllegalArgumentException | IllegalStateException e) {
             ENABLED = false;
         }
@@ -95,7 +95,7 @@ public class WebSocketServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        plugin.log(Phrase.WEBSERVER_CLOSE+"");
+        plugin.log(Phrase.WEBSERVER_CLOSE + "");
         shutdown = true;
         try {
             server.close();

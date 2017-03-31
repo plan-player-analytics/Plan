@@ -35,6 +35,10 @@ public enum Settings {
     LOCALE("Settings.Locale"),
     SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode"),
     //
+    COLOR_MAIN("Customization.Colors.Commands.Main"),
+    COLOR_SEC("Customization.Colors.Commands.Secondary"),
+    COLOR_TER("Customization.Colors.Commands.Highlight"),
+    //
     HCOLOR_ACT_ONL("Customization.Colors.HTML.ActivityGraph.OnlinePlayers"),
     HCOLOR_ACT_ONL_FILL("Customization.Colors.HTML.ActivityGraph.OnlinePlayersFill"),
     HCOLOR_ACTP_ACT("Customization.Colors.HTML.ActivityPie.Active"),
@@ -43,7 +47,7 @@ public enum Settings {
     HCOLOR_ACTP_JON("Customization.Colors.HTML.ActivityPie.JoinedOnce"),
     HCOLOR_GMP_0("Customization.Colors.HTML.GamemodePie.Survival"),
     HCOLOR_GMP_1("Customization.Colors.HTML.GamemodePie.Creative"),
-    HCOLOR_GMP_2("Customization.Colors.HTML.GamemodePie.Adventure"),    
+    HCOLOR_GMP_2("Customization.Colors.HTML.GamemodePie.Adventure"),
     HCOLOR_GMP_3("Customization.Colors.HTML.GamemodePie.Spectator"),
     HCOLOR_GENP_M("Customization.Colors.HTML.GenderPie.Male"),
     HCOLOR_GENP_F("Customization.Colors.HTML.GenderPie.Female"),

@@ -8,10 +8,10 @@ import java.util.UUID;
  */
 public class KillData {
 
-    private UUID victim;
-    private int victimUserID;
-    private long date;
-    private String weapon;
+    private final UUID victim;
+    private final int victimUserID;
+    private final long date;
+    private final String weapon;
 
     /**
      *

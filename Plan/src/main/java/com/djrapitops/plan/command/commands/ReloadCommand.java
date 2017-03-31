@@ -21,7 +21,7 @@ public class ReloadCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ReloadCommand(Plan plugin) {
-        super("reload", "plan.reload", Phrase.CMD_USG_RELOAD+"", CommandType.CONSOLE, "");
+        super("reload", "plan.reload", Phrase.CMD_USG_RELOAD + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }
@@ -31,7 +31,7 @@ public class ReloadCommand extends SubCommand {
         plugin.reloadConfig();
         plugin.onDisable();
         plugin.onEnable();
-        sender.sendMessage(Phrase.RELOAD_COMPLETE+"");
+        sender.sendMessage(Phrase.RELOAD_COMPLETE + "");
 
         return true;
     }

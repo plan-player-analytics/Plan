@@ -23,15 +23,15 @@ public class ManageHotswapCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageHotswapCommand(Plan plugin) {
-        super("hotswap", "plan.manage", Phrase.CMD_USG_MANAGE_HOTSWAP+"", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB>");
+        super("hotswap", "plan.manage", Phrase.CMD_USG_MANAGE_HOTSWAP + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB>");
 
         this.plugin = plugin;
     }
 
     /**
-     * Subcommand hotswap.
-     * Swaps db type and reloads plugin if the connection works.
-     * 
+     * Subcommand hotswap. Swaps db type and reloads plugin if the connection
+     * works.
+     *
      * @param sender
      * @param cmd
      * @param commandLabel

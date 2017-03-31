@@ -22,7 +22,7 @@ public class ManageStatusCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageStatusCommand(Plan plugin) {
-        super("status", "plan.manage", Phrase.CMD_USG_MANAGE_STATUS+"", CommandType.CONSOLE, "");
+        super("status", "plan.manage", Phrase.CMD_USG_MANAGE_STATUS + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }
@@ -45,10 +45,10 @@ public class ManageStatusCommand extends SubCommand {
         ChatColor hColor = Phrase.COLOR_TER.color();
 
         // Header
-        sender.sendMessage(Phrase.CMD_MANAGE_STATUS_HEADER+"");
-        
+        sender.sendMessage(Phrase.CMD_MANAGE_STATUS_HEADER + "");
+
         sender.sendMessage(Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()));
-        
+
         // Footer
         sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
         return true;

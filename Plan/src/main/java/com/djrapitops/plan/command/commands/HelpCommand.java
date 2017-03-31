@@ -26,7 +26,7 @@ public class HelpCommand extends SubCommand {
      * @param command Current instance of PlanCommand
      */
     public HelpCommand(Plan plugin, PlanCommand command) {
-        super("help,?", "plan.?", Phrase.CMD_USG_HELP+"", CommandType.CONSOLE, "");
+        super("help,?", "plan.?", Phrase.CMD_USG_HELP + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
         this.command = command;
@@ -39,7 +39,7 @@ public class HelpCommand extends SubCommand {
         ChatColor tColor = Phrase.COLOR_SEC.color();
 
         // Header
-        sender.sendMessage(Phrase.CMD_HELP_HEADER+"");
+        sender.sendMessage(Phrase.CMD_HELP_HEADER + "");
         // Help results
         for (SubCommand command : this.command.getCommands()) {
             if (command.getName().equalsIgnoreCase(getName())) {
@@ -58,7 +58,7 @@ public class HelpCommand extends SubCommand {
                     + " /plan " + command.getFirstName() + " " + command.getArguments() + tColor + " - " + command.getUsage());
         }
         // Footer
-        sender.sendMessage(Phrase.CMD_FOOTER+"");
+        sender.sendMessage(Phrase.CMD_FOOTER + "");
         return true;
     }
 

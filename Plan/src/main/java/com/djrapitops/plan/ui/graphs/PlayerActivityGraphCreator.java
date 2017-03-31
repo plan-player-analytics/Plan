@@ -48,7 +48,7 @@ public class PlayerActivityGraphCreator {
                 int amount = 0;
                 amount = sessionStarts.parallelStream()
                         .filter((start) -> (start == j))
-                        .map((_item) -> 1)
+                        .map((item) -> 1)
                         .reduce(amount, Integer::sum);
                 lastPValue += amount;
             }
@@ -56,14 +56,14 @@ public class PlayerActivityGraphCreator {
                 int amount = 0;
                 amount = sessionEnds.parallelStream()
                         .filter((end) -> (end == j))
-                        .map((_item) -> 1)
+                        .map((item) -> 1)
                         .reduce(amount, Integer::sum);
                 lastPValue -= amount;
             }
 
             if (lastSavedPValue != lastPValue || i - lastSaveI > (scale / (long) 75)) {
                 lastSaveI = i;
-                labels.add("\""+FormatUtils.formatTimeStamp(i+"")+"\"");
+                labels.add("\"" + FormatUtils.formatTimeStamp(i + "") + "\"");
                 lastSavedPValue = lastPValue;
                 playersOnline.add(lastPValue);
             }

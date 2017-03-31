@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.data.UserData;
  * @author Rsl1122
  */
 public class KillHandler {
+
     private Plan plugin;
 
     /**
@@ -21,7 +22,7 @@ public class KillHandler {
     public KillHandler(Plan plugin) {
         this.plugin = plugin;
     }
-    
+
     /**
      *
      * @param killerData
@@ -29,31 +30,31 @@ public class KillHandler {
      * @param weapon
      */
     public void handlePlayerKill(UserData killerData, UUID victimUUID, String weapon) {
-        long now = new Date().toInstant().getEpochSecond()*(long)1000;
+        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         int victimID;
         try {
-            victimID = plugin.getDB().getUserId(victimUUID+"");
+            victimID = plugin.getDB().getUserId(victimUUID + "");
         } catch (SQLException e) {
             plugin.toLog(this.getClass().getName(), e);
             return;
         }
         killerData.addPlayerKill(new KillData(victimUUID, victimID, weapon, now));
     }
-    
+
     /**
      *
      * @param data
      */
     public void handlePlayerDeath(UserData data) {
-        data.setDeaths(data.getDeaths()+1);
+        data.setDeaths(data.getDeaths() + 1);
     }
-    
+
     /**
      *
      * @param data
      */
     public void handleMobKill(UserData data) {
-        data.setMobKills(data.getMobKills()+1);
+        data.setMobKills(data.getMobKills() + 1);
     }
-    
+
 }

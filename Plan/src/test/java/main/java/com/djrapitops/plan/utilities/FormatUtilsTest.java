@@ -1,0 +1,116 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package test.java.main.java.com.djrapitops.plan.utilities;
+
+import java.util.Date;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import org.bukkit.Location;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.Ignore;
+
+/**
+ *
+ * @author Risto
+ */
+public class FormatUtilsTest {
+
+    public FormatUtilsTest() {
+    }
+
+    @Test
+    public void testFormatTimeAmount() {
+        String string = "" + 1000L;
+        String expResult = "1s";
+        String result = FormatUtils.formatTimeAmount(string);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testFormatTimeAmountSinceDate() {
+        Date before = new Date(300000L);
+        Date now = new Date(310000L);
+        String expResult = "10s";
+        String result = FormatUtils.formatTimeAmountSinceDate(before, now);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testFormatTimeStamp() {
+        String string = "0";
+        String expResult = "Jan 01 02:00:00";
+        String result = FormatUtils.formatTimeStamp(string);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testFormatTimeAmountSinceString() {
+        String string = "" + new Date(310000L).toInstant().getEpochSecond() * 1000L;
+        Date now = new Date(300000L);
+        String expResult = "10s";
+        String result = FormatUtils.formatTimeAmountSinceString(string, now);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testRemoveLetters() {
+        String dataPoint = "435729847jirggu.eiwb¤#¤%¤#";
+        String expResult = "435729847.";
+        String result = FormatUtils.removeLetters(dataPoint);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testParseVersionNumber() {
+        String versionString = "2.10.2";
+        int expResult = 21002;
+        int result = FormatUtils.parseVersionNumber(versionString);
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testVersionNumber() {
+        String versionString = "2.10.2";
+        String versionString2 = "2.9.3";
+        int result = FormatUtils.parseVersionNumber(versionString);
+        int result2 = FormatUtils.parseVersionNumber(versionString2);
+        assertTrue("Higher version not higher", result > result2);
+    }
+
+    @Test
+    public void testMergeArrays() {
+        String[][] arrays = new String[][]{new String[]{"Test", "One"}, new String[]{"Test", "Two"}};
+        String[] expResult = new String[]{"Test", "One", "Test","Two"};
+        String[] result = FormatUtils.mergeArrays(arrays);
+        assertArrayEquals(expResult, result);
+    }
+
+    @Ignore @Test
+    public void testFormatLocation() {
+        Location loc = null;
+        String expResult = "";
+        String result = FormatUtils.formatLocation(loc);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testCutDecimals() {
+        double d = 0.05234;
+        String expResult = "0,05";
+        String result = FormatUtils.cutDecimals(d);
+        assertEquals(expResult, result);
+    }
+    @Test
+    public void testCutDecimals2() {
+        double d = 0.05634;
+        String expResult = "0,06";
+        String result = FormatUtils.cutDecimals(d);
+        assertEquals(expResult, result);
+    }
+
+}

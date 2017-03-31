@@ -26,7 +26,7 @@ public class ManageHelpCommand extends SubCommand {
      * @param command Current instance of PlanCommand
      */
     public ManageHelpCommand(Plan plugin, ManageCommand command) {
-        super("help,?", "plan.manage", Phrase.CMD_USG_MANAGE_HELP+"", CommandType.CONSOLE, "");
+        super("help,?", "plan.manage", Phrase.CMD_USG_MANAGE_HELP + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
         this.command = command;
@@ -40,7 +40,7 @@ public class ManageHelpCommand extends SubCommand {
         ChatColor hColor = Phrase.COLOR_TER.color();
 
         // Header
-        sender.sendMessage(Phrase.CMD_MANAGE_HELP_HEADER+"");
+        sender.sendMessage(Phrase.CMD_MANAGE_HELP_HEADER + "");
         // Help results
         for (SubCommand command : this.command.getCommands()) {
             if (command.getName().equalsIgnoreCase(getName())) {

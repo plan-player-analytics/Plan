@@ -33,7 +33,7 @@ public class SortableCommandUseTableCreator {
             } catch (IllegalArgumentException e) {
                 Plan plugin = getPlugin(Plan.class);
                 plugin.toLog("SortableCommandUseTableCreator", e);
-                plugin.toLog("Cause: "+values[0]+" "+values[1]);
+                plugin.toLog("Cause: " + values[0] + " " + values[1]);
             }
         }
         return html;

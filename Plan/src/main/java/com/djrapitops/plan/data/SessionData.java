@@ -56,4 +56,8 @@ public class SessionData {
     public String toString() {
         return "s:" + sessionStart + " e:" + sessionEnd;
     }
+    
+    public boolean isValid() {
+        return sessionStart <= sessionEnd;
+    }
 }

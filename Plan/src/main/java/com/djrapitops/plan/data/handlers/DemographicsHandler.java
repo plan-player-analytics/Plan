@@ -125,7 +125,7 @@ public class DemographicsHandler {
                 demData.setGeoLocation(results[2]);
             }
         } catch (Exception e) {
-            demData.setGeoLocation(Phrase.DEM_UNKNOWN+"");
+            demData.setGeoLocation(Phrase.DEM_UNKNOWN + "");
         }
     }
 }

@@ -155,13 +155,13 @@ public class UserData {
     public String toString() {
         return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|location:" + location + "|locations:" + locations + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|demData:" + demData + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
     }
-    
+
     /**
      *
      * @param ip
      */
     public void addIpAddress(InetAddress ip) {
-        if (!ips.contains(ip)) {
+        if (ip != null && !ips.contains(ip)) {
             ips.add(ip);
         }
     }
@@ -171,7 +171,8 @@ public class UserData {
      * @param addIps
      */
     public void addIpAddresses(Collection<InetAddress> addIps) {
-        ips.addAll(addIps);
+        ips.addAll(addIps.stream().filter(ip -> ip != null).collect(Collectors.toList()));
+
     }
 
     /**
@@ -216,7 +217,7 @@ public class UserData {
      * @param addNicks
      */
     public void addNicknames(Collection<String> addNicks) {
-        nicknames.addAll(addNicks);
+        nicknames.addAll(addNicks.stream().filter(nick -> nick != null).collect(Collectors.toList()));
     }
 
     /**
@@ -228,7 +229,9 @@ public class UserData {
         if (gmTimes == null) {
             gmTimes = new HashMap<>();
         }
-        gmTimes.put(gm, time);
+        if (gm != null) {
+            gmTimes.put(gm, time);
+        }
     }
 
     /**
@@ -254,7 +257,7 @@ public class UserData {
      * @param session
      */
     public void addSession(SessionData session) {
-        if (session != null) {
+        if (session != null && session.isValid()) {
             sessions.add(session);
         }
     }
@@ -266,6 +269,7 @@ public class UserData {
     public void addSessions(Collection<SessionData> sessions) {
         Collection<SessionData> filteredSessions = sessions.parallelStream()
                 .filter(session -> session != null)
+                .filter(session -> session.isValid())
                 .collect(Collectors.toList());
         this.sessions.addAll(filteredSessions);
     }
@@ -276,6 +280,10 @@ public class UserData {
      */
     public void setCurrentSession(SessionData session) {
         currentSession = session;
+    }
+
+    public SessionData getCurrentSession() {
+        return currentSession;
     }
 
     /**

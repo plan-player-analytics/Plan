@@ -44,13 +44,13 @@ public class AnalysisData {
     private long totalkills;
     private long totalmobkills;
     private long totaldeaths;
-    
+
     private long sessionAverage;
-    
+
     private String geomapCountries;
     private String geomapZ;
     private String geomapCodes;
-    
+
     private int[] genderData;
 
     /**
@@ -59,19 +59,19 @@ public class AnalysisData {
      * All data has to be set with setters to avoid NPE.
      */
     public AnalysisData() {
-        sortablePlayersTable = Html.ERROR_NOT_SET+"";
-        commandUseTableHtml = Html.ERROR_NOT_SET+"";
-        top20ActivePlayers = Html.ERROR_NOT_SET+"";
-        recentPlayers = Html.ERROR_NOT_SET+"";
-        geomapCountries = Html.ERROR_NOT_SET+"";
-        geomapZ = Html.ERROR_NOT_SET+"";
-        geomapCodes = Html.ERROR_NOT_SET+"";
-        playersDataArray = new String[]{"[0]","[\"No data\"]","[0]","[\"No data\"]","[0]","[\"No data\"]"};
-        genderData = new int[]{0,0,0};
+        sortablePlayersTable = Html.ERROR_NOT_SET + "";
+        commandUseTableHtml = Html.ERROR_NOT_SET + "";
+        top20ActivePlayers = Html.ERROR_NOT_SET + "";
+        recentPlayers = Html.ERROR_NOT_SET + "";
+        geomapCountries = Html.ERROR_NOT_SET + "";
+        geomapZ = Html.ERROR_NOT_SET + "";
+        geomapCodes = Html.ERROR_NOT_SET + "";
+        playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
+        genderData = new int[]{0, 0, 0};
     }
-    
+
     // Getters and setters v---------------------------------v
-    @Override    
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -205,7 +205,7 @@ public class AnalysisData {
     public void setGeomapCodes(String geomapCodes) {
         this.geomapCodes = geomapCodes;
     }
-    
+
     /**
      *
      * @return
@@ -235,7 +235,7 @@ public class AnalysisData {
     public void setJoinleaver(int joinleaver) {
         this.joinleaver = joinleaver;
     }
-    
+
     /**
      * @return HTML String of the Top50CommandsList
      */

@@ -29,14 +29,14 @@ public class SortableKillsTableCreator {
                 if (i >= 10) {
                     break;
                 }
-                long date = kill.getDate();                
+                long date = kill.getDate();
                 OfflinePlayer victim = getOfflinePlayer(kill.getVictim());
                 String name = victim.getName();
                 html += Html.TABLELINE_3_CUSTOMKEY_1.parse(
-                        date+"", FormatUtils.formatTimeStamp(date+""), 
+                        date + "", FormatUtils.formatTimeStamp(date + ""),
                         Html.LINK.parse(HtmlUtils.getInspectUrl(name), name),
                         kill.getWeapon()
-                );                
+                );
                 i++;
             }
         }

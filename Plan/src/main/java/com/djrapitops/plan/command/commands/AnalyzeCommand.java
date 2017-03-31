@@ -49,7 +49,7 @@ public class AnalyzeCommand extends SubCommand {
      * @return true in all cases.
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {        
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!Settings.WEBSERVER_ENABLED.isTrue()) {
             if (!Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
                 sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString());
@@ -59,7 +59,7 @@ public class AnalyzeCommand extends SubCommand {
                 return true;
             }
         }
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE+"");
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         if (!analysisCache.isCached()) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
@@ -70,9 +70,9 @@ public class AnalyzeCommand extends SubCommand {
             analysisCache.updateCache();
         }
 
-        BukkitTask analysisMessageSenderTask = (new BukkitRunnable() {            
+        BukkitTask analysisMessageSenderTask = (new BukkitRunnable() {
             private int timesrun = 0;
-            
+
             @Override
             public void run() {
                 timesrun++;
@@ -91,16 +91,16 @@ public class AnalyzeCommand extends SubCommand {
 
     /**
      * Used to send the message after /plan analysis.
+     *
      * @param sender Command sender.
      * @throws CommandException
      */
     public void sendAnalysisMessage(CommandSender sender) throws CommandException {
-        
-        
-        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER+"");
+
+        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
         // Link
         String url = HtmlUtils.getServerAnalysisUrl();
-        String message = Phrase.CMD_LINK+"";
+        String message = Phrase.CMD_LINK + "";
         boolean console = !(sender instanceof Player);
         if (console) {
             sender.sendMessage(message + url);
@@ -109,9 +109,9 @@ public class AnalyzeCommand extends SubCommand {
             Player player = (Player) sender;
             Bukkit.getServer().dispatchCommand(
                     Bukkit.getConsoleSender(),
-                    "tellraw " + player.getName() + " [\"\",{\"text\":\""+Phrase.CMD_CLICK_ME+"\",\"underlined\":true,"
+                    "tellraw " + player.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
                     + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
         }
-        sender.sendMessage(Phrase.CMD_FOOTER+"");
+        sender.sendMessage(Phrase.CMD_FOOTER + "");
     }
 }

@@ -132,6 +132,10 @@ public class Plan extends JavaPlugin {
         }
 
         hookHandler = new HookHandler(this);
+        Phrase.COLOR_MAIN.setColor(Settings.COLOR_MAIN.toString().charAt(1)+"");
+        Phrase.COLOR_SEC.setColor(Settings.COLOR_SEC.toString().charAt(1)+"");
+        Phrase.COLOR_TER.setColor(Settings.COLOR_TER.toString().charAt(1)+"");
+        
         log(Phrase.ENABLED + "");
     }
 
