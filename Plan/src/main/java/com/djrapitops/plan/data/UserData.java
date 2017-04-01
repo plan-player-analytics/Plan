@@ -141,6 +141,9 @@ public class UserData {
         this.isOp = data.isOp();
         this.isBanned = data.isBanned();
         DemographicsData dem = data.getDemData();
+        if (dem == null) {
+            dem = new DemographicsData();
+        }
         this.demData = new DemographicsData(dem.getAge(), dem.getGender(), dem.getGeoLocation());
         this.mobKills = data.getMobKills();
         this.playerKills = data.getPlayerKills();

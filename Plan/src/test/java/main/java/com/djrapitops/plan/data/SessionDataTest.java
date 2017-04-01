@@ -47,5 +47,33 @@ public class SessionDataTest {
     public void testInvalid() {
         assertTrue("Supposed to be invalid.", !test.isValid());
     }
-
+    
+    @Test
+    public void testInvalid2() {
+        test = new SessionData(3);
+        test.endSession(2);
+        assertTrue("Supposed to be invalid.", !test.isValid());
+    }
+    
+    @Test
+    public void testValid2() {
+        test = new SessionData(3);
+        test.endSession(3);
+        assertTrue("Supposed to be valid.", test.isValid());
+    }
+    
+    @Test
+    public void testToString() {
+        String exp = "s:0 e:-1";
+        String result = test.toString();
+        assertEquals(exp, result);
+    }
+    
+    @Test
+    public void testGetLength() {
+        long exp = 5L;
+        test.endSession(5L);
+        long result = test.getLength();
+        assertEquals(exp, result);
+    }
 }

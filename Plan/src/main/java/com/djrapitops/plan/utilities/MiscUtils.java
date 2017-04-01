@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,34 +29,39 @@ public class MiscUtils {
      * @return String informing about status of plugins version.
      */
     public static String checkVersion() {
-        Plan plugin = getPlugin(Plan.class);
-        String cVersion;
-        String lineWithVersion;
         try {
-            URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
-            lineWithVersion = "";
-            Scanner websiteScanner = new Scanner(githubUrl.openStream());
-            while (websiteScanner.hasNextLine()) {
-                String line = websiteScanner.nextLine();
-                if (line.toLowerCase().contains("version")) {
-                    lineWithVersion = line;
-                    break;
-                }
-            }
-            String versionString = lineWithVersion.split(": ")[1];
-            int newestVersionNumber = FormatUtils.parseVersionNumber(versionString);
-            cVersion = plugin.getDescription().getVersion();
-            int currentVersionNumber = FormatUtils.parseVersionNumber(cVersion);
-            if (newestVersionNumber > currentVersionNumber) {
-                plugin.getConfig().set("Settins.Locale", "default");
-                return Phrase.VERSION_NEW_AVAILABLE.parse(versionString);
-            } else {
-                return Phrase.VERSION_LATEST + "";
-            }
+            Plan plugin = getPlugin(Plan.class);
+            String cVersion = plugin.getDescription().getVersion();
+            String gitVersion = getGitVersion();
+            return checkVersion(cVersion, gitVersion);
         } catch (IOException | NumberFormatException e) {
-            plugin.logError(Phrase.VERSION_CHECK_ERROR + "");
+            getPlugin(Plan.class).logError(Phrase.VERSION_CHECK_ERROR + "");
         }
-        return Phrase.VERSION_FAIL + "";
+        return Phrase.VERSION_FAIL+"";        
+    }
+
+    private static String getGitVersion() throws IOException {
+        URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
+        String lineWithVersion = "";
+        Scanner websiteScanner = new Scanner(githubUrl.openStream());
+        while (websiteScanner.hasNextLine()) {
+            String line = websiteScanner.nextLine();
+            if (line.toLowerCase().contains("version")) {
+                lineWithVersion = line;
+                break;
+            }
+        }
+        return lineWithVersion.split(": ")[1];
+    }
+
+    public static String checkVersion(String currentVersion, String gitVersion) throws NumberFormatException {
+        int newestVersionNumber = FormatUtils.parseVersionNumber(gitVersion);
+        int currentVersionNumber = FormatUtils.parseVersionNumber(currentVersion);
+        if (newestVersionNumber > currentVersionNumber) {
+            return Phrase.VERSION_NEW_AVAILABLE.parse(gitVersion);
+        } else {
+            return Phrase.VERSION_LATEST + "";
+        }
     }
 
     /**
@@ -84,7 +90,7 @@ public class MiscUtils {
                 Player player = plugin.getServer().getPlayer(UUIDFetcher.getUUIDOf(sender.getName()));
                 playerName = player.getName();
             } catch (Exception e) {
-                plugin.logError(Phrase.ERROR_CONSOLE_PLAYER.parse(Arrays.toString(args),isConsole+""));
+                plugin.logError(Phrase.ERROR_CONSOLE_PLAYER.parse(Arrays.toString(args), isConsole + ""));
             }
         }
         return playerName;

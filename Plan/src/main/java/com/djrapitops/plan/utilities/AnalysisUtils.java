@@ -64,8 +64,8 @@ public class AnalysisUtils {
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
         List<Long> list = data.stream()
                 .filter(session -> session != null)
-                .filter(session -> session.getSessionEnd() > session.getSessionStart())
-                .map(session -> session.getSessionEnd() - session.getSessionStart())
+                .filter(session -> session.isValid())
+                .map(session -> session.getLength())
                 .collect(Collectors.toList());
         return list;
     }

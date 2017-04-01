@@ -307,14 +307,15 @@ public class Analysis {
         long scaleDay = 86400 * 1000;
         long scaleWeek = 604800 * 1000;
         long scaleMonth = (long) 2592000 * (long) 1000;
+        int maxPlayers = plugin.getHandler().getMaxPlayers();
 
         data.setNewPlayersDay(AnalysisUtils.getNewPlayers(registered, scaleDay, now));
         data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
         data.setNewPlayersMonth(AnalysisUtils.getNewPlayers(registered, scaleMonth, now));
 
-        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleDay);
-        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleWeek);
-        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleMonth);
+        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleDay, maxPlayers);
+        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleWeek, maxPlayers);
+        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleMonth, maxPlayers);
 
         data.setPlayersDataArray(new String[]{dayArray[0], dayArray[1], weekArray[0], weekArray[1], monthArray[0], monthArray[1]});
     }

@@ -23,11 +23,33 @@ public class MiscUtilsTest {
     public MiscUtilsTest() {
     }
     
-    @Ignore @Test
+    @Test
     public void testCheckVersion() {
-        System.out.println("checkVersion");
-        String result = MiscUtils.checkVersion();
-        assertTrue("Failed", !result.equals(Phrase.VERSION_CHECK_ERROR + ""));
+        String versionG = "2.10.9";
+        String result = MiscUtils.checkVersion("2.0.0", versionG);
+        String exp = Phrase.VERSION_NEW_AVAILABLE.parse(versionG);
+        assertEquals(exp, result);
+    }
+    
+    @Test
+    public void testCheckVersion2() {
+        String result = MiscUtils.checkVersion("3.0.0", "2.10.9");
+        String exp = Phrase.VERSION_LATEST+"";
+        assertEquals(exp, result);
+    }
+    
+    @Test
+    public void testCheckVersion3() {
+        String result = MiscUtils.checkVersion("2.11.0", "2.10.9");
+        String exp = Phrase.VERSION_LATEST+"";
+        assertEquals(exp, result);
+    }
+    
+    @Test
+    public void testCheckVersion4() {
+        String result = MiscUtils.checkVersion("2.11.0", "2.11.0");
+        String exp = Phrase.VERSION_LATEST+"";
+        assertEquals(exp, result);
     }
 
     @Ignore

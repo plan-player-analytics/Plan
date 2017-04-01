@@ -34,7 +34,7 @@ public class UserDataTest {
 
     @Before
     public void setUp() {
-        DemographicsData demData = null;
+        DemographicsData demData = new DemographicsData();
         test = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, demData, "Testname", true);
     }
 
@@ -66,6 +66,13 @@ public class UserDataTest {
         assertTrue("Didn't add 2", test.getIps().contains(ip2));
         assertTrue("Added null", !test.getIps().contains(null));
         assertTrue("Added multiples", test.getIps().size() == 2);
+    }
+
+    @Test
+    public void testAddIpAddressesEmpty() {
+        List<InetAddress> ips = new ArrayList<>();
+        test.addIpAddresses(ips);
+        assertTrue("Added something", test.getIps().isEmpty());
     }
 
     @Ignore
@@ -109,6 +116,13 @@ public class UserDataTest {
         assertTrue("Didn't add 2", test.getNicknames().contains(two));
         assertTrue("Added null", !test.getNicknames().contains(null));
         assertTrue("Added multiples", test.getNicknames().size() == 2);
+    }
+    
+    @Test
+    public void testAddNicknamesEmpty() {
+        List<String> o = new ArrayList<>();
+        test.addNicknames(o);
+        assertTrue("Added something", test.getNicknames().isEmpty());
     }
 
     @Test
@@ -178,6 +192,13 @@ public class UserDataTest {
         assertTrue("Added incorrect one", !test.getSessions().contains(incorrect));
         assertTrue("Added null", !test.getSessions().contains(incorrect));
     }
+    
+    @Test
+    public void testAddSessionsEmpty() {
+        List<SessionData> o = new ArrayList<>();
+        test.addSessions(o);
+        assertTrue("Added something", test.getSessions().isEmpty());
+    }
 
     @Test
     public void testSetCurrentSession() {
@@ -235,4 +256,14 @@ public class UserDataTest {
         assertTrue("Equals!", !test.equals(o));
     }
 
+    @Test
+    public void testCopyConstructor() {
+        UserData copy = new UserData(test);
+        assertTrue("Not copied properly", test.equals(copy));
+    }
+    
+    @Test
+    public void testGetUUID() {
+        assertEquals(test.getUuid(), UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"));
+    }
 }

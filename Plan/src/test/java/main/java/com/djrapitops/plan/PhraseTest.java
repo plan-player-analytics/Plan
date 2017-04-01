@@ -5,11 +5,11 @@
  */
 package test.java.main.java.com.djrapitops.plan;
 
-import java.io.File;
 import main.java.com.djrapitops.plan.Phrase;
 import org.bukkit.ChatColor;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -24,6 +24,7 @@ public class PhraseTest {
     public void testToString() {
         Phrase instance = Phrase.REPLACE0;
         String expResult = "REPLACE0";
+        instance.setText(expResult);        
         String result = instance.toString();
         assertEquals(expResult, result);
     }
@@ -46,7 +47,6 @@ public class PhraseTest {
 
     @Test
     public void testColor() {
-        System.out.println("color");
         Phrase instance = Phrase.COLOR_MAIN;
         ChatColor expResult = ChatColor.RED;
         instance.setColor("c");
@@ -56,7 +56,6 @@ public class PhraseTest {
 
     @Test
     public void testSetText() {
-        System.out.println("setText");
         Phrase instance = Phrase.REPLACE0;
         String expResult = "Test";
         instance.setText(expResult);

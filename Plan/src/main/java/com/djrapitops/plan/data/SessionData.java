@@ -51,6 +51,10 @@ public class SessionData {
     public long getSessionEnd() {
         return sessionEnd;
     }
+    
+    public long getLength() {
+        return sessionEnd-sessionStart;
+    }
 
     @Override
     public String toString() {

@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -19,11 +17,10 @@ public class PlayerActivityGraphCreator {
      *
      * @param sessionData
      * @param scale
+     * @param maxPlayers
      * @return
      */
-    public static String[] generateDataArray(List<SessionData> sessionData, long scale) {
-        Plan plugin = getPlugin(Plan.class);
-        int maxPlayers = plugin.getHandler().getMaxPlayers();
+    public static String[] generateDataArray(List<SessionData> sessionData, long scale, int maxPlayers) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         long nowMinusScale = now - scale;
         CopyOnWriteArrayList<Long> sessionStarts = new CopyOnWriteArrayList<>();
