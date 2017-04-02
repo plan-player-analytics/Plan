@@ -10,16 +10,18 @@ import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
  * @author Risto
  */
 public class DemographicsDataTest {
-    
+
     public DemographicsDataTest() {
     }
 
+    @Ignore
     @Test
     public void testGetAge() {
         DemographicsData instance = new DemographicsData();
@@ -27,7 +29,8 @@ public class DemographicsDataTest {
         int result = instance.getAge();
         assertEquals(expResult, result);
     }
-    
+
+    @Ignore
     @Test
     public void testGetAge2() {
         DemographicsData instance = new DemographicsData(10, Gender.OTHER, "None");
@@ -36,6 +39,7 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    @Ignore
     @Test
     public void testGetGender() {
         DemographicsData instance = new DemographicsData();
@@ -43,7 +47,8 @@ public class DemographicsDataTest {
         Gender result = instance.getGender();
         assertEquals(expResult, result);
     }
-    
+
+    @Ignore
     @Test
     public void testGetGender2() {
         DemographicsData instance = new DemographicsData(10, Gender.OTHER, "None");
@@ -52,6 +57,7 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    @Ignore
     @Test
     public void testGetGeoLocation() {
         DemographicsData instance = new DemographicsData();
@@ -59,6 +65,8 @@ public class DemographicsDataTest {
         String result = instance.getGeoLocation();
         assertEquals(expResult, result);
     }
+
+    @Ignore
     @Test
     public void testGetGeoLocation2() {
         DemographicsData instance = new DemographicsData(10, Gender.OTHER, "None");
@@ -67,6 +75,7 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    @Ignore
     @Test
     public void testSetAge() {
         int age = 10;
@@ -76,6 +85,7 @@ public class DemographicsDataTest {
         assertEquals(age, result);
     }
 
+    @Ignore
     @Test
     public void testSetGender() {
         Gender gender = Gender.MALE;
@@ -85,6 +95,7 @@ public class DemographicsDataTest {
         assertEquals(gender, result);
     }
 
+    @Ignore
     @Test
     public void testSetGeoLocation() {
         String geoLocation = "None";
@@ -94,6 +105,7 @@ public class DemographicsDataTest {
         assertEquals(geoLocation, result);
     }
 
+    @Ignore
     @Test
     public void testToString() {
         DemographicsData instance = new DemographicsData();
@@ -101,5 +113,5 @@ public class DemographicsDataTest {
         String result = instance.toString();
         assertEquals(expResult, result);
     }
-    
+
 }

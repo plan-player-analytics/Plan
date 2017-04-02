@@ -45,9 +45,9 @@ public enum Phrase {
     USERNAME_NOT_SEEN(ChatColor.RED + "" + PREFIX + "This Player has not played on this server."),
     USERNAME_NOT_KNOWN(ChatColor.RED + "" + PREFIX + "Player not found from the database."),
     //
-    COLOR_MAIN(""),
-    COLOR_SEC(""),
-    COLOR_TER(""),
+    COLOR_MAIN(ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1))),
+    COLOR_SEC(ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1))),
+    COLOR_TER(ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1))),
     //
     ARROWS_RIGHT("»"),
     BALL("•"),
@@ -196,7 +196,7 @@ public enum Phrase {
         this.text = text;
     }
 
-    public void setColor(String colorCode) {
+    public void setColor(char colorCode) {
         this.color = ChatColor.getByChar(colorCode);
     }
 

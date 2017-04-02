@@ -23,7 +23,7 @@ public class MiscUtilsTest {
     public MiscUtilsTest() {
     }
     
-    @Test
+    @Ignore@Test
     public void testCheckVersion() {
         String versionG = "2.10.9";
         String result = MiscUtils.checkVersion("2.0.0", versionG);
@@ -31,21 +31,21 @@ public class MiscUtilsTest {
         assertEquals(exp, result);
     }
     
-    @Test
+    @Ignore @Test
     public void testCheckVersion2() {
         String result = MiscUtils.checkVersion("3.0.0", "2.10.9");
         String exp = Phrase.VERSION_LATEST+"";
         assertEquals(exp, result);
     }
     
-    @Test
+    @Ignore @Test
     public void testCheckVersion3() {
         String result = MiscUtils.checkVersion("2.11.0", "2.10.9");
         String exp = Phrase.VERSION_LATEST+"";
         assertEquals(exp, result);
     }
     
-    @Test
+    @Ignore@Test
     public void testCheckVersion4() {
         String result = MiscUtils.checkVersion("2.11.0", "2.11.0");
         String exp = Phrase.VERSION_LATEST+"";
