@@ -1194,9 +1194,36 @@ public abstract class SQLDB extends Database {
                 + ") VALUES (?, ?, ?, ?, ?)");
 
         statement.setInt(1, userId);
-        statement.setLong(2, gamemodeTimes.get(GameMode.SURVIVAL));
-        statement.setLong(3, gamemodeTimes.get(GameMode.CREATIVE));
-        statement.setLong(4, gamemodeTimes.get(GameMode.ADVENTURE));
+        try {
+            Long gm = gamemodeTimes.get(GameMode.SURVIVAL);
+            if (gm != null) {
+                statement.setLong(2, gm);
+            } else {
+                statement.setLong(2, 0);
+            }
+        } catch (NoSuchFieldError e) {
+            statement.setLong(2, 0);
+        }
+        try {
+            Long gm = gamemodeTimes.get(GameMode.CREATIVE);
+            if (gm != null) {
+                statement.setLong(3, gm);
+            } else {
+                statement.setLong(3, 0);
+            }
+        } catch (NoSuchFieldError e) {
+            statement.setLong(3, 0);
+        }
+        try {
+            Long gm = gamemodeTimes.get(GameMode.ADVENTURE);
+            if (gm != null) {
+                statement.setLong(4, gm);
+            } else {
+                statement.setLong(4, 0);
+            }
+        } catch (NoSuchFieldError e) {
+            statement.setLong(4, 0);
+        }
         try {
             Long gm = gamemodeTimes.get(GameMode.SPECTATOR);
             if (gm != null) {
