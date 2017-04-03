@@ -11,34 +11,55 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.easymock.EasyMock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
 
 /**
  *
  * @author Risto
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(JavaPlugin.class)
 public class UserDataTest {
 
     private UserData test;
 
     public UserDataTest() {
     }
-
+    
     @Before
     public void setUp() {
+        TestInit t = new TestInit();
+        assertTrue("Not set up", t.setUp());
+        Plan plan = t.getPlanMock();
+        PowerMock.mockStatic(JavaPlugin.class);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        PowerMock.replay(JavaPlugin.class);
+//        PowerMock.verify(JavaPlugin.class);
         DemographicsData demData = new DemographicsData();
         test = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, demData, "Testname", true);
     }
 
-    @Ignore
     @Test
     public void testAddIpAddress() throws UnknownHostException {
         InetAddress ip = InetAddress.getByName("247.183.163.155");
@@ -53,7 +74,6 @@ public class UserDataTest {
         assertTrue("Added multiples", test.getIps().size() == 2);
     }
 
-    @Ignore
     @Test
     public void testAddIpAddresses() throws UnknownHostException {
         List<InetAddress> ips = new ArrayList<>();
@@ -70,7 +90,6 @@ public class UserDataTest {
         assertTrue("Added multiples", test.getIps().size() == 2);
     }
 
-    @Ignore
     @Test
     public void testAddIpAddressesEmpty() {
         List<InetAddress> ips = new ArrayList<>();
@@ -78,17 +97,36 @@ public class UserDataTest {
         assertTrue("Added something", test.getIps().isEmpty());
     }
 
-    @Ignore
     @Test
     public void testAddLocation() {
+        World mockWorld = MockUtils.mockWorld();
+        Location loc = new Location(mockWorld, 0, 0, 0);
+        test.addLocation(loc);
+        assertTrue("Didn't add location", !test.getLocations().isEmpty());
+    }
+    
+    @Test
+    public void testAddNullLocation() {
+        test.addLocation(null);
+        assertTrue("Added location", test.getLocations().isEmpty());
     }
 
-    @Ignore
     @Test
     public void testAddLocations() {
+        World mockWorld = MockUtils.mockWorld();
+        Location loc = new Location(mockWorld, 0, 0, 0);
+        Location loc2 = new Location(mockWorld, 1, 0, 1);
+        List<Location> locs = new ArrayList<>();
+        locs.add(loc);
+        locs.add(loc2);
+        locs.add(null);
+        test.addLocations(locs);
+        List<Location> locations = test.getLocations();
+        assertTrue("Didn't add locations", !locations.isEmpty());
+        assertTrue("Didn't add 2 locations", locations.size() == 2);
+        assertTrue("Added null", !locations.contains(null));
     }
 
-    @Ignore
     @Test
     public void testAddNickname() {
         String one = "Test1";
@@ -106,7 +144,6 @@ public class UserDataTest {
         assertTrue("Added multiples", test.getNicknames().size() == 2);
     }
 
-    @Ignore
     @Test
     public void testAddNicknames() {
         String one = "Test1";
@@ -123,7 +160,6 @@ public class UserDataTest {
         assertTrue("Added multiples", test.getNicknames().size() == 2);
     }
 
-    @Ignore
     @Test
     public void testAddNicknamesEmpty() {
         List<String> o = new ArrayList<>();
@@ -131,14 +167,12 @@ public class UserDataTest {
         assertTrue("Added something", test.getNicknames().isEmpty());
     }
 
-    @Ignore
     @Test
     public void testSetGMTime() {
         test.setGMTime(GameMode.SURVIVAL, 1L);
         assertTrue("" + test.getGmTimes().get(GameMode.SURVIVAL), test.getGmTimes().get(GameMode.SURVIVAL) == 1L);
     }
 
-    @Ignore
     @Test
     public void testSetGMTimeWhenGMTimesNull() {
         test.setGmTimes(null);
@@ -146,14 +180,12 @@ public class UserDataTest {
         assertTrue("" + test.getGmTimes().get(GameMode.SURVIVAL), test.getGmTimes().get(GameMode.SURVIVAL) == 1L);
     }
 
-    @Ignore
     @Test
     public void testSetGMTimeNull() {
         test.setGMTime(null, 0L);
         assertTrue("Added null", !test.getGmTimes().containsKey(null));
     }
 
-    @Ignore
     @Test
     public void testSetAllGMTimes() {
         HashMap<GameMode, Long> gmTimes = new HashMap<>();
@@ -168,7 +200,6 @@ public class UserDataTest {
         assertTrue("Not equal 3", times.get(GameMode.SPECTATOR) == 4L);
     }
 
-    @Ignore
     @Test
     public void testAddSession() {
         SessionData correct = new SessionData(0, 1);
@@ -176,7 +207,6 @@ public class UserDataTest {
         assertTrue("Didn't add correct one", test.getSessions().contains(correct));
     }
 
-    @Ignore
     @Test
     public void testAddSessionIncorrect() {
         SessionData incorrect = new SessionData(0);
@@ -184,7 +214,6 @@ public class UserDataTest {
         assertTrue("Added incorrect one", !test.getSessions().contains(incorrect));
     }
 
-    @Ignore
     @Test
     public void testAddSessionNull() {
         SessionData incorrect = null;
@@ -192,7 +221,6 @@ public class UserDataTest {
         assertTrue("Added null", !test.getSessions().contains(incorrect));
     }
 
-    @Ignore
     @Test
     public void testAddSessions() {
         SessionData correct = new SessionData(0, 1);
@@ -207,7 +235,6 @@ public class UserDataTest {
         assertTrue("Added null", !test.getSessions().contains(incorrect));
     }
 
-    @Ignore
     @Test
     public void testAddSessionsEmpty() {
         List<SessionData> o = new ArrayList<>();
@@ -215,7 +242,6 @@ public class UserDataTest {
         assertTrue("Added something", test.getSessions().isEmpty());
     }
 
-    @Ignore
     @Test
     public void testSetCurrentSession() {
         SessionData s = new SessionData(0);
@@ -223,7 +249,6 @@ public class UserDataTest {
         assertEquals(test.getCurrentSession(), s);
     }
 
-    @Ignore
     @Test
     public void testUpdateBanned() {
         test.updateBanned(true);
@@ -232,7 +257,6 @@ public class UserDataTest {
         assertTrue("True", !test.isBanned());
     }
 
-    @Ignore
     @Test
     public void testIsAccessed() {
         test.access();
@@ -244,14 +268,12 @@ public class UserDataTest {
         assertTrue("Accessed, even though not accessing", !test.isAccessed());
     }
 
-    @Ignore
     @Test
     public void testAccess() {
         test.access();
         assertTrue("Not accessed, even though accessing", test.isAccessed());
     }
 
-    @Ignore
     @Test
     public void testStopAccessing() {
         test.access();
@@ -259,34 +281,29 @@ public class UserDataTest {
         assertTrue("Accessed, even though not accessing", !test.isAccessed());
     }
 
-    @Ignore
     @Test
     public void testEquals() {
         assertTrue("Not Equals!", test.equals(new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, null, "Testname", true)));
     }
 
-    @Ignore
     @Test
     public void testEqualsNot() {
         UserData notEqual = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, null, "WRONG", true);
         assertTrue("Equals!", !notEqual.equals(test));
     }
 
-    @Ignore
     @Test
     public void testEqualsNot2() {
         Object o = "NOT";
         assertTrue("Equals!", !test.equals(o));
     }
 
-    @Ignore
     @Test
     public void testCopyConstructor() {
         UserData copy = new UserData(test);
         assertTrue("Not copied properly", test.equals(copy));
     }
 
-    @Ignore
     @Test
     public void testGetUUID() {
         assertEquals(test.getUuid(), UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"));

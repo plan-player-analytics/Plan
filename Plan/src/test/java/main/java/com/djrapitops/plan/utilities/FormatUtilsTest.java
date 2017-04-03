@@ -10,7 +10,8 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import org.bukkit.Location;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
+import org.bukkit.World;
+import test.java.utils.*;
 
 /**
  *
@@ -88,14 +89,13 @@ public class FormatUtilsTest {
         assertArrayEquals(expResult, result);
     }
 
-    @Ignore @Test
+    @Test
     public void testFormatLocation() {
-        Location loc = null;
-        String expResult = "";
+        World mockWorld = MockUtils.mockWorld();
+        Location loc = new Location(mockWorld, 0, 0, 0);
+        String expResult = "x 0 z 0 in World";
         String result = FormatUtils.formatLocation(loc);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     @Test

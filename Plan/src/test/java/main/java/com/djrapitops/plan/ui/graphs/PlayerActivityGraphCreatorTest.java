@@ -24,7 +24,7 @@ public class PlayerActivityGraphCreatorTest {
     public PlayerActivityGraphCreatorTest() {
     }
 
-    @Ignore("Takes too long") @Test
+    @Test
     public void testGenerateDataArray() {
         List<SessionData> sessionData = createRandomSessionDataList();
         long scale = 2592000L * 1000L;

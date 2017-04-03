@@ -183,8 +183,10 @@ public class UserData {
      * @param loc
      */
     public void addLocation(Location loc) {
-        locations.add(loc);
-        location = loc;
+        if (loc != null) {
+            locations.add(loc);
+            location = loc;
+        }
     }
 
     /**
@@ -192,8 +194,9 @@ public class UserData {
      * @param addLocs
      */
     public void addLocations(Collection<Location> addLocs) {
-        locations.addAll(addLocs);
-        if (!locations.isEmpty()) {
+        if (!addLocs.isEmpty()) {
+            List<Location> locs = addLocs.stream().filter(l -> l != null).collect(Collectors.toList());
+            locations.addAll(locs);
             location = locations.get(locations.size() - 1);
         }
     }

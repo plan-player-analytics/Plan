@@ -9,24 +9,78 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import test.java.utils.TestInit;
 
 /**
  *
  * @author Risto
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(JavaPlugin.class)
 public class AnalysisUtilsTest {
     
     public AnalysisUtilsTest() {
     }
 
-    @Ignore("Mock Settings")@Test
+    @Before
+    public void setUp() {
+        TestInit t = new TestInit();
+        assertTrue("Not set up", t.setUp());
+        Plan plan = t.getPlanMock();
+        PowerMock.mockStatic(JavaPlugin.class);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        PowerMock.replay(JavaPlugin.class);
+//        PowerMock.verify(JavaPlugin.class);
+    }
+    
+    @Test
     public void testIsActive() {
         long lastPlayed = new Date().getTime();
+        long playTime = 12638934876L;
+        int loginTimes = 4;
+        boolean expResult = true;
+        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testIsNotActive2() {
+        long lastPlayed = new Date().getTime();
+        long playTime = 0L;
+        int loginTimes = 4;
+        boolean expResult = false;
+        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        assertEquals(expResult, result);
+    }    
+    
+    @Test
+    public void testIsNotActive3() {
+        long lastPlayed = new Date().getTime();
+        long playTime = 12638934876L;
+        int loginTimes = 0;
+        boolean expResult = false;
+        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testIsNotActive() {
+        long lastPlayed = 0L;
         long playTime = 12638934876L;
         int loginTimes = 4;
         boolean expResult = false;

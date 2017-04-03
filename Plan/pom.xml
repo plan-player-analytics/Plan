@@ -55,7 +55,7 @@
             <scope>provided</scope>
         </dependency>
         <!--         -->  
-<!--        <dependency>
+        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock</artifactId>
             <version>1.6.6</version>
@@ -98,7 +98,7 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>3.4</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
