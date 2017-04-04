@@ -7,9 +7,11 @@ package test.java.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
 import main.java.com.djrapitops.plan.Plan;
-import org.mockito.Mockito;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.Server;
+import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -20,30 +22,30 @@ public class TestInit {
 
     private Plan planMock;
 
-    public TestInit() {        
+    public TestInit() {
     }
-    
+
     public boolean setUp() {
         try {
-            planMock = Mockito.mock(Plan.class);
+            planMock = PowerMockito.mock(Plan.class);
             File configfile = new File(getClass().getResource("/config.yml").getPath());
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.load(configfile.getAbsolutePath());
             when(planMock.getConfig()).thenReturn(configuration);
-//            if (testFolder.exists()) {
-//                Files.deleteIfExists(testFolder.toPath());
-//            }
-//            testFolder.mkdir();
-//            when(planMock.getDataFolder()).thenReturn(new File("temporaryTestFolder"));
+            Files.deleteIfExists(new File("temporaryTestFolder").toPath());
+            File testFolder = new File("temporaryTestFolder");
+            testFolder.mkdir();
+//
+            when(planMock.getDataFolder()).thenReturn(testFolder);
             File analysis = new File(getClass().getResource("/analysis.html").getPath());
             when(planMock.getResource("analysis.html")).thenReturn(new FileInputStream(analysis));
             File player = new File(getClass().getResource("/player.html").getPath());
             when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
-            
-//            Server mockServer = Mockito.mock(Server.class);
-//            when(mockServer.getIp()).thenReturn("0.0.0.0");
+
+            Server mockServer = PowerMockito.mock(Server.class);
+            when(mockServer.getIp()).thenReturn("0.0.0.0");
 //            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
-//            when(planMock.getServer()).thenReturn(mockServer);
+            when(planMock.getServer()).thenReturn(mockServer);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();
             return true;
         } catch (Exception ex) {

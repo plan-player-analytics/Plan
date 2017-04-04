@@ -40,6 +40,8 @@ public class HtmlUtilsTest {
         PowerMock.mockStatic(JavaPlugin.class);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);
     }
@@ -72,21 +74,19 @@ public class HtmlUtilsTest {
         assertEquals(result, exp);
     }
 
-    @Ignore("Mock Server.getIp") @Test
+    @Test
     public void testGetServerAnalysisUrl() throws FileNotFoundException {
         String result = HtmlUtils.getServerAnalysisUrl();
-        String exp = "";
-        assertEquals(result, exp);
+        String exp = "http://0.0.0.0:8804/bAkEd/server";
+        assertEquals(exp, result);
     }
 
-    @Ignore("Mock Server.getIp") @Test
+    @Test
     public void testGetInspectUrl() {
-        String playerName = "";
-        String expResult = "";
+        String playerName = "Test";
+        String expResult = "http://0.0.0.0:8804/bAkEd/player/Test";
         String result = HtmlUtils.getInspectUrl(playerName);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     @Test

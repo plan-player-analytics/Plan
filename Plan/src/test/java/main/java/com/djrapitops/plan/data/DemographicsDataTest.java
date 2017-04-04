@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
+import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import org.junit.Test;

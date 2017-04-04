@@ -5,6 +5,8 @@
  */
 package test.java.main.java.com.djrapitops.plan.data;
 
+import org.bukkit.OfflinePlayer;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -24,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -41,16 +42,18 @@ import test.java.utils.TestInit;
 public class UserDataTest {
 
     private UserData test;
+    private Plan plan;
 
     public UserDataTest() {
     }
-    
+
     @Before
     public void setUp() {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
-        Plan plan = t.getPlanMock();
+        plan = t.getPlanMock();
         PowerMock.mockStatic(JavaPlugin.class);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
@@ -104,7 +107,7 @@ public class UserDataTest {
         test.addLocation(loc);
         assertTrue("Didn't add location", !test.getLocations().isEmpty());
     }
-    
+
     @Test
     public void testAddNullLocation() {
         test.addLocation(null);
@@ -302,6 +305,38 @@ public class UserDataTest {
     public void testCopyConstructor() {
         UserData copy = new UserData(test);
         assertTrue("Not copied properly", test.equals(copy));
+    }
+
+    @Test
+    public void testPlayerConstructor() {
+        test = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        expected.updateBanned(true);
+        assertTrue("Not equal!", test.equals(expected));
+    }
+
+    @Test
+    public void testPlayerConstructorBrokenBanned() throws IOException {
+        test = new UserData(MockUtils.mockBrokenPlayer(), new DemographicsData());
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        expected.updateBanned(false);
+        assertTrue("Not equal!", test.equals(expected));
+    }
+
+    @Test
+    public void testOfflinePlayerConstructor() {
+        test = new UserData((OfflinePlayer) MockUtils.mockPlayer(), new DemographicsData());
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        expected.updateBanned(true);
+        assertTrue("Not equal!", test.equals(expected));
+    }
+
+    @Test
+    public void testOfflinePlayerConstructorBrokenBanned() throws IOException {
+        test = new UserData((OfflinePlayer) MockUtils.mockBrokenPlayer(), new DemographicsData());
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        expected.updateBanned(false);
+        assertTrue("Not equal!", test.equals(expected));
     }
 
     @Test
