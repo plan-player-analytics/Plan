@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *

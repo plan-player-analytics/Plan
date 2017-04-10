@@ -32,11 +32,10 @@ public class SessionHandler {
      *
      * @param data
      */
-    public void startSession(UserData data) {
+    public void startSession(UUID uuid) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         SessionData session = new SessionData(now);
-        activeSessions.put(data.getUuid(), session);
-        data.setCurrentSession(session);
+        activeSessions.put(uuid, session);
     }
     
     /**

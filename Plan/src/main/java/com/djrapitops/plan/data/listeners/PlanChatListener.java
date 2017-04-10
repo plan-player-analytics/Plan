@@ -1,11 +1,8 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handlers.BasicInfoHandler;
-import main.java.com.djrapitops.plan.data.handlers.DemographicsHandler;
+import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
+import main.java.com.djrapitops.plan.data.handling.info.ChatInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,9 +16,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class PlanChatListener implements Listener {
 
     private final Plan plugin;
-    private final DataCacheHandler handler;
-    private final DemographicsHandler demographicsHandler;
-    private final BasicInfoHandler basicInfoH;
+    private final InfoPoolProcessor processor;
 
     /**
      * Class Constructor.
@@ -30,9 +25,7 @@ public class PlanChatListener implements Listener {
      */
     public PlanChatListener(Plan plugin) {
         this.plugin = plugin;
-        handler = plugin.getHandler();
-        demographicsHandler = handler.getDemographicsHandler();
-        basicInfoH = handler.getBasicInfoHandler();
+        processor = plugin.getInfoPoolProcessor();
     }
 
     /**
@@ -46,13 +39,6 @@ public class PlanChatListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        DBCallableProcessor chatProcessor = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                basicInfoH.addNickname(p.getDisplayName(), data);
-                demographicsHandler.handleChatEvent(event.getMessage(), data);
-            }
-        };
-        handler.getUserDataForProcessing(chatProcessor, p.getUniqueId());
+        processor.addToPool(new ChatInfo(p.getUniqueId(), p.getDisplayName(), event.getMessage()));
     }
 }

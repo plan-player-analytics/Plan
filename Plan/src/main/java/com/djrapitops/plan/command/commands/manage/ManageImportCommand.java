@@ -86,12 +86,11 @@ public class ManageImportCommand extends SubCommand {
             uuids.add(p.getUniqueId());
         }
         HashMap<UUID, Long> numbericData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
-        DataCacheHandler handler = plugin.getHandler();
         BukkitTask asyncImportTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 if (importFromPlugin.equals("ontime")) {
-                    if (ManageUtils.importOnTime(numbericData, handler)) {
+                    if (ManageUtils.importOnTime(numbericData, plugin)) {
                         sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
                     }
                 }

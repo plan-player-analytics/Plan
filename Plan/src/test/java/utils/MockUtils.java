@@ -34,6 +34,19 @@ public class MockUtils {
         when(p.getName()).thenReturn("TestName");
         return p;
     }
+    public static Player mockPlayer2() {
+        Player p = PowerMockito.mock(Player.class);
+        when(p.getGameMode()).thenReturn(GameMode.SPECTATOR);
+        when(p.getUniqueId()).thenReturn(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"));
+        when(p.getFirstPlayed()).thenReturn(3423434L);
+        World mockWorld = mockWorld();
+        when(p.getLocation()).thenReturn(new Location(mockWorld, 1, 0, 1));
+        when(p.isOp()).thenReturn(false);
+        when(p.isBanned()).thenReturn(false);
+        when(p.isOnline()).thenReturn(false);
+        when(p.getName()).thenReturn("TestName2");
+        return p;
+    }
 
     public static Player mockBrokenPlayer() {
         Player p = PowerMockito.mock(Player.class);

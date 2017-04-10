@@ -134,9 +134,9 @@ public class UserDataTest {
     public void testAddNickname() {
         String one = "Test1";
         String two = "Test2";
-        boolean n = test.addNickname(one);
         boolean n1 = test.addNickname(two);
         boolean n2 = test.addNickname(two);
+        boolean n = test.addNickname(one);
         test.addNickname(null);
         assertTrue("Didn't add 1", test.getNicknames().contains(one));
         assertTrue("Didn't add 2", test.getNicknames().contains(two));
@@ -145,6 +145,7 @@ public class UserDataTest {
         assertTrue("2 is not new", !n2);
         assertTrue("Added null", !test.getNicknames().contains(null));
         assertTrue("Added multiples", test.getNicknames().size() == 2);
+        assertTrue("Last nickname was not one", test.getLastNick().equals(one));
     }
 
     @Test

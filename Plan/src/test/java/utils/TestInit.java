@@ -32,8 +32,14 @@ public class TestInit {
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.load(configfile.getAbsolutePath());
             when(planMock.getConfig()).thenReturn(configuration);
-            Files.deleteIfExists(new File("temporaryTestFolder").toPath());
             File testFolder = new File("temporaryTestFolder");
+            if (testFolder.exists()) {
+                for (File f : testFolder.listFiles()) {
+                    Files.deleteIfExists(f.toPath());
+                }
+            }
+            Files.deleteIfExists(new File("temporaryTestFolder").toPath());
+            testFolder = new File("temporaryTestFolder");
             testFolder.mkdir();
 //
             when(planMock.getDataFolder()).thenReturn(testFolder);

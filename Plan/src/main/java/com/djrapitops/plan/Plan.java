@@ -37,6 +37,7 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.*;
+import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
@@ -59,6 +60,7 @@ public class Plan extends JavaPlugin {
 
     private API api;
     private DataCacheHandler handler;
+    private InfoPoolProcessor infoPoolProcessor;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
     private Database db;
@@ -102,6 +104,8 @@ public class Plan extends JavaPlugin {
         }
 
         this.handler = new DataCacheHandler(this);
+        this.infoPoolProcessor = new InfoPoolProcessor(this);
+        infoPoolProcessor.startPoolTask();
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
         registerListeners();
@@ -148,6 +152,7 @@ public class Plan extends JavaPlugin {
         }
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
+            infoPoolProcessor.processPool();
             log(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
@@ -327,6 +332,10 @@ public class Plan extends JavaPlugin {
         return handler;
     }
 
+    public InfoPoolProcessor getInfoPoolProcessor() {
+        return infoPoolProcessor;
+    }
+    
     /**
      * @return the Current Database
      */

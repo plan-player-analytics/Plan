@@ -50,13 +50,15 @@ public class ManageUtils {
      * cache.
      *
      * @param onTimeData PlayTime data of Ontime
-     * @param handler Cache the data will be cached to.
+     * @param plugin Current instance of Plan
      * @return success?
      */
-    public static boolean importOnTime(HashMap<UUID, Long> onTimeData, DataCacheHandler handler) {
+    public static boolean importOnTime(HashMap<UUID, Long> onTimeData, Plan plugin) {
+        DataCacheHandler handler = plugin.getHandler();
         for (UUID uuid : onTimeData.keySet()) {
             OfflinePlayer player = getOfflinePlayer(uuid);
-            if (handler.getActivityHandler().isFirstTimeJoin(uuid)) {
+            if (!plugin.getDB().wasSeenBefore(uuid)) {
+                
                 handler.newPlayer(player);
             }
             DBCallableProcessor importer = new DBCallableProcessor() {

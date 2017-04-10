@@ -211,6 +211,7 @@ public class UserData {
             if (nick != null) {
                 if (!nick.isEmpty()) {
                     nicknames.add(nick);
+                    lastNick = nick;
                     return true;
                 }
             }
@@ -408,6 +409,9 @@ public class UserData {
      * @return
      */
     public HashMap<GameMode, Long> getGmTimes() {
+        if (gmTimes == null) {
+            gmTimes = new HashMap<>();
+        }
         return gmTimes;
     }
 

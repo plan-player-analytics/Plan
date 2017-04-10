@@ -161,6 +161,10 @@ public abstract class SQLDB extends Database {
 
         versionName = "plan_version";
 
+        startConnectionPingTask(plugin);
+    }
+
+    public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
         (new BukkitRunnable() {
             @Override

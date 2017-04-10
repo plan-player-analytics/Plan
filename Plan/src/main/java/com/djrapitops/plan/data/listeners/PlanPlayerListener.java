@@ -1,12 +1,14 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import java.net.InetAddress;
+import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handlers.*;
+import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
+import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
+import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
+import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,11 +27,7 @@ public class PlanPlayerListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final ActivityHandler activityH;
-    private final BasicInfoHandler basicInfoH;
-    private final GamemodeTimesHandler gmTimesH;
-    private final DemographicsHandler demographicH;
-    private final RuleBreakingHandler rulebreakH;
+    private final InfoPoolProcessor processor;
     private final LocationHandler locationH;
 
     /**
@@ -43,11 +41,7 @@ public class PlanPlayerListener implements Listener {
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        activityH = handler.getActivityHandler();
-        basicInfoH = handler.getBasicInfoHandler();
-        gmTimesH = handler.getGamemodeTimesHandler();
-        demographicH = handler.getDemographicsHandler();
-        rulebreakH = handler.getRuleBreakingHandler();
+        processor = plugin.getInfoPoolProcessor();
         locationH = handler.getLocationHandler();
     }
 
@@ -63,25 +57,15 @@ public class PlanPlayerListener implements Listener {
     public void onPlayerLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        BukkitTask asyncLoginSaveTask = (new BukkitRunnable() {
+        processor.addToPool(new LoginInfo(uuid, new Date().getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1));
+        handler.getSessionHandler().startSession(uuid);
+        BukkitTask asyncNewPlayerCheckTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                boolean isNewPlayer = activityH.isFirstTimeJoin(uuid);
+                boolean isNewPlayer = !plugin.getDB().wasSeenBefore(uuid);
                 if (isNewPlayer) {
                     handler.newPlayer(player);
                 }
-                DBCallableProcessor loginProcessor = new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        activityH.handleLogin(player.isBanned(), data);
-                        InetAddress ip = player.getAddress().getAddress();
-                        basicInfoH.handleLogin(player.getDisplayName(), ip, data);
-                        gmTimesH.handleLogin(player.getGameMode(), data);
-                        demographicH.handleLogin(ip, data);
-                        handler.saveCachedData(uuid);
-                    }
-                };
-                handler.getUserDataForProcessing(loginProcessor, uuid);
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
@@ -99,17 +83,8 @@ public class PlanPlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        DBCallableProcessor logoutProcessor = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                activityH.handleLogOut(data);
-                gmTimesH.handleLogOut(player.getGameMode(), data);
-                data.addLocations(locationH.getLocationsForSaving(uuid));
-                handler.saveCachedData(uuid);
-                locationH.clearLocations(uuid);
-            }
-        };
-        handler.getUserDataForProcessing(logoutProcessor, uuid);
+        processor.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));
+        handler.saveCachedData(uuid);        
     }
 
     /**
@@ -124,17 +99,10 @@ public class PlanPlayerListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        UUID uuid = event.getPlayer().getUniqueId();
-        DBCallableProcessor kickProcessor = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                rulebreakH.handleKick(data);
-                data.addLocations(locationH.getLocationsForSaving(uuid));
-                handler.saveCachedData(uuid);
-                locationH.clearLocations(uuid);
-                handler.scheludeForClear(uuid);
-            }
-        };
-        handler.getUserDataForProcessing(kickProcessor, uuid);
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        processor.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));
+        processor.addToPool(new KickInfo(uuid));
+        handler.saveCachedData(uuid); 
     }
 }

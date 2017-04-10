@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.ChatColor;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

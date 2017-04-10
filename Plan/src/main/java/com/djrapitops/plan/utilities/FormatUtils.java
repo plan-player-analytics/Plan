@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Date;
 import main.java.com.djrapitops.plan.ui.Html;
