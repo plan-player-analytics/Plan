@@ -67,6 +67,37 @@ public class ChatHandlingTest {
     }
     
     @Test
+    public void testUpdateDemographicInformationNoInfo() {
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        ChatHandling.updateDemographicInformation("I'm serious", data);
+        assertTrue("Updated gender", data.getDemData().getGender() == Gender.UNKNOWN);
+        assertTrue("Updated age", data.getDemData().getAge() == -1);
+    }
+    
+    @Test
+    public void testUpdateDemographicInformation100Age() {
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        ChatHandling.updateDemographicInformation("I'm 100", data);
+        assertTrue("Updated age", data.getDemData().getAge() == -1);
+    }
+    
+    @Test
+    public void testUpdateDemographicInformationNoTrigger() {
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        ChatHandling.updateDemographicInformation("18 male", data);
+        assertTrue("Updated gender", data.getDemData().getGender() == Gender.UNKNOWN);
+        assertTrue("Updated age", data.getDemData().getAge() == -1);
+    }
+    
+    @Test
+    public void testUpdateDemographicInformationIgnore() {
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        ChatHandling.updateDemographicInformation("im sure you're male", data);
+        assertTrue("Updated gender", data.getDemData().getGender() == Gender.UNKNOWN);
+        assertTrue("Updated age", data.getDemData().getAge() == -1);
+    }
+    
+    @Test
     public void testUpdateDemographicInformationAge() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         ChatHandling.updateDemographicInformation("im 18", data);

@@ -76,4 +76,13 @@ public class SessionDataTest {
         long result = test.getLength();
         assertEquals(exp, result);
     }
+    
+    @Test
+    public void testGetLength2() {
+        long exp = 5L;
+        test = new SessionData(5L);
+        test.endSession(10L);
+        long result = test.getLength();
+        assertEquals(exp, result);
+    }
 }

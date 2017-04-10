@@ -1,5 +1,8 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,12 +14,12 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.handlers.*;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -24,7 +27,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Rsl1122
  */
-public class DataCacheHandler {
+public class DataCacheHandler extends LocationCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
@@ -33,11 +36,6 @@ public class DataCacheHandler {
     // Plan
     private final Plan plugin;
     private final Database db;
-
-    // Handlers
-    private final LocationHandler locationHandler;
-    private CommandUseHandler commandUseHandler;
-    private final SessionHandler sessionHandler;
 
     // Queues
     private DataCacheSaveQueue saveTask;
@@ -57,11 +55,10 @@ public class DataCacheHandler {
      * @param plugin Current instance of Plan
      */
     public DataCacheHandler(Plan plugin) {
+        super();
         this.plugin = plugin;
         db = plugin.getDB();
         dataCache = new HashMap<>();
-        locationHandler = new LocationHandler(plugin);
-        sessionHandler = new SessionHandler(plugin);
 
         getTask = new DataCacheGetQueue(plugin);
         clearTask = new DataCacheClearQueue(plugin, this);
@@ -69,14 +66,19 @@ public class DataCacheHandler {
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
+        
         try {
             commandUse = db.getCommandUse();
-            commandUseHandler = new CommandUseHandler(commandUse);
         } catch (SQLException e) {
             plugin.toLog(this.getClass().getName(), e);
             plugin.logError(Phrase.DB_FAILURE_DISABLE + "");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return;
         }
+        startAsyncPeriodicSaveTask();
+    }
+
+    public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
             minutes = 5;
@@ -91,7 +93,7 @@ public class DataCacheHandler {
         BukkitTask asyncPeriodicCacheSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                DataCacheHandler handler = plugin.getHandler();
+                DataCacheHandler handler = getPlugin(Plan.class).getHandler();
                 handler.saveHandlerDataToCache();
                 handler.saveCachedUserData();
                 if (timesSaved % clearAfterXsaves == 0) {
@@ -173,7 +175,7 @@ public class DataCacheHandler {
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
         data.parallelStream().forEach((userData) -> {
-            sessionHandler.endSession(userData);
+            endSession(userData);
         });
         try {
             db.saveMultipleUserData(data);
@@ -193,8 +195,8 @@ public class DataCacheHandler {
         DBCallableProcessor saveProcessor = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
-                data.addLocations(locationHandler.getLocationsForSaving(uuid));
-                locationHandler.clearLocations(uuid);
+                data.addLocations(getLocationsForSaving(uuid));
+                clearLocations(uuid);
                 saveTask.scheduleForSave(data);
                 scheludeForClear(uuid);
             }
@@ -297,8 +299,8 @@ public class DataCacheHandler {
     /**
      * @return Current instance of the LocationHandler
      */
-    public LocationHandler getLocationHandler() {
-        return locationHandler;
+    public LocationCache getLocationHandler() {
+        return this;
     }
 
     /**
@@ -310,18 +312,11 @@ public class DataCacheHandler {
     }
 
     /**
-     * @return Current instance of ServerDataHandler
-     */
-    public CommandUseHandler getCommandUseHandler() {
-        return commandUseHandler;
-    }
-
-    /**
      *
      * @return
      */
-    public SessionHandler getSessionHandler() {
-        return sessionHandler;
+    public SessionCache getSessionCache() {
+        return this;
     }
 
     /**
@@ -353,5 +348,12 @@ public class DataCacheHandler {
      */
     public int getMaxPlayers() {
         return maxPlayers;
+    }
+    
+    public void handleCommand(String command) {
+        if (!commandUse.containsKey(command)) {
+            commandUse.put(command, 0);
+        }
+        commandUse.put(command, commandUse.get(command) + 1);
     }
 }

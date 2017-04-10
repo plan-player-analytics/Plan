@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test.java.main.java.com.djrapitops.plan.data.handling.info;
+package test.java.main.java.com.djrapitops.plan;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.DemographicsData;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -18,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
 /**
@@ -27,9 +24,9 @@ import test.java.utils.TestInit;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
-public class DeathInfoTest {
+public class SettingsTest {
 
-    public DeathInfoTest() {
+    public SettingsTest() {
     }
 
     @Before
@@ -39,26 +36,28 @@ public class DeathInfoTest {
         Plan plan = t.getPlanMock();
         PowerMock.mockStatic(JavaPlugin.class);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);
     }
 
     @Test
-    public void testProcess() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        DeathInfo i = new DeathInfo(data.getUuid());
-        assertTrue(i.process(data));
-        assertEquals(1, data.getDeaths());
+    public void testIsTrue() {
+        assertTrue("Webserver supposed to be enabled by default", Settings.WEBSERVER_ENABLED.isTrue());
     }
-    
+
     @Test
-    public void testProcessWrongUUID() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        DeathInfo i = new DeathInfo(null);
-        assertTrue(!i.process(data));
-        assertEquals(0, data.getDeaths());
+    public void testToString() {
+        assertEquals("sqlite",Settings.DB_TYPE.toString());
+    }
+
+    @Test
+    public void testGetNumber() {
+        assertEquals(8804,Settings.WEBSERVER_PORT.getNumber());
+    }
+
+    @Test
+    public void testGetPath() {
+        assertEquals("Settings.WebServer.Enabled", Settings.WEBSERVER_ENABLED.getPath());
     }
 
 }

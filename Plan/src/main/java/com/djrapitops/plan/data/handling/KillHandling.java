@@ -28,6 +28,9 @@ public class KillHandling {
             try {
                 UUID victimUUID = deadPlayer.getUniqueId();
                 victimID = plugin.getDB().getUserId(victimUUID + "");
+                if (victimID == -1) {
+                    return;
+                }
                 data.addPlayerKill(new KillData(victimUUID, victimID, weaponName, time));
             } catch (SQLException e) {
                 plugin.toLog("main.java.com.djrapitops.plan.KillHandling", e);                

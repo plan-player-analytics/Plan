@@ -8,7 +8,7 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
+import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -27,9 +27,9 @@ import test.java.utils.TestInit;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
-public class DeathInfoTest {
+public class KickInfoTest {
 
-    public DeathInfoTest() {
+    public KickInfoTest() {
     }
 
     @Before
@@ -48,17 +48,9 @@ public class DeathInfoTest {
     @Test
     public void testProcess() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        DeathInfo i = new DeathInfo(data.getUuid());
+        KickInfo i = new KickInfo(data.getUuid());
         assertTrue(i.process(data));
-        assertEquals(1, data.getDeaths());
-    }
-    
-    @Test
-    public void testProcessWrongUUID() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        DeathInfo i = new DeathInfo(null);
-        assertTrue(!i.process(data));
-        assertEquals(0, data.getDeaths());
+        assertEquals(1, data.getTimesKicked());
     }
 
 }

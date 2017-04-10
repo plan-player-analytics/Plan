@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache;
+package main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache;
+package main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 

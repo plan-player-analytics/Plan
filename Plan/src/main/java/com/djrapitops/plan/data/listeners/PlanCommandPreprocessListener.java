@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handlers.CommandUseHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,7 +15,6 @@ public class PlanCommandPreprocessListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final CommandUseHandler serverH;
 
     /**
      * Class Constructor.
@@ -26,7 +24,6 @@ public class PlanCommandPreprocessListener implements Listener {
     public PlanCommandPreprocessListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        serverH = handler.getCommandUseHandler();
     }
 
     /**
@@ -42,6 +39,6 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.getPlayer().hasPermission("plan.ignore.commanduse")) {
             return;
         }
-        serverH.handleCommand(event.getMessage().split(" ")[0]);
+        handler.handleCommand(event.getMessage().split(" ")[0]);
     }
 }

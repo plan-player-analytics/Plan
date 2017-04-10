@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handlers.LocationHandler;
+import main.java.com.djrapitops.plan.data.cache.LocationCache;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,7 +18,7 @@ public class PlanPlayerMoveListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final LocationHandler locationH;
+    private final LocationCache locationH;
 
     /**
      * Class Consturctor.

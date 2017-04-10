@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.Server;
 import org.powermock.api.mockito.PowerMockito;
@@ -52,7 +53,7 @@ public class TestInit {
             when(mockServer.getIp()).thenReturn("0.0.0.0");
 //            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
             when(planMock.getServer()).thenReturn(mockServer);
-//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();
+//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();            
             return true;
         } catch (Exception ex) {
             System.out.println(ex);

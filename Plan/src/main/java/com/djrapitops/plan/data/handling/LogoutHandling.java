@@ -18,6 +18,6 @@ public class LogoutHandling {
         data.setPlayTime(data.getPlayTime() + (time - data.getLastPlayed()));
         data.setLastPlayed(time);        
         data.updateBanned(banned);
-        getPlugin(Plan.class).getHandler().getSessionHandler().endSession(data);
+        getPlugin(Plan.class).getHandler().getSessionCache().endSession(data);
     }
 }

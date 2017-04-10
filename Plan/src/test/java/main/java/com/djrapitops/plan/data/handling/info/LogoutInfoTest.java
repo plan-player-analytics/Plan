@@ -5,12 +5,11 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
+import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
+import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
@@ -30,9 +29,9 @@ import test.java.utils.TestInit;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
-public class LoginInfoTest {
-
-    public LoginInfoTest() {
+public class LogoutInfoTest {
+    
+    public LogoutInfoTest() {
     }
 
     @Before
@@ -44,44 +43,50 @@ public class LoginInfoTest {
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);
     }
-
+    
     @Test
-    public void testProcess() throws UnknownHostException {
+    public void testProcess() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        InetAddress ip = InetAddress.getByName("137.19.188.146");
-        long time = 10L;
-        int loginTimes = data.getLoginTimes();
-        String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(data.getUuid(), time, ip, true, nick, GameMode.CREATIVE, 1);
-        assertTrue(i.process(data));
-        assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
-        assertTrue("Ip not added", data.getIps().contains(ip));
-        assertTrue("Logintimes not +1", data.getLoginTimes() == loginTimes + 1);
-        assertTrue("Nick not added", data.getNicknames().contains(nick));
-        assertTrue("Nick not last nick", data.getLastNick().equals(nick));
-        String geo = data.getDemData().getGeoLocation();
-        assertTrue("Wrong location " + geo, geo.equals("United States"));
+        data.setLastPlayed(10L);
+        data.updateBanned(false);
+        long time = 20L;
+        Exception ex = null;
+        data.setLastGamemode(GameMode.SURVIVAL);
+        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, GameMode.CREATIVE);
+        try {
+            assertTrue(i.process(data));
+        } catch (NullPointerException e) {
+            ex = e;
+        }
+        assertTrue("Caught endSessionException", ex != null);
+        assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
+        assertTrue("Playtime wrong", data.getPlayTime()== 10L);
+        assertTrue("Banned wrong", data.isBanned());
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
     }
     
     @Test
-    public void testProcessWrongUUID() throws UnknownHostException {
+    public void testProcessWrongUUID() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        InetAddress ip = InetAddress.getByName("137.19.188.146");
-        long time = 10L;
-        String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(null, time, ip, true, nick, GameMode.CREATIVE, 1);
-        assertTrue(!i.process(data));
-        assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == 0L);
-        assertTrue("Ip not added", !data.getIps().contains(ip));
-        assertTrue("Logintimes not +1", data.getLoginTimes() == 0);
-        assertTrue("Nick not added", !data.getNicknames().contains(nick));
-        String geo = data.getDemData().getGeoLocation();
-        assertTrue("Wrong location " + geo, geo.equals("Not Known"));
+        data.setLastPlayed(10L);
+        data.updateBanned(false);
+        long time = 20L;
+        Exception ex = null;
+        LogoutInfo i = new LogoutInfo(null, time, true, GameMode.CREATIVE);
+        try {
+            assertTrue(!i.process(data));
+        } catch (NullPointerException e) {
+            ex = e;
+        }
+        assertTrue("Caught endSessionException", ex == null);
+        assertTrue("Last Played wrong", data.getLastPlayed() == 10L);
+        assertTrue("Playtime wrong", data.getPlayTime()== 0L);
+        assertTrue("Banned wrong", !data.isBanned());
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.SURVIVAL);
     }
-
+    
 }

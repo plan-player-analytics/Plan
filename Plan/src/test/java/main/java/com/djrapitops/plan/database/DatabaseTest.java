@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -58,6 +59,12 @@ public class DatabaseTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
+        db = new SQLiteDB(plan, "debug"+new Date().getTime()) {
+            @Override
+            public void startConnectionPingTask(Plan plugin) {
+
+            }
+        };
         PowerMock.mockStatic(JavaPlugin.class);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
@@ -69,12 +76,6 @@ public class DatabaseTest {
         if (f.exists()) {
             rows = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList()).size();
         }
-        db = new SQLiteDB(plan, "debug") {
-            @Override
-            public void startConnectionPingTask(Plan plugin) {
-
-            }
-        };
 //        BukkitRunnable mockRunnable = PowerMockito.mock(BukkitRunnable.class);
 //        when(mockRunnable.runTaskTimerAsynchronously(plan, anyLong(), anyLong())).thenReturn(null);
 //        whenNew(BukkitRunnable.class).withNoArguments().thenReturn(mockRunnable);
@@ -82,7 +83,7 @@ public class DatabaseTest {
         PowerMock.mockStatic(Bukkit.class);
         OfflinePlayer op = MockUtils.mockPlayer();
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
-        op = MockUtils.mockPlayer2();        
+        op = MockUtils.mockPlayer2();
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
         PowerMock.replay(Bukkit.class);
 //        BukkitScheduler mockScheduler = Mockito.mock(BukkitScheduler.class);
@@ -152,7 +153,7 @@ public class DatabaseTest {
         };
         db.giveUserDataToProcessors(data.getUuid(), process);
     }
-    
+
     @Test
     public void testSaveMultipleUserData() throws SQLException {
         db.init();

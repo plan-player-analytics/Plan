@@ -1,5 +1,5 @@
 
-package main.java.com.djrapitops.plan.data.handlers;
+package main.java.com.djrapitops.plan.data.cache;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,24 +13,19 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
  *
  * @author Rsl1122
  */
-public class SessionHandler {
+public class SessionCache {
     private final HashMap<UUID, SessionData> activeSessions;
-    private final DataCacheHandler handler;
-    private final Plan plugin;
 
     /**
      *
-     * @param plugin
      */
-    public SessionHandler(Plan plugin) {
-        this.plugin = plugin;
-        this.handler = plugin.getHandler();
+    public SessionCache() {
         this.activeSessions = new HashMap<>();    
     }
     
     /**
      *
-     * @param data
+     * @param uuid
      */
     public void startSession(UUID uuid) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;

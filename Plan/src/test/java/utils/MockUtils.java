@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import org.bukkit.entity.Player;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -32,6 +33,7 @@ public class MockUtils {
         when(p.isBanned()).thenReturn(true);
         when(p.isOnline()).thenReturn(true);
         when(p.getName()).thenReturn("TestName");
+        when(p.hasPermission("plan.inspect.other")).thenReturn(true);
         return p;
     }
     public static Player mockPlayer2() {
@@ -44,6 +46,7 @@ public class MockUtils {
         when(p.isOp()).thenReturn(false);
         when(p.isBanned()).thenReturn(false);
         when(p.isOnline()).thenReturn(false);
+        when(p.hasPermission("plan.inspect.other")).thenReturn(false);
         when(p.getName()).thenReturn("TestName2");
         return p;
     }
@@ -60,5 +63,10 @@ public class MockUtils {
         when(p.isOnline()).thenReturn(true);
         when(p.getName()).thenReturn("TestName");
         return p;
+    }
+    
+    public static CommandSender mockConsoleSender() {
+        CommandSender s = PowerMockito.mock(CommandSender.class);
+        return s;
     }
 }

@@ -66,7 +66,7 @@ public class InspectCommand extends SubCommand {
                 return true;
             }
         }
-        String playerName = MiscUtils.getPlayerDisplayname(args, sender);
+        String playerName = MiscUtils.getPlayerName(args, sender);
         BukkitTask inspectTask = (new BukkitRunnable() {
             @Override
             public void run() {

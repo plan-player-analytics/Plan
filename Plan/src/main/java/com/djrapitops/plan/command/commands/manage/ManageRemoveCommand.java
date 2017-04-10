@@ -14,6 +14,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -54,7 +57,7 @@ public class ManageRemoveCommand extends SubCommand {
             return true;
         }
 
-        String playerName = MiscUtils.getPlayerDisplayname(args, sender);
+        String playerName = MiscUtils.getPlayerName(args, sender);
 
         UUID uuid;
         try {

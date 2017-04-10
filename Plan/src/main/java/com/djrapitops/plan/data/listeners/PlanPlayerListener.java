@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import main.java.com.djrapitops.plan.data.cache.LocationCache;
 import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handlers.*;
 import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
@@ -28,7 +28,7 @@ public class PlanPlayerListener implements Listener {
     private final Plan plugin;
     private final DataCacheHandler handler;
     private final InfoPoolProcessor processor;
-    private final LocationHandler locationH;
+    private final LocationCache locationH;
 
     /**
      * Class Constructor.
@@ -58,7 +58,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         processor.addToPool(new LoginInfo(uuid, new Date().getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1));
-        handler.getSessionHandler().startSession(uuid);
+        handler.getSessionCache().startSession(uuid);
         BukkitTask asyncNewPlayerCheckTask = (new BukkitRunnable() {
             @Override
             public void run() {
