@@ -103,10 +103,16 @@ public class SearchCommand extends SubCommand {
                         } else {
                             sender.sendMessage(message);
                             Player player = (Player) sender;
-                            Bukkit.getServer().dispatchCommand(
-                                    Bukkit.getConsoleSender(),
-                                    "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
-                                    + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                            BukkitTask link = new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    Bukkit.getServer().dispatchCommand(
+                                            Bukkit.getConsoleSender(),
+                                            "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
+                                                    + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                                }
+                            }.runTask(plugin);
+                            
                         }
                     }
                 }

@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
 import org.bukkit.entity.LivingEntity;
@@ -19,7 +19,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public class PlanDeathEventListener implements Listener {
 
     private final Plan plugin;
-    private final InfoPoolProcessor processor;
+//    private final InfoPoolProcessor processor;
+    private final DataCacheHandler handler;
 
     /**
      *
@@ -27,7 +28,8 @@ public class PlanDeathEventListener implements Listener {
      */
     public PlanDeathEventListener(Plan plugin) {
         this.plugin = plugin;
-        this.processor = plugin.getInfoPoolProcessor();
+//        this.processor = plugin.getInfoPoolProcessor();
+        this.handler = plugin.getHandler();
     }
 
     /**
@@ -42,10 +44,10 @@ public class PlanDeathEventListener implements Listener {
         Player killer = dead.getKiller();
         boolean killerIsPlayer = killer != null;
         if (killerIsPlayer) {
-            processor.addToPool(new KillInfo(killer.getUniqueId(), time, dead, killer.getInventory().getItemInMainHand().getType().name()));
+            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, killer.getInventory().getItemInMainHand().getType().name()));
         }
         if (dead instanceof Player) {
-            processor.addToPool(new DeathInfo(((Player) dead).getUniqueId()));
+            handler.addToPool(new DeathInfo(((Player) dead).getUniqueId()));
         }
     }
 }

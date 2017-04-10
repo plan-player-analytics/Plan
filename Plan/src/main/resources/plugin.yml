@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: main.java.com.djrapitops.plan.Plan
-version: 2.9.3
+version: 3.0.0
 
 softdepend:
 - OnTime

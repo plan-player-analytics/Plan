@@ -14,7 +14,8 @@ import org.bukkit.GameMode;
  *
  * @author Risto
  */
-public class LogoutInfo extends HandlingInfo{
+public class LogoutInfo extends HandlingInfo {
+
     private boolean banned;
     private GamemodeInfo gmInfo;
 
@@ -29,8 +30,8 @@ public class LogoutInfo extends HandlingInfo{
         if (uData.getUuid() != uuid) {
             return false;
         }
+        LogoutHandling.processLogoutInfo(uData, time, banned);
         gmInfo.process(uData);
-        LogoutHandling.processLogoutInfo(uData, time, banned);        
         return true;
     }
 

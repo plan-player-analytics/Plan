@@ -1,14 +1,14 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import main.java.com.djrapitops.plan.data.cache.LocationCache;
 import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
+import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,8 +27,7 @@ public class PlanPlayerListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final InfoPoolProcessor processor;
-    private final LocationCache locationH;
+//    private final InfoPoolProcessor processor;
 
     /**
      * Class Constructor.
@@ -41,8 +40,7 @@ public class PlanPlayerListener implements Listener {
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        processor = plugin.getInfoPoolProcessor();
-        locationH = handler.getLocationHandler();
+//        handler = plugin.getInfoPoolProcessor();
     }
 
     /**
@@ -57,15 +55,19 @@ public class PlanPlayerListener implements Listener {
     public void onPlayerLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        processor.addToPool(new LoginInfo(uuid, new Date().getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1));
-        handler.getSessionCache().startSession(uuid);
+        handler.startSession(uuid);
         BukkitTask asyncNewPlayerCheckTask = (new BukkitRunnable() {
             @Override
             public void run() {
+                LoginInfo loginInfo = new LoginInfo(uuid, new Date().getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1);
                 boolean isNewPlayer = !plugin.getDB().wasSeenBefore(uuid);
                 if (isNewPlayer) {
-                    handler.newPlayer(player);
-                }
+                    UserData newUserData = NewPlayerCreator.createNewPlayer(player);
+                    loginInfo.process(newUserData);
+                    handler.newPlayer(newUserData);
+                } else {
+                    handler.addToPool(loginInfo);
+                }                
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
@@ -83,8 +85,9 @@ public class PlanPlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        processor.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));
-        handler.saveCachedData(uuid);        
+        handler.endSession(uuid);
+        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));        
+        handler.saveCachedData(uuid);
     }
 
     /**
@@ -101,8 +104,8 @@ public class PlanPlayerListener implements Listener {
         }
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        processor.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));
-        processor.addToPool(new KickInfo(uuid));
-        handler.saveCachedData(uuid); 
+        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));
+        handler.addToPool(new KickInfo(uuid));
+        handler.saveCachedData(uuid);
     }
 }

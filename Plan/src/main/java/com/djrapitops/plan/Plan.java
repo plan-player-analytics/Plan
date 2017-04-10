@@ -104,8 +104,8 @@ public class Plan extends JavaPlugin {
         }
 
         this.handler = new DataCacheHandler(this);
-        this.infoPoolProcessor = new InfoPoolProcessor(this);
-        infoPoolProcessor.startPoolTask();
+//        this.infoPoolProcessor = new InfoPoolProcessor(this);
+//        infoPoolProcessor.startPoolTask();
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
         registerListeners();
@@ -151,11 +151,11 @@ public class Plan extends JavaPlugin {
             uiServer.stop();
         }
         Bukkit.getScheduler().cancelTasks(this);
-        if (handler != null) {
-            infoPoolProcessor.processPool();
+        if (handler != null) {            
             log(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
+//                infoPoolProcessor.processPool();
                 handler.saveCacheOnDisable();
             });
 

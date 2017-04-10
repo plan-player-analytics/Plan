@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.ChatInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class PlanChatListener implements Listener {
 
     private final Plan plugin;
-    private final InfoPoolProcessor processor;
+//    private final InfoPoolProcessor processor;
+    private final DataCacheHandler handler;
 
     /**
      * Class Constructor.
@@ -25,7 +26,8 @@ public class PlanChatListener implements Listener {
      */
     public PlanChatListener(Plan plugin) {
         this.plugin = plugin;
-        processor = plugin.getInfoPoolProcessor();
+//        processor = plugin.getInfoPoolProcessor();
+        handler = plugin.getHandler();
     }
 
     /**
@@ -39,6 +41,6 @@ public class PlanChatListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        processor.addToPool(new ChatInfo(p.getUniqueId(), p.getDisplayName(), event.getMessage()));
+        handler.addToPool(new ChatInfo(p.getUniqueId(), p.getDisplayName(), event.getMessage()));
     }
 }

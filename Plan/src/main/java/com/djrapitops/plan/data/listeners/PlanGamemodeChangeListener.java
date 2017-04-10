@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.InfoPoolProcessor;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +17,8 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 public class PlanGamemodeChangeListener implements Listener {
 
     private final Plan plugin;
-    private final InfoPoolProcessor processor;
+//    private final InfoPoolProcessor processor;
+    private final DataCacheHandler handler;
 
     /**
      * Class Constructor.
@@ -26,7 +27,8 @@ public class PlanGamemodeChangeListener implements Listener {
      */
     public PlanGamemodeChangeListener(Plan plugin) {
         this.plugin = plugin;
-        processor = plugin.getInfoPoolProcessor();
+//        processor = plugin.getInfoPoolProcessor();
+        handler = plugin.getHandler();
         
     }
 
@@ -41,6 +43,6 @@ public class PlanGamemodeChangeListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        processor.addToPool(new GamemodeInfo(p.getUniqueId(), new Date().getTime(), event.getNewGameMode()));
+        handler.addToPool(new GamemodeInfo(p.getUniqueId(), new Date().getTime(), event.getNewGameMode()));
     }
 }

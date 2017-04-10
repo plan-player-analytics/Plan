@@ -18,7 +18,6 @@ public class PlanPlayerMoveListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final LocationCache locationH;
 
     /**
      * Class Consturctor.
@@ -28,7 +27,6 @@ public class PlanPlayerMoveListener implements Listener {
     public PlanPlayerMoveListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        locationH = handler.getLocationHandler();
     }
 
     /**
@@ -50,6 +48,6 @@ public class PlanPlayerMoveListener implements Listener {
         }
         UUID uuid = event.getPlayer().getUniqueId();
         Location savedLocation = to.getBlock().getLocation();
-        locationH.addLocation(uuid, savedLocation);
+        handler.addLocation(uuid, savedLocation);
     }
 }

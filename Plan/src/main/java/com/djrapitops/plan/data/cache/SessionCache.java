@@ -33,16 +33,22 @@ public class SessionCache {
         activeSessions.put(uuid, session);
     }
     
-    /**
-     *
-     * @param data
-     */
-    public void endSession (UserData data) {
-        UUID uuid = data.getUuid();
+    public void endSession(UUID uuid) {
         SessionData currentSession = activeSessions.get(uuid);
         if (currentSession != null) {
             long now = new Date().toInstant().getEpochSecond() * (long) 1000;
             currentSession.endSession(now);
+        }
+    }
+    
+    /**
+     *
+     * @param data
+     */
+    public void addSession(UserData data) {
+        UUID uuid = data.getUuid();
+        SessionData currentSession = activeSessions.get(uuid);
+        if (currentSession != null && currentSession.isValid()) {
             data.addSession(currentSession);
             activeSessions.remove(uuid);
         }

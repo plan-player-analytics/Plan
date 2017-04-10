@@ -30,7 +30,7 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class LogoutInfoTest {
-    
+
     public LogoutInfoTest() {
     }
 
@@ -47,7 +47,7 @@ public class LogoutInfoTest {
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);
     }
-    
+
     @Test
     public void testProcess() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -57,18 +57,13 @@ public class LogoutInfoTest {
         Exception ex = null;
         data.setLastGamemode(GameMode.SURVIVAL);
         LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, GameMode.CREATIVE);
-        try {
-            assertTrue(i.process(data));
-        } catch (NullPointerException e) {
-            ex = e;
-        }
-        assertTrue("Caught endSessionException", ex != null);
+        assertTrue(i.process(data));
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
-        assertTrue("Playtime wrong", data.getPlayTime()== 10L);
+        assertTrue("Playtime wrong", data.getPlayTime() == 10L);
         assertTrue("Banned wrong", data.isBanned());
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
     }
-    
+
     @Test
     public void testProcessWrongUUID() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -84,9 +79,9 @@ public class LogoutInfoTest {
         }
         assertTrue("Caught endSessionException", ex == null);
         assertTrue("Last Played wrong", data.getLastPlayed() == 10L);
-        assertTrue("Playtime wrong", data.getPlayTime()== 0L);
+        assertTrue("Playtime wrong", data.getPlayTime() == 0L);
         assertTrue("Banned wrong", !data.isBanned());
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.SURVIVAL);
     }
-    
+
 }

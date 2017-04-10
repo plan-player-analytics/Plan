@@ -18,7 +18,6 @@ public class InspectCacheHandler {
     private DataCacheHandler handler;
     private Plan plugin;
     private HashMap<UUID, UserData> cache;
-    private HashMap<UUID, Long> clearTimes;
 
     /**
      * Class constructor
@@ -29,29 +28,14 @@ public class InspectCacheHandler {
         this.handler = plugin.getHandler();
         this.plugin = plugin;
         this.cache = new HashMap<>();
-        this.clearTimes = new HashMap<>();
     }
-
-    /**
-     * Caches the UserData of user to the HashMap for X minutes. Data is removed
-     * from the cache automatically after 5 minutes with a BukkitRunnable
-     *
-     * @param uuid UUID of the player
-     */
-    public void cache(UUID uuid) {
-        int minutes = Settings.CLEAR_INSPECT_CACHE.getNumber();
-        if (minutes <= 0) {
-            minutes = 3;
-        }
-        cache(uuid, minutes);
-    }
-
+    
     /**
      *
      * @param uuid
-     * @param minutes
      */
-    public void cache(UUID uuid, int minutes) {
+    public void cache(UUID uuid) {
+//        plugin.getInfoPoolProcessor().process(uuid);
         DBCallableProcessor cacher = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
@@ -59,33 +43,6 @@ public class InspectCacheHandler {
             }
         };
         handler.getUserDataForProcessing(cacher, uuid, false);
-        long clearTime = new Date().toInstant().getEpochSecond() + (long) 60 * (long) minutes;
-        if (clearTimes.get(uuid) == null) {
-            clearTimes.put(uuid, (long) 0);
-        }
-        if (clearTimes.get(uuid) < clearTime) {
-            clearTimes.put(uuid, clearTime);
-            BukkitTask timedInspectCacheClearTask = (new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (new Date().toInstant().getEpochSecond() - clearTimes.get(uuid) < 30) {
-                        UserData uData = cache.get(uuid);
-                        if (uData == null) {
-                            this.cancel();
-                            return;
-                        }
-                        if (!uData.isAccessed()) {
-                            clearFomCache(uuid);
-                        }
-                    } 
-                    this.cancel();
-                }
-            }).runTaskLater(plugin, 60 * 20 * minutes);
-        }
-    }
-
-    private void clearFomCache(UUID uuid) {
-        cache.remove(uuid);
     }
 
     /**

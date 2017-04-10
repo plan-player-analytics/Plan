@@ -52,15 +52,9 @@ public class LogoutHandlingTest {
         data.setLastPlayed(10L);
         data.updateBanned(false);
         long time = 20L;
-        Exception ex = null;
-        try {
-            LogoutHandling.processLogoutInfo(data, time, true);
-        } catch (NullPointerException e) {
-            ex = e;
-        }
-        assertTrue("Didn't catch endSessionException", ex != null);
+        LogoutHandling.processLogoutInfo(data, time, true);
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
-        assertTrue("Playtime wrong", data.getPlayTime()== 10L);
+        assertTrue("Playtime wrong", data.getPlayTime() == 10L);
         assertTrue("Banned wrong", data.isBanned());
     }
 

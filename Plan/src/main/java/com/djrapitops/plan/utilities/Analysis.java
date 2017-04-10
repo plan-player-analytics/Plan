@@ -111,7 +111,7 @@ public class Analysis {
             return false;
         }
         uuids.stream().forEach((uuid) -> {
-            inspectCache.cache(uuid, 15);
+            inspectCache.cache(uuid);
         });
         log(Phrase.ANALYSIS_FETCH_DATA + "");
         while (rawData.size() != uuids.size()) {

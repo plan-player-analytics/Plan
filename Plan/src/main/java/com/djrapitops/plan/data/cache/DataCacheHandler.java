@@ -6,16 +6,23 @@ import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
+import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -40,6 +47,7 @@ public class DataCacheHandler extends LocationCache {
     // Queues
     private DataCacheSaveQueue saveTask;
     private DataCacheClearQueue clearTask;
+    private DataCacheProcessQueue processTask;
     private DataCacheGetQueue getTask;
 
     // Variables
@@ -62,11 +70,12 @@ public class DataCacheHandler extends LocationCache {
 
         getTask = new DataCacheGetQueue(plugin);
         clearTask = new DataCacheClearQueue(plugin, this);
+        processTask = new DataCacheProcessQueue(plugin, this);
         saveTask = new DataCacheSaveQueue(plugin);
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
-        
+
         try {
             commandUse = db.getCommandUse();
         } catch (SQLException e) {
@@ -164,6 +173,10 @@ public class DataCacheHandler extends LocationCache {
         }
     }
 
+    public void addToPool(HandlingInfo i) {
+        processTask.addToPool(i);
+    }
+
     /**
      * Saves all data in the cache to Database and closes the database down.
      * Closes save clear and get tasks.
@@ -172,11 +185,33 @@ public class DataCacheHandler extends LocationCache {
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
+        List<HandlingInfo> toProcess = processTask.stop();
+        Collections.sort(toProcess, new HandlingInfoTimeComparator());
+        for (HandlingInfo i : toProcess) {
+            UserData uData = dataCache.get(i.getUuid());
+            if (uData == null) {
+                DBCallableProcessor p = new DBCallableProcessor() {
+                    @Override
+                    public void process(UserData data) {
+                        i.process(data);
+                    }
+                };
+                try {
+                    db.giveUserDataToProcessors(i.getUuid(), p);
+                } catch (SQLException ex) {
+                    plugin.toLog(this.getClass().getName(), ex);
+                }
+            } else {
+                i.process(uData);
+            }
+        }
         List<UserData> data = new ArrayList<>();
+
         data.addAll(dataCache.values());
-        data.parallelStream().forEach((userData) -> {
-            endSession(userData);
-        });
+        data.parallelStream()
+                .forEach((userData) -> {
+                    addSession(userData);
+                });
         try {
             db.saveMultipleUserData(data);
             db.saveCommandUse(commandUse);
@@ -197,6 +232,7 @@ public class DataCacheHandler extends LocationCache {
             public void process(UserData data) {
                 data.addLocations(getLocationsForSaving(uuid));
                 clearLocations(uuid);
+                addSession(data);
                 saveTask.scheduleForSave(data);
                 scheludeForClear(uuid);
             }
@@ -225,7 +261,8 @@ public class DataCacheHandler extends LocationCache {
     private void saveHandlerDataToCache(Player player) {
         long time = new Date().getTime();
         UUID uuid = player.getUniqueId();
-        plugin.getInfoPoolProcessor().addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
+//        plugin.getInfoPoolProcessor().
+        addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
 
     }
 
@@ -278,7 +315,7 @@ public class DataCacheHandler extends LocationCache {
      * @param player Player the new UserData is created for
      */
     public void newPlayer(Player player) {
-        saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
+        newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
     /**
@@ -286,7 +323,11 @@ public class DataCacheHandler extends LocationCache {
      * @param player
      */
     public void newPlayer(OfflinePlayer player) {
-        saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
+        newPlayer(NewPlayerCreator.createNewPlayer(player));
+    }
+    
+    public void newPlayer(UserData data) {
+        saveTask.scheduleNewPlayer(data);
     }
 
     /**
@@ -349,7 +390,7 @@ public class DataCacheHandler extends LocationCache {
     public int getMaxPlayers() {
         return maxPlayers;
     }
-    
+
     public void handleCommand(String command) {
         if (!commandUse.containsKey(command)) {
             commandUse.put(command, 0);

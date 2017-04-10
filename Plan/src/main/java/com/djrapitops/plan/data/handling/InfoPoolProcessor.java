@@ -6,6 +6,7 @@
 package main.java.com.djrapitops.plan.data.handling;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +48,38 @@ public class InfoPoolProcessor {
     
     public void processPool() {
         List<HandlingInfo> toProcess = new ArrayList<>(pool);
+        if (toProcess.isEmpty()) {
+            return;
+        }
         try {
             pool.removeAll(toProcess);
             List<UUID> uuids = toProcess.parallelStream().map(i -> i.getUuid()).distinct().collect(Collectors.toList());
+            Map<UUID, UserData> userData = getAffectedUserData(uuids);
+
+            Collections.sort(toProcess, new HandlingInfoTimeComparator());
+            for (HandlingInfo r : toProcess) {
+                UserData data = userData.get(r.getUuid());
+                if (data == null) {
+                    pool.add(r);
+                    continue;
+                }
+                r.process(data);
+            }
+        } catch (Exception e) {
+            plugin.toLog(this.getClass().getName(), e);
+            pool.addAll(toProcess);
+        }
+    }
+    
+    public void process(UUID uuid) {
+        List<HandlingInfo> toProcess = new ArrayList<>();
+        toProcess.addAll(pool.stream().filter(i -> i.getUuid().equals(uuid)).collect(Collectors.toList()));
+        if (toProcess.isEmpty()) {
+            return;
+        }
+        try {
+            pool.removeAll(toProcess);
+            List<UUID> uuids = Arrays.asList(new UUID[]{uuid});
             Map<UUID, UserData> userData = getAffectedUserData(uuids);
 
             Collections.sort(toProcess, new HandlingInfoTimeComparator());
