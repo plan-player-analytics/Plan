@@ -36,6 +36,11 @@ public class MockUtils {
         when(p.hasPermission("plan.inspect.other")).thenReturn(true);
         return p;
     }
+    
+    public static UUID getPlayerUUID() {
+        return UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
+    }
+    
     public static Player mockPlayer2() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SPECTATOR);
@@ -49,6 +54,10 @@ public class MockUtils {
         when(p.hasPermission("plan.inspect.other")).thenReturn(false);
         when(p.getName()).thenReturn("TestName2");
         return p;
+    }
+    
+    public static UUID getPlayer2UUID() {
+        return UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
     }
 
     public static Player mockBrokenPlayer() {

@@ -35,7 +35,6 @@ public class InspectCacheHandler {
      * @param uuid
      */
     public void cache(UUID uuid) {
-//        plugin.getInfoPoolProcessor().process(uuid);
         DBCallableProcessor cacher = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {

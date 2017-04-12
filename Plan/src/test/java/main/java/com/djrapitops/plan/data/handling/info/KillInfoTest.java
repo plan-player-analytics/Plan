@@ -7,6 +7,7 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
@@ -18,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -37,9 +37,9 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class KillInfoTest {
-    
+
     private Database db;
-    
+
     public KillInfoTest() {
     }
 
@@ -48,10 +48,15 @@ public class KillInfoTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         Plan plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug"+new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 
+            }
+
+            @Override
+            public int getUserId(String uuid) {
+                return 1;
             }
         };
         when(plan.getDB()).thenReturn(db);
@@ -61,30 +66,29 @@ public class KillInfoTest {
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
-        db.init();
     }
 
     @After
     public void tearDown() throws SQLException {
         db.close();
-    }    
-    
+    }
+
     @Test
     public void testProcess() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         Player dead = MockUtils.mockPlayer2();
-        db.saveUserData(dead.getUniqueId(), new UserData(dead, new DemographicsData()));
+//        db.saveUserData(dead.getUniqueId(), new UserData(dead, new DemographicsData()));
         KillInfo i = new KillInfo(data.getUuid(), 10L, dead, "TestWeapon");
         assertTrue(i.process(data));
         KillData expected = new KillData(dead.getUniqueId(), 1, "TestWeapon", 10L);
         assertTrue("Didn't add the kill", data.getPlayerKills().size() == 1);
-        KillData result = data.getPlayerKills().get(0);        
-        assertEquals(expected.getDate(), result.getDate());        
-        assertEquals(expected.getVictim(), result.getVictim());        
-        assertEquals(expected.getVictimUserID(), result.getVictimUserID());        
-        assertEquals(expected.getWeapon(), result.getWeapon()); 
+        KillData result = data.getPlayerKills().get(0);
+        assertEquals(expected.getDate(), result.getDate());
+        assertEquals(expected.getVictim(), result.getVictim());
+        assertEquals(expected.getVictimUserID(), result.getVictimUserID());
+        assertEquals(expected.getWeapon(), result.getWeapon());
     }
-    
+
     @Test
     public void testProcessMobKill() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -93,7 +97,7 @@ public class KillInfoTest {
         assertTrue("Added a kill", data.getPlayerKills().isEmpty());
         assertEquals(1, data.getMobKills());
     }
-    
+
     @Test
     public void testProcessMobKillWrongUUID() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -102,6 +106,5 @@ public class KillInfoTest {
         assertTrue("Added a kill", data.getPlayerKills().isEmpty());
         assertEquals(0, data.getMobKills());
     }
-    
-    
+
 }

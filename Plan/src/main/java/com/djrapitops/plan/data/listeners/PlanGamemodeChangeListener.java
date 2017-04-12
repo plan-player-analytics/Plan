@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 public class PlanGamemodeChangeListener implements Listener {
 
     private final Plan plugin;
-//    private final InfoPoolProcessor processor;
     private final DataCacheHandler handler;
 
     /**
@@ -27,7 +26,6 @@ public class PlanGamemodeChangeListener implements Listener {
      */
     public PlanGamemodeChangeListener(Plan plugin) {
         this.plugin = plugin;
-//        processor = plugin.getInfoPoolProcessor();
         handler = plugin.getHandler();
         
     }

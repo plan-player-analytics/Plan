@@ -274,7 +274,7 @@ public class UserData {
      * @param sessions
      */
     public void addSessions(Collection<SessionData> sessions) {
-        Collection<SessionData> filteredSessions = sessions.parallelStream()
+        Collection<SessionData> filteredSessions = sessions.stream()
                 .filter(session -> session != null)
                 .filter(session -> session.isValid())
                 .collect(Collectors.toList());

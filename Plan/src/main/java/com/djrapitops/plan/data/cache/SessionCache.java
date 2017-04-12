@@ -53,4 +53,8 @@ public class SessionCache {
             activeSessions.remove(uuid);
         }
     }
+
+    public HashMap<UUID, SessionData> getActiveSessions() {
+        return activeSessions;
+    }
 }

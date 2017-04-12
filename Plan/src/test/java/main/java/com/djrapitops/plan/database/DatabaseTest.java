@@ -21,6 +21,7 @@ import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -36,6 +37,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.easymock.EasyMock;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import test.java.utils.MockUtils;
 
@@ -59,7 +61,7 @@ public class DatabaseTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug"+new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 
@@ -104,6 +106,34 @@ public class DatabaseTest {
     @Test
     public void testInit() {
         assertTrue("Database failed to init.", db.init());
+    }
+
+    @Test
+    public void testSqLiteGetConfigName() {
+        assertEquals("sqlite", db.getConfigName());
+    }
+    @Test
+    public void testSqLiteGetgName() {
+        assertEquals("SQLite", db.getName());
+    }
+
+    @Test
+    public void testMysqlGetConfigName() {
+        assertEquals("mysql", new MySQLDB(plan) {
+            @Override
+            public void startConnectionPingTask(Plan plugin) {
+
+            }
+        }.getConfigName());
+    }
+    @Test
+    public void testMysqlGetName() {
+        assertEquals("MySQL", new MySQLDB(plan) {
+            @Override
+            public void startConnectionPingTask(Plan plugin) {
+
+            }
+        }.getName());
     }
 
     @Test
@@ -158,6 +188,7 @@ public class DatabaseTest {
     public void testSaveMultipleUserData() throws SQLException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        db.saveUserData(data.getUuid(), data);
         UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
         List<UserData> list = new ArrayList<>();
         list.add(data);

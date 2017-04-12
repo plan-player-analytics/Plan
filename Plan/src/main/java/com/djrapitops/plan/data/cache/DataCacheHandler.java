@@ -6,14 +6,11 @@ import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -68,23 +65,35 @@ public class DataCacheHandler extends LocationCache {
         db = plugin.getDB();
         dataCache = new HashMap<>();
 
-        getTask = new DataCacheGetQueue(plugin);
-        clearTask = new DataCacheClearQueue(plugin, this);
-        processTask = new DataCacheProcessQueue(plugin, this);
-        saveTask = new DataCacheSaveQueue(plugin);
+        startQueues();
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
 
-        try {
-            commandUse = db.getCommandUse();
-        } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
+        commandUse = new HashMap<>();
+        if (!getCommandUseFromDb()) {
             plugin.logError(Phrase.DB_FAILURE_DISABLE + "");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return;
         }
         startAsyncPeriodicSaveTask();
+    }
+
+    public boolean getCommandUseFromDb() {
+        try {
+            commandUse = db.getCommandUse();
+            return true;
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
+        return false;
+    }
+
+    public void startQueues() {
+        getTask = new DataCacheGetQueue(plugin);
+        clearTask = new DataCacheClearQueue(plugin, this);
+        processTask = new DataCacheProcessQueue(plugin, this);
+        saveTask = new DataCacheSaveQueue(plugin);
     }
 
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
@@ -187,6 +196,25 @@ public class DataCacheHandler extends LocationCache {
         clearTask.stop();
         List<HandlingInfo> toProcess = processTask.stop();
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
+        processUnprocessedHandlingInfo(toProcess);
+        List<UserData> data = new ArrayList<>();
+
+        data.addAll(dataCache.values());
+        data.parallelStream()
+                .forEach((userData) -> {
+                    endSession(userData.getUuid());
+                    addSession(userData);
+                });
+        try {
+            db.saveMultipleUserData(data);
+            db.saveCommandUse(commandUse);
+            db.close();
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
+    }
+
+    private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
         for (HandlingInfo i : toProcess) {
             UserData uData = dataCache.get(i.getUuid());
             if (uData == null) {
@@ -204,20 +232,6 @@ public class DataCacheHandler extends LocationCache {
             } else {
                 i.process(uData);
             }
-        }
-        List<UserData> data = new ArrayList<>();
-
-        data.addAll(dataCache.values());
-        data.parallelStream()
-                .forEach((userData) -> {
-                    addSession(userData);
-                });
-        try {
-            db.saveMultipleUserData(data);
-            db.saveCommandUse(commandUse);
-            db.close();
-        } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
         }
     }
 
@@ -261,9 +275,7 @@ public class DataCacheHandler extends LocationCache {
     private void saveHandlerDataToCache(Player player) {
         long time = new Date().getTime();
         UUID uuid = player.getUniqueId();
-//        plugin.getInfoPoolProcessor().
         addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
-
     }
 
     /**
@@ -305,6 +317,9 @@ public class DataCacheHandler extends LocationCache {
             if (saveTask.containsUUID(uuid)) {
                 return true;
             }
+            if (processTask.containsUUID(uuid)) {
+                return true;
+            }
         }
         return false;
     }
@@ -325,7 +340,7 @@ public class DataCacheHandler extends LocationCache {
     public void newPlayer(OfflinePlayer player) {
         newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
-    
+
     public void newPlayer(UserData data) {
         saveTask.scheduleNewPlayer(data);
     }

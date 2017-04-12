@@ -27,7 +27,6 @@ public class PlanPlayerListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-//    private final InfoPoolProcessor processor;
 
     /**
      * Class Constructor.
@@ -40,7 +39,6 @@ public class PlanPlayerListener implements Listener {
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-//        handler = plugin.getInfoPoolProcessor();
     }
 
     /**
