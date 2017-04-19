@@ -84,7 +84,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
-        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));        
+        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));        
         handler.saveCachedData(uuid);
     }
 
@@ -102,7 +102,8 @@ public class PlanPlayerListener implements Listener {
         }
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode()));
+        handler.endSession(uuid);
+        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
     }

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.Bukkit;
@@ -63,6 +64,10 @@ public class MiscUtils {
         }
     }
 
+    public static String getPlayerName(String[] args, CommandSender sender) {
+        return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
+    }
+    
     /**
      * Used by the inspect command.
      *
@@ -70,13 +75,13 @@ public class MiscUtils {
      * @param sender Command sender
      * @return The name of the player (first argument or sender)
      */
-    public static String getPlayerName(String[] args, CommandSender sender) {
+    public static String getPlayerName(String[] args, CommandSender sender, Permissions perm) {
         String playerName = "";
         boolean isConsole = !(sender instanceof Player);
         if (isConsole) {
             playerName = args[0];
         } else if (args.length > 0) {
-            if (sender.hasPermission("plan.inspect.other")) {
+            if (perm.userHasThisPermission(sender)) {
                 playerName = args[0];
             } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
                 playerName = sender.getName();

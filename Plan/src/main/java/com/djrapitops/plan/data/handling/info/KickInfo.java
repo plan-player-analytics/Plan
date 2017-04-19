@@ -20,6 +20,9 @@ public class KickInfo extends HandlingInfo {
 
     @Override
     public boolean process(UserData uData) {
+        if (!uData.getUuid().equals(uuid)) {
+            return false;
+        }
         uData.setTimesKicked(uData.getTimesKicked()+1);
         return true;
     }

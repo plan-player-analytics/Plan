@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -22,7 +23,7 @@ public class ManageStatusCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageStatusCommand(Plan plugin) {
-        super("status", "plan.manage", Phrase.CMD_USG_MANAGE_STATUS + "", CommandType.CONSOLE, "");
+        super("status", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_STATUS + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }

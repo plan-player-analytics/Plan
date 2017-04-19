@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command;
 
+import main.java.com.djrapitops.plan.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -10,7 +11,7 @@ import org.bukkit.command.CommandSender;
 public abstract class SubCommand {
 
     private final String name;
-    private final String permission;
+    private final Permissions permission;
     private final String usage;
     private final CommandType commandType;
     private final String arguments;
@@ -23,7 +24,7 @@ public abstract class SubCommand {
      * @param commandType Type Enum
      * @param arguments Additional possible arguments the command requires
      */
-    public SubCommand(String name, String permission, String usage, CommandType commandType, String arguments) {
+    public SubCommand(String name, Permissions permission, String usage, CommandType commandType, String arguments) {
         this.name = name;
         this.permission = permission;
         this.usage = usage;
@@ -55,7 +56,7 @@ public abstract class SubCommand {
     /**
      * @return Required permission
      */
-    public String getPermission() {
+    public Permissions getPermission() {
         return permission;
     }
 

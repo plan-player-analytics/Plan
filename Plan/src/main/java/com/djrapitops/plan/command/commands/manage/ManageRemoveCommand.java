@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -32,7 +33,7 @@ public class ManageRemoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRemoveCommand(Plan plugin) {
-        super("remove", "plan.manage", Phrase.CMD_USG_MANAGE_REMOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + " [-a]");
+        super("remove", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_REMOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + " [-a]");
 
         this.plugin = plugin;
     }
@@ -57,7 +58,7 @@ public class ManageRemoveCommand extends SubCommand {
             return true;
         }
 
-        String playerName = MiscUtils.getPlayerName(args, sender);
+        String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
         UUID uuid;
         try {

@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -25,7 +26,7 @@ public class ManageClearCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageClearCommand(Plan plugin) {
-        super("clear", "plan.manage", Phrase.CMD_USG_MANAGE_CLEAR + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
+        super("clear", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_CLEAR + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
         
         this.plugin = plugin;
     }

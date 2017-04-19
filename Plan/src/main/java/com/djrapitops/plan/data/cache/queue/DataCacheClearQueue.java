@@ -8,7 +8,6 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 

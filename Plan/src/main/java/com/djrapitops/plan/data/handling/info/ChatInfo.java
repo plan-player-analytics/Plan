@@ -28,7 +28,7 @@ public class ChatInfo extends HandlingInfo {
 
     @Override
     public boolean process(UserData uData) {
-        if (!uData.getUuid().equals(super.uuid)) {
+        if (!uData.getUuid().equals(uuid)) {
             return false;
         }
         ChatHandling.processChatInfo(uData, nickname, message);

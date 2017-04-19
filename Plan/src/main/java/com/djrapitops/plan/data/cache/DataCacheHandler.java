@@ -92,7 +92,7 @@ public class DataCacheHandler extends LocationCache {
     public void startQueues() {
         getTask = new DataCacheGetQueue(plugin);
         clearTask = new DataCacheClearQueue(plugin, this);
-        processTask = new DataCacheProcessQueue(plugin, this);
+        processTask = new DataCacheProcessQueue(this);
         saveTask = new DataCacheSaveQueue(plugin);
     }
 
@@ -246,7 +246,7 @@ public class DataCacheHandler extends LocationCache {
             public void process(UserData data) {
                 data.addLocations(getLocationsForSaving(uuid));
                 clearLocations(uuid);
-                addSession(data);
+//                addSession(data);
                 saveTask.scheduleForSave(data);
                 scheludeForClear(uuid);
             }
@@ -308,20 +308,9 @@ public class DataCacheHandler extends LocationCache {
      * @param uuid
      * @return
      */
-    public boolean isDataAccessed(UUID uuid) {
+    public boolean isDataAccessed(UUID uuid) {        
         UserData userData = dataCache.get(uuid);
-        if (userData != null) {
-            if (userData.isAccessed()) {
-                return true;
-            }
-            if (saveTask.containsUUID(uuid)) {
-                return true;
-            }
-            if (processTask.containsUUID(uuid)) {
-                return true;
-            }
-        }
-        return false;
+        return (userData != null && userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
     }
 
     /**

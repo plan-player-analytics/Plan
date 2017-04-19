@@ -98,7 +98,7 @@ public class PlanCommand implements CommandExecutor {
 
         boolean console = !(sender instanceof Player);
 
-        if (!sender.hasPermission(command.getPermission())) {
+        if (!command.getPermission().userHasThisPermission(sender)) {
             sender.sendMessage("" + Phrase.COMMAND_NO_PERMISSION);
             return true;
         }

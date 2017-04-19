@@ -19,7 +19,6 @@ import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *

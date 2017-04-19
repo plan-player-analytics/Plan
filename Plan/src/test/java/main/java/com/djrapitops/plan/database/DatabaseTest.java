@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
@@ -23,6 +25,7 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
@@ -51,6 +54,7 @@ public class DatabaseTest {
 
     private Plan plan;
     private Database db;
+    private Database backup;
     private int rows;
 
     public DatabaseTest() {
@@ -71,6 +75,7 @@ public class DatabaseTest {
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);      
         File f = new File(plan.getDataFolder(), "Errors.txt");
@@ -85,7 +90,13 @@ public class DatabaseTest {
         PowerMock.mockStatic(Bukkit.class);
         OfflinePlayer op = MockUtils.mockPlayer();
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
         op = MockUtils.mockPlayer2();
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
         PowerMock.replay(Bukkit.class);
 //        BukkitScheduler mockScheduler = Mockito.mock(BukkitScheduler.class);
@@ -95,6 +106,9 @@ public class DatabaseTest {
     @After
     public void tearDown() throws IOException, SQLException {
         db.close();
+        if (backup != null) {
+            backup.close();
+        }
         File f = new File(plan.getDataFolder(), "Errors.txt");
         int rowsAgain = 0;
         if (f.exists()) {
@@ -112,6 +126,7 @@ public class DatabaseTest {
     public void testSqLiteGetConfigName() {
         assertEquals("sqlite", db.getConfigName());
     }
+
     @Test
     public void testSqLiteGetgName() {
         assertEquals("SQLite", db.getName());
@@ -126,6 +141,7 @@ public class DatabaseTest {
             }
         }.getConfigName());
     }
+
     @Test
     public void testMysqlGetName() {
         assertEquals("MySQL", new MySQLDB(plan) {
@@ -175,6 +191,8 @@ public class DatabaseTest {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         db.saveUserData(data.getUuid(), data);
+        data.addNickname("TestUpdateForSave");
+        db.saveUserData(data.getUuid(), data);
         DBCallableProcessor process = new DBCallableProcessor() {
             @Override
             public void process(UserData d) {
@@ -185,10 +203,22 @@ public class DatabaseTest {
     }
 
     @Test
+    public void testNicknameInjection() throws SQLException {
+        db.init();
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
+        db.saveUserData(data2.getUuid(), data2);
+        data.addNickname("s); DROP TABLE plan_users;--");
+        db.saveUserData(data.getUuid(), data);
+        assertTrue("Removed Users table.", db.getUserId(data2.getUuid().toString()) != -1);
+    }
+
+    @Test
     public void testSaveMultipleUserData() throws SQLException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         db.saveUserData(data.getUuid(), data);
+        data.addNickname("TestUpdateForSave");
         UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
         List<UserData> list = new ArrayList<>();
         list.add(data);
@@ -217,5 +247,50 @@ public class DatabaseTest {
         db.saveUserData(data.getUuid(), data);
         db.removeAccount(data.getUuid().toString());
         assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));
+    }
+
+    @Test
+    public void testBackup() throws SQLException {
+        db.init();
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
+        List<UserData> list = new ArrayList<>();
+        list.add(data);
+        list.add(data2);
+        db.saveMultipleUserData(list);
+        backup = new SQLiteDB(plan, "debug-backup") {
+            @Override
+            public void startConnectionPingTask(Plan plugin) {
+
+            }
+        };
+        backup.init();
+        ManageUtils.clearAndCopy(backup, db, db.getSavedUUIDs());
+        Set<UUID> savedUUIDs = backup.getSavedUUIDs();
+        assertTrue("Didn't contain 1", savedUUIDs.contains(data.getUuid()));
+        assertTrue("Didn't contain 2", savedUUIDs.contains(data2.getUuid()));
+    }
+
+    @Test
+    public void testRestore() throws SQLException {
+        db.init();
+        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
+        List<UserData> list = new ArrayList<>();
+        list.add(data);
+        list.add(data2);
+        db.saveMultipleUserData(list);
+        backup = new SQLiteDB(plan, "debug-backup") {
+            @Override
+            public void startConnectionPingTask(Plan plugin) {
+
+            }
+        };
+        backup.init();
+        ManageUtils.clearAndCopy(backup, db, db.getSavedUUIDs());
+        ManageUtils.clearAndCopy(db, backup, backup.getSavedUUIDs());
+        Set<UUID> savedUUIDs = db.getSavedUUIDs();
+        assertTrue("Didn't contain 1", savedUUIDs.contains(data.getUuid()));
+        assertTrue("Didn't contain 2", savedUUIDs.contains(data2.getUuid()));
     }
 }

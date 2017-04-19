@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import org.bukkit.event.EventHandler;
@@ -36,7 +37,7 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getPlayer().hasPermission("plan.ignore.commanduse")) {
+        if (Permissions.IGNORE_COMMANDUSE.userHasThisPermission(event.getPlayer())) {
             return;
         }
         handler.handleCommand(event.getMessage().split(" ")[0]);

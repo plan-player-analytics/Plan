@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -26,7 +27,7 @@ public class HelpCommand extends SubCommand {
      * @param command Current instance of PlanCommand
      */
     public HelpCommand(Plan plugin, PlanCommand command) {
-        super("help,?", "plan.?", Phrase.CMD_USG_HELP + "", CommandType.CONSOLE, "");
+        super("help,?", Permissions.HELP, Phrase.CMD_USG_HELP + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
         this.command = command;
@@ -46,7 +47,7 @@ public class HelpCommand extends SubCommand {
                 continue;
             }
 
-            if (!sender.hasPermission(command.getPermission())) {
+            if (!command.getPermission().userHasThisPermission(sender)) {
                 continue;
             }
 

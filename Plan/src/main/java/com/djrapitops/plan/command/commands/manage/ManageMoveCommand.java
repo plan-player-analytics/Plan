@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -27,7 +28,7 @@ public class ManageMoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageMoveCommand(Plan plugin) {
-        super("move", "plan.manage", Phrase.CMD_USG_MANAGE_MOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE + "");
+        super("move", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_MOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE + "");
 
         this.plugin = plugin;
     }

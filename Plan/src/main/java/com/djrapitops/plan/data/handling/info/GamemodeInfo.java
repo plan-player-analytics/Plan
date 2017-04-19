@@ -27,7 +27,7 @@ public class GamemodeInfo extends HandlingInfo{
         if (currentGamemode == null) {
             return false;
         }
-        if (uData.getUuid() != uuid) {
+        if (!uData.getUuid().equals(uuid)) {
             return false;
         }
         GamemodeHandling.processGamemodeInfo(uData, time, currentGamemode);

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -35,7 +36,7 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", "plan.search", Phrase.CMD_USG_SEARCH + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_SEARCH + "");
+        super("search", Permissions.SEARCH, Phrase.CMD_USG_SEARCH + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_SEARCH + "");
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
     }

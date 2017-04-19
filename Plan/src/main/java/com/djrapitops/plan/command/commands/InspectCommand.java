@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands;
 
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -33,7 +34,7 @@ public class InspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InspectCommand(Plan plugin) {
-        super("inspect", "plan.inspect", Phrase.CMD_USG_INSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
+        super("inspect", Permissions.INSPECT, Phrase.CMD_USG_INSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();

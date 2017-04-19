@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -27,7 +28,7 @@ public class ManageCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCommand(Plan plugin) {
-        super("manage, m", "plan.manage", Phrase.CMD_USG_MANAGE+"", CommandType.CONSOLE, "");
+        super("manage, m", Permissions.MANAGE, Phrase.CMD_USG_MANAGE+"", CommandType.CONSOLE, "");
         this.plugin = plugin;
         commands = new ArrayList<>();
         commands.add(new ManageHelpCommand(plugin, this));
@@ -98,7 +99,7 @@ public class ManageCommand extends SubCommand {
 
         boolean console = !(sender instanceof Player);
 
-        if (!sender.hasPermission(command.getPermission())) {
+        if (!command.getPermission().userHasThisPermission(sender)) {
             sender.sendMessage("" + Phrase.COMMAND_NO_PERMISSION);
             return true;
         }

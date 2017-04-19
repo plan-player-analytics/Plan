@@ -41,6 +41,10 @@ public class SessionCache {
         }
     }
     
+    public SessionData getSession(UUID uuid) {
+        return activeSessions.get(uuid);
+    }
+    
     /**
      *
      * @param data

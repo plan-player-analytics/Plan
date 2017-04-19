@@ -20,7 +20,7 @@ public class DeathInfo extends HandlingInfo{
     
     @Override
     public boolean process(UserData uData) {
-        if (uData.getUuid() != uuid) {
+        if (!uData.getUuid().equals(uuid)) {
             return false;
         }
         uData.setDeaths(uData.getDeaths()+1);

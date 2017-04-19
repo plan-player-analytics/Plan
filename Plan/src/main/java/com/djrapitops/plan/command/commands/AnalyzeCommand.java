@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands;
 
 import java.util.Date;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -31,7 +32,7 @@ public class AnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis", "plan.analyze", Phrase.CMD_USG_ANALYZE.parse(), CommandType.CONSOLE, "");
+        super("analyze, analyse, analysis", Permissions.ANALYZE, Phrase.CMD_USG_ANALYZE.parse(), CommandType.CONSOLE, "");
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }

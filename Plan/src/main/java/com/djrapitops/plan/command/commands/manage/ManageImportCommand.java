@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -35,7 +36,7 @@ public class ManageImportCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageImportCommand(Plan plugin) {
-        super("import", "plan.manage", Phrase.CMD_USG_MANAGE_IMPORT + "", CommandType.CONSOLE, Phrase.ARG_IMPORT + "");
+        super("import", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_IMPORT + "", CommandType.CONSOLE, Phrase.ARG_IMPORT + "");
         this.plugin = plugin;
     }
 

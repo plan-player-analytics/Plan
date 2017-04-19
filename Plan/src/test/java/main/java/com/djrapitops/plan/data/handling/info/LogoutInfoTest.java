@@ -7,8 +7,8 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,12 +56,13 @@ public class LogoutInfoTest {
         long time = 20L;
         Exception ex = null;
         data.setLastGamemode(GameMode.SURVIVAL);
-        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, GameMode.CREATIVE);
+        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, GameMode.CREATIVE, new SessionData(0, 1));
         assertTrue(i.process(data));
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
         assertTrue("Playtime wrong", data.getPlayTime() == 10L);
         assertTrue("Banned wrong", data.isBanned());
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
+        assertEquals(1, data.getSessions().size());
     }
 
     @Test
@@ -71,7 +72,7 @@ public class LogoutInfoTest {
         data.updateBanned(false);
         long time = 20L;
         Exception ex = null;
-        LogoutInfo i = new LogoutInfo(null, time, true, GameMode.CREATIVE);
+        LogoutInfo i = new LogoutInfo(null, time, true, GameMode.CREATIVE, new SessionData(0, 1));
         try {
             assertTrue(!i.process(data));
         } catch (NullPointerException e) {
@@ -82,6 +83,7 @@ public class LogoutInfoTest {
         assertTrue("Playtime wrong", data.getPlayTime() == 0L);
         assertTrue("Banned wrong", !data.isBanned());
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.SURVIVAL);
+        assertEquals(0, data.getSessions().size());
     }
 
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -30,7 +31,7 @@ public class ManageRestoreCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRestoreCommand(Plan plugin) {
-        super("restore", "plan.restore", Phrase.CMD_USG_MANAGE_RESTORE + "", CommandType.CONSOLE, Phrase.ARG_RESTORE + "");
+        super("restore", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_RESTORE + "", CommandType.CONSOLE, Phrase.ARG_RESTORE + "");
 
         this.plugin = plugin;
     }

@@ -44,7 +44,11 @@ public class DataCacheHandlerTest {
     private boolean calledSaveUserData;
     private boolean calledSaveMultiple;
 
-    public DataCacheHandlerTest() {
+    public DataCacheHandlerTest() {        
+    }
+
+    @Before
+    public void setUp() {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
@@ -86,10 +90,6 @@ public class DataCacheHandlerTest {
             public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
             }
         };
-    }
-
-    @Before
-    public void setUp() {
     }
 
     @After

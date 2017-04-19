@@ -105,7 +105,9 @@ class SaveConsumer implements Runnable {
 
     void consume(UserData data) {
         try {
+            data.access();
             db.saveUserData(data.getUuid(), data);
+            data.stopAccessing();
         } catch (SQLException ex) {
             getPlugin(Plan.class).toLog(this.getClass().getName(), ex);
         }

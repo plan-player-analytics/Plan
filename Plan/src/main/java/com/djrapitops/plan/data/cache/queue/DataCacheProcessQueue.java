@@ -26,14 +26,13 @@ public class DataCacheProcessQueue {
 
     /**
      *
-     * @param plugin
      * @param handler
      */
-    public DataCacheProcessQueue(Plan plugin, DataCacheHandler handler) {
+    public DataCacheProcessQueue(DataCacheHandler handler) {
         h = handler;
         q = new ArrayBlockingQueue(20000);
         s = new ProcessSetup();
-        s.go(q, plugin.getDB(), h);
+        s.go(q, h);
     }
 
     /**
@@ -77,13 +76,11 @@ class ProcessConsumer implements Runnable {
 
     private final BlockingQueue<HandlingInfo> queue;
     private final DataCacheHandler handler;
-    private final Database db;
     private boolean run;
 
-    ProcessConsumer(BlockingQueue q, Database db, DataCacheHandler h) {
+    ProcessConsumer(BlockingQueue q, DataCacheHandler h) {
         handler = h;
         queue = q;
-        this.db = db;
         run = true;
     }
 
@@ -101,7 +98,9 @@ class ProcessConsumer implements Runnable {
         DBCallableProcessor p = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
-                info.process(data);
+                if (!info.process(data)) {
+                    System.out.println("Attempted to process data for wrong uuid: W:"+data.getUuid()+" | R:"+info.getUuid()+" Type:"+info.getType().name());
+                }
             }
         };
         handler.getUserDataForProcessing(p, info.getUuid());
@@ -118,9 +117,9 @@ class ProcessSetup {
     private ProcessConsumer one;
     private ProcessConsumer two;
 
-    void go(BlockingQueue<HandlingInfo> q, Database db, DataCacheHandler h) {
-        one = new ProcessConsumer(q, db, h);
-        two = new ProcessConsumer(q, db, h);
+    void go(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
+        one = new ProcessConsumer(q, h);
+        two = new ProcessConsumer(q, h);
         new Thread(one).start();
         new Thread(two).start();
     }
