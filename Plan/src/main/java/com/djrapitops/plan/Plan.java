@@ -1,6 +1,6 @@
 /*
 *    Player Analytics Bukkit plugin for monitoring server activity.
-*    Copyright (C) 2016  Risto Lahtela / Rsl1122
+*    Copyright (C) 2017  Risto Lahtela / Rsl1122
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the Plan License. (licence.yml)
@@ -52,6 +52,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * Javaplugin class that contains methods for starting the plugin, logging to
+ * the Bukkit console & various get methods.
  *
  * @author Rsl1122
  */
@@ -132,7 +134,7 @@ public class Plan extends JavaPlugin {
         }
 
         hookHandler = new HookHandler(this);
-        
+
         log(Phrase.ENABLED + "");
     }
 
@@ -162,7 +164,7 @@ public class Plan extends JavaPlugin {
     /**
      * Logs the message to the console.
      *
-     * @param message
+     * @param message "Message" will show up as [INFO][Plan]: Message
      */
     public void log(String message) {
         getLogger().info(message);
@@ -171,7 +173,7 @@ public class Plan extends JavaPlugin {
     /**
      * Logs an error message to the console.
      *
-     * @param message
+     * @param message "Message" will show up as [ERROR][Plan]: Message
      */
     public void logError(String message) {
         getLogger().severe(message);
@@ -207,7 +209,7 @@ public class Plan extends JavaPlugin {
     /**
      * Logs a message to the Errors.txt with a timestamp.
      *
-     * @param message Message to log to Errors.txt
+     * @param message Message to log to Errors.txt [timestamp] Message
      */
     public void toLog(String message) {
         File folder = getDataFolder();
@@ -231,6 +233,8 @@ public class Plan extends JavaPlugin {
     }
 
     /**
+     * Used to access the API.
+     *
      * @return Plan API
      */
     public API getAPI() {
@@ -307,13 +311,17 @@ public class Plan extends JavaPlugin {
     }
 
     /**
-     * @return Currnet instance of the AnalysisCacheHandler
+     * Used to access AnalysisCache.
+     *
+     * @return Current instance of the AnalysisCacheHandler
      */
     public AnalysisCacheHandler getAnalysisCache() {
         return analysisCache;
     }
 
     /**
+     * Used to access InspectCache.
+     *
      * @return Current instance of the InspectCacheHandler
      */
     public InspectCacheHandler getInspectCache() {
@@ -321,6 +329,8 @@ public class Plan extends JavaPlugin {
     }
 
     /**
+     * Used to access Cache.
+     *
      * @return Current instance of the DataCacheHandler
      */
     public DataCacheHandler getHandler() {
@@ -328,6 +338,8 @@ public class Plan extends JavaPlugin {
     }
 
     /**
+     * Used to access active Database.
+     *
      * @return the Current Database
      */
     public Database getDB() {
@@ -335,6 +347,8 @@ public class Plan extends JavaPlugin {
     }
 
     /**
+     * Used to access Webserver.
+     *
      * @return the Webserver
      */
     public WebSocketServer getUiServer() {
@@ -342,6 +356,8 @@ public class Plan extends JavaPlugin {
     }
 
     /**
+     * Used to access HookHandler.
+     *
      * @return HookHandler that manages Hooks to other plugins.
      */
     public HookHandler getHookHandler() {
@@ -349,13 +365,19 @@ public class Plan extends JavaPlugin {
     }
 
     /**
-     * @return Set containing the SqLite & MySQL classes.
+     * Used to get all possible database objects.
+     *
+     * #init() might need to be called in order for the object to function.
+     *
+     * @return Set containing the SqLite & MySQL objects.
      */
     public HashSet<Database> getDatabases() {
         return databases;
     }
 
     /**
+     * Used to get the ID of the BootAnalysisTask, so that it can be disabled.
+     *
      * @return ID of the bootAnalysisTask
      */
     public int getBootAnalysisTaskID() {

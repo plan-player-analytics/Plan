@@ -14,10 +14,9 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -26,15 +25,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class AnalysisUtilsTest {
     
+    /**
+     *
+     */
     public AnalysisUtilsTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -48,6 +53,9 @@ public class AnalysisUtilsTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
     
+    /**
+     *
+     */
     @Test
     public void testIsActive() {
         long lastPlayed = new Date().getTime();
@@ -58,6 +66,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testIsNotActive2() {
         long lastPlayed = new Date().getTime();
@@ -68,6 +79,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }    
     
+    /**
+     *
+     */
     @Test
     public void testIsNotActive3() {
         long lastPlayed = new Date().getTime();
@@ -78,6 +92,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testIsNotActive() {
         long lastPlayed = 0L;
@@ -88,6 +105,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetNewPlayers() {
         List<Long> registered = new ArrayList<>();
@@ -100,6 +120,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testGetNewPlayersEmpty() {
         List<Long> registered = new ArrayList<>();
@@ -110,6 +133,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testTransformSessionDataToLengths() {
         Collection<SessionData> data = new ArrayList<>();
@@ -123,6 +149,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testAverage() {
         Collection<Long> o = new ArrayList<>();
@@ -136,6 +165,9 @@ public class AnalysisUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testAverageEmpty() {
         Collection<Long> list = new ArrayList<>();

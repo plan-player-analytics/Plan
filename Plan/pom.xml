@@ -162,10 +162,10 @@
                 <version>1.1.8</version>
                 <configuration>
                     <targetClasses>
-                        <param>main.java.com.djrapitops.*</param>
+                        <param>main.java.com.djrapitops.plan.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>test.java.main.java.com.djrapitops.*</param>
+                        <param>test.java.main.java.com.djrapitops.plan.*</param>
                     </targetTests>
                 </configuration>
             </plugin>

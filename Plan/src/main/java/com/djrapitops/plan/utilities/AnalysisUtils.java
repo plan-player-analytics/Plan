@@ -48,6 +48,13 @@ public class AnalysisUtils {
         return SortablePlayersTableCreator.createSortablePlayersTable(data);
     }
 
+    /**
+     *
+     * @param registered
+     * @param scale
+     * @param now
+     * @return
+     */
     public static int getNewPlayers(List<Long> registered, long scale, long now) {
         int newPlayers = 0;
         if (!registered.isEmpty()) {
@@ -61,6 +68,11 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
         List<Long> list = data.stream()
                 .filter(session -> session != null)
@@ -70,6 +82,11 @@ public class AnalysisUtils {
         return list;
     }
 
+    /**
+     *
+     * @param list
+     * @return
+     */
     public static long average(Collection<Long> list) {
         if (list.isEmpty()) {
             return 0;

@@ -11,19 +11,24 @@ import java.util.List;
 import java.util.Random;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
-import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class PlayerActivityGraphCreatorTest {
     
+    /**
+     *
+     */
     public PlayerActivityGraphCreatorTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testGenerateDataArray() {
         List<SessionData> sessionData = createRandomSessionDataList();
@@ -32,6 +37,10 @@ public class PlayerActivityGraphCreatorTest {
         assertTrue("0", 0 < result.length());
     }
     
+    /**
+     *
+     * @return
+     */
     public static List<SessionData> createRandomSessionDataList() {
         List<SessionData> list = new ArrayList<>();
         Random r = new Random();

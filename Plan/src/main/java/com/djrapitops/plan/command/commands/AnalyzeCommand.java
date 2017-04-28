@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands;
 
 import java.util.Date;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -17,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * This subcommand is used to run the analysis and access the /server link.
  *
  * @author Rsl1122
  */
@@ -31,7 +33,7 @@ public class AnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis", "plan.analyze", Phrase.CMD_USG_ANALYZE.parse(), CommandType.CONSOLE, "");
+        super("analyze, analyse, analysis", Permissions.ANALYZE, Phrase.CMD_USG_ANALYZE.parse(), CommandType.CONSOLE, "");
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }
@@ -40,7 +42,7 @@ public class AnalyzeCommand extends SubCommand {
      * Subcommand analyze.
      *
      * Updates AnalysisCache if last refresh was over 60 seconds ago and sends
-     * player the link that views cache.
+     * player the link that views cache with a delayed timer task.
      *
      * @param sender
      * @param cmd

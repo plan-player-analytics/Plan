@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.importing.Importer;
 import main.java.com.djrapitops.plan.data.importing.OnTimeImporter;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
@@ -35,7 +35,7 @@ public class ManageImportCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageImportCommand(Plan plugin) {
-        super("import", "plan.manage", Phrase.CMD_USG_MANAGE_IMPORT + "", CommandType.CONSOLE, Phrase.ARG_IMPORT + "");
+        super("import", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_IMPORT + "", CommandType.CONSOLE, Phrase.ARG_IMPORT + "");
         this.plugin = plugin;
     }
 
@@ -86,12 +86,11 @@ public class ManageImportCommand extends SubCommand {
             uuids.add(p.getUniqueId());
         }
         HashMap<UUID, Long> numbericData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
-        DataCacheHandler handler = plugin.getHandler();
         BukkitTask asyncImportTask = (new BukkitRunnable() {
             @Override
             public void run() {
                 if (importFromPlugin.equals("ontime")) {
-                    if (ManageUtils.importOnTime(numbericData, handler)) {
+                    if (ManageUtils.importOnTime(numbericData, plugin)) {
                         sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
                     }
                 }

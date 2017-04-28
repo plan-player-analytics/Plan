@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -21,7 +22,7 @@ public class ReloadCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ReloadCommand(Plan plugin) {
-        super("reload", "plan.reload", Phrase.CMD_USG_RELOAD + "", CommandType.CONSOLE, "");
+        super("reload", Permissions.MANAGE, Phrase.CMD_USG_RELOAD + "", CommandType.CONSOLE, "");
 
         this.plugin = plugin;
     }

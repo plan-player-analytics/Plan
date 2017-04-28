@@ -52,6 +52,17 @@ public class UserData {
     private SessionData currentSession;
     private List<SessionData> sessions;
 
+    /**
+     *
+     * @param uuid
+     * @param reg
+     * @param loc
+     * @param op
+     * @param lastGM
+     * @param demData
+     * @param name
+     * @param online
+     */
     public UserData(UUID uuid, long reg, Location loc, boolean op, GameMode lastGM, DemographicsData demData, String name, boolean online) {
         accessing = 0;
         this.uuid = uuid;
@@ -211,6 +222,7 @@ public class UserData {
             if (nick != null) {
                 if (!nick.isEmpty()) {
                     nicknames.add(nick);
+                    lastNick = nick;
                     return true;
                 }
             }
@@ -273,7 +285,7 @@ public class UserData {
      * @param sessions
      */
     public void addSessions(Collection<SessionData> sessions) {
-        Collection<SessionData> filteredSessions = sessions.parallelStream()
+        Collection<SessionData> filteredSessions = sessions.stream()
                 .filter(session -> session != null)
                 .filter(session -> session.isValid())
                 .collect(Collectors.toList());
@@ -288,6 +300,10 @@ public class UserData {
         currentSession = session;
     }
 
+    /**
+     *
+     * @return
+     */
     public SessionData getCurrentSession() {
         return currentSession;
     }
@@ -408,6 +424,9 @@ public class UserData {
      * @return
      */
     public HashMap<GameMode, Long> getGmTimes() {
+        if (gmTimes == null) {
+            gmTimes = new HashMap<>();
+        }
         return gmTimes;
     }
 

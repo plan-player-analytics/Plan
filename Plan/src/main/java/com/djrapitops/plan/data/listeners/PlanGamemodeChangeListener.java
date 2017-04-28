@@ -1,10 +1,9 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handlers.GamemodeTimesHandler;
+import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +18,6 @@ public class PlanGamemodeChangeListener implements Listener {
 
     private final Plan plugin;
     private final DataCacheHandler handler;
-    private final GamemodeTimesHandler gmTimesH;
 
     /**
      * Class Constructor.
@@ -29,7 +27,7 @@ public class PlanGamemodeChangeListener implements Listener {
     public PlanGamemodeChangeListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        gmTimesH = handler.getGamemodeTimesHandler();
+        
     }
 
     /**
@@ -43,12 +41,6 @@ public class PlanGamemodeChangeListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        DBCallableProcessor gmProcessor = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                gmTimesH.handleChangeEvent(event.getNewGameMode(), data);
-            }
-        };
-        handler.getUserDataForProcessing(gmProcessor, p.getUniqueId());
+        handler.addToPool(new GamemodeInfo(p.getUniqueId(), new Date().getTime(), event.getNewGameMode()));
     }
 }

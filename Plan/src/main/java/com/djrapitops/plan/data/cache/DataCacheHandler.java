@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -10,11 +11,19 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.handlers.*;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
+import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
+import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -22,7 +31,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Rsl1122
  */
-public class DataCacheHandler {
+public class DataCacheHandler extends LocationCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
@@ -32,20 +41,10 @@ public class DataCacheHandler {
     private final Plan plugin;
     private final Database db;
 
-    // Handlers
-    private final ActivityHandler activityHandler;
-    private final GamemodeTimesHandler gamemodeTimesHandler;
-    private final LocationHandler locationHandler;
-    private final DemographicsHandler demographicsHandler;
-    private final BasicInfoHandler basicInfoHandler;
-    private final RuleBreakingHandler ruleBreakingHandler;
-    private CommandUseHandler commandUseHandler;
-    private final KillHandler killHandler;
-    private final SessionHandler sessionHandler;
-
     // Queues
     private DataCacheSaveQueue saveTask;
     private DataCacheClearQueue clearTask;
+    private DataCacheProcessQueue processTask;
     private DataCacheGetQueue getTask;
 
     // Variables
@@ -61,33 +60,55 @@ public class DataCacheHandler {
      * @param plugin Current instance of Plan
      */
     public DataCacheHandler(Plan plugin) {
+        super();
         this.plugin = plugin;
         db = plugin.getDB();
         dataCache = new HashMap<>();
-        activityHandler = new ActivityHandler(plugin, this);
-        gamemodeTimesHandler = new GamemodeTimesHandler(plugin, this);
-        locationHandler = new LocationHandler(plugin);
-        demographicsHandler = new DemographicsHandler(plugin, this);
-        basicInfoHandler = new BasicInfoHandler(plugin, this);
-        ruleBreakingHandler = new RuleBreakingHandler(plugin, this);
 
-        killHandler = new KillHandler(plugin);
-        sessionHandler = new SessionHandler(plugin);
-
-        getTask = new DataCacheGetQueue(plugin);
-        clearTask = new DataCacheClearQueue(plugin, this);
-        saveTask = new DataCacheSaveQueue(plugin);
+        startQueues();
 
         timesSaved = 0;
         maxPlayers = plugin.getServer().getMaxPlayers();
-        try {
-            commandUse = db.getCommandUse();
-            commandUseHandler = new CommandUseHandler(commandUse);
-        } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
+
+        commandUse = new HashMap<>();
+        if (!getCommandUseFromDb()) {
             plugin.logError(Phrase.DB_FAILURE_DISABLE + "");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return;
         }
+        startAsyncPeriodicSaveTask();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean getCommandUseFromDb() {
+        try {
+            commandUse = db.getCommandUse();
+            return true;
+        } catch (SQLException e) {
+            plugin.toLog(this.getClass().getName(), e);
+        }
+        return false;
+    }
+
+    /**
+     *
+     */
+    public void startQueues() {
+        getTask = new DataCacheGetQueue(plugin);
+        clearTask = new DataCacheClearQueue(plugin, this);
+        processTask = new DataCacheProcessQueue(this);
+        saveTask = new DataCacheSaveQueue(plugin);
+    }
+
+    /**
+     *
+     * @throws IllegalArgumentException
+     * @throws IllegalStateException
+     */
+    public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
             minutes = 5;
@@ -102,7 +123,7 @@ public class DataCacheHandler {
         BukkitTask asyncPeriodicCacheSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                DataCacheHandler handler = plugin.getHandler();
+                DataCacheHandler handler = getPlugin(Plan.class).getHandler();
                 handler.saveHandlerDataToCache();
                 handler.saveCachedUserData();
                 if (timesSaved % clearAfterXsaves == 0) {
@@ -174,6 +195,14 @@ public class DataCacheHandler {
     }
 
     /**
+     *
+     * @param i
+     */
+    public void addToPool(HandlingInfo i) {
+        processTask.addToPool(i);
+    }
+
+    /**
      * Saves all data in the cache to Database and closes the database down.
      * Closes save clear and get tasks.
      */
@@ -181,11 +210,16 @@ public class DataCacheHandler {
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
+        List<HandlingInfo> toProcess = processTask.stop();
+        Collections.sort(toProcess, new HandlingInfoTimeComparator());
+        processUnprocessedHandlingInfo(toProcess);
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
-        data.parallelStream().forEach((userData) -> {
-            sessionHandler.endSession(userData);
-        });
+        data.parallelStream()
+                .forEach((userData) -> {
+                    endSession(userData.getUuid());
+                    addSession(userData);
+                });
         try {
             db.saveMultipleUserData(data);
             db.saveCommandUse(commandUse);
@@ -195,16 +229,45 @@ public class DataCacheHandler {
         }
     }
 
+    private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
+        for (HandlingInfo i : toProcess) {
+            UserData uData = dataCache.get(i.getUuid());
+            if (uData == null) {
+                DBCallableProcessor p = new DBCallableProcessor() {
+                    @Override
+                    public void process(UserData data) {
+                        i.process(data);
+                    }
+                };
+                try {
+                    db.giveUserDataToProcessors(i.getUuid(), p);
+                } catch (SQLException ex) {
+                    plugin.toLog(this.getClass().getName(), ex);
+                }
+            } else {
+                i.process(uData);
+            }
+        }
+    }
+
     /**
      * Saves the cached data of matching Player if it is in the cache
      *
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        UserData data = dataCache.get(uuid);
-        if (data != null) {
-            saveTask.scheduleForSave(data);
-        }
+        DBCallableProcessor saveProcessor = new DBCallableProcessor() {
+            @Override
+            public void process(UserData data) {
+                data.addLocations(getLocationsForSaving(uuid));
+                clearLocations(uuid);
+//                addSession(data);
+                data.access();
+                saveTask.scheduleForSave(data);
+                scheludeForClear(uuid);
+            }
+        };
+        getTask.scheduleForGet(uuid, saveProcessor);
     }
 
     /**
@@ -219,7 +282,6 @@ public class DataCacheHandler {
         }
     }
 
-    // Should only be called from Async thread
     /**
      *
      */
@@ -229,16 +291,10 @@ public class DataCacheHandler {
         });
     }
 
-    // Should only be called from Async thread
-    private void saveHandlerDataToCache(Player p) {
-        DBCallableProcessor cacheUpdater = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                activityHandler.saveToCache(data);
-                gamemodeTimesHandler.saveToCache(p.getGameMode(), data);
-            }
-        };
-        getUserDataForProcessing(cacheUpdater, p.getUniqueId());
+    private void saveHandlerDataToCache(Player player) {
+        long time = new Date().getTime();
+        UUID uuid = player.getUniqueId();
+        addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
     }
 
     /**
@@ -273,10 +329,7 @@ public class DataCacheHandler {
      */
     public boolean isDataAccessed(UUID uuid) {
         UserData userData = dataCache.get(uuid);
-        if (userData != null) {
-            return userData.isAccessed();
-        }
-        return false;
+        return (userData != null && userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
     }
 
     /**
@@ -285,7 +338,7 @@ public class DataCacheHandler {
      * @param player Player the new UserData is created for
      */
     public void newPlayer(Player player) {
-        saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
+        newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
     /**
@@ -293,7 +346,15 @@ public class DataCacheHandler {
      * @param player
      */
     public void newPlayer(OfflinePlayer player) {
-        saveTask.scheduleNewPlayer(NewPlayerCreator.createNewPlayer(player));
+        newPlayer(NewPlayerCreator.createNewPlayer(player));
+    }
+
+    /**
+     *
+     * @param data
+     */
+    public void newPlayer(UserData data) {
+        saveTask.scheduleNewPlayer(data);
     }
 
     /**
@@ -304,53 +365,10 @@ public class DataCacheHandler {
     }
 
     /**
-     * @return Current instance of the ActivityHandler
-     */
-    public ActivityHandler getActivityHandler() {
-        return activityHandler;
-    }
-
-    /**
      * @return Current instance of the LocationHandler
      */
-    public LocationHandler getLocationHandler() {
-        return locationHandler;
-    }
-
-    /**
-     * @return Current instance of the DemographicsHandler
-     */
-    public DemographicsHandler getDemographicsHandler() {
-        return demographicsHandler;
-    }
-
-    /**
-     * @return Current instance of the BasicInfoHandler
-     */
-    public BasicInfoHandler getBasicInfoHandler() {
-        return basicInfoHandler;
-    }
-
-    /**
-     * @return Current instance of the RuleBreakingHandler
-     */
-    public RuleBreakingHandler getRuleBreakingHandler() {
-        return ruleBreakingHandler;
-    }
-
-    /**
-     * @return Current instance of the GamemodeTimesHandler
-     */
-    public GamemodeTimesHandler getGamemodeTimesHandler() {
-        return gamemodeTimesHandler;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public KillHandler getKillHandler() {
-        return killHandler;
+    public LocationCache getLocationHandler() {
+        return this;
     }
 
     /**
@@ -362,18 +380,11 @@ public class DataCacheHandler {
     }
 
     /**
-     * @return Current instance of ServerDataHandler
-     */
-    public CommandUseHandler getCommandUseHandler() {
-        return commandUseHandler;
-    }
-
-    /**
      *
      * @return
      */
-    public SessionHandler getSessionHandler() {
-        return sessionHandler;
+    public SessionCache getSessionCache() {
+        return this;
     }
 
     /**
@@ -387,20 +398,12 @@ public class DataCacheHandler {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     UUID uuid = player.getUniqueId();
-                    boolean isNewPlayer = activityHandler.isFirstTimeJoin(uuid);
+                    boolean isNewPlayer = !db.wasSeenBefore(uuid);
                     if (isNewPlayer) {
                         newPlayer(player);
                     }
-                    DBCallableProcessor cacheUpdater = new DBCallableProcessor() {
-                        @Override
-                        public void process(UserData data) {
-                            activityHandler.handleReload(data);
-                            basicInfoHandler.handleReload(player.getDisplayName(), player.getAddress().getAddress(), data);
-                            gamemodeTimesHandler.handleReload(player.getGameMode(), data);
-                            saveCachedUserData();
-                        }
-                    };
-                    getUserDataForProcessing(cacheUpdater, player.getUniqueId());
+                    startSession(uuid);
+                    saveHandlerDataToCache(player);
                 }
                 this.cancel();
             }
@@ -414,5 +417,16 @@ public class DataCacheHandler {
      */
     public int getMaxPlayers() {
         return maxPlayers;
+    }
+
+    /**
+     *
+     * @param command
+     */
+    public void handleCommand(String command) {
+        if (!commandUse.containsKey(command)) {
+            commandUse.put(command, 0);
+        }
+        commandUse.put(command, commandUse.get(command) + 1);
     }
 }

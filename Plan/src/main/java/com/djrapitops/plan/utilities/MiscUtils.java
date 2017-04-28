@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.Bukkit;
@@ -37,7 +37,7 @@ public class MiscUtils {
         } catch (IOException | NumberFormatException e) {
             getPlugin(Plan.class).logError(Phrase.VERSION_CHECK_ERROR + "");
         }
-        return Phrase.VERSION_FAIL+"";        
+        return Phrase.VERSION_FAIL + "";
     }
 
     private static String getGitVersion() throws IOException {
@@ -54,6 +54,13 @@ public class MiscUtils {
         return lineWithVersion.split(": ")[1];
     }
 
+    /**
+     *
+     * @param currentVersion
+     * @param gitVersion
+     * @return
+     * @throws NumberFormatException
+     */
     public static String checkVersion(String currentVersion, String gitVersion) throws NumberFormatException {
         int newestVersionNumber = FormatUtils.parseVersionNumber(gitVersion);
         int currentVersionNumber = FormatUtils.parseVersionNumber(currentVersion);
@@ -65,20 +72,29 @@ public class MiscUtils {
     }
 
     /**
+     *
+     * @param args
+     * @param sender
+     * @return
+     */
+    public static String getPlayerName(String[] args, CommandSender sender) {
+        return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
+    }
+    
+    /**
      * Used by the inspect command.
      *
-     * @param args Arguments of the inspect command
+     * @param args Arguments of a command, must be > 0 if console sender.
      * @param sender Command sender
-     * @return The name of the player searched for, if the arguments are empty
-     * player's own name is returned.
+     * @return The name of the player (first argument or sender)
      */
-    public static String getPlayerDisplayname(String[] args, CommandSender sender) {
+    public static String getPlayerName(String[] args, CommandSender sender, Permissions perm) {
         String playerName = "";
-        Plan plugin = getPlugin(Plan.class);
         boolean isConsole = !(sender instanceof Player);
-        if (args.length > 0) {
-            if (sender.hasPermission("plan.inspect.other")
-                    || isConsole) {
+        if (isConsole) {
+            playerName = args[0];
+        } else if (args.length > 0) {
+            if (perm.userHasThisPermission(sender)) {
                 playerName = args[0];
             } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
                 playerName = sender.getName();
@@ -86,12 +102,7 @@ public class MiscUtils {
                 sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
             }
         } else {
-            try {
-                Player player = plugin.getServer().getPlayer(UUIDFetcher.getUUIDOf(sender.getName()));
-                playerName = player.getName();
-            } catch (Exception e) {
-                plugin.logError(Phrase.ERROR_CONSOLE_PLAYER.parse(Arrays.toString(args), isConsole + ""));
-            }
+            playerName = sender.getName();
         }
         return playerName;
     }
@@ -107,8 +118,8 @@ public class MiscUtils {
         players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
         Set<OfflinePlayer> matches = new HashSet<>();
         players.parallelStream()
-                .filter((OfflinePlayer player) -> (player.getName().toLowerCase().contains(search.toLowerCase())))
-                .forEach((OfflinePlayer player) -> {
+                .filter(player -> (player.getName().toLowerCase().contains(search.toLowerCase())))
+                .forEach(player -> {
                     matches.add(player);
                 });
         return matches;

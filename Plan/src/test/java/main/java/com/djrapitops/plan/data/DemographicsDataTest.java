@@ -9,13 +9,11 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
-import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,15 +22,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class DemographicsDataTest {
 
+    /**
+     *
+     */
     public DemographicsDataTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -46,6 +50,9 @@ public class DemographicsDataTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
     
+    /**
+     *
+     */
     @Test
     public void testGetAge() {
         DemographicsData instance = new DemographicsData();
@@ -54,6 +61,9 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetAge2() {
         DemographicsData instance = new DemographicsData(10, Gender.OTHER, "None");
@@ -62,6 +72,9 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetGender() {
         DemographicsData instance = new DemographicsData();
@@ -70,6 +83,9 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetGender2() {
         DemographicsData instance = new DemographicsData(10, Gender.OTHER, "None");
@@ -78,6 +94,9 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetGeoLocation() {
         DemographicsData instance = new DemographicsData();
@@ -86,6 +105,9 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetGeoLocation2() {
         DemographicsData instance = new DemographicsData(10, Gender.OTHER, "None");
@@ -94,6 +116,9 @@ public class DemographicsDataTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSetAge() {
         int age = 10;
@@ -103,6 +128,9 @@ public class DemographicsDataTest {
         assertEquals(age, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSetGender() {
         Gender gender = Gender.MALE;
@@ -112,6 +140,9 @@ public class DemographicsDataTest {
         assertEquals(gender, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSetGeoLocation() {
         String geoLocation = "None";
@@ -121,6 +152,9 @@ public class DemographicsDataTest {
         assertEquals(geoLocation, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testToString() {
         DemographicsData instance = new DemographicsData();

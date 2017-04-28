@@ -9,22 +9,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.Server;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class TestInit {
 
     private Plan planMock;
 
+    /**
+     *
+     */
     public TestInit() {
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean setUp() {
         try {
             planMock = PowerMockito.mock(Plan.class);
@@ -32,8 +39,14 @@ public class TestInit {
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.load(configfile.getAbsolutePath());
             when(planMock.getConfig()).thenReturn(configuration);
-            Files.deleteIfExists(new File("temporaryTestFolder").toPath());
             File testFolder = new File("temporaryTestFolder");
+            if (testFolder.exists()) {
+                for (File f : testFolder.listFiles()) {
+                    Files.deleteIfExists(f.toPath());
+                }
+            }
+            Files.deleteIfExists(new File("temporaryTestFolder").toPath());
+            testFolder = new File("temporaryTestFolder");
             testFolder.mkdir();
 //
             when(planMock.getDataFolder()).thenReturn(testFolder);
@@ -44,9 +57,10 @@ public class TestInit {
 
             Server mockServer = PowerMockito.mock(Server.class);
             when(mockServer.getIp()).thenReturn("0.0.0.0");
+            when(mockServer.getMaxPlayers()).thenReturn(20);
 //            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
             when(planMock.getServer()).thenReturn(mockServer);
-//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();
+//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();            
             return true;
         } catch (Exception ex) {
             System.out.println(ex);
@@ -58,6 +72,10 @@ public class TestInit {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Plan getPlanMock() {
         return planMock;
     }

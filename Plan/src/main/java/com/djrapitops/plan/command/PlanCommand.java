@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
+ * CommandExecutor for the /plan command, and all subcommands.
  *
  * @author Rsl1122
  */
@@ -20,7 +21,7 @@ public class PlanCommand implements CommandExecutor {
     private final List<SubCommand> commands;
 
     /**
-     * Class Constructor.
+     * CommandExecutor class Constructor.
      *
      * Initializes Subcommands
      *
@@ -28,7 +29,6 @@ public class PlanCommand implements CommandExecutor {
      */
     public PlanCommand(Plan plugin) {
         commands = new ArrayList<>();
-
         commands.add(new HelpCommand(plugin, this));
         commands.add(new InspectCommand(plugin));
         commands.add(new AnalyzeCommand(plugin));
@@ -39,6 +39,8 @@ public class PlanCommand implements CommandExecutor {
     }
 
     /**
+     * Used to get the list of all subcommands.
+     *
      * @return Initialized SubCommands
      */
     public List<SubCommand> getCommands() {
@@ -76,11 +78,11 @@ public class PlanCommand implements CommandExecutor {
      * Checks if Sender has rights to run the command and executes matching
      * subcommand.
      *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args
-     * @return true in all cases.
+     * @param sender source of the command.
+     * @param cmd command.
+     * @param commandLabel 
+     * @param args arguments of the command
+     * @return true
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -98,7 +100,7 @@ public class PlanCommand implements CommandExecutor {
 
         boolean console = !(sender instanceof Player);
 
-        if (!sender.hasPermission(command.getPermission())) {
+        if (!command.getPermission().userHasThisPermission(sender)) {
             sender.sendMessage("" + Phrase.COMMAND_NO_PERMISSION);
             return true;
         }

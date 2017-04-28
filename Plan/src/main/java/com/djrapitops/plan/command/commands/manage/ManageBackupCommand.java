@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -24,7 +25,7 @@ public class ManageBackupCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageBackupCommand(Plan plugin) {
-        super("backup", "plan.manage", Phrase.CMD_USG_MANAGE_BACKUP + "", CommandType.CONSOLE, "<DB>");
+        super("backup", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_BACKUP + "", CommandType.CONSOLE, "<DB>");
 
         this.plugin = plugin;
     }

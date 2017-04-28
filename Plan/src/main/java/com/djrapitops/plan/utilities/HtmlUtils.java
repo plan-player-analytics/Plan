@@ -81,6 +81,11 @@ public class HtmlUtils {
         return url;
     }
 
+    /**
+     *
+     * @param string
+     * @return
+     */
     public static String removeXSS(String string) {
         return string.replace("<!--", "")
                 .replace("-->", "")

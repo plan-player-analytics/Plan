@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
 import java.sql.SQLException;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
@@ -23,7 +24,7 @@ public class ManageHotswapCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageHotswapCommand(Plan plugin) {
-        super("hotswap", "plan.manage", Phrase.CMD_USG_MANAGE_HOTSWAP + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB>");
+        super("hotswap", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_HOTSWAP + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB>");
 
         this.plugin = plugin;
     }

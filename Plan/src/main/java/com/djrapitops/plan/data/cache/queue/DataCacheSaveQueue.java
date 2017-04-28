@@ -1,9 +1,12 @@
-package main.java.com.djrapitops.plan.data.cache;
+package main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -65,6 +68,15 @@ public class DataCacheSaveQueue {
             getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
     }
+    
+    /**
+     *
+     * @param uuid
+     * @return
+     */
+    public boolean containsUUID(UUID uuid) {
+        return new ArrayList<>(q).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
+    }
 
     /**
      *
@@ -98,7 +110,9 @@ class SaveConsumer implements Runnable {
 
     void consume(UserData data) {
         try {
+            
             db.saveUserData(data.getUuid(), data);
+            data.stopAccessing();
         } catch (SQLException ex) {
             getPlugin(Plan.class).toLog(this.getClass().getName(), ex);
         }
