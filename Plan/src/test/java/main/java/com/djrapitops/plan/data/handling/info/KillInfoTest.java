@@ -7,7 +7,6 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
@@ -19,9 +18,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -32,7 +31,7 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
@@ -40,9 +39,15 @@ public class KillInfoTest {
 
     private Database db;
 
+    /**
+     *
+     */
     public KillInfoTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -68,11 +73,19 @@ public class KillInfoTest {
         PowerMock.replay(JavaPlugin.class);
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @After
     public void tearDown() throws SQLException {
         db.close();
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testProcess() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -89,6 +102,10 @@ public class KillInfoTest {
         assertEquals(expected.getWeapon(), result.getWeapon());
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testProcessMobKill() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -98,6 +115,10 @@ public class KillInfoTest {
         assertEquals(1, data.getMobKills());
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testProcessMobKillWrongUUID() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

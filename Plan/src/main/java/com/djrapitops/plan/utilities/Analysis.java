@@ -24,11 +24,10 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -135,6 +134,13 @@ public class Analysis {
         return analyzeData(rawData, uuids, analysisCache);
     }
 
+    /**
+     *
+     * @param rawData
+     * @param uuids
+     * @param analysisCache
+     * @return
+     */
     public boolean analyzeData(List<UserData> rawData, List<UUID> uuids, AnalysisCacheHandler analysisCache) {
         // Create empty Dataset
         final RawAnalysisData sorted = new RawAnalysisData();

@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
+ * This subcommand is used to view the subcommands.
  *
  * @author Rsl1122
  */
@@ -34,33 +35,20 @@ public class HelpCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-
+    public boolean onCommand(CommandSender sender, Command comd, String commandLabel, String[] args) {
+        boolean isConsole = !(sender instanceof Player);
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();
 
-        // Header
         sender.sendMessage(Phrase.CMD_HELP_HEADER + "");
-        // Help results
-        for (SubCommand command : this.command.getCommands()) {
-            if (command.getName().equalsIgnoreCase(getName())) {
-                continue;
-            }
-
-            if (!command.getPermission().userHasThisPermission(sender)) {
-                continue;
-            }
-
-            if (!(sender instanceof Player) && command.getCommandType() == CommandType.PLAYER) {
-                continue;
-            }
-
-            sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor
-                    + " /plan " + command.getFirstName() + " " + command.getArguments() + tColor + " - " + command.getUsage());
-        }
-        // Footer
+        
+        this.command.getCommands().stream()
+                .filter(cmd -> !cmd.getName().equalsIgnoreCase(getName()))
+                .filter(cmd -> cmd.getPermission().userHasThisPermission(sender))
+                .filter(cmd -> !(isConsole && cmd.getCommandType() == CommandType.PLAYER))
+                .map(cmd -> tColor + " " + Phrase.BALL.toString() + oColor + " /plan " + cmd.getFirstName() + " " + cmd.getArguments() + tColor + " - " + cmd.getUsage())
+                .forEach(msg -> sender.sendMessage(msg));
         sender.sendMessage(Phrase.CMD_FOOTER + "");
         return true;
     }
-
 }

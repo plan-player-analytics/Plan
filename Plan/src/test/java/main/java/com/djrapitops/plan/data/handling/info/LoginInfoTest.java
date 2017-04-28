@@ -14,9 +14,9 @@ import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -26,15 +26,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class LoginInfoTest {
 
+    /**
+     *
+     */
     public LoginInfoTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -48,6 +54,10 @@ public class LoginInfoTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
 
+    /**
+     *
+     * @throws UnknownHostException
+     */
     @Test
     public void testProcess() throws UnknownHostException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -67,6 +77,10 @@ public class LoginInfoTest {
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
     }
     
+    /**
+     *
+     * @throws UnknownHostException
+     */
     @Test
     public void testProcessWrongUUID() throws UnknownHostException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

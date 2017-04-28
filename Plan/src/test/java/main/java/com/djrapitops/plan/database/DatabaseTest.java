@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -26,27 +25,26 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.powermock.api.easymock.PowerMock;
-import test.java.utils.TestInit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.*;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.easymock.EasyMock;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class, Bukkit.class, BukkitScheduler.class, BukkitRunnable.class})
@@ -57,9 +55,17 @@ public class DatabaseTest {
     private Database backup;
     private int rows;
 
+    /**
+     *
+     */
     public DatabaseTest() {
     }
 
+    /**
+     *
+     * @throws IOException
+     * @throws Exception
+     */
     @Before
     public void setUp() throws IOException, Exception {
         TestInit t = new TestInit();
@@ -103,6 +109,11 @@ public class DatabaseTest {
 //        EasyMock.expect(Bukkit.getScheduler()).andReturn(mockScheduler);
     }
 
+    /**
+     *
+     * @throws IOException
+     * @throws SQLException
+     */
     @After
     public void tearDown() throws IOException, SQLException {
         db.close();
@@ -117,21 +128,33 @@ public class DatabaseTest {
         assertTrue("Errors were caught.", rows == rowsAgain);
     }
 
+    /**
+     *
+     */
     @Test
     public void testInit() {
         assertTrue("Database failed to init.", db.init());
     }
 
+    /**
+     *
+     */
     @Test
     public void testSqLiteGetConfigName() {
         assertEquals("sqlite", db.getConfigName());
     }
 
+    /**
+     *
+     */
     @Test
     public void testSqLiteGetgName() {
         assertEquals("SQLite", db.getName());
     }
 
+    /**
+     *
+     */
     @Test
     public void testMysqlGetConfigName() {
         assertEquals("mysql", new MySQLDB(plan) {
@@ -142,6 +165,9 @@ public class DatabaseTest {
         }.getConfigName());
     }
 
+    /**
+     *
+     */
     @Test
     public void testMysqlGetName() {
         assertEquals("MySQL", new MySQLDB(plan) {
@@ -152,6 +178,10 @@ public class DatabaseTest {
         }.getName());
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testRemoveAll() throws SQLException {
         db.init();
@@ -169,6 +199,10 @@ public class DatabaseTest {
         assertTrue("Contains commandUse", db.getCommandUse().isEmpty());
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testSaveCommandUse() throws SQLException {
         db.init();
@@ -186,6 +220,10 @@ public class DatabaseTest {
         assertTrue("Contains too long cmd", !db.getCommandUse().containsKey("/roiergbnougbierubieugbeigubeigubgierbgeugeg"));
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testSaveUserData() throws SQLException {
         db.init();
@@ -202,6 +240,10 @@ public class DatabaseTest {
         db.giveUserDataToProcessors(data.getUuid(), process);
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testNicknameInjection() throws SQLException {
         db.init();
@@ -213,6 +255,10 @@ public class DatabaseTest {
         assertTrue("Removed Users table.", db.getUserId(data2.getUuid().toString()) != -1);
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testSaveMultipleUserData() throws SQLException {
         db.init();
@@ -240,6 +286,10 @@ public class DatabaseTest {
         db.giveUserDataToProcessors(data2.getUuid(), process2);
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testRemove() throws SQLException {
         db.init();
@@ -249,6 +299,10 @@ public class DatabaseTest {
         assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testBackup() throws SQLException {
         db.init();
@@ -271,6 +325,10 @@ public class DatabaseTest {
         assertTrue("Didn't contain 2", savedUUIDs.contains(data2.getUuid()));
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testRestore() throws SQLException {
         db.init();

@@ -1,9 +1,5 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
-import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +11,14 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
 import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -79,6 +79,10 @@ public class DataCacheHandler extends LocationCache {
         startAsyncPeriodicSaveTask();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getCommandUseFromDb() {
         try {
             commandUse = db.getCommandUse();
@@ -89,6 +93,9 @@ public class DataCacheHandler extends LocationCache {
         return false;
     }
 
+    /**
+     *
+     */
     public void startQueues() {
         getTask = new DataCacheGetQueue(plugin);
         clearTask = new DataCacheClearQueue(plugin, this);
@@ -96,6 +103,11 @@ public class DataCacheHandler extends LocationCache {
         saveTask = new DataCacheSaveQueue(plugin);
     }
 
+    /**
+     *
+     * @throws IllegalArgumentException
+     * @throws IllegalStateException
+     */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
@@ -182,6 +194,10 @@ public class DataCacheHandler extends LocationCache {
         }
     }
 
+    /**
+     *
+     * @param i
+     */
     public void addToPool(HandlingInfo i) {
         processTask.addToPool(i);
     }
@@ -198,7 +214,6 @@ public class DataCacheHandler extends LocationCache {
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
         List<UserData> data = new ArrayList<>();
-
         data.addAll(dataCache.values());
         data.parallelStream()
                 .forEach((userData) -> {
@@ -247,6 +262,7 @@ public class DataCacheHandler extends LocationCache {
                 data.addLocations(getLocationsForSaving(uuid));
                 clearLocations(uuid);
 //                addSession(data);
+                data.access();
                 saveTask.scheduleForSave(data);
                 scheludeForClear(uuid);
             }
@@ -266,6 +282,9 @@ public class DataCacheHandler extends LocationCache {
         }
     }
 
+    /**
+     *
+     */
     public void saveHandlerDataToCache() {
         Bukkit.getServer().getOnlinePlayers().parallelStream().forEach((p) -> {
             saveHandlerDataToCache(p);
@@ -308,7 +327,7 @@ public class DataCacheHandler extends LocationCache {
      * @param uuid
      * @return
      */
-    public boolean isDataAccessed(UUID uuid) {        
+    public boolean isDataAccessed(UUID uuid) {
         UserData userData = dataCache.get(uuid);
         return (userData != null && userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
     }
@@ -330,6 +349,10 @@ public class DataCacheHandler extends LocationCache {
         newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
+    /**
+     *
+     * @param data
+     */
     public void newPlayer(UserData data) {
         saveTask.scheduleNewPlayer(data);
     }
@@ -379,6 +402,7 @@ public class DataCacheHandler extends LocationCache {
                     if (isNewPlayer) {
                         newPlayer(player);
                     }
+                    startSession(uuid);
                     saveHandlerDataToCache(player);
                 }
                 this.cancel();
@@ -395,6 +419,10 @@ public class DataCacheHandler extends LocationCache {
         return maxPlayers;
     }
 
+    /**
+     *
+     * @param command
+     */
     public void handleCommand(String command) {
         if (!commandUse.containsKey(command)) {
             commandUse.put(command, 0);

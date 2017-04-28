@@ -11,9 +11,9 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -22,15 +22,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class HtmlUtilsTest {
     
+    /**
+     *
+     */
     public HtmlUtilsTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -45,6 +51,10 @@ public class HtmlUtilsTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
     
+    /**
+     *
+     * @throws Exception
+     */
     @Test
     public void testGetHtmlStringFromResource() throws Exception {
         String fileName = "player.html";
@@ -53,6 +63,9 @@ public class HtmlUtilsTest {
         assertTrue("Result empty", !result.isEmpty());
     }
 
+    /**
+     *
+     */
     @Test
     public void testReplacePlaceholders() {
         String html = "%test%";
@@ -63,6 +76,9 @@ public class HtmlUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testReplacePlaceholdersBackslash() {
         HashMap<String, String> replace = new HashMap<>();
@@ -72,6 +88,10 @@ public class HtmlUtilsTest {
         assertEquals(result, exp);
     }
 
+    /**
+     *
+     * @throws FileNotFoundException
+     */
     @Test
     public void testGetServerAnalysisUrl() throws FileNotFoundException {
         String result = HtmlUtils.getServerAnalysisUrl();
@@ -79,6 +99,9 @@ public class HtmlUtilsTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetInspectUrl() {
         String playerName = "Test";
@@ -87,6 +110,9 @@ public class HtmlUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testRemoveXSS() {
         String xss = "<script></script><!--";

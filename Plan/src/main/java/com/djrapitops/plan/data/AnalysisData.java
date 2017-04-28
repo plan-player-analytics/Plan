@@ -182,26 +182,50 @@ public class AnalysisData {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getGeomapCountries() {
         return geomapCountries;
     }
 
+    /**
+     *
+     * @param geomapCountries
+     */
     public void setGeomapCountries(String geomapCountries) {
         this.geomapCountries = geomapCountries;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getGeomapZ() {
         return geomapZ;
     }
 
+    /**
+     *
+     * @param geomapZ
+     */
     public void setGeomapZ(String geomapZ) {
         this.geomapZ = geomapZ;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getGeomapCodes() {
         return geomapCodes;
     }
 
+    /**
+     *
+     * @param geomapCodes
+     */
     public void setGeomapCodes(String geomapCodes) {
         this.geomapCodes = geomapCodes;
     }
@@ -644,10 +668,18 @@ public class AnalysisData {
         this.sessionAverage = sessionAverage;
     }
 
+    /**
+     *
+     * @return
+     */
     public int[] getGenderData() {
         return genderData;
     }
 
+    /**
+     *
+     * @param genderData
+     */
     public void setGenderData(int[] genderData) {
         this.genderData = genderData;
     }

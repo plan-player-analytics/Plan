@@ -13,7 +13,7 @@ import org.bukkit.GameMode;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class LoginInfo extends HandlingInfo{
     private InetAddress ip;
@@ -22,6 +22,16 @@ public class LoginInfo extends HandlingInfo{
     private GamemodeInfo gmInfo;
     private int loginTimes;
 
+    /**
+     *
+     * @param uuid
+     * @param time
+     * @param ip
+     * @param banned
+     * @param nickname
+     * @param gm
+     * @param loginTimes
+     */
     public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm, int loginTimes) {
         super(uuid, InfoType.LOGIN, time);
         this.ip = ip;
@@ -31,10 +41,24 @@ public class LoginInfo extends HandlingInfo{
         this.loginTimes = loginTimes;
     }
     
+    /**
+     *
+     * @param uuid
+     * @param time
+     * @param ip
+     * @param banned
+     * @param nickname
+     * @param gm
+     */
     public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm) {
         this(uuid, time, ip, banned, nickname, gm, 0);
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

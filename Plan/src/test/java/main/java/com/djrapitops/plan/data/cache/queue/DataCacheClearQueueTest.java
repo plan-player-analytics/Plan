@@ -22,7 +22,7 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})
@@ -31,9 +31,15 @@ public class DataCacheClearQueueTest {
     private Plan plan;
     private DataCacheHandler handler;
     
+    /**
+     *
+     */
     public DataCacheClearQueueTest() {
     }
     
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -64,18 +70,30 @@ public class DataCacheClearQueueTest {
         };
     }
 
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testScheduleForClear_UUID() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testScheduleForClear_Collection() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testStop() {
     }

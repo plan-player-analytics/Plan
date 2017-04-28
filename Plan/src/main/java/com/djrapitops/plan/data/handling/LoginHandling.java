@@ -15,10 +15,19 @@ import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class LoginHandling {
 
+    /**
+     *
+     * @param data
+     * @param time
+     * @param ip
+     * @param banned
+     * @param nickname
+     * @param loginTimes
+     */
     public static void processLoginInfo(UserData data, long time, InetAddress ip, boolean banned, String nickname, int loginTimes) {
         data.setLastPlayed(time);
         data.updateBanned(banned);
@@ -28,6 +37,11 @@ public class LoginHandling {
         updateGeolocation(ip, data);
     }
 
+    /**
+     *
+     * @param ip
+     * @param data
+     */
     public static void updateGeolocation(InetAddress ip, UserData data) {
         DemographicsData demData = data.getDemData();
         try {

@@ -17,13 +17,19 @@ import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class HandlingInfoTimeComparatorTest {
     
+    /**
+     *
+     */
     public HandlingInfoTimeComparatorTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testCompare() {
         List<HandlingInfo> i = new ArrayList<>();

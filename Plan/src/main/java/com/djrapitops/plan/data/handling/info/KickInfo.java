@@ -10,14 +10,23 @@ import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class KickInfo extends HandlingInfo {
 
+    /**
+     *
+     * @param uuid
+     */
     public KickInfo(UUID uuid) {
         super(uuid, InfoType.KICK, 0L);
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

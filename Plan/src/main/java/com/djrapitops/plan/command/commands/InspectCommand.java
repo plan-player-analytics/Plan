@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * This command is used to cache UserData to InspectCache and display the link.
  *
  * @author Rsl1122
  */
@@ -43,11 +44,9 @@ public class InspectCommand extends SubCommand {
     /**
      * Subcommand inspect.
      *
-     * Adds player's data from DataCache/DB to the InspectCache for amount of
-     * time specified in the config, and clears the data from Cache with a timer
-     * task.
+     * Adds player's data from DataCache/DB to the InspectCache
      *
-     * @param sender
+     * @param sender args is empty, can not be Console.
      * @param cmd
      * @param commandLabel
      * @param args Player's name or nothing - if empty sender's name is used.

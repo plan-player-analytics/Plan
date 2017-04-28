@@ -9,6 +9,9 @@ import org.bukkit.ChatColor;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
+ * Phrase contains every message that is used in placeholders or commands. The
+ * contents for each message can be changed. Every message can contain a String
+ * or ChatColor.
  *
  * @author Rsl1122
  */
@@ -173,10 +176,21 @@ public enum Phrase {
         return text;
     }
 
+    /**
+     * Alternative for toString.
+     *
+     * @return toString()
+     */
     public String parse() {
         return this.toString();
     }
 
+    /**
+     * Replaces all REPLACE{x} strings with the given parameters.
+     *
+     * @param p Strings to replace REPLACE{x}:s with
+     * @return String with placeholders replaced.
+     */
     public String parse(String... p) {
         String returnValue = this.toString();
         for (int i = 0; i < p.length; i++) {
@@ -192,10 +206,18 @@ public enum Phrase {
         return color;
     }
 
+    /**
+     *
+     * @param text
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     *
+     * @param colorCode
+     */
     public void setColor(char colorCode) {
         this.color = ChatColor.getByChar(colorCode);
     }

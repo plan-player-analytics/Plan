@@ -6,18 +6,24 @@
 package test.java.main.java.com.djrapitops.plan.api;
 
 import main.java.com.djrapitops.plan.api.Gender;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class GenderTest {
 
+    /**
+     *
+     */
     public GenderTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testParse() {
         String name = "male";
@@ -26,6 +32,9 @@ public class GenderTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testParse2() {
         String name = "female";
@@ -34,6 +43,9 @@ public class GenderTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testParse3() {
         String name = "other";
@@ -42,6 +54,9 @@ public class GenderTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testParse4() {
         String name = "noeanroe";

@@ -6,18 +6,24 @@
 package test.java.main.java.com.djrapitops.plan.ui;
 
 import main.java.com.djrapitops.plan.ui.Html;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class HtmlTest {
     
+    /**
+     *
+     */
     public HtmlTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testParse_0args() {
         Html instance = Html.REPLACE0;
@@ -26,6 +32,9 @@ public class HtmlTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testParse_StringArr() {
         Html instance = Html.REPLACE0;
@@ -34,6 +43,9 @@ public class HtmlTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSetHtml() {
         Html instance = Html.REPLACE0;
@@ -43,6 +55,9 @@ public class HtmlTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testNoBackSlash() {
         assertTrue("Null for some reason", Html.TABLELINE_2.parse("/\\", "0") != null);

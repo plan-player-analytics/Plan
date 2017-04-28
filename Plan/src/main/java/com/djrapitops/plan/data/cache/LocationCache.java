@@ -24,6 +24,11 @@ public class LocationCache extends SessionCache{
         locations = new HashMap<>();
     }
 
+    /**
+     *
+     * @param uuid
+     * @param loc
+     */
     public void addLocation(UUID uuid, Location loc) {
         if (!locations.containsKey(uuid)) {
             locations.put(uuid, new ArrayList<>());
@@ -31,6 +36,11 @@ public class LocationCache extends SessionCache{
         locations.get(uuid).add(loc);
     }
 
+    /**
+     *
+     * @param uuid
+     * @param locs
+     */
     public void addLocations(UUID uuid, Collection<Location> locs) {
         if (!locations.containsKey(uuid)) {
             locations.put(uuid, new ArrayList<>());
@@ -38,6 +48,11 @@ public class LocationCache extends SessionCache{
         locations.get(uuid).addAll(locs);
     }
     
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public List<Location> getLocationsForSaving(UUID uuid) {
         if (!locations.containsKey(uuid)) {
             return new ArrayList<>();
@@ -45,6 +60,10 @@ public class LocationCache extends SessionCache{
         return locations.get(uuid);
     }
    
+    /**
+     *
+     * @param uuid
+     */
     public void clearLocations(UUID uuid) {
         locations.remove(uuid);
     }

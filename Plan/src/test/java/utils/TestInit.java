@@ -9,22 +9,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.Server;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class TestInit {
 
     private Plan planMock;
 
+    /**
+     *
+     */
     public TestInit() {
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean setUp() {
         try {
             planMock = PowerMockito.mock(Plan.class);
@@ -65,6 +72,10 @@ public class TestInit {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Plan getPlanMock() {
         return planMock;
     }

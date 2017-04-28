@@ -10,7 +10,7 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class HandlingInfoTimeComparator implements Comparator<HandlingInfo> {
 

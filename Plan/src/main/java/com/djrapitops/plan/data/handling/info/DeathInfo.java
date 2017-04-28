@@ -10,14 +10,23 @@ import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class DeathInfo extends HandlingInfo{
 
+    /**
+     *
+     * @param uuid
+     */
     public DeathInfo(UUID uuid) {
         super(uuid, InfoType.DEATH, 0L);
     }
     
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

@@ -11,9 +11,9 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -23,15 +23,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class KickInfoTest {
 
+    /**
+     *
+     */
     public KickInfoTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -45,6 +51,9 @@ public class KickInfoTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
 
+    /**
+     *
+     */
     @Test
     public void testProcess() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

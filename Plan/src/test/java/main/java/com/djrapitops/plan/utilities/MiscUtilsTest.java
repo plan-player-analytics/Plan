@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
-import java.util.HashSet;
 import java.util.Set;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -13,12 +12,11 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -28,15 +26,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class, Bukkit.class})
 public class MiscUtilsTest {
 
+    /**
+     *
+     */
     public MiscUtilsTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -56,6 +60,9 @@ public class MiscUtilsTest {
         PowerMock.replay(Bukkit.class);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCheckVersion() {
         String versionG = "2.10.9";
@@ -64,6 +71,9 @@ public class MiscUtilsTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCheckVersion2() {
         String result = MiscUtils.checkVersion("3.0.0", "2.10.9");
@@ -71,6 +81,9 @@ public class MiscUtilsTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCheckVersion3() {
         String result = MiscUtils.checkVersion("2.11.0", "2.10.9");
@@ -78,6 +91,9 @@ public class MiscUtilsTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCheckVersion4() {
         String result = MiscUtils.checkVersion("2.11.0", "2.11.0");
@@ -85,6 +101,9 @@ public class MiscUtilsTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlayerDisplaynameArgsPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
@@ -94,6 +113,9 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlayerDisplaynameArgsNoPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
@@ -103,6 +125,9 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlayerDisplaynameNoArgsPerm() {
         String[] args = new String[]{};
@@ -112,6 +137,9 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlayerDisplaynameNoArgsNoPerm() {
         String[] args = new String[]{};
@@ -121,6 +149,9 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlayerDisplaynameOwnNameNoPerm() {
         String[] args = new String[]{"testname2"};
@@ -130,6 +161,9 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlayerDisplaynameConsole() {
         String[] args = new String[]{"TestConsoleSender"};
@@ -139,6 +173,9 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetMatchingDisplaynames() {
         String search = "testname";
@@ -155,6 +192,9 @@ public class MiscUtilsTest {
         }
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetMatchingDisplaynames2() {
         String search = "2";

@@ -14,13 +14,19 @@ import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class HandlingInfoTest {
     
+    /**
+     *
+     */
     public HandlingInfoTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetUuid() {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
@@ -33,6 +39,9 @@ public class HandlingInfoTest {
         assertEquals(uuid,i.getUuid());
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetType() {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
@@ -45,6 +54,9 @@ public class HandlingInfoTest {
         assertEquals(InfoType.CHAT,i.getType());
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetTime() {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");

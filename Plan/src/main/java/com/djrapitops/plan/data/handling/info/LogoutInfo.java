@@ -13,7 +13,7 @@ import org.bukkit.GameMode;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class LogoutInfo extends HandlingInfo {
 
@@ -21,6 +21,14 @@ public class LogoutInfo extends HandlingInfo {
     private SessionData sData;
     private GamemodeInfo gmInfo;
 
+    /**
+     *
+     * @param uuid
+     * @param time
+     * @param banned
+     * @param gm
+     * @param sData
+     */
     public LogoutInfo(UUID uuid, long time, boolean banned, GameMode gm, SessionData sData) {
         super(uuid, InfoType.LOGOUT, time);
         this.banned = banned;
@@ -28,6 +36,11 @@ public class LogoutInfo extends HandlingInfo {
         this.gmInfo = new GamemodeInfo(uuid, time, gm);
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

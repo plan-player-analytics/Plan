@@ -12,20 +12,39 @@ public class ChatInfo extends HandlingInfo {
     private String nickname;
     private String message;
 
+    /**
+     *
+     * @param uuid
+     * @param nickname
+     * @param message
+     */
     public ChatInfo(UUID uuid, String nickname, String message) {
         super(uuid, InfoType.CHAT, 0L);
         this.nickname = nickname;
         this.message = message;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

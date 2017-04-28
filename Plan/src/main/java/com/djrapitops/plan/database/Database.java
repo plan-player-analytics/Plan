@@ -166,5 +166,13 @@ public abstract class Database {
      * @throws SQLException
      */
     public abstract int getUserId(String uuid) throws SQLException;
+
+    /**
+     *
+     * @param userId
+     * @param worlds
+     * @return
+     * @throws SQLException
+     */
     public abstract List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException;
 }

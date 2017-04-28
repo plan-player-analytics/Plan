@@ -12,16 +12,27 @@ import org.bukkit.GameMode;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class GamemodeInfo extends HandlingInfo{
     private GameMode currentGamemode;
 
+    /**
+     *
+     * @param uuid
+     * @param time
+     * @param gm
+     */
     public GamemodeInfo(UUID uuid, long time, GameMode gm) {
         super(uuid, InfoType.GM, time);
         currentGamemode = gm;
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (currentGamemode == null) {

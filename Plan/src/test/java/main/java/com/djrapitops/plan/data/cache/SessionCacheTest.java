@@ -14,8 +14,8 @@ import main.java.com.djrapitops.plan.data.cache.SessionCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -25,7 +25,7 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
@@ -33,14 +33,23 @@ public class SessionCacheTest {
 
     private SessionCache test;
 
+    /**
+     *
+     */
     public SessionCacheTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         test = new SessionCache();        
     }
 
+    /**
+     *
+     */
     @Test
     public void testStartSession() {
         UUID uuid = MockUtils.getPlayerUUID();
@@ -48,6 +57,9 @@ public class SessionCacheTest {
         assertTrue("Didn't contain new session", test.getActiveSessions().containsKey(uuid));
     }
 
+    /**
+     *
+     */
     @Test
     public void testEndSession() {
         UUID uuid = MockUtils.getPlayerUUID();
@@ -59,6 +71,9 @@ public class SessionCacheTest {
         assertTrue("Session not valid", testSession.isValid());
     }
 
+    /**
+     *
+     */
     @Test
     public void testAddSession() {
         UUID uuid = MockUtils.getPlayerUUID();

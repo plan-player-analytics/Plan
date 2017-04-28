@@ -11,26 +11,35 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.data.cache.LocationCache;
 import org.bukkit.Location;
 import static org.junit.Assert.*;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import test.java.utils.MockUtils;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class LocationCacheTest {
 
     private LocationCache test;
 
+    /**
+     *
+     */
     public LocationCacheTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         test = new LocationCache();
     }
 
+    /**
+     *
+     */
     @Test
     public void testAddLocation() {
         Location loc = new Location(MockUtils.mockWorld(), 0, 0, 0);
@@ -39,6 +48,9 @@ public class LocationCacheTest {
         assertTrue("Didn't contain location", test.getLocationsForSaving(uuid).contains(loc));
     }
 
+    /**
+     *
+     */
     @Test
     public void testAddLocations() {
         Location loc = new Location(MockUtils.mockWorld(), 0, 0, 0);
@@ -50,6 +62,9 @@ public class LocationCacheTest {
         assertTrue("Didn't contain location", result.contains(loc2));
     }
     
+    /**
+     *
+     */
     @Test
     public void testClearLocations() {
         Location loc = new Location(MockUtils.mockWorld(), 0, 0, 0);

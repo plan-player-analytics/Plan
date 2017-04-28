@@ -8,20 +8,26 @@ package test.java.main.java.com.djrapitops.plan.utilities;
 import java.util.Date;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import org.bukkit.Location;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.bukkit.World;
+import static org.junit.Assert.*;
+import org.junit.Test;
 import test.java.utils.*;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class FormatUtilsTest {
 
+    /**
+     *
+     */
     public FormatUtilsTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testFormatTimeAmount() {
         String string = "" + 1000L;
@@ -30,6 +36,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testFormatTimeAmountSinceDate() {
         Date before = new Date(300000L);
@@ -39,6 +48,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testFormatTimeStamp() {
         String string = "0";
@@ -47,6 +59,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testFormatTimeAmountSinceString() {
         String string = "" + new Date(310000L).toInstant().getEpochSecond() * 1000L;
@@ -56,6 +71,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testRemoveLetters() {
         String dataPoint = "435729847jirggu.eiwb¤#¤%¤#";
@@ -64,6 +82,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testParseVersionNumber() {
         String versionString = "2.10.2";
@@ -72,6 +93,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testVersionNumber() {
         String versionString = "2.10.2";
@@ -81,6 +105,9 @@ public class FormatUtilsTest {
         assertTrue("Higher version not higher", result > result2);
     }
 
+    /**
+     *
+     */
     @Test
     public void testMergeArrays() {
         String[][] arrays = new String[][]{new String[]{"Test", "One"}, new String[]{"Test", "Two"}};
@@ -89,6 +116,9 @@ public class FormatUtilsTest {
         assertArrayEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testFormatLocation() {
         World mockWorld = MockUtils.mockWorld();
@@ -98,6 +128,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCutDecimals() {
         double d = 0.05234;
@@ -105,6 +138,10 @@ public class FormatUtilsTest {
         String result = FormatUtils.cutDecimals(d);
         assertEquals(expResult, result);
     }
+
+    /**
+     *
+     */
     @Test
     public void testCutDecimals2() {
         double d = 0.05634;

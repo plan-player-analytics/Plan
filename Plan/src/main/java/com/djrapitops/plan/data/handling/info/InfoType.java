@@ -7,8 +7,47 @@ package main.java.com.djrapitops.plan.data.handling.info;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public enum InfoType {
-    CHAT, DEATH, KILL, GM, LOGIN, LOGOUT, KICK, RELOAD
+
+    /**
+     *
+     */
+    CHAT, 
+
+    /**
+     *
+     */
+    DEATH, 
+
+    /**
+     *
+     */
+    KILL, 
+
+    /**
+     *
+     */
+    GM, 
+
+    /**
+     *
+     */
+    LOGIN, 
+
+    /**
+     *
+     */
+    LOGOUT, 
+
+    /**
+     *
+     */
+    KICK, 
+
+    /**
+     *
+     */
+    RELOAD
 }

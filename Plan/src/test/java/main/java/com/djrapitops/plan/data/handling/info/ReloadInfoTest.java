@@ -14,9 +14,9 @@ import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -26,15 +26,22 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class ReloadInfoTest {
     
+    /**
+     *
+     */
     public ReloadInfoTest() {
     }
-@Before
+
+    /**
+     *
+     */
+    @Before
     public void setUp() {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
@@ -46,6 +53,11 @@ public class ReloadInfoTest {
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);
     }
+
+    /**
+     *
+     * @throws UnknownHostException
+     */
     @Test
     public void testProcess() throws UnknownHostException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -65,6 +77,10 @@ public class ReloadInfoTest {
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
     }
     
+    /**
+     *
+     * @throws UnknownHostException
+     */
     @Test
     public void testProcessWrongUUID() throws UnknownHostException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

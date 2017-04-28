@@ -7,12 +7,10 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
-import main.java.com.djrapitops.plan.database.Database;
 
 /**
  *
@@ -59,6 +57,11 @@ public class DataCacheProcessQueue {
         }
     }
     
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public boolean containsUUID(UUID uuid) {
         return new ArrayList<>(q).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
     }

@@ -69,6 +69,11 @@ public class DataCacheSaveQueue {
         }
     }
     
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public boolean containsUUID(UUID uuid) {
         return new ArrayList<>(q).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
     }
@@ -105,7 +110,7 @@ class SaveConsumer implements Runnable {
 
     void consume(UserData data) {
         try {
-            data.access();
+            
             db.saveUserData(data.getUuid(), data);
             data.stopAccessing();
         } catch (SQLException ex) {

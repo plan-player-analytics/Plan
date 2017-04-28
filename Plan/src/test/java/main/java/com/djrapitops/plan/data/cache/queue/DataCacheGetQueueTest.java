@@ -25,9 +25,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -37,7 +37,7 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class, Bukkit.class})
@@ -47,9 +47,17 @@ public class DataCacheGetQueueTest {
     private Database db;
     private int rows;
 
+    /**
+     *
+     */
     public DataCacheGetQueueTest() {
     }
 
+    /**
+     *
+     * @throws IOException
+     * @throws Exception
+     */
     @Before
     public void setUp() throws IOException, Exception {
         TestInit t = new TestInit();
@@ -93,6 +101,11 @@ public class DataCacheGetQueueTest {
         }
     }
 
+    /**
+     *
+     * @throws IOException
+     * @throws SQLException
+     */
     @After
     public void tearDown() throws IOException, SQLException {
         db.close();
@@ -104,6 +117,9 @@ public class DataCacheGetQueueTest {
         assertTrue("Errors were caught.", rows == rowsAgain);
     }
 
+    /**
+     *
+     */
     @Test
     public void testScheduleForGet() {
         OfflinePlayer op = MockUtils.mockPlayer2();
@@ -118,6 +134,9 @@ public class DataCacheGetQueueTest {
         });
     }
 
+    /**
+     *
+     */
     @Test
     public void testStop() {
         DataCacheGetQueue instance = new DataCacheGetQueue(plan);

@@ -54,6 +54,13 @@ public class MiscUtils {
         return lineWithVersion.split(": ")[1];
     }
 
+    /**
+     *
+     * @param currentVersion
+     * @param gitVersion
+     * @return
+     * @throws NumberFormatException
+     */
     public static String checkVersion(String currentVersion, String gitVersion) throws NumberFormatException {
         int newestVersionNumber = FormatUtils.parseVersionNumber(gitVersion);
         int currentVersionNumber = FormatUtils.parseVersionNumber(currentVersion);
@@ -64,6 +71,12 @@ public class MiscUtils {
         }
     }
 
+    /**
+     *
+     * @param args
+     * @param sender
+     * @return
+     */
     public static String getPlayerName(String[] args, CommandSender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }

@@ -52,6 +52,10 @@ public class SessionData {
         return sessionEnd;
     }
     
+    /**
+     *
+     * @return
+     */
     public long getLength() {
         return sessionEnd-sessionStart;
     }
@@ -61,7 +65,34 @@ public class SessionData {
         return "s:" + sessionStart + " e:" + sessionEnd;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean isValid() {
         return sessionStart <= sessionEnd;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SessionData other = (SessionData) obj;
+        if (this.sessionStart != other.sessionStart) {
+            return false;
+        }
+        if (this.sessionEnd != other.sessionEnd) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

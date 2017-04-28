@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * This subcommand is used to run the analysis and access the /server link.
  *
  * @author Rsl1122
  */
@@ -41,7 +42,7 @@ public class AnalyzeCommand extends SubCommand {
      * Subcommand analyze.
      *
      * Updates AnalysisCache if last refresh was over 60 seconds ago and sends
-     * player the link that views cache.
+     * player the link that views cache with a delayed timer task.
      *
      * @param sender
      * @param cmd

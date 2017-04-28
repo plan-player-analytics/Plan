@@ -12,9 +12,9 @@ import main.java.com.djrapitops.plan.data.handling.GamemodeHandling;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,15 +24,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class GamemodeHandlingTest {
     
+    /**
+     *
+     */
     public GamemodeHandlingTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -46,6 +52,9 @@ public class GamemodeHandlingTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessGamemodeInfo() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -67,6 +76,9 @@ public class GamemodeHandlingTest {
         assertTrue("Last swaptime was "+result, result == 1100L);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessGamemodeInfoSameGM() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -88,6 +100,9 @@ public class GamemodeHandlingTest {
         assertTrue("Last swaptime was "+result, result == 1100L);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessGamemodeInfoNullNewGM() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -109,6 +124,9 @@ public class GamemodeHandlingTest {
         assertTrue("Last swaptime was "+result, result == 50L);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessGamemodeInfoNullOldGM() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -130,6 +148,9 @@ public class GamemodeHandlingTest {
         assertTrue("Last swaptime was "+result, result == 1100L);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessGamemodeInfoNullGMTimes() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

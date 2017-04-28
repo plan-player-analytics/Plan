@@ -10,12 +10,11 @@ import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.ChatHandling;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -25,15 +24,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class ChatHandlingTest {
     
+    /**
+     *
+     */
     public ChatHandlingTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -51,6 +56,9 @@ public class ChatHandlingTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessChatInfoAddedNickname() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -59,6 +67,9 @@ public class ChatHandlingTest {
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
     }
 
+    /**
+     *
+     */
     @Test
     public void testUpdateDemographicInformationMale() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -66,6 +77,9 @@ public class ChatHandlingTest {
         assertTrue("Didn't update gender", data.getDemData().getGender() == Gender.MALE);
     }
     
+    /**
+     *
+     */
     @Test
     public void testUpdateDemographicInformationNoInfo() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -74,6 +88,9 @@ public class ChatHandlingTest {
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
     
+    /**
+     *
+     */
     @Test
     public void testUpdateDemographicInformation100Age() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -81,6 +98,9 @@ public class ChatHandlingTest {
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
     
+    /**
+     *
+     */
     @Test
     public void testUpdateDemographicInformationNoTrigger() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -89,6 +109,9 @@ public class ChatHandlingTest {
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
     
+    /**
+     *
+     */
     @Test
     public void testUpdateDemographicInformationIgnore() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -97,6 +120,9 @@ public class ChatHandlingTest {
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
     
+    /**
+     *
+     */
     @Test
     public void testUpdateDemographicInformationAge() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

@@ -34,7 +34,7 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
@@ -43,9 +43,15 @@ public class KillHandlingTest {
     private Database db;
     private Plan plan;
 
+    /**
+     *
+     */
     public KillHandlingTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -71,11 +77,19 @@ public class KillHandlingTest {
         PowerMock.replay(JavaPlugin.class);
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @After
     public void tearDown() throws SQLException {
         db.close();
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testProcessKillInfoPlayer() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -91,6 +105,11 @@ public class KillHandlingTest {
         assertEquals(expected.getWeapon(), result.getWeapon());
     }
 
+    /**
+     *
+     * @throws SQLException
+     * @throws IOException
+     */
     @Ignore
     @Test
     public void testProcessKillInfoException() throws SQLException, IOException {
@@ -100,6 +119,10 @@ public class KillHandlingTest {
         assertTrue("Added the kill", data.getPlayerKills().isEmpty());
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     @Test
     public void testProcessKillInfoMob() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

@@ -12,17 +12,31 @@ import org.bukkit.GameMode;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class ReloadInfo extends HandlingInfo {
 
     private LoginInfo info;
 
+    /**
+     *
+     * @param uuid
+     * @param time
+     * @param ip
+     * @param banned
+     * @param nickname
+     * @param gm
+     */
     public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm) {
         super(uuid, InfoType.RELOAD, time);
         info = new LoginInfo(uuid, time, ip, banned, nickname, gm);
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

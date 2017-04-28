@@ -52,6 +52,17 @@ public class UserData {
     private SessionData currentSession;
     private List<SessionData> sessions;
 
+    /**
+     *
+     * @param uuid
+     * @param reg
+     * @param loc
+     * @param op
+     * @param lastGM
+     * @param demData
+     * @param name
+     * @param online
+     */
     public UserData(UUID uuid, long reg, Location loc, boolean op, GameMode lastGM, DemographicsData demData, String name, boolean online) {
         accessing = 0;
         this.uuid = uuid;
@@ -289,6 +300,10 @@ public class UserData {
         currentSession = session;
     }
 
+    /**
+     *
+     * @return
+     */
     public SessionData getCurrentSession() {
         return currentSession;
     }

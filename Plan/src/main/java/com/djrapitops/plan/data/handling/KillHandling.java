@@ -16,10 +16,17 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class KillHandling {
 
+    /**
+     *
+     * @param data
+     * @param time
+     * @param dead
+     * @param weaponName
+     */
     public static void processKillInfo(UserData data, long time, LivingEntity dead, String weaponName) {
         Plan plugin = getPlugin(Plan.class);
         if (dead instanceof Player) {

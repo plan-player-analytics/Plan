@@ -13,14 +13,26 @@ import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class ChatHandling {
+
+    /**
+     *
+     * @param data
+     * @param nickname
+     * @param msg
+     */
     public static void processChatInfo(UserData data, String nickname, String msg) {
         data.addNickname(nickname);
         updateDemographicInformation(msg, data);
     }
 
+    /**
+     *
+     * @param msg
+     * @param data
+     */
     public static void updateDemographicInformation(String msg, UserData data) {
         List<String> triggers = Arrays.asList(Settings.DEM_TRIGGERS.toString().split(", "));
         List<String> female = Arrays.asList(Settings.DEM_FEMALE.toString().split(", "));

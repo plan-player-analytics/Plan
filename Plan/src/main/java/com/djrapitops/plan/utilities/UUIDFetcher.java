@@ -33,6 +33,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ *
+ * @author Rsl1122
+ */
 public class UUIDFetcher implements Callable<Map<String, UUID>> {
 
     private static final double PROFILES_PER_REQUEST = 100;
@@ -41,11 +45,20 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     private final List<String> names;
     private final boolean rateLimiting;
 
+    /**
+     *
+     * @param names
+     * @param rateLimiting
+     */
     public UUIDFetcher(List<String> names, boolean rateLimiting) {
         this.names = ImmutableList.copyOf(names);
         this.rateLimiting = rateLimiting;
     }
 
+    /**
+     *
+     * @param names
+     */
     public UUIDFetcher(List<String> names) {
         this(names, true);
     }
@@ -97,6 +110,11 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public static byte[] toBytes(UUID uuid) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
         byteBuffer.putLong(uuid.getMostSignificantBits());
@@ -104,6 +122,11 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return byteBuffer.array();
     }
 
+    /**
+     *
+     * @param array
+     * @return
+     */
     public static UUID fromBytes(byte[] array) {
         if (array.length != 16) {
             throw new IllegalArgumentException("Illegal byte array length: " + array.length);
@@ -114,6 +137,12 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return new UUID(mostSignificant, leastSignificant);
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     * @throws Exception
+     */
     public static UUID getUUIDOf(String name) throws Exception {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
     }

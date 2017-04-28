@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan;
 
 import org.bukkit.command.CommandSender;
 
 /**
+ * Permissions class is used easily check every permission node.
  *
- * @author Risto
+ * @author Rsl1122
  */
 public enum Permissions {
 
@@ -32,10 +28,22 @@ public enum Permissions {
         this.permission = permission;
     }
 
+    /**
+     * Checks if the CommandSender has the permission.
+     *
+     * @param p entity sending the command (console/player/other)
+     * @return CommandSender#hasPermission
+     * @see CommandSender
+     */
     public boolean userHasThisPermission(CommandSender p) {
         return p.hasPermission(permission);
     }
-    
+
+    /**
+     * Returns the string of the permission node in plugin.yml
+     *
+     * @return line of the permission eg. plan.inspect
+     */
     public String getPermission() {
         return permission;
     }

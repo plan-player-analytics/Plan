@@ -11,9 +11,16 @@ import org.bukkit.GameMode;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class GamemodeHandling {
+
+    /**
+     *
+     * @param data
+     * @param time
+     * @param newGM
+     */
     public static void processGamemodeInfo(UserData data, long time, GameMode newGM) {
         if (newGM == null) {
             return;

@@ -19,11 +19,11 @@ import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -164,6 +164,12 @@ public abstract class SQLDB extends Database {
         startConnectionPingTask(plugin);
     }
 
+    /**
+     *
+     * @param plugin
+     * @throws IllegalArgumentException
+     * @throws IllegalStateException
+     */
     public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
         (new BukkitRunnable() {
@@ -715,6 +721,13 @@ public abstract class SQLDB extends Database {
         return nicknames;
     }
 
+    /**
+     *
+     * @param userId
+     * @param worlds
+     * @return
+     * @throws SQLException
+     */
     @Override
     public List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException {
         PreparedStatement statement;

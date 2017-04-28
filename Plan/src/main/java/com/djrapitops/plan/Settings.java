@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
+ * This enum contains all of the config settings used by the plugin for easier
+ * access.
  *
  * @author Rsl1122
  */
@@ -60,18 +62,27 @@ public enum Settings {
     }
 
     /**
-     * @return Boolean value of the config setting
+     * If the settings is a boolean, this method should be used.
+     *
+     * @return Boolean value of the config setting, false if not boolean.
      */
     public boolean isTrue() {
         return getPlugin(Plan.class).getConfig().getBoolean(configPath);
     }
 
+    /**
+     * If the settings is a String, this method should be used.
+     *
+     * @return String value of the config setting.
+     */
     @Override
     public String toString() {
         return getPlugin(Plan.class).getConfig().getString(configPath);
     }
 
     /**
+     * If the settings is a number, this method should be used.
+     *
      * @return Integer value of the config setting
      */
     public int getNumber() {
@@ -79,6 +90,9 @@ public enum Settings {
     }
 
     /**
+     * Used to get the String path of a the config setting eg.
+     * Settings.WebServer.Enabled
+     *
      * @return Path of the config setting.
      */
     public String getPath() {

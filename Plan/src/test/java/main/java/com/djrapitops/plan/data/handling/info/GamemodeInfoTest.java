@@ -12,9 +12,9 @@ import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,15 +24,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class GamemodeInfoTest {
 
+    /**
+     *
+     */
     public GamemodeInfoTest() {
     }
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -46,6 +52,9 @@ public class GamemodeInfoTest {
 //        PowerMock.verify(JavaPlugin.class);
     }
 
+    /**
+     *
+     */
     @Test
     public void testProcess() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -68,6 +77,9 @@ public class GamemodeInfoTest {
         assertTrue("Last swaptime was "+result, result == 1100L);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessWrongUUID() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
@@ -90,6 +102,9 @@ public class GamemodeInfoTest {
         assertTrue("Last swaptime was "+result, result == 50L);
     }
     
+    /**
+     *
+     */
     @Test
     public void testProcessNullGM() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

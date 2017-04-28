@@ -28,15 +28,21 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class NewPlayerCreatorTest {
     
+    /**
+     *
+     */
     public NewPlayerCreatorTest() {
     }
     
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();
@@ -52,10 +58,16 @@ public class NewPlayerCreatorTest {
         PowerMock.replay(JavaPlugin.class);
     }
     
+    /**
+     *
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testCreateNewPlayer_Player() {
         OfflinePlayer p = MockUtils.mockPlayer2();
@@ -73,6 +85,9 @@ public class NewPlayerCreatorTest {
         assertTrue(exp.equals(result));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCreateNewPlayer_OfflinePlayer() {
         Player p = MockUtils.mockPlayer2();
@@ -90,6 +105,9 @@ public class NewPlayerCreatorTest {
         assertTrue(exp.equals(result));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCreateNewPlayer_OfflinePlayer_GameMode() {
         Player p = MockUtils.mockPlayer();

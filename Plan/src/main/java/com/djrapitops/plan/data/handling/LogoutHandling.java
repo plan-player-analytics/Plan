@@ -9,9 +9,16 @@ import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class LogoutHandling {
+
+    /**
+     *
+     * @param data
+     * @param time
+     * @param banned
+     */
     public static void processLogoutInfo(UserData data, long time, boolean banned) {
         data.setPlayTime(data.getPlayTime() + (time - data.getLastPlayed()));
         data.setLastPlayed(time);        

@@ -19,12 +19,24 @@ public class KillInfo extends HandlingInfo {
     private LivingEntity dead;
     private String weaponName;
 
+    /**
+     *
+     * @param uuid
+     * @param time
+     * @param dead
+     * @param weaponName
+     */
     public KillInfo(UUID uuid, long time, LivingEntity dead, String weaponName) {
         super(uuid, InfoType.KILL, time);
         this.dead = dead;
         this.weaponName = weaponName;
     }
 
+    /**
+     *
+     * @param uData
+     * @return
+     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {
