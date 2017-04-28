@@ -102,17 +102,13 @@ class ClearConsumer implements Runnable {
 class ClearSetup {
 
     private ClearConsumer one;
-    private ClearConsumer two;
 
     void go(BlockingQueue<UUID> q, DataCacheHandler handler) {
         one = new ClearConsumer(q, handler);
-        two = new ClearConsumer(q, handler);
         new Thread(one).start();
-        new Thread(two).start();
     }
 
     void stop() {
         one.stop();
-        two.stop();
     }
 }

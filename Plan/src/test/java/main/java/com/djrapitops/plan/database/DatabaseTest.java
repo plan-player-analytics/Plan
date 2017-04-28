@@ -82,6 +82,7 @@ public class DatabaseTest {
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);      
         File f = new File(plan.getDataFolder(), "Errors.txt");

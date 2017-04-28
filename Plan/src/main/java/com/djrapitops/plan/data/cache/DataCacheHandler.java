@@ -16,11 +16,13 @@ import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
 import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
 import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
@@ -207,6 +209,12 @@ public class DataCacheHandler extends LocationCache {
      * Closes save clear and get tasks.
      */
     public void saveCacheOnDisable() {
+        long time = new Date().getTime();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            UUID uuid = p.getUniqueId();
+            endSession(uuid);
+            processTask.addToPool(new LogoutInfo(uuid, time, p.isBanned(), p.getGameMode(), getSession(uuid)));
+        }
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
@@ -215,11 +223,10 @@ public class DataCacheHandler extends LocationCache {
         processUnprocessedHandlingInfo(toProcess);
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
-        data.parallelStream()
-                .forEach((userData) -> {
-                    endSession(userData.getUuid());
-                    addSession(userData);
-                });
+//        data.parallelStream()
+//                .forEach((userData) -> {
+//                    addSession(userData);
+//                });
         try {
             db.saveMultipleUserData(data);
             db.saveCommandUse(commandUse);

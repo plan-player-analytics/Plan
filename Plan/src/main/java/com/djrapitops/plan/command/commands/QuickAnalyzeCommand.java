@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Rsl1122
  */
-public class AnalyzeCommand extends SubCommand {
+public class QuickAnalyzeCommand extends SubCommand {
 
     private Plan plugin;
     private AnalysisCacheHandler analysisCache;
@@ -33,17 +33,17 @@ public class AnalyzeCommand extends SubCommand {
      *
      * @param plugin Current instance of Plan
      */
-    public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis", Permissions.ANALYZE, Phrase.CMD_USG_ANALYZE.parse(), CommandType.CONSOLE, "");
+    public QuickAnalyzeCommand(Plan plugin) {
+        super("qanalyze, qanalyse, qanalysis", Permissions.QUICK_ANALYZE, Phrase.CMD_USG_QANALYZE.parse(), CommandType.CONSOLE, "");
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }
 
     /**
-     * Subcommand analyze.
+     * Subcommand qanalyze (QuickAnalyze).
      *
      * Updates AnalysisCache if last refresh was over 60 seconds ago and sends
-     * player the link that views cache with a delayed timer task.
+     * player the text ui msgs about analysis data
      *
      * @param sender
      * @param cmd
@@ -53,14 +53,6 @@ public class AnalyzeCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
-            if (!Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
-                if (!Settings.USE_ALTERNATIVE_UI.isTrue()) {
-                    sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "");
-                    return true;
-                }
-            }
-        }
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         if (!analysisCache.isCached()) {
             int bootAnID = plugin.getBootAnalysisTaskID();
@@ -79,7 +71,9 @@ public class AnalyzeCommand extends SubCommand {
             public void run() {
                 timesrun++;
                 if (analysisCache.isCached()) {
-                    sendAnalysisMessage(sender);
+                     sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
+                    sender.sendMessage(TextUI.getAnalysisMessages());
+                    sender.sendMessage(Phrase.CMD_FOOTER + "");
                     this.cancel();
                 }
                 if (timesrun > 10) {
@@ -89,35 +83,5 @@ public class AnalyzeCommand extends SubCommand {
             }
         }).runTaskTimer(plugin, 1 * 20, 5 * 20);
         return true;
-    }
-
-    /**
-     * Used to send the message after /plan analysis.
-     *
-     * @param sender Command sender.
-     * @throws CommandException
-     */
-    public void sendAnalysisMessage(CommandSender sender) throws CommandException {
-        boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
-        if (textUI) {
-            sender.sendMessage(TextUI.getAnalysisMessages());
-        } else {
-            // Link
-            String url = HtmlUtils.getServerAnalysisUrl();
-            String message = Phrase.CMD_LINK + "";
-            boolean console = !(sender instanceof Player);
-            if (console) {
-                sender.sendMessage(message + url);
-            } else {
-                sender.sendMessage(message);
-                Player player = (Player) sender;
-                Bukkit.getServer().dispatchCommand(
-                        Bukkit.getConsoleSender(),
-                        "tellraw " + player.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
-            }
-        }
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
     }
 }

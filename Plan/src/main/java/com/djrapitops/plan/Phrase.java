@@ -116,9 +116,11 @@ public enum Phrase {
     CMD_MATCH(COLOR_SEC.color() + " Matching player: " + COLOR_TER.color()),
     //
     CMD_USG_ANALYZE("View the Server Analysis"),
+    CMD_USG_QANALYZE("View the Server QuickAnalysis"),
     CMD_USG_HELP("Show command list."),
     CMD_USG_INFO("View Version of Plan"),
     CMD_USG_INSPECT("Inspect Player's Data"),
+    CMD_USG_QINSPECT("QuickInspect Player's Data"),
     CMD_USG_MANAGE("Database managment command"),
     CMD_USG_MANAGE_BACKUP("Backup a database to .db file"),
     CMD_USG_MANAGE_RESTORE("Restore a database from a backup file"),

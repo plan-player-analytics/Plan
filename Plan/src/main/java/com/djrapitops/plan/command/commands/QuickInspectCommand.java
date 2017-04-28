@@ -25,7 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Rsl1122
  */
-public class InspectCommand extends SubCommand {
+public class QuickInspectCommand extends SubCommand {
 
     private Plan plugin;
     private InspectCacheHandler inspectCache;
@@ -35,15 +35,15 @@ public class InspectCommand extends SubCommand {
      *
      * @param plugin Current instance of Plan
      */
-    public InspectCommand(Plan plugin) {
-        super("inspect", Permissions.INSPECT, Phrase.CMD_USG_INSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
+    public QuickInspectCommand(Plan plugin) {
+        super("qinspect", Permissions.QUICK_INSPECT, Phrase.CMD_USG_QINSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
     }
 
     /**
-     * Subcommand inspect.
+     * Subcommand qinspect (QuickInspect).
      *
      * Adds player's data from DataCache/DB to the InspectCache
      *
@@ -55,16 +55,7 @@ public class InspectCommand extends SubCommand {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        final boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
-            if (!useAlternativeIP) {
-                if (!Settings.USE_ALTERNATIVE_UI.isTrue()) {
-                    sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT + "");
-                    return true;
-                }
-            }
-        }
-        String playerName = MiscUtils.getPlayerName(args, sender);
+        String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
         BukkitTask inspectTask = (new BukkitRunnable() {
             @Override
             public void run() {
@@ -105,31 +96,12 @@ public class InspectCommand extends SubCommand {
                         timesrun++;
                         if (inspectCache.isCached(uuid)) {
                             sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
-                            if (Settings.USE_ALTERNATIVE_UI.isTrue()) {
-                                sender.sendMessage(TextUI.getInspectMessages(uuid));
-                            } else {
-                                // Link
-                                String url = HtmlUtils.getInspectUrl(playerName);
-                                String message = Phrase.CMD_LINK + "";
-                                boolean console = !(sender instanceof Player);
-                                if (console) {
-                                    sender.sendMessage(message + url);
-                                } else {
-                                    sender.sendMessage(message);
-                                    Player player = (Player) sender;
-                                    Bukkit.getServer().dispatchCommand(
-                                            Bukkit.getConsoleSender(),
-                                            "tellraw " + player.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                                            + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
-                                }
-
-                                sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available + ""));
-                            }
+                            sender.sendMessage(TextUI.getInspectMessages(uuid));
                             sender.sendMessage(Phrase.CMD_FOOTER + "");
                             this.cancel();
                         }
                         if (timesrun > 10) {
-                            sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
+                            sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Qinspect"));
                             this.cancel();
                         }
                     }

@@ -31,7 +31,9 @@ public class PlanCommand implements CommandExecutor {
         commands = new ArrayList<>();
         commands.add(new HelpCommand(plugin, this));
         commands.add(new InspectCommand(plugin));
+        commands.add(new QuickInspectCommand(plugin));
         commands.add(new AnalyzeCommand(plugin));
+        commands.add(new QuickAnalyzeCommand(plugin));
         commands.add(new SearchCommand(plugin));
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));

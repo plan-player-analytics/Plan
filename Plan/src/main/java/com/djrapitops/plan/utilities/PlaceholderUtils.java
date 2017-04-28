@@ -53,9 +53,9 @@ public class PlaceholderUtils {
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         replaceMap.put("%top20mostactive%", data.getTop20ActivePlayers());
         replaceMap.put("%recentlogins%", data.getRecentPlayers());
-        replaceMap.put("%deaths%", data.getTotaldeaths() + "");
-        replaceMap.put("%playerkills%", data.getTotalkills() + "");
-        replaceMap.put("%mobkills%", data.getTotalmobkills() + "");
+        replaceMap.put("%deaths%", data.getTotalDeaths() + "");
+        replaceMap.put("%playerkills%", data.getTotalPlayerKills() + "");
+        replaceMap.put("%mobkills%", data.getTotalMobKills() + "");
         Plan plugin = getPlugin(Plan.class);
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");

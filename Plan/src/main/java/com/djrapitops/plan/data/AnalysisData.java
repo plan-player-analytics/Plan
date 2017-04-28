@@ -576,7 +576,7 @@ public class AnalysisData {
      *
      * @return
      */
-    public long getTotalkills() {
+    public long getTotalPlayerKills() {
         return totalkills;
     }
 
@@ -584,7 +584,7 @@ public class AnalysisData {
      *
      * @return
      */
-    public long getTotalmobkills() {
+    public long getTotalMobKills() {
         return totalmobkills;
     }
 
@@ -592,7 +592,7 @@ public class AnalysisData {
      *
      * @return
      */
-    public long getTotaldeaths() {
+    public long getTotalDeaths() {
         return totaldeaths;
     }
 
