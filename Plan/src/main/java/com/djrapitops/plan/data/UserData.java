@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -289,6 +290,9 @@ public class UserData {
                 .filter(session -> session != null)
                 .filter(session -> session.isValid())
                 .collect(Collectors.toList());
+        if (sessions.size() != filteredSessions.size()) {
+            Log.debug("Some sessions were filtered! "+getUuid()+": Org:"+sessions.size()+" Fil:"+filteredSessions.size());
+        }
         this.sessions.addAll(filteredSessions);
     }
 

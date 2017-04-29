@@ -64,7 +64,7 @@ public class LoginInfo extends HandlingInfo{
         if (!uData.getUuid().equals(uuid)) {
             return false;
         }
-        LoginHandling.processLoginInfo(uData, getTime(), ip, banned, nickname, loginTimes);
+        LoginHandling.processLoginInfo(uData, time, ip, banned, nickname, loginTimes);
         gmInfo.process(uData);
         return true;
     }

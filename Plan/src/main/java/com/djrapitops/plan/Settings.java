@@ -10,6 +10,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public enum Settings {
     // Boolean
+    DEBUG("Settings.Debug"),
     WEBSERVER_ENABLED("Settings.WebServer.Enabled"),
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),

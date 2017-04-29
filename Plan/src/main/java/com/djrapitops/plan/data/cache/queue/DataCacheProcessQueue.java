@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -101,6 +102,7 @@ class ProcessConsumer implements Runnable {
         DBCallableProcessor p = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
+                Log.debug("Processing type: "+info.getType().name()+" "+info.getUuid());
                 if (!info.process(data)) {
                     System.out.println("Attempted to process data for wrong uuid: W:"+data.getUuid()+" | R:"+info.getUuid()+" Type:"+info.getType().name());
                 }

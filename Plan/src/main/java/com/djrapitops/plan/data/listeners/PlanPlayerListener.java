@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import java.util.Date;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -54,6 +55,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
+        Log.debug("PlayerJoinEvent: "+uuid);
         BukkitTask asyncNewPlayerCheckTask = (new BukkitRunnable() {
             @Override
             public void run() {
@@ -65,10 +67,12 @@ public class PlanPlayerListener implements Listener {
                     handler.newPlayer(newUserData);
                 } else {
                     handler.addToPool(loginInfo);
-                }                
+                }
+                Log.debug("PlayerJoinEvent_AsyncTask_END: "+uuid+" New:"+isNewPlayer);
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
+        Log.debug("PlayerJoinEvent_END: "+uuid);
     }
 
     /**
@@ -84,8 +88,10 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
-        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));        
+        Log.debug("PlayerQuitEvent: "+uuid);
+        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
         handler.saveCachedData(uuid);
+        Log.debug("PlayerQuitEvent_END: "+uuid);
     }
 
     /**

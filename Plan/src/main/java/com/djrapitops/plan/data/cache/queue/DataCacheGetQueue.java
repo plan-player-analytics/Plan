@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -40,6 +41,7 @@ public class DataCacheGetQueue {
      * @param processors
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
+        Log.debug("Scheduling for get: "+uuid);
         try {
             HashMap<UUID, List<DBCallableProcessor>> map = new HashMap<>();
             if (map.get(uuid) == null) {

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -36,6 +37,7 @@ public class DataCacheClearQueue {
      * @param uuid
      */
     public void scheduleForClear(UUID uuid) {
+        Log.debug("Scheduling for clear: " + uuid);
         q.add(uuid);
     }
 
@@ -44,6 +46,7 @@ public class DataCacheClearQueue {
      * @param uuids
      */
     public void scheduleForClear(Collection<UUID> uuids) {
+        Log.debug("Scheduling for clear: " + uuids);
         try {
             q.addAll(uuids);
         } catch (IllegalStateException e) {
@@ -86,6 +89,7 @@ class ClearConsumer implements Runnable {
             if (handler.isDataAccessed(uuid)) {
                 queue.add(uuid);
             } else if (!getOfflinePlayer(uuid).isOnline()) {
+
                 handler.clearFromCache(uuid);
             }
             // if online remove from clear list

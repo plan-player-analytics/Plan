@@ -2,11 +2,13 @@ package main.java.com.djrapitops.plan.data.cache;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -201,6 +203,7 @@ public class DataCacheHandler extends LocationCache {
      * @param i
      */
     public void addToPool(HandlingInfo i) {
+        Log.debug("Adding to pool, type:" + i.getType().name() + " " + i.getUuid());
         processTask.addToPool(i);
     }
 
@@ -210,23 +213,34 @@ public class DataCacheHandler extends LocationCache {
      */
     public void saveCacheOnDisable() {
         long time = new Date().getTime();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            UUID uuid = p.getUniqueId();
-            endSession(uuid);
-            processTask.addToPool(new LogoutInfo(uuid, time, p.isBanned(), p.getGameMode(), getSession(uuid)));
-        }
+        Log.debug("SaveCacheOnDisable! " + time);
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
         List<HandlingInfo> toProcess = processTask.stop();
+        Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        Log.debug("Online: " + onlinePlayers.size());
+        for (Player p : onlinePlayers) {
+            UUID uuid = p.getUniqueId();
+            endSession(uuid);
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGameMode(), getSession(uuid)));
+        }
+        Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
+//        for (UUID uuid : dataCache.keySet()) {
+//            UserData uData = dataCache.get(uuid);
+//            endSession(uuid);
+//            new LogoutInfo(uuid, time, uData.isBanned(), uData.getLastGamemode(), getSession(uuid)).process(uData);
+//        }
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
 //        data.parallelStream()
 //                .forEach((userData) -> {
 //                    addSession(userData);
 //                });
+        Log.debug("SAVING, DataCache size: " + dataCache.keySet().size());
         try {
             db.saveMultipleUserData(data);
             db.saveCommandUse(commandUse);
@@ -234,6 +248,7 @@ public class DataCacheHandler extends LocationCache {
         } catch (SQLException e) {
             plugin.toLog(this.getClass().getName(), e);
         }
+        Log.debug("SaveCacheOnDisable_END");
     }
 
     private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
@@ -246,11 +261,7 @@ public class DataCacheHandler extends LocationCache {
                         i.process(data);
                     }
                 };
-                try {
-                    db.giveUserDataToProcessors(i.getUuid(), p);
-                } catch (SQLException ex) {
-                    plugin.toLog(this.getClass().getName(), ex);
-                }
+                getUserDataForProcessing(p, i.getUuid());
             } else {
                 i.process(uData);
             }
@@ -263,6 +274,7 @@ public class DataCacheHandler extends LocationCache {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
+        Log.debug("SaveCachedData: " + uuid);
         DBCallableProcessor saveProcessor = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
@@ -317,6 +329,7 @@ public class DataCacheHandler extends LocationCache {
      * @param uuid Player's UUID
      */
     public void clearFromCache(UUID uuid) {
+        Log.debug("Clear: " + uuid);
         dataCache.remove(uuid);
         plugin.log(Phrase.CACHE_REMOVE.parse(uuid.toString()));
     }
@@ -336,6 +349,9 @@ public class DataCacheHandler extends LocationCache {
      */
     public boolean isDataAccessed(UUID uuid) {
         UserData userData = dataCache.get(uuid);
+        if (userData != null) {
+            Log.debug("Is data accessed?:" + userData.isAccessed()+" "+saveTask.containsUUID(uuid)+" "+processTask.containsUUID(uuid));
+        }
         return (userData != null && userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
     }
 

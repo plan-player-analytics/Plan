@@ -92,13 +92,13 @@ public class Plan extends JavaPlugin {
         getConfig().options().header(Phrase.CONFIG_HEADER + "");
         saveConfig();
 
-        log(MiscUtils.checkVersion());
+        Log.log(MiscUtils.checkVersion());
 
-        log(Phrase.DB_INIT + "");
+        Log.log(Phrase.DB_INIT + "");
         if (initDatabase()) {
-            log(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
+            Log.log(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
-            logError(Phrase.DB_FAILURE_DISABLE.toString());
+            Log.logError(Phrase.DB_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -134,8 +134,8 @@ public class Plan extends JavaPlugin {
         }
 
         hookHandler = new HookHandler(this);
-
-        log(Phrase.ENABLED + "");
+        Log.debug("Verboose debug messages are enabled.");
+        Log.log(Phrase.ENABLED + "");
     }
 
     /**
@@ -166,8 +166,9 @@ public class Plan extends JavaPlugin {
      *
      * @param message "Message" will show up as [INFO][Plan]: Message
      */
+    @Deprecated
     public void log(String message) {
-        getLogger().info(message);
+        Log.log(message);
     }
 
     /**
@@ -175,8 +176,9 @@ public class Plan extends JavaPlugin {
      *
      * @param message "Message" will show up as [ERROR][Plan]: Message
      */
+    @Deprecated
     public void logError(String message) {
-        getLogger().severe(message);
+        Log.logError(message);
     }
 
     /**
@@ -185,13 +187,9 @@ public class Plan extends JavaPlugin {
      * @param source Class name the exception was caught in.
      * @param e Throwable, eg NullPointerException
      */
+    @Deprecated
     public void toLog(String source, Throwable e) {
-        logError(Phrase.ERROR_LOGGED.parse(e.toString()));
-        toLog(source + " Caught " + e);
-        for (StackTraceElement x : e.getStackTrace()) {
-            toLog("  " + x);
-        }
-        toLog("");
+        Log.toLog(source, e);
     }
 
     /**
@@ -200,10 +198,9 @@ public class Plan extends JavaPlugin {
      * @param source Class name the exception was caught in.
      * @param e Collection of Throwables, eg NullPointerException
      */
+    @Deprecated
     public void toLog(String source, Collection<Throwable> e) {
-        for (Throwable ex : e) {
-            toLog(source, ex);
-        }
+        Log.toLog(source, e);
     }
 
     /**
@@ -211,25 +208,9 @@ public class Plan extends JavaPlugin {
      *
      * @param message Message to log to Errors.txt [timestamp] Message
      */
+    @Deprecated
     public void toLog(String message) {
-        File folder = getDataFolder();
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-        File log = new File(getDataFolder(), "Errors.txt");
-        try {
-            if (!log.exists()) {
-                log.createNewFile();
-            }
-            FileWriter fw = new FileWriter(log, true);
-            try (PrintWriter pw = new PrintWriter(fw)) {
-                String timestamp = FormatUtils.formatTimeStamp(new Date().getTime() + "");
-                pw.println("[" + timestamp + "] " + message);
-                pw.flush();
-            }
-        } catch (IOException e) {
-            getLogger().severe("Failed to create Errors.txt file");
-        }
+        Log.toLog(message);
     }
 
     /**

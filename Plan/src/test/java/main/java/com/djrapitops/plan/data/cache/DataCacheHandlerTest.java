@@ -119,6 +119,9 @@ public class DataCacheHandlerTest {
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
         PowerMock.replay(JavaPlugin.class);
         handler = new DataCacheHandler(plan) {
             @Override

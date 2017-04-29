@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -38,6 +39,7 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleForSave(UserData data) {
+        Log.debug("Scheduling for save: "+data.getUuid());
         try {
             q.add(data);
         } catch (IllegalStateException e) {
@@ -50,6 +52,7 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleForSave(Collection<UserData> data) {
+        Log.debug("Scheduling for save: "+data.stream().map(u -> u.getUuid()).collect(Collectors.toList()));
         try {
             q.addAll(data);
         } catch (IllegalStateException e) {
@@ -62,13 +65,14 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleNewPlayer(UserData data) {
+        Log.debug("Scheduling new Player: "+data.getUuid());
         try {
             q.add(data);
         } catch (IllegalStateException e) {
             getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
     }
-    
+
     /**
      *
      * @param uuid
@@ -109,8 +113,8 @@ class SaveConsumer implements Runnable {
     }
 
     void consume(UserData data) {
+        Log.debug("Saving: "+data.getUuid());
         try {
-            
             db.saveUserData(data.getUuid(), data);
             data.stopAccessing();
         } catch (SQLException ex) {

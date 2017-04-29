@@ -44,6 +44,20 @@ public class SessionCacheTest {
      */
     @Before
     public void setUp() {
+        TestInit t = new TestInit();
+        assertTrue(t.setUp());
+        Plan plan = t.getPlanMock();
+        PowerMock.mockStatic(JavaPlugin.class);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        PowerMock.replay(JavaPlugin.class);
         test = new SessionCache();        
     }
 
@@ -77,14 +91,6 @@ public class SessionCacheTest {
     @Test
     public void testAddSession() {
         UUID uuid = MockUtils.getPlayerUUID();
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
-        Plan plan = t.getPlanMock();
-        PowerMock.mockStatic(JavaPlugin.class);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        PowerMock.replay(JavaPlugin.class);
         test.getActiveSessions().put(uuid, new SessionData(0));
         test.endSession(uuid);
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());

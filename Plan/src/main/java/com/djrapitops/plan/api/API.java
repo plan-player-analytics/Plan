@@ -34,6 +34,7 @@ public class API {
      * @param after Date with long value that is higher
      * @return String that is easily readable d:h:m:s
      */
+    @Deprecated
     public static String formatTimeSinceDate(Date before, Date after) {
         return FormatUtils.formatTimeAmountSinceDate(before, after);
     }
@@ -45,6 +46,7 @@ public class API {
      * @param after Date with long value that is higher
      * @return String that is easily readable d:h:m:s
      */
+    @Deprecated
     public static String formatTimeSinceString(String before, Date after) {
         return FormatUtils.formatTimeAmountSinceString(before, after);
     }
@@ -55,6 +57,7 @@ public class API {
      * @param timeInMs String of long value in milliseconds
      * @return String that is easily readable d:h:m:s
      */
+    @Deprecated
     public static String formatTimeAmount(String timeInMs) {
         return FormatUtils.formatTimeAmount(timeInMs);
     }
@@ -65,6 +68,7 @@ public class API {
      * @param timeInMs String of long since Epoch 1970
      * @return String that is easily readable date.
      */
+    @Deprecated
     public static String formatTimeStamp(String timeInMs) {
         return FormatUtils.formatTimeStamp(timeInMs);
     }
@@ -89,6 +93,7 @@ public class API {
      *
      * @param uuid UUID of the Player
      */
+    @Deprecated
     public void cacheUserDataToInspectCache(UUID uuid) {
         plugin.getInspectCache().cache(uuid);
     }
@@ -105,6 +110,7 @@ public class API {
      * @param uuid UUID of the Player
      * @return html as a string or a single error line html.
      */
+    @Deprecated
     public String getPlayerHtmlAsString(UUID uuid) {
         WebSocketServer server = plugin.getUiServer();
         if (server != null) {
@@ -118,6 +124,7 @@ public class API {
      * Updates the AnalysisCache so the cached data can be called by the
      * webserver.
      */
+    @Deprecated
     public void updateAnalysisCache() {
         plugin.getAnalysisCache().updateCache();
     }
@@ -133,6 +140,7 @@ public class API {
      *
      * @return html as a string or a single error line html.
      */
+    @Deprecated
     public String getAnalysisHtmlAsString() {
         WebSocketServer server = plugin.getUiServer();
         if (server != null) {
@@ -148,6 +156,7 @@ public class API {
      * @param uuid UUID of the Player
      * @return UserData of the Player in the InspectCache or null if not found
      */
+    @Deprecated
     public UserData getUserDataFromInspectCache(UUID uuid) {
         return plugin.getInspectCache().getFromCache(uuid);
     }
@@ -157,6 +166,7 @@ public class API {
      *
      * @return AnalysisData in the AnalysisCache or null if not found
      */
+    @Deprecated
     public AnalysisData getAnalysisDataFromCache() {
         return plugin.getAnalysisCache().getData();
     }

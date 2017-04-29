@@ -4,6 +4,7 @@ package main.java.com.djrapitops.plan.data.cache;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 
@@ -27,6 +28,7 @@ public class SessionCache {
      */
     public void startSession(UUID uuid) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+        Log.debug("Starting a session: "+uuid+" "+now);
         SessionData session = new SessionData(now);
         activeSessions.put(uuid, session);
     }
@@ -39,6 +41,7 @@ public class SessionCache {
         SessionData currentSession = activeSessions.get(uuid);
         if (currentSession != null) {
             long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+            Log.debug("Ending a session: "+uuid+" "+now);
             currentSession.endSession(now);
         }
     }
@@ -59,6 +62,7 @@ public class SessionCache {
     public void addSession(UserData data) {
         UUID uuid = data.getUuid();
         SessionData currentSession = activeSessions.get(uuid);
+        Log.debug("Adding a session: "+uuid+" "+currentSession);
         if (currentSession != null && currentSession.isValid() && !data.getSessions().contains(currentSession)) {
             data.addSession(currentSession);
             activeSessions.remove(uuid);
