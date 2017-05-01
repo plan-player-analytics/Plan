@@ -91,10 +91,8 @@ class ClearConsumer implements Runnable {
         try {
             if (handler.isDataAccessed(uuid)) {
                 queue.add(uuid);
-            } else if (!getOfflinePlayer(uuid).isOnline()) {
-                handler.clearFromCache(uuid);
             } else {
-                Log.debug("Online, removed from clear queue: "+uuid);
+                handler.clearFromCache(uuid);
             }
             // if online remove from clear list
         } catch (Exception ex) {

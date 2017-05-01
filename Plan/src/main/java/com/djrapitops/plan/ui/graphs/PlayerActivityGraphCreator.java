@@ -28,7 +28,7 @@ public class PlayerActivityGraphCreator {
         CopyOnWriteArrayList<SessionData> s = new CopyOnWriteArrayList(sessionData);
         s.parallelStream()
                 .filter(session -> (session != null))
-                .filter((session) -> (session.getSessionStart() > nowMinusScale))
+                .filter((session) -> (session.getSessionStart() > nowMinusScale || session.getSessionEnd() > nowMinusScale))
                 .forEach((session) -> {
                     sessionEnds.add(session.getSessionEnd());
                     sessionStarts.add(session.getSessionStart());
@@ -36,6 +36,12 @@ public class PlayerActivityGraphCreator {
         List<Integer> playersOnline = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
+        for (Long start : sessionStarts) {
+            if (start < nowMinusScale) {
+                sessionStarts.add(nowMinusScale);
+            }
+        }
+        
         int lastPValue = 0;
         int lastSavedPValue = -1;
         long lastSaveI = 0;

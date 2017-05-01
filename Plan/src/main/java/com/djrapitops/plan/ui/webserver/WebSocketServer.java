@@ -53,7 +53,7 @@ public class WebSocketServer {
         try {
             //Setup server
             try {
-                server = new ServerSocket(PORT, 1, InetAddress.getByName("0.0.0.0"));
+                server = new ServerSocket(PORT, 1, InetAddress.getByName(Settings.WEBSERVER_IP.toString()));
             } catch (IOException e) {
                 System.exit(1);
             }

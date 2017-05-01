@@ -14,6 +14,7 @@ public enum Settings {
     WEBSERVER_ENABLED("Settings.WebServer.Enabled"),
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
+    ANALYSIS_LOG_FINISHED("Settings.Analysis.NotifyWhenFinished"),
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
@@ -36,6 +37,7 @@ public enum Settings {
     DEM_MALE("Customization.DemographicsTriggers.Male"),
     DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),
     LOCALE("Settings.Locale"),
+    WEBSERVER_IP("Settings.WebServer.InternalIP"),
     SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode"),
     //
     COLOR_MAIN("Customization.Colors.Commands.Main"),

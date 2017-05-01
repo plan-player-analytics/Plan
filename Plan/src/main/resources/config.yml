@@ -6,6 +6,7 @@ Settings:
     GatherLocations: true
   Analysis:
     LogProgressOnConsole: false
+    NotifyWhenFinished: true
     MinutesPlayedUntilConsidiredActive: 10
   Cache:
     Processing:
@@ -23,6 +24,7 @@ Settings:
   WebServer:
     Enabled: true
     Port: 8804
+    InternalIP: 0.0.0.0
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
     Security:

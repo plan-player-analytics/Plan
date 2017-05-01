@@ -102,9 +102,8 @@ public class UserData {
         try {
             isBanned = player.isBanned();
         } catch (Exception e) {
-            Plan plugin = getPlugin(Plan.class);
-            plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
-            plugin.toLog(this.getClass().getName(), e);
+            Log.errorMsg("Error getting ban date from Bukkit files. " + uuid.toString());
+            Log.toLog(this.getClass().getName(), e);
             isBanned = false;
         }
     }
@@ -119,9 +118,8 @@ public class UserData {
         try {
             isBanned = player.isBanned();
         } catch (Exception e) {
-            Plan plugin = getPlugin(Plan.class);
-            plugin.logError("Error getting ban date from Bukkit files. " + uuid.toString());
-            plugin.toLog(this.getClass().getName(), e);
+            Log.errorMsg("Error getting ban date from Bukkit files. " + uuid.toString());
+            Log.toLog(this.getClass().getName(), e);
             isBanned = false;
         }
     }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -24,16 +25,9 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -113,7 +107,7 @@ public class Analysis {
         List<UUID> added = new ArrayList<>();
         List<UUID> uuids = fetchPlayersInDB(db);
         if (uuids.isEmpty()) {
-            plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
+            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
         uuids.stream().forEach((uuid) -> {
@@ -135,7 +129,7 @@ public class Analysis {
                     });
         }
         if (added.isEmpty()) {
-            plugin.log(Phrase.ANALYSIS_FAIL_NO_DATA + "");
+            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
         return analyzeData(rawData, uuids, analysisCache);
@@ -262,7 +256,9 @@ public class Analysis {
         analysisData.setRefreshDate(new Date().getTime());
         analysisData.setGenderData(sorted.getGenders());
         analysisCache.cache(analysisData);
-        plugin.log(Phrase.ANALYSIS_COMPLETE + "");
+        if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
+            Log.info(Phrase.ANALYSIS_COMPLETE + "");
+        }
         return true;
     }
 
@@ -336,7 +332,7 @@ public class Analysis {
 
     private void log(String msg) {
         if (Settings.ANALYSIS_LOG_TO_CONSOLE.isTrue()) {
-            plugin.log(msg);
+            Log.info(msg);
         }
     }
 

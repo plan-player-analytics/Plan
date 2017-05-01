@@ -24,7 +24,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
@@ -129,7 +129,7 @@ public class DataCacheHandler extends LocationCache {
             public void run() {
                 DataCacheHandler handler = getPlugin(Plan.class).getHandler();
                 handler.saveHandlerDataToCache();
-//                handler.saveCachedUserData();
+                handler.saveCachedUserData();
                 if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
@@ -250,7 +250,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
-        Log.debug("PROCESS: "+toProcess.size());
+        Log.debug("PROCESS: " + toProcess.size());
         for (HandlingInfo i : toProcess) {
             UserData uData = dataCache.get(i.getUuid());
             if (uData == null) {
@@ -331,8 +331,16 @@ public class DataCacheHandler extends LocationCache {
      */
     public void clearFromCache(UUID uuid) {
         Log.debug("Clear: " + uuid);
-        dataCache.remove(uuid);
-        plugin.log(Phrase.CACHE_REMOVE.parse(uuid.toString()));
+        if (getOfflinePlayer(uuid).isOnline()) {
+            Log.debug("Online, did not clear: " + uuid);
+            UserData data = dataCache.get(uuid);
+            if (data != null) {
+                data.setClearAfterSave(false);
+            }
+        } else {
+            dataCache.remove(uuid);
+            Log.info(Phrase.CACHE_REMOVE.parse(uuid.toString()));
+        }
     }
 
     /**

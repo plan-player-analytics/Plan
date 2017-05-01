@@ -27,7 +27,7 @@ public class SessionCache {
      * @param uuid
      */
     public void startSession(UUID uuid) {
-        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+        long now = new Date().getTime();
         Log.debug("Starting a session: "+uuid+" "+now);
         SessionData session = new SessionData(now);
         activeSessions.put(uuid, session);
@@ -40,7 +40,7 @@ public class SessionCache {
     public void endSession(UUID uuid) {
         SessionData currentSession = activeSessions.get(uuid);
         if (currentSession != null) {
-            long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+            long now = new Date().getTime();
             Log.debug("Ending a session: "+uuid+" "+now);
             currentSession.endSession(now);
         }

@@ -50,7 +50,7 @@ public class SessionsTable extends Table {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE UPPER(" + columnUserID + ") LIKE UPPER(?)");
+            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUserID + "=?)");
             statement.setInt(1, userId);
             set = statement.executeQuery();
             List<SessionData> sessions = new ArrayList<>();
