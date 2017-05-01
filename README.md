@@ -16,6 +16,6 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
   - Analysis
   - Visualization
 - Guides
-  - Configuration
+  - [Configuration](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md)
   - Localization
   - Manage Command Guide
