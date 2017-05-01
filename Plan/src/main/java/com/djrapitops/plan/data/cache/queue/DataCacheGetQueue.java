@@ -92,15 +92,16 @@ class GetConsumer implements Runnable {
                 }
                 List<DBCallableProcessor> processorsList = processors.get(uuid);
                 if (processorsList != null) {
+                    Log.debug("Get: "+uuid+" For:"+ processorsList.size());
                     try {
                         db.giveUserDataToProcessors(uuid, processorsList);
                     } catch (SQLException e) {
-                        getPlugin(Plan.class).toLog(this.getClass().getName(), e);
+                        Log.toLog(this.getClass().getName(), e);
                     }
                 }
             }
         } catch (Exception ex) {
-            getPlugin(Plan.class).toLog(this.getClass().getName(), ex);
+            Log.toLog(this.getClass().getName(), ex);
         }
     }
 

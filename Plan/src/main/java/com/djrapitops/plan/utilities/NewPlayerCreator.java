@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.util.Date;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.GameMode;
@@ -51,6 +52,7 @@ public class NewPlayerCreator {
         data.setLastGmSwapTime(zero);
         data.setDeaths(0);
         data.setMobKills(0);
+        Log.debug("Created a new UserData object for "+player.getUniqueId());
         return data;
     }
 

@@ -57,7 +57,7 @@ public class DataCacheProcessQueue {
 //            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
     }
-    
+
     /**
      *
      * @param uuid
@@ -69,7 +69,7 @@ public class DataCacheProcessQueue {
 
     /**
      *
-     * @return 
+     * @return
      */
     public List<HandlingInfo> stop() {
         return s.stop();
@@ -99,12 +99,12 @@ class ProcessConsumer implements Runnable {
     }
 
     void consume(HandlingInfo info) {
+        Log.debug("Processing type: " + info.getType().name() + " " + info.getUuid());
         DBCallableProcessor p = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
-                Log.debug("Processing type: "+info.getType().name()+" "+info.getUuid());
                 if (!info.process(data)) {
-                    System.out.println("Attempted to process data for wrong uuid: W:"+data.getUuid()+" | R:"+info.getUuid()+" Type:"+info.getType().name());
+                    System.out.println("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
                 }
             }
         };
@@ -113,7 +113,7 @@ class ProcessConsumer implements Runnable {
 
     Collection<HandlingInfo> stop() {
         run = false;
-        return queue;        
+        return queue;
     }
 }
 
@@ -129,7 +129,7 @@ class ProcessSetup {
         new Thread(two).start();
     }
 
-    List<HandlingInfo> stop() {        
+    List<HandlingInfo> stop() {
         List<HandlingInfo> i = new ArrayList<>(one.stop());
         i.addAll(two.stop());
         return i;

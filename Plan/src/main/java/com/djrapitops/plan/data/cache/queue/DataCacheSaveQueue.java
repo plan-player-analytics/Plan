@@ -28,10 +28,10 @@ public class DataCacheSaveQueue {
      *
      * @param plugin
      */
-    public DataCacheSaveQueue(Plan plugin) {
+    public DataCacheSaveQueue(Plan plugin, DataCacheClearQueue clear) {
         q = new ArrayBlockingQueue(Settings.PROCESS_SAVE_LIMIT.getNumber());
         s = new SaveSetup();
-        s.go(q, plugin.getDB());
+        s.go(q, clear, plugin.getDB());
     }
 
     /**
@@ -94,11 +94,13 @@ class SaveConsumer implements Runnable {
 
     private final BlockingQueue<UserData> queue;
     private final Database db;
+    private final DataCacheClearQueue clear;
     private boolean run;
 
-    SaveConsumer(BlockingQueue q, Database db) {
+    SaveConsumer(BlockingQueue q, DataCacheClearQueue clear, Database db) {
         queue = q;
         this.db = db;
+        this.clear = clear;
         run = true;
     }
 
@@ -113,12 +115,18 @@ class SaveConsumer implements Runnable {
     }
 
     void consume(UserData data) {
-        Log.debug("Saving: "+data.getUuid());
+        UUID uuid = data.getUuid();
+        Log.debug("Saving: "+uuid);
         try {
-            db.saveUserData(data.getUuid(), data);
+            db.saveUserData(uuid, data);
             data.stopAccessing();
+            Log.debug("Saved! "+uuid);
+            if (data.shouldClearAfterSave()) {
+                clear.scheduleForClear(uuid);
+            }
         } catch (SQLException ex) {
-            getPlugin(Plan.class).toLog(this.getClass().getName(), ex);
+//            queue.add(data);
+            Log.toLog(this.getClass().getName(), ex);
         }
     }
 
@@ -132,9 +140,9 @@ class SaveSetup {
     private SaveConsumer one;
     private SaveConsumer two;
 
-    void go(BlockingQueue<UserData> q, Database db) {
-        one = new SaveConsumer(q, db);
-        two = new SaveConsumer(q, db);
+    void go(BlockingQueue<UserData> q, DataCacheClearQueue clear, Database db) {
+        one = new SaveConsumer(q, clear, db);
+        two = new SaveConsumer(q, clear, db);
         new Thread(one).start();
         new Thread(two).start();
     }

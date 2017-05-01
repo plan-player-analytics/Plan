@@ -8,6 +8,8 @@ package test.java.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
+import java.util.logging.Logger;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,6 +62,8 @@ public class TestInit {
             when(mockServer.getMaxPlayers()).thenReturn(20);
 //            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
             when(planMock.getServer()).thenReturn(mockServer);
+            when(planMock.getLogger()).thenReturn(Logger.getGlobal());
+            Plan.setInstance(planMock);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();            
             return true;
         } catch (Exception ex) {

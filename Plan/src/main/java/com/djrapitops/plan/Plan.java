@@ -80,6 +80,7 @@ public class Plan extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        setInstance(this);
         getDataFolder().mkdirs();
 
         initLocale();
@@ -92,13 +93,13 @@ public class Plan extends JavaPlugin {
         getConfig().options().header(Phrase.CONFIG_HEADER + "");
         saveConfig();
 
-        Log.log(MiscUtils.checkVersion());
+        Log.info(MiscUtils.checkVersion());
 
-        Log.log(Phrase.DB_INIT + "");
+        Log.info(Phrase.DB_INIT + "");
         if (initDatabase()) {
-            Log.log(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
+            Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
-            Log.logError(Phrase.DB_FAILURE_DISABLE.toString());
+            Log.errorMsg(Phrase.DB_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -135,7 +136,7 @@ public class Plan extends JavaPlugin {
 
         hookHandler = new HookHandler(this);
         Log.debug("Verboose debug messages are enabled.");
-        Log.log(Phrase.ENABLED + "");
+        Log.info(Phrase.ENABLED + "");
     }
 
     /**
@@ -168,7 +169,7 @@ public class Plan extends JavaPlugin {
      */
     @Deprecated
     public void log(String message) {
-        Log.log(message);
+        Log.info(message);
     }
 
     /**
@@ -178,7 +179,7 @@ public class Plan extends JavaPlugin {
      */
     @Deprecated
     public void logError(String message) {
-        Log.logError(message);
+        Log.errorMsg(message);
     }
 
     /**
@@ -419,5 +420,18 @@ public class Plan extends JavaPlugin {
             usingLocale = "Default: EN";
         }
         log("Using locale: " + usingLocale);
+    }
+    
+    public static Plan getInstance() {
+        return PlanHolder.INSTANCE;
+    }
+
+    public static void setInstance(Plan plan) {
+        PlanHolder.INSTANCE = plan;
+    }
+
+    private static class PlanHolder {
+
+        private static Plan INSTANCE = null;
     }
 }

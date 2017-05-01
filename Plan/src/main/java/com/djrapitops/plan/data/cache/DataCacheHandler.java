@@ -101,10 +101,10 @@ public class DataCacheHandler extends LocationCache {
      *
      */
     public void startQueues() {
-        getTask = new DataCacheGetQueue(plugin);
         clearTask = new DataCacheClearQueue(plugin, this);
+        saveTask = new DataCacheSaveQueue(plugin, clearTask);
+        getTask = new DataCacheGetQueue(plugin);
         processTask = new DataCacheProcessQueue(this);
-        saveTask = new DataCacheSaveQueue(plugin);
     }
 
     /**
@@ -129,7 +129,7 @@ public class DataCacheHandler extends LocationCache {
             public void run() {
                 DataCacheHandler handler = getPlugin(Plan.class).getHandler();
                 handler.saveHandlerDataToCache();
-                handler.saveCachedUserData();
+//                handler.saveCachedUserData();
                 if (timesSaved % clearAfterXsaves == 0) {
                     handler.clearCache();
                 }
@@ -157,10 +157,8 @@ public class DataCacheHandler extends LocationCache {
                 DBCallableProcessor cacher = new DBCallableProcessor() {
                     @Override
                     public void process(UserData data) {
-
                         dataCache.put(uuid, data);
-                        plugin.log(Phrase.CACHE_ADD.parse(uuid.toString()));
-
+                        Log.info(Phrase.CACHE_ADD.parse(uuid.toString()));
                     }
                 };
                 getTask.scheduleForGet(uuid, cacher, processor);
@@ -252,6 +250,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
+        Log.debug("PROCESS: "+toProcess.size());
         for (HandlingInfo i : toProcess) {
             UserData uData = dataCache.get(i.getUuid());
             if (uData == null) {
@@ -282,11 +281,13 @@ public class DataCacheHandler extends LocationCache {
                 clearLocations(uuid);
 //                addSession(data);
                 data.access();
+                data.setClearAfterSave(true);
                 saveTask.scheduleForSave(data);
-                scheludeForClear(uuid);
+//                scheludeForClear(uuid);
             }
         };
-        getTask.scheduleForGet(uuid, saveProcessor);
+        getUserDataForProcessing(saveProcessor, uuid);
+//        getTask.scheduleForGet(uuid, saveProcessor);
     }
 
     /**
@@ -349,10 +350,15 @@ public class DataCacheHandler extends LocationCache {
      */
     public boolean isDataAccessed(UUID uuid) {
         UserData userData = dataCache.get(uuid);
-        if (userData != null) {
-            Log.debug("Is data accessed?:" + userData.isAccessed()+" "+saveTask.containsUUID(uuid)+" "+processTask.containsUUID(uuid));
+        if (userData == null) {
+            return false;
         }
-        return (userData != null && userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
+//        Log.debug("Is data accessed?:" + userData.isAccessed() + " " + saveTask.containsUUID(uuid) + " " + processTask.containsUUID(uuid));
+        boolean isAccessed = (userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
+        if (isAccessed) {
+            userData.setClearAfterSave(false);
+        }
+        return isAccessed;
     }
 
     /**

@@ -8,6 +8,7 @@ package main.java.com.djrapitops.plan.data.handling.info;
 import java.net.InetAddress;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.handling.LoginHandling;
 import org.bukkit.GameMode;
 
 /**
@@ -16,7 +17,10 @@ import org.bukkit.GameMode;
  */
 public class ReloadInfo extends HandlingInfo {
 
-    private LoginInfo info;
+    private InetAddress ip;
+    private boolean banned;
+    private String nickname;
+    private GamemodeInfo gmInfo;
 
     /**
      *
@@ -29,7 +33,10 @@ public class ReloadInfo extends HandlingInfo {
      */
     public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm) {
         super(uuid, InfoType.RELOAD, time);
-        info = new LoginInfo(uuid, time, ip, banned, nickname, gm);
+        this.ip = ip;
+        this.banned = banned;
+        this.nickname = nickname;
+        gmInfo = new GamemodeInfo(uuid, time, gm);
     }
 
     /**
@@ -42,7 +49,13 @@ public class ReloadInfo extends HandlingInfo {
         if (!uData.getUuid().equals(uuid)) {
             return false;
         }
-        return info.process(uData);
+        uData.setPlayTime(uData.getPlayTime() + (time - uData.getLastPlayed()));
+        uData.setLastPlayed(time);        
+        uData.updateBanned(banned);
+        uData.addIpAddress(ip);
+        uData.addNickname(nickname);
+        LoginHandling.updateGeolocation(ip, uData);
+        return gmInfo.process(uData);
     }
 
 }

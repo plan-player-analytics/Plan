@@ -9,8 +9,8 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -46,6 +46,9 @@ public class DataCacheClearQueue {
      * @param uuids
      */
     public void scheduleForClear(Collection<UUID> uuids) {
+        if (uuids.isEmpty()) {
+            return;
+        }
         Log.debug("Scheduling for clear: " + uuids);
         try {
             q.addAll(uuids);
@@ -89,8 +92,9 @@ class ClearConsumer implements Runnable {
             if (handler.isDataAccessed(uuid)) {
                 queue.add(uuid);
             } else if (!getOfflinePlayer(uuid).isOnline()) {
-
                 handler.clearFromCache(uuid);
+            } else {
+                Log.debug("Online, removed from clear queue: "+uuid);
             }
             // if online remove from clear list
         } catch (Exception ex) {

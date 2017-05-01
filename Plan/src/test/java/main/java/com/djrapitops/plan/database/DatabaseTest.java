@@ -34,6 +34,7 @@ import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
@@ -78,14 +79,9 @@ public class DatabaseTest {
             }
         };
         PowerMock.mockStatic(JavaPlugin.class);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        for (int i = 0; i < 40; i++) {
+            EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
+        }
         PowerMock.replay(JavaPlugin.class);
 //        PowerMock.verify(JavaPlugin.class);      
         File f = new File(plan.getDataFolder(), "Errors.txt");
@@ -127,7 +123,11 @@ public class DatabaseTest {
         File f = new File(plan.getDataFolder(), "Errors.txt");
         int rowsAgain = 0;
         if (f.exists()) {
-            rowsAgain = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList()).size();
+            List<String> lines = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList());
+            rowsAgain = lines.size();
+            for (String line : lines) {
+                System.out.println(line);
+            }
         }
         assertTrue("Errors were caught.", rows == rowsAgain);
     }
@@ -198,7 +198,7 @@ public class DatabaseTest {
         c.put("/help", 21);
         c.put("/roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
         db.saveCommandUse(c);
-        db.removeAllData();
+        assertTrue(db.removeAllData());
         assertTrue("Contains the user", db.getUserId(data.getUuid().toString()) == -1);
         assertTrue("Contains commandUse", db.getCommandUse().isEmpty());
     }
@@ -299,7 +299,7 @@ public class DatabaseTest {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         db.saveUserData(data.getUuid(), data);
-        db.removeAccount(data.getUuid().toString());
+        assertTrue(db.removeAccount(data.getUuid().toString()));
         assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));
     }
 

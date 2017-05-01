@@ -29,7 +29,7 @@ public class MySQLDB extends SQLDB {
      * @return the new Connection.
      */
     @Override
-    protected Connection getNewConnection() {
+    public Connection getNewConnection() {
         FileConfiguration config = getPlugin(Plan.class).getConfig();
         
         try {
