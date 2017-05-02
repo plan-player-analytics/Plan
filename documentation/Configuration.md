@@ -2,88 +2,51 @@
 # Configuration
 
 - [Default Config](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/config.yml)
+- [Settings Enum](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/Settings.java)
 
 This page is an in depth documentation on what each Setting does in the config.
 
-## Specific settings
-Config.Point (Version introduced)
+# Settings
 
-### Locale (2.5.0)
-This setting can be set to a two letter combination of the Available locales.
-If a faulty combination is used, default locale will be used.  
-[Available locales](https://github.com/Rsl1122/Plan-PlayerAnalytics/tree/master/Plan/localization)
+## Basic settings
 
-### UseTextUI (3.0.0)
-Redirects */plan inspect* and */plan analyze* commands to display same messages as */plan qinspect* & */plan qanalyze*
+Config.Point | Version introduced | Type | Default | Description
+--- | ---- | ------ | --- | ---------------------------------
+Debug | 3.0.0 | boolean | false | Enables debug messages on console.
+Locale | 2.5.0 | String | default | Two letter Locale combination. Can be set to one of the Available locales. If a faulty combination is used, default locale will be used. [Available locales](https://github.com/Rsl1122/Plan-PlayerAnalytics/tree/master/Plan/localization)
+UseTextUI | 3.0.0 | boolean | false | Redirects */plan inspect* and */plan analyze* commands to display same messages as */plan qinspect* & */plan qanalyze*
+Data.GatherLocations | 2.2.0 | boolean | true | Enables [PlanPlayerMoveEventListener](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/data/listeners/PlanPlayerMoveListener.java)
 
-### Data.GatherLocations (2.2.0)
-This setting enables saving of Locations to the database with the PlayerMoveEventListener.
+## Analysis settings
 
-----
+Config.Point | Version introduced | Type | Default | Description
+--- | ---- | ------ | --- |  ---------------------------------
+LogProgressOnConsole | 2.4.0 | boolean | false | More detailed analysis progress to console.
+NotifyWhenFinished | 3.0.0 | boolean | true | Enables ["Analysis Complete"-message](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/Phrase.java#L73) will be shown on the console after analysis is complete.
+MinutesPlayedUntilConsidiredActive | 2.0.0 | Integer | 10 | This setting affects how the Analysis treats player's activity. Whether or not a player is active is determined with 3 values: Last Login, Playtime and Login Times. If the player has logged in in the last 2 weeks, has playtime higher than in the config, and has logged in 3 times, the player is considered active. Otherwise the player is counted as inactive.
 
-### Analysis.LogProgressOnConsole (2.4.0)
-When this setting is enabled, the plugin logs analysis phases in more detail to the console.
+## Cache settings
 
-### Analysis.NotifyWhenFinished (3.0.0)
-When this setting is enabled ["Analysis Complete"-message](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/Phrase.java#L73) will be shown on the console after analysis is complete.
+Config.Point | Version introduced | Type | Default | Description
+--- | ---- | ------ | --- | ---------------------------------
+Processing.GetLimit | 2.8.0 | Integer | 2000 | Changes the queue size for database get actions. If queue runs out notification is given on console.
+Processing.SaveLimit | 2.8.0 | Integer | 1000 | Changes the queue size for database save actions. If queue runs out notification is given on console.
+Processing.ClearLimit | 2.8.0 | Integer | 1000 | Changes the queue size for clearing datacache. If queue runs out notification is given on console.
+AnalysisCache.RefreshAnalysisCacheOnEnable | 2.?.0 | boolean | true | Enables Analysis refresh 30 seconds after boot/reload
+AnalysisCache.RefreshEveryXMinutes | 2.4.0 | Integer | -1 | Enables periodic Analysis refresh, -1 to disable
+DataCache.SaveEveryXMinutes | 2.0.0 | Integer | 2 | Determines how often cache is saved to the Database.
+DataCache.ClearCacheEveryXSaves | 2.0.0 | Integer | 5 | Determines how often cache clear attempt is made. This is done in case some data is left lingering even after the player has been gone for a long time.
 
-### Analysis.MinutesPlayedUntilConsidiredActive (2.0.0)
-This setting affects how the Analysis treats player's activity. Whether or not a player is active is determined with 3 values: Last Login, Playtime and Login Times.  
-If the player has logged in in the last 2 weeks, has playtime higher than in the config, and has logged in 3 times, the player is considered active.  
-Otherwise the player is counted as inactive.  
-[Code responsible for determening activity](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/utilities/AnalysisUtils.java#L27)
+## WebServer settings
 
-Set to 0 to disable Playtime check & use only the other two.
-
-----
-
-### Cache.AnalysisCache.RefreshAnalysisCacheOnEnable (2.?.0)
-This setting determines whether or not Plan will perform an Analysis 30 seconds after the server is booted/reloaded.  
-Analysis Cache is calculated only if last refresh was more than 60 seconds ago when using the */plan analyze* command.  
-If this setting is enabled you can view server.ip:port/server right away after the server is booted without using /plan analyze.
-
-### Cache.AnalysisCache.RefreshEveryXMinutes (2.4.0)
-This setting can be used to automatically refresh the AnalysisData in the cache, visible in the browser.  
--1 to disable.
-
-### Cache.InspectCache.ClearFromInspectCacheAfterXMinutes
-This setting affects how long the Inspect results are visible at *server.ip:port/player/<playername>* after the */plan inspect <playername>* command is used.  
-After the time has passed, the data will be cleared from the InspectCache to save RAM.
-
-### Cache.DataCache.SaveEveryXMinutes
-Determines how often the UserData is saved to the Database.
-
-### Cache.DataCache.ClearCacheEveryXSaves
-The DataCache is used to save the data while the players are online.  
-This data is used actively by the listeners, and is used to avoid excess stress on the database. Player's data is added to the cache upon login and removed on logout.
-  
-This setting tells how many saves will be done without clearing the DataCache.  
-After Cache has been saved enough times, it will clear itself after a successful save.  
-This is done in case some data is left lingering even after the player has been gone for a long time.
-
-----
-
-### WebServer.Enabled (2.1.0)
-This setting is used to turn off the Webserver if multiple servers are used to collect the data (with MySQL)  
-You can also use this if you want to only use the text UI.
-
-### WebServer.Port (2.0.0)
-This setting determines the Port that the webserver will be opened on. Remember to Open the Port in the server's firewall so that you can access the webserver.  
-Default: 8804
-
-### Webserver.InternalIP (3.0.0)
-This setting is used to change the internal ip used when enabling the web socket server.  
-Default: 0.0.0.0 (localhost)  
-[Code enabling the socket server](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/ui/webserver/WebSocketServer.java#L56)
-
-### WebServer.ShowAlternativeServerIP (2.0.0)
-This setting determines whether or not the setting below is used to show alternative IP to the player, in case you don't want them to see just numbers.
-
-### WebServer.AlternativeIP (2.0.0)
-This IP is used as the address on /plan analyze and /plan inspect <playername> if the setting above is true.  
-%port% will be replaced automatically with Webserver.Port  
-If you have port-forwarded an alternate address to the webserver port, %port% is not required.
-
+Config.Point | Version introduced | Type | Default | Description
+--- | ---- | ------ | --- | ---------------------------------
+Enabled | 2.1.0 | boolean | true | Enables the Webserver
+Port | 2.0.0 | Integer | 8804 | Port of the Webserver
+InternalIP | 3.0.0 | String | 0.0.0.0 | Internal InetAddress to start the WebSocketServer on. [Code enabling the socket server](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/ui/webserver/WebSocketServer.java#L56)
+ShowAlternativeServerIP | 2.0.0 | boolean | false | Enables the use of the link below in the inspect and analyze commands.
+AlternativeIP | 2.0.0 | String | your.ip.here:%port% | Address to use as link in inspect and analyze commands if setting above is enabled. %port% will be replaced with the Port automatically. If you have port-forwarded an alternate address to the webserver port, %port% is not required.
+Security.DisplayIPsAndUUIDs | 2.5.0 | boolean | true | 
 ### WebServer.Security.DisplayIPsAndUUIDs (2.5.0)
 If true, IPs and UUIDs will be visible on the player Inspect page. Otherwise "Hidden" takes their place.
 
