@@ -45,54 +45,30 @@ Enabled | 2.1.0 | boolean | true | Enables the Webserver
 Port | 2.0.0 | Integer | 8804 | Port of the Webserver
 InternalIP | 3.0.0 | String | 0.0.0.0 | Internal InetAddress to start the WebSocketServer on. [Code enabling the socket server](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/ui/webserver/WebSocketServer.java#L56)
 ShowAlternativeServerIP | 2.0.0 | boolean | false | Enables the use of the link below in the inspect and analyze commands.
-AlternativeIP | 2.0.0 | String | your.ip.here:%port% | Address to use as link in inspect and analyze commands if setting above is enabled. %port% will be replaced with the Port automatically. If you have port-forwarded an alternate address to the webserver port, %port% is not required.
-Security.DisplayIPsAndUUIDs | 2.5.0 | boolean | true | 
-### WebServer.Security.DisplayIPsAndUUIDs (2.5.0)
-If true, IPs and UUIDs will be visible on the player Inspect page. Otherwise "Hidden" takes their place.
+AlternativeIP | 2.0.0 | String | `your.ip.here:%port%` | Address to use as link in inspect and analyze commands if setting above is enabled. %port% will be replaced with the Port automatically. If you have port-forwarded an alternate address to the webserver port, %port% is not required.
+Security.DisplayIPsAndUUIDs | 2.5.0 | boolean | true | Toggles visibility of UUIDs and IPs on player Inspect page.
+Security.AddressSecurityCode | 2.5.0 | String | bAkEd | This string is added to the url so that outsiders can not access the `/server` and `/player/<playername>` pages just by knowing your IP and that your server uses Plan. Example: bAkEd -> `localhost:8804/bAkEd/server`
 
-### WebServer.Security.AddressSecurityCode (2.5.0)
-This string is added to the url so that outsiders can not access the /server and /player/<playername> pages just by knowing your IP and that your server uses Plan.
-Example: bAkEd -> localhost:8804/bAkEd/server
+## Customization settings
 
-----
-
-### Customization.Colors.Commands (2.1.0)
-These color codes are used with all the /plan commands. 
-
-### Customization.Colors.HTML (2.1.0)
-These HTML Color codes are used when generating the graphs and piecharts.
+Config.Point | Version introduced | Type | Default | Description
+--- | ---- | ------ | --- | ---------------------------------
+Colors.Commands | 2.1.0 | String | Various | Color codes used with the */plan* commands. 
+Colors.HTML | 2.1.0 | String | Various | These HTML Color codes are used when generating the graphs and piecharts.
 Use without the # (hashtag)
-Change requires plugin restart
+DemographicsTriggers.Trigger | 2.1.0 | String | "i'm, am, im, bin" | An attempt to gather info is only made if message contains one of these words.
+DemographicsTriggers.IgnoreWhen | 2.1.0 | String |  | If an attempt is made and message contains one of these words, the info is disregarded.
 
-### Customization.DemographicsTriggers (2.1.0)
-These lists of words are used when detecting the Age & gender of the player from the chatbox. Seperate words with a comma ( , ).
-*Trigger*: An attempt to gather info is only made if message contains one of these words.
-*IgnoreWhen*: If an attempt is made and message contains one of these words, the info is disregarded.
+## Database settings
 
-----
-
-### database.type (2.0.0)
-This setting determines what type of database the plugin will use.  
-sqLite - sqLite database file will be created to the /plugins/Plan/ folder and used as the save location for all data.  
-MySQL - MySQL settings are used and the data is saved to the MySQL database you have installed.  
-
-### mysql (2.0.0)
-These settings are used to connect to the database when database.type is set to 'mysql'.
-In order to use MySQL the table in the mysql.database has to be created 
-separately
-
-**mysql.host**  
-IP of the MySQL database.  
-**mysql.port**  
-Port of the MySQL database  
-**mysql.user**  
-MySQL User  
-**mysql.password**  
-User's password  
-
-### mysql.database (2.0.0)
-Name of the database that has already been created.
-Please note, that you have to create this database in your mysql solution (eg. MariaDB)!
+Config.Point | Version introduced | Type | Default | Description
+--- | ---- | ------ | --- | ---------------------------------
+database.type | 2.0.0 | String | sqlite | Determines the type of database the plugin will use. **sqLite** - sqLite database file will be created. **MySQL** - MySQL settings are used.
+mysql.host | 2.0.0 | String | localhost | IP of the MySQL-database
+mysql.port | 2.0.0 | Integer | 3306 | Port of the MySQL-database
+mysql.user | 2.0.0 | String | root | MySQL user
+mysql.password | 2.0.0 | String | minecraft | User's password
+mysql.database | 2.0.0 | String | Plan | Name of the database that has already been created. Please note, that you have to create this database in your mysql solution (eg. MariaDB)!
 
 ## End
 If you don't see explanation for a config point or need help setting up the plugin, don't hesitate to ask for help! :)
