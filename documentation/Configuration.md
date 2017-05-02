@@ -54,8 +54,7 @@ Security.AddressSecurityCode | 2.5.0 | String | bAkEd | This string is added to 
 Config.Point | Version introduced | Type | Default | Description
 --- | ---- | ------ | --- | ---------------------------------
 Colors.Commands | 2.1.0 | String | Various | Color codes used with the */plan* commands. 
-Colors.HTML | 2.1.0 | String | Various | These HTML Color codes are used when generating the graphs and piecharts.
-Use without the # (hashtag)
+Colors.HTML | 2.1.0 | String | Various | These HTML Color codes are used when generating the graphs and piecharts. Use without the # (hashtag)
 DemographicsTriggers.Trigger | 2.1.0 | String | "i'm, am, im, bin" | An attempt to gather info is only made if message contains one of these words.
 DemographicsTriggers.IgnoreWhen | 2.1.0 | String |  | If an attempt is made and message contains one of these words, the info is disregarded.
 
