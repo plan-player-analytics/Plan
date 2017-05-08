@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
  * This subcommand is used to view the version & the database type in use.
  * 
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class InfoCommand extends SubCommand {
 

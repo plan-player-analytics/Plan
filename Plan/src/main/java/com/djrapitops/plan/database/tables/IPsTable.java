@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
@@ -79,7 +79,7 @@ public class IPsTable extends Table {
         }
     }
 
-    public void saveIPList(int userId, HashSet<InetAddress> ips) throws SQLException {
+    public void saveIPList(int userId, Set<InetAddress> ips) throws SQLException {
         if (ips == null) {
             return;
         }

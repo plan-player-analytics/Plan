@@ -10,12 +10,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
+ * This manage subcommand is used to check the status of the database.
  *
  * @author Rsl1122
  */
 public class ManageStatusCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -28,29 +29,14 @@ public class ManageStatusCommand extends SubCommand {
         this.plugin = plugin;
     }
 
-    /**
-     * Subcommand inspect.
-     *
-     * Adds player's data from DataCache/DB to the InspectCache for amount of
-     * time specified in the config, and clears the data from Cache with a timer
-     * task.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         ChatColor hColor = Phrase.COLOR_TER.color();
 
-        // Header
         sender.sendMessage(Phrase.CMD_MANAGE_STATUS_HEADER + "");
 
         sender.sendMessage(Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()));
 
-        // Footer
         sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());
         return true;
     }

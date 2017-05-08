@@ -14,8 +14,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
+ * This command is used to manage the database of the plugin.
+ * <p>
+ * No arguments will run ManageHelpCommand. Contains subcommands.
  *
  * @author Rsl1122
+ * @since 2.3.0
  */
 public class ManageCommand extends SubCommand {
 
@@ -28,7 +32,7 @@ public class ManageCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCommand(Plan plugin) {
-        super("manage, m", Permissions.MANAGE, Phrase.CMD_USG_MANAGE+"", CommandType.CONSOLE, "");
+        super("manage, m", Permissions.MANAGE, Phrase.CMD_USG_MANAGE + "", CommandType.CONSOLE, "");
         this.plugin = plugin;
         commands = new ArrayList<>();
         commands.add(new ManageHelpCommand(plugin, this));
@@ -39,10 +43,12 @@ public class ManageCommand extends SubCommand {
         commands.add(new ManageStatusCommand(plugin));
         commands.add(new ManageImportCommand(plugin));
         commands.add(new ManageRemoveCommand(plugin));
-        commands.add(new ManageClearCommand(plugin));        
+        commands.add(new ManageClearCommand(plugin));
     }
 
     /**
+     * Used to get the list of manage subcommands.
+     *
      * @return Initialized SubCommands
      */
     public List<SubCommand> getCommands() {
@@ -105,7 +111,7 @@ public class ManageCommand extends SubCommand {
         }
 
         if (console && args.length < 2 && command.getCommandType() == CommandType.CONSOLE_WITH_ARGUMENTS) {
-            sender.sendMessage("" + Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MANAGE+""));
+            sender.sendMessage("" + Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MANAGE + ""));
 
             return true;
         }

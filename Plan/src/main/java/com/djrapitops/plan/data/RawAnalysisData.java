@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This class is used for storing combined data of several UserData objects
+ * during Analysis.
  *
  * @author Rsl1122
+ * @since 2.6.0
  */
 public class RawAnalysisData {
 
@@ -36,7 +39,7 @@ public class RawAnalysisData {
     private int[] genders;
 
     /**
-     *
+     * Constructor for a new empty dataset.
      */
     public RawAnalysisData() {
         gmZero = 0;

@@ -1,12 +1,11 @@
 package main.java.com.djrapitops.plan;
 
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
-
 /**
  * This enum contains all of the config settings used by the plugin for easier
  * access.
  *
  * @author Rsl1122
+ * @since 2.3.2
  */
 public enum Settings {
     // Boolean
@@ -70,7 +69,7 @@ public enum Settings {
      * @return Boolean value of the config setting, false if not boolean.
      */
     public boolean isTrue() {
-        return getPlugin(Plan.class).getConfig().getBoolean(configPath);
+        return Plan.getInstance().getConfig().getBoolean(configPath);
     }
 
     /**
@@ -80,7 +79,7 @@ public enum Settings {
      */
     @Override
     public String toString() {
-        return getPlugin(Plan.class).getConfig().getString(configPath);
+        return Plan.getInstance().getConfig().getString(configPath);
     }
 
     /**
@@ -89,7 +88,7 @@ public enum Settings {
      * @return Integer value of the config setting
      */
     public int getNumber() {
-        return getPlugin(Plan.class).getConfig().getInt(configPath);
+        return Plan.getInstance().getConfig().getInt(configPath);
     }
 
     /**

@@ -12,8 +12,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
+ * This manage subcommand is used to view all other manage subcommands.
  *
  * @author Rsl1122
+ * @since 2.3.0
  */
 public class ManageHelpCommand extends SubCommand {
 
@@ -34,7 +36,7 @@ public class ManageHelpCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(CommandSender sender, Command c, String commandLabel, String[] args) {
 
         ChatColor oColor = Phrase.COLOR_MAIN.color();
         ChatColor tColor = Phrase.COLOR_SEC.color();
@@ -43,21 +45,21 @@ public class ManageHelpCommand extends SubCommand {
         // Header
         sender.sendMessage(Phrase.CMD_MANAGE_HELP_HEADER + "");
         // Help results
-        for (SubCommand command : this.command.getCommands()) {
-            if (command.getName().equalsIgnoreCase(getName())) {
+        for (SubCommand cmd : this.command.getCommands()) {
+            if (cmd.getName().equalsIgnoreCase(getName())) {
                 continue;
             }
 
-            if (!command.getPermission().userHasThisPermission(sender)) {
+            if (!cmd.getPermission().userHasThisPermission(sender)) {
                 continue;
             }
 
-            if (!(sender instanceof Player) && command.getCommandType() == CommandType.PLAYER) {
+            if (!(sender instanceof Player) && cmd.getCommandType() == CommandType.PLAYER) {
                 continue;
             }
 
             sender.sendMessage(tColor + " " + Phrase.BALL.toString() + oColor
-                    + " /plan manage " + command.getFirstName() + " " + command.getArguments() + tColor + " - " + command.getUsage());
+                    + " /plan manage " + cmd.getFirstName() + " " + cmd.getArguments() + tColor + " - " + cmd.getUsage());
         }
         // Footer
         sender.sendMessage(hColor + Phrase.ARROWS_RIGHT.toString());

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
  * This subcommand is used to view the subcommands.
  *
  * @author Rsl1122
+ * @since 1.0.0
  */
 public class HelpCommand extends SubCommand {
 

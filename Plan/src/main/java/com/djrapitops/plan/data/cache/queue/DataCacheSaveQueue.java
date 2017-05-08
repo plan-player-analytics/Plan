@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -27,6 +26,7 @@ public class DataCacheSaveQueue {
     /**
      *
      * @param plugin
+     * @param clear
      */
     public DataCacheSaveQueue(Plan plugin, DataCacheClearQueue clear) {
         q = new ArrayBlockingQueue(Settings.PROCESS_SAVE_LIMIT.getNumber());
@@ -39,11 +39,11 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleForSave(UserData data) {
-        Log.debug("Scheduling for save: "+data.getUuid());
+        Log.debug(data.getUuid()+": Scheduling for save");
         try {
             q.add(data);
         } catch (IllegalStateException e) {
-            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
     }
 
@@ -56,7 +56,7 @@ public class DataCacheSaveQueue {
         try {
             q.addAll(data);
         } catch (IllegalStateException e) {
-            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
     }
 
@@ -65,11 +65,11 @@ public class DataCacheSaveQueue {
      * @param data
      */
     public void scheduleNewPlayer(UserData data) {
-        Log.debug("Scheduling new Player: "+data.getUuid());
+        Log.debug(data.getUuid()+": Scheduling new Player");
         try {
             q.add(data);
         } catch (IllegalStateException e) {
-            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
     }
 
@@ -86,15 +86,19 @@ public class DataCacheSaveQueue {
      *
      */
     public void stop() {
-        s.stop();
+        if (s != null) {
+            s.stop();
+        }
+        s = null;
+        q.clear();
     }
 }
 
 class SaveConsumer implements Runnable {
 
     private final BlockingQueue<UserData> queue;
-    private final Database db;
-    private final DataCacheClearQueue clear;
+    private Database db;
+    private DataCacheClearQueue clear;
     private boolean run;
 
     SaveConsumer(BlockingQueue q, DataCacheClearQueue clear, Database db) {
@@ -115,14 +119,19 @@ class SaveConsumer implements Runnable {
     }
 
     void consume(UserData data) {
+        if (db == null) {
+            return;
+        }
         UUID uuid = data.getUuid();
-        Log.debug("Saving: "+uuid);
+        Log.debug(uuid+": Saving: "+uuid);
         try {
             db.saveUserData(uuid, data);
             data.stopAccessing();
-            Log.debug("Saved! "+uuid);
+            Log.debug(uuid+": Saved!");
             if (data.shouldClearAfterSave()) {
-                clear.scheduleForClear(uuid);
+                if (clear != null) {
+                    clear.scheduleForClear(uuid);
+                }
             }
         } catch (SQLException ex) {
 //            queue.add(data);
@@ -132,6 +141,12 @@ class SaveConsumer implements Runnable {
 
     void stop() {
         run = false;
+        if (db != null) {
+            db = null;
+        }
+        if (clear != null) {
+            clear = null;
+        }
     }
 }
 

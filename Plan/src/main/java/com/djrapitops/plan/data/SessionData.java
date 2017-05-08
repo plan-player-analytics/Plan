@@ -1,6 +1,8 @@
 package main.java.com.djrapitops.plan.data;
 
 /**
+ * This class is used for storing start and end of a playsession inside UserData
+ * object.
  *
  * @author Rsl1122
  */
@@ -10,8 +12,9 @@ public class SessionData {
     private long sessionEnd;
 
     /**
+     * Creates a new session with given start and end of -1.
      *
-     * @param sessionStart
+     * @param sessionStart Epoch millisecond the session was started.
      */
     public SessionData(long sessionStart) {
         this.sessionStart = sessionStart;
@@ -19,9 +22,10 @@ public class SessionData {
     }
 
     /**
+     * Creates a new session with given start and end.
      *
-     * @param sessionStart
-     * @param sessionEnd
+     * @param sessionStart Epoch millisecond the session was started.
+     * @param sessionEnd Epoch millisecond the session ended.
      */
     public SessionData(long sessionStart, long sessionEnd) {
         this.sessionStart = sessionStart;
@@ -29,45 +33,52 @@ public class SessionData {
     }
 
     /**
+     * Ends the session with given end point.
      *
-     * @param endOfSession
+     * (Changes the end to the parameter.).
+     *
+     * @param endOfSession Epoch millisecond the session ended.
      */
     public void endSession(long endOfSession) {
         sessionEnd = endOfSession;
     }
 
     /**
+     * Get the start of the session.
      *
-     * @return
+     * @return Epoch millisecond the session started.
      */
     public long getSessionStart() {
         return sessionStart;
     }
 
     /**
+     * Get the end of the session.
      *
-     * @return
+     * @return Epoch millisecond the session ended.
      */
     public long getSessionEnd() {
         return sessionEnd;
     }
-    
+
     /**
+     * Get the length of the session in milliseconds.
      *
-     * @return
+     * @return Long in ms.
      */
     public long getLength() {
-        return sessionEnd-sessionStart;
+        return sessionEnd - sessionStart;
     }
 
     @Override
     public String toString() {
         return "s:" + sessionStart + " e:" + sessionEnd;
     }
-    
+
     /**
+     * Check if the session start was before the end.
      *
-     * @return
+     * @return Is the length positive?
      */
     public boolean isValid() {
         return sessionStart <= sessionEnd;
@@ -93,6 +104,4 @@ public class SessionData {
         }
         return true;
     }
-    
-    
 }

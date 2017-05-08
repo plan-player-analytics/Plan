@@ -11,8 +11,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
+ * This manage subcommand is used to swap to a different database and reload the
+ * plugin if the connection to the new database can be established.
  *
  * @author Rsl1122
+ * @since 2.3.0
  */
 public class ManageHotswapCommand extends SubCommand {
 

@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -20,7 +21,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -395,7 +395,7 @@ public abstract class SQLDB extends Database {
             }
         }
         if (!exceptions.isEmpty()) {
-            Log.errorMsg("SEVERE: MULTIPLE ERRORS OCCURRED: " + exceptions.size());
+            Log.error("SEVERE: MULTIPLE ERRORS OCCURRED: " + exceptions.size());
             Log.toLog(this.getClass().getName(), exceptions);
         }
     }
@@ -444,7 +444,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     @Deprecated
-    public void saveNickList(int userId, HashSet<String> names, String lastNick) throws SQLException {
+    public void saveNickList(int userId, Set<String> names, String lastNick) throws SQLException {
         nicknamesTable.saveNickList(userId, names, lastNick);
     }
 
@@ -478,7 +478,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     @Deprecated
-    public void saveIPList(int userId, HashSet<InetAddress> ips) throws SQLException {
+    public void saveIPList(int userId, Set<InetAddress> ips) throws SQLException {
         ipsTable.saveIPList(userId, ips);
     }
 
@@ -489,7 +489,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     @Deprecated
-    public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) throws SQLException {
+    public void saveGMTimes(int userId, Map<GameMode, Long> gamemodeTimes) throws SQLException {
         gmTimesTable.saveGMTimes(userId, gamemodeTimes);
     }
 

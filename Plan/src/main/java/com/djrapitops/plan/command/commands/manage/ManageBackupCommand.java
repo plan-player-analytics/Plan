@@ -12,8 +12,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
+ * This manage subcommand is used to backup a database to a .db file.
  *
  * @author Rsl1122
+ * @since 2.3.0
  */
 public class ManageBackupCommand extends SubCommand {
 
@@ -36,7 +38,7 @@ public class ManageBackupCommand extends SubCommand {
      * @param sender
      * @param cmd
      * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
+     * @param args mysql or sqlite, -a to confirm.
      * @return true in all cases.
      */
     @Override

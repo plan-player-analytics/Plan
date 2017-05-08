@@ -14,6 +14,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * or ChatColor.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public enum Phrase {
     REPLACE0("REPLACE0"),

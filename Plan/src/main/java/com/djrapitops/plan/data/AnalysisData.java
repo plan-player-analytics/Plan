@@ -3,10 +3,23 @@ package main.java.com.djrapitops.plan.data;
 import java.util.Arrays;
 import java.util.Objects;
 import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
+import main.java.com.djrapitops.plan.utilities.Analysis;
+import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
+ * This class is used to store result data from Analysis at runtime.
+ *
+ * Most of the variables need to be set with various set methods, as they are
+ * not initialized in a constructor.
  *
  * @author Rsl1122
+ * @since 2.0.0
+ * @see Analysis
+ * @see PlaceholderUtils
  */
 public class AnalysisData {
 
@@ -17,7 +30,6 @@ public class AnalysisData {
     private double averageAge;
     private String commandUseTableHtml;
     private long totalCommands;
-    private String top20ActivePlayers;
     private String recentPlayers;
     private String sortablePlayersTable;
     private String[] playersDataArray;
@@ -56,12 +68,11 @@ public class AnalysisData {
     /**
      * Class constructor.
      *
-     * All data has to be set with setters to avoid NPE.
+     * All data has to be set with setters to avoid NPEs.
      */
     public AnalysisData() {
         sortablePlayersTable = Html.ERROR_NOT_SET + "";
         commandUseTableHtml = Html.ERROR_NOT_SET + "";
-        top20ActivePlayers = Html.ERROR_NOT_SET + "";
         recentPlayers = Html.ERROR_NOT_SET + "";
         geomapCountries = Html.ERROR_NOT_SET + "";
         geomapZ = Html.ERROR_NOT_SET + "";
@@ -70,7 +81,6 @@ public class AnalysisData {
         genderData = new int[]{0, 0, 0};
     }
 
-    // Getters and setters v---------------------------------v
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -155,9 +165,6 @@ public class AnalysisData {
         if (!Objects.equals(this.commandUseTableHtml, other.commandUseTableHtml)) {
             return false;
         }
-        if (!Objects.equals(this.top20ActivePlayers, other.top20ActivePlayers)) {
-            return false;
-        }
         if (!Objects.equals(this.recentPlayers, other.recentPlayers)) {
             return false;
         }
@@ -183,106 +190,151 @@ public class AnalysisData {
     }
 
     /**
+     * Used to get the toString representation of a String[] containing all
+     * countries on the Plotly.js Chloropleth map.
      *
-     * @return
+     * @return ["Finland","Sweden","Etc.."]
      */
     public String getGeomapCountries() {
         return geomapCountries;
     }
 
     /**
+     * Used to set the toString representation of a String[] containing all
+     * countries on the Plotly.js Chloropleth map.
      *
-     * @param geomapCountries
+     * Incorrect value will break the Chloropleth map on analysis.html page.
+     *
+     * @param geomapCountries ["Finland","Sweden","Etc.."]
      */
     public void setGeomapCountries(String geomapCountries) {
         this.geomapCountries = geomapCountries;
     }
 
     /**
+     * Used to get the toString representation of a int[] containing all player
+     * amounts on the Plotly.js Chloropleth map.
      *
-     * @return
+     * Must contain same amount of numbers as countries in GeomapCountries.
+     *
+     * @return [0,0,0,3,0,Etc..]
      */
     public String getGeomapZ() {
         return geomapZ;
     }
 
     /**
+     * Used to set the toString representation of a int[] containing all player
+     * amounts on the Plotly.js Chloropleth map.
      *
-     * @param geomapZ
+     * Must contain same amount of numbers as countries in GeomapCountries.
+     * Incorrect amount will break the Chloropleth map on analysis.html page.
+     *
+     * @param geomapZ [0,0,0,3,0,Etc..]
      */
     public void setGeomapZ(String geomapZ) {
         this.geomapZ = geomapZ;
     }
 
     /**
+     * Used to get the toString representation of a String[] containing all
+     * country codes on the Plotly.js Chloropleth map.
      *
-     * @return
+     * Must contain same amount of numbers as countries in GeomapCountries.
+     *
+     * @return ["PNG","KHM","KAZ","PRY","SYR","SLB","MLI","Etc.."]
      */
     public String getGeomapCodes() {
         return geomapCodes;
     }
 
     /**
+     * Used to set the toString representation of a String[] containing all
+     * country codes on the Plotly.js Chloropleth map.
      *
-     * @param geomapCodes
+     * Must contain same amount of numbers as countries in GeomapCountries.
+     *
+     * @param geomapCodes ["PNG","KHM","KAZ","PRY","SYR","SLB","MLI","Etc.."]
      */
     public void setGeomapCodes(String geomapCodes) {
         this.geomapCodes = geomapCodes;
     }
 
     /**
+     * Used to get the html for players table.
      *
-     * @return
+     * @return Html string.
+     * @see SortablePlayersTableCreator
      */
     public String getSortablePlayersTable() {
         return sortablePlayersTable;
     }
 
     /**
+     * Used to set the html for players table.
      *
-     * @param sortablePlayersTable
+     * @param sortablePlayersTable Html string.
+     * @see SortablePlayersTableCreator
      */
     public void setSortablePlayersTable(String sortablePlayersTable) {
         this.sortablePlayersTable = sortablePlayersTable;
     }
 
     /**
-     * @return The Amount of players who have joined only once
+     * Used to get the amount of players who have joined only once
+     *
+     * @return Number from 0 to Integer.MAX
      */
     public int getJoinleaver() {
         return joinleaver;
     }
 
     /**
-     * @param joinleaver The Amount of players who have joined only once
+     * Used to set the amount of players who have joined only once.
+     *
+     * No check for correct value.
+     *
+     * @param joinleaver Number from 0 to Integer.MAX
      */
     public void setJoinleaver(int joinleaver) {
         this.joinleaver = joinleaver;
     }
 
     /**
-     * @return HTML String of the Top50CommandsList
+     * Used to get the html for the commands table.
+     *
+     * @return Html string.
+     * @see SortableCommandUseTableCreator
      */
     public String getCommandUseListHtml() {
         return commandUseTableHtml;
     }
 
     /**
-     * @param top50CommandsListHtml HTML String of the Top50CommandsList
+     * Used to get the html for the commands table.
+     *
+     * @param commandsTableHtml Html string.
+     * @see SortableCommandUseTableCreator
      */
-    public void setCommandUseTableHtml(String top50CommandsListHtml) {
-        this.commandUseTableHtml = top50CommandsListHtml;
+    public void setCommandUseTableHtml(String commandsTableHtml) {
+        this.commandUseTableHtml = commandsTableHtml;
     }
 
     /**
-     * @return Amount of banned players
+     * Used to get the amount of banned players.
+     *
+     * @return 0 to Integer.MAX
      */
     public int getBanned() {
         return banned;
     }
 
     /**
-     * @param banned Amount of banned players
+     * Used to set the amount of banned players.
+     *
+     * No check for correct value.
+     *
+     * @param banned 0 to Integer.MAX
      */
     public void setBanned(int banned) {
         this.banned = banned;
@@ -294,6 +346,7 @@ public class AnalysisData {
      * Activity is determined by AnalysisUtils.isActive()
      *
      * @return Amount of active players
+     * @see AnalysisUtils
      */
     public int getActive() {
         return active;
@@ -305,166 +358,233 @@ public class AnalysisData {
      * Activity is determined by AnalysisUtils.isActive()
      *
      * @param active Amount of active players
+     * @see AnalysisUtils
      */
     public void setActive(int active) {
         this.active = active;
     }
 
     /**
+     * Set the amount of inactive players.
+     *
+     * Activity is determined by AnalysisUtils.isActive()
+     *
      * @return Amount of inactive players
+     * @see AnalysisUtils
      */
     public int getInactive() {
         return inactive;
     }
 
     /**
+     * Set the amount of inactive players.
+     *
+     * Activity is determined by AnalysisUtils.isActive()
+     *
      * @param inactive Amount of inactive players
+     * @see AnalysisUtils
      */
     public void setInactive(int inactive) {
         this.inactive = inactive;
     }
 
     /**
-     * @return Total Amount of players used to calculate activity
+     * Get the total amount of players used to calculate activity.
+     *
+     * @return 0 to Integer.MAX
      */
     public int getTotal() {
         return total;
     }
 
     /**
-     * @param total Total Amount of players used to calculate activity
+     * Set the total amount of players used to calculate activity.
+     *
+     * No check for correct value.
+     *
+     * @param total 0 to Integer.MAX
      */
     public void setTotal(int total) {
         this.total = total;
     }
 
     /**
-     * @return Percentage of Gamemode usage time as a whole
+     * Get percentage of Gamemode usage time as a whole.
+     *
+     * @return 0.0 to 1.0
      */
     public double getGm0Perc() {
         return gm0Perc;
     }
 
     /**
-     * @param gm0Perc Percentage of Gamemode usage time as a whole
+     * Set percentage of Gamemode usage time as a whole.
+     *
+     * No check for correct value.
+     *
+     * @param gm0Perc 0.0 to 1.0
      */
     public void setGm0Perc(double gm0Perc) {
         this.gm0Perc = gm0Perc;
     }
 
     /**
-     * @return Percentage of Gamemode usage time as a whole
+     * Get percentage of Gamemode usage time as a whole.
+     *
+     * @return 0.0 to 1.0
      */
     public double getGm1Perc() {
         return gm1Perc;
     }
 
     /**
-     * @param gm1Perc Percentage of Gamemode usage time as a whole
+     * Set percentage of Gamemode usage time as a whole.
+     *
+     * No check for correct value.
+     *
+     * @param gm1Perc 0.0 to 1.0
      */
     public void setGm1Perc(double gm1Perc) {
         this.gm1Perc = gm1Perc;
     }
 
     /**
-     * @return Percentage of Gamemode usage time as a whole
+     * Get percentage of Gamemode usage time as a whole.
+     *
+     * @return 0.0 to 1.0
      */
     public double getGm2Perc() {
         return gm2Perc;
     }
 
     /**
-     * @param gm2Perc Percentage of Gamemode usage time as a whole
+     * Set percentage of Gamemode usage time as a whole.
+     *
+     * No check for correct value.
+     *
+     * @param gm2Perc 0.0 to 1.0
      */
     public void setGm2Perc(double gm2Perc) {
         this.gm2Perc = gm2Perc;
     }
 
     /**
-     * @return Percentage of Gamemode usage time as a whole
+     * Get percentage of Gamemode usage time as a whole.
+     *
+     * @return 0.0 to 1.0
      */
     public double getGm3Perc() {
         return gm3Perc;
     }
 
     /**
-     * @param gm3Perc Percentage of Gamemode usage time as a whole
+     * Set percentage of Gamemode usage time as a whole.
+     *
+     * No check for correct value.
+     *
+     * @param gm3Perc 0.0 to 1.0
      */
     public void setGm3Perc(double gm3Perc) {
         this.gm3Perc = gm3Perc;
     }
 
     /**
-     * @return Total number of players according to bukkit's data.
+     * Get percentage of Gamemode usage time as a whole.
+     *
+     * @return 0.0 to 1.0
      */
     public int getTotalPlayers() {
         return totalPlayers;
     }
 
     /**
-     * @param totalPlayers Total number of players according to bukkit's data.
+     * Get the Total number of players according to bukkit's data.
+     *
+     * @param totalPlayers 0 to Integer.MAX
      */
     public void setTotalPlayers(int totalPlayers) {
         this.totalPlayers = totalPlayers;
     }
 
     /**
-     * @return How long has been played, long in ms.
+     * Get how long time has been played, long in ms.
+     *
+     * @return 0 to Long.MAX
      */
     public long getTotalPlayTime() {
         return totalPlayTime;
     }
 
     /**
-     * @param totalPlayTime How long has been played, long in ms.
+     * Set how long time has been played, long in ms.
+     *
+     * No check for correct value.
+     *
+     * @param totalPlayTime 0 to Long.MAX
      */
     public void setTotalPlayTime(long totalPlayTime) {
         this.totalPlayTime = totalPlayTime;
     }
 
     /**
-     * @return Last Analysis Refresh, long in ms.
+     * Retrieve the refresh Epoch millisecond this object's data was calculated.
+     *
+     * @return the refresh Epoch millisecond.
      */
     public long getRefreshDate() {
         return refreshDate;
     }
 
     /**
-     * @return How long has been played on average, long in ms.
+     * Get How long players have played on average.
+     *
+     * @return long in ms.
      */
     public long getAveragePlayTime() {
         return averagePlayTime;
     }
 
     /**
-     * @return Average age of the players whose age has been gathered.
+     * Get the average age of the players whose age has been gathered.
+     *
+     * -1 if none have been gathered.
+     *
+     * @return -1 or from 1.0 to 99.0
      */
     public double getAverageAge() {
         return averageAge;
     }
 
     /**
-     * @return How many times players have joined.
+     * Get How many times players have joined in total.
+     *
+     * @return 0 to Long.MAX
      */
     public long getTotalLoginTimes() {
         return totalLoginTimes;
     }
 
     /**
-     * @return How many operators are on the server.
+     * Get How many operators are on the server.
+     *
+     * @return 0 to Integer.MAX
      */
     public int getOps() {
         return ops;
     }
 
     /**
-     * @param refreshDate Last Analysis Refresh, long in ms.
+     * Set the refresh Epoch millisecond this object's data was calculated.
+     *
+     * @param refreshDate Epoch millisecond.
      */
     public void setRefreshDate(long refreshDate) {
         this.refreshDate = refreshDate;
     }
 
     /**
+     * Set the average playtime of all players.
+     *
      * @param averagePlayTime long in ms.
      */
     public void setAveragePlayTime(long averagePlayTime) {
@@ -472,147 +592,167 @@ public class AnalysisData {
     }
 
     /**
-     * @param averageAge Average age of the players whose age has been gathered.
+     * Set the average age of the players whose age has been gathered.
+     *
+     * No check for correct value.
+     *
+     * @param averageAge 1.0 to 99.0 or -1 if none have been gathered.
      */
     public void setAverageAge(double averageAge) {
         this.averageAge = averageAge;
     }
 
     /**
-     * @param totalLoginTimes How many times playes have logged in
+     * Set How many times playes have logged in.
+     *
+     * @param totalLoginTimes 0 to Long.MAX
      */
     public void setTotalLoginTimes(long totalLoginTimes) {
         this.totalLoginTimes = totalLoginTimes;
     }
 
     /**
-     * @param ops Amount of operators.
+     * Set the amount of operators.
+     *
+     * @param ops 0 to Integer.MAX
      */
     public void setOps(int ops) {
         this.ops = ops;
     }
 
     /**
+     * Get the html for Recent player buttons.
      *
-     * @return
-     */
-    public String getTop20ActivePlayers() {
-        return top20ActivePlayers;
-    }
-
-    /**
-     *
-     * @param top20ActivePlayers
-     */
-    public void setTop20ActivePlayers(String top20ActivePlayers) {
-        this.top20ActivePlayers = top20ActivePlayers;
-    }
-
-    /**
-     *
-     * @return
+     * @return html string.
+     * @see RecentPlayersButtonsCreator
      */
     public String getRecentPlayers() {
         return recentPlayers;
     }
 
     /**
+     * Set the html for Recent player buttons.
      *
-     * @param recentPlayers
+     * @param recentPlayers html string.
+     * @see RecentPlayersButtonsCreator
      */
     public void setRecentPlayers(String recentPlayers) {
         this.recentPlayers = recentPlayers;
     }
 
     /**
+     * Get the amount of registered players in last 30 days.
      *
-     * @return
+     * @return 0 to Integer.MAX
      */
     public int getNewPlayersMonth() {
         return newPlayersMonth;
     }
 
     /**
+     * Set the amount of registered players in last 30 days.
      *
-     * @param newPlayersMonth
+     * No check for correct value.
+     *
+     * @param newPlayersMonth 0 to Integer.MAX
      */
     public void setNewPlayersMonth(int newPlayersMonth) {
         this.newPlayersMonth = newPlayersMonth;
     }
 
     /**
+     * Get the amount of registered players in last 7 days.
      *
-     * @return
+     * @return 0 to Integer.MAX
      */
     public int getNewPlayersWeek() {
         return newPlayersWeek;
     }
 
     /**
+     * Set the amount of registered players in last 7 days.
      *
-     * @param newPlayersWeek
+     * No check for correct value.
+     *
+     * @param newPlayersWeek 0 to Integer.MAX
      */
     public void setNewPlayersWeek(int newPlayersWeek) {
         this.newPlayersWeek = newPlayersWeek;
     }
 
     /**
+     * Get the amount of registered players in last 24 hours.
      *
-     * @return
+     * @return 0 to Integer.MAX
      */
     public int getNewPlayersDay() {
         return newPlayersDay;
     }
 
     /**
+     * Set the amount of registered players in last 24 hours.
      *
-     * @param newPlayersDay
+     * No check for correct value.
+     *
+     * @param newPlayersDay 0 to Integer.MAX
      */
     public void setNewPlayersDay(int newPlayersDay) {
         this.newPlayersDay = newPlayersDay;
     }
 
     /**
+     * Get the amount of times players have killed each other.
      *
-     * @return
+     * @return 0 to Long.MAX
      */
     public long getTotalPlayerKills() {
         return totalkills;
     }
 
     /**
+     * Get the amount of mob kills the players have.
      *
-     * @return
+     * @return 0 to Long.MAX
      */
     public long getTotalMobKills() {
         return totalmobkills;
     }
 
     /**
+     * Get how many times the playes have died.
      *
-     * @return
+     * @return 0 to Long.MAX
      */
     public long getTotalDeaths() {
         return totaldeaths;
     }
 
     /**
+     * Set the amount of times players have killed each other.
      *
-     * @param totalkills
+     * No check for correct value.
+     *
+     * @param totalkills 0 to Long.MAX
      */
     public void setTotalkills(long totalkills) {
         this.totalkills = totalkills;
     }
 
     /**
+     * Set the amount of mob kills the players have.
      *
-     * @param totalmobkills
+     * No check for correct value.
+     *
+     * @param totalmobkills 0 to Long.MAX
      */
     public void setTotalmobkills(long totalmobkills) {
         this.totalmobkills = totalmobkills;
     }
 
     /**
+     * Set how many times the playes have died.
+     *
+     * No check for correct value.
      *
      * @param totaldeaths
      */
@@ -621,56 +761,83 @@ public class AnalysisData {
     }
 
     /**
+     * Used to store all arrays created in
+     * Analysis#createPlayerActivityGraphs().
      *
-     * @return
+     * 0, 2, 4 contain data. 1, 3, 5 contain labels.
+     *
+     * 0, 1 day; 2, 3 week; 4, 5 month
+     *
+     * @return String array containing multiple toString representations of
+     * number & label arrays.
+     * @see PlayersActivityGraphCreator
+     * @see Analysis
      */
     public String[] getPlayersDataArray() {
         return playersDataArray;
     }
 
     /**
+     * Used to store all arrays created in
+     * Analysis#createPlayerActivityGraphs().
      *
-     * @param playersDataArray
+     * 0, 2, 4 contain data. 1, 3, 5 contain labels.
+     *
+     * 0, 1 day; 2, 3 week; 4, 5 month
+     *
+     * @param playersDataArray String array containing multiple toString
+     * representations of number & label arrays.
+     * @see PlayersActivityGraphCreator
+     * @see Analysis
      */
     public void setPlayersDataArray(String[] playersDataArray) {
         this.playersDataArray = playersDataArray;
     }
 
     /**
+     * Set the total number of unique commands.
      *
-     * @param totalCommands
+     * No check for correct value.
+     *
+     * @param totalCommands 0 to Long.MAX
      */
     public void setTotalCommands(long totalCommands) {
         this.totalCommands = totalCommands;
     }
 
     /**
+     * Get the total number of unique commands.
      *
-     * @return
+     * @return 0 to Long.MAX
      */
     public long getTotalCommands() {
         return totalCommands;
     }
 
     /**
+     * Get the average length of every session on the server.
      *
-     * @return
+     * @return long in ms.
      */
     public long getSessionAverage() {
         return sessionAverage;
     }
 
     /**
+     * Set the average length of every session on the server.
      *
-     * @param sessionAverage
+     * @param sessionAverage 0 to Long.MAX
      */
     public void setSessionAverage(long sessionAverage) {
         this.sessionAverage = sessionAverage;
     }
 
     /**
+     * Get the integer array containing 3 numbers.
      *
-     * @return
+     * 0 Male, 1 Female, 2 Unknown.
+     *
+     * @return for example [0, 4, 5] when 0 male, 4 female and 5 unknown.
      */
     public int[] getGenderData() {
         return genderData;
@@ -678,7 +845,11 @@ public class AnalysisData {
 
     /**
      *
-     * @param genderData
+     * Set the integer array containing 3 numbers.
+     * 
+     * 0 Male, 1 Female, 2 Unknown.
+     * 
+     * @param genderData for example [0, 4, 5]
      */
     public void setGenderData(int[] genderData) {
         this.genderData = genderData;

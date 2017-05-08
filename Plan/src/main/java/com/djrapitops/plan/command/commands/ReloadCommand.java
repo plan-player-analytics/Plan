@@ -9,8 +9,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
+ * This subcommand is used to reload the plugin.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class ReloadCommand extends SubCommand {
 
@@ -33,7 +35,6 @@ public class ReloadCommand extends SubCommand {
         plugin.onDisable();
         plugin.onEnable();
         sender.sendMessage(Phrase.RELOAD_COMPLETE + "");
-
         return true;
     }
 

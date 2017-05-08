@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
  * CommandExecutor for the /plan command, and all subcommands.
  *
  * @author Rsl1122
+ * @since 1.0.0
  */
 public class PlanCommand implements CommandExecutor {
 

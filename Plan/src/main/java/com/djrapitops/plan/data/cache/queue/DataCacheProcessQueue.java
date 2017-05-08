@@ -19,19 +19,17 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
  */
 public class DataCacheProcessQueue {
 
-    private BlockingQueue<HandlingInfo> q;
-    private DataCacheHandler h;
-    private ProcessSetup s;
+    private BlockingQueue<HandlingInfo> queue;
+    private ProcessSetup setup;
 
     /**
      *
      * @param handler
      */
     public DataCacheProcessQueue(DataCacheHandler handler) {
-        h = handler;
-        q = new ArrayBlockingQueue(20000);
-        s = new ProcessSetup();
-        s.go(q, h);
+        queue = new ArrayBlockingQueue(20000);
+        setup = new ProcessSetup();
+        setup.go(queue, handler);
     }
 
     /**
@@ -40,7 +38,7 @@ public class DataCacheProcessQueue {
      */
     public void addToPool(HandlingInfo info) {
         try {
-            q.add(info);
+            queue.add(info);
         } catch (IllegalStateException e) {
 //            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
@@ -52,7 +50,7 @@ public class DataCacheProcessQueue {
      */
     public void addToPool(Collection<HandlingInfo> info) {
         try {
-            q.addAll(info);
+            queue.addAll(info);
         } catch (IllegalStateException e) {
 //            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
@@ -64,7 +62,7 @@ public class DataCacheProcessQueue {
      * @return
      */
     public boolean containsUUID(UUID uuid) {
-        return new ArrayList<>(q).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
+        return new ArrayList<>(queue).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
     }
 
     /**
@@ -72,14 +70,23 @@ public class DataCacheProcessQueue {
      * @return
      */
     public List<HandlingInfo> stop() {
-        return s.stop();
+        try {
+            if (setup != null) {
+                setup.stop();
+                return new ArrayList<>(queue);
+            }
+            return new ArrayList<>();
+        } finally {
+            setup = null;
+            queue.clear();
+        }
     }
 }
 
 class ProcessConsumer implements Runnable {
 
     private final BlockingQueue<HandlingInfo> queue;
-    private final DataCacheHandler handler;
+    private DataCacheHandler handler;
     private boolean run;
 
     ProcessConsumer(BlockingQueue q, DataCacheHandler h) {
@@ -99,21 +106,26 @@ class ProcessConsumer implements Runnable {
     }
 
     void consume(HandlingInfo info) {
-        Log.debug("Processing type: " + info.getType().name() + " " + info.getUuid());
+        if (handler == null) {
+            return;
+        }
+        Log.debug(info.getUuid()+": Processing type: " + info.getType().name());
         DBCallableProcessor p = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
                 if (!info.process(data)) {
-                    System.out.println("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
+                    Log.error("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
                 }
             }
         };
         handler.getUserDataForProcessing(p, info.getUuid());
     }
 
-    Collection<HandlingInfo> stop() {
+    void stop() {
         run = false;
-        return queue;
+        if (handler != null) {
+            handler = null;
+        }
     }
 }
 
@@ -129,9 +141,8 @@ class ProcessSetup {
         new Thread(two).start();
     }
 
-    List<HandlingInfo> stop() {
-        List<HandlingInfo> i = new ArrayList<>(one.stop());
-        i.addAll(two.stop());
-        return i;
+    void stop() {
+        one.stop();
+        two.stop();
     }
 }

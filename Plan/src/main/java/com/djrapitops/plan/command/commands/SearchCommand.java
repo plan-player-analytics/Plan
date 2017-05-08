@@ -22,8 +22,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * This subcommand is used to search for a user, and to view all matches' data.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class SearchCommand extends SubCommand {
 
@@ -44,7 +46,7 @@ public class SearchCommand extends SubCommand {
     /**
      * Subcommand search.
      *
-     * Searches database for matching playernames and caches matching PlayerData
+     * Searches database for matching playernames and caches matching UserData
      * to InspectCache. Shows all links to matching players data.
      *
      * @param sender
@@ -110,10 +112,10 @@ public class SearchCommand extends SubCommand {
                                     Bukkit.getServer().dispatchCommand(
                                             Bukkit.getConsoleSender(),
                                             "tellraw " + player.getName() + " [\"\",{\"text\":\"Click Me\",\"underlined\":true,"
-                                                    + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                                            + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
                                 }
                             }.runTask(plugin);
-                            
+
                         }
                     }
                 }

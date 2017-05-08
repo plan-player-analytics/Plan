@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
@@ -106,7 +106,7 @@ public class NicknamesTable extends Table {
         }
     }
 
-    public void saveNickList(int userId, HashSet<String> names, String lastNick) throws SQLException {
+    public void saveNickList(int userId, Set<String> names, String lastNick) throws SQLException {
         if (names == null || names.isEmpty()) {
             return;
         }

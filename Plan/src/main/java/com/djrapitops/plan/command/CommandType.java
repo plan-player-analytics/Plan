@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.command;
  * CONSOLE_WITH_ARGUMENTS can be used always, except with arguments on console.
  *
  * @author Rsl1122
+ * @since 1.0.0
  */
 public enum CommandType {
     CONSOLE,

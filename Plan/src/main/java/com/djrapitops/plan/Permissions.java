@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
  * Permissions class is used easily check every permission node.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public enum Permissions {
 

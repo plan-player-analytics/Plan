@@ -152,7 +152,7 @@ public class DataCacheProcessQueueTest {
      *
      * @throws InterruptedException
      */
-    @Ignore @Test
+    @Test
     public void testContainsUUID() throws InterruptedException {
         DataCacheProcessQueue q = new DataCacheProcessQueue(handler);
         UUID uuid = MockUtils.getPlayerUUID();
@@ -164,7 +164,6 @@ public class DataCacheProcessQueueTest {
             }
         };
         q.stop();
-        Thread.sleep(2000);
         q.addToPool(h);
         assertTrue(q.containsUUID(uuid));
     }

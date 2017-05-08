@@ -9,13 +9,15 @@ import java.util.Date;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 /**
+ * This class manages the messages going to the Bukkit's Logger.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class Log {
 
     /**
-     * Logs the message to the console.
+     * Logs the message to the console as INFO.
      *
      * @param message "Message" will show up as [INFO][Plan]: Message
      */
@@ -27,17 +29,22 @@ public class Log {
     }
 
     /**
-     * Logs an error message to the console.
+     * Logs an error message to the console as ERROR.
      *
      * @param message "Message" will show up as [ERROR][Plan]: Message
      */
-    public static void errorMsg(String message) {
+    public static void error(String message) {
         Plan instance = Plan.getInstance();
         if (instance != null) {
             instance.getLogger().severe(message);
         }
     }
 
+    /**
+     * Logs a debug message to the console as INFO if Settings.Debug is true.
+     *
+     * @param message "Message" will show up as [INFO][Plan]: [DEBUG] Message
+     */
     public static void debug(String message) {
         if (Settings.DEBUG.isTrue()) {
             info("[DEBUG] " + message);
@@ -51,7 +58,7 @@ public class Log {
      * @param e Throwable, eg NullPointerException
      */
     public static void toLog(String source, Throwable e) {
-        errorMsg(Phrase.ERROR_LOGGED.parse(e.toString()));
+        error(Phrase.ERROR_LOGGED.parse(e.toString()));
         toLog(source + " Caught " + e);
         for (StackTraceElement x : e.getStackTrace()) {
             toLog("  " + x);

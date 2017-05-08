@@ -4,6 +4,7 @@ package main.java.com.djrapitops.plan.api;
  * This class contains Genders used by the plugin.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public enum Gender {
     MALE, FEMALE, OTHER, UNKNOWN;

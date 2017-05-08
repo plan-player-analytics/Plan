@@ -18,12 +18,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * This manage subcommand is used to restore a backup.db file in the
+ * /plugins/Plan folder.
  *
  * @author Rsl1122
  */
 public class ManageRestoreCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -36,15 +38,6 @@ public class ManageRestoreCommand extends SubCommand {
         this.plugin = plugin;
     }
 
-    /**
-     * Subcommand Manage backup.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         try {

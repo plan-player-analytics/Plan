@@ -153,7 +153,7 @@ public class Analysis {
         // Fill Dataset with userdata.
         rawData.stream().forEach((uData) -> {
 //            try {
-            HashMap<GameMode, Long> gmTimes = uData.getGmTimes();
+            Map<GameMode, Long> gmTimes = uData.getGmTimes();
             if (gmTimes != null) {
                 Long survival = gmTimes.get(GameMode.SURVIVAL);
                 if (survival != null) {

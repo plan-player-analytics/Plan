@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitTask;
  * This subcommand is used to run the analysis and access the /server link.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class AnalyzeCommand extends SubCommand {
 

@@ -14,7 +14,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -41,7 +40,7 @@ public class DataCacheGetQueue {
      * @param processors
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
-        Log.debug("Scheduling for get: "+uuid);
+        Log.debug(uuid + ": Scheduling for get");
         try {
             HashMap<UUID, List<DBCallableProcessor>> map = new HashMap<>();
             if (map.get(uuid) == null) {
@@ -50,7 +49,7 @@ public class DataCacheGetQueue {
             map.get(uuid).addAll(Arrays.asList(processors));
             q.add(map);
         } catch (IllegalStateException e) {
-            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber()+""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber() + ""));
         }
     }
 
@@ -58,14 +57,18 @@ public class DataCacheGetQueue {
      *
      */
     public void stop() {
-        s.stop();
+        if (s != null) {
+            s.stop();
+        }
+        s = null;
+        q.clear();
     }
 }
 
 class GetConsumer implements Runnable {
 
     private final BlockingQueue<HashMap<UUID, List<DBCallableProcessor>>> queue;
-    private final Database db;
+    private Database db;
     private boolean run;
 
     GetConsumer(BlockingQueue q, Database db) {
@@ -85,6 +88,9 @@ class GetConsumer implements Runnable {
     }
 
     void consume(HashMap<UUID, List<DBCallableProcessor>> processors) {
+        if (db == null) {
+            return;
+        }
         try {
             for (UUID uuid : processors.keySet()) {
                 if (uuid == null) {
@@ -92,7 +98,7 @@ class GetConsumer implements Runnable {
                 }
                 List<DBCallableProcessor> processorsList = processors.get(uuid);
                 if (processorsList != null) {
-                    Log.debug("Get: "+uuid+" For:"+ processorsList.size());
+                    Log.debug(uuid+ ": Get, For:" + processorsList.size());
                     try {
                         db.giveUserDataToProcessors(uuid, processorsList);
                     } catch (SQLException e) {
@@ -107,6 +113,9 @@ class GetConsumer implements Runnable {
 
     void stop() {
         run = false;
+        if (db != null) {
+            db = null;
+        }
     }
 }
 

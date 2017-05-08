@@ -55,7 +55,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
-        Log.debug("PlayerJoinEvent: "+uuid);
+        Log.debug(uuid+": PlayerJoinEvent");
         BukkitTask asyncNewPlayerCheckTask = (new BukkitRunnable() {
             @Override
             public void run() {
@@ -68,11 +68,11 @@ public class PlanPlayerListener implements Listener {
                 } else {
                     handler.addToPool(loginInfo);
                 }
-                Log.debug("PlayerJoinEvent_AsyncTask_END: "+uuid+" New:"+isNewPlayer);
+                Log.debug(uuid+": PlayerJoinEvent_AsyncTask_END, New:"+isNewPlayer);
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
-        Log.debug("PlayerJoinEvent_END: "+uuid);
+        Log.debug(uuid+": PlayerJoinEvent_END");
     }
 
     /**
@@ -88,10 +88,10 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
-        Log.debug("PlayerQuitEvent: "+uuid);
+        Log.debug(uuid+": PlayerQuitEvent");
         handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
         handler.saveCachedData(uuid);
-        Log.debug("PlayerQuitEvent_END: "+uuid);
+        Log.debug(uuid+": PlayerQuitEvent_END");
     }
 
     /**

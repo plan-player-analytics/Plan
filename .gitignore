@@ -1,11 +1,9 @@
 /dist/
 /build/
 /nbproject/
-/Plan Lite/build/
-/Plan Lite/dist/
-/Plan Lite/nbproject/private/
 /Plan/nbproject/
 /Plan/target/
 /Plan/temporaryTestFolder/
 /Debugger/nbproject/private/
-/PlanDebugger/nbproject/private/
+/PlanDebugger/
+/Plan Lite/

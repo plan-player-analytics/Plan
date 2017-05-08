@@ -58,15 +58,6 @@ public class DataCacheSaveQueueTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
-        PowerMock.mockStatic(JavaPlugin.class);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        PowerMock.replay(JavaPlugin.class);
         calledSaveUserData = false;
         calledSaveUserData2 = false;
         db = new SQLiteDB(plan, "debug" + new Date().getTime()) {

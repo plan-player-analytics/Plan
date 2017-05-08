@@ -5,7 +5,7 @@
  */
 package main.java.com.djrapitops.plan.data.handling;
 
-import java.util.HashMap;
+import java.util.Map;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.GameMode;
 
@@ -31,7 +31,7 @@ public class GamemodeHandling {
             data.setLastGamemode(newGM);
         }
         lastGamemode = data.getLastGamemode();
-        HashMap<GameMode, Long> times = data.getGmTimes();
+        Map<GameMode, Long> times = data.getGmTimes();
         Long currentGMTime = times.get(lastGamemode);
         if (currentGMTime == null) {
             currentGMTime = 0L;

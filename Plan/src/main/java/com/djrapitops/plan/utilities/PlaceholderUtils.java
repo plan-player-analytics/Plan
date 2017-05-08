@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -51,7 +52,7 @@ public class PlaceholderUtils {
         replaceMap.put("%ops%", "" + data.getOps());
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
-        replaceMap.put("%top20mostactive%", data.getTop20ActivePlayers());
+        replaceMap.put("%top20mostactive%", Html.ERROR_NOT_SET.parse());
         replaceMap.put("%recentlogins%", data.getRecentPlayers());
         replaceMap.put("%deaths%", data.getTotalDeaths() + "");
         replaceMap.put("%playerkills%", data.getTotalPlayerKills() + "");
@@ -133,7 +134,7 @@ public class PlaceholderUtils {
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
-        HashMap<GameMode, Long> gmTimes = data.getGmTimes();
+        Map<GameMode, Long> gmTimes = data.getGmTimes();
         long gmThree;
         try {
             Long gm3 = gmTimes.get(GameMode.SPECTATOR);

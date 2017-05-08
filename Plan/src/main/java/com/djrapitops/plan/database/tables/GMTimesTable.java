@@ -4,8 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import org.bukkit.GameMode;
@@ -90,7 +89,7 @@ public class GMTimesTable extends Table {
         }
     }
 
-    public void saveGMTimes(int userId, HashMap<GameMode, Long> gamemodeTimes) throws SQLException {
+    public void saveGMTimes(int userId, Map<GameMode, Long> gamemodeTimes) throws SQLException {
         if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;
         }
@@ -127,7 +126,7 @@ public class GMTimesTable extends Table {
         }
     }
 
-    private void addNewGMTimesRow(int userId, HashMap<GameMode, Long> gamemodeTimes) throws SQLException {
+    private void addNewGMTimesRow(int userId, Map<GameMode, Long> gamemodeTimes) throws SQLException {
         PreparedStatement statement = null;
         GameMode[] gms = new GameMode[]{GameMode.SURVIVAL, GameMode.CREATIVE, GameMode.ADVENTURE, GameMode.SPECTATOR};
         try {

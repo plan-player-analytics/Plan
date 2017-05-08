@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
  * command.
  *
  * @author Rsl1122
+ * @since 1.0.0
  */
 public abstract class SubCommand {
 

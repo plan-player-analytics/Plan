@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitTask;
  * This command is used to cache UserData to InspectCache and display the link.
  *
  * @author Rsl1122
+ * @since 1.0.0
  */
 public class InspectCommand extends SubCommand {
 

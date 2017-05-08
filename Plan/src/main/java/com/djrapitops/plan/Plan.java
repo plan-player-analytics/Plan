@@ -22,11 +22,9 @@ package main.java.com.djrapitops.plan;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
@@ -42,7 +40,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -56,6 +53,7 @@ import org.bukkit.scheduler.BukkitTask;
  * the Bukkit console & various get methods.
  *
  * @author Rsl1122
+ * @since 1.0.0
  */
 public class Plan extends JavaPlugin {
 
@@ -99,7 +97,7 @@ public class Plan extends JavaPlugin {
         if (initDatabase()) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
-            Log.errorMsg(Phrase.DB_FAILURE_DISABLE.toString());
+            Log.error(Phrase.DB_FAILURE_DISABLE.toString());
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -179,7 +177,7 @@ public class Plan extends JavaPlugin {
      */
     @Deprecated
     public void logError(String message) {
-        Log.errorMsg(message);
+        Log.error(message);
     }
 
     /**

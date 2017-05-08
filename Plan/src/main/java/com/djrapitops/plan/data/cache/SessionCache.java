@@ -28,7 +28,7 @@ public class SessionCache {
      */
     public void startSession(UUID uuid) {
         long now = new Date().getTime();
-        Log.debug("Starting a session: "+uuid+" "+now);
+        Log.debug(uuid+": Starting a session: "+now);
         SessionData session = new SessionData(now);
         activeSessions.put(uuid, session);
     }
@@ -41,7 +41,7 @@ public class SessionCache {
         SessionData currentSession = activeSessions.get(uuid);
         if (currentSession != null) {
             long now = new Date().getTime();
-            Log.debug("Ending a session: "+uuid+" "+now);
+            Log.debug(uuid+": Ending a session: "+now);
             currentSession.endSession(now);
         }
     }

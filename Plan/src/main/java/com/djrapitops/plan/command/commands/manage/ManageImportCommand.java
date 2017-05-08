@@ -22,8 +22,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
- *
+ * This manage subcommand is used to import data from 3rd party plugins.
+ * 
+ * Supported plugins (v3.0.0) : OnTime
+ * 
  * @author Rsl1122
+ * @since 2.3.0
  */
 public class ManageImportCommand extends SubCommand {
 

@@ -4,24 +4,21 @@ import java.util.Date;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
- * This subcommand is used to run the analysis and access the /server link.
+ * This subcommand is used to run the analysis and to view some of the data in
+ * game.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class QuickAnalyzeCommand extends SubCommand {
 
@@ -71,7 +68,7 @@ public class QuickAnalyzeCommand extends SubCommand {
             public void run() {
                 timesrun++;
                 if (analysisCache.isCached()) {
-                     sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
+                    sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
                     sender.sendMessage(TextUI.getAnalysisMessages());
                     sender.sendMessage(Phrase.CMD_FOOTER + "");
                     this.cancel();

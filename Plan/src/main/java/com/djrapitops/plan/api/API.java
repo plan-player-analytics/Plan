@@ -11,8 +11,12 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
 
 /**
+ * This class contains the API methods.
+ * <p>
+ * Revamp incoming in 3.1.0
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class API {
 
@@ -102,8 +106,9 @@ public class API {
      * Returns the ip:port/player/playername html as a string so it can be
      * integrated into other webserver plugins.
      *
-     * Should use cacheUserDataToInspectCache(UUID uuid) before using this method.
-     * 
+     * Should use cacheUserDataToInspectCache(UUID uuid) before using this
+     * method.
+     *
      * If UserData of the specified player is not in the Cache returns <h1>404
      * Data was not found in cache</h1>
      *
@@ -134,7 +139,7 @@ public class API {
      * other webserver plugins.
      *
      * Should use updateAnalysisCache() before using this method.
-     * 
+     *
      * If AnalysisData is not in the AnalysisCache: returns <h1>404 Data was not
      * found in cache</h1>
      *

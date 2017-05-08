@@ -9,8 +9,6 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -37,7 +35,7 @@ public class DataCacheClearQueue {
      * @param uuid
      */
     public void scheduleForClear(UUID uuid) {
-        Log.debug("Scheduling for clear: " + uuid);
+        Log.debug(uuid+": Scheduling for clear");
         q.add(uuid);
     }
 
@@ -53,7 +51,7 @@ public class DataCacheClearQueue {
         try {
             q.addAll(uuids);
         } catch (IllegalStateException e) {
-            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber() + ""));
         }
     }
 
@@ -61,14 +59,18 @@ public class DataCacheClearQueue {
      *
      */
     public void stop() {
-        s.stop();
+        if (s != null) {
+            s.stop();
+        }
+        s = null;
+        q.clear();
     }
 }
 
 class ClearConsumer implements Runnable {
 
     private final BlockingQueue<UUID> queue;
-    private final DataCacheHandler handler;
+    private DataCacheHandler handler;
     private boolean run;
 
     ClearConsumer(BlockingQueue q, DataCacheHandler handler) {
@@ -88,6 +90,9 @@ class ClearConsumer implements Runnable {
     }
 
     void consume(UUID uuid) {
+        if (handler == null) {
+            return;
+        }
         try {
             if (handler.isDataAccessed(uuid)) {
                 queue.add(uuid);
@@ -96,12 +101,15 @@ class ClearConsumer implements Runnable {
             }
             // if online remove from clear list
         } catch (Exception ex) {
-            getPlugin(Plan.class).toLog(this.getClass().getName(), ex);
+            Log.toLog(this.getClass().getName(), ex);
         }
     }
 
     void stop() {
         run = false;
+        if (handler != null) {
+            handler = null;
+        }
     }
 }
 

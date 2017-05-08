@@ -24,12 +24,12 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -76,7 +76,7 @@ public class DataCacheHandler extends LocationCache {
 
         commandUse = new HashMap<>();
         if (!getCommandUseFromDb()) {
-            plugin.logError(Phrase.DB_FAILURE_DISABLE + "");
+            Log.error(Phrase.DB_FAILURE_DISABLE + "");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return;
         }
@@ -92,7 +92,7 @@ public class DataCacheHandler extends LocationCache {
             commandUse = db.getCommandUse();
             return true;
         } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
         return false;
     }
@@ -151,14 +151,14 @@ public class DataCacheHandler extends LocationCache {
      * of DataCacheHandler
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid, boolean cache) {
+        Log.debug(uuid+": HANDLER getForProcess,"+" Cache:"+cache);
         UserData uData = dataCache.get(uuid);
         if (uData == null) {
             if (cache) {
                 DBCallableProcessor cacher = new DBCallableProcessor() {
                     @Override
                     public void process(UserData data) {
-                        dataCache.put(uuid, data);
-                        Log.info(Phrase.CACHE_ADD.parse(uuid.toString()));
+                        cache(data);
                     }
                 };
                 getTask.scheduleForGet(uuid, cacher, processor);
@@ -168,6 +168,11 @@ public class DataCacheHandler extends LocationCache {
         } else {
             processor.process(uData);
         }
+    }
+
+    public void cache(UserData data) {
+        dataCache.put(data.getUuid(), data);
+        Log.info(Phrase.CACHE_ADD.parse(data.getUuid().toString()));
     }
 
     /**
@@ -192,7 +197,7 @@ public class DataCacheHandler extends LocationCache {
         try {
             db.saveMultipleUserData(data);
         } catch (SQLException ex) {
-            plugin.toLog(this.getClass().getName(), ex);
+            Log.toLog(this.getClass().getName(), ex);
         }
     }
 
@@ -201,7 +206,7 @@ public class DataCacheHandler extends LocationCache {
      * @param i
      */
     public void addToPool(HandlingInfo i) {
-        Log.debug("Adding to pool, type:" + i.getType().name() + " " + i.getUuid());
+        Log.debug(i.getUuid()+ ": Adding to pool, type:" + i.getType().name());
         processTask.addToPool(i);
     }
 
@@ -244,7 +249,7 @@ public class DataCacheHandler extends LocationCache {
             db.saveCommandUse(commandUse);
             db.close();
         } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
         Log.debug("SaveCacheOnDisable_END");
     }
@@ -273,7 +278,7 @@ public class DataCacheHandler extends LocationCache {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        Log.debug("SaveCachedData: " + uuid);
+        Log.debug(uuid+": SaveCachedData");
         DBCallableProcessor saveProcessor = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
@@ -298,7 +303,7 @@ public class DataCacheHandler extends LocationCache {
         try {
             db.saveCommandUse(commandUse);
         } catch (SQLException | NullPointerException e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
     }
 
@@ -330,9 +335,9 @@ public class DataCacheHandler extends LocationCache {
      * @param uuid Player's UUID
      */
     public void clearFromCache(UUID uuid) {
-        Log.debug("Clear: " + uuid);
+        Log.debug(uuid+": Clear");
         if (getOfflinePlayer(uuid).isOnline()) {
-            Log.debug("Online, did not clear: " + uuid);
+            Log.debug(uuid+": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
                 data.setClearAfterSave(false);
@@ -392,6 +397,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void newPlayer(UserData data) {
         saveTask.scheduleNewPlayer(data);
+        cache(data);
     }
 
     /**

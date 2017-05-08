@@ -13,11 +13,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
+ * This manage subcommand is used to clear a database of all data.
  *
  * @author Rsl1122
+ * @since 2.3.0
  */
 public class ManageClearCommand extends SubCommand {
-    
+
     private final Plan plugin;
 
     /**
@@ -27,7 +29,7 @@ public class ManageClearCommand extends SubCommand {
      */
     public ManageClearCommand(Plan plugin) {
         super("clear", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_CLEAR + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
-        
+
         this.plugin = plugin;
     }
 
@@ -59,7 +61,7 @@ public class ManageClearCommand extends SubCommand {
             sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[0])));
             return true;
         }
-        
+
         Database clearDB = null;
         for (Database database : plugin.getDatabases()) {
             if (dbToClear.equalsIgnoreCase(database.getConfigName())) {
@@ -72,7 +74,7 @@ public class ManageClearCommand extends SubCommand {
             plugin.logError(dbToClear + " was null!");
             return true;
         }
-        
+
         final Database clearThisDB = clearDB;
         (new BukkitRunnable() {
             @Override

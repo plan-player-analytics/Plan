@@ -52,7 +52,7 @@ public class NewPlayerCreator {
         data.setLastGmSwapTime(zero);
         data.setDeaths(0);
         data.setMobKills(0);
-        Log.debug("Created a new UserData object for "+player.getUniqueId());
+        Log.debug(player.getUniqueId()+": Created a new UserData object.");
         return data;
     }
 
