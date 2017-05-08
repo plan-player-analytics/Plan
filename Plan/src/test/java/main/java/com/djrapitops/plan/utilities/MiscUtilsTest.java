@@ -7,7 +7,6 @@ package test.java.main.java.com.djrapitops.plan.utilities;
 
 import java.util.Set;
 import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -45,13 +44,6 @@ public class MiscUtilsTest {
     public void setUp() {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
-        Plan plan = t.getPlanMock();
-        PowerMock.mockStatic(JavaPlugin.class);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        PowerMock.replay(JavaPlugin.class);
-
         PowerMock.mockStatic(Bukkit.class);
         OfflinePlayer op = MockUtils.mockPlayer();
         OfflinePlayer op2 = MockUtils.mockPlayer2();

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
 import java.sql.SQLException;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -63,7 +64,7 @@ public class ManageHotswapCommand extends SubCommand {
                 }
             }
         } catch (NullPointerException | SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
             sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
             return true;
         }

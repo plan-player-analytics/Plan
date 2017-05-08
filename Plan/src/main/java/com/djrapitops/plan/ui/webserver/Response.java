@@ -3,11 +3,10 @@ package main.java.com.djrapitops.plan.ui.webserver;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -87,7 +86,7 @@ public class Response {
                                     + "\r\n";
                             output.write((htmlDef + dataHtml).getBytes());
                         } catch (NullPointerException e) {
-                            getPlugin(Plan.class).toLog(this.getClass().getName(), e);
+                            Log.toLog(this.getClass().getName(), e);
                             String errorMessage = "HTTP/1.1 404 Error\r\n"
                                     + "Content-Type: text/html;\r\n"
                                     + "Content-Length: 30\r\n"
@@ -116,7 +115,7 @@ public class Response {
                     + "<h1>404 Data was not found in cache</h1>";
             output.write(errorMessage.getBytes());
         } catch (Exception e) {
-            getPlugin(Plan.class).toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
     }
 

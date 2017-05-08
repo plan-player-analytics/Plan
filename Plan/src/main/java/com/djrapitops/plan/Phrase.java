@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.bukkit.ChatColor;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  * Phrase contains every message that is used in placeholders or commands. The
@@ -243,7 +242,7 @@ public enum Phrase {
                     String[] split = localeRow.split(" <> ");
                     Phrase.valueOf(split[0]).setText(split[1]);
                 } catch (IllegalArgumentException e) {
-                    getPlugin(Plan.class).logError("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
+                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
                 }
             }
         } catch (IOException e) {

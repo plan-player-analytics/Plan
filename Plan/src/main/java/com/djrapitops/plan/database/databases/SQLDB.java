@@ -501,7 +501,7 @@ public abstract class SQLDB extends Database {
         try {
             checkConnection();
         } catch (SQLException e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
     }
 

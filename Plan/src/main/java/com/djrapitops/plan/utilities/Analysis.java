@@ -89,7 +89,7 @@ public class Analysis {
                     .collect(Collectors.toList());
             return uuids;
         } catch (Exception e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
         return new ArrayList<>();
     }

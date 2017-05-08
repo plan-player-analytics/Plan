@@ -149,7 +149,7 @@ public class Plan extends JavaPlugin {
         }
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
-            log(Phrase.CACHE_SAVE + "");
+            Log.info(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
@@ -157,59 +157,7 @@ public class Plan extends JavaPlugin {
 
             scheduler.shutdown();
         }
-        log(Phrase.DISABLED + "");
-    }
-
-    /**
-     * Logs the message to the console.
-     *
-     * @param message "Message" will show up as [INFO][Plan]: Message
-     */
-    @Deprecated
-    public void log(String message) {
-        Log.info(message);
-    }
-
-    /**
-     * Logs an error message to the console.
-     *
-     * @param message "Message" will show up as [ERROR][Plan]: Message
-     */
-    @Deprecated
-    public void logError(String message) {
-        Log.error(message);
-    }
-
-    /**
-     * Logs trace of caught Exception to Errors.txt & notifies on console.
-     *
-     * @param source Class name the exception was caught in.
-     * @param e Throwable, eg NullPointerException
-     */
-    @Deprecated
-    public void toLog(String source, Throwable e) {
-        Log.toLog(source, e);
-    }
-
-    /**
-     * Logs multiple caught Errors to Errors.txt.
-     *
-     * @param source Class name the exception was caught in.
-     * @param e Collection of Throwables, eg NullPointerException
-     */
-    @Deprecated
-    public void toLog(String source, Collection<Throwable> e) {
-        Log.toLog(source, e);
-    }
-
-    /**
-     * Logs a message to the Errors.txt with a timestamp.
-     *
-     * @param message Message to log to Errors.txt [timestamp] Message
-     */
-    @Deprecated
-    public void toLog(String message) {
-        Log.toLog(message);
+        Log.info(Phrase.DISABLED + "");
     }
 
     /**
@@ -252,11 +200,11 @@ public class Plan extends JavaPlugin {
             }
         }
         if (db == null) {
-            log(Phrase.DB_TYPE_DOES_NOT_EXIST.toString());
+            Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString());
             return false;
         }
         if (!db.init()) {
-            log(Phrase.DB_FAILURE_DISABLE.toString());
+            Log.info(Phrase.DB_FAILURE_DISABLE.toString());
             setEnabled(false);
             return false;
         }
@@ -278,11 +226,11 @@ public class Plan extends JavaPlugin {
     }
 
     private void startBootAnalysisTask() throws IllegalStateException, IllegalArgumentException {
-        log(Phrase.ANALYSIS_BOOT_NOTIFY + "");
+        Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
         BukkitTask bootAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                log(Phrase.ANALYSIS_BOOT + "");
+                Log.info(Phrase.ANALYSIS_BOOT + "");
                 analysisCache.updateCache();
                 this.cancel();
             }
@@ -410,18 +358,22 @@ public class Plan extends JavaPlugin {
                     localeFile.delete();
                 }
             } catch (FileNotFoundException ex) {
-                logError("Attempted using locale that doesn't exist.");
+                Log.error("Attempted using locale that doesn't exist.");
                 usingLocale = "Default: EN";
             } catch (IOException e) {
             }
         } else {
             usingLocale = "Default: EN";
         }
-        log("Using locale: " + usingLocale);
+        Log.info("Using locale: " + usingLocale);
     }
     
     public static Plan getInstance() {
-        return PlanHolder.INSTANCE;
+        Plan INSTANCE = PlanHolder.INSTANCE;
+        if (INSTANCE == null) {
+            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
+        }
+        return INSTANCE;
     }
 
     public static void setInstance(Plan plan) {

@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -76,12 +77,12 @@ public class ManageMoveCommand extends SubCommand {
         }
         if (fromDatabase == null) {
             sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-            plugin.logError(fromDB + " was null!");
+            Log.error(fromDB + " was null!");
             return true;
         }
         if (toDatabase == null) {
             sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-            plugin.logError(toDB + " was null!");
+            Log.error(toDB + " was null!");
             return true;
         }
 

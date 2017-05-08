@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.util.logging.Logger;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;

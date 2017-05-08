@@ -34,7 +34,6 @@ import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
@@ -77,13 +76,7 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
-        };
-        PowerMock.mockStatic(JavaPlugin.class);
-        for (int i = 0; i < 40; i++) {
-            EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        }
-        PowerMock.replay(JavaPlugin.class);
-//        PowerMock.verify(JavaPlugin.class);      
+        };   
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = 0;
         if (f.exists()) {

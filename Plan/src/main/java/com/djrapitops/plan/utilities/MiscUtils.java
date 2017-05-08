@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -15,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -30,12 +30,12 @@ public class MiscUtils {
      */
     public static String checkVersion() {
         try {
-            Plan plugin = getPlugin(Plan.class);
+            Plan plugin = Plan.getInstance();
             String cVersion = plugin.getDescription().getVersion();
             String gitVersion = getGitVersion();
             return checkVersion(cVersion, gitVersion);
         } catch (IOException | NumberFormatException e) {
-            getPlugin(Plan.class).logError(Phrase.VERSION_CHECK_ERROR + "");
+            Log.error(Phrase.VERSION_CHECK_ERROR + "");
         }
         return Phrase.VERSION_FAIL + "";
     }

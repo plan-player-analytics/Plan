@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import main.java.com.djrapitops.plan.Plan;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
+import main.java.com.djrapitops.plan.Log;
 
 /**
  *
@@ -150,7 +149,7 @@ public enum Html {
                     String[] split = localeRow.split(" <> ");
                     Html.valueOf(split[0]).setHtml(split[1]);
                 } catch (IllegalArgumentException e) {
-                    getPlugin(Plan.class).logError("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
+                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
                 }
             }
         } catch (IOException e) {

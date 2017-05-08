@@ -3,10 +3,9 @@ package main.java.com.djrapitops.plan.ui.tables;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -31,9 +30,8 @@ public class SortableCommandUseTableCreator {
             try {
                 html += Html.TABLELINE_2.parse(values[1], values[0]);
             } catch (IllegalArgumentException e) {
-                Plan plugin = getPlugin(Plan.class);
-                plugin.toLog("SortableCommandUseTableCreator", e);
-                plugin.toLog("Cause: " + values[0] + " " + values[1]);
+                Log.toLog("SortableCommandUseTableCreator", e);
+                Log.toLog("Cause: " + values[0] + " " + values[1]);
             }
         }
         return html;
