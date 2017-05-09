@@ -29,12 +29,11 @@ public class PlayerActivityGraphCreator {
         List<Long> playersOnline = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        for (Long start : sessionStarts) {
-            if (start < nowMinusScale) {
-                sessionStarts.add(nowMinusScale);
-            }
+        int amount = (int) sessionStarts.stream().filter(start -> start < nowMinusScale).count();
+        for (int i = amount; i > 0; i--) {
+             sessionStarts.add(nowMinusScale);
         }
-
+        
         long lastPValue = 0;
         long lastSavedPValue = -1;
         long lastSaveI = 0;
