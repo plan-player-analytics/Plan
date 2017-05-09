@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -21,8 +20,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.easymock.EasyMock;
-import static org.easymock.EasyMock.anyString;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +27,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -112,23 +108,6 @@ public class DataCacheHandlerTest {
             }
         };
         when(plan.getDB()).thenReturn(db);
-        PowerMock.mockStatic(JavaPlugin.class);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        PowerMock.replay(JavaPlugin.class);
         handler = new DataCacheHandler(plan) {
             @Override
             public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {

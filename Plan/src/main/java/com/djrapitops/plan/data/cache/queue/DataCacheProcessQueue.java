@@ -40,7 +40,7 @@ public class DataCacheProcessQueue {
         try {
             queue.add(info);
         } catch (IllegalStateException e) {
-//            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.toLog(this.getClass().getName(), e);
         }
     }
 
@@ -52,7 +52,7 @@ public class DataCacheProcessQueue {
         try {
             queue.addAll(info);
         } catch (IllegalStateException e) {
-//            getPlugin(Plan.class).logError(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+             Log.toLog(this.getClass().getName(), e);
         }
     }
 

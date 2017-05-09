@@ -16,7 +16,6 @@ import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableKillsTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableSessionTableCreator;
 import org.bukkit.GameMode;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -57,7 +56,7 @@ public class PlaceholderUtils {
         replaceMap.put("%deaths%", data.getTotalDeaths() + "");
         replaceMap.put("%playerkills%", data.getTotalPlayerKills() + "");
         replaceMap.put("%mobkills%", data.getTotalMobKills() + "");
-        Plan plugin = getPlugin(Plan.class);
+        Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
@@ -177,7 +176,7 @@ public class PlaceholderUtils {
         replaceMap.put("%sessionstable%", SortableSessionTableCreator.createSortedSessionDataTable10(data.getSessions()));
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(data.getSessions())) + ""));
         replaceMap.put("%killstable%", SortableKillsTableCreator.createSortedSessionDataTable10(data.getPlayerKills()));
-        Plan plugin = getPlugin(Plan.class);
+        Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000, 2);

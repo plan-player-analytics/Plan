@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -21,7 +20,7 @@ public class HtmlUtils {
      * @throws FileNotFoundException
      */
     public static String getHtmlStringFromResource(String fileName) throws FileNotFoundException {
-        Plan plugin = getPlugin(Plan.class);
+        Plan plugin = Plan.getInstance();
         File localFile = new File(plugin.getDataFolder(), fileName);
         Scanner scanner = new Scanner(plugin.getResource(fileName));
         if (localFile.exists()) {
@@ -54,7 +53,7 @@ public class HtmlUtils {
      */
     public static String getServerAnalysisUrl() {
         int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = getPlugin(Plan.class).getServer().getIp() + ":" + port;
+        String ip = Plan.getInstance().getServer().getIp() + ":" + port;
         String securityCode = Settings.SECURITY_CODE.toString();
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
@@ -71,7 +70,7 @@ public class HtmlUtils {
      */
     public static String getInspectUrl(String playerName) {
         int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = getPlugin(Plan.class).getServer().getIp() + ":" + port;
+        String ip = Plan.getInstance().getServer().getIp() + ":" + port;
         String securityCode = Settings.SECURITY_CODE.toString();
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {

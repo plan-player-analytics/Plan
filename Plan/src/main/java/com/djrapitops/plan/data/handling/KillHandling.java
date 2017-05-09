@@ -7,12 +7,12 @@ package main.java.com.djrapitops.plan.data.handling;
 
 import java.sql.SQLException;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -28,7 +28,7 @@ public class KillHandling {
      * @param weaponName
      */
     public static void processKillInfo(UserData data, long time, LivingEntity dead, String weaponName) {
-        Plan plugin = getPlugin(Plan.class);
+        Plan plugin = Plan.getInstance();
         if (dead instanceof Player) {
             Player deadPlayer = (Player) dead;
             int victimID;
@@ -40,7 +40,7 @@ public class KillHandling {
                 }
                 data.addPlayerKill(new KillData(victimUUID, victimID, weaponName, time));
             } catch (SQLException e) {
-                plugin.toLog("main.java.com.djrapitops.plan.KillHandling", e);                
+                Log.toLog("main.java.com.djrapitops.plan.KillHandling", e);                
             }
         } else {
             data.setMobKills(data.getMobKills() + 1);

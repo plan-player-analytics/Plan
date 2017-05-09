@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -49,7 +50,7 @@ public class WebSocketServer {
         if (ENABLED) {
             return;
         }
-        plugin.log(Phrase.WEBSERVER_INIT + "");
+        Log.info(Phrase.WEBSERVER_INIT + "");
         try {
             //Setup server
             try {
@@ -85,7 +86,7 @@ public class WebSocketServer {
 
             ENABLED = true;
 
-            plugin.log(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort() + ""));
+            Log.info(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort() + ""));
         } catch (IllegalArgumentException | IllegalStateException e) {
             ENABLED = false;
         }
@@ -95,12 +96,12 @@ public class WebSocketServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        plugin.log(Phrase.WEBSERVER_CLOSE + "");
+        Log.info(Phrase.WEBSERVER_CLOSE + "");
         shutdown = true;
         try {
             server.close();
         } catch (IOException e) {
-            plugin.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
     }
 

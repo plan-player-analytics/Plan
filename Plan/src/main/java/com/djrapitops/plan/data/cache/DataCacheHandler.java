@@ -26,7 +26,6 @@ import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeCompa
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -127,7 +126,7 @@ public class DataCacheHandler extends LocationCache {
         BukkitTask asyncPeriodicCacheSaveTask = (new BukkitRunnable() {
             @Override
             public void run() {
-                DataCacheHandler handler = getPlugin(Plan.class).getHandler();
+                DataCacheHandler handler = Plan.getInstance().getHandler();
                 handler.saveHandlerDataToCache();
                 handler.saveCachedUserData();
                 if (timesSaved % clearAfterXsaves == 0) {

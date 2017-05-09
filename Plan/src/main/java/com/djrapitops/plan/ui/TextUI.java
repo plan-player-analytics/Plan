@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import org.bukkit.ChatColor;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -19,7 +18,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 public class TextUI {
 
     public static String[] getInspectMessages(UUID uuid) {
-        InspectCacheHandler inspectCache = getPlugin(Plan.class).getInspectCache();
+        InspectCacheHandler inspectCache = Plan.getInstance().getInspectCache();
         if (!inspectCache.isCached(uuid)) {
             return new String[]{"Error has occurred, please retry."};
         }
@@ -44,7 +43,7 @@ public class TextUI {
     }
 
     public static String[] getAnalysisMessages() {
-        AnalysisCacheHandler analysisCache = getPlugin(Plan.class).getAnalysisCache();
+        AnalysisCacheHandler analysisCache = Plan.getInstance().getAnalysisCache();
         if (!analysisCache.isCached()) {
             return new String[]{"Error has occurred, please retry."};
         }

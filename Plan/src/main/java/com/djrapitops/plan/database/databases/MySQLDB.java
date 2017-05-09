@@ -3,10 +3,10 @@ package main.java.com.djrapitops.plan.database.databases;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.configuration.file.FileConfiguration;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -30,7 +30,7 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     public Connection getNewConnection() {
-        FileConfiguration config = getPlugin(Plan.class).getConfig();
+        FileConfiguration config = Plan.getInstance().getConfig();
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -40,7 +40,7 @@ public class MySQLDB extends SQLDB {
             
             return connection;
         } catch (ClassNotFoundException | SQLException e) {
-            getPlugin(Plan.class).logError(Phrase.DB_CONNECTION_FAIL.parse(getConfigName(), e.getMessage()));
+            Log.error(Phrase.DB_CONNECTION_FAIL.parse(getConfigName(), e.getMessage()));
             return null;
         }
     }

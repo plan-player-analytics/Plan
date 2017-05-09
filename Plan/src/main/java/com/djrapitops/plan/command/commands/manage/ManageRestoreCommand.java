@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -66,7 +67,7 @@ public class ManageRestoreCommand extends SubCommand {
             }
             if (database == null) {
                 sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-                plugin.logError(db + " was null!");
+                Log.error(db + " was null!");
                 return true;
             }
             final Database copyToDB = database;

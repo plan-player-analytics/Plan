@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
@@ -18,7 +19,6 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
-import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  *
@@ -34,7 +34,7 @@ public class ManageUtils {
      * @return success?
      */
     public static boolean backup(String dbName, Database copyFromDB) {
-        Plan plugin = getPlugin(Plan.class);
+        Plan plugin = Plan.getInstance();
         Date now = new Date();
         SQLiteDB backupDB = new SQLiteDB(plugin,
                 dbName + "-backup-" + now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
@@ -86,12 +86,11 @@ public class ManageUtils {
      * @return uuids hashset as a Collection.
      */
     public static Collection<UUID> getUUIDS(Database db) {
-        Plan plugin = getPlugin(Plan.class);
         final Set<UUID> uuids = new HashSet<>();
         try {
             uuids.addAll(db.getSavedUUIDs());
         } catch (SQLException e) {
-            plugin.toLog("ManageUtils.getUUIDS", e);
+            Log.toLog("ManageUtils.getUUIDS", e);
         }
         return uuids;
     }
@@ -106,7 +105,6 @@ public class ManageUtils {
      * @return success?
      */
     public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
-        Plan plugin = getPlugin(Plan.class);
         try {
             clearAndCopyToDB.removeAllData();
             List<UserData> allUserData = new ArrayList<>();
@@ -124,7 +122,7 @@ public class ManageUtils {
             clearAndCopyToDB.saveMultipleUserData(allUserData);
             clearAndCopyToDB.saveCommandUse(copyFromDB.getCommandUse());
         } catch (SQLException | NullPointerException e) {
-            plugin.toLog("ManageUtils.move", e);
+            Log.toLog("ManageUtils.move", e);
             return false;
         }
         return true;

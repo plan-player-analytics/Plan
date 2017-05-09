@@ -5,17 +5,14 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.io.File;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.easymock.EasyMock;
 import org.junit.After;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
@@ -45,15 +42,6 @@ public class DataCacheClearQueueTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
-        PowerMock.mockStatic(JavaPlugin.class);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        EasyMock.expect(JavaPlugin.getPlugin(Plan.class)).andReturn(plan);
-        PowerMock.replay(JavaPlugin.class);
-        File f = new File(plan.getDataFolder(), "Errors.txt");
         handler = new DataCacheHandler(plan) {            
             @Override
             public boolean getCommandUseFromDb() {                
