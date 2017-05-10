@@ -105,7 +105,7 @@ public class PlaceholderUtils {
                 + "\",\"#" + Settings.HCOLOR_GENP_U + "\"");
         replaceMap.put("%genderfcolor%", "#" + Settings.HCOLOR_GENP_F);
         replaceMap.put("%gendermcolor%", "#" + Settings.HCOLOR_GENP_M);
-        replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
+        replaceMap.putAll(data.getAdditionalDataReplaceMap());
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage() + ""));
         replaceMap.put("%geomapcountries%", data.getGeomapCountries());
         replaceMap.put("%geomapz%", data.getGeomapZ());

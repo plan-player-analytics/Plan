@@ -9,7 +9,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public abstract class Hook {
 
-    private boolean enabled;
+    protected boolean enabled;
 
     /**
      *

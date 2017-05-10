@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package main.java.com.djrapitops.plan.data.additional.factions;
 
 import com.massivecraft.factions.entity.Faction;
 import java.util.Comparator;

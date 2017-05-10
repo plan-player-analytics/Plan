@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
@@ -158,15 +157,6 @@ public class Plan extends JavaPlugin {
             scheduler.shutdown();
         }
         Log.info(Phrase.DISABLED + "");
-    }
-
-    /**
-     * Used to access the API.
-     *
-     * @return Plan API
-     */
-    public API getAPI() {
-        return api;
     }
 
     private void registerListeners() {
@@ -312,6 +302,10 @@ public class Plan extends JavaPlugin {
         return bootAnalysisTaskID;
     }
 
+    public API getAPI() {
+        return api;
+    }
+    
     private void initLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
         /*// Used to write a new Locale file
@@ -367,7 +361,7 @@ public class Plan extends JavaPlugin {
         }
         Log.info("Using locale: " + usingLocale);
     }
-    
+
     public static Plan getInstance() {
         Plan INSTANCE = PlanHolder.INSTANCE;
         if (INSTANCE == null) {
@@ -378,6 +372,14 @@ public class Plan extends JavaPlugin {
 
     public static void setInstance(Plan plan) {
         PlanHolder.INSTANCE = plan;
+    }
+
+    public static API getPlanAPI() throws IllegalStateException {
+        Plan INSTANCE = PlanHolder.INSTANCE;
+        if (INSTANCE == null) {
+            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
+        }
+        return INSTANCE.api;
     }
 
     private static class PlanHolder {

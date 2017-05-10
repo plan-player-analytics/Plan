@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.comparators;
+package main.java.com.djrapitops.plan.data.additional.towny;
 
 import com.palmergames.bukkit.towny.object.Town;
 import java.util.Comparator;

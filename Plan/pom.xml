@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.hm</groupId>
             <artifactId>advanced.achievements</artifactId>
-            <version>4.1.5</version>
+            <version>5.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

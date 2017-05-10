@@ -61,6 +61,13 @@ Customization:
     Female: 'female, girl, gurl, woman, gal, mrs, she, miss, feminin, weiblich, mädchen, frau'
     Male: 'male, boy, man, boe, sir, mr, guy, he, männlich, maskulin, junge, mann'
     IgnoreWhen: 'sure, think, with, are, you, din'
+  Plugins:
+    Factions:
+      HideFactions:
+        - ExampleFaction
+    Towny:
+      HideTowns:
+        - ExampleTown
 
 database:
   type: sqlite

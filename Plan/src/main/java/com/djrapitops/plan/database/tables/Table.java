@@ -12,9 +12,9 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
  */
 public abstract class Table {
 
-    String tableName;
-    SQLDB db;
-    boolean usingMySQL;
+    protected String tableName;
+    protected SQLDB db;
+    protected boolean usingMySQL;
 
     public Table(String name, SQLDB db, boolean usingMySQL) {
         this.tableName = name;
@@ -24,7 +24,7 @@ public abstract class Table {
     
     public abstract boolean createTable();
     
-    public Connection getConnection() throws SQLException {
+    protected Connection getConnection() throws SQLException {
         Connection connection = db.getConnection();
         if (connection == null || connection.isClosed()) {
             connection = db.getNewConnection();
@@ -36,17 +36,17 @@ public abstract class Table {
         return db.getVersion();
     }
 
-    public boolean execute(String sql) throws SQLException {
+    protected boolean execute(String sql) throws SQLException {
         Connection connection = getConnection();
         boolean success = connection.createStatement().execute(sql);
         return success;
     }
     
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
+    protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return getConnection().prepareStatement(sql);
     }
     
-    public void close(AutoCloseable toClose) {
+    protected void close(AutoCloseable toClose) {
         if (toClose != null) {
             try {
                 toClose.close();

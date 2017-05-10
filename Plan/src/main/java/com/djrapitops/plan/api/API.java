@@ -5,10 +5,14 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * This class contains the API methods.
@@ -31,52 +35,18 @@ public class API {
         this.plugin = plugin;
     }
 
-    /**
-     * Returns a user readable format of Time difference between two dates
-     *
-     * @param before Date with long value that is lower
-     * @param after Date with long value that is higher
-     * @return String that is easily readable d:h:m:s
-     */
-    @Deprecated
-    public static String formatTimeSinceDate(Date before, Date after) {
-        return FormatUtils.formatTimeAmountSinceDate(before, after);
+    public void addPluginDataSource(PluginData dataSource) {
+        plugin.getHookHandler().addPluginDataSource(dataSource);
     }
-
-    /**
-     * Returns a user readable format of Time difference between two dates
-     *
-     * @param before String of long since Epoch 1970
-     * @param after Date with long value that is higher
-     * @return String that is easily readable d:h:m:s
-     */
-    @Deprecated
-    public static String formatTimeSinceString(String before, Date after) {
-        return FormatUtils.formatTimeAmountSinceString(before, after);
+    
+    public String getPlayerInspectPageLinkHtml(UUID uuid) throws IllegalStateException {
+        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
+        if (offlinePlayer.hasPlayedBefore()) {
+            return HtmlUtils.getInspectUrl(offlinePlayer.getName());
+        }
+        throw new IllegalStateException("Player has not played on this server before.");
     }
-
-    /**
-     * Returns a user readable format of Time
-     *
-     * @param timeInMs String of long value in milliseconds
-     * @return String that is easily readable d:h:m:s
-     */
-    @Deprecated
-    public static String formatTimeAmount(String timeInMs) {
-        return FormatUtils.formatTimeAmount(timeInMs);
-    }
-
-    /**
-     * Returns user readable format of a Date.
-     *
-     * @param timeInMs String of long since Epoch 1970
-     * @return String that is easily readable date.
-     */
-    @Deprecated
-    public static String formatTimeStamp(String timeInMs) {
-        return FormatUtils.formatTimeStamp(timeInMs);
-    }
-
+    
     /**
      * Uses UUIDFetcher to turn PlayerName to UUID
      *
@@ -87,34 +57,34 @@ public class API {
     public UUID playerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
     }
+    
+    
+    // DEPRECATED METHODS WILL BE REMOVED IN 3.2.0
+    @Deprecated
+    public static String formatTimeSinceDate(Date before, Date after) {
+        return FormatUtils.formatTimeAmountSinceDate(before, after);
+    }
 
-    /**
-     * Caches the UserData to the InspectCache for time specified in the Plan
-     * config, so it can be called by webserver.
-     *
-     * Does not cache anything if the player has not joined the server or has no
-     * data in the database.
-     *
-     * @param uuid UUID of the Player
-     */
+    @Deprecated
+    public static String formatTimeSinceString(String before, Date after) {
+        return FormatUtils.formatTimeAmountSinceString(before, after);
+    }
+
+    @Deprecated
+    public static String formatTimeAmount(String timeInMs) {
+        return FormatUtils.formatTimeAmount(timeInMs);
+    }
+
+    @Deprecated
+    public static String formatTimeStamp(String timeInMs) {
+        return FormatUtils.formatTimeStamp(timeInMs);
+    }
+
     @Deprecated
     public void cacheUserDataToInspectCache(UUID uuid) {
         plugin.getInspectCache().cache(uuid);
     }
 
-    /**
-     * Returns the ip:port/player/playername html as a string so it can be
-     * integrated into other webserver plugins.
-     *
-     * Should use cacheUserDataToInspectCache(UUID uuid) before using this
-     * method.
-     *
-     * If UserData of the specified player is not in the Cache returns <h1>404
-     * Data was not found in cache</h1>
-     *
-     * @param uuid UUID of the Player
-     * @return html as a string or a single error line html.
-     */
     @Deprecated
     public String getPlayerHtmlAsString(UUID uuid) {
         WebSocketServer server = plugin.getUiServer();
@@ -125,26 +95,11 @@ public class API {
         return reqH.getInspectHtml(uuid);
     }
 
-    /**
-     * Updates the AnalysisCache so the cached data can be called by the
-     * webserver.
-     */
     @Deprecated
     public void updateAnalysisCache() {
         plugin.getAnalysisCache().updateCache();
     }
 
-    /**
-     * Returns the ip:port/server html as a string so it can be integrated into
-     * other webserver plugins.
-     *
-     * Should use updateAnalysisCache() before using this method.
-     *
-     * If AnalysisData is not in the AnalysisCache: returns <h1>404 Data was not
-     * found in cache</h1>
-     *
-     * @return html as a string or a single error line html.
-     */
     @Deprecated
     public String getAnalysisHtmlAsString() {
         WebSocketServer server = plugin.getUiServer();
@@ -155,22 +110,11 @@ public class API {
         return reqH.getAnalysisHtml();
     }
 
-    /**
-     * Returns UserData from the InspectCache
-     *
-     * @param uuid UUID of the Player
-     * @return UserData of the Player in the InspectCache or null if not found
-     */
     @Deprecated
     public UserData getUserDataFromInspectCache(UUID uuid) {
         return plugin.getInspectCache().getFromCache(uuid);
     }
-
-    /**
-     * Returns AnalysisData from the AnalysisCache
-     *
-     * @return AnalysisData in the AnalysisCache or null if not found
-     */
+    
     @Deprecated
     public AnalysisData getAnalysisDataFromCache() {
         return plugin.getAnalysisCache().getData();
