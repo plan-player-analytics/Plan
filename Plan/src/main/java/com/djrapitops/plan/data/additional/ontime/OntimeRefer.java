@@ -15,8 +15,9 @@ import org.bukkit.OfflinePlayer;
 public class OntimeRefer extends PluginData {
 
     public OntimeRefer() {
-        super("OnTime", "refer", AnalysisType.LONG_TOTAL);
+        super("OnTime", "refer", AnalysisType.INT_TOTAL, AnalysisType.INT_AVG);
         super.setAnalysisOnly(false);
+        super.setIcon("commenting-o");
         super.setPrefix("Referrals All Time: ");
     }
 

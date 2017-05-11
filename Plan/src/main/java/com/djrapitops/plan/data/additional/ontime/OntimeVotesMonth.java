@@ -15,8 +15,9 @@ import org.bukkit.OfflinePlayer;
 public class OntimeVotesMonth extends PluginData {
 
     public OntimeVotesMonth() {
-        super("OnTime", "votes_30d", AnalysisType.LONG_TOTAL);
+        super("OnTime", "votes_30d", AnalysisType.INT_TOTAL);
         super.setAnalysisOnly(false);
+        super.setIcon("check");
         super.setPrefix("Votes Last 30d: ");
     }
 

@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
 
 /**
  *
@@ -21,14 +20,13 @@ public class FactionsHook extends Hook {
      * Hooks to Factions plugin
      *
      */
-    public FactionsHook() {
+    public FactionsHook(HookHandler hookH) {
         super("com.massivecraft.factions.Factions");
-        if (enabled) {
-            API planAPI = Plan.getPlanAPI();
-            planAPI.addPluginDataSource(new FactionsTable(this.getTopFactions()));
-            planAPI.addPluginDataSource(new FactionsFaction());
-            planAPI.addPluginDataSource(new FactionsPower());
-            planAPI.addPluginDataSource(new FactionsMaxPower());
+        if (enabled) {            
+            hookH.addPluginDataSource(new FactionsFaction());
+            hookH.addPluginDataSource(new FactionsPower());
+            hookH.addPluginDataSource(new FactionsMaxPower());
+            hookH.addPluginDataSource(new FactionsTable(this.getTopFactions()));
         }
     }
 

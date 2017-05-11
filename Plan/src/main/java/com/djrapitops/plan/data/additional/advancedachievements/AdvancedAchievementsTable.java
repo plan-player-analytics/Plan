@@ -23,8 +23,9 @@ public class AdvancedAchievementsTable extends PluginData {
 
     public AdvancedAchievementsTable(AdvancedAchievementsAPI aaAPI) {
         super("AdvancedAchievements", "achievementstable", AnalysisType.HTML);
-        String player = Html.FONT_AWESOME_ICON.parse("user") + "Player";
-        String achievements = Html.FONT_AWESOME_ICON.parse("check-circle-o") + "Achievements";
+        this.aaAPI = aaAPI;
+        String player = Html.FONT_AWESOME_ICON.parse("user") + " Player";
+        String achievements = Html.FONT_AWESOME_ICON.parse("check-circle-o") + " Achievements";
         // analysisOnly true by default.
         super.setPrefix(Html.TABLE_START_2.parse(player, achievements));
         super.setSuffix(Html.TABLE_END.parse());
@@ -40,10 +41,10 @@ public class AdvancedAchievementsTable extends PluginData {
             for (OfflinePlayer p : offlinePlayers) {
                 String inspectUrl = HtmlUtils.getInspectUrl(p.getName());
                 String achievements = aaAPI.getPlayerTotalAchievements(p.getUniqueId()) + "";
-                html.append(Html.TABLELINE_2.parse(inspectUrl, achievements));
+                html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, p.getName()), achievements));
             }
         }
-        return parseContainer(modifierPrefix, html.toString());
+        return parseContainer("", html.toString());
     }
 
     @Override

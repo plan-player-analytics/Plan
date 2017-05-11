@@ -9,8 +9,15 @@ import java.util.Comparator;
  */
 public class TownComparator implements Comparator<Town> {
 
-    // This method should only be used if FactionsHook.isEnabled() returns true.
-    // Note: this comparator imposes orderings that are inconsistent with equals.
+    /**
+     * Used to compare two Town objects.
+     *
+     * This method should only be used if TownyHook.isEnabled() returns true.
+     *
+     * Note: this comparator imposes orderings that are inconsistent with
+     * equals.
+     *
+     */
     @Override
     public int compare(Town tow1, Town tow2) {
         if (tow1.equals(tow2)) {

@@ -16,8 +16,8 @@ public class FactionsPower extends PluginData {
     public FactionsPower() {
         super("Factions", "power", AnalysisType.DOUBLE_AVG);
         super.setAnalysisOnly(false);
+        super.setIcon("bolt");
         super.setPrefix("Power: ");
-        super.setSuffix(" / %maxpower%");
     }
 
     @Override

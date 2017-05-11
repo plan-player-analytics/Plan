@@ -14,6 +14,7 @@ public class FactionsFaction extends PluginData {
     public FactionsFaction() {
         super("Factions", "faction");
         super.setAnalysisOnly(false);
+        super.setIcon("flag");
         super.setPrefix("Faction: ");
     }
 

@@ -15,8 +15,9 @@ import org.bukkit.OfflinePlayer;
 public class OntimeVotes extends PluginData {
 
     public OntimeVotes() {
-        super("OnTime", "votes", AnalysisType.LONG_TOTAL);
+        super("OnTime", "votes", AnalysisType.INT_TOTAL, AnalysisType.INT_AVG);
         super.setAnalysisOnly(false);
+        super.setIcon("check");
         super.setPrefix("Votes All Time: ");
     }
 

@@ -1,472 +1,541 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Plan | Server Analysis</title>
-        <meta name="description" content="Player Analysis window">
-        <meta name="author" content="Rsl1122">
-        <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />        
-        <script src="https://use.fontawesome.com/df48eb908b.js"></script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <style>
-            * {
-                box-sizing: border-box;
-            }
-            img {
-                width: auto;
-            }
-            body {
-                line-height: 140%;
-                font-family: Verdana, Geneva, sans-serif;
-                font-style: normal;
-            }
-            header, footer {
-                line-height: 40%;
-                background-color: #267F00;
-                color: white;
-                padding: 10px 15px 5px 15px;
-                font-family: futura-pt, Futura, Futura-Medium, Verdana, Geneva, sans-serif;
-                font-style: normal;
-            }
-            .column {
-                float: left;
-                padding: 15px;
-            }
-            .warn {
-                padding: 8px;
-                background-color: #ffcc00;
-                color: black;
-                margin: 0;
-            }
-            .clearfix::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
-            .info {
-                width: 50%;
-            }
-            .graphs {
-                width: 60%
-            }            
-            .button {
-                padding: 8px 14px;
-                background-color: green;
-                border: none;
-                color: white;
-                outline: 0;
-                text-decoration:none!important;
-            }
-            .button:hover {
-                background-color: darkgreen;
-            }
-            .table {
-                border-collapse: collapse;
-                table-layout: fixed; 
-                border-style: solid; 
-                border-width: 1px; 
-                padding: 8px 14px;
-                width: 100%;
-            }
-            .buttons {
-                line-height: 270%;
-            }
-            .link {
-                color: green;
-                text-decoration:none!important;
-            }
-            .link:hover {
-                color: darkgreen;
-            }
-            table.sortable thead {
-                background-color: #267F00;
-                color:white;
-                font-weight: bold;
-                cursor: default;
-                width: 100%;
-                overflow: hidden;
-            }
-            table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-                content: " \25B4\25BE" 
-            }
-            #wrapper {
-                width: 500%;
-                transform: translate3d(0, 0, 0);
-                transition: transform .5s ease-in-out;
-            }
-            .content {
-                float: left;
-                width: 20%;
-                height: 100%;
-                white-space: normal;
-                background-repeat: no-repeat;
-            }
-            #contentContainer {
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-            }
-            #navLinks {
-                text-align: center;
-                width: 100%;
-            }
-            #navLinks ul {
-                margin: 0px;
-                padding: 0px;
-                display: inline-block;
-                margin-top: 6px;
-            }
-            #navLinks ul li {
-                float: left;
-                text-align: center;
-                margin: 10px;
-                list-style: none;
-                cursor: pointer;
-                background-color: #267F00;
-                color: #FFFFFF;
-                font-weight: bold;
-                padding: 8px 14px;
-            }
-            #navLinks ul li:hover {
-                background-color: darkgreen;
-            }
-            #navLinks ul li.active {
-                background-color: darkgreen;
-                color: #FFFFFF;
-                outline-width: 7px;
-            }
-            .itemLinks {}
-            .box-area {
-                width: 100%;
-                text-align: center;
-                margin: 0px;
-                padding: 0px;
-            }
-            .infobox {
-                color: white;   
-                display: inline-block;
-                background-color: #267F00;
-                padding: 8px 14px;
-                border-radius: 10px;
-            }
-            .info-text {
-                float: right;
-                width: 70%;
-                text-align: right;
-            }
-            .info-number {
-                font-size: x-large;
-                float: right;
-            }
-            .info-label {
-                float: right;
-                font-size: medium;
-            }
-            .info-icon {
-                font-size: xx-large;
-                float: left;
-                width: 20%;
-            }
-            .headerbox {
-                color: #267F00; 
-                display: inline-block;
-                border-style: solid;
-                border-color: #267F00;
-                padding: 8px 14px;
-                border-radius: 10px;
-                width: 100%;
-            }
-            .header-icon {
-                font-size: xx-large;
-                float: left;
-                width: 60%;                
-            }
-            .header-text {
-                font-size: x-large;
-            }
-            .header-label {
-                padding: 0px;
-                margin: 0px;
-                border: 0px;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
-            <p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-            <h1>Plan | Server Analysis</h1>
-            <h4>Analysis refreshed %refresh% ago</h4>
-        </header>
-        <div class="clearfix">            
-            <div id="navLinks">
-                <ul>
-                    <li class="itemLinks" data-pos="0px"><i class="fa fa-info-circle" aria-hidden="true"></i> Information</li>
-                    <li class="itemLinks" data-pos="-20%"><i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity</li>
-                    <li class="itemLinks" data-pos="-40%"><i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist</li>
-                    <li class="itemLinks" data-pos="-60%"><i class="fa fa-terminal" aria-hidden="true"></i> Command usage</li>
-                    <li class="itemLinks" data-pos="-80%"><i class="fa fa-globe" aria-hidden="true"></i> Demographics</li>
-                </ul>
-            </div>
-            <div id="contentContainer">
-                <div id="wrapper">
-                    <div class="content">
-                        <div class="column" style="width: 60%;">
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
-                                </div>
-                                <div class="infobox" style="float: right;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %npday%
-                                        </div>
-                                        <div class="info-label">
-                                            New Players
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas><br/>
-                            <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
-                            <div class="buttons">                                
-                                %recentlogins%
-                            </div>
-                            %towntable%<br/>
-                            %factionstable%
-                        </div>
-                        <div class="column" style="width: 40%;">
-                            <div class="headerbox">
-                            <div class="header-icon">
-                                <div class="header-label"><i class="fa fa-info-circle" aria-hidden="true"></i><span class="header-text"> Information</span></div>
-                            </div>
-                            <div class="infobox" style="float: right;">
-                                <div class="info-icon">
-                                    <i class="fa fa-users" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %activitytotal%
-                                    </div>
-                                    <div class="info-label">
-                                        Total Players
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            <p><i class="fa fa-clock-o" aria-hidden="true"></i> Total Playtime: %totalplaytime% | <i class="fa fa-clock-o" aria-hidden="true"></i> Player Average: %avgplaytime%<br/>
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> Average Session Length: %sessionaverage%<br/>
-                                <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times: %totallogins%<br/>                                
-                                <b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%<br/> 
-                                
-                                %essentialswarps%</p>
-                            <p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Gamemode Usage</span></p><br/>
-                            <div class="box-area">                                
-                                <div class="infobox" style="background-color: #%gm0col%; width: 23%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-fire" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %gm0%
-                                        </div>
-                                        <div class="info-label">
-                                            Survival
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="infobox" style="background-color: #%gm1col%; width: 23%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-cube" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %gm1%
-                                        </div>
-                                        <div class="info-label">
-                                            Creative
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="infobox" style="background-color: #%gm2col%; width: 23%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %gm2%
-                                        </div>
-                                        <div class="info-label">
-                                            Adventure
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="infobox" style="background-color: #%gm3col%; width: 23%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-binoculars" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %gm3%
-                                        </div>
-                                        <div class="info-label">
-                                            Spectator
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><br/>
-                            <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
-                        </div>                        
-                    </div>
-                    <div class="content">                        
-                        <div class="column" style="width: 60%;">
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
-                                </div>
-                                <div class="infobox" style="float: right;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %npday%
-                                        </div>
-                                        <div class="info-label">
-                                            New Players
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas><br/>
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 7d</span></div>
-                                </div>
-                                <div class="infobox" style="float: right;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %npweek%
-                                        </div>
-                                        <div class="info-label">
-                                            New Players
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas><br/>
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 30d</span></div>
-                                </div>
-                                <div class="infobox" style="float: right;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %npmonth%
-                                        </div>
-                                        <div class="info-label">
-                                            New Players
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
-                        </div>
-                        <div class="column" style="width: 40%;">
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Playerbase Composition</span></div>
-                                </div>
-                                <div class="infobox" style="float: right;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-users" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %activitytotal%
-                                        </div>
-                                        <div class="info-label">
-                                            Total Players
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-area">                                
-                                <div class="infobox" style="background-color: #%activecol%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %active%
-                                        </div>
-                                        <div class="info-label">
-                                            <span style="color: #%activecol%;">__</span>Active
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="infobox" style="background-color: #%inactivecol%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user-o" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %inactive%
-                                        </div>
-                                        <div class="info-label">
-                                            Inactive
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="infobox" style="background-color: #%joinleavecol%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-user-secret" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %joinleaver%
-                                        </div>
-                                        <div class="info-label">
-                                            Single join
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="infobox" style="background-color: #%bancol%;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-ban" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %banned%
-                                        </div>
-                                        <div class="info-label">
-                                            Banned
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><br/>
-                            <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas><br/>                     
-                            <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
-                            <div class="buttons">
-                                %recentlogins%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content column">
-                        <div class="headerbox">
+<html>
+<head>
+<title>Plan | Server Analysis</title>
+<meta name="description" content="Player Analysis window">
+<meta name="author" content="Rsl1122">
+<link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />        
+<script src="https://use.fontawesome.com/df48eb908b.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>
+header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 10%;
+	padding: 0px;
+	background-color: #348e0f;
+	z-index: 1;
+}
+.header-content {
+	padding: 5px 20px;
+}
+body {
+    font-family: Verdana, sans-serif;
+    background-color: #ddd;
+    color: #fff;
+}
+.sidenav {
+    height: 100%;
+    width: 15%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #5cb239;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 5.4%;
+	text-align: left;
+}
+.sidenav p {
+	width: 100%;
+	padding: 8px 8px 8px 16px;
+    text-decoration: none;
+	background-color: #89c471;
+	color: #fff;
+	margin: 10px 0px;
+}
+
+.sidenav a {
+	margin: 10px 0px;
+	width: 100%;
+    padding: 8px 8px 8px 16px;
+    text-decoration: none;
+	background-color: #89c471;
+    font-size: 22px;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+	z-index: 1;
+}
+
+.sidenav a.active {
+	background-color: #5da341
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+	background-color: #5da341;
+}
+
+.main-limiter {
+	margin-left: 15%;
+	width: 85%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.main-wrapper {
+	margin-top: 5.5%;
+	transform: translate3d(0, 0, 0);
+	opacity: 0;
+	transition: 1.5s;
+}
+
+.box {
+	background-color: #fff;
+	padding: 5px;
+	text-decoration: none;!important;
+	color: #000
+	width: 100%;
+}
+
+.box p {
+	color: #000;
+}
+
+.tab {
+	width: 20%;
+	height: 100%;
+	float: left;
+}
+.content {
+  text-align: center;
+  padding: 5px;
+  margin: 0px;
+}
+.columns {
+	display: flex;
+}
+.column {
+    flex: 1;
+}
+.column-one {
+    order: 1;
+}
+.column-two {
+    order: 2;
+}
+.column-three {
+    order: 3;
+}
+.about {
+  text-align: left;
+  margin: 5px;
+  padding: 5px;
+}
+.box-area {
+	width: 100%;
+}
+.infobox {
+	margin-left: 3px;
+	color: white;
+	background-color: #348e0f;
+	padding: 8px 14px;
+	border-radius: 10px;
+	float: right;
+}
+.info-text {
+	float: right;
+	width: 50%;
+	text-align: right;
+}
+.info-number {
+	font-size: x-large;
+	float: right;
+}
+.info-label {
+	float: right;
+	font-size: medium;
+}
+.info-icon {
+	font-size: xx-large;
+	float: left;
+}
+.headerbox {
+	color: #348e0f; 
+	display: inline-block;
+	border-style: solid;
+	border-color: #348e0f;
+	padding: 8px 14px;
+	border-radius: 10px;
+	width: 95%;
+}
+.header-icon {
+	font-size: xx-large;
+	float: left;             
+}
+.header-text {
+	font-size: x-large;
+}
+.header-label {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+}
+.button {
+	padding: 8px 14px;
+	background-color: #348e0f;
+	border: none;
+	color: white;
+	outline: 0;
+	text-decoration:none!important;
+}
+.button:hover {
+	background-color: #267F00;
+}
+.table {
+	border-collapse: collapse;
+	table-layout: fixed; 
+	border-style: solid; 
+	border-width: 1px; 
+	padding: 8px 14px;
+	width: 100%;
+}
+.buttons {
+	line-height: 270%;
+}
+.link {
+	color: #348e0f;
+	text-decoration:none!important;
+}
+.link:hover {
+	color: #267F00;
+}
+table.sortable thead {
+	background-color: #348e0f;
+	color:#fff;
+	font-weight: bold;
+	cursor: default;
+	width: 100%;
+	overflow: hidden;
+}
+table.sortable tbody {
+	color: #000;
+}
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+	content: " \25B4\25BE" 
+}
+.plugin-container {
+    color: #000;
+    height: 100%;
+    max-height: 400px;
+    overflow: auto;
+}
+.plugin-data {
+    color: #000;
+}
+</style>
+</head>
+<body>
+	<header>
+		<div class="header-content">
+			<img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
+			<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
+			<h1>Plan | Server Analysis</h1>
+		</div>
+	</header>
+<div id="content" class="content">
+	
+	<div class="sidenav">
+		<p>Last Refresh: <br>%refresh% ago</p>
+		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
+		</a>
+		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity
+		</a>
+		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist
+		</a>
+		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-terminal" aria-hidden="true"></i> Command usage
+		</a>
+		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-globe" aria-hidden="true"></i> Demographics
+		</a>
+		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-cubes" aria-hidden="true"></i> Plugins
+		</a>
+	</div>
+	<div class="main-limiter">
+		<div id="main" class="main-wrapper">
+			<div class="tab">
+				<div class="columns">
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 33%;">
+								<div class="info-icon">
+									<i class="fa fa-user-plus" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%npday%
+									</div>
+									<div class="info-label">
+										New Players
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-info-circle" aria-hidden="true"></i><span class="header-text"> Information</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 33%;">
+								<div class="info-icon">
+									<i class="fa fa-users" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%activitytotal%
+									</div>
+									<div class="info-label">
+										Total Players
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						<canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas><br/>
+					</div>
+					<div class="about box column">
+						<p><i class="fa fa-clock-o" aria-hidden="true"></i> Total Playtime: %totalplaytime% | <i class="fa fa-clock-o" aria-hidden="true"></i> Player Average: %avgplaytime%<br/>
+						<i class="fa fa-clock-o" aria-hidden="true"></i> Average Session Length: %sessionaverage%<br/>
+						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times: %totallogins%<br/>                                
+						<b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
+						<p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Gamemode Usage</span></p><br/>
+						<div class="box-area">                                
+							<div class="infobox" style="background-color: #%gm0col%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-fire" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%gm0%
+									</div>
+									<div class="info-label">
+										Survival
+									</div>
+								</div>
+							</div>
+							<div class="infobox" style="background-color: #%gm1col%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-cube" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%gm1%
+									</div>
+									<div class="info-label">
+										Creative
+									</div>
+								</div>
+							</div>                                
+							<div class="infobox" style="background-color: #%gm2col%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-chevron-right" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%gm2%
+									</div>
+									<div class="info-label">
+										Adventure
+									</div>
+								</div>
+							</div>
+							<div class="infobox" style="background-color: #%gm3col%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-binoculars" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%gm3%
+									</div>
+									<div class="info-label">
+										Spectator
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						<p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
+						<div class="buttons">                                
+							%recentlogins%
+						</div>
+					</div>
+					<div class="about box column">
+						<canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="tab">
+				<div class="columns">
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 33%;">
+								<div class="info-icon">
+									<i class="fa fa-user-plus" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%npday%
+									</div>
+									<div class="info-label">
+										New Players
+									</div>
+								</div>
+							</div>
+						</div>
+						<canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 7d</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 33%;">
+								<div class="info-icon">
+									<i class="fa fa-user-plus" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%npweek%
+									</div>
+									<div class="info-label">
+										New Players
+									</div>
+								</div>
+							</div>
+						</div>
+						<canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 30d</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 33%;">
+								<div class="info-icon">
+									<i class="fa fa-user-plus" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%npmonth%
+									</div>
+									<div class="info-label">
+										New Players
+									</div>
+								</div>
+							</div>
+						</div>
+						<canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
+					</div>
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Playerbase Composition</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 40%;">
+								<div class="info-icon">
+									<i class="fa fa-users" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%activitytotal%
+									</div>
+									<div class="info-label">
+										Total Players
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="box-area">                                
+							<div class="infobox" style="background-color: #%activecol%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-user" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%active%
+									</div>
+									<div class="info-label">
+										<span style="color: #%activecol%;">__</span>Active
+									</div>
+								</div>
+							</div>
+							<div class="infobox" style="background-color: #%inactivecol%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-user-o" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%inactive%
+									</div>
+									<div class="info-label">
+										Inactive
+									</div>
+								</div>
+							</div>                                
+							<div class="infobox" style="background-color: #%joinleavecol%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-user-secret" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%joinleaver%
+									</div>
+									<div class="info-label">
+										Single<span style="color: #%joinleavecol%;">_</span>join
+									</div>
+								</div>
+							</div>
+							<div class="infobox" style="background-color: #%bancol%; width: 20%;">
+								<div class="info-icon">
+									<i class="fa fa-ban" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%banned%
+									</div>
+									<div class="info-label">
+										Banned
+									</div>
+								</div>
+							</div>
+						</div><br><br>
+						<canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas><br>
+						<p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
+						<div class="buttons">                                
+							%recentlogins%
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						
+					</div>
+				</div>
+			</div>
+			<div class="tab">
+				<div class="columns">
+					<div class="about box column">
+						<div class="headerbox" style="width: 97%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-list-alt" aria-hidden="true"></i><span class="header-text"> Playerlist</span></div>
                             </div>
-                            <div class="infobox" style="float: right;">
+                            <div class="infobox" style="float: right; width: 18%;">
                                 <div class="info-icon">
                                     <i class="fa fa-users" aria-hidden="true"></i>
                                 </div>
@@ -480,7 +549,11 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="sortable table">
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						<table class="sortable table">
                             <thead>
                                 <tr>
                                     <th><i class="fa fa-user" aria-hidden="true"></i> Player</th>
@@ -496,9 +569,13 @@
                                 %sortabletable%
                             </tbody>
                         </table>
-                    </div>
-                    <div class="content column">
-                        <div class="headerbox">
+					</div>
+				</div>
+			</div>
+			<div class="tab">
+				<div class="columns">
+					<div class="about box column">
+						<div class="headerbox" style="width: 97%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-terminal" aria-hidden="true"></i><span class="header-text"> Command usage</span></div>
                             </div>
@@ -516,7 +593,11 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="sortable table">
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						<table class="sortable table">
                             <thead>
                                 <tr>
                                     <th><i class="fa fa-chevron-right" aria-hidden="true"></i> Command</th>
@@ -527,352 +608,350 @@
                                 %commanduse%
                             </tbody>
                         </table>
-                    </div>
-                    <div class="content">                        
-                        <div class="column" style="width:50%;">
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-globe" aria-hidden="true"></i><span class="header-text"> Geolocations</span></div>
-                                </div>
-                                <div class="infobox" style="float: right;">
-                                    <div class="info-icon">
-                                        <i class="fa fa-users" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %activitytotal%
-                                        </div>
-                                        <div class="info-label">
-                                            Total Players
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="width:100%;"><div id="cloropleth"></div></div>                            
-                        </div>
-                        <div class="column" style="width:50%;">
-                            <div class="headerbox">
-                                <div class="header-icon">
-                                    <div class="header-label"><i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i><span class="header-text"> Gender Distribution</span></div>
-                                </div>                                
-                                <div class="infobox" style="float: right; background-color: %genderfcolor%">
-                                    <div class="info-icon">
-                                        <i class="fa fa-female" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %genderfemale%
-                                        </div>
-                                        <div class="info-label">
-                                            Female
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="infobox" style="float: right; background-color: %gendermcolor%">
-                                    <div class="info-icon">
-                                        <i class="fa fa-male" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        <div class="info-number">
-                                            %gendermale%
-                                        </div>
-                                        <div class="info-label">
-                                            Male
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <canvas id="genderPie" width="1000" height="600" style="width: 95%;"></canvas>
-                        </div>
-                    </div>
-                </div> <!--wrapper-->
-            </div></div> <!--contentcontainer, clearfix-->
-    </body>
-    <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-    <script>
-        // Script for All charts using Chart.js
-        var ctxday = document.getElementById("playerChartDay");        
-        var ctxday2 = document.getElementById("playerChartDay2");        
-        var ctxweek = document.getElementById("playerChartWeek");        
-        var ctxmonth = document.getElementById("playerChartMonth");        
-        var ctxactivitypie = document.getElementById("activityPie");        
-        var ctxgmpie = document.getElementById("gmPie");        
-        var ctxgenderpie = document.getElementById("genderPie");        
-        var dataday = {
-            labels: %labelsday%,
-            datasets: [
-                {
-                label: "Players Online",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#%playersgraphfill%",
-                borderColor: "#%playersgraphcolor%",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#%playersgraphcolor%",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %dataday%,
-            }]
-        }
-        var dataweek = {
-            labels: %labelsweek%,
-            datasets: [
-                {
-                label: "Players Online",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#%playersgraphfill%",
-                borderColor: "#%playersgraphcolor%",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#%playersgraphcolor%",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %dataweek%,
-            }]
-        }
-        var datamonth = {
-            labels: %labelsmonth%,
-            datasets: [
-                {
-                label: "Players Online",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#%playersgraphfill%",
-                borderColor: "#%playersgraphcolor%",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#%playersgraphcolor%",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %datamonth%,
-            }]
-        }
-        var dataActivityPie = {
-            labels: %labelsactivity%,
-            datasets: [
-                {
-                    data: %activitydata%,
-                    backgroundColor: [%activitycolors%],
-                    hoverBackgroundColor: [%activitycolors%]
-                }
-            ]
-        }
-        var ActivityPie = new Chart(ctxactivitypie, {
-           type: 'doughnut',
-           data: dataActivityPie,
-           options: {
-               legend: {
-                   position: 'right',
-                   labels: {
-                       padding: 7
-                   }
-               }
-           }
-        });
-        var dataGmPie = {
-            labels: %gmlabels%,
-            datasets: [
-                {
-                    data: %gmdata%,
-                    backgroundColor: [%gmcolors%],
-                    hoverBackgroundColor: [%gmcolors%]
-                }
-            ]
-        }
-        var GMPie = new Chart(ctxgmpie, {
-           type: 'doughnut',
-           data: dataGmPie,
-           options: {
-               legend: {
-                   position: 'right',
-                   labels: {
-                       padding: 7
-                   }
-               }
-           }
-        });
-        var dataGenderPie = {
-            labels: %genderlabels%,
-            datasets: [
-                {
-                    data: %genderdata%,
-                    backgroundColor: [%gendercolors%],
-                    hoverBackgroundColor: [%gendercolors%]
-                }
-            ]
-        }
-        var GenderPie = new Chart(ctxgenderpie, {
-           type: 'doughnut',
-           data: dataGenderPie,
-           options: {
-               legend: {
-                   position: 'right',
-                   labels: {
-                       padding: 7
-                   }
-               }
-           }
-        });
-        var playersChartDay = new Chart(ctxday, {
-            type: 'line',
-            data: dataday,
-            options: {
-                scales: {
-                    xAxes: [{
-                            display: false
-                    }]
-                }
-            }
-        });
-        var playersChartDay2 = new Chart(ctxday2, {
-            type: 'line',
-            data: dataday,
-            options: {
-                scales: {
-                    xAxes: [{
-                            display: false
-                    }]
-                }
-            }
-        });
-        var playersChartWeek = new Chart(ctxweek, {
-            type: 'line',
-            data: dataweek,
-            options: {
-                scales: {
-                    xAxes: [{
-                            display: false
-                    }]
-                }
-            }
-        });
-        var playersChartMonth = new Chart(ctxmonth, {
-            type: 'line',
-            data: datamonth,
-            options: {
-                scales: {
-                    xAxes: [{
-                            display: false
-                    }]
-                }
-            }
-        });
-    </script>
-    <script>
-        CLOROPLETH = document.getElementById('cloropleth');
-           var data = [{
-                type: 'choropleth',
-                locationmode: "country names",
-                locations: %geomapcountries%,
-                z: %geomapz%,
-                text: %geomapcodes%,
-                colorscale: [
-                    [0,'rgb(38, 127, 0)'],[1,'rgb(220, 220, 220)']],
-                autocolorscale: false,
-                reversescale: true,
-                marker: {
-                    line: {
-                        color: 'rgb(100,100,100)',
-                        width: 0.5
-                    }
-                },
-                tick0: 0,
-                zmin: 0,
-                dtick: 1000,
-                colorbar: {
-                    autotic: false,
-                    tickprefix: '',
-                    title: 'Players'
-                }
-          }];
+					</div>
+				</div>
+			</div>
+			<div class="tab">
+				<div class="columns">
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-globe" aria-hidden="true"></i><span class="header-text"> Geolocations</span></div>
+							</div>
+							<div class="infobox" style="float: right; width: 33%;">
+								<div class="info-icon">
+									<i class="fa fa-users" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%activitytotal%
+									</div>
+									<div class="info-label">
+										Total Players
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i><span class="header-text"> Gender Distribution</span></div>
+							</div>                                
+							<div class="infobox" style="width: 22%; background-color: %genderfcolor%">
+								<div class="info-icon">
+									<i class="fa fa-female" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%genderfemale%
+									</div>
+									<div class="info-label">
+										Female
+									</div>
+								</div>
+							</div>
+							<div class="infobox" style="width: 22%; background-color: %gendermcolor%">
+								<div class="info-icon">
+									<i class="fa fa-male" aria-hidden="true"></i>
+								</div>
+								<div class="info-text">
+									<div class="info-number">
+										%gendermale%
+									</div>
+									<div class="info-label">
+										Male
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						<div style="width:100%;"><div id="cloropleth"></div></div> 
+					</div>
+					<div class="about box column">
+						<canvas id="genderPie" width="1000" height="600" style="width: 95%;"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="tab">
+				%plugins%
+			</div>
+		</div>
+	</div>
+<script>
+var navButtons = document.getElementsByClassName("nav-button");
+var tabs = document.getElementsByClassName("tab");
+var slideIndex = 0;
+var x = document.getElementById("main");
 
-          var layout = {
-              title: '',
-              autosize: true, 
-              geo:{
-                  showframe: false,
-                  showcoastlines: false,
-                  projection:{
-                      type: 'mercator'
-                  }
-              }
-          };
-          Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
-    </script>
-    <script>
-        // Script for the page navigation buttons
-        var links = document.querySelectorAll(".itemLinks");
-        var wrapper = document.querySelector("#wrapper");
+x.style.transform = "translate3d(0px,0px,0)";
+x.style.width = ""+navButtons.length*100+"%";
 
-        // the activeLink provides a pointer to the currently displayed item
-        var activeLink = 0;
+for (i=0; i < navButtons.length; i++) {
+	navButtons[i].onclick = openFunc(i)
+	tabs[i].style.width = ""+100/navButtons.length+"%";
+}
+x.style.opacity = "1";
+openFunc(0);
 
-        // setup the event listeners
-        for (var i = 0; i < links.length; i++) {
-            var link = links[i];
-            link.addEventListener('click', setClickedItem, false);
+function openFunc(i) {
+	return function() {
+		var max = navButtons.length;
+		var perc = -100 / navButtons.length;
+		slideIndex = i;
+		if (slideIndex>max) {slideIndex=0};
+		if (slideIndex<0) {slideIndex=max};
+	
+		var value = slideIndex*perc;
+		x.style.transition = "0.5s";
+		x.style.transform = "translate3d("+value+"%,0px,0)";
+	};
+}
+</script>
+<script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+<script>
+	// Script for All charts using Chart.js
+	var ctxday = document.getElementById("playerChartDay");        
+	var ctxday2 = document.getElementById("playerChartDay2");        
+	var ctxweek = document.getElementById("playerChartWeek");        
+	var ctxmonth = document.getElementById("playerChartMonth");        
+	var ctxactivitypie = document.getElementById("activityPie");        
+	var ctxgmpie = document.getElementById("gmPie");        
+	var ctxgenderpie = document.getElementById("genderPie");        
+	var dataday = {
+		labels: %labelsday%,
+		datasets: [
+			{
+			label: "Players Online",
+			fill: true,
+			lineTension: 0.1,
+			backgroundColor: "#%playersgraphfill%",
+			borderColor: "#%playersgraphcolor%",
+			borderCapStyle: 'butt',
+			borderDash: [],
+			borderDashOffset: 0.0,
+			borderJoinStyle: 'miter',
+			pointBorderColor: "#%playersgraphcolor%",
+			pointBackgroundColor: "#fff",
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: "#%playersgraphcolor%",
+			pointHoverBorderColor: "#8fabc6",
+			pointHoverBorderWidth: 2,
+			pointRadius: 1,
+			pointHitRadius: 10,
+			spanGaps: false,
+			data: %dataday%,
+		}]
+	}
+	var dataweek = {
+		labels: %labelsweek%,
+		datasets: [
+			{
+			label: "Players Online",
+			fill: true,
+			lineTension: 0.1,
+			backgroundColor: "#%playersgraphfill%",
+			borderColor: "#%playersgraphcolor%",
+			borderCapStyle: 'butt',
+			borderDash: [],
+			borderDashOffset: 0.0,
+			borderJoinStyle: 'miter',
+			pointBorderColor: "#%playersgraphcolor%",
+			pointBackgroundColor: "#fff",
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: "#%playersgraphcolor%",
+			pointHoverBorderColor: "#8fabc6",
+			pointHoverBorderWidth: 2,
+			pointRadius: 1,
+			pointHitRadius: 10,
+			spanGaps: false,
+			data: %dataweek%,
+		}]
+	}
+	var datamonth = {
+		labels: %labelsmonth%,
+		datasets: [
+			{
+			label: "Players Online",
+			fill: true,
+			lineTension: 0.1,
+			backgroundColor: "#%playersgraphfill%",
+			borderColor: "#%playersgraphcolor%",
+			borderCapStyle: 'butt',
+			borderDash: [],
+			borderDashOffset: 0.0,
+			borderJoinStyle: 'miter',
+			pointBorderColor: "#%playersgraphcolor%",
+			pointBackgroundColor: "#fff",
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: "#%playersgraphcolor%",
+			pointHoverBorderColor: "#8fabc6",
+			pointHoverBorderWidth: 2,
+			pointRadius: 1,
+			pointHitRadius: 10,
+			spanGaps: false,
+			data: %datamonth%,
+		}]
+	}
+	var dataActivityPie = {
+		labels: %labelsactivity%,
+		datasets: [
+			{
+				data: %activitydata%,
+				backgroundColor: [%activitycolors%],
+				hoverBackgroundColor: [%activitycolors%]
+			}
+		]
+	}
+	var ActivityPie = new Chart(ctxactivitypie, {
+	   type: 'doughnut',
+	   data: dataActivityPie,
+	   options: {
+		   legend: {
+			   position: 'right',
+			   labels: {
+				   padding: 7
+			   }
+		   }
+	   }
+	});
+	var dataGmPie = {
+		labels: %gmlabels%,
+		datasets: [
+			{
+				data: %gmdata%,
+				backgroundColor: [%gmcolors%],
+				hoverBackgroundColor: [%gmcolors%]
+			}
+		]
+	}
+	var GMPie = new Chart(ctxgmpie, {
+	   type: 'doughnut',
+	   data: dataGmPie,
+	   options: {
+		   legend: {
+			   position: 'right',
+			   labels: {
+				   padding: 7
+			   }
+		   }
+	   }
+	});
+	var dataGenderPie = {
+		labels: %genderlabels%,
+		datasets: [
+			{
+				data: %genderdata%,
+				backgroundColor: [%gendercolors%],
+				hoverBackgroundColor: [%gendercolors%]
+			}
+		]
+	}
+	var GenderPie = new Chart(ctxgenderpie, {
+	   type: 'doughnut',
+	   data: dataGenderPie,
+	   options: {
+		   legend: {
+			   position: 'right',
+			   labels: {
+				   padding: 7
+			   }
+		   }
+	   }
+	});
+	var playersChartDay = new Chart(ctxday, {
+		type: 'line',
+		data: dataday,
+		options: {
+			scales: {
+				xAxes: [{
+						display: false
+				}]
+			}
+		}
+	});
+	var playersChartDay2 = new Chart(ctxday2, {
+		type: 'line',
+		data: dataday,
+		options: {
+			scales: {
+				xAxes: [{
+						display: false
+				}]
+			}
+		}
+	});
+	var playersChartWeek = new Chart(ctxweek, {
+		type: 'line',
+		data: dataweek,
+		options: {
+			scales: {
+				xAxes: [{
+						display: false
+				}]
+			}
+		}
+	});
+	var playersChartMonth = new Chart(ctxmonth, {
+		type: 'line',
+		data: datamonth,
+		options: {
+			scales: {
+				xAxes: [{
+						display: false
+				}]
+			}
+		}
+	});
+</script>
+<script>
+	CLOROPLETH = document.getElementById('cloropleth');
+	   var data = [{
+			type: 'choropleth',
+			locationmode: "country names",
+			locations: %geomapcountries%,
+			z: %geomapz%,
+			text: %geomapcodes%,
+			colorscale: [
+				[0,'rgb(38, 127, 0)'],[1,'rgb(220, 220, 220)']],
+			autocolorscale: false,
+			reversescale: true,
+			marker: {
+				line: {
+					color: 'rgb(100,100,100)',
+					width: 0.5
+				}
+			},
+			tick0: 0,
+			zmin: 0,
+			dtick: 1000,
+			colorbar: {
+				autotic: false,
+				tickprefix: '',
+				title: 'Players'
+			}
+	  }];
 
-            // identify the item for the activeLink
-            link.itemID = i;
-        }
-
-        // set first item as active
-        links[activeLink].classList.add("active");
-
-        function setClickedItem(e) {
-            removeActiveLinks();
-
-            var clickedLink = e.target;
-            activeLink = clickedLink.itemID;
-
-            changePosition(clickedLink);
-        }
-
-        function removeActiveLinks() {
-            for (var i = 0; i < links.length; i++) {
-                links[i].classList.remove("active");
-            }
-        }
-        // Handle changing the slider position as well as ensure
-        // the correct link is highlighted as being active
-        function changePosition(link) {
-            var position = link.getAttribute("data-pos");
-
-            var translateValue = "translate3d(" + position + ", 0px, 0)";
-            wrapper.style.transform = translateValue;
-
-            link.classList.add("active");
-        }
-    </script>
-</html>
+	  var layout = {
+		  title: '',
+		  autosize: true, 
+		  geo:{
+			  showframe: false,
+			  showcoastlines: false,
+			  projection:{
+				  type: 'mercator'
+			  }
+		  }
+	  };
+	  Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
+</script>
+</body>
+</html> 

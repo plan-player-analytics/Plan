@@ -40,19 +40,19 @@ public abstract class PluginData {
         this(sourcePlugin, placeholder, new ArrayList<>());
     }
 
-    public List<AnalysisType> getAnalysisTypes() {
+    public final List<AnalysisType> getAnalysisTypes() {
         return analysisTypes;
     }
 
-    public String parseContainer(String modifier, String contents) {
+    public final String parseContainer(String modifier, String contents) {
         return "<div class=\"plugin-data\">" + icon + modifier + prefix + contents + suffix + "</div>";
     }
 
-    public String getPlaceholder(String modifier) {
-        return "%" + placeholder + modifier + "%";
+    public final String getPlaceholder(String modifier) {
+        return "%" + sourcePlugin + "_" + placeholder + modifier + "%";
     }
 
-    public String getSourcePlugin() {
+    public final String getSourcePlugin() {
         return sourcePlugin;
     }
 
@@ -60,24 +60,32 @@ public abstract class PluginData {
 
     public abstract Serializable getValue(UUID uuid);
 
-    public void setPrefix(String prefix) {
+    public final void setPrefix(String prefix) {
         this.prefix = prefix;
     }
 
-    public void setSuffix(String suffix) {
+    public final void setSuffix(String suffix) {
         this.suffix = suffix;
     }
 
-    public void setIcon(String iconName) {
-        this.icon = Html.FONT_AWESOME_ICON.parse(iconName)+" ";
+    public final void setIcon(String iconName) {
+        this.icon = Html.FONT_AWESOME_ICON.parse(iconName) + " ";
     }
 
-    public void setAnalysisOnly(boolean analysisOnly) {
+    public final void setAnalysisOnly(boolean analysisOnly) {
         this.analysisOnly = analysisOnly;
     }
 
-    public boolean analysisOnly() {
+    public final boolean analysisOnly() {
         return analysisOnly;
+    }
+
+    public final String getPrefix() {
+        return prefix;
+    }
+
+    public final String getSuffix() {
+        return suffix;
     }
 
     /**
@@ -88,7 +96,7 @@ public abstract class PluginData {
      * @return Is current object equal to given object.
      */
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -115,7 +123,7 @@ public abstract class PluginData {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int hash = 5;
         hash = 47 * hash + Objects.hashCode(this.placeholder);
         hash = 47 * hash + Objects.hashCode(this.sourcePlugin);

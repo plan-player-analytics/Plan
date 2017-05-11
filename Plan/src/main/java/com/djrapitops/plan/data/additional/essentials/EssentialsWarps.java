@@ -4,6 +4,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Warps;
 import java.io.Serializable;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 /**
@@ -15,9 +16,9 @@ public class EssentialsWarps extends PluginData {
     private Essentials essentials;
 
     public EssentialsWarps(Essentials essentials) {
-        super("Essentials", "warps");
+        super("Essentials", "warps", AnalysisType.HTML);
         this.essentials = essentials;
-        super.setAnalysisOnly(false);
+        super.setIcon("map-marker");
         super.setPrefix("Warps: ");
     }
 

@@ -18,6 +18,7 @@ public class EssentialsMuted extends PluginData {
     public EssentialsMuted(Essentials essentials) {
         super("Essentials", "muted", AnalysisType.BOOLEAN_PERCENTAGE, AnalysisType.BOOLEAN_TOTAL);
         this.essentials = essentials;
+        super.setIcon("bell-slash-o");
         super.setAnalysisOnly(false);
         super.setPrefix("Muted: ");
     }

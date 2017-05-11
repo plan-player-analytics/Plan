@@ -16,9 +16,10 @@ public class AdvancedAchievementsAchievements extends PluginData {
 
     public AdvancedAchievementsAchievements(AdvancedAchievementsAPI aaAPI) {
         super("AdvancedAchievements", "achievements", new AnalysisType[]{AnalysisType.INT_TOTAL, AnalysisType.INT_AVG});
+        this.aaAPI = aaAPI;
         super.setAnalysisOnly(false);
+        super.setIcon("check-circle-o");
         super.setPrefix("Achivements: ");
-        super.setSuffix(" / %totalachievements%");
     }
 
     @Override

@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 public class FactionsMaxPower extends PluginData {
 
     public FactionsMaxPower() {
-        super("Factions", "maxpower", AnalysisType.TOTAL_VALUE);
+        super("Factions", "maxpower");
         super.setAnalysisOnly(false);
         super.setPrefix("Max Power: ");
     }

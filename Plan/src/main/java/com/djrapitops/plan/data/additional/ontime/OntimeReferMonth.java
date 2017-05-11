@@ -15,8 +15,9 @@ import org.bukkit.OfflinePlayer;
 public class OntimeReferMonth extends PluginData {
 
     public OntimeReferMonth() {
-        super("OnTime", "refer_30d", AnalysisType.LONG_TOTAL);
+        super("OnTime", "refer_30d", AnalysisType.INT_TOTAL);
         super.setAnalysisOnly(false);
+        super.setIcon("commenting-o");
         super.setPrefix("Referrals Last 30d: ");
     }
 

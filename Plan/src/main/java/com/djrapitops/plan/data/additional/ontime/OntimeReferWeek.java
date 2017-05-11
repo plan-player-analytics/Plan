@@ -15,8 +15,9 @@ import org.bukkit.OfflinePlayer;
 public class OntimeReferWeek extends PluginData {
 
     public OntimeReferWeek() {
-        super("OnTime", "refer_7d", AnalysisType.LONG_TOTAL);
+        super("OnTime", "refer_7d", AnalysisType.INT_TOTAL);
         super.setAnalysisOnly(false);
+        super.setIcon("commenting-o");
         super.setPrefix("Referrals Last 7d: ");
     }
 

@@ -19,6 +19,7 @@ public class TownyTown extends PluginData {
     public TownyTown() {
         super("Towny", "town");
         super.setAnalysisOnly(false);
+        super.setIcon("bank");
         super.setPrefix("Town: ");
     }
 

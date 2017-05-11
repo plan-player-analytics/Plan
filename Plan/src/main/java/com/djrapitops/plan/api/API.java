@@ -11,13 +11,14 @@ import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
-import org.bukkit.OfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.OfflinePlayer;
 
 /**
  * This class contains the API methods.
  * <p>
- * Revamp incoming in 3.1.0
+ * Methods can be called from Asyncronous task & are thread safe unless
+ * otherwise stated.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -35,18 +36,64 @@ public class API {
         this.plugin = plugin;
     }
 
-    public void addPluginDataSource(PluginData dataSource) {
-        plugin.getHookHandler().addPluginDataSource(dataSource);
+    /**
+     * Check whether or not the plugin enabled successfully.
+     *
+     * @return true if plugin is enabled correctly.
+     */
+    public boolean isEnabled() {
+        return plugin.isEnabled();
     }
-    
-    public String getPlayerInspectPageLinkHtml(UUID uuid) throws IllegalStateException {
+
+    /**
+     * Add a source of plugin data to the Plugins tab on Analysis and/or Inspect
+     * page.
+     *
+     * Refer to documentation on github or Javadoc of PluginData to set-up a
+     * data source that extends PluginData correctly.
+     *
+     * @param dataSource an object that extends PluginData-object, thus allowing
+     * Analysis & Inspect to manage the data of a plugin correctly.
+     * @see PluginData
+     */
+    public void addPluginDataSource(PluginData dataSource) {
+        if (isEnabled()) {
+            plugin.getHookHandler().addPluginDataSource(dataSource);
+        }
+    }
+
+    /**
+     * Used to get the link to InspectPage of a player.
+     *
+     * This method is useful if you have a table and want to link to the inspect
+     * page.
+     *
+     * Html.LINK.parse("Link", "Playername") can be used to get a link
+     * {@code <a href="Link">Playername</a>}
+     *
+     * @param name Playername of the player
+     * @return ip:port/security/player/Playername
+     */
+    public String getPlayerInspectPageLink(String name) {
+        return HtmlUtils.getInspectUrl(name);
+    }
+
+    /**
+     * Used to get the playerName of a player who has played on the server.
+     *
+     * @param uuid UUID of the player.
+     * @return Playername, eg "Rsl1122"
+     * @throws IllegalStateException If the player has not played on the server
+     * before.
+     */
+    public String getPlayerName(UUID uuid) throws IllegalStateException {
         OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (offlinePlayer.hasPlayedBefore()) {
-            return HtmlUtils.getInspectUrl(offlinePlayer.getName());
+            return offlinePlayer.getName();
         }
         throw new IllegalStateException("Player has not played on this server before.");
     }
-    
+
     /**
      * Uses UUIDFetcher to turn PlayerName to UUID
      *
@@ -57,8 +104,7 @@ public class API {
     public UUID playerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
     }
-    
-    
+
     // DEPRECATED METHODS WILL BE REMOVED IN 3.2.0
     @Deprecated
     public static String formatTimeSinceDate(Date before, Date after) {
@@ -114,7 +160,7 @@ public class API {
     public UserData getUserDataFromInspectCache(UUID uuid) {
         return plugin.getInspectCache().getFromCache(uuid);
     }
-    
+
     @Deprecated
     public AnalysisData getAnalysisDataFromCache() {
         return plugin.getAnalysisCache().getData();

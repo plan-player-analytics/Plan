@@ -18,6 +18,7 @@ public class EssentialsJailed extends PluginData {
     public EssentialsJailed(Essentials essentials) {
         super("Essentials", "jailed", AnalysisType.BOOLEAN_PERCENTAGE, AnalysisType.BOOLEAN_TOTAL);
         this.essentials = essentials;
+        super.setIcon("ban");
         super.setAnalysisOnly(false);
         super.setPrefix("Jailed: ");
     }

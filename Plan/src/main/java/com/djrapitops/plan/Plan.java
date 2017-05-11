@@ -131,7 +131,7 @@ public class Plan extends JavaPlugin {
             consoleSender.sendMessage(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
-        hookHandler = new HookHandler(this);
+        hookHandler = new HookHandler();
         Log.debug("Verboose debug messages are enabled.");
         Log.info(Phrase.ENABLED + "");
     }
@@ -302,10 +302,17 @@ public class Plan extends JavaPlugin {
         return bootAnalysisTaskID;
     }
 
+    /**
+     * Old method for getting the API.
+     *
+     * @deprecated Use Plan.getAPI() (static method) instead.
+     * @return the Plan API.
+     */
+    @Deprecated
     public API getAPI() {
         return api;
     }
-    
+
     private void initLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
         /*// Used to write a new Locale file
@@ -362,6 +369,15 @@ public class Plan extends JavaPlugin {
         Log.info("Using locale: " + usingLocale);
     }
 
+    /**
+     * Used to get the current instance of Plan.
+     *
+     * Instance is set on the first line of onEnable method.
+     *
+     * @return current instance of Plan, Singleton.
+     * @throws IllegalStateException If onEnable method has not been called &
+     * the instance is null.
+     */
     public static Plan getInstance() {
         Plan INSTANCE = PlanHolder.INSTANCE;
         if (INSTANCE == null) {
@@ -370,10 +386,22 @@ public class Plan extends JavaPlugin {
         return INSTANCE;
     }
 
+    /**
+     * Used to set the current instance of Plan.
+     *
+     * @param plan The newly enabled Plan instance.
+     */
     public static void setInstance(Plan plan) {
         PlanHolder.INSTANCE = plan;
     }
 
+    /**
+     * Used to get the PlanAPI. @see API
+     *
+     * @return API of the current instance of Plan.
+     * @throws IllegalStateException If onEnable method has not been called on
+     * Plan & the instance is null.
+     */
     public static API getPlanAPI() throws IllegalStateException {
         Plan INSTANCE = PlanHolder.INSTANCE;
         if (INSTANCE == null) {
@@ -383,7 +411,6 @@ public class Plan extends JavaPlugin {
     }
 
     private static class PlanHolder {
-
         private static Plan INSTANCE = null;
     }
 }

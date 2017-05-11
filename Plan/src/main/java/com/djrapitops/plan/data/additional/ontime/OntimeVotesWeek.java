@@ -15,8 +15,9 @@ import org.bukkit.OfflinePlayer;
 public class OntimeVotesWeek extends PluginData {
 
     public OntimeVotesWeek() {
-        super("OnTime", "votes_7d", AnalysisType.LONG_TOTAL);
+        super("OnTime", "votes_7d", AnalysisType.INT_TOTAL);
         super.setAnalysisOnly(false);
+        super.setIcon("check");
         super.setPrefix("Votes Last 7d: ");
     }
 
