@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,7 +43,17 @@ public class PlanDeathEventListener implements Listener {
         Player killer = dead.getKiller();
         boolean killerIsPlayer = killer != null;
         if (killerIsPlayer) {
-            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, killer.getInventory().getItemInMainHand().getType().name()));
+            Material itemInHand;
+            try {
+                itemInHand = killer.getInventory().getItemInMainHand().getType();
+            } catch (Throwable e) {
+                try {
+                    itemInHand = killer.getInventory().getItemInHand().getType();
+                } catch (Throwable e2) {
+                    itemInHand = Material.AIR;
+                }
+            }
+            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, itemInHand.name()));
         }
         if (dead instanceof Player) {
             handler.addToPool(new DeathInfo(((Player) dead).getUniqueId()));

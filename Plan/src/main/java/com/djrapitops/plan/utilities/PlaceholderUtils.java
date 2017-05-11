@@ -112,6 +112,13 @@ public class PlaceholderUtils {
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForAnalysis();
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, data.getAdditionalDataReplaceMap());
         replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, data.getAdditionalDataReplaceMap()));
+        String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
+        String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};
+        for (int i = 0; i < colors.length; i++) {
+            if (!defaultCols[i].equals(colors[i])) {
+                replaceMap.put("#"+defaultCols[i], "#"+colors[i]);
+            }
+        }
         return replaceMap;
     }
 
@@ -194,7 +201,7 @@ public class PlaceholderUtils {
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);
-        replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));       
+        replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
         return replaceMap;
     }
 }

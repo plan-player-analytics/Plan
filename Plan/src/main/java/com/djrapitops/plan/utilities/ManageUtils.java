@@ -41,7 +41,8 @@ public class ManageUtils {
         final Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
         if (uuids.isEmpty()) {
             return false;
-        }        
+        }
+        backupDB.init();
         return clearAndCopy(backupDB, copyFromDB, uuids);
     }
 
@@ -58,7 +59,7 @@ public class ManageUtils {
         for (UUID uuid : onTimeData.keySet()) {
             OfflinePlayer player = getOfflinePlayer(uuid);
             if (!plugin.getDB().wasSeenBefore(uuid)) {
-                
+
                 handler.newPlayer(player);
             }
             DBCallableProcessor importer = new DBCallableProcessor() {

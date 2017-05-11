@@ -38,6 +38,12 @@ Customization:
       Secondary: '&7'
       Highlight: '&f'
     HTML:
+      UI:
+        Main: 348e0f
+        MainDark: 267F00
+        Secondary: 5cb239
+        Tertiary: 89c471
+        TertiaryDark: 5da341
       ActivityGraph:
         OnlinePlayers: '1E90FF'
         OnlinePlayersFill: '75BBFF'
