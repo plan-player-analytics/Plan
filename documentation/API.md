@@ -65,8 +65,9 @@ public class StepCounterSteps extends PluginData {
 - List<AnalysisType> analysisTypes
 - boolean analysisOnly
 
-analysisOnly is 'true' by default. - Thus Inspect page will ignore the data.  (Except when using a super constructor without AnalysisType parameters. - then 'false'.)
-analysisTypes is empty. - Thus Analysis page will ignore the data.  
+- analysisOnly is 'true' by default. - Inspect page will ignore the data.  
+- analysisOnly is set to 'false' automatically when using the super constructor without AnalysisType parameters.
+- analysisTypes is empty. - Thus Analysis page will ignore the data.  
 
 ## Registering the data point
 
@@ -110,7 +111,7 @@ public StepCounterSteps(StepCounterPlugin stepCounter) {
 
 Why should parseContainer(String modifier, String value)-method be used with getHtmlReplaceValue-method?
 
-- Automatically add <div class="plugin-data"></div> wrap around the text.
+- Automatically add `<div class="plugin-data"></div>` wrap around the text.
 - Automatically add the prefix, suffix & icon to the value.
 
 Wait, icons?
