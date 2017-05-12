@@ -9,20 +9,25 @@ Accessing the API Methods:
 API planAPI = Plan.getPlanAPI(); // Throws IllegalStateException if onEnable() method for Plan has not yet been called.
 ```
 
-## Adding plugin's data to the 'plugins'-tab on Analysis and/or Inspect pages
+# Adding plugin's data to the 'plugins'-tab on Analysis and/or Inspect pages
 
 Plan has a flexible data addition system since 3.1.0. With it you can add Averages, Totals, Percentages, Tables & Other Html elements to the Plugins tab on the Analysis and/or Inspect pages.
 
 ## Basics
 
-- [PluginData](/Plan/src/main/java/com/djrapitops/plan/data/additional/PluginData.java))
+- [PluginData](/Plan/src/main/java/com/djrapitops/plan/data/additional/PluginData.java)
 - [AnalysisType Enum](/Plan/src/main/java/com/djrapitops/plan/data/additional/AnalysisType.java)
 - [Example classes](/Plan/src/main/java/com/djrapitops/plan/data/additional)
 
 To add data a class that extends PluginData class is needed. One PluginData object should only contain data for one user, but tables & other elements are an exception.  
 
+Examples:
+- Basic Example
+- Inspect Example
+- Analysis Example
+- Table Example
 
-### Basic Example
+## Basic Example
 
 ```
 public class StepCounterSteps extends PluginData {
