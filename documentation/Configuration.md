@@ -54,9 +54,11 @@ Security.AddressSecurityCode | 2.5.0 | String | bAkEd | This string is added to 
 Config.Point | Version introduced | Type | Default | Description
 --- | ---- | ------ | --- | ---------------------------------
 Colors.Commands | 2.1.0 | String |  | Color codes used with the */plan* commands. 
-Colors.HTML | 2.1.0 | String |  | These HTML Color codes are used when generating the graphs and piecharts. Use without the # (hashtag)
+Colors.HTML | 2.1.0 | String |  | These HTML Color codes are used when generating the Html pages. Use without the # (hashtag)
 DemographicsTriggers.Trigger | 2.1.0 | String |  | An attempt to gather info is only made if message contains one of these words.
 DemographicsTriggers.IgnoreWhen | 2.1.0 | String |  | If an attempt is made and message contains one of these words, the info is disregarded.
+Plugins.Factions.HideFactions | 3.1.0 | String list | - ExampleFaction | Add a list of Faction names you don't want to show up on the Analysis page.
+Plugins.Towny.HideTowns | 3.1.0 | String list | - ExampleTown | Add a list of Town names you don't want to show up on the Analysis page.
 
 ## Database settings
 
