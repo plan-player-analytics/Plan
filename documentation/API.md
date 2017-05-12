@@ -9,7 +9,7 @@ Accessing the API Methods:
 API planAPI = Plan.getPlanAPI(); // Throws IllegalStateException if onEnable() method for Plan has not yet been called.
 ```
 
-# Adding plugin's data to the 'plugins'-tab on Analysis and/or Inspect pages
+## Adding plugin's data to the 'plugins'-tab on Analysis and/or Inspect pages
 
 Plan has a flexible data addition system since 3.1.0. With it you can add Averages, Totals, Percentages, Tables & Other Html elements to the Plugins tab on the Analysis and/or Inspect pages.
 
