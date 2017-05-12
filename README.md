@@ -9,7 +9,8 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 
 ## Documentation
 - Javadocs (In progress)
-- API v2.9.3 (Revamp incoming in 3.1.0)
+- [API](documentation/API.md)
+- [Dependencies](documentation/Dependencies.md)
 - Data, Collection & Visualisation
   - Gathering the data & Data cache
   - Stored data & data format
