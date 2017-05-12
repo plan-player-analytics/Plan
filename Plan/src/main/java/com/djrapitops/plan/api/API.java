@@ -6,6 +6,8 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -79,6 +81,139 @@ public class API {
     }
 
     /**
+     * Schedule a UserData object to be fetched from the database or cache if
+     * the player is online.
+     *
+     * The data will not be cached if it is not already cached.
+     *
+     * @param uuid UUID of the player.
+     * @param processor Object implementing DBCallableProcessor, which
+     * process(UserData data) method will be called.
+     */
+    public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
+        plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
+    }
+
+    /**
+     * Schedule a HandlingInfo object to be processed.
+     *
+     * UserData associated with the UUID of the HandlingInfo object will be
+     * cached.
+     *
+     * @param info object that extends HandlingInfo.
+     */
+    public void scheduleEventHandlingInfo(HandlingInfo info) {
+        plugin.getHandler().addToPool(info);
+    }
+
+    /**
+     * Used to cache a UserData object.
+     *
+     * If data is already cached it will be overridden.
+     *
+     * @param data UserData object. Will be placed to the data.getUuid() key in
+     * the cache.
+     */
+    public void placeDataToCache(UserData data) {
+        plugin.getHandler().cache(data);
+    }
+
+    /**
+     * Used to save the cached data to the database.
+     *
+     * Should be only called from an Asyncronous thread.
+     */
+    public void saveCachedData() {
+        plugin.getHandler().saveCachedUserData();
+    }
+
+    /**
+     * Check if the UserData is cached to the InspectCache.
+     *
+     * @param uuid UUID of the player.
+     * @return true/false
+     */
+    public boolean isPlayersDataInspectCached(UUID uuid) {
+        return plugin.getInspectCache().isCached(uuid);
+    }
+
+    /**
+     * Cache the UserData to InspectCache.
+     *
+     * Uses cache if data is cached or database if not. Call from an Asyncronous
+     * thread.
+     *
+     * @param uuid
+     */
+    public void cacheUserDataToInspectCache(UUID uuid) {
+        plugin.getInspectCache().cache(uuid);
+    }
+
+    /**
+     * Used to get the full Html of the Inspect page as a string.
+     *
+     * Check if the data is cached to InspectCache before calling this.
+     *
+     * @param uuid UUID of the player.
+     * @return player.html with all placeholders replaced.
+     */
+    public String getPlayerHtmlAsString(UUID uuid) {
+        WebSocketServer server = plugin.getUiServer();
+        if (server != null) {
+            return server.getDataReqHandler().getInspectHtml(uuid);
+        }
+        DataRequestHandler reqH = new DataRequestHandler(plugin);
+        return reqH.getInspectHtml(uuid);
+    }
+
+    /**
+     * Check if the Analysis has been run & is cached to the AnalysisCache.
+     *
+     * @return true/false
+     */
+    public boolean isAnalysisCached() {
+        return plugin.getAnalysisCache().isCached();
+    }
+
+    /**
+     * Run's the analysis with the current data in the cache & fetches rest from
+     * the database.
+     *
+     * Starts a new Asyncronous task to run the analysis.
+     */
+    public void updateAnalysisCache() {
+        plugin.getAnalysisCache().updateCache();
+    }
+
+    /**
+     * Used to get the full Html of the Analysis page as a string.
+     *
+     * Check if the data is cached to AnalysisCache before calling this.
+     *
+     * @return analysis.html with all placeholders replaced.
+     */
+    public String getAnalysisHtmlAsString() {
+        WebSocketServer server = plugin.getUiServer();
+        if (server != null) {
+            return server.getDataReqHandler().getAnalysisHtml();
+        }
+        DataRequestHandler reqH = new DataRequestHandler(plugin);
+        return reqH.getAnalysisHtml();
+    }
+
+    /**
+     * Used to get the AnalysisData object.
+     *
+     * Check if the data is cached to AnalysisCache before calling this.
+     *
+     * @return AnalysisData object.
+     * @see AnalysisData
+     */
+    public AnalysisData getAnalysisDataFromCache() {
+        return plugin.getAnalysisCache().getData();
+    }
+
+    /**
      * Used to get the playerName of a player who has played on the server.
      *
      * @param uuid UUID of the player.
@@ -124,45 +259,5 @@ public class API {
     @Deprecated
     public static String formatTimeStamp(String timeInMs) {
         return FormatUtils.formatTimeStamp(timeInMs);
-    }
-
-    @Deprecated
-    public void cacheUserDataToInspectCache(UUID uuid) {
-        plugin.getInspectCache().cache(uuid);
-    }
-
-    @Deprecated
-    public String getPlayerHtmlAsString(UUID uuid) {
-        WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
-            return server.getDataReqHandler().getInspectHtml(uuid);
-        }
-        DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getInspectHtml(uuid);
-    }
-
-    @Deprecated
-    public void updateAnalysisCache() {
-        plugin.getAnalysisCache().updateCache();
-    }
-
-    @Deprecated
-    public String getAnalysisHtmlAsString() {
-        WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
-            return server.getDataReqHandler().getAnalysisHtml();
-        }
-        DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getAnalysisHtml();
-    }
-
-    @Deprecated
-    public UserData getUserDataFromInspectCache(UUID uuid) {
-        return plugin.getInspectCache().getFromCache(uuid);
-    }
-
-    @Deprecated
-    public AnalysisData getAnalysisDataFromCache() {
-        return plugin.getAnalysisCache().getData();
     }
 }

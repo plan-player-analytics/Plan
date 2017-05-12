@@ -13,7 +13,6 @@ public class FactionsFaction extends PluginData {
 
     public FactionsFaction() {
         super("Factions", "faction");
-        super.setAnalysisOnly(false);
         super.setIcon("flag");
         super.setPrefix("Faction: ");
     }
@@ -21,7 +20,11 @@ public class FactionsFaction extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         MPlayer mPlayer = MPlayer.get(uuid);
-        return parseContainer("", mPlayer.getFactionName());
+        String faction = mPlayer.getFactionName();
+        if (faction.isEmpty()) {
+            return parseContainer("", "No Faction.");
+        }
+        return parseContainer("", faction);
     }
 
     @Override

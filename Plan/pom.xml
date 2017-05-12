@@ -5,11 +5,22 @@
     <artifactId>Plan</artifactId>
     <version>2.0.0</version>
     <packaging>jar</packaging>
+    <repositories>
+<!--        <repository>
+            <id>bukkit-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>-->
+        <repository>
+            <id>vault-repo</id>
+            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <!--        SoftDepended Plugins-->
         <dependency>
@@ -31,12 +42,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.minimum</groupId>
-            <artifactId>superbvote</artifactId>
-            <version>0.3.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>factions</artifactId>
             <version>2.10.0</version>
@@ -52,6 +57,12 @@
             <groupId>com.palmergames</groupId>
             <artifactId>towny</artifactId>
             <version>0.91.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.6</version>
             <scope>provided</scope>
         </dependency>
         <!--         -->  
@@ -111,6 +122,7 @@
             <scope>test</scope>
         </dependency>        
     </dependencies>
+    
     <build>
         <defaultGoal>clean package install</defaultGoal>
         <finalName>${project.name}</finalName>
@@ -126,7 +138,6 @@
             </resource>
         </resources>
         <plugins>
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
@@ -135,22 +146,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-<!--            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -177,19 +172,6 @@
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
-            <!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
         </plugins>
     </build>
     <properties>

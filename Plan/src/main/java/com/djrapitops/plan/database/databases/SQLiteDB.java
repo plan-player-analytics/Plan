@@ -12,7 +12,6 @@ import main.java.com.djrapitops.plan.Plan;
  */
 public class SQLiteDB extends SQLDB {
 
-    private final Plan plugin;
     private final String dbName;
 
     /**
@@ -31,8 +30,6 @@ public class SQLiteDB extends SQLDB {
      */
     public SQLiteDB(Plan plugin, String dbName) {
         super(plugin, false);
-
-        this.plugin = plugin;
         this.dbName = dbName;
     }
 

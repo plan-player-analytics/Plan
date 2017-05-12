@@ -55,12 +55,12 @@ public class StepCounterSteps extends PluginData {
 }
 ```
 
-**At the moment registering this data source will have no effect.** It is disregarded because of two variables inside PluginData:
+**At the moment registering this data source will have Only show up on Inspect page.** It is disregarded on analysis page. Two variables inside PluginData determine what should be done with the datapoint:
 
 - List<AnalysisType> analysisTypes
 - boolean analysisOnly
 
-analysisOnly is 'true' by default. - Thus Inspect page will ignore the data.  
+analysisOnly is 'true' by default. - Thus Inspect page will ignore the data.  (Except when using a super constructor without AnalysisType parameters. - then 'false'.)
 analysisTypes is empty. - Thus Analysis page will ignore the data.  
 
 ## Registering the data point

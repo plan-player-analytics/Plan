@@ -15,7 +15,6 @@ public class FactionsMaxPower extends PluginData {
 
     public FactionsMaxPower() {
         super("Factions", "maxpower");
-        super.setAnalysisOnly(false);
         super.setPrefix("Max Power: ");
     }
 

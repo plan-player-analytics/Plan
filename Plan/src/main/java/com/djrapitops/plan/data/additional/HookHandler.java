@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.factions.FactionsHook;
 import main.java.com.djrapitops.plan.data.additional.ontime.OnTimeHook;
 import main.java.com.djrapitops.plan.data.additional.towny.TownyHook;
+import main.java.com.djrapitops.plan.data.additional.vault.VaultHook;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
@@ -25,16 +25,9 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 public class HookHandler {
 
     private List<PluginData> additionalDataSources;
-    private AdvancedAchievementsHook advancedAchievementsHook;
-    private EssentialsHook essentialsHook;
-    private FactionsHook factionsHook;
-    private OnTimeHook onTimeHook;
-    private TownyHook townyHook;
 
     /**
      * Class constructor, hooks to plugins.
-     *
-     * @param plan Current instance of Plan.
      */
     public HookHandler() {
         additionalDataSources = new ArrayList<>();
@@ -57,7 +50,7 @@ public class HookHandler {
     }
 
     /**
-     * Used to get all PluginData objects in a list.
+     * Used to get all PluginData objects currently registered.
      *
      * @return List of PluginData objects.
      */
@@ -65,43 +58,53 @@ public class HookHandler {
         return additionalDataSources;
     }
 
-    /**
-     *
-     */
-    public void reloadHooks() {
-        additionalDataSources.clear();
-        hook();
-    }
-
     private void hook() {
         try {
-            advancedAchievementsHook = new AdvancedAchievementsHook(this);
+            AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(this);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            essentialsHook = new EssentialsHook(this);
+            EssentialsHook essentialsHook = new EssentialsHook(this);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            factionsHook = new FactionsHook(this);
+            FactionsHook factionsHook = new FactionsHook(this);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            onTimeHook = new OnTimeHook(this);
+            OnTimeHook onTimeHook = new OnTimeHook(this);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            townyHook = new TownyHook(this);
+            TownyHook townyHook = new TownyHook(this);
+        } catch (NoClassDefFoundError e) {
+        }
+        try {
+            VaultHook vaultHook = new VaultHook(this);
         } catch (NoClassDefFoundError e) {
         }
     }
 
+    /**
+     * Used to get the Layout with PluginData placeholders to replace %plugins%
+     * placeholder on analysis.hmtl.
+     *
+     * @return html, getPluginsTabLayout-method
+     * @see HtmlUtils
+     */
     public String getPluginsTabLayoutForAnalysis() {
         List<String> pluginNames = getPluginNamesAnalysis();
         Map<String, List<String>> placeholders = getPlaceholdersAnalysis();
         return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
     }
 
+    /**
+     * Used to get the Layout with PluginData placeholders to replace %plugins%
+     * placeholder on player.hmtl.
+     *
+     * @return html, getPluginsTabLayout-method
+     * @see HtmlUtils
+     */
     public String getPluginsTabLayoutForInspect() {
         List<String> pluginNames = getPluginNamesInspect();
         Map<String, List<String>> placeholders = getPlaceholdersInspect();
