@@ -79,7 +79,7 @@ Plan.getPlanAPI().addPluginDataSource(new StepCounterSteps(stepCounter));
 
 **If you register multiple data sources, they will appear in the order they were registered.**
 
-### Inspect Example
+## Inspect Example
 
 We can add the data to the Inspect page with `super.setAnalysisOnly(false);`-call inside the constructor:
 ```
@@ -121,7 +121,7 @@ To set the icon call `super.setIcon(iconName)` in the constructor. Icon-names ar
 super.setIcon("wheelchair");
 ```
 
-### Analysis Example
+## Analysis Example
 
 Adding data to the Analysis page is straightforward as well. Please note that one class can add a data to both Analysis & Inspect pages.
 
@@ -154,7 +154,7 @@ Refer to AnalysisType for what types you should add. The type depends on the ret
 
 AnalysisType.HTML is for all other elements you might want to add.
 
-### Table Example
+## Table Example
 
 A good example is the [AdvancedAchievementsTable](/Plan/src/main/java/com/djrapitops/plan/data/additional/advancedachievements/AdvanceAchievementsTable.java).
 You can use the [Html Enum] to quickly create table html.
