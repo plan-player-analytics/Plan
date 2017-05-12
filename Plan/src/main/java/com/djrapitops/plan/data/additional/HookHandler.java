@@ -1,175 +1,182 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import java.io.Serializable;
+import main.java.com.djrapitops.plan.data.additional.essentials.EssentialsHook;
+import main.java.com.djrapitops.plan.data.additional.advancedachievements.AdvancedAchievementsHook;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.ui.Html;
-import main.java.com.djrapitops.plan.ui.tables.SortableFactionsTableCreator;
-import main.java.com.djrapitops.plan.ui.tables.SortableTownTableCreator;
+import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.additional.factions.FactionsHook;
+import main.java.com.djrapitops.plan.data.additional.ontime.OnTimeHook;
+import main.java.com.djrapitops.plan.data.additional.towny.TownyHook;
+import main.java.com.djrapitops.plan.data.additional.vault.VaultHook;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
+ * Class responsible for hooking to other plugins & managing the %plugins%
+ * placeholder on Analysis & Inspect pages.
  *
  * @author Rsl1122
  */
 public class HookHandler {
 
-    private Plan plan;
-    private AdvancedAchievementsHook advancedAchievementsHook;
-    private EssentialsHook essentialsHook;
-    private SuperbVoteHook superbVoteHook;
-    private FactionsHook factionsHook;
-    private OnTimeHook onTimeHook;
-    private TownyHook townyHook;
+    private List<PluginData> additionalDataSources;
 
     /**
-     *
-     * @param plan
+     * Class constructor, hooks to plugins.
      */
-    public HookHandler(Plan plan) {
-        this.plan = plan;
+    public HookHandler() {
+        additionalDataSources = new ArrayList<>();
         hook();
     }
 
     /**
+     * Adds a new PluginData source to the list.
      *
+     * The plugin data will appear on Analysis and/or Inspect pages depending on
+     * how the extending object is set up.
+     *
+     * Refer to documentation on github for more information.
+     *
+     * @param dataSource an object extending the PluginData class.
      */
-    public void reloadHooks() {
-        hook();
+    public void addPluginDataSource(PluginData dataSource) {
+        Log.debug("Registered a new datasource: " + dataSource.getPlaceholder("").replace("%", ""));
+        additionalDataSources.add(dataSource);
+    }
+
+    /**
+     * Used to get all PluginData objects currently registered.
+     *
+     * @return List of PluginData objects.
+     */
+    public List<PluginData> getAdditionalDataSources() {
+        return additionalDataSources;
     }
 
     private void hook() {
         try {
-            advancedAchievementsHook = new AdvancedAchievementsHook(plan);
+            AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(this);
         } catch (NoClassDefFoundError e) {
-            advancedAchievementsHook = new AdvancedAchievementsHook();
         }
         try {
-            essentialsHook = new EssentialsHook(plan);
+            EssentialsHook essentialsHook = new EssentialsHook(this);
         } catch (NoClassDefFoundError e) {
-            essentialsHook = new EssentialsHook();
         }
         try {
-            superbVoteHook = new SuperbVoteHook(plan);
+            FactionsHook factionsHook = new FactionsHook(this);
         } catch (NoClassDefFoundError e) {
-            superbVoteHook = new SuperbVoteHook();
         }
         try {
-            factionsHook = new FactionsHook(plan);
+            OnTimeHook onTimeHook = new OnTimeHook(this);
         } catch (NoClassDefFoundError e) {
-            factionsHook = new FactionsHook();
         }
         try {
-            townyHook = new TownyHook(plan);
+            TownyHook townyHook = new TownyHook(this);
         } catch (NoClassDefFoundError e) {
-            townyHook = new TownyHook();
         }
         try {
-            onTimeHook = new OnTimeHook(plan);
+            VaultHook vaultHook = new VaultHook(this);
         } catch (NoClassDefFoundError e) {
-            onTimeHook = new OnTimeHook();
         }
     }
 
     /**
+     * Used to get the Layout with PluginData placeholders to replace %plugins%
+     * placeholder on analysis.hmtl.
      *
-     * @return
+     * @return html, getPluginsTabLayout-method
+     * @see HtmlUtils
      */
-    public AdvancedAchievementsHook getAdvancedAchievementsHook() {
-        return advancedAchievementsHook;
+    public String getPluginsTabLayoutForAnalysis() {
+        List<String> pluginNames = getPluginNamesAnalysis();
+        Map<String, List<String>> placeholders = getPlaceholdersAnalysis();
+        return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
     }
 
     /**
+     * Used to get the Layout with PluginData placeholders to replace %plugins%
+     * placeholder on player.hmtl.
      *
-     * @return
+     * @return html, getPluginsTabLayout-method
+     * @see HtmlUtils
      */
-    public EssentialsHook getEssentialsHook() {
-        return essentialsHook;
+    public String getPluginsTabLayoutForInspect() {
+        List<String> pluginNames = getPluginNamesInspect();
+        Map<String, List<String>> placeholders = getPlaceholdersInspect();
+        return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
+    }
+
+    private List<String> getPluginNamesAnalysis() {
+        List<String> pluginNames = additionalDataSources.stream()
+                .filter(source -> !source.getAnalysisTypes().isEmpty())
+                .map(source -> source.getSourcePlugin())
+                .distinct()
+                .collect(Collectors.toList());
+        Collections.sort(pluginNames);
+        return pluginNames;
+    }
+
+    private List<String> getPluginNamesInspect() {
+        List<String> pluginNames = additionalDataSources.stream()
+                .filter(source -> !source.analysisOnly())
+                .map(source -> source.getSourcePlugin())
+                .distinct()
+                .collect(Collectors.toList());
+        Collections.sort(pluginNames);
+        return pluginNames;
+    }
+
+    private Map<String, List<String>> getPlaceholdersAnalysis() {
+        Map<String, List<String>> placeholders = new HashMap<>();
+        for (PluginData source : additionalDataSources) {
+            List<AnalysisType> analysisTypes = source.getAnalysisTypes();
+            if (analysisTypes.isEmpty()) {
+                continue;
+            }
+            String pluginName = source.getSourcePlugin();
+            if (!placeholders.containsKey(pluginName)) {
+                placeholders.put(pluginName, new ArrayList<>());
+            }
+            for (AnalysisType t : analysisTypes) {
+                placeholders.get(pluginName).add(source.getPlaceholder(t.getPlaceholderModifier()));
+            }
+        }
+        return placeholders;
+    }
+
+    private Map<String, List<String>> getPlaceholdersInspect() {
+        Map<String, List<String>> placeholders = new HashMap<>();
+        for (PluginData source : additionalDataSources) {
+            if (source.analysisOnly()) {
+                continue;
+            }
+            String pluginName = source.getSourcePlugin();
+            if (!placeholders.containsKey(pluginName)) {
+                placeholders.put(pluginName, new ArrayList<>());
+            }
+            placeholders.get(pluginName).add(source.getPlaceholder(""));
+        }
+        return placeholders;
     }
 
     /**
+     * Used to get the replaceMap for inspect page.
      *
-     * @return
-     */
-    public SuperbVoteHook getSuperbVoteHook() {
-        return superbVoteHook;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public FactionsHook getFactionsHook() {
-        return factionsHook;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public TownyHook getTownyHook() {
-        return townyHook;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public OnTimeHook getOnTimeHook() {
-        return onTimeHook;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Map<String, String> getAdditionalAnalysisReplaceRules() {
-        Map<String, String> addReplace = new HashMap<>();
-        AdvancedAchievementsHook aH = advancedAchievementsHook;
-        EssentialsHook eH = essentialsHook;
-        SuperbVoteHook sH = superbVoteHook;
-        FactionsHook fH = factionsHook;
-        TownyHook tH = townyHook;
-        addReplace.put("%towntable%", tH.isEnabled() ? SortableTownTableCreator.createSortableTownsTable(tH.getTopTowns(), tH) : "");
-        addReplace.put("%factionstable%", fH.isEnabled() ? SortableFactionsTableCreator.createSortableFactionsTable(fH.getTopFactions(), fH) : "");
-        addReplace.put("%essentialswarps%", eH.isEnabled() ? Html.WARPS.parse(eH.getWarps().toString()) : "");
-        return addReplace;
-    }
-
-    /**
-     *
-     * @param uuid
-     * @return
+     * @param uuid UUID of the player whose page is being inspected.
+     * @return Map: key|value - %placeholder%|value
      */
     public Map<String, String> getAdditionalInspectReplaceRules(UUID uuid) {
         Map<String, String> addReplace = new HashMap<>();
-        AdvancedAchievementsHook aH = advancedAchievementsHook;
-        EssentialsHook eH = essentialsHook;
-        SuperbVoteHook sH = superbVoteHook;
-        FactionsHook fH = factionsHook;
-        TownyHook tH = townyHook;
-        addReplace.put("%achievements%", (aH.isEnabled() ? Html.ACHIEVEMENTS.parse(aH.getPlayerAchievements(uuid) + "", aH.getTotalAchievements() + "") : ""));
-        if (eH.isEnabled()) {
-            HashMap<String, Serializable> essData = eH.getEssentialsData(uuid);
-            addReplace.put("%essentials%", ((boolean) essData.get("JAILED") ? Html.JAILED.parse() : "")
-                    + " " + ((boolean) essData.get("MUTED") ? Html.MUTED.parse() : ""));
-        } else {
-            addReplace.put("%essentials%", "");
-        }
-
-        addReplace.put("%votes%", sH.isEnabled() ? Html.VOTES.parse(sH.getVotes(uuid) + "") : "");
-        if (fH.isEnabled()) {
-            HashMap<String, Serializable> facInfo = fH.getPlayerInfo(uuid);
-            addReplace.put("%faction%", Html.FACTION.parse(facInfo.get("FACTION") + "", facInfo.get("POWER") + "", facInfo.get("MAXPOWER") + ""));
-        } else {
-            addReplace.put("%faction%", "");
-        }
-        if (tH.isEnabled()) {
-            HashMap<String, Serializable> townInfo = tH.getPlayerInfo(uuid);
-            addReplace.put("%town%", Html.TOWN.parse(townInfo.get("TOWN") + ""));
-        } else {
-            addReplace.put("%town%", "");
+        for (PluginData source : additionalDataSources) {
+            if (source.analysisOnly()) {
+                continue;
+            }
+            addReplace.put(source.getPlaceholder(""), source.getHtmlReplaceValue("", uuid));
         }
         return addReplace;
     }

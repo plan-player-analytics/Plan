@@ -5,15 +5,22 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.OfflinePlayer;
 
 /**
  * This class contains the API methods.
  * <p>
- * Revamp incoming in 3.1.0
+ * Methods can be called from Asyncronous task & are thread safe unless
+ * otherwise stated.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -32,49 +39,194 @@ public class API {
     }
 
     /**
-     * Returns a user readable format of Time difference between two dates
+     * Check whether or not the plugin enabled successfully.
      *
-     * @param before Date with long value that is lower
-     * @param after Date with long value that is higher
-     * @return String that is easily readable d:h:m:s
+     * @return true if plugin is enabled correctly.
      */
-    @Deprecated
-    public static String formatTimeSinceDate(Date before, Date after) {
-        return FormatUtils.formatTimeAmountSinceDate(before, after);
+    public boolean isEnabled() {
+        return plugin.isEnabled();
     }
 
     /**
-     * Returns a user readable format of Time difference between two dates
+     * Add a source of plugin data to the Plugins tab on Analysis and/or Inspect
+     * page.
      *
-     * @param before String of long since Epoch 1970
-     * @param after Date with long value that is higher
-     * @return String that is easily readable d:h:m:s
+     * Refer to documentation on github or Javadoc of PluginData to set-up a
+     * data source that extends PluginData correctly.
+     *
+     * @param dataSource an object that extends PluginData-object, thus allowing
+     * Analysis & Inspect to manage the data of a plugin correctly.
+     * @see PluginData
      */
-    @Deprecated
-    public static String formatTimeSinceString(String before, Date after) {
-        return FormatUtils.formatTimeAmountSinceString(before, after);
+    public void addPluginDataSource(PluginData dataSource) {
+        if (isEnabled()) {
+            plugin.getHookHandler().addPluginDataSource(dataSource);
+        }
     }
 
     /**
-     * Returns a user readable format of Time
+     * Used to get the link to InspectPage of a player.
      *
-     * @param timeInMs String of long value in milliseconds
-     * @return String that is easily readable d:h:m:s
+     * This method is useful if you have a table and want to link to the inspect
+     * page.
+     *
+     * Html.LINK.parse("Link", "Playername") can be used to get a link
+     * {@code <a href="Link">Playername</a>}
+     *
+     * @param name Playername of the player
+     * @return ip:port/security/player/Playername
      */
-    @Deprecated
-    public static String formatTimeAmount(String timeInMs) {
-        return FormatUtils.formatTimeAmount(timeInMs);
+    public String getPlayerInspectPageLink(String name) {
+        return HtmlUtils.getInspectUrl(name);
     }
 
     /**
-     * Returns user readable format of a Date.
+     * Schedule a UserData object to be fetched from the database or cache if
+     * the player is online.
      *
-     * @param timeInMs String of long since Epoch 1970
-     * @return String that is easily readable date.
+     * The data will not be cached if it is not already cached.
+     *
+     * @param uuid UUID of the player.
+     * @param processor Object implementing DBCallableProcessor, which
+     * process(UserData data) method will be called.
      */
-    @Deprecated
-    public static String formatTimeStamp(String timeInMs) {
-        return FormatUtils.formatTimeStamp(timeInMs);
+    public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
+        plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
+    }
+
+    /**
+     * Schedule a HandlingInfo object to be processed.
+     *
+     * UserData associated with the UUID of the HandlingInfo object will be
+     * cached.
+     *
+     * @param info object that extends HandlingInfo.
+     */
+    public void scheduleEventHandlingInfo(HandlingInfo info) {
+        plugin.getHandler().addToPool(info);
+    }
+
+    /**
+     * Used to cache a UserData object.
+     *
+     * If data is already cached it will be overridden.
+     *
+     * @param data UserData object. Will be placed to the data.getUuid() key in
+     * the cache.
+     */
+    public void placeDataToCache(UserData data) {
+        plugin.getHandler().cache(data);
+    }
+
+    /**
+     * Used to save the cached data to the database.
+     *
+     * Should be only called from an Asyncronous thread.
+     */
+    public void saveCachedData() {
+        plugin.getHandler().saveCachedUserData();
+    }
+
+    /**
+     * Check if the UserData is cached to the InspectCache.
+     *
+     * @param uuid UUID of the player.
+     * @return true/false
+     */
+    public boolean isPlayersDataInspectCached(UUID uuid) {
+        return plugin.getInspectCache().isCached(uuid);
+    }
+
+    /**
+     * Cache the UserData to InspectCache.
+     *
+     * Uses cache if data is cached or database if not. Call from an Asyncronous
+     * thread.
+     *
+     * @param uuid
+     */
+    public void cacheUserDataToInspectCache(UUID uuid) {
+        plugin.getInspectCache().cache(uuid);
+    }
+
+    /**
+     * Used to get the full Html of the Inspect page as a string.
+     *
+     * Check if the data is cached to InspectCache before calling this.
+     *
+     * @param uuid UUID of the player.
+     * @return player.html with all placeholders replaced.
+     */
+    public String getPlayerHtmlAsString(UUID uuid) {
+        WebSocketServer server = plugin.getUiServer();
+        if (server != null) {
+            return server.getDataReqHandler().getInspectHtml(uuid);
+        }
+        DataRequestHandler reqH = new DataRequestHandler(plugin);
+        return reqH.getInspectHtml(uuid);
+    }
+
+    /**
+     * Check if the Analysis has been run & is cached to the AnalysisCache.
+     *
+     * @return true/false
+     */
+    public boolean isAnalysisCached() {
+        return plugin.getAnalysisCache().isCached();
+    }
+
+    /**
+     * Run's the analysis with the current data in the cache & fetches rest from
+     * the database.
+     *
+     * Starts a new Asyncronous task to run the analysis.
+     */
+    public void updateAnalysisCache() {
+        plugin.getAnalysisCache().updateCache();
+    }
+
+    /**
+     * Used to get the full Html of the Analysis page as a string.
+     *
+     * Check if the data is cached to AnalysisCache before calling this.
+     *
+     * @return analysis.html with all placeholders replaced.
+     */
+    public String getAnalysisHtmlAsString() {
+        WebSocketServer server = plugin.getUiServer();
+        if (server != null) {
+            return server.getDataReqHandler().getAnalysisHtml();
+        }
+        DataRequestHandler reqH = new DataRequestHandler(plugin);
+        return reqH.getAnalysisHtml();
+    }
+
+    /**
+     * Used to get the AnalysisData object.
+     *
+     * Check if the data is cached to AnalysisCache before calling this.
+     *
+     * @return AnalysisData object.
+     * @see AnalysisData
+     */
+    public AnalysisData getAnalysisDataFromCache() {
+        return plugin.getAnalysisCache().getData();
+    }
+
+    /**
+     * Used to get the playerName of a player who has played on the server.
+     *
+     * @param uuid UUID of the player.
+     * @return Playername, eg "Rsl1122"
+     * @throws IllegalStateException If the player has not played on the server
+     * before.
+     */
+    public String getPlayerName(UUID uuid) throws IllegalStateException {
+        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
+        if (offlinePlayer.hasPlayedBefore()) {
+            return offlinePlayer.getName();
+        }
+        throw new IllegalStateException("Player has not played on this server before.");
     }
 
     /**
@@ -88,91 +240,24 @@ public class API {
         return UUIDFetcher.getUUIDOf(playerName);
     }
 
-    /**
-     * Caches the UserData to the InspectCache for time specified in the Plan
-     * config, so it can be called by webserver.
-     *
-     * Does not cache anything if the player has not joined the server or has no
-     * data in the database.
-     *
-     * @param uuid UUID of the Player
-     */
+    // DEPRECATED METHODS WILL BE REMOVED IN 3.2.0
     @Deprecated
-    public void cacheUserDataToInspectCache(UUID uuid) {
-        plugin.getInspectCache().cache(uuid);
+    public static String formatTimeSinceDate(Date before, Date after) {
+        return FormatUtils.formatTimeAmountSinceDate(before, after);
     }
 
-    /**
-     * Returns the ip:port/player/playername html as a string so it can be
-     * integrated into other webserver plugins.
-     *
-     * Should use cacheUserDataToInspectCache(UUID uuid) before using this
-     * method.
-     *
-     * If UserData of the specified player is not in the Cache returns <h1>404
-     * Data was not found in cache</h1>
-     *
-     * @param uuid UUID of the Player
-     * @return html as a string or a single error line html.
-     */
     @Deprecated
-    public String getPlayerHtmlAsString(UUID uuid) {
-        WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
-            return server.getDataReqHandler().getInspectHtml(uuid);
-        }
-        DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getInspectHtml(uuid);
+    public static String formatTimeSinceString(String before, Date after) {
+        return FormatUtils.formatTimeAmountSinceString(before, after);
     }
 
-    /**
-     * Updates the AnalysisCache so the cached data can be called by the
-     * webserver.
-     */
     @Deprecated
-    public void updateAnalysisCache() {
-        plugin.getAnalysisCache().updateCache();
+    public static String formatTimeAmount(String timeInMs) {
+        return FormatUtils.formatTimeAmount(timeInMs);
     }
 
-    /**
-     * Returns the ip:port/server html as a string so it can be integrated into
-     * other webserver plugins.
-     *
-     * Should use updateAnalysisCache() before using this method.
-     *
-     * If AnalysisData is not in the AnalysisCache: returns <h1>404 Data was not
-     * found in cache</h1>
-     *
-     * @return html as a string or a single error line html.
-     */
     @Deprecated
-    public String getAnalysisHtmlAsString() {
-        WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
-            return server.getDataReqHandler().getAnalysisHtml();
-        }
-        DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getAnalysisHtml();
-    }
-
-    /**
-     * Returns UserData from the InspectCache
-     *
-     * @param uuid UUID of the Player
-     * @return UserData of the Player in the InspectCache or null if not found
-     */
-    @Deprecated
-    public UserData getUserDataFromInspectCache(UUID uuid) {
-        return plugin.getInspectCache().getFromCache(uuid);
-    }
-
-    /**
-     * Returns AnalysisData from the AnalysisCache
-     *
-     * @return AnalysisData in the AnalysisCache or null if not found
-     */
-    @Deprecated
-    public AnalysisData getAnalysisDataFromCache() {
-        return plugin.getAnalysisCache().getData();
+    public static String formatTimeStamp(String timeInMs) {
+        return FormatUtils.formatTimeStamp(timeInMs);
     }
 }

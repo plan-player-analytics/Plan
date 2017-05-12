@@ -81,7 +81,7 @@ public class Response {
                         try {
                             String dataHtml = requestHandler.getInspectHtml(uuid);
                             String htmlDef = "HTTP/1.1 200 OK\r\n"
-                                    + "Content-Type: text/html; charset=utf-8\r\n"
+                                    + "Content-Type: text/html;\r\n"
                                     + "Content-Length: " + dataHtml.length() + "\r\n"
                                     + "\r\n";
                             output.write((htmlDef + dataHtml).getBytes());
@@ -101,7 +101,7 @@ public class Response {
                 if (requestHandler.checkIfAnalysisIsCached()) {
                     String analysisHtml = requestHandler.getAnalysisHtml();
                     String htmlDef = "HTTP/1.1 200 OK\r\n"
-                            + "Content-Type: text/html; charset=utf-8\r\n"
+                            + "Content-Type: text/html;\r\n"
                             + "Content-Length: " + analysisHtml.length() + "\r\n"
                             + "\r\n";
                     output.write((htmlDef + analysisHtml).getBytes());

@@ -1,6 +1,8 @@
 package main.java.com.djrapitops.plan.data;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
@@ -24,6 +26,7 @@ import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 public class AnalysisData {
 
     private long refreshDate;
+    private Map<String, String> additionalDataReplaceMap;
 
     private long averagePlayTime;
     private long totalPlayTime;
@@ -79,6 +82,7 @@ public class AnalysisData {
         geomapCodes = Html.ERROR_NOT_SET + "";
         playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
         genderData = new int[]{0, 0, 0};
+        additionalDataReplaceMap = new HashMap<>();
     }
 
     @Override
@@ -187,6 +191,25 @@ public class AnalysisData {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Set the additional data replaceMap used with Analysis replacerules.
+     *
+     * @param additionalDataReplaceMap Map with placeholder keys %key%, value
+     * @see PlaceholderUtils
+     */
+    public void setAdditionalDataReplaceMap(Map<String, String> additionalDataReplaceMap) {
+        this.additionalDataReplaceMap = additionalDataReplaceMap;
+    }
+
+    /**
+     * Get the additional data replaceMap used with Analysis replacerules.
+     *
+     * @return a Map with placeholder keys %key%, value
+     */
+    public Map<String, String> getAdditionalDataReplaceMap() {
+        return additionalDataReplaceMap;
     }
 
     /**
@@ -846,9 +869,9 @@ public class AnalysisData {
     /**
      *
      * Set the integer array containing 3 numbers.
-     * 
+     *
      * 0 Male, 1 Female, 2 Unknown.
-     * 
+     *
      * @param genderData for example [0, 4, 5]
      */
     public void setGenderData(int[] genderData) {

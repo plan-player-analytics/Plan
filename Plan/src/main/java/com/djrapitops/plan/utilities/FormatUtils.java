@@ -72,6 +72,14 @@ public class FormatUtils {
     public static String removeLetters(String dataPoint) {
         return dataPoint.replaceAll("[^\\d.]", "");
     }
+    
+    public static String removeNumbers(String dataPoint) {
+        for (char c : removeLetters(dataPoint).toCharArray()) {
+            dataPoint = dataPoint.replace(c+"", "");
+        }
+        dataPoint = dataPoint.replace(" ", "");
+        return dataPoint;
+    }
 
     // Formats long in milliseconds into d:h:m:s string
     private static String turnMsLongToString(long ms) {

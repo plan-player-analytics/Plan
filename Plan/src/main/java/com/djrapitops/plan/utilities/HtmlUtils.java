@@ -2,10 +2,13 @@ package main.java.com.djrapitops.plan.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.ui.Html;
 
 /**
  *
@@ -40,7 +43,7 @@ public class HtmlUtils {
      * @param replaceMap
      * @return
      */
-    public static String replacePlaceholders(String html, HashMap<String, String> replaceMap) {
+    public static String replacePlaceholders(String html, Map<String, String> replaceMap) {
         for (String key : replaceMap.keySet()) {
             html = html.replace(key, replaceMap.get(key));
         }
@@ -90,5 +93,50 @@ public class HtmlUtils {
                 .replace("-->", "")
                 .replace("<script>", "")
                 .replace("</script>", "");
+    }
+
+    public static String getPluginsTabLayout(List<String> pluginNames, Map<String, List<String>> placeholders) {
+        boolean sizeIsEvenNumber = pluginNames.size() % 2 == 0;
+        StringBuilder html = new StringBuilder();
+        String temp = "";
+        int evenSize = pluginNames.size() - (pluginNames.size() % 2);
+        Log.debug("Html parsing for:" + pluginNames + ", " + (evenSize));
+        for (int i = 0; i < evenSize; i++) {
+            String name = pluginNames.get(i);
+            Log.debug("Html parsing: " + name);
+            if (i % 2 == 0) {
+                temp = Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)));
+            } else {
+                html.append(Html.COLUMNS_DIV_WRAPPER.parse(temp + Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)))));
+            }
+        }
+        if (!sizeIsEvenNumber) {
+            int lastIndex = pluginNames.size() - 1;
+            String name = pluginNames.get(lastIndex);
+            html.append(Html.COLUMNS_DIV_WRAPPER.parse(Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)))+Html.COLUMN_DIV_WRAPPER.parse("")));
+        }
+        String returnValue = html.toString();
+        if (returnValue.isEmpty()) {
+            return Html.COLUMNS_DIV_WRAPPER.parse(
+                    Html.COLUMN_DIV_WRAPPER.parse(
+                            Html.PLUGIN_DATA_WRAPPER.parse(
+                                    Html.NO_PLUGINS.parse()
+                            )
+                    )
+            );
+        }
+        return returnValue;
+    }
+
+    private static String getContent(String name, List<String> placeholders) {
+        Log.debug("Getting content for: "+name);
+        StringBuilder html = new StringBuilder();
+        html.append(Html.HEADER.parse(name));
+        html.append(Html.PLUGIN_CONTAINER_START.parse());
+        for (String placeholder : placeholders) {
+            html.append(placeholder);
+        }
+        html.append("</div>");
+        return html.toString();
     }
 }

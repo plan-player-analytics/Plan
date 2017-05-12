@@ -7,7 +7,6 @@ package test.java.main.java.com.djrapitops.plan.utilities;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;

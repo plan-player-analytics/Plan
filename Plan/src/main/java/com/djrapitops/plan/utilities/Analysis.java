@@ -19,6 +19,9 @@ import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.additional.AnalysisType;
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
@@ -255,6 +258,7 @@ public class Analysis {
         analysisData.setTotalmobkills(sorted.getTotalMobKills());
         analysisData.setRefreshDate(new Date().getTime());
         analysisData.setGenderData(sorted.getGenders());
+        analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
         analysisCache.cache(analysisData);
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
             Log.info(Phrase.ANALYSIS_COMPLETE + "");
@@ -356,5 +360,52 @@ public class Analysis {
         aData.setGeomapCountries(locations.replace(",]", "]"));
         aData.setGeomapZ(z.replace(",]", "]"));
         aData.setGeomapCodes(text.replace(",]", "]"));
+    }
+
+    private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
+        Map<String, String> replaceMap = new HashMap<>();
+        HookHandler hookHandler = Plan.getInstance().getHookHandler();
+        List<PluginData> sources = hookHandler.getAdditionalDataSources();
+        for (PluginData source : sources) {
+            Log.debug("Analyzing source: " + source.getPlaceholder("").replace("%", ""));
+            try {
+                List<AnalysisType> analysisTypes = source.getAnalysisTypes();
+                if (analysisTypes.isEmpty()) {
+                    continue;
+                }
+                if (analysisTypes.contains(AnalysisType.HTML)) {
+                    replaceMap.put(source.getPlaceholder(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), uuids.get(0)));
+                    continue;
+                }
+                AnalysisType[] totalTypes = new AnalysisType[]{
+                    AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
+                };
+                for (AnalysisType type : totalTypes) {
+                    if (analysisTypes.contains(type)) {
+                        replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getTotal(type, source, uuids));
+                    }
+                }
+                AnalysisType[] avgTypes = new AnalysisType[]{
+                    AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
+                };
+                for (AnalysisType type : avgTypes) {
+                    if (analysisTypes.contains(type)) {
+                        replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getAverage(type, source, uuids));
+                    }
+                }
+                AnalysisType t = AnalysisType.BOOLEAN_PERCENTAGE;
+                if (analysisTypes.contains(t)) {
+                    replaceMap.put(source.getPlaceholder(t.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(t, source, uuids));
+                }
+                t = AnalysisType.BOOLEAN_TOTAL;
+                if (analysisTypes.contains(t)) {
+                    replaceMap.put(source.getPlaceholder(t.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(t, source, uuids));
+                }
+            } catch (Throwable e) {
+                Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
+                Log.toLog(this.getClass().getName(), e);
+            }
+        }
+        return replaceMap;
     }
 }

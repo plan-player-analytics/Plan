@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan;
 
+import java.util.List;
+
 /**
  * This enum contains all of the config settings used by the plugin for easier
  * access.
@@ -43,6 +45,11 @@ public enum Settings {
     COLOR_SEC("Customization.Colors.Commands.Secondary"),
     COLOR_TER("Customization.Colors.Commands.Highlight"),
     //
+    HCOLOR_MAIN("Customization.Colors.HTML.UI.Main"),
+    HCOLOR_MAIN_DARK("Customization.Colors.HTML.UI.MainDark"),
+    HCOLOR_SEC("Customization.Colors.HTML.UI.Secondary"),
+    HCOLOR_TER("Customization.Colors.HTML.UI.Tertiary"),
+    HCOLOR_TER_DARK("Customization.Colors.HTML.UI.TertiaryDark"),
     HCOLOR_ACT_ONL("Customization.Colors.HTML.ActivityGraph.OnlinePlayers"),
     HCOLOR_ACT_ONL_FILL("Customization.Colors.HTML.ActivityGraph.OnlinePlayersFill"),
     HCOLOR_ACTP_ACT("Customization.Colors.HTML.ActivityPie.Active"),
@@ -55,7 +62,10 @@ public enum Settings {
     HCOLOR_GMP_3("Customization.Colors.HTML.GamemodePie.Spectator"),
     HCOLOR_GENP_M("Customization.Colors.HTML.GenderPie.Male"),
     HCOLOR_GENP_F("Customization.Colors.HTML.GenderPie.Female"),
-    HCOLOR_GENP_U("Customization.Colors.HTML.GenderPie.Unknown");
+    HCOLOR_GENP_U("Customization.Colors.HTML.GenderPie.Unknown"),
+    // StringList
+    HIDE_FACTIONS("Customization.Plugins.Factions.HideFactions"),
+    HIDE_TOWNS("Customization.Plugins.Towny.HideTowns");
 
     private final String configPath;
 
@@ -89,6 +99,10 @@ public enum Settings {
      */
     public int getNumber() {
         return Plan.getInstance().getConfig().getInt(configPath);
+    }
+    
+    public List<String> getStringList() {
+        return Plan.getInstance().getConfig().getStringList(configPath);
     }
 
     /**

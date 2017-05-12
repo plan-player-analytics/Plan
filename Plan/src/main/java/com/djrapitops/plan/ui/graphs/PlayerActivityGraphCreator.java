@@ -23,7 +23,7 @@ public class PlayerActivityGraphCreator {
     public static String[] generateDataArray(List<SessionData> sessionData, long scale, int maxPlayers) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         long nowMinusScale = now - scale;
-        List<List<Long>> s = filterSessions(sessionData, nowMinusScale);
+        List<List<Long>> s = filterAndTransformSessions(sessionData, nowMinusScale);
         List<Long> sessionStarts = s.get(0);
         List<Long> sessionEnds = s.get(1);
         List<Long> playersOnline = new ArrayList<>();
@@ -63,9 +63,10 @@ public class PlayerActivityGraphCreator {
                 .count();
     }
 
-    public static List<List<Long>> filterSessions(List<SessionData> sessionData, long nowMinusScale) {        
+    public static List<List<Long>> filterAndTransformSessions(List<SessionData> sessionData, long nowMinusScale) {        
         List<Long[]> values = sessionData.parallelStream()
                 .filter(session -> (session != null))
+                .filter(session -> session.isValid())
                 .filter((session) -> (session.getSessionStart() >= nowMinusScale || session.getSessionEnd() >= nowMinusScale))
                 .map(session -> new Long[]{session.getSessionStart(), session.getSessionEnd()})
                 .collect(Collectors.toList());

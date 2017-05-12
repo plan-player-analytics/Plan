@@ -29,7 +29,7 @@ public class PlaceholderUtils {
      * @param data AnalysisData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
      */
-    public static HashMap<String, String> getAnalysisReplaceRules(AnalysisData data) {
+    public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
         replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
@@ -105,11 +105,20 @@ public class PlaceholderUtils {
                 + "\",\"#" + Settings.HCOLOR_GENP_U + "\"");
         replaceMap.put("%genderfcolor%", "#" + Settings.HCOLOR_GENP_F);
         replaceMap.put("%gendermcolor%", "#" + Settings.HCOLOR_GENP_M);
-        replaceMap.putAll(plugin.getHookHandler().getAdditionalAnalysisReplaceRules());
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage() + ""));
         replaceMap.put("%geomapcountries%", data.getGeomapCountries());
         replaceMap.put("%geomapz%", data.getGeomapZ());
         replaceMap.put("%geomapcodes%", data.getGeomapCodes());
+        String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForAnalysis();
+        String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, data.getAdditionalDataReplaceMap());
+        replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, data.getAdditionalDataReplaceMap()));
+        String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
+        String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};
+        for (int i = 0; i < colors.length; i++) {
+            if (!defaultCols[i].equals(colors[i])) {
+                replaceMap.put("#"+defaultCols[i], "#"+colors[i]);
+            }
+        }
         return replaceMap;
     }
 
@@ -120,7 +129,7 @@ public class PlaceholderUtils {
      * @return HashMap that contains string for each placeholder.
      * @throws java.io.FileNotFoundException if planliteplayer.html is not found
      */
-    public static HashMap<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
+    public static Map<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
@@ -189,7 +198,10 @@ public class PlaceholderUtils {
         replaceMap.put("%gm2col%", Settings.HCOLOR_GMP_2 + "");
         replaceMap.put("%gm3col%", Settings.HCOLOR_GMP_3 + "");
         replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
-        replaceMap.putAll(plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid));
+        String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
+        Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
+        String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);
+        replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
         return replaceMap;
     }
 }
