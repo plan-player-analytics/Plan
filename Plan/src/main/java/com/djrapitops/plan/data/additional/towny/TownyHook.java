@@ -7,30 +7,40 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 
 /**
+ * A Class responsible for hooking to Towny and registering 2 data sources.
  *
  * @author Rsl1122
+ * @since 3.1.0
  */
 public class TownyHook extends Hook {
 
     /**
-     * Hooks to Factions plugin
+     * Hooks the plugin and registers it's PluginData objects.
      *
+     * API#addPluginDataSource uses the same method from HookHandler.
+     *
+     * @param hookH HookHandler instance for registering the data sources.
+     * @see API
+     * @throws NoClassDefFoundError when the plugin class can not be found.
      */
     public TownyHook(HookHandler hookH) throws NoClassDefFoundError {
         super("com.palmergames.bukkit.towny.Towny");
         if (enabled) {
             hookH.addPluginDataSource(new TownyTable(getTopTowns()));
-            hookH.addPluginDataSource(new TownyTown());            
+            hookH.addPluginDataSource(new TownyTown());
         }
     }
 
     /**
-     * @return List of Towns sorted by residents
+     * Used to get the list of Towns and filter out unnessecary ones.
+     *
+     * @return List of Towns sorted by amount of residents.
      */
-    public List<Town> getTopTowns() {        
+    public List<Town> getTopTowns() {
         List<Town> topTowns = TownyUniverse.getDataSource().getTowns();
         Collections.sort(topTowns, new TownComparator());
         List<String> hide = Settings.HIDE_TOWNS.getStringList();

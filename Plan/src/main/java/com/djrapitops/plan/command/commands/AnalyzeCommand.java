@@ -12,7 +12,6 @@ import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -40,18 +39,6 @@ public class AnalyzeCommand extends SubCommand {
         analysisCache = plugin.getAnalysisCache();
     }
 
-    /**
-     * Subcommand analyze.
-     *
-     * Updates AnalysisCache if last refresh was over 60 seconds ago and sends
-     * player the link that views cache with a delayed timer task.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!Settings.WEBSERVER_ENABLED.isTrue()) {
@@ -73,7 +60,7 @@ public class AnalyzeCommand extends SubCommand {
             analysisCache.updateCache();
         }
 
-        BukkitTask analysisMessageSenderTask = (new BukkitRunnable() {
+        BukkitTask analysisMessageSenderTask = new BukkitRunnable() {
             private int timesrun = 0;
 
             @Override
@@ -88,7 +75,7 @@ public class AnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }).runTaskTimer(plugin, 1 * 20, 5 * 20);
+        }.runTaskTimer(plugin, 1 * 20, 5 * 20);
         return true;
     }
 
@@ -96,9 +83,8 @@ public class AnalyzeCommand extends SubCommand {
      * Used to send the message after /plan analysis.
      *
      * @param sender Command sender.
-     * @throws CommandException
      */
-    public void sendAnalysisMessage(CommandSender sender) throws CommandException {
+    public void sendAnalysisMessage(CommandSender sender) {
         boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
         sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
         if (textUI) {

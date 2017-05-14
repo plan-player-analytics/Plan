@@ -6,13 +6,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 
 /**
+ * This Class strats the Clear Queue Thread, that clears data from DataCache.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class DataCacheClearQueue {
 
@@ -20,28 +21,30 @@ public class DataCacheClearQueue {
     private ClearSetup s;
 
     /**
+     * Class constructor, starts the new Thread for clearing.
      *
-     * @param plugin
-     * @param handler
+     * @param handler current instance of DataCachehandler.
      */
-    public DataCacheClearQueue(Plan plugin, DataCacheHandler handler) {
+    public DataCacheClearQueue(DataCacheHandler handler) {
         q = new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber());
         s = new ClearSetup();
         s.go(q, handler);
     }
 
     /**
+     * Used to schedule UserData to be cleared from the cache.
      *
-     * @param uuid
+     * @param uuid UUID of the UserData object (Player's UUID)
      */
     public void scheduleForClear(UUID uuid) {
-        Log.debug(uuid+": Scheduling for clear");
+        Log.debug(uuid + ": Scheduling for clear");
         q.add(uuid);
     }
 
     /**
+     * Used to schedule multiple UserData objects to be cleared from the cache.
      *
-     * @param uuids
+     * @param uuids UUIDs of the UserData object (Players' UUIDs)
      */
     public void scheduleForClear(Collection<UUID> uuids) {
         if (uuids.isEmpty()) {
@@ -56,7 +59,7 @@ public class DataCacheClearQueue {
     }
 
     /**
-     *
+     * Stops all activity and clears the queue.
      */
     public void stop() {
         if (s != null) {

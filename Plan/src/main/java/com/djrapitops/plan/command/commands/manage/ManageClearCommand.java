@@ -34,19 +34,6 @@ public class ManageClearCommand extends SubCommand {
         this.plugin = plugin;
     }
 
-    /**
-     * Subcommand inspect.
-     *
-     * Adds player's data from DataCache/DB to the InspectCache for amount of
-     * time specified in the config, and clears the data from Cache with a timer
-     * task.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length == 0) {

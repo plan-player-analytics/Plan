@@ -95,6 +95,12 @@ public class HtmlUtils {
                 .replace("</script>", "");
     }
 
+    /**
+     *
+     * @param pluginNames
+     * @param placeholders
+     * @return
+     */
     public static String getPluginsTabLayout(List<String> pluginNames, Map<String, List<String>> placeholders) {
         boolean sizeIsEvenNumber = pluginNames.size() % 2 == 0;
         StringBuilder html = new StringBuilder();

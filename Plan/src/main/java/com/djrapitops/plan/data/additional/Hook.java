@@ -7,6 +7,7 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  * Abstract class for easy hooking of plugins.
  *
  * @author Rsl1122
+ * @since 2.6.0
  */
 public abstract class Hook {
 
@@ -34,5 +35,14 @@ public abstract class Hook {
      */
     public Hook() {
         enabled = false;
+    }
+
+    /**
+     * Check if the hooked plugin is enabled.
+     *
+     * @return true/false
+     */
+    public boolean isEnabled() {
+        return enabled;
     }
 }

@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 /**
+ * Event Listener for EntityDeathEvents.
  *
  * @author Rsl1122
  */
@@ -23,8 +24,9 @@ public class PlanDeathEventListener implements Listener {
     private final DataCacheHandler handler;
 
     /**
+     * Class Constructor.
      *
-     * @param plugin
+     * @param plugin Current instance of Plan
      */
     public PlanDeathEventListener(Plan plugin) {
         this.plugin = plugin;

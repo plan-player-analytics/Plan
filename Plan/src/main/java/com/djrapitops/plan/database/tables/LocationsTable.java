@@ -23,6 +23,11 @@ public class LocationsTable extends Table {
     private final String columnCoordinatesZ;
     private final String columnWorld;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public LocationsTable(SQLDB db, boolean usingMySQL) {
         super("plan_locations", db, usingMySQL);
         columnID = "id";
@@ -32,6 +37,10 @@ public class LocationsTable extends Table {
         columnWorld = "world_name";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
@@ -53,6 +62,11 @@ public class LocationsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public boolean removeUserLocations(int userId) {
         PreparedStatement statement = null;
         try {
@@ -68,6 +82,13 @@ public class LocationsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param worlds
+     * @return
+     * @throws SQLException
+     */
     public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -86,6 +107,12 @@ public class LocationsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param locations
+     * @throws SQLException
+     */
     public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
         if (locations == null || locations.isEmpty()) {
             return;

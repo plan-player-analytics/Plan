@@ -8,13 +8,25 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 /**
+ * PluginData class for Essentials-plugin.
+ *
+ * Registered to the plugin by EssentialsHook
+ *
+ * Gives Jailed boolean value.
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see EssentialsHook
  */
 public class EssentialsJailed extends PluginData {
 
     private Essentials essentials;
-    
+
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     *
+     * @param essentials Instance of Essentials plugin.
+     */
     public EssentialsJailed(Essentials essentials) {
         super("Essentials", "jailed", AnalysisType.BOOLEAN_PERCENTAGE, AnalysisType.BOOLEAN_TOTAL);
         this.essentials = essentials;
@@ -37,5 +49,5 @@ public class EssentialsJailed extends PluginData {
         User user = essentials.getUser(uuid);
         return user != null && user.isJailed();
     }
-    
+
 }

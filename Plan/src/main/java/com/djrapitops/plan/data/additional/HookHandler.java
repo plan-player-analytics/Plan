@@ -17,10 +17,11 @@ import main.java.com.djrapitops.plan.data.additional.vault.VaultHook;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
- * Class responsible for hooking to other plugins & managing the %plugins%
- * placeholder on Analysis & Inspect pages.
+ * Class responsible for hooking to other plugins and managing the %plugins%
+ * placeholder on Analysis and Inspect pages.
  *
  * @author Rsl1122
+ * @since 2.6.0
  */
 public class HookHandler {
 

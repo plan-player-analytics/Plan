@@ -136,10 +136,18 @@ public abstract class SQLDB extends Database {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public Table[] getAllTables() {
         return new Table[]{usersTable, locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, commandUseTable};
     }
 
+    /**
+     *
+     * @return
+     */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, usersTable, commandUseTable};
     }
@@ -329,6 +337,14 @@ public abstract class SQLDB extends Database {
         return getLocations(Integer.parseInt(userId), worlds);
     }
 
+    /**
+     *
+     * @param userId
+     * @param worlds
+     * @return
+     * @throws SQLException
+     * @deprecated
+     */
     @Deprecated
     public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
         return locationsTable.getLocations(userId, worlds);
@@ -535,34 +551,66 @@ public abstract class SQLDB extends Database {
         return connection;
     }
 
+    /**
+     *
+     * @return
+     */
     public UsersTable getUsersTable() {
         return usersTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public SessionsTable getSessionsTable() {
         return sessionsTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public GMTimesTable getGmTimesTable() {
         return gmTimesTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public KillsTable getKillsTable() {
         return killsTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public LocationsTable getLocationsTable() {
         return locationsTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public IPsTable getIpsTable() {
         return ipsTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public NicknamesTable getNicknamesTable() {
         return nicknamesTable;
     }
 
+    /**
+     *
+     * @return
+     */
     public CommandUseTable getCommandUseTable() {
         return commandUseTable;
     }

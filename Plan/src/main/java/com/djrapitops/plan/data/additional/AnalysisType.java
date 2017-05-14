@@ -1,8 +1,6 @@
 package main.java.com.djrapitops.plan.data.additional;
 
 import main.java.com.djrapitops.plan.data.additional.advancedachievements.AdvancedAchievementsTable;
-import main.java.com.djrapitops.plan.data.additional.factions.FactionsMaxPower;
-import main.java.com.djrapitops.plan.data.additional.factions.FactionsPower;
 import main.java.com.djrapitops.plan.data.additional.factions.FactionsTable;
 import main.java.com.djrapitops.plan.data.additional.towny.TownyTable;
 
@@ -16,46 +14,47 @@ import main.java.com.djrapitops.plan.data.additional.towny.TownyTable;
  * Refer to the documentation on github for additional information.
  *
  * @author Rsl1122
+ * @since 3.1.0
  */
 public enum AnalysisType {
 
     /**
-     * Used when the getValue() method returns an integer & average should be
+     * Used when the getValue() method returns an integer and average should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    INT_AVG("avgInt_","Average "),
+    INT_AVG("avgInt_", "Average "),
     /**
-     * Used when the getValue() method returns a long & average should be
+     * Used when the getValue() method returns a long and average should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_AVG("avgLong_","Average "),
+    LONG_AVG("avgLong_", "Average "),
     /**
-     * Used when the getValue() method returns double & average should be
+     * Used when the getValue() method returns double and average should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     DOUBLE_AVG("avgDouble_", "Average "),
     /**
-     * Used when the getValue() method returns an integer & total should be
+     * Used when the getValue() method returns an integer and total should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     INT_TOTAL("totalInt_"),
     /**
-     * Used when the getValue() method returns a long & total should be
+     * Used when the getValue() method returns a long and total should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_TOTAL("totalLong_"),
     /**
-     * Used when the getValue() method returns a double & total should be
+     * Used when the getValue() method returns a double and total should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
@@ -63,24 +62,24 @@ public enum AnalysisType {
     DOUBLE_TOTAL("totalDouble_"),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
-     * & average should be calculated.
+     * and average should be calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_TIME_MS_AVG("avgTimeMs_", "Average "),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
-     * & total should be calculated.
+     * and total should be calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_TIME_MS_TOTAL("totalTimeMs_"),
     /**
-     * Used when the getValue() method returns an Epoch Millisecond as long &
-     * average of differences between the millisecond & current millisecond
+     * Used when the getValue() method returns an Epoch Millisecond as long and
+     * average of differences between the millisecond and current millisecond
      * should be calculated.
      *
-     * For example if a player has dropped a Foo on epoch ms 1494486504000 &
+     * For example if a player has dropped a Foo on epoch ms 1494486504000 and
      * that was 5s (5000ms) ago. Now you want to calculate the average
      * time-since for all players. Then you use this one.
      *
@@ -90,7 +89,7 @@ public enum AnalysisType {
     /**
      * Used to calculate %-true for the returned boolean values of getValue().
      */
-    BOOLEAN_PERCENTAGE("perchBool_","Percentage "),
+    BOOLEAN_PERCENTAGE("perchBool_", "Percentage "),
     /**
      * Used to calculate number of true values for the returned boolean values
      * of getValue().
@@ -101,7 +100,7 @@ public enum AnalysisType {
     /**
      * Used to add html tags to the plugins tab.
      *
-     * Can be used to add Tables, Images (for example maps) & other html
+     * Can be used to add Tables, Images (for example maps) and other html
      * elements.
      *
      * @see AdvancedAchievementsTable
@@ -140,6 +139,11 @@ public enum AnalysisType {
         return modifier;
     }
 
+    /**
+     * Used to get the Placeholder modifier.
+     *
+     * @return for example "_total"
+     */
     public String getPlaceholderModifier() {
         return placeholderModifier;
     }

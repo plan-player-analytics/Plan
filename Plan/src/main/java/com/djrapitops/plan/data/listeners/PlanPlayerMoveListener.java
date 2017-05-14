@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
+ * Event Listener for PlayerMoveEvents.
  *
  * @author Rsl1122
  */

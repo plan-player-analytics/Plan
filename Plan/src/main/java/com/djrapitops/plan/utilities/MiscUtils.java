@@ -84,7 +84,7 @@ public class MiscUtils {
     /**
      * Used by the inspect command.
      *
-     * @param args Arguments of a command, must be > 0 if console sender.
+     * @param args Arguments of a command, must not be empty if console sender.
      * @param sender Command sender
      * @return The name of the player (first argument or sender)
      */

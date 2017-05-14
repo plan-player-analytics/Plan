@@ -19,6 +19,11 @@ public class NicknamesTable extends Table {
     private final String columnNick;
     private final String columnCurrent;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public NicknamesTable(SQLDB db, boolean usingMySQL) {
         super("plan_nicknames", db, usingMySQL);
         columnUserID = "user_id";
@@ -26,6 +31,10 @@ public class NicknamesTable extends Table {
         columnCurrent = "current_nick";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
@@ -61,6 +70,11 @@ public class NicknamesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public boolean removeUserNicknames(int userId) {
         PreparedStatement statement = null;
         try {
@@ -76,6 +90,12 @@ public class NicknamesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     public List<String> getNicknames(int userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -106,6 +126,13 @@ public class NicknamesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param names
+     * @param lastNick
+     * @throws SQLException
+     */
     public void saveNickList(int userId, Set<String> names, String lastNick) throws SQLException {
         if (names == null || names.isEmpty()) {
             return;

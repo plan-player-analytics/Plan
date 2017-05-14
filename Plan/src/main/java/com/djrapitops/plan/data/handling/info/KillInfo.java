@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import java.util.UUID;
@@ -11,8 +6,11 @@ import main.java.com.djrapitops.plan.data.handling.KillHandling;
 import org.bukkit.entity.LivingEntity;
 
 /**
+ * HandlingInfo Class for DeathEvent information when the dead entity is a
+ * player.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class KillInfo extends HandlingInfo {
 
@@ -20,11 +18,12 @@ public class KillInfo extends HandlingInfo {
     private String weaponName;
 
     /**
+     * Constructor.
      *
-     * @param uuid
-     * @param time
-     * @param dead
-     * @param weaponName
+     * @param uuid UUID of the killer.
+     * @param time Epoch ms the event occurred.
+     * @param dead Dead entity (Mob or Player)
+     * @param weaponName Weapon used.
      */
     public KillInfo(UUID uuid, long time, LivingEntity dead, String weaponName) {
         super(uuid, InfoType.KILL, time);
@@ -32,11 +31,6 @@ public class KillInfo extends HandlingInfo {
         this.weaponName = weaponName;
     }
 
-    /**
-     *
-     * @param uData
-     * @return
-     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 /**
  * This command is used to manage the database of the plugin.
- * <p>
+ *
  * No arguments will run ManageHelpCommand. Contains subcommands.
  *
  * @author Rsl1122
@@ -79,16 +79,6 @@ public class ManageCommand extends SubCommand {
         onCommand(sender, cmd, commandLabel, FormatUtils.mergeArrays(new String[]{command}, args));
     }
 
-    /**
-     * Checks if Sender has rights to run the command and executes matching
-     * subcommand.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 1) {
@@ -116,7 +106,7 @@ public class ManageCommand extends SubCommand {
             return true;
         }
 
-        if (console && command.getCommandType() == CommandType.PLAYER) {;
+        if (console && command.getCommandType() == CommandType.PLAYER) {
             sender.sendMessage("" + Phrase.COMMAND_SENDER_NOT_PLAYER);
 
             return true;
@@ -128,8 +118,7 @@ public class ManageCommand extends SubCommand {
             realArgs[i - 1] = args[i];
         }
 
-        if (!command.onCommand(sender, cmd, commandLabel, realArgs)) {
-        }
+        command.onCommand(sender, cmd, commandLabel, realArgs);
         return true;
     }
 

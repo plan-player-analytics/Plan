@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
+ * Abstract class representing a Database.
  *
  * @author Rsl1122
  */
@@ -18,18 +19,22 @@ public abstract class Database {
     private final Plan plugin;
 
     /**
+     * Super constructor.
      *
-     * @param plugin
+     * @param plugin current instance of Plan.
      */
     public Database(Plan plugin) {
         this.plugin = plugin;
     }
 
     /**
+     * Initiates the database.
      *
-     * @return
+     * Default method returns false.
+     *
+     * @return Was the initiation successful?
      */
-    public boolean init(){
+    public boolean init() {
         return false;
     }
 
@@ -104,8 +109,7 @@ public abstract class Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public abstract int getVersion() throws SQLException;
 
@@ -132,8 +136,7 @@ public abstract class Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public abstract boolean removeAllData() throws SQLException;
 
@@ -147,15 +150,13 @@ public abstract class Database {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public abstract Set<UUID> getSavedUUIDs() throws SQLException;
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public abstract HashMap<String, Integer> getCommandUse() throws SQLException;
 

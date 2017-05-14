@@ -49,7 +49,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 /**
  * Javaplugin class that contains methods for starting the plugin, logging to
- * the Bukkit console & various get methods.
+ * the Bukkit console and various get methods.
  *
  * @author Rsl1122
  * @since 1.0.0
@@ -72,8 +72,9 @@ public class Plan extends JavaPlugin {
      *
      * Creates the config file. Checks for new version. Initializes Database.
      * Hooks to Supported plugins. Initializes DataCaches. Registers Listeners.
-     * Registers Command /plan and initializes API. Enables Webserver & analysis
-     * tasks if enabled in config. Warns about possible mistakes made in config.
+     * Registers Command /plan and initializes API. Enables Webserver and
+     * analysis tasks if enabled in config. Warns about possible mistakes made
+     * in config.
      */
     @Override
     public void onEnable() {
@@ -203,7 +204,7 @@ public class Plan extends JavaPlugin {
     }
 
     private void startAnalysisRefreshTask(int analysisRefreshMinutes) throws IllegalStateException, IllegalArgumentException {
-        BukkitTask asyncPeriodicalAnalysisTask = (new BukkitRunnable() {
+        BukkitTask asyncPeriodicalAnalysisTask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!analysisCache.isCached()) {
@@ -212,19 +213,19 @@ public class Plan extends JavaPlugin {
                     analysisCache.updateCache();
                 }
             }
-        }).runTaskTimerAsynchronously(this, analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
+        }.runTaskTimerAsynchronously(this, analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
     }
 
     private void startBootAnalysisTask() throws IllegalStateException, IllegalArgumentException {
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-        BukkitTask bootAnalysisTask = (new BukkitRunnable() {
+        BukkitTask bootAnalysisTask = new BukkitRunnable() {
             @Override
             public void run() {
                 Log.info(Phrase.ANALYSIS_BOOT + "");
                 analysisCache.updateCache();
                 this.cancel();
             }
-        }).runTaskLater(this, 30 * 20);
+        }.runTaskLater(this, 30 * 20);
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
     }
 
@@ -287,7 +288,7 @@ public class Plan extends JavaPlugin {
      *
      * #init() might need to be called in order for the object to function.
      *
-     * @return Set containing the SqLite & MySQL objects.
+     * @return Set containing the SqLite and MySQL objects.
      */
     public HashSet<Database> getDatabases() {
         return databases;
@@ -375,7 +376,7 @@ public class Plan extends JavaPlugin {
      * Instance is set on the first line of onEnable method.
      *
      * @return current instance of Plan, Singleton.
-     * @throws IllegalStateException If onEnable method has not been called &
+     * @throws IllegalStateException If onEnable method has not been called and
      * the instance is null.
      */
     public static Plan getInstance() {
@@ -400,7 +401,7 @@ public class Plan extends JavaPlugin {
      *
      * @return API of the current instance of Plan.
      * @throws IllegalStateException If onEnable method has not been called on
-     * Plan & the instance is null.
+     * Plan and the instance is null.
      */
     public static API getPlanAPI() throws IllegalStateException {
         Plan INSTANCE = PlanHolder.INSTANCE;
@@ -411,6 +412,7 @@ public class Plan extends JavaPlugin {
     }
 
     private static class PlanHolder {
+
         private static Plan INSTANCE = null;
     }
 }

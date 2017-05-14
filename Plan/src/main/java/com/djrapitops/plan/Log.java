@@ -52,7 +52,7 @@ public class Log {
     }
 
     /**
-     * Logs trace of caught Exception to Errors.txt & notifies on console.
+     * Logs trace of caught Exception to Errors.txt and notifies on console.
      *
      * @param source Class name the exception was caught in.
      * @param e Throwable, eg NullPointerException

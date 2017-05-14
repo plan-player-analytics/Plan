@@ -57,12 +57,24 @@ public class PlayerActivityGraphCreator {
         return new String[]{playersOnline.toString(), labels.toString()};
     }
 
+    /**
+     *
+     * @param values
+     * @param lookFor
+     * @return
+     */
     public static long getCount(List<Long> values, long lookFor) {
         return values.stream()
                 .filter((start) -> (start == lookFor))
                 .count();
     }
 
+    /**
+     *
+     * @param sessionData
+     * @param nowMinusScale
+     * @return
+     */
     public static List<List<Long>> filterAndTransformSessions(List<SessionData> sessionData, long nowMinusScale) {        
         List<Long[]> values = sessionData.parallelStream()
                 .filter(session -> (session != null))
@@ -82,6 +94,11 @@ public class PlayerActivityGraphCreator {
         return r;
     }
     
+    /**
+     *
+     * @param ms
+     * @return
+     */
     public static long getSecond(long ms) {
         return ms - (ms % 1000);
     }

@@ -16,8 +16,10 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 
 /**
+ * This Class is starts the Get Queue Thread, that fetches data from DataCache.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class DataCacheGetQueue {
 
@@ -25,8 +27,9 @@ public class DataCacheGetQueue {
     private GetSetup s;
 
     /**
+     * Class constructor, starts the new Thread for fetching.
      *
-     * @param plugin
+     * @param plugin current instance of Plan
      */
     public DataCacheGetQueue(Plan plugin) {
         q = new ArrayBlockingQueue(Settings.PROCESS_GET_LIMIT.getNumber());
@@ -35,9 +38,11 @@ public class DataCacheGetQueue {
     }
 
     /**
+     * Schedules UserData objects to be get for the given proecssors.
      *
-     * @param uuid
-     * @param processors
+     * @param uuid UUID of the player whose UserData object is fetched.
+     * @param processors Processors which process-method will be called after
+     * fetch is complete, with the UserData object.
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
         Log.debug(uuid + ": Scheduling for get");
@@ -54,7 +59,7 @@ public class DataCacheGetQueue {
     }
 
     /**
-     *
+     * Stops the activities and clears the queue.
      */
     public void stop() {
         if (s != null) {
@@ -98,7 +103,7 @@ class GetConsumer implements Runnable {
                 }
                 List<DBCallableProcessor> processorsList = processors.get(uuid);
                 if (processorsList != null) {
-                    Log.debug(uuid+ ": Get, For:" + processorsList.size());
+                    Log.debug(uuid + ": Get, For:" + processorsList.size());
                     try {
                         db.giveUserDataToProcessors(uuid, processorsList);
                     } catch (SQLException e) {

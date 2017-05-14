@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 /**
+ * Event Listener for AsyncPlayerChatEvents.
  *
  * @author Rsl1122
  */

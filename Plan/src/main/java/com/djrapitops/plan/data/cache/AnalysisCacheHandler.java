@@ -5,8 +5,11 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.utilities.Analysis;
 
 /**
+ * This class is used to store the most recent AnalysisData object and to run
+ * Analysis.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class AnalysisCacheHandler {
 
@@ -53,6 +56,8 @@ public class AnalysisCacheHandler {
     }
 
     /**
+     * Check if the AnalysisData has been cached.
+     *
      * @return true if there is data in the cache.
      */
     public boolean isCached() {

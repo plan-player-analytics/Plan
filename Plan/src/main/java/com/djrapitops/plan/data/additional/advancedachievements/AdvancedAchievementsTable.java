@@ -14,13 +14,28 @@ import static org.bukkit.Bukkit.getOfflinePlayers;
 import org.bukkit.OfflinePlayer;
 
 /**
+ * PluginData class for AdvancedAchievements-plugin.
+ *
+ * Registered to the plugin by AdvancedAchievementsHook
+ *
+ * Gives a table of players and achievements achievements.
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see AdvancedAchievementsHook
  */
 public class AdvancedAchievementsTable extends PluginData {
 
     private AdvancedAchievementsAPI aaAPI;
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     *
+     * Uses Html to easily parse Html for the table.
+     *
+     * @param aaAPI AdvancedAchievementsAPI given by AdvancedAchievementsHook
+     * @see Html
+     */
     public AdvancedAchievementsTable(AdvancedAchievementsAPI aaAPI) {
         super("AdvancedAchievements", "achievementstable", AnalysisType.HTML);
         this.aaAPI = aaAPI;
@@ -36,7 +51,7 @@ public class AdvancedAchievementsTable extends PluginData {
         StringBuilder html = new StringBuilder();
         List<OfflinePlayer> offlinePlayers = Arrays.stream(getOfflinePlayers()).filter(p -> p.hasPlayedBefore()).collect(Collectors.toList());
         if (offlinePlayers.isEmpty()) {
-            html.append(Html.TABLELINE_2.parse("No Players.",""));
+            html.append(Html.TABLELINE_2.parse("No Players.", ""));
         } else {
             for (OfflinePlayer p : offlinePlayers) {
                 String inspectUrl = HtmlUtils.getInspectUrl(p.getName());

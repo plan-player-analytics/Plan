@@ -17,6 +17,11 @@ import org.bukkit.ChatColor;
  */
 public class TextUI {
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public static String[] getInspectMessages(UUID uuid) {
         InspectCacheHandler inspectCache = Plan.getInstance().getInspectCache();
         if (!inspectCache.isCached(uuid)) {
@@ -42,6 +47,10 @@ public class TextUI {
         };
     }
 
+    /**
+     *
+     * @return
+     */
     public static String[] getAnalysisMessages() {
         AnalysisCacheHandler analysisCache = Plan.getInstance().getAnalysisCache();
         if (!analysisCache.isCached()) {

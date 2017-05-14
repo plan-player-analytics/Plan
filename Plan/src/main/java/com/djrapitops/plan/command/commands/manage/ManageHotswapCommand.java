@@ -33,16 +33,6 @@ public class ManageHotswapCommand extends SubCommand {
         this.plugin = plugin;
     }
 
-    /**
-     * Subcommand hotswap. Swaps db type and reloads plugin if the connection
-     * works.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length == 0) {

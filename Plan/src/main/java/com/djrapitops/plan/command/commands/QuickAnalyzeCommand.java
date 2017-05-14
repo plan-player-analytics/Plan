@@ -36,18 +36,6 @@ public class QuickAnalyzeCommand extends SubCommand {
         analysisCache = plugin.getAnalysisCache();
     }
 
-    /**
-     * Subcommand qanalyze (QuickAnalyze).
-     *
-     * Updates AnalysisCache if last refresh was over 60 seconds ago and sends
-     * player the text ui msgs about analysis data
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
@@ -61,7 +49,7 @@ public class QuickAnalyzeCommand extends SubCommand {
             analysisCache.updateCache();
         }
 
-        BukkitTask analysisMessageSenderTask = (new BukkitRunnable() {
+        BukkitTask analysisMessageSenderTask = new BukkitRunnable() {
             private int timesrun = 0;
 
             @Override
@@ -78,7 +66,7 @@ public class QuickAnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }).runTaskTimer(plugin, 1 * 20, 5 * 20);
+        }.runTaskTimer(plugin, 1 * 20, 5 * 20);
         return true;
     }
 }

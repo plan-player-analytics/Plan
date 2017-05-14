@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
+import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import main.java.com.djrapitops.plan.utilities.Analysis;
@@ -304,7 +305,7 @@ public class AnalysisData {
     }
 
     /**
-     * Used to get the amount of players who have joined only once
+     * Used to get the amount of players who have joined only once.
      *
      * @return Number from 0 to Integer.MAX
      */
@@ -777,7 +778,7 @@ public class AnalysisData {
      *
      * No check for correct value.
      *
-     * @param totaldeaths
+     * @param totaldeaths 0 to Long.MAX
      */
     public void setTotaldeaths(long totaldeaths) {
         this.totaldeaths = totaldeaths;
@@ -792,8 +793,8 @@ public class AnalysisData {
      * 0, 1 day; 2, 3 week; 4, 5 month
      *
      * @return String array containing multiple toString representations of
-     * number & label arrays.
-     * @see PlayersActivityGraphCreator
+     * number and label arrays.
+     * @see PlayerActivityGraphCreator
      * @see Analysis
      */
     public String[] getPlayersDataArray() {
@@ -809,8 +810,8 @@ public class AnalysisData {
      * 0, 1 day; 2, 3 week; 4, 5 month
      *
      * @param playersDataArray String array containing multiple toString
-     * representations of number & label arrays.
-     * @see PlayersActivityGraphCreator
+     * representations of number and label arrays.
+     * @see PlayerActivityGraphCreator
      * @see Analysis
      */
     public void setPlayersDataArray(String[] playersDataArray) {

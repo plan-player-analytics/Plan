@@ -35,6 +35,11 @@ public class UsersTable extends Table {
     private final String columnDeaths;
     private final String columnMobKills;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public UsersTable(SQLDB db, boolean usingMySQL) {
         super("plan_users", db, usingMySQL);
         columnID = "id";
@@ -52,6 +57,10 @@ public class UsersTable extends Table {
         columnDeaths = "deaths";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         try {
@@ -103,10 +112,22 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
     public int getUserId(UUID uuid) throws SQLException {
         return getUserId(uuid.toString());
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
     public int getUserId(String uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -125,6 +146,12 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userID
+     * @return
+     * @throws SQLException
+     */
     public UUID getUserUUID(String userID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -143,6 +170,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public Set<UUID> getSavedUUIDs() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -164,10 +196,20 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public boolean removeUser(UUID uuid) {
         return removeUser(uuid.toString());
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public boolean removeUser(String uuid) {
         PreparedStatement statement = null;
         try {
@@ -182,6 +224,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     */
     public void addUserInformationToUserData(UserData data) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -207,6 +254,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     */
     public void saveUserDataInformation(UserData data) throws SQLException {
         PreparedStatement statement = null;
         try {
@@ -285,6 +337,12 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @return
+     * @throws SQLException
+     */
     public List<UserData> saveUserDataInformationBatch(List<UserData> data) throws SQLException {
         PreparedStatement statement = null;
         try {
@@ -360,6 +418,10 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getColumnID() {
         return columnID;
     }

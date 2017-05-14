@@ -9,11 +9,21 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 
 /**
+ * PluginData class for Ontime-plugin.
+ *
+ * Registered to the plugin by OnTimeHook
+ *
+ * Gives Week's Votes Integer as value.
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see OnTimeHook
  */
 public class OntimeVotesWeek extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public OntimeVotesWeek() {
         super("OnTime", "votes_7d", AnalysisType.INT_TOTAL);
         super.setAnalysisOnly(false);

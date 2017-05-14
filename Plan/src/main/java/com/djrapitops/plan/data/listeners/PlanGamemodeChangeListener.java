@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 /**
+ * Event Listener for PlayerGameModeChangeEvents.
  *
  * @author Rsl1122
  */
@@ -27,7 +28,7 @@ public class PlanGamemodeChangeListener implements Listener {
     public PlanGamemodeChangeListener(Plan plugin) {
         this.plugin = plugin;
         handler = plugin.getHandler();
-        
+
     }
 
     /**

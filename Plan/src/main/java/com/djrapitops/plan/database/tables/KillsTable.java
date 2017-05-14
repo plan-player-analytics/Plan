@@ -21,6 +21,11 @@ public class KillsTable extends Table {
     private final String columnWeapon;
     private final String columnDate;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public KillsTable(SQLDB db, boolean usingMySQL) {
         super("plan_kills", db, usingMySQL);
         columnWeapon = "weapon";
@@ -29,6 +34,10 @@ public class KillsTable extends Table {
         columnVictimUserID = "victim_id";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
@@ -49,6 +58,11 @@ public class KillsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public boolean removeUserKillsAndVictims(int userId) {
         PreparedStatement statement = null;
         try {
@@ -65,6 +79,12 @@ public class KillsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     public List<KillData> getPlayerKills(int userId) throws SQLException {
         UsersTable usersTable = db.getUsersTable();
         PreparedStatement statement = null;
@@ -86,6 +106,12 @@ public class KillsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param kills
+     * @throws SQLException
+     */
     public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
         if (kills == null) {
             return;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import java.net.InetAddress;
@@ -12,8 +7,10 @@ import main.java.com.djrapitops.plan.data.handling.LoginHandling;
 import org.bukkit.GameMode;
 
 /**
+ * HandlingInfo Class for refreshing data in the cache for online players.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class ReloadInfo extends HandlingInfo {
 
@@ -23,13 +20,14 @@ public class ReloadInfo extends HandlingInfo {
     private GamemodeInfo gmInfo;
 
     /**
+     * Constructor.
      *
-     * @param uuid
-     * @param time
-     * @param ip
-     * @param banned
-     * @param nickname
-     * @param gm
+     * @param uuid UUID of the player.
+     * @param time Epoch ms of the event.
+     * @param ip IP of the player
+     * @param banned Is the player banned?
+     * @param nickname Nickname of the player
+     * @param gm current gamemode of the player
      */
     public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm) {
         super(uuid, InfoType.RELOAD, time);
@@ -39,18 +37,13 @@ public class ReloadInfo extends HandlingInfo {
         gmInfo = new GamemodeInfo(uuid, time, gm);
     }
 
-    /**
-     *
-     * @param uData
-     * @return
-     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {
             return false;
         }
         uData.setPlayTime(uData.getPlayTime() + (time - uData.getLastPlayed()));
-        uData.setLastPlayed(time);        
+        uData.setLastPlayed(time);
         uData.updateBanned(banned);
         uData.addIpAddress(ip);
         uData.addNickname(nickname);

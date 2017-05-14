@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 /**
+ * Event Listener for PlayerCommandPreprocessEvents.
  *
  * @author Rsl1122
  */

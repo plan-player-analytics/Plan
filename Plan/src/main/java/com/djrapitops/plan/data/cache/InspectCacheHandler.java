@@ -6,8 +6,10 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
+ * This class stores UserData objects used for displaying the Html pages.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class InspectCacheHandler {
 
@@ -16,7 +18,7 @@ public class InspectCacheHandler {
     private HashMap<UUID, UserData> cache;
 
     /**
-     * Class constructor
+     * Class constructor.
      *
      * @param plugin Current instance of Plan.class
      */
@@ -25,10 +27,14 @@ public class InspectCacheHandler {
         this.plugin = plugin;
         this.cache = new HashMap<>();
     }
-    
+
     /**
+     * Caches the UserData object to InspectCache.
      *
-     * @param uuid
+     * If the Userdata is cached in DataCache it will be used. Otherwise the Get
+     * Queue will handle the DBCallableProcessor.
+     *
+     * @param uuid UUID of the player.
      */
     public void cache(UUID uuid) {
         DBCallableProcessor cacher = new DBCallableProcessor() {
@@ -41,7 +47,7 @@ public class InspectCacheHandler {
     }
 
     /**
-     * Checks the cache for UserData matching UUID
+     * Checks the cache for UserData matching UUID.
      *
      * @param uuid UUID of the Player
      * @return UserData that matches the player, null if not cached.

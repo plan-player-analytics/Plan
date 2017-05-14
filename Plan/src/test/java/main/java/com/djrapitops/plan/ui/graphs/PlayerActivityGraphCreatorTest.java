@@ -49,6 +49,9 @@ public class PlayerActivityGraphCreatorTest {
         return list;
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetCount() {
         List<Long> test = new ArrayList<>();
@@ -65,6 +68,9 @@ public class PlayerActivityGraphCreatorTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testFilterSessions() {
         List<SessionData> test = new ArrayList<>();
@@ -95,6 +101,9 @@ public class PlayerActivityGraphCreatorTest {
         assertTrue("Did not contain valid session" + ends, ends.contains(valid3.getSessionEnd()));
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetSecond() {
         Date test = new Date();
@@ -103,6 +112,9 @@ public class PlayerActivityGraphCreatorTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetSecond2() {
         long exp = 2000L;
@@ -110,6 +122,9 @@ public class PlayerActivityGraphCreatorTest {
         assertEquals(exp, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetSecond3() {
         long exp = 2000L;

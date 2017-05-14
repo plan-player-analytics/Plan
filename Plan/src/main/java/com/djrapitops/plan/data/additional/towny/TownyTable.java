@@ -11,13 +11,27 @@ import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
+ * PluginData class for Towny-plugin.
+ *
+ * Registered to the plugin by TownyHook
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see TownyHook
  */
 public class TownyTable extends PluginData {
 
     private List<Town> towns;
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     *
+     * Uses Html to easily parse Html for the table.
+     *
+     * @param towns List of filtered Towns.
+     * @see TownyHook
+     * @see Html
+     */
     public TownyTable(List<Town> towns) {
         super("Towny", "townstable", AnalysisType.HTML);
         this.towns = towns;

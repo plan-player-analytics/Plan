@@ -82,6 +82,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testRemoveNumbers() {
         String dataPoint = "34532453.5 $";
@@ -90,6 +93,9 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
     
+    /**
+     *
+     */
     @Test
     public void testRemoveNumbers2() {
         String dataPoint = "l43r4545tl43  4.5";

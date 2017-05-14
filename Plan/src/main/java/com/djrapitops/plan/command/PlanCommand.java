@@ -83,7 +83,7 @@ public class PlanCommand implements CommandExecutor {
      *
      * @param sender source of the command.
      * @param cmd command.
-     * @param commandLabel 
+     * @param commandLabel label.
      * @param args arguments of the command
      * @return true
      */
@@ -113,7 +113,7 @@ public class PlanCommand implements CommandExecutor {
             return true;
         }
 
-        if (console && command.getCommandType() == CommandType.PLAYER) {;
+        if (console && command.getCommandType() == CommandType.PLAYER) {
             sender.sendMessage("" + Phrase.COMMAND_SENDER_NOT_PLAYER);
 
             return true;
@@ -125,9 +125,7 @@ public class PlanCommand implements CommandExecutor {
             realArgs[i - 1] = args[i];
         }
 
-        if (!command.onCommand(sender, cmd, commandLabel, realArgs)) {
-//            Phrase.TRY_COMMAND.sendWithPrefix( sender, parse( commandLabel, command ) );
-        }
+        command.onCommand(sender, cmd, commandLabel, realArgs);
         return true;
     }
 

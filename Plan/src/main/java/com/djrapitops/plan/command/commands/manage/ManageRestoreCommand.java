@@ -71,7 +71,7 @@ public class ManageRestoreCommand extends SubCommand {
                 return true;
             }
             final Database copyToDB = database;
-            BukkitTask asyncRestoreTask = (new BukkitRunnable() {
+            BukkitTask asyncRestoreTask = new BukkitRunnable() {
                 @Override
                 public void run() {
                     String backupDBName = args[0];
@@ -105,7 +105,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
                     this.cancel();
                 }
-            }).runTaskAsynchronously(plugin);
+            }.runTaskAsynchronously(plugin);
         } catch (NullPointerException e) {
             sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
         }

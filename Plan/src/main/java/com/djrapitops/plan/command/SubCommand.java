@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command;
 
 import main.java.com.djrapitops.plan.Permissions;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -93,11 +94,12 @@ public abstract class SubCommand {
     /**
      * The Command Execution method.
      *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args
+     * @param sender Parameter of onCommand in CommandExecutor.
+     * @param cmd Parameter of onCommand in CommandExecutor.
+     * @param commandLabel Parameter of onCommand in CommandExecutor.
+     * @param args Parameter of onCommand in CommandExecutor.
      * @return Was the execution successful?
+     * @see CommandExecutor
      */
     public abstract boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args);
 }

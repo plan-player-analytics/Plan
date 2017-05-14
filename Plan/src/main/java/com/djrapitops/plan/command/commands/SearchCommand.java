@@ -43,18 +43,6 @@ public class SearchCommand extends SubCommand {
         inspectCache = plugin.getInspectCache();
     }
 
-    /**
-     * Subcommand search.
-     *
-     * Searches database for matching playernames and caches matching UserData
-     * to InspectCache. Shows all links to matching players data.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args Part of a Players name
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!Settings.WEBSERVER_ENABLED.isTrue()) {
@@ -68,7 +56,7 @@ public class SearchCommand extends SubCommand {
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         Set<OfflinePlayer> matches = MiscUtils.getMatchingDisplaynames(args[0]);
-        BukkitTask searchTask = (new BukkitRunnable() {
+        BukkitTask searchTask = new BukkitRunnable() {
             @Override
             public void run() {
                 Set<UUID> uuids = new HashSet<>();
@@ -122,7 +110,7 @@ public class SearchCommand extends SubCommand {
                 sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available + ""));
                 sender.sendMessage(Phrase.CMD_FOOTER + "");
             }
-        }).runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(plugin);
         return true;
     }
 }

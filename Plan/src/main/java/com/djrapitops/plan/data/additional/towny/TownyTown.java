@@ -11,11 +11,21 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 
 /**
+ * PluginData class for Towny-plugin.
+ *
+ * Registered to the plugin by TownyHook
+ *
+ * Gives Town name as String.
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see TownyHook
  */
 public class TownyTown extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public TownyTown() {
         super("Towny", "town");
         super.setAnalysisOnly(false);

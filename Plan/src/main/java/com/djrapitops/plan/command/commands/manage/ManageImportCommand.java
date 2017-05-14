@@ -43,19 +43,6 @@ public class ManageImportCommand extends SubCommand {
         this.plugin = plugin;
     }
 
-    /**
-     * Subcommand inspect.
-     *
-     * Adds player's data from DataCache/DB to the InspectCache for amount of
-     * time specified in the config, and clears the data from Cache with a timer
-     * task.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
@@ -90,7 +77,7 @@ public class ManageImportCommand extends SubCommand {
             uuids.add(p.getUniqueId());
         }
         HashMap<UUID, Long> numbericData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
-        BukkitTask asyncImportTask = (new BukkitRunnable() {
+        BukkitTask asyncImportTask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (importFromPlugin.equals("ontime")) {
@@ -100,7 +87,7 @@ public class ManageImportCommand extends SubCommand {
                 }
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(plugin);
         return true;
     }
 }

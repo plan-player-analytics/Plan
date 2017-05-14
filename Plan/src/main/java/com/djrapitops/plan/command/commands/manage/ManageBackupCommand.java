@@ -33,15 +33,6 @@ public class ManageBackupCommand extends SubCommand {
         this.plugin = plugin;
     }
 
-    /**
-     * Subcommand Manage backup.
-     *
-     * @param sender
-     * @param cmd
-     * @param commandLabel
-     * @param args mysql or sqlite, -a to confirm.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         try {

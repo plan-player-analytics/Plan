@@ -21,6 +21,11 @@ public class GMTimesTable extends Table {
     private final String columnAdventureTime;
     private final String columnSpectatorTime;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public GMTimesTable(SQLDB db, boolean usingMySQL) {
         super("plan_gamemodetimes", db, usingMySQL);
         columnUserID = "user_id";
@@ -30,6 +35,10 @@ public class GMTimesTable extends Table {
         columnSpectatorTime = "spectator";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
@@ -50,6 +59,11 @@ public class GMTimesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public boolean removeUserGMTimes(int userId) {
         PreparedStatement statement = null;
         try {
@@ -65,6 +79,12 @@ public class GMTimesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     public HashMap<GameMode, Long> getGMTimes(int userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -89,6 +109,12 @@ public class GMTimesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param gamemodeTimes
+     * @throws SQLException
+     */
     public void saveGMTimes(int userId, Map<GameMode, Long> gamemodeTimes) throws SQLException {
         if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;

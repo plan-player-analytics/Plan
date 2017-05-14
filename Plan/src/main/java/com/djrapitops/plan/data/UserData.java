@@ -56,10 +56,10 @@ public class UserData {
     private List<SessionData> sessions;
 
     /**
-     * Creates a new UserData object with given values & default values.
+     * Creates a new UserData object with given values and default values.
      *
      * Some variables are left uninitialized: isBanned, lastPlayed, playTime,
-     * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths &
+     * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths and
      * currentSession.
      *
      * These variables need to be set with setters.
@@ -110,7 +110,7 @@ public class UserData {
      * Creates a new UserData object with the variables inside a Player object.
      *
      * Some variables are left uninitialized: lastPlayed, playTime, loginTimes,
-     * timesKicked, lastGmSwapTime, mobKills, deaths & currentSession.
+     * timesKicked, lastGmSwapTime, mobKills, deaths and currentSession.
      *
      * These variables need to be set with setters.
      *
@@ -139,7 +139,7 @@ public class UserData {
      * object.
      *
      * Some variables are left uninitialized: location, lastPlayed, playTime,
-     * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths &
+     * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths and
      * currentSession.
      *
      * These variables need to be set with setters.
@@ -454,7 +454,7 @@ public class UserData {
     }
 
     /**
-     * Get the nickname String Set
+     * Get the nickname String Set.
      *
      * @return a HashSet of Strings.
      */
@@ -696,7 +696,7 @@ public class UserData {
     /**
      * Set the GM Times map containing playtime in each gamemode.
      *
-     * @param gmTimes Map containing SURVIVAL, CREATIVE, ADVENTURE & SPECTATOR
+     * @param gmTimes Map containing SURVIVAL, CREATIVE, ADVENTURE and SPECTATOR
      * (After 1.8) keys.
      */
     public void setGmTimes(Map<GameMode, Long> gmTimes) {

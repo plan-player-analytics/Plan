@@ -8,13 +8,25 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 /**
+ * PluginData class for Essentials-plugin.
  *
+ * Registered to the plugin by EssentialsHook
+ *
+ * Gives a list of warps as a String value.
+ * 
  * @author Rsl1122
+ * @since 3.1.0
+ * @see EssentialsHook
  */
 public class EssentialsWarps extends PluginData {
 
     private Essentials essentials;
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     *
+     * @param essentials Instance of Essentials plugin.
+     */
     public EssentialsWarps(Essentials essentials) {
         super("Essentials", "warps", AnalysisType.HTML);
         this.essentials = essentials;

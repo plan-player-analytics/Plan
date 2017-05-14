@@ -1,38 +1,31 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
+ * HandlingInfo Class for DeathEvent information.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
-public class DeathInfo extends HandlingInfo{
+public class DeathInfo extends HandlingInfo {
 
     /**
+     * Constructor.
      *
-     * @param uuid
+     * @param uuid UUID of the dead player.
      */
     public DeathInfo(UUID uuid) {
         super(uuid, InfoType.DEATH, 0L);
     }
-    
-    /**
-     *
-     * @param uData
-     * @return
-     */
+
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {
             return false;
         }
-        uData.setDeaths(uData.getDeaths()+1);
+        uData.setDeaths(uData.getDeaths() + 1);
         return true;
     }
 }

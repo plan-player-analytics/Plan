@@ -9,19 +9,24 @@ import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
+ * Class containing static methods for processing information contained in a
+ * JoinEvent.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class LoginHandling {
 
     /**
+     * Processes the information of the Event and changes UserData object
+     * accordingly.
      *
-     * @param data
-     * @param time
-     * @param ip
-     * @param banned
-     * @param nickname
-     * @param loginTimes
+     * @param data UserData of the player.
+     * @param time Epoch ms the event occurred.
+     * @param ip IP of the player
+     * @param banned Is the player banned
+     * @param nickname Nickname of the player
+     * @param loginTimes amount the loginTimes should be incremented with.
      */
     public static void processLoginInfo(UserData data, long time, InetAddress ip, boolean banned, String nickname, int loginTimes) {
         data.setLastPlayed(time);
@@ -33,9 +38,12 @@ public class LoginHandling {
     }
 
     /**
+     * Updates the geolocation of the player.
      *
-     * @param ip
-     * @param data
+     * Uses free service of freegeoip.net. 10000 requests can be sent per hour.
+     *
+     * @param ip InetAddress used for location.
+     * @param data UserData of the player.
      */
     public static void updateGeolocation(InetAddress ip, UserData data) {
         DemographicsData demData = data.getDemData();

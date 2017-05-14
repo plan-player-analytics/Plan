@@ -106,6 +106,14 @@ public class AnalysisUtils {
     }
 
     // Refactor to MathUtils class
+
+    /**
+     *
+     * @param analysisType
+     * @param source
+     * @param uuids
+     * @return
+     */
     public static String getTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
         try {
             if (null != analysisType) {
@@ -149,6 +157,14 @@ public class AnalysisUtils {
     }
 
     // Refactor to MathUtils class
+
+    /**
+     *
+     * @param analysisType
+     * @param source
+     * @param uuids
+     * @return
+     */
     public static String getAverage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
         try {
             if (null != analysisType) {

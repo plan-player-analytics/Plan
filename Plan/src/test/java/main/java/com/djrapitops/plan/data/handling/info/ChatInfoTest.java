@@ -46,24 +46,6 @@ public class ChatInfoTest {
      *
      */
     @Test
-    public void testGetNickname() {
-        ChatInfo i = new ChatInfo(null, "Test", "Message");
-        assertTrue("Nick get wrong", i.getNickname().equals("Test"));
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testGetMessage() {
-        ChatInfo i = new ChatInfo(null, "Test", "Message");
-        assertTrue("Message get wrong", i.getMessage().equals("Message"));
-    }
-
-    /**
-     *
-     */
-    @Test
     public void testProcessNick() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         String expected = "TestNicknameChatInfo";

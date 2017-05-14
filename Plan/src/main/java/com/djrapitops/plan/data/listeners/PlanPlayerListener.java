@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
+ * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
  *
  * @author Rsl1122
  */
@@ -55,8 +56,8 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
-        Log.debug(uuid+": PlayerJoinEvent");
-        BukkitTask asyncNewPlayerCheckTask = (new BukkitRunnable() {
+        Log.debug(uuid + ": PlayerJoinEvent");
+        BukkitTask asyncNewPlayerCheckTask = new BukkitRunnable() {
             @Override
             public void run() {
                 LoginInfo loginInfo = new LoginInfo(uuid, new Date().getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1);
@@ -68,11 +69,11 @@ public class PlanPlayerListener implements Listener {
                 } else {
                     handler.addToPool(loginInfo);
                 }
-                Log.debug(uuid+": PlayerJoinEvent_AsyncTask_END, New:"+isNewPlayer);
+                Log.debug(uuid + ": PlayerJoinEvent_AsyncTask_END, New:" + isNewPlayer);
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);
-        Log.debug(uuid+": PlayerJoinEvent_END");
+        }.runTaskAsynchronously(plugin);
+        Log.debug(uuid + ": PlayerJoinEvent_END");
     }
 
     /**
@@ -88,10 +89,10 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
-        Log.debug(uuid+": PlayerQuitEvent");
+        Log.debug(uuid + ": PlayerQuitEvent");
         handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
         handler.saveCachedData(uuid);
-        Log.debug(uuid+": PlayerQuitEvent_END");
+        Log.debug(uuid + ": PlayerQuitEvent_END");
     }
 
     /**

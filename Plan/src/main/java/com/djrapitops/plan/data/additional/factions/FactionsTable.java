@@ -12,13 +12,27 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
+ * PluginData class for Factions-plugin.
+ *
+ * Registered to the plugin by FactionsHook
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see FactionsHook
  */
 public class FactionsTable extends PluginData {
 
     private List<Faction> factions;
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     *
+     * Uses Html to easily parse Html for the table.
+     *
+     * @param factions List of filtered Factions.
+     * @see FactionsHook
+     * @see Html
+     */
     public FactionsTable(List<Faction> factions) {
         super("Factions", "factionstable", AnalysisType.HTML);
         this.factions = factions;

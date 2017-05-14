@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import main.java.com.djrapitops.plan.utilities.Analysis;
 
 /**
  * This class is used for storing combined data of several UserData objects
- * during Analysis.
+ * during Analysis and thus is not documented.
  *
  * @author Rsl1122
  * @since 2.6.0
+ * @see Analysis
  */
 public class RawAnalysisData {
 
@@ -370,7 +372,7 @@ public class RawAnalysisData {
      *
      * @param commandUse
      */
-    public void setCommandUse(HashMap<String, Integer> commandUse) {
+    public void setCommandUse(Map<String, Integer> commandUse) {
         this.commandUse = commandUse;
     }
 

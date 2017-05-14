@@ -16,12 +16,21 @@ public class CommandUseTable extends Table {
     private final String columnCommand;
     private final String columnTimesUsed;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public CommandUseTable(SQLDB db, boolean usingMySQL) {
         super("plan_commandusages", db, usingMySQL);
         columnCommand = "command";
         columnTimesUsed = "times_used";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         try {
@@ -37,6 +46,11 @@ public class CommandUseTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public HashMap<String, Integer> getCommandUse() throws SQLException {
         HashMap<String, Integer> commandUse = new HashMap<>();
         PreparedStatement statement = null;
@@ -54,6 +68,12 @@ public class CommandUseTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     * @throws NullPointerException
+     */
     public void saveCommandUse(HashMap<String, Integer> data) throws SQLException, NullPointerException {
         if (data.isEmpty()) {
             return;

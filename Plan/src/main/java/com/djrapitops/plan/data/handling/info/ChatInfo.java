@@ -5,18 +5,22 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.ChatHandling;
 
 /**
+ * HandlingInfo Class for ChatEvent information.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class ChatInfo extends HandlingInfo {
+
     private String nickname;
     private String message;
 
     /**
+     * Constructor.
      *
-     * @param uuid
-     * @param nickname
-     * @param message
+     * @param uuid UUID of the player.
+     * @param nickname Nickname of the player.
+     * @param message Message the player sent.
      */
     public ChatInfo(UUID uuid, String nickname, String message) {
         super(uuid, InfoType.CHAT, 0L);
@@ -24,27 +28,6 @@ public class ChatInfo extends HandlingInfo {
         this.message = message;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getNickname() {
-        return nickname;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     *
-     * @param uData
-     * @return
-     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

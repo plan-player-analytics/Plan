@@ -1,16 +1,15 @@
 package main.java.com.djrapitops.plan.api;
 
-import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
 import static org.bukkit.Bukkit.getOfflinePlayer;
@@ -18,12 +17,16 @@ import org.bukkit.OfflinePlayer;
 
 /**
  * This class contains the API methods.
- * <p>
- * Methods can be called from Asyncronous task & are thread safe unless
+ *
+ * Methods can be called from Asyncronous task and are thread safe unless
  * otherwise stated.
  *
  * @author Rsl1122
  * @since 2.0.0
+ * @see PluginData
+ * @see AnalysisType
+ * @see DBCallableProcessor
+ * @see HandlingInfo
  */
 public class API {
 
@@ -55,7 +58,7 @@ public class API {
      * data source that extends PluginData correctly.
      *
      * @param dataSource an object that extends PluginData-object, thus allowing
-     * Analysis & Inspect to manage the data of a plugin correctly.
+     * Analysis and Inspect to manage the data of a plugin correctly.
      * @see PluginData
      */
     public void addPluginDataSource(PluginData dataSource) {
@@ -143,7 +146,7 @@ public class API {
      * Uses cache if data is cached or database if not. Call from an Asyncronous
      * thread.
      *
-     * @param uuid
+     * @param uuid UUID of the player.
      */
     public void cacheUserDataToInspectCache(UUID uuid) {
         plugin.getInspectCache().cache(uuid);
@@ -167,7 +170,7 @@ public class API {
     }
 
     /**
-     * Check if the Analysis has been run & is cached to the AnalysisCache.
+     * Check if the Analysis has been run and is cached to the AnalysisCache.
      *
      * @return true/false
      */
@@ -176,7 +179,7 @@ public class API {
     }
 
     /**
-     * Run's the analysis with the current data in the cache & fetches rest from
+     * Run's the analysis with the current data in the cache and fetches rest from
      * the database.
      *
      * Starts a new Asyncronous task to run the analysis.
@@ -230,7 +233,7 @@ public class API {
     }
 
     /**
-     * Uses UUIDFetcher to turn PlayerName to UUID
+     * Uses UUIDFetcher to turn PlayerName to UUID.
      *
      * @param playerName Player's name
      * @return UUID of the Player
@@ -238,26 +241,5 @@ public class API {
      */
     public UUID playerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
-    }
-
-    // DEPRECATED METHODS WILL BE REMOVED IN 3.2.0
-    @Deprecated
-    public static String formatTimeSinceDate(Date before, Date after) {
-        return FormatUtils.formatTimeAmountSinceDate(before, after);
-    }
-
-    @Deprecated
-    public static String formatTimeSinceString(String before, Date after) {
-        return FormatUtils.formatTimeAmountSinceString(before, after);
-    }
-
-    @Deprecated
-    public static String formatTimeAmount(String timeInMs) {
-        return FormatUtils.formatTimeAmount(timeInMs);
-    }
-
-    @Deprecated
-    public static String formatTimeStamp(String timeInMs) {
-        return FormatUtils.formatTimeStamp(timeInMs);
     }
 }

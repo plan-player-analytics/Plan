@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.data.handling;
 
 import java.util.Arrays;
@@ -12,16 +7,21 @@ import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
+ * Class containing static methods for processing information contained in a
+ * ChatEvent.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class ChatHandling {
 
     /**
+     * Processes the information of the Event and changes UserData object
+     * accordingly.
      *
-     * @param data
-     * @param nickname
-     * @param msg
+     * @param data UserData of the player.
+     * @param nickname Nickname of the player during the event.
+     * @param msg Message sent by the player.
      */
     public static void processChatInfo(UserData data, String nickname, String msg) {
         data.addNickname(nickname);
@@ -29,9 +29,10 @@ public class ChatHandling {
     }
 
     /**
+     * Updates Demographics information according to various rules.
      *
-     * @param msg
-     * @param data
+     * @param msg Message sent by the player.
+     * @param data UserData of the player.
      */
     public static void updateDemographicInformation(String msg, UserData data) {
         List<String> triggers = Arrays.asList(Settings.DEM_TRIGGERS.toString().split(", "));

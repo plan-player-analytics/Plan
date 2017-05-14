@@ -117,6 +117,7 @@ public class DataCacheHandlerTest {
 
     /**
      *
+     * @throws SQLException
      */
     @After
     public void tearDown() throws SQLException {
@@ -125,6 +126,8 @@ public class DataCacheHandlerTest {
 
     /**
      *
+     * @throws SQLException
+     * @throws InterruptedException
      */
     @Test
     public void testGetUserDataForProcessingCache() throws SQLException, InterruptedException {
@@ -144,6 +147,8 @@ public class DataCacheHandlerTest {
 
     /**
      *
+     * @throws SQLException
+     * @throws InterruptedException
      */
     @Ignore
     @Test

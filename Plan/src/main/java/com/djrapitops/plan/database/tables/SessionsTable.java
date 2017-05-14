@@ -19,6 +19,11 @@ public class SessionsTable extends Table {
     private final String columnSessionStart;
     private final String columnSessionEnd;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public SessionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_sessions", db, usingMySQL);
         columnUserID = "user_id";
@@ -26,6 +31,10 @@ public class SessionsTable extends Table {
         columnSessionEnd = "session_end";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         try {
@@ -44,6 +53,12 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     public List<SessionData> getSessionData(int userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -64,6 +79,11 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public boolean removeUserSessions(int userId) {
         PreparedStatement statement = null;
         try {
@@ -79,6 +99,12 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param sessions
+     * @throws SQLException
+     */
     public void saveSessionData(int userId, List<SessionData> sessions) throws SQLException {
         if (sessions == null) {
             return;

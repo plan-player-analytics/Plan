@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import java.util.UUID;
@@ -11,28 +6,27 @@ import main.java.com.djrapitops.plan.data.handling.GamemodeHandling;
 import org.bukkit.GameMode;
 
 /**
+ * HandlingInfo Class for GamemodeChangeEvent information.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
-public class GamemodeInfo extends HandlingInfo{
+public class GamemodeInfo extends HandlingInfo {
+
     private GameMode currentGamemode;
 
     /**
+     * Constructor.
      *
-     * @param uuid
-     * @param time
-     * @param gm
+     * @param uuid UUID of the player.
+     * @param time Epoch ms of the event.
+     * @param gm Gamemode the player changed to.
      */
     public GamemodeInfo(UUID uuid, long time, GameMode gm) {
         super(uuid, InfoType.GM, time);
         currentGamemode = gm;
     }
 
-    /**
-     *
-     * @param uData
-     * @return
-     */
     @Override
     public boolean process(UserData uData) {
         if (currentGamemode == null) {

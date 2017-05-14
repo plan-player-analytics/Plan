@@ -9,11 +9,21 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 
 /**
+ * PluginData class for Ontime-plugin.
+ *
+ * Registered to the plugin by OnTimeHook
+ *
+ * Gives Month's Votes Integer as value.
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see OnTimeHook
  */
 public class OntimeVotesMonth extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public OntimeVotesMonth() {
         super("OnTime", "votes_30d", AnalysisType.INT_TOTAL);
         super.setAnalysisOnly(false);

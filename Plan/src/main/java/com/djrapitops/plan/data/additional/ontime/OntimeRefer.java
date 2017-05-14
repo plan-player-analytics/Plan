@@ -9,11 +9,21 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 
 /**
+ * PluginData class for Ontime-plugin.
+ *
+ * Registered to the plugin by OnTimeHook
+ *
+ * Gives Total Referral Integer as value.
  *
  * @author Rsl1122
+ * @since 3.1.0
+ * @see OnTimeHook
  */
 public class OntimeRefer extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public OntimeRefer() {
         super("OnTime", "refer", AnalysisType.INT_TOTAL, AnalysisType.INT_AVG);
         super.setAnalysisOnly(false);

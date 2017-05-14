@@ -14,8 +14,11 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 
 /**
+ * This Class is starts the Process Queue Thread, that processes HandlingInfo
+ * objects.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class DataCacheProcessQueue {
 
@@ -23,8 +26,9 @@ public class DataCacheProcessQueue {
     private ProcessSetup setup;
 
     /**
+     * Class constructor, starts the new Thread for processing.
      *
-     * @param handler
+     * @param handler current instance of DataCachehandler.
      */
     public DataCacheProcessQueue(DataCacheHandler handler) {
         queue = new ArrayBlockingQueue(20000);
@@ -33,8 +37,9 @@ public class DataCacheProcessQueue {
     }
 
     /**
+     * Used to add HandlingInfo object to be processed.
      *
-     * @param info
+     * @param info object that extends HandlingInfo.
      */
     public void addToPool(HandlingInfo info) {
         try {
@@ -45,29 +50,33 @@ public class DataCacheProcessQueue {
     }
 
     /**
+     * Used to add multiple HandlingInfo objects to be processed.
      *
-     * @param info
+     * @param info Collection of objects that extends HandlingInfo.
      */
     public void addToPool(Collection<HandlingInfo> info) {
         try {
             queue.addAll(info);
         } catch (IllegalStateException e) {
-             Log.toLog(this.getClass().getName(), e);
+            Log.toLog(this.getClass().getName(), e);
         }
     }
 
     /**
+     * Check whether or not the queue contains a HandlingInfo object with the
+     * uuid.
      *
-     * @param uuid
-     * @return
+     * @param uuid UUID of the player.
+     * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
         return new ArrayList<>(queue).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
     }
 
     /**
+     * Stops all activites and clears the queue.
      *
-     * @return
+     * @return unprocessed HandlingInfo objects.
      */
     public List<HandlingInfo> stop() {
         try {
@@ -109,7 +118,7 @@ class ProcessConsumer implements Runnable {
         if (handler == null) {
             return;
         }
-        Log.debug(info.getUuid()+": Processing type: " + info.getType().name());
+        Log.debug(info.getUuid() + ": Processing type: " + info.getType().name());
         DBCallableProcessor p = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {

@@ -42,21 +42,10 @@ public class QuickInspectCommand extends SubCommand {
         inspectCache = plugin.getInspectCache();
     }
 
-    /**
-     * Subcommand qinspect (QuickInspect).
-     *
-     * Adds player's data from DataCache/DB to the InspectCache
-     *
-     * @param sender args is empty, can not be Console.
-     * @param cmd
-     * @param commandLabel
-     * @param args Player's name or nothing - if empty sender's name is used.
-     * @return true in all cases.
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
-        BukkitTask inspectTask = (new BukkitRunnable() {
+        BukkitTask inspectTask = new BukkitRunnable() {
             @Override
             public void run() {
                 UUID uuid;
@@ -88,7 +77,7 @@ public class QuickInspectCommand extends SubCommand {
                     configValue = 4;
                 }
                 final int available = configValue;
-                BukkitTask inspectMessageSenderTask = (new BukkitRunnable() {
+                BukkitTask inspectMessageSenderTask = new BukkitRunnable() {
                     private int timesrun = 0;
 
                     @Override
@@ -105,9 +94,9 @@ public class QuickInspectCommand extends SubCommand {
                             this.cancel();
                         }
                     }
-                }).runTaskTimer(plugin, 1 * 20, 5 * 20);
+                }.runTaskTimer(plugin, 1 * 20, 5 * 20);
             }
-        }).runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously(plugin);
         return true;
     }
 }

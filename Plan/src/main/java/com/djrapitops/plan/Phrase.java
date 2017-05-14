@@ -202,6 +202,8 @@ public enum Phrase {
     }
 
     /**
+     * Used to get the ChatColor of COLOR_ enums.
+     *
      * @return Color of the COLOR_ENUM
      */
     public ChatColor color() {
@@ -209,16 +211,18 @@ public enum Phrase {
     }
 
     /**
+     * Used to set the text of the Enum.
      *
-     * @param text
+     * @param text A String.
      */
     public void setText(String text) {
         this.text = text;
     }
 
     /**
+     * Set the ChatColor of any Enum.
      *
-     * @param colorCode
+     * @param colorCode The character that determines a chatcolor. 1-9, a-f etc.
      */
     public void setColor(char colorCode) {
         this.color = ChatColor.getByChar(colorCode);

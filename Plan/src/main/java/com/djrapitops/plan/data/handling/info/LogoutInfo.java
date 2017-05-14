@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import java.util.UUID;
@@ -12,8 +7,10 @@ import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
 import org.bukkit.GameMode;
 
 /**
+ * HandlingInfo Class for QuitEvent information.
  *
  * @author Rsl1122
+ * @since 3.0.0
  */
 public class LogoutInfo extends HandlingInfo {
 
@@ -22,12 +19,14 @@ public class LogoutInfo extends HandlingInfo {
     private GamemodeInfo gmInfo;
 
     /**
+     * Constructor.
      *
-     * @param uuid
-     * @param time
-     * @param banned
-     * @param gm
-     * @param sData
+     * @param uuid UUID of the player.
+     * @param time Epoch ms of the event.
+     * @param banned Is the player banned
+     * @param gm current gamemode of the player
+     * @param sData session that has been ended at the moment of the logout
+     * event.
      */
     public LogoutInfo(UUID uuid, long time, boolean banned, GameMode gm, SessionData sData) {
         super(uuid, InfoType.LOGOUT, time);
@@ -36,11 +35,6 @@ public class LogoutInfo extends HandlingInfo {
         this.gmInfo = new GamemodeInfo(uuid, time, gm);
     }
 
-    /**
-     *
-     * @param uData
-     * @return
-     */
     @Override
     public boolean process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {

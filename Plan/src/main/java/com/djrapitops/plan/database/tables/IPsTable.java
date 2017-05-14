@@ -20,12 +20,21 @@ public class IPsTable extends Table {
     private final String columnUserID;
     private final String columnIP;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public IPsTable(SQLDB db, boolean usingMySQL) {
         super("plan_ips", db, usingMySQL);
         columnUserID = "user_id";
         columnIP = "ip";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
@@ -43,6 +52,11 @@ public class IPsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public boolean removeUserIps(int userId) {
         PreparedStatement statement = null;
         try {
@@ -58,6 +72,12 @@ public class IPsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     public List<InetAddress> getIPAddresses(int userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -79,6 +99,12 @@ public class IPsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @param ips
+     * @throws SQLException
+     */
     public void saveIPList(int userId, Set<InetAddress> ips) throws SQLException {
         if (ips == null) {
             return;

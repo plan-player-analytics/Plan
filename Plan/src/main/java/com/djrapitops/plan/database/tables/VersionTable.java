@@ -12,10 +12,19 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
  */
 public class VersionTable extends Table {
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public VersionTable(SQLDB db, boolean usingMySQL) {
         super("plan_version", db, usingMySQL);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean createTable() {
         try {
@@ -30,6 +39,11 @@ public class VersionTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public int getVersion() throws SQLException {
         PreparedStatement statement = null;
@@ -48,6 +62,11 @@ public class VersionTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param version
+     * @throws SQLException
+     */
     public void setVersion(int version) throws SQLException {
         removeAllData();
         PreparedStatement statement = null;

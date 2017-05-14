@@ -31,7 +31,7 @@ public class KillData {
     }
 
     /**
-     * Get the victim's UUID
+     * Get the victim's UUID.
      *
      * @return UUID of the victim.
      */

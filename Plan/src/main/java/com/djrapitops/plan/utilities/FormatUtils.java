@@ -73,6 +73,11 @@ public class FormatUtils {
         return dataPoint.replaceAll("[^\\d.]", "");
     }
     
+    /**
+     *
+     * @param dataPoint
+     * @return
+     */
     public static String removeNumbers(String dataPoint) {
         for (char c : removeLetters(dataPoint).toCharArray()) {
             dataPoint = dataPoint.replace(c+"", "");

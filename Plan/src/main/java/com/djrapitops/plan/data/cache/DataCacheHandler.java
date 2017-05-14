@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
@@ -31,8 +32,18 @@ import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
+ * This Class contains the Cache.
+ *
+ * This class is the main processing class that initializes Save, Clear, Process
+ * and Get queue and Starts the asyncronous save task.
+ *
+ * It is used to store commanduse, locations, active sessions and UserData objects
+ * in memory.
+ *
+ * It's methods can be used to access all the data it stores and to clear them.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class DataCacheHandler extends LocationCache {
 
@@ -57,8 +68,8 @@ public class DataCacheHandler extends LocationCache {
     /**
      * Class Constructor.
      *
-     * Creates the set of Handlers that will be used to modify UserData. Gets
-     * the Database from the plugin. Registers Asyncronous Periodic Save Task
+     * Gets the Database from the plugin. Starts the queues. Registers
+     * Asyncronous Periodic Save Task
      *
      * @param plugin Current instance of Plan
      */
@@ -83,33 +94,36 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
+     * Used to get the initial commandUse Map from the database.
      *
-     * @return
+     * @return Was the fetch successful?
      */
     public boolean getCommandUseFromDb() {
         try {
             commandUse = db.getCommandUse();
             return true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
         }
         return false;
     }
 
     /**
-     *
+     * Used to start all processing Queue Threads.
      */
     public void startQueues() {
-        clearTask = new DataCacheClearQueue(plugin, this);
+        clearTask = new DataCacheClearQueue(this);
         saveTask = new DataCacheSaveQueue(plugin, clearTask);
         getTask = new DataCacheGetQueue(plugin);
         processTask = new DataCacheProcessQueue(this);
     }
 
     /**
+     * Used to start the Asyncronous Save Task.
      *
-     * @throws IllegalArgumentException
-     * @throws IllegalStateException
+     * @throws IllegalArgumentException BukkitRunnable was given wrong
+     * parameters.
+     * @throws IllegalStateException BukkitScheduler is in a wrong state.
      */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
@@ -123,7 +137,7 @@ public class DataCacheHandler extends LocationCache {
         } else {
             clearAfterXsaves = configValue;
         }
-        BukkitTask asyncPeriodicCacheSaveTask = (new BukkitRunnable() {
+        BukkitTask asyncPeriodicCacheSaveTask = new BukkitRunnable() {
             @Override
             public void run() {
                 DataCacheHandler handler = Plan.getInstance().getHandler();
@@ -135,22 +149,22 @@ public class DataCacheHandler extends LocationCache {
                 saveCommandUse();
                 timesSaved++;
             }
-        }).runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
+        }.runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
     }
 
     /**
-     * Uses Database to retrieve the UserData of a matching player
+     * Uses Database or Cache to retrieve the UserData of a matching player.
      *
-     * Caches the data to the HashMap if cache: true
+     * Caches the data to the Cache if cache-parameter is true.
      *
      * @param processor DBCallableProcessor Object used to process the data
      * after it was retrieved
      * @param uuid Player's UUID
-     * @param cache Wether or not the UserData will be Cached in this instance
-     * of DataCacheHandler
+     * @param cache Whether or not the UserData will be Cached in this instance
+     * of DataCacheHandler after it has been fetched (if not already fetched)
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid, boolean cache) {
-        Log.debug(uuid+": HANDLER getForProcess,"+" Cache:"+cache);
+        Log.debug(uuid + ": HANDLER getForProcess," + " Cache:" + cache);
         UserData uData = dataCache.get(uuid);
         if (uData == null) {
             if (cache) {
@@ -169,14 +183,22 @@ public class DataCacheHandler extends LocationCache {
         }
     }
 
+    /**
+     * Used to Cache a UserData object to the Cache.
+     *
+     * If a object already exists it will be replaced.
+     *
+     * @param data UserData object with the UUID inside used as key.
+     */
     public void cache(UserData data) {
         dataCache.put(data.getUuid(), data);
         Log.info(Phrase.CACHE_ADD.parse(data.getUuid().toString()));
     }
 
     /**
-     ** Uses Database to retrieve the UserData of a matching player Caches the
-     * data to the HashMap
+     * Uses Database or Cache to retrieve the UserData of a matching player.
+     *
+     * Always Caches the data after retrieval (unless already cached)
      *
      * @param processor DBCallableProcessor Object used to process the data
      * after it was retrieved
@@ -187,8 +209,11 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
-     * Saves all data in the cache to Database. Should only be called from Async
-     * thread
+     * Saves all UserData in the cache to Database.
+     *
+     * ATTENTION: TODO - Doesn't save the Locations in the locationCache.
+     *
+     * Should only be called from Async thread
      */
     public void saveCachedUserData() {
         List<UserData> data = new ArrayList<>();
@@ -201,17 +226,23 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
+     * Used to add event HandlingInfo to the processTask's pool.
      *
-     * @param i
+     * Given HandlingInfo object's process method will be called.
+     *
+     * @param i Object that extends HandlingInfo.
      */
     public void addToPool(HandlingInfo i) {
-        Log.debug(i.getUuid()+ ": Adding to pool, type:" + i.getType().name());
+        Log.debug(i.getUuid() + ": Adding to pool, type:" + i.getType().name());
         processTask.addToPool(i);
     }
 
     /**
      * Saves all data in the cache to Database and closes the database down.
-     * Closes save clear and get tasks.
+     *
+     * Stops all tasks.
+     *
+     * If processTask has unprocessed information, it will be processed.
      */
     public void saveCacheOnDisable() {
         long time = new Date().getTime();
@@ -226,22 +257,16 @@ public class DataCacheHandler extends LocationCache {
         for (Player p : onlinePlayers) {
             UUID uuid = p.getUniqueId();
             endSession(uuid);
+            if (dataCache.containsKey(uuid)) {
+                dataCache.get(uuid).addLocations(getLocationsForSaving(uuid));
+            }
             toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGameMode(), getSession(uuid)));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
-//        for (UUID uuid : dataCache.keySet()) {
-//            UserData uData = dataCache.get(uuid);
-//            endSession(uuid);
-//            new LogoutInfo(uuid, time, uData.isBanned(), uData.getLastGamemode(), getSession(uuid)).process(uData);
-//        }
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
-//        data.parallelStream()
-//                .forEach((userData) -> {
-//                    addSession(userData);
-//                });
         Log.debug("SAVING, DataCache size: " + dataCache.keySet().size());
         try {
             db.saveMultipleUserData(data);
@@ -272,31 +297,29 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
-     * Saves the cached data of matching Player if it is in the cache
+     * Saves the cached data of matching Player if it is in the cache.
      *
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        Log.debug(uuid+": SaveCachedData");
+        Log.debug(uuid + ": SaveCachedData");
         DBCallableProcessor saveProcessor = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
                 data.addLocations(getLocationsForSaving(uuid));
                 clearLocations(uuid);
-//                addSession(data);
                 data.access();
                 data.setClearAfterSave(true);
                 saveTask.scheduleForSave(data);
-//                scheludeForClear(uuid);
             }
         };
         getUserDataForProcessing(saveProcessor, uuid);
-//        getTask.scheduleForGet(uuid, saveProcessor);
     }
 
     /**
-     * Scheludes the cached CommandUsage to be saved.
+     * Saves the cached CommandUse.
      *
+     * Should be only called from an Asyncronous Thread.
      */
     public void saveCommandUse() {
         try {
@@ -307,7 +330,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
-     *
+     * Refreshes the calculations for all online players with ReloadInfo.
      */
     public void saveHandlerDataToCache() {
         Bukkit.getServer().getOnlinePlayers().parallelStream().forEach((p) -> {
@@ -322,21 +345,21 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
-     * Clears all UserData from the HashMap
+     * Schedules all UserData from the Cache to be cleared.
      */
     public void clearCache() {
         clearTask.scheduleForClear(dataCache.keySet());
     }
 
     /**
-     * Clears the matching UserData from the HashMap
+     * Clears the matching UserData from the Cache if they're not online.
      *
      * @param uuid Player's UUID
      */
     public void clearFromCache(UUID uuid) {
-        Log.debug(uuid+": Clear");
+        Log.debug(uuid + ": Clear");
         if (getOfflinePlayer(uuid).isOnline()) {
-            Log.debug(uuid+": Online, did not clear");
+            Log.debug(uuid + ": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
                 data.setClearAfterSave(false);
@@ -348,24 +371,26 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
+     * Schedules a matching UserData object to be cleared from the cache.
      *
-     * @param uuid
+     * @param uuid Player's UUID.
      */
     public void scheludeForClear(UUID uuid) {
         clearTask.scheduleForClear(uuid);
     }
 
     /**
+     * Check whether or not the UserData object is being accessed by save or
+     * process tasks.
      *
-     * @param uuid
-     * @return
+     * @param uuid Player's UUID
+     * @return true/false
      */
     public boolean isDataAccessed(UUID uuid) {
         UserData userData = dataCache.get(uuid);
         if (userData == null) {
             return false;
         }
-//        Log.debug("Is data accessed?:" + userData.isAccessed() + " " + saveTask.containsUUID(uuid) + " " + processTask.containsUUID(uuid));
         boolean isAccessed = (userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
         if (isAccessed) {
             userData.setClearAfterSave(false);
@@ -374,7 +399,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
-     * Creates a new UserData instance and saves it to the Database
+     * Creates a new UserData instance and saves it to the Database.
      *
      * @param player Player the new UserData is created for
      */
@@ -383,16 +408,18 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
+     * Creates a new UserData instance and saves it to the Database.
      *
-     * @param player
+     * @param player Player the new UserData is created for
      */
     public void newPlayer(OfflinePlayer player) {
         newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
     /**
+     * Schedules a new player's data to be saved to the Database.
      *
-     * @param data
+     * @param data UserData object to schedule for save.
      */
     public void newPlayer(UserData data) {
         saveTask.scheduleNewPlayer(data);
@@ -400,6 +427,8 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
+     * Used to get the contents of the cache.
+     *
      * @return The HashMap containing all Cached UserData
      */
     public HashMap<UUID, UserData> getDataCache() {
@@ -407,26 +436,12 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
-     * @return Current instance of the LocationHandler
-     */
-    public LocationCache getLocationHandler() {
-        return this;
-    }
-
-    /**
+     * Used to get the cached commandUse.
      *
-     * @return
+     * @return Map with key:value - "/command":4
      */
-    public HashMap<String, Integer> getCommandUse() {
+    public Map<String, Integer> getCommandUse() {
         return commandUse;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public SessionCache getSessionCache() {
-        return this;
     }
 
     /**
@@ -462,8 +477,9 @@ public class DataCacheHandler extends LocationCache {
     }
 
     /**
+     * Used to handle a command's execution.
      *
-     * @param command
+     * @param command "/command"
      */
     public void handleCommand(String command) {
         if (!commandUse.containsKey(command)) {
