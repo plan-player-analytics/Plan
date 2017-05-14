@@ -2,22 +2,24 @@
 # API
 
 - [API class](/Plan/src/main/java/com/djrapitops/plan/api/API.java)
-- API Javadocs (Coming soon)
+- [API Javadocs](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/api/API.html)
 
 Accessing the API Methods:
 ```
 API planAPI = Plan.getPlanAPI(); // Throws IllegalStateException if onEnable() method for Plan has not yet been called.
 ```
 
+# Basics
+
+- [PluginData](/Plan/src/main/java/com/djrapitops/plan/data/additional/PluginData.java)
+- [PluginData Javadoc](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/data/additional/PluginData.html)
+- [AnalysisType Enum](/Plan/src/main/java/com/djrapitops/plan/data/additional/AnalysisType.java)
+- [AnalysisType Javadoc](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/data/additional/AnalysisType.html)
+- [Example classes](/Plan/src/main/java/com/djrapitops/plan/data/additional)
+
 ## Adding plugin's data to the 'plugins'-tab on Analysis and/or Inspect pages
 
 Plan has a flexible data addition system since 3.1.0. With it you can add Averages, Totals, Percentages, Tables & Other Html elements to the Plugins tab on the Analysis and/or Inspect pages.
-
-## Basics
-
-- [PluginData](/Plan/src/main/java/com/djrapitops/plan/data/additional/PluginData.java)
-- [AnalysisType Enum](/Plan/src/main/java/com/djrapitops/plan/data/additional/AnalysisType.java)
-- [Example classes](/Plan/src/main/java/com/djrapitops/plan/data/additional)
 
 To add data a class that extends PluginData class is needed. One PluginData object should only contain data for one user, but tables & other elements are an exception.  
 
@@ -151,7 +153,7 @@ super("StepCounter", "stepsTaken", AnalysisType.LONG_AVG, AnalysisType.LONG_TOTA
 Refer to AnalysisType for what types you should add. The type depends on the return of the getValue(UUID uuid)-method you have written.
 
 - [AnalysisType](/Plan/src/main/java/com/djrapitops/plan/data/additional/AnalysisType.java)
-- AnalysisType Javadoc (Coming soon)
+- [AnalysisType Javadoc](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/data/additional/AnalysisType.html)
 
 AnalysisType.HTML is for all other elements you might want to add.
 
