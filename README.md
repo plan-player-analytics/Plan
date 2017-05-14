@@ -8,7 +8,7 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 - [Licence](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml)
 
 ## Documentation
-- [Javadocs (~50% complete, documented packages from plan to plan.data.database)](https://rsl1122.github.io/Plan-PlayerAnalytics/)
+- [Javadocs](https://rsl1122.github.io/Plan-PlayerAnalytics/) (~50% complete, documented packages from plan to plan.database)
 - [API](documentation/API.md)
 - [Dependencies](documentation/Dependencies.md)
 - Data, Collection & Visualisation
