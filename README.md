@@ -8,7 +8,7 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 - [Licence](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/licence.yml)
 
 ## Documentation
-- Javadocs (In progress)
+- [Javadocs (~50% complete, documented packages from plan to plan.data.database)](https://rsl1122.github.io/Plan-PlayerAnalytics/)
 - [API](documentation/API.md)
 - [Dependencies](documentation/Dependencies.md)
 - Data, Collection & Visualisation
@@ -25,3 +25,4 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
   - [Chart.js](http://www.chartjs.org/docs/) | [Licence](http://www.chartjs.org/docs/#notes-license)
   - [Plotly.js](https://plot.ly/javascript/) | [Licence](https://github.com/plotly/plotly.js/blob/master/LICENSE)
   - [Font Awesome Icons](http://fontawesome.io/icons/) | [Licence](https://opensource.org/licenses/mit-license.html)
+  - [Sortable Tables](https://kryogenix.org/code/browser/sorttable/) | [Licence](https://kryogenix.org/code/browser/licence.html)
