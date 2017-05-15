@@ -1,8 +1,8 @@
 ![Player Analytics](https://puu.sh/t8vin.png)
 # Commands & Permissions
 
-- [Plugin.yml](Plan/src/main/resources/plugin.yml)
-- [Permissions Enum](Plan/src/main/java/com/djrapitops/plan/Permissions.java)
+- [Plugin.yml](/Plan/src/main/resources/plugin.yml)
+- [Permissions Enum](/Plan/src/main/java/com/djrapitops/plan/Permissions.java)
 
 This page is an in depth documentation of all permissions & commands.
 
