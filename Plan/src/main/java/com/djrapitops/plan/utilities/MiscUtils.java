@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -22,6 +23,10 @@ import org.bukkit.entity.Player;
  * @author Rsl1122
  */
 public class MiscUtils {
+
+    public static long getTime() {
+        return new Date().getTime();
+    }
 
     /**
      * Checks the version and returns response String.
@@ -80,7 +85,7 @@ public class MiscUtils {
     public static String getPlayerName(String[] args, CommandSender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }
-    
+
     /**
      * Used by the inspect command.
      *

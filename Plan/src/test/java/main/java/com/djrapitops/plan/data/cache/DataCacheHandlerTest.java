@@ -7,7 +7,6 @@ package test.java.main.java.com.djrapitops.plan.data.cache;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +17,7 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -64,7 +64,7 @@ public class DataCacheHandlerTest {
         plan = t.getPlanMock();
         calledSaveCommandUse = false;
         calledSaveUserData = false;
-        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 

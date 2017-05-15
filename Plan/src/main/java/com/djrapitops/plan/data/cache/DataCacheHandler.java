@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
@@ -245,7 +245,7 @@ public class DataCacheHandler extends LocationCache {
      * If processTask has unprocessed information, it will be processed.
      */
     public void saveCacheOnDisable() {
-        long time = new Date().getTime();
+        long time = MiscUtils.getTime();
         Log.debug("SaveCacheOnDisable! " + time);
         saveTask.stop();
         getTask.stop();
@@ -339,7 +339,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     private void saveHandlerDataToCache(Player player) {
-        long time = new Date().getTime();
+        long time = MiscUtils.getTime();
         UUID uuid = player.getUniqueId();
         addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
     }

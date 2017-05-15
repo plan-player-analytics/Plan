@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.utilities;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -46,10 +45,10 @@ public class PlaceholderUtils {
         replaceMap.put("%commanduse%", HtmlUtils.removeXSS(data.getCommandUseListHtml()));
         replaceMap.put("%totalcommands%", data.getTotalCommands() + "");
         replaceMap.put("%avgage%", (data.getAverageAge() != -1) ? "" + data.getAverageAge() : Phrase.DEM_UNKNOWN + "");
-        replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount("" + data.getAveragePlayTime()));
-        replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount("" + data.getTotalPlayTime()));
+        replaceMap.put("%avgplaytime%", FormatUtils.formatTimeAmount(data.getAveragePlayTime()));
+        replaceMap.put("%totalplaytime%", FormatUtils.formatTimeAmount(data.getTotalPlayTime()));
         replaceMap.put("%ops%", "" + data.getOps());
-        replaceMap.put("%refresh%", FormatUtils.formatTimeAmountSinceString("" + data.getRefreshDate(), new Date()));
+        replaceMap.put("%refresh%", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getTime()));
         replaceMap.put("%totallogins%", "" + data.getTotalLoginTimes());
         replaceMap.put("%top20mostactive%", Html.ERROR_NOT_SET.parse());
         replaceMap.put("%recentlogins%", data.getRecentPlayers());
@@ -105,7 +104,7 @@ public class PlaceholderUtils {
                 + "\",\"#" + Settings.HCOLOR_GENP_U + "\"");
         replaceMap.put("%genderfcolor%", "#" + Settings.HCOLOR_GENP_F);
         replaceMap.put("%gendermcolor%", "#" + Settings.HCOLOR_GENP_M);
-        replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage() + ""));
+        replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage()));
         replaceMap.put("%geomapcountries%", data.getGeomapCountries());
         replaceMap.put("%geomapz%", data.getGeomapZ());
         replaceMap.put("%geomapcodes%", data.getGeomapCodes());
@@ -116,7 +115,7 @@ public class PlaceholderUtils {
         String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};
         for (int i = 0; i < colors.length; i++) {
             if (!defaultCols[i].equals(colors[i])) {
-                replaceMap.put("#"+defaultCols[i], "#"+colors[i]);
+                replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
         return replaceMap;
@@ -134,10 +133,11 @@ public class PlaceholderUtils {
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
         replaceMap.put("%uuid%", (showIPandUUID ? "" + uuid : Html.HIDDEN.parse()));
-        replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp("" + data.getLastPlayed()));
+        replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp(data.getLastPlayed()));
         replaceMap.put("%logintimes%", "" + data.getLoginTimes());
         replaceMap.put("%geoloc%", data.getDemData().getGeoLocation());
-        boolean isActive = AnalysisUtils.isActive(data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
+        long now = MiscUtils.getTime();
+        boolean isActive = AnalysisUtils.isActive(now, data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
         replaceMap.put("%active%", isActive ? Html.ACTIVE.parse() : Html.INACTIVE.parse());
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
@@ -160,21 +160,21 @@ public class PlaceholderUtils {
             gmThree
         };
         long total = gmData[0] + gmData[1] + gmData[2] + gmData[3];
-        replaceMap.put("%gm0%", FormatUtils.formatTimeAmount("" + gmData[0]));
-        replaceMap.put("%gm1%", FormatUtils.formatTimeAmount("" + gmData[1]));
-        replaceMap.put("%gm2%", FormatUtils.formatTimeAmount("" + gmData[2]));
-        replaceMap.put("%gm3%", FormatUtils.formatTimeAmount("" + gmData[3]));
+        replaceMap.put("%gm0%", FormatUtils.formatTimeAmount(gmData[0]));
+        replaceMap.put("%gm1%", FormatUtils.formatTimeAmount(gmData[1]));
+        replaceMap.put("%gm2%", FormatUtils.formatTimeAmount(gmData[2]));
+        replaceMap.put("%gm3%", FormatUtils.formatTimeAmount(gmData[3]));
         replaceMap.put("%gmdata%", Arrays.toString(gmData));
         replaceMap.put("%gmlabels%", "[\"Survival\", \"Creative\", \"Adventure\", \"Spectator\"]");
         replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
                 + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
-        replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount("" + total));
+        replaceMap.put("%gmtotal%", FormatUtils.formatTimeAmount(total));
         replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : Html.HIDDEN.parse()));
-        replaceMap.put("%nicknames%", HtmlUtils.removeXSS(FormatUtils.swapColorsToSpan(data.getNicknames().toString())));
+        replaceMap.put("%nicknames%", HtmlUtils.removeXSS(HtmlUtils.swapColorsToSpan(data.getNicknames().toString())));
         replaceMap.put("%name%", data.getName());
-        replaceMap.put("%registered%", FormatUtils.formatTimeStamp("" + data.getRegistered()));
+        replaceMap.put("%registered%", FormatUtils.formatTimeStamp(data.getRegistered()));
         replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
-        replaceMap.put("%playtime%", FormatUtils.formatTimeAmount("" + data.getPlayTime()));
+        replaceMap.put("%playtime%", FormatUtils.formatTimeAmount(data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? Html.BANNED.parse() : "");
         replaceMap.put("%op%", data.isOp() ? Html.OPERATOR.parse() : "");
         replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
@@ -183,7 +183,7 @@ public class PlaceholderUtils {
         replaceMap.put("%playerkills%", data.getPlayerKills().size() + "");
         replaceMap.put("%mobkills%", data.getMobKills() + "");
         replaceMap.put("%sessionstable%", SortableSessionTableCreator.createSortedSessionDataTable10(data.getSessions()));
-        replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(data.getSessions())) + ""));
+        replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(data.getSessions()))));
         replaceMap.put("%killstable%", SortableKillsTableCreator.createSortedSessionDataTable10(data.getPlayerKills()));
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
@@ -197,7 +197,7 @@ public class PlaceholderUtils {
         replaceMap.put("%gm1col%", Settings.HCOLOR_GMP_1 + "");
         replaceMap.put("%gm2col%", Settings.HCOLOR_GMP_2 + "");
         replaceMap.put("%gm3col%", Settings.HCOLOR_GMP_3 + "");
-        replaceMap.put("%inaccuratedatawarning%", (new Date().getTime() - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
+        replaceMap.put("%inaccuratedatawarning%", (now - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);

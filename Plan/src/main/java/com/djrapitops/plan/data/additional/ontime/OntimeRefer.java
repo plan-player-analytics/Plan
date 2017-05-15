@@ -25,7 +25,7 @@ public class OntimeRefer extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public OntimeRefer() {
-        super("OnTime", "refer", AnalysisType.INT_TOTAL, AnalysisType.INT_AVG);
+        super("OnTime", "refer", AnalysisType.LONG_TOTAL, AnalysisType.LONG_AVG);
         super.setAnalysisOnly(false);
         super.setIcon("commenting-o");
         super.setPrefix("Referrals All Time: ");
@@ -49,12 +49,12 @@ public class OntimeRefer extends PluginData {
     public Serializable getValue(UUID uuid) {
         OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (!offlinePlayer.hasPlayedBefore()) {
-            return 0;
+            return -1L;
         }
         String name = offlinePlayer.getName();
         long referTotal = OnTimeAPI.getPlayerTimeData(name, OnTimeAPI.data.TOTALREFER);
         if (referTotal == -1) {
-            return 0;
+            return -1L;
         }
         return referTotal;
     }

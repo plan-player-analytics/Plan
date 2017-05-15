@@ -28,6 +28,8 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -147,11 +149,13 @@ public class Analysis {
      */
     public boolean analyzeData(List<UserData> rawData, List<UUID> uuids, AnalysisCacheHandler analysisCache) {
         // Create empty Dataset
+        long now = MiscUtils.getTime();
         final RawAnalysisData sorted = new RawAnalysisData();
         sorted.setCommandUse(plugin.getHandler().getCommandUse());
         log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
         AnalysisData analysisData = new AnalysisData();
-        analysisData.setSortablePlayersTable(AnalysisUtils.createSortablePlayersTable(rawData));
+        String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
+        analysisData.setSortablePlayersTable(playersTable);
         sorted.fillGeolocations();
         // Fill Dataset with userdata.
         rawData.stream().forEach((uData) -> {
@@ -201,7 +205,7 @@ public class Analysis {
                 sorted.addTotalBanned(1);
             } else if (uData.getLoginTimes() == 1) {
                 sorted.addJoinleaver(1);
-            } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
+            } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
                 sorted.addActive(1);
                 sorted.getPlaytimes().put(html, playTime);
             } else {
@@ -246,7 +250,7 @@ public class Analysis {
         long totalPlaytime = sorted.getTotalPlaytime();
         analysisData.setTotalPlayTime(totalPlaytime);
         analysisData.setAveragePlayTime(totalPlaytime / rawData.size());
-        analysisData.setSessionAverage(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(sorted.getSessiondata())));
+        analysisData.setSessionAverage(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(sorted.getSessiondata())));
         analysisData.setTotalLoginTimes(sorted.getTotalLoginTimes());
         createActivityVisalization(uuids.size(), sorted.getTotalBanned(), sorted.getActive(), sorted.getInactive(), sorted.getJoinleaver(), analysisData);
         analysisData.setOps(sorted.getOps());
@@ -256,7 +260,7 @@ public class Analysis {
         analysisData.setTotaldeaths(sorted.getTotalDeaths());
         analysisData.setTotalkills(sorted.getTotalKills());
         analysisData.setTotalmobkills(sorted.getTotalMobKills());
-        analysisData.setRefreshDate(new Date().getTime());
+        analysisData.setRefreshDate(now);
         analysisData.setGenderData(sorted.getGenders());
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
         analysisCache.cache(analysisData);
@@ -269,7 +273,8 @@ public class Analysis {
     private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
         Map<String, Integer> commandUse = raw.getCommandUse();
         if (!commandUse.isEmpty()) {
-            data.setCommandUseTableHtml(AnalysisUtils.createTableOutOfMap(commandUse));
+            String tableHtml = SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
+            data.setCommandUseTableHtml(tableHtml);
             data.setTotalCommands(commandUse.size());
         } else {
             data.setCommandUseTableHtml(Html.ERROR_TABLE_2.parse());

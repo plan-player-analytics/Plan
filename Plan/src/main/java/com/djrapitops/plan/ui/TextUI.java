@@ -9,6 +9,8 @@ import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.MathUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.ChatColor;
 
 /**
@@ -24,6 +26,7 @@ public class TextUI {
      */
     public static String[] getInspectMessages(UUID uuid) {
         InspectCacheHandler inspectCache = Plan.getInstance().getInspectCache();
+        long now = MiscUtils.getTime();
         if (!inspectCache.isCached(uuid)) {
             return new String[]{"Error has occurred, please retry."};
         }
@@ -31,17 +34,17 @@ public class TextUI {
         ChatColor main = Phrase.COLOR_MAIN.color();
         ChatColor sec = Phrase.COLOR_SEC.color();
         ChatColor ter = Phrase.COLOR_TER.color();
-        boolean active = AnalysisUtils.isActive(d.getLastPlayed(), d.getPlayTime(), d.getLoginTimes());
+        boolean active = AnalysisUtils.isActive(now, d.getLastPlayed(), d.getPlayTime(), d.getLoginTimes());
         boolean banned = d.isBanned();
         boolean online = d.isOnline();
         String ball = sec + " " + Phrase.BALL + main;
         return new String[]{
             sec + " " + Phrase.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
-            ball + " Registered: " + sec + FormatUtils.formatTimeStamp(d.getRegistered() + ""),
-            ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed() + ""),
-            ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime() + ""),
+            ball + " Registered: " + sec + FormatUtils.formatTimeStamp(d.getRegistered()),
+            ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
+            ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),
             ball + " Login times: " + sec + d.getLoginTimes(),
-            ball + " Average session length: " + sec + FormatUtils.formatTimeAmount(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(d.getSessions())) + ""),
+            ball + " Average session length: " + sec + FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(d.getSessions()))),
             ball + " Kills: " + sec + d.getPlayerKills().size() + main + " Mobs: " + sec + d.getMobKills() + main + " Deaths: " + sec + d.getDeaths(),
             ball + " Geolocation: " + sec + d.getDemData().getGeoLocation()
         };
@@ -66,8 +69,8 @@ public class TextUI {
             ball + " Active: " + sec + d.getActive() + main + " Inactive: " + sec + d.getInactive() + main + " Single join: " + sec + d.getJoinleaver() + main + " Banned: " + sec + d.getBanned(),
             ball + " New Players 24h: " + sec + d.getNewPlayersDay() + main + " 7d: " + sec + d.getNewPlayersWeek() + main + " 30d: " + sec + d.getNewPlayersMonth(),
             "",
-            ball + " Total Playtime: " + sec + FormatUtils.formatTimeAmount(d.getTotalPlayTime() + "") + main + " Player Avg: " + sec + FormatUtils.formatTimeAmount(d.getAveragePlayTime() + ""),
-            ball + " Average Session Length: " + sec + FormatUtils.formatTimeAmount(d.getSessionAverage() + ""),
+            ball + " Total Playtime: " + sec + FormatUtils.formatTimeAmount(d.getTotalPlayTime()) + main + " Player Avg: " + sec + FormatUtils.formatTimeAmount(d.getAveragePlayTime()),
+            ball + " Average Session Length: " + sec + FormatUtils.formatTimeAmount(d.getSessionAverage()),
             ball + " Total Logintimes: " + sec + d.getTotalLoginTimes(),
             ball + " Kills: " + sec + d.getTotalPlayerKills() + main + " Mobs: " + sec + d.getTotalMobKills() + main + " Deaths: " + sec + d.getTotalDeaths()
         };

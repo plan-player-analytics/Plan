@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.util.Date;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -44,7 +43,7 @@ public class NewPlayerCreator {
     public static UserData createNewPlayer(OfflinePlayer player, GameMode gm) {
         UserData data = new UserData(player, new DemographicsData());
         data.setLastGamemode(gm);
-        data.setLastPlayed(new Date().getTime());
+        data.setLastPlayed(MiscUtils.getTime());
         long zero = Long.parseLong("0");
         data.setPlayTime(zero);
         data.setTimesKicked(0);

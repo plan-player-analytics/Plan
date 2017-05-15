@@ -51,7 +51,7 @@ public class SettingsTest {
      */
     @Test
     public void testToString() {
-        assertEquals("sqlite",Settings.DB_TYPE.toString());
+        assertEquals("sqlite", Settings.DB_TYPE.toString());
     }
 
     /**
@@ -59,7 +59,7 @@ public class SettingsTest {
      */
     @Test
     public void testGetNumber() {
-        assertEquals(8804,Settings.WEBSERVER_PORT.getNumber());
+        assertEquals(8804, Settings.WEBSERVER_PORT.getNumber());
     }
 
     /**
