@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.database.databases;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,16 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
-import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
@@ -34,16 +35,6 @@ public abstract class SQLDB extends Database {
     private final boolean supportsModification;
 
     private Connection connection;
-
-    private final UsersTable usersTable;
-    private final GMTimesTable gmTimesTable;
-    private final KillsTable killsTable;
-    private final LocationsTable locationsTable;
-    private final NicknamesTable nicknamesTable;
-    private final SessionsTable sessionsTable;
-    private final IPsTable ipsTable;
-    private final CommandUseTable commandUseTable;
-    private final VersionTable versionTable;
 
     /**
      *
@@ -77,7 +68,7 @@ public abstract class SQLDB extends Database {
      */
     public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
-        (new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 try {
@@ -88,7 +79,7 @@ public abstract class SQLDB extends Database {
                     connection = getNewConnection();
                 }
             }
-        }).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20);
+        }.runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20);
     }
 
     /**
@@ -124,13 +115,22 @@ public abstract class SQLDB extends Database {
                 newDatabase = false;
             } catch (Exception e) {
             }
-            versionTable.createTable();
+            if (!versionTable.createTable()) {
+                Log.error("Failed to create table: " + versionTable.getTableName());
+                return false;
+            }
             if (newDatabase) {
                 Log.info("New Database created.");
                 setVersion(3);
             }
             for (Table table : getAllTables()) {
-                table.createTable();
+                if (!table.createTable()) {
+                    Log.error("Failed to create table: " + table.getTableName());
+                    return false;
+                }
+            }
+            if (!newDatabase && getVersion() < 3) {
+                setVersion(3);
             }
         }
         return true;
@@ -196,53 +196,11 @@ public abstract class SQLDB extends Database {
     @Override
     public boolean wasSeenBefore(UUID uuid) {
         try {
-            return getUserId(uuid.toString()) != -1;
+            return usersTable.getUserId(uuid.toString()) != -1;
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
             return false;
         }
-    }
-
-    /**
-     *
-     * @param uuid
-     * @return
-     * @throws SQLException
-     */
-    @Override
-    public int getUserId(String uuid) throws SQLException {
-        return usersTable.getUserId(uuid);
-    }
-
-    /**
-     *
-     * @return @throws SQLException
-     */
-    @Override
-    public Set<UUID> getSavedUUIDs() throws SQLException {
-        return usersTable.getSavedUUIDs();
-    }
-
-    /**
-     *
-     * @param commandUse
-     * @throws SQLException
-     * @throws NullPointerException
-     */
-    @Override
-    @Deprecated
-    public void saveCommandUse(HashMap<String, Integer> commandUse) throws SQLException, NullPointerException {
-        commandUseTable.saveCommandUse(commandUse);
-    }
-
-    /**
-     *
-     * @return @throws SQLException
-     */
-    @Override
-    @Deprecated
-    public HashMap<String, Integer> getCommandUse() throws SQLException {
-        return commandUseTable.getCommandUse();
     }
 
     /**
@@ -259,7 +217,7 @@ public abstract class SQLDB extends Database {
             Log.toLog(this.getClass().getName(), e);
             return false;
         }
-        int userId = getUserId(uuid);
+        int userId = usersTable.getUserId(uuid);
         if (userId == -1) {
             return false;
         }
@@ -295,7 +253,7 @@ public abstract class SQLDB extends Database {
         UserData data = new UserData(getOfflinePlayer(uuid), new DemographicsData());
         usersTable.addUserInformationToUserData(data);
 
-        int userId = getUserId(uuid.toString());
+        int userId = usersTable.getUserId(uuid);
 
         List<String> nicknames = nicknamesTable.getNicknames(userId);
         data.addNicknames(nicknames);
@@ -316,43 +274,42 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    @Deprecated
-    private HashMap<GameMode, Long> getGMTimes(int userId) throws SQLException {
-        return gmTimesTable.getGMTimes(userId);
-    }
-
-    @Deprecated
-    private List<InetAddress> getIPAddresses(int userId) throws SQLException {
-        return ipsTable.getIPAddresses(userId);
-    }
-
-    @Deprecated
-    private List<String> getNicknames(int userId) throws SQLException {
-        return nicknamesTable.getNicknames(userId);
-    }
-
     @Override
-    @Deprecated
-    public List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException {
-        return getLocations(Integer.parseInt(userId), worlds);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param worlds
-     * @return
-     * @throws SQLException
-     * @deprecated
-     */
-    @Deprecated
-    public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
-        return locationsTable.getLocations(userId, worlds);
-    }
-
-    @Deprecated
-    private List<KillData> getPlayerKills(int userId) throws SQLException {
-        return killsTable.getPlayerKills(userId);
+    public List<UserData> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException {
+        if (uuids == null || uuids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Map<UUID, Integer> userIds = usersTable.getAllUserIds();
+        List<UserData> data = new ArrayList<>();
+        for (UUID uuid : uuids) {
+            if (!userIds.keySet().contains(uuid)) {
+                continue;
+            }
+            UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+            data.add(uData);
+        }
+        if (data.isEmpty()) {
+            return data;
+        }
+        usersTable.addUserInformationToUserData(data);
+        Map<Integer, UUID> idUuidRel = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        List<Integer> ids = userIds.entrySet().stream().filter(e -> uuids.contains(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList());
+        Log.debug("Ids: "+ids);
+        Map<Integer, List<String>> nicknames = nicknamesTable.getNicknames(ids);
+        Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
+        Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
+        Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
+        Log.debug("Sizes: U:"+uuids.size()+" D:"+data.size()+" I:"+userIds.size()+" N:"+nicknames.size()+" I:"+ipList.size()+" K:"+playerKills.size()+" S:"+sessionData.size());
+        for (UserData uData : data) {
+            UUID uuid = uData.getUuid();
+            Integer id = userIds.get(uuid);
+            uData.addIpAddresses(ipList.get(id));
+            uData.addNicknames(nicknames.get(id));
+            uData.addSessions(sessionData.get(id));
+            uData.setPlayerKills(playerKills.get(id));
+            uData.setGmTimes(gmTimesTable.getGMTimes(id));
+        }
+        return data;
     }
 
     /**
@@ -361,7 +318,7 @@ public abstract class SQLDB extends Database {
      * @throws SQLException
      */
     @Override
-    public void saveMultipleUserData(List<UserData> data) throws SQLException {
+    public void saveMultipleUserData(Collection<UserData> data) throws SQLException {
         checkConnection();
         if (data.isEmpty()) {
             return;
@@ -369,42 +326,58 @@ public abstract class SQLDB extends Database {
         Set<Throwable> exceptions = new HashSet<>();
         List<UserData> saveLast = usersTable.saveUserDataInformationBatch(data);
         data.removeAll(saveLast);
-        for (UserData uData : data) {
-            if (uData == null) {
+        // Transform to map
+        Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
+        // Get UserIDs
+        Map<UUID, Integer> userIds = usersTable.getAllUserIds();
+        // Empty dataset
+        Map<Integer, List<Location>> locations = new HashMap<>();
+        Map<Integer, Set<String>> nicknames = new HashMap<>();
+        Map<Integer, String> lastNicks = new HashMap<>();
+        Map<Integer, Set<InetAddress>> ips = new HashMap<>();
+        Map<Integer, List<KillData>> kills = new HashMap<>();
+        Map<Integer, UUID> uuids = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        Map<Integer, List<SessionData>> sessions = new HashMap<>();
+        Map<Integer, Map<GameMode, Long>> gmTimes = new HashMap<>();
+        // Put to dataset
+        for (UUID uuid : userDatas.keySet()) {
+            Integer id = userIds.get(uuid);
+            UserData uData = userDatas.get(uuid);
+            if (id == -1) {
+                saveLast.add(uData);
                 continue;
-            }
-            UUID uuid = uData.getUuid();
-            if (uuid == null) {
-                try {
-                    uData.setUuid(UUIDFetcher.getUUIDOf(uData.getName()));
-                    if (uData.getUuid() == null) {
-                        continue;
-                    }
-                } catch (Exception ex) {
-                    continue;
-                }
             }
             uData.access();
-            try {
-                int userId = getUserId(uData.getUuid().toString());
-                sessionsTable.saveSessionData(userId, uData.getSessions());
-                saveAdditionalLocationsList(userId, uData.getLocations());
-                saveNickList(userId, uData.getNicknames(), uData.getLastNick());
-                saveIPList(userId, uData.getIps());
-                savePlayerKills(userId, uData.getPlayerKills());
-                saveGMTimes(userId, uData.getGmTimes());
-            } catch (Exception e) {
-                exceptions.add(e);
-            }
-            uData.stopAccessing();
+            locations.put(id, uData.getLocations());
+            nicknames.put(id, uData.getNicknames());
+            lastNicks.put(id, uData.getLastNick());
+            ips.put(id, uData.getIps());
+            kills.put(id, uData.getPlayerKills());
+            sessions.put(id, uData.getSessions());
+            gmTimes.put(id, uData.getGmTimes());
         }
-        for (UserData userData : saveLast) {
-            UUID uuid = userData.getUuid();
-            if (uuid == null) {
-                continue;
+        // Save
+        locationsTable.saveAdditionalLocationsLists(locations);
+        nicknamesTable.saveNickLists(nicknames, lastNicks);
+        ipsTable.saveIPList(ips);
+        killsTable.savePlayerKills(kills, uuids);
+        sessionsTable.saveSessionData(sessions);
+        for (Integer id : gmTimes.keySet()) {
+            gmTimesTable.saveGMTimes(id, gmTimes.get(id));
+        }
+        for (Integer id : locations.keySet()) {
+            UUID uuid = uuids.get(id);
+            if (uuid != null) {
+                UserData uData = userDatas.get(uuid);
+                if (uData != null) {
+                    uData.stopAccessing();
+                }
             }
+        }
+        // Save leftovers
+        for (UserData userData : saveLast) {
             try {
-                saveUserData(uuid, userData);
+                saveUserData(userData);
             } catch (SQLException e) {
                 exceptions.add(e);
             } catch (NullPointerException e) {
@@ -418,12 +391,15 @@ public abstract class SQLDB extends Database {
 
     /**
      *
-     * @param uuid
      * @param data
      * @throws SQLException
      */
     @Override
-    public void saveUserData(UUID uuid, UserData data) throws SQLException {
+    public void saveUserData(UserData data) throws SQLException {
+        if (data == null) {
+            return;
+        }
+        UUID uuid = data.getUuid();
         if (uuid == null) {
             return;
         }
@@ -431,7 +407,7 @@ public abstract class SQLDB extends Database {
         Log.debug("DB_Save: " + data);
         data.access();
         usersTable.saveUserDataInformation(data);
-        int userId = getUserId(uuid.toString());
+        int userId = usersTable.getUserId(uuid.toString());
         sessionsTable.saveSessionData(userId, data.getSessions());
         locationsTable.saveAdditionalLocationsList(userId, data.getLocations());
         nicknamesTable.saveNickList(userId, data.getNicknames(), data.getLastNick());
@@ -549,69 +525,5 @@ public abstract class SQLDB extends Database {
      */
     public Connection getConnection() {
         return connection;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public UsersTable getUsersTable() {
-        return usersTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public SessionsTable getSessionsTable() {
-        return sessionsTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public GMTimesTable getGmTimesTable() {
-        return gmTimesTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public KillsTable getKillsTable() {
-        return killsTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public LocationsTable getLocationsTable() {
-        return locationsTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public IPsTable getIpsTable() {
-        return ipsTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public NicknamesTable getNicknamesTable() {
-        return nicknamesTable;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public CommandUseTable getCommandUseTable() {
-        return commandUseTable;
     }
 }

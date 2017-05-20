@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.1.1</version>
+    <version>3.2.0</version>
     <packaging>jar</packaging>
     <repositories>
-<!--        <repository>
+        <!--        <repository>
             <id>bukkit-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>-->
@@ -149,7 +149,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>            
+                <version>2.6</version>  
+                <configuration>
+                    <excludes>
+                        <exclude>**/test/*</exclude>
+                        <exclude>**/*/test/*</exclude>
+                        <exclude>**/*/test.*</exclude>
+                        <exclude>**/test/**/*</exclude>
+                    </excludes>
+                </configuration>        
             </plugin>
             <plugin>
                 <groupId>org.pitest</groupId>
@@ -162,6 +170,8 @@
                     <targetTests>
                         <param>test.java.main.java.com.djrapitops.plan.*</param>
                     </targetTests>
+                    <timeoutConstant>1000</timeoutConstant>
+                    <verbose>true</verbose>
                 </configuration>
             </plugin>
             <plugin>
@@ -171,6 +181,14 @@
                 <configuration>
                     <excludes>**/test/**/*</excludes>
                     <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <excludePackageNames>test.*</excludePackageNames>
                 </configuration>
             </plugin>
         </plugins>

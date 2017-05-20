@@ -37,8 +37,8 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  * This class is the main processing class that initializes Save, Clear, Process
  * and Get queue and Starts the asyncronous save task.
  *
- * It is used to store commanduse, locations, active sessions and UserData objects
- * in memory.
+ * It is used to store commanduse, locations, active sessions and UserData
+ * objects in memory.
  *
  * It's methods can be used to access all the data it stores and to clear them.
  *
@@ -49,7 +49,7 @@ public class DataCacheHandler extends LocationCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
-    private HashMap<String, Integer> commandUse;
+    private Map<String, Integer> commandUse;
 
     // Plan
     private final Plan plugin;
@@ -269,8 +269,16 @@ public class DataCacheHandler extends LocationCache {
         data.addAll(dataCache.values());
         Log.debug("SAVING, DataCache size: " + dataCache.keySet().size());
         try {
-            db.saveMultipleUserData(data);
             db.saveCommandUse(commandUse);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        try {
+            db.saveMultipleUserData(data);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        try {
             db.close();
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);

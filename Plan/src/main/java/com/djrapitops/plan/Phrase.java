@@ -79,6 +79,7 @@ public enum Phrase {
     ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
     ERROR_LOGGED("Caught " + REPLACE0 + ". It has been logged to the Errors.txt"),
     ERROR_SESSIONDATA_INITIALIZATION("Player's session was initialized in a wrong way! (" + REPLACE0 + ")"),
+    ERROR_ANALYSIS_FETCH_FAIL("Failed to fetch data for Analysis, Exception occurred."),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
     MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED + "" + PREFIX + "Plugin not supported: "),

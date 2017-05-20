@@ -6,7 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -128,6 +132,76 @@ public class IPsTable extends Table {
                 statement.setString(2, ip.getHostAddress());
                 statement.addBatch();
                 commitRequired = true;
+            }
+            if (commitRequired) {
+                statement.executeBatch();
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<Integer, Set<InetAddress>> getIPList(Collection<Integer> ids) throws SQLException {
+        if (ids == null || ids.isEmpty()) {
+            return new HashMap<>();
+        }
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            Map<Integer, Set<InetAddress>> ips = new HashMap<>();
+            for (Integer id : ids) {
+                ips.put(id, new HashSet<>());
+            }
+            while (set.next()) {
+                Integer id = set.getInt(columnUserID);
+                if (!ids.contains(id)) {
+                    Log.debug("Ips-Ids did not contain: " + id);
+                    continue;
+                }
+                try {
+                    ips.get(id).add(InetAddress.getByName(set.getString(columnIP)));
+                } catch (UnknownHostException e) {
+                }
+            }
+            return ips;
+        } finally {
+            close(set);
+            close(statement);
+        }
+    }
+
+    public void saveIPList(Map<Integer, Set<InetAddress>> ips) throws SQLException {
+        if (ips == null || ips.isEmpty()) {
+            return;
+        }
+        Map<Integer, Set<InetAddress>> saved = getIPList(ips.keySet());
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnUserID + ", "
+                    + columnIP
+                    + ") VALUES (?, ?)");
+            boolean commitRequired = false;
+            for (Integer id : ips.keySet()) {
+                Set<InetAddress> ipAddresses = ips.get(id);
+                Set<InetAddress> s = saved.get(id);
+                if (s != null) {
+                    ipAddresses.removeAll(s);
+                }
+                if (ipAddresses.isEmpty()) {
+                    continue;
+                }
+                for (InetAddress ip : ipAddresses) {
+                    if (ip == null) {
+                        continue;
+                    }
+                    statement.setInt(1, id);
+                    statement.setString(2, ip.getHostAddress());
+                    statement.addBatch();
+                    commitRequired = true;
+                }
             }
             if (commitRequired) {
                 statement.executeBatch();

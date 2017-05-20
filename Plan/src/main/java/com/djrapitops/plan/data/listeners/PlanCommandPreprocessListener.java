@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -39,6 +40,7 @@ public class PlanCommandPreprocessListener implements Listener {
             return;
         }
         if (Permissions.IGNORE_COMMANDUSE.userHasThisPermission(event.getPlayer())) {
+            Log.debug("Ignored command, player had ignore permission.");
             return;
         }
         handler.handleCommand(event.getMessage().split(" ")[0]);

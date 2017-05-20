@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -47,40 +50,6 @@ public class ManageUtils {
     }
 
     /**
-     * Import OnTime plugin data to the provided DataCacheHandler, and save
-     * cache.
-     *
-     * @param onTimeData PlayTime data of Ontime
-     * @param plugin Current instance of Plan
-     * @return success?
-     */
-    public static boolean importOnTime(HashMap<UUID, Long> onTimeData, Plan plugin) {
-        DataCacheHandler handler = plugin.getHandler();
-        for (UUID uuid : onTimeData.keySet()) {
-            OfflinePlayer player = getOfflinePlayer(uuid);
-            if (!plugin.getDB().wasSeenBefore(uuid)) {
-
-                handler.newPlayer(player);
-            }
-            DBCallableProcessor importer = new DBCallableProcessor() {
-                @Override
-                public void process(UserData data) {
-                    Long playTime = onTimeData.get(uuid);
-                    if (playTime > data.getPlayTime()) {
-                        data.setPlayTime(playTime);
-                        data.setLastGamemode(GameMode.SURVIVAL);
-                        data.setAllGMTimes(playTime, 0, 0, 0);
-                        data.setLastGmSwapTime(playTime);
-                    }
-                }
-            };
-            handler.getUserDataForProcessing(importer, uuid);
-        }
-        handler.saveCachedUserData();
-        return true;
-    }
-
-    /**
      * Get the saved UUIDs in a hashset
      *
      * @param db Database to get UUIDs from
@@ -108,20 +77,9 @@ public class ManageUtils {
     public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
         try {
             clearAndCopyToDB.removeAllData();
-            List<UserData> allUserData = new ArrayList<>();
-            for (UUID uuid : fromDBsavedUUIDs) {
-                copyFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        allUserData.add(data);
-                    }
-                });
-            }
-            while (fromDBsavedUUIDs.size() > allUserData.size()) {
-
-            }
+            List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
             clearAndCopyToDB.saveMultipleUserData(allUserData);
-            clearAndCopyToDB.saveCommandUse(copyFromDB.getCommandUse());
+            clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());            
         } catch (SQLException | NullPointerException e) {
             Log.toLog("ManageUtils.move", e);
             return false;

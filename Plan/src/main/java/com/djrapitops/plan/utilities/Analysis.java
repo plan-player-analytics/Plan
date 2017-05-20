@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
@@ -75,15 +78,6 @@ public class Analysis {
         }).runTaskAsynchronously(plugin);
     }
 
-    /**
-     * @param analysisCache
-     * @deprecated Does nothing anymore, use analyze(AnalysisCacheHandler,
-     * Database)
-     */
-    @Deprecated
-    public void analyze(AnalysisCacheHandler analysisCache) {
-    }
-
     private List<UUID> fetchPlayersInDB(Database db) {
         try {
             log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
@@ -108,46 +102,29 @@ public class Analysis {
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
-        List<UserData> rawData = new ArrayList<>();
-        List<UUID> added = new ArrayList<>();
-        List<UUID> uuids = fetchPlayersInDB(db);
-        if (uuids.isEmpty()) {
-            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
-            return false;
-        }
-        uuids.stream().forEach((uuid) -> {
-            inspectCache.cache(uuid);
-        });
         log(Phrase.ANALYSIS_FETCH_DATA + "");
-        while (rawData.size() != uuids.size()) {
-            uuids.stream()
-                    .filter((uuid) -> (!added.contains(uuid)))
-                    .forEach((uuid) -> {
-                        if (inspectCache.isCached(uuid)) {
-                            UserData userData = inspectCache.getFromCache(uuid);
-                            if (userData != null) {
-                                rawData.add(userData);
-                                userData.access();
-                                added.add(uuid);
-                            }
-                        }
-                    });
+        try {
+            inspectCache.cacheAllUserData(db);
+        } catch (Exception ex) {
+            Log.toLog(this.getClass().getName(), ex);
+            Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL + "");
         }
-        if (added.isEmpty()) {
+        List<UserData> rawData = inspectCache.getCachedUserData();
+        if (rawData.isEmpty()) {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
-        return analyzeData(rawData, uuids, analysisCache);
+        return analyzeData(rawData, analysisCache);
     }
 
     /**
      *
      * @param rawData
-     * @param uuids
      * @param analysisCache
      * @return
      */
-    public boolean analyzeData(List<UserData> rawData, List<UUID> uuids, AnalysisCacheHandler analysisCache) {
+    public boolean analyzeData(List<UserData> rawData, AnalysisCacheHandler analysisCache) {
+        List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
         // Create empty Dataset
         long now = MiscUtils.getTime();
         final RawAnalysisData sorted = new RawAnalysisData();
@@ -368,49 +345,49 @@ public class Analysis {
     }
 
     private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
-        Map<String, String> replaceMap = new HashMap<>();
-        HookHandler hookHandler = Plan.getInstance().getHookHandler();
-        List<PluginData> sources = hookHandler.getAdditionalDataSources();
-        for (PluginData source : sources) {
+        final Map<String, String> replaceMap = new HashMap<>();
+        final HookHandler hookHandler = plugin.getHookHandler();
+        final List<PluginData> sources = hookHandler.getAdditionalDataSources();
+        final AnalysisType[] totalTypes = new AnalysisType[]{
+            AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
+        };
+        final AnalysisType[] avgTypes = new AnalysisType[]{
+            AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
+        };
+        final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
+        final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
+        sources.parallelStream().forEach(source -> {
             Log.debug("Analyzing source: " + source.getPlaceholder("").replace("%", ""));
             try {
-                List<AnalysisType> analysisTypes = source.getAnalysisTypes();
+                final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
-                    continue;
+                    return;
                 }
                 if (analysisTypes.contains(AnalysisType.HTML)) {
                     replaceMap.put(source.getPlaceholder(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), uuids.get(0)));
-                    continue;
+                    return;
                 }
-                AnalysisType[] totalTypes = new AnalysisType[]{
-                    AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
-                };
                 for (AnalysisType type : totalTypes) {
                     if (analysisTypes.contains(type)) {
                         replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getTotal(type, source, uuids));
                     }
                 }
-                AnalysisType[] avgTypes = new AnalysisType[]{
-                    AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
-                };
                 for (AnalysisType type : avgTypes) {
                     if (analysisTypes.contains(type)) {
                         replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getAverage(type, source, uuids));
                     }
                 }
-                AnalysisType t = AnalysisType.BOOLEAN_PERCENTAGE;
-                if (analysisTypes.contains(t)) {
-                    replaceMap.put(source.getPlaceholder(t.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(t, source, uuids));
+                if (analysisTypes.contains(bool)) {
+                    replaceMap.put(source.getPlaceholder(bool.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(bool, source, uuids));
                 }
-                t = AnalysisType.BOOLEAN_TOTAL;
-                if (analysisTypes.contains(t)) {
-                    replaceMap.put(source.getPlaceholder(t.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(t, source, uuids));
+                if (analysisTypes.contains(boolTot)) {
+                    replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
             } catch (Throwable e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
                 Log.toLog(this.getClass().getName(), e);
             }
-        }
+        });
         return replaceMap;
     }
 }

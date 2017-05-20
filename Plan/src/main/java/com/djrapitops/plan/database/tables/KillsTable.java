@@ -4,7 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.KillData;
@@ -142,6 +145,77 @@ public class KillsTable extends Table {
             }
             if (commitRequired) {
                 statement.executeBatch();
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<Integer, List<KillData>> getPlayerKills(Collection<Integer> ids, Map<Integer, UUID> uuids) throws SQLException {
+        if (ids == null || ids.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<Integer, List<KillData>> kills = new HashMap<>();
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            for (Integer id : ids) {
+                kills.put(id, new ArrayList<>());
+            }
+            while (set.next()) {
+                int killerID = set.getInt(columnKillerUserID);
+                int victimID = set.getInt(columnVictimUserID);
+                if (!ids.contains(killerID)) {
+                    Log.debug("Kills-Ids did not contain: " + killerID);
+                    continue;
+                }
+                UUID victimUUID = uuids.get(victimID);
+                kills.get(killerID).add(new KillData(victimUUID, victimID, set.getString(columnWeapon), set.getLong(columnDate)));
+            }
+            return kills;
+        } finally {
+            close(set);
+            close(statement);
+        }
+    }
+
+    public void savePlayerKills(Map<Integer, List<KillData>> kills, Map<Integer, UUID> uuids) throws SQLException {
+        if (kills == null || kills.isEmpty()) {
+            return;
+        }
+        Map<Integer, List<KillData>> saved = getPlayerKills(kills.keySet(), uuids);
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnKillerUserID + ", "
+                    + columnVictimUserID + ", "
+                    + columnWeapon + ", "
+                    + columnDate
+                    + ") VALUES (?, ?, ?, ?)");
+            boolean commitRequired = false;
+            for (Integer id : kills.keySet()) {
+                List<KillData> playerKills = kills.get(id);
+                List<KillData> s = saved.get(id);
+                if (s != null) {
+                    playerKills.removeAll(s);
+                }
+                for (KillData kill : playerKills) {
+                    if (kill == null) {
+                        continue;
+                    }
+                    statement.setInt(1, id);
+                    statement.setInt(2, kill.getVictimUserID());
+                    statement.setString(3, kill.getWeapon());
+                    statement.setLong(4, kill.getDate());
+                    statement.addBatch();
+                    commitRequired = true;
+                }
+                if (commitRequired) {
+                    statement.executeBatch();
+                }
             }
         } finally {
             close(statement);

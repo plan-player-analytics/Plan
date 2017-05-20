@@ -11,8 +11,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -183,7 +185,7 @@ public class DatabaseTest {
     public void testRemoveAll() throws SQLException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         HashMap<String, Integer> c = new HashMap<>();
         c.put("/plan", 1);
         c.put("/tp", 4);
@@ -192,7 +194,7 @@ public class DatabaseTest {
         c.put("/roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
         db.saveCommandUse(c);
         assertTrue(db.removeAllData());
-        assertTrue("Contains the user", db.getUserId(data.getUuid().toString()) == -1);
+        assertTrue("Contains the user", db.getUserDataForUUIDS(Arrays.asList(new UUID[]{MockUtils.getPlayerUUID(), MockUtils.getPlayer2UUID()})).isEmpty());
         assertTrue("Contains commandUse", db.getCommandUse().isEmpty());
     }
 
@@ -210,11 +212,12 @@ public class DatabaseTest {
         c.put("/help", 21);
         c.put("/roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
         db.saveCommandUse(c);
-        assertTrue("Doesn't contain /plan", db.getCommandUse().containsKey("/plan"));
-        assertTrue("Doesn't contain /tp", db.getCommandUse().containsKey("/tp"));
-        assertTrue("Doesn't contain /pla", db.getCommandUse().containsKey("/pla"));
-        assertTrue("Doesn't contain /help", db.getCommandUse().containsKey("/help"));
-        assertTrue("Contains too long cmd", !db.getCommandUse().containsKey("/roiergbnougbierubieugbeigubeigubgierbgeugeg"));
+        Map<String, Integer> commandUse = db.getCommandUse();
+        assertTrue("Doesn't contain /plan", commandUse.containsKey("/plan"));
+        assertTrue("Doesn't contain /tp", commandUse.containsKey("/tp"));
+        assertTrue("Doesn't contain /pla", commandUse.containsKey("/pla"));
+        assertTrue("Doesn't contain /help", commandUse.containsKey("/help"));
+        assertTrue("Contains too long cmd", !commandUse.containsKey("/roiergbnougbierubieugbeigubeigubgierbgeugeg"));
     }
 
     /**
@@ -225,9 +228,9 @@ public class DatabaseTest {
     public void testSaveUserData() throws SQLException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         data.addNickname("TestUpdateForSave");
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         DBCallableProcessor process = new DBCallableProcessor() {
             @Override
             public void process(UserData d) {
@@ -246,9 +249,9 @@ public class DatabaseTest {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
-        db.saveUserData(data2.getUuid(), data2);
+        db.saveUserData(data2);
         data.addNickname("s); DROP TABLE plan_users;--");
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         assertTrue("Removed Users table.", db.getUserId(data2.getUuid().toString()) != -1);
     }
 
@@ -260,7 +263,7 @@ public class DatabaseTest {
     public void testSaveMultipleUserData() throws SQLException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         data.addNickname("TestUpdateForSave");
         UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
         List<UserData> list = new ArrayList<>();
@@ -291,7 +294,7 @@ public class DatabaseTest {
     public void testRemove() throws SQLException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         assertTrue(db.removeAccount(data.getUuid().toString()));
         assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));
     }
@@ -326,6 +329,7 @@ public class DatabaseTest {
      *
      * @throws SQLException
      */
+    // Big test because
     @Test
     public void testRestore() throws SQLException {
         db.init();
@@ -335,6 +339,12 @@ public class DatabaseTest {
         list.add(data);
         list.add(data2);
         db.saveMultipleUserData(list);
+        HashMap<String, Integer> c = new HashMap<>();
+        c.put("/plan", 1);
+        c.put("/tp", 4);
+        c.put("/pla", 7);
+        c.put("/help", 21);
+        db.saveCommandUse(c);
         backup = new SQLiteDB(plan, "debug-backup") {
             @Override
             public void startConnectionPingTask(Plan plugin) {
@@ -347,5 +357,10 @@ public class DatabaseTest {
         Set<UUID> savedUUIDs = db.getSavedUUIDs();
         assertTrue("Didn't contain 1", savedUUIDs.contains(data.getUuid()));
         assertTrue("Didn't contain 2", savedUUIDs.contains(data2.getUuid()));
+        Map<String, Integer> commandUse = db.getCommandUse();
+        assertTrue("Doesn't contain /plan", commandUse.containsKey("/plan"));
+        assertTrue("Doesn't contain /tp", commandUse.containsKey("/tp"));
+        assertTrue("Doesn't contain /pla", commandUse.containsKey("/pla"));
+        assertTrue("Doesn't contain /help", commandUse.containsKey("/help"));
     }
 }
