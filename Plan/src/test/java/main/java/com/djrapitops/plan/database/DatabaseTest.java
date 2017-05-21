@@ -7,6 +7,8 @@ package test.java.main.java.com.djrapitops.plan.database;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.SQLException;
@@ -20,6 +22,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
+import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
@@ -78,7 +82,7 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
-        };   
+        };
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = 0;
         if (f.exists()) {
@@ -258,21 +262,39 @@ public class DatabaseTest {
     /**
      *
      * @throws SQLException
+     * @throws java.net.UnknownHostException
      */
     @Test
-    public void testSaveMultipleUserData() throws SQLException {
+    public void testSaveMultipleUserData() throws SQLException, UnknownHostException {
         db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        data.addIpAddress(InetAddress.getByName("185.64.113.61"));
+        data.addSession(new SessionData(1286349L, 2342978L));
+        data.addNickname("TestNick");
+        data.addPlayerKill(new KillData(MockUtils.getPlayer2UUID(), 2, "DiamondSword", 75843759L));
+        System.out.println(data.toString());
         db.saveUserData(data);
+        data.getPlayerKills().clear();
+        System.out.println(data.toString());
         data.addNickname("TestUpdateForSave");
         UserData data2 = new UserData(MockUtils.mockPlayer2(), new DemographicsData());
+        data2.addNickname("Alright");
+        data.addNickname("TestNick2");
+        data2.addIpAddress(InetAddress.getByName("185.64.113.60"));
+        data2.addSession(new SessionData(2348743L, 4839673L));
+        data2.addPlayerKill(new KillData(MockUtils.getPlayerUUID(), 1, "DiamondSword", 753759L));
         List<UserData> list = new ArrayList<>();
         list.add(data);
         list.add(data2);
         db.saveMultipleUserData(list);
+        data.addPlayerKill(new KillData(MockUtils.getPlayer2UUID(), 2, "DiamondSword", 75843759L));
+        data.setLocation(null);
+        data2.setLocation(null);        
         DBCallableProcessor process = new DBCallableProcessor() {
             @Override
             public void process(UserData d) {
+                System.out.println("\n" + data.toString());
+                System.out.println(d.toString());
                 assertTrue("Not Equals", data.equals(d));
             }
         };
@@ -280,6 +302,8 @@ public class DatabaseTest {
         DBCallableProcessor process2 = new DBCallableProcessor() {
             @Override
             public void process(UserData d) {
+                System.out.println("\n" + data2.toString());
+                System.out.println(d.toString());
                 assertTrue("Not Equals", data2.equals(d));
             }
         };

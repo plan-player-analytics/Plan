@@ -345,15 +345,16 @@ public abstract class SQLDB extends Database {
             UserData uData = userDatas.get(uuid);
             if (id == -1) {
                 saveLast.add(uData);
+                Log.debug("User not seen before, saving last: "+uuid);
                 continue;
             }
             uData.access();
-            locations.put(id, uData.getLocations());
-            nicknames.put(id, uData.getNicknames());
+            locations.put(id, new ArrayList<>(uData.getLocations()));
+            nicknames.put(id, new HashSet<>(uData.getNicknames()));
             lastNicks.put(id, uData.getLastNick());
-            ips.put(id, uData.getIps());
-            kills.put(id, uData.getPlayerKills());
-            sessions.put(id, uData.getSessions());
+            ips.put(id, new HashSet<>(uData.getIps()));
+            kills.put(id, new ArrayList<>(uData.getPlayerKills()));
+            sessions.put(id, new ArrayList<>(uData.getSessions()));
             gmTimes.put(id, uData.getGmTimes());
         }
         // Save
@@ -378,9 +379,8 @@ public abstract class SQLDB extends Database {
         for (UserData userData : saveLast) {
             try {
                 saveUserData(userData);
-            } catch (SQLException e) {
+            } catch (SQLException | NullPointerException e) {
                 exceptions.add(e);
-            } catch (NullPointerException e) {
             }
         }
         if (!exceptions.isEmpty()) {
@@ -408,11 +408,11 @@ public abstract class SQLDB extends Database {
         data.access();
         usersTable.saveUserDataInformation(data);
         int userId = usersTable.getUserId(uuid.toString());
-        sessionsTable.saveSessionData(userId, data.getSessions());
+        sessionsTable.saveSessionData(userId, new ArrayList<>(data.getSessions()));
         locationsTable.saveAdditionalLocationsList(userId, data.getLocations());
-        nicknamesTable.saveNickList(userId, data.getNicknames(), data.getLastNick());
-        ipsTable.saveIPList(userId, data.getIps());
-        killsTable.savePlayerKills(userId, data.getPlayerKills());
+        nicknamesTable.saveNickList(userId, new HashSet<>(data.getNicknames()), data.getLastNick());
+        ipsTable.saveIPList(userId, new HashSet<>(data.getIps()));
+        killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
         gmTimesTable.saveGMTimes(userId, data.getGmTimes());
         data.stopAccessing();
     }

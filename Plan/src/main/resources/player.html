@@ -289,6 +289,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
 		</a>
 		<a href="javascript:void(0)" class="nav-button">
+			<i class="fa fa-calendar" aria-hidden="true"></i> Sessions
+		</a>
+		<a href="javascript:void(0)" class="nav-button">
 			<i class="fa fa-cubes" aria-hidden="true"></i> Plugins
 		</a>
 	</div>
@@ -379,18 +382,18 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 					<div class="about box column">
 						<div class="headerbox">
 							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-list" aria-hidden="true"></i><span class="header-text"> Last 10 Sessions</span></div>
+								<div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span class="header-text"> Last 10 Kills</span></div>
 							</div>
-							<div class="infobox">
+							<div class="infobox" style="float: right;">
 								<div class="info-icon">
-									<i class="fa fa-clock-o" aria-hidden="true"></i>
+									<i class="fa fa-crosshairs" aria-hidden="true"></i>
 								</div>
 								<div class="info-text" style="width: 70%;">
 									<div class="info-number">
-										%sessionaverage%
+										%playerkills%
 									</div>
 									<div class="info-label">
-										Average Length
+										Player Kills
 									</div>
 								</div>
 							</div>
@@ -456,26 +459,59 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 						<canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
 					<div class="about box column">
-						%sessionstable%<br>
+						%killstable%
+					</div>
+				</div>
+			</div>
+			<div class="tab">
+				<div class="columns">
+					<div class="about box column">
 						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span class="header-text"> Last 10 Kills</span></div>
+							<div class="header-icon" style="width: 50%">
+								<div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> PunchCard</span></div>
 							</div>
-							<div class="infobox" style="float: right;">
+							<div class="infobox" >
 								<div class="info-icon">
-									<i class="fa fa-crosshairs" aria-hidden="true"></i>
+									<i class="fa fa-clock-o" aria-hidden="true"></i>
 								</div>
 								<div class="info-text" style="width: 70%;">
 									<div class="info-number">
-										%playerkills%
+										%playtime%
 									</div>
 									<div class="info-label">
-										Player Kills
+										Playtime
 									</div>
 								</div>
 							</div>
-						</div><br/>
-						%killstable%
+						</div>
+					</div>
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-list" aria-hidden="true"></i><span class="header-text"> Last 10 Sessions</span></div>
+							</div>
+							<div class="infobox">
+								<div class="info-icon">
+									<i class="fa fa-clock-o" aria-hidden="true"></i>
+								</div>
+								<div class="info-text" style="width: 70%;">
+									<div class="info-number">
+										%sessionaverage%
+									</div>
+									<div class="info-label">
+										Average Length
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="about box column">
+						<canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
+					</div>
+					<div class="about box column">
+						%sessionstable%
 					</div>
 				</div>
 			</div>
@@ -578,6 +614,66 @@ function openFunc(i) {
 			}]
 			}
 			}
+	});
+	var ctxpunch = document.getElementById("punchcard");
+	var datapunch = {
+			datasets: [
+			{
+				label: 'Player Join Punchcard',
+				data: %datapunchcard%,
+				backgroundColor: "#222",
+				hoverBackgroundColor: "#333",
+			}]
+	};
+	var punchcardChart = new Chart(ctxpunch, {
+		type: 'bubble',
+		data: datapunch,
+		options: {
+			scales: {
+				xAxes: [{
+					ticks: {
+						callback: function(value, index, values) {
+                                                    switch (value) {
+                                                        case 25:
+                                                        case -1:
+                                                        case -2:
+                                                        case -3:
+                                                        case -4:
+                                                        case -5:
+                                                            return '';
+                                                        default:
+                                                            return value+':00';
+                                                    }							
+						}
+					}
+				}],
+				yAxes: [{
+					ticks: {
+						callback: function(value, index, values) {
+							switch (value) {
+								case 0:
+									return 'Monday';
+								case 1:
+									return 'Tuesday';
+								case 2:
+									return 'Wednesday';
+								case 3:
+									return 'Thursday';
+								case 4:
+									return 'Friday';
+								case 5:
+									return 'Saturday';
+								case 6:
+									return 'Sunday';
+								default:
+									break;
+								return '';
+							}							
+						}
+					}
+				}]
+			}
+		}
 	});
 </script>
 </body>

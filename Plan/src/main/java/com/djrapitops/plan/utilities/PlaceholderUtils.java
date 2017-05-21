@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableKillsTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableSessionTableCreator;
 import org.bukkit.GameMode;
@@ -197,6 +198,7 @@ public class PlaceholderUtils {
         replaceMap.put("%gm1col%", Settings.HCOLOR_GMP_1 + "");
         replaceMap.put("%gm2col%", Settings.HCOLOR_GMP_2 + "");
         replaceMap.put("%gm3col%", Settings.HCOLOR_GMP_3 + "");
+        replaceMap.put("%datapunchcard%", PunchCardGraphCreator.generateDataArray(data.getSessions()));
         replaceMap.put("%inaccuratedatawarning%", (now - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);

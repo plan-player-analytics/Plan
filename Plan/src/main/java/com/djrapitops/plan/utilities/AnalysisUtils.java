@@ -29,7 +29,7 @@ public class AnalysisUtils {
     public static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
         return isActive(MiscUtils.getTime(), lastPlayed, playTime, loginTimes);
     }
-    
+
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
@@ -134,28 +134,28 @@ public class AnalysisUtils {
             return source.parseContainer("Err ", "Null Analysistype. ");
         }
         try {
-            Number average;
+            double average;
             switch (analysisType) {
                 case LONG_EPOCH_MS_MINUS_NOW_AVG:
                     final long now = MiscUtils.getTime();
                     average = MathUtils.averageLong(getCorrectValues(uuids, source).map(value -> ((long) value) - now));
                     return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
-                case INT_AVG:
-                    average = MathUtils.averageInt(getCorrectValues(uuids, source).map(i -> (Integer) i));
-                    break;
                 case LONG_AVG:
-                    average = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    break;
+                    long averageLong = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
+                    return source.parseContainer(analysisType.getModifier(), averageLong + "");
                 case LONG_TIME_MS_AVG:
                     average = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
                     return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
+                case INT_AVG:
+                    average = MathUtils.averageInt(getCorrectValues(uuids, source).map(i -> (Integer) i));
+                    break;
                 case DOUBLE_AVG:
                     average = MathUtils.averageDouble(getCorrectValues(uuids, source).map(i -> (Double) i));
                     break;
                 default:
                     return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
             }
-            return source.parseContainer(analysisType.getModifier(), average + "");
+            return source.parseContainer(analysisType.getModifier(), FormatUtils.cutDecimals(average));
         } catch (Throwable e) {
             return logPluginDataCausedError(source, e);
         }

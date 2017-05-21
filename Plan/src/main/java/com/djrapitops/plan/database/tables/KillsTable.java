@@ -184,9 +184,11 @@ public class KillsTable extends Table {
 
     public void savePlayerKills(Map<Integer, List<KillData>> kills, Map<Integer, UUID> uuids) throws SQLException {
         if (kills == null || kills.isEmpty()) {
+            Log.debug("Save multiple - Kills was empty.");
             return;
         }
         Map<Integer, List<KillData>> saved = getPlayerKills(kills.keySet(), uuids);
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -199,6 +201,7 @@ public class KillsTable extends Table {
             for (Integer id : kills.keySet()) {
                 List<KillData> playerKills = kills.get(id);
                 List<KillData> s = saved.get(id);
+                Log.debug("Saving:" + playerKills + " Saved: " + s);
                 if (s != null) {
                     playerKills.removeAll(s);
                 }

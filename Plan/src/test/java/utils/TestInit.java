@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
@@ -63,7 +64,8 @@ public class TestInit {
             when(planMock.getServer()).thenReturn(mockServer);
             when(planMock.getLogger()).thenReturn(Logger.getGlobal());
             Plan.setInstance(planMock);
-//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();            
+//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
+            Settings.DEBUG.setValue(true);
             return true;
         } catch (Exception ex) {
             System.out.println(ex);

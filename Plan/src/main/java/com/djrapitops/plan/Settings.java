@@ -68,6 +68,7 @@ public enum Settings {
     HIDE_TOWNS("Customization.Plugins.Towny.HideTowns");
 
     private final String configPath;
+    private Boolean value;
 
     private Settings(String path) {
         this.configPath = path;
@@ -79,7 +80,14 @@ public enum Settings {
      * @return Boolean value of the config setting, false if not boolean.
      */
     public boolean isTrue() {
+        if (value != null) {
+            return value;
+        }
         return Plan.getInstance().getConfig().getBoolean(configPath);
+    }
+
+    public void setValue(Boolean value) {
+        this.value = value;
     }
 
     /**

@@ -41,16 +41,16 @@ public class EconomyBalance extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         OfflinePlayer p = getOfflinePlayer(uuid);
-        if (p.hasPlayedBefore()) {
-            parseContainer(modifierPrefix, this.econ.getBalance(p) + "");
+        if (this.econ.hasAccount(p)) {
+            return parseContainer(modifierPrefix, this.econ.getBalance(p) + "");
         }
-        return "";
+        return parseContainer(modifierPrefix, "0");
     }
 
     @Override
     public Serializable getValue(UUID uuid) {
         OfflinePlayer p = getOfflinePlayer(uuid);
-        if (p.hasPlayedBefore()) {
+        if (this.econ.hasAccount(p)) {
             return this.econ.getBalance(p);
         }
         return -1;
