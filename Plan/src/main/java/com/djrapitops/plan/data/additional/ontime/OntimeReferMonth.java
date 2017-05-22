@@ -25,7 +25,7 @@ public class OntimeReferMonth extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public OntimeReferMonth() {
-        super("OnTime", "refer_30d", AnalysisType.INT_TOTAL);
+        super("OnTime", "refer_30d", AnalysisType.LONG_TOTAL);
         super.setAnalysisOnly(false);
         super.setIcon("commenting-o");
         super.setPrefix("Referrals Last 30d: ");
@@ -49,12 +49,12 @@ public class OntimeReferMonth extends PluginData {
     public Serializable getValue(UUID uuid) {
         OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (!offlinePlayer.hasPlayedBefore()) {
-            return 0;
+            return -1L;
         }
         String name = offlinePlayer.getName();
         long referTotal = OnTimeAPI.getPlayerTimeData(name, OnTimeAPI.data.MONTHREFER);
         if (referTotal == -1) {
-            return 0;
+            return -1L;
         }
         return referTotal;
     }

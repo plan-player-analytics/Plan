@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
@@ -9,6 +8,7 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,7 +60,7 @@ public class PlanPlayerListener implements Listener {
         BukkitTask asyncNewPlayerCheckTask = new BukkitRunnable() {
             @Override
             public void run() {
-                LoginInfo loginInfo = new LoginInfo(uuid, new Date().getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1);
+                LoginInfo loginInfo = new LoginInfo(uuid, MiscUtils.getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1);
                 boolean isNewPlayer = !plugin.getDB().wasSeenBefore(uuid);
                 if (isNewPlayer) {
                     UserData newUserData = NewPlayerCreator.createNewPlayer(player);
@@ -90,7 +90,7 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
         Log.debug(uuid + ": PlayerQuitEvent");
-        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
+        handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerQuitEvent_END");
     }
@@ -110,7 +110,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
-        handler.addToPool(new LogoutInfo(uuid, new Date().getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
+        handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), player.getGameMode(), handler.getSession(uuid)));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
     }

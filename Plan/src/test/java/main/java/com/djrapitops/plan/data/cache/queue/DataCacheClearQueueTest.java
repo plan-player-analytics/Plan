@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -68,6 +69,7 @@ public class DataCacheClearQueueTest {
     /**
      *
      */
+    @Ignore
     @Test
     public void testScheduleForClear_UUID() {
     }
@@ -75,6 +77,7 @@ public class DataCacheClearQueueTest {
     /**
      *
      */
+    @Ignore
     @Test
     public void testScheduleForClear_Collection() {
     }
@@ -82,6 +85,7 @@ public class DataCacheClearQueueTest {
     /**
      *
      */
+    @Ignore
     @Test
     public void testStop() {
     }

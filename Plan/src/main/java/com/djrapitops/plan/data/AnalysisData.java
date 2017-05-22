@@ -37,6 +37,9 @@ public class AnalysisData {
     private String recentPlayers;
     private String sortablePlayersTable;
     private String[] playersDataArray;
+    private String punchCardData;
+    private String[] sessionDistributionData;
+    private String[] playtimeDistributionData;
 
     private int newPlayersMonth;
     private int newPlayersWeek;
@@ -81,6 +84,9 @@ public class AnalysisData {
         geomapCountries = Html.ERROR_NOT_SET + "";
         geomapZ = Html.ERROR_NOT_SET + "";
         geomapCodes = Html.ERROR_NOT_SET + "";
+        punchCardData = "[]";
+        sessionDistributionData = new String[]{"[]", "[]"};
+        playtimeDistributionData = new String[]{"[]", "[]"};
         playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
         genderData = new int[]{0, 0, 0};
         additionalDataReplaceMap = new HashMap<>();
@@ -877,5 +883,29 @@ public class AnalysisData {
      */
     public void setGenderData(int[] genderData) {
         this.genderData = genderData;
+    }
+
+    public String getPunchCardData() {
+        return punchCardData;
+    }
+
+    public void setPunchCardData(String punchCardData) {
+        this.punchCardData = punchCardData;
+    }
+
+    public String[] getSessionDistributionData() {
+        return sessionDistributionData;
+    }
+
+    public void setSessionDistributionData(String[] sessionDistributionData) {
+        this.sessionDistributionData = sessionDistributionData;
+    }
+
+    public String[] getPlaytimeDistributionData() {
+        return playtimeDistributionData;
+    }
+
+    public void setPlaytimeDistributionData(String[] playtimeDistributionData) {
+        this.playtimeDistributionData = playtimeDistributionData;
     }
 }

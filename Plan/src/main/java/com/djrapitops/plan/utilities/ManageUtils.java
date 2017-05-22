@@ -1,10 +1,8 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,13 +10,8 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -44,40 +37,6 @@ public class ManageUtils {
         }
         backupDB.init();
         return clearAndCopy(backupDB, copyFromDB, uuids);
-    }
-
-    /**
-     * Import OnTime plugin data to the provided DataCacheHandler, and save
-     * cache.
-     *
-     * @param onTimeData PlayTime data of Ontime
-     * @param plugin Current instance of Plan
-     * @return success?
-     */
-    public static boolean importOnTime(HashMap<UUID, Long> onTimeData, Plan plugin) {
-        DataCacheHandler handler = plugin.getHandler();
-        for (UUID uuid : onTimeData.keySet()) {
-            OfflinePlayer player = getOfflinePlayer(uuid);
-            if (!plugin.getDB().wasSeenBefore(uuid)) {
-
-                handler.newPlayer(player);
-            }
-            DBCallableProcessor importer = new DBCallableProcessor() {
-                @Override
-                public void process(UserData data) {
-                    Long playTime = onTimeData.get(uuid);
-                    if (playTime > data.getPlayTime()) {
-                        data.setPlayTime(playTime);
-                        data.setLastGamemode(GameMode.SURVIVAL);
-                        data.setAllGMTimes(playTime, 0, 0, 0);
-                        data.setLastGmSwapTime(playTime);
-                    }
-                }
-            };
-            handler.getUserDataForProcessing(importer, uuid);
-        }
-        handler.saveCachedUserData();
-        return true;
     }
 
     /**
@@ -108,20 +67,9 @@ public class ManageUtils {
     public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
         try {
             clearAndCopyToDB.removeAllData();
-            List<UserData> allUserData = new ArrayList<>();
-            for (UUID uuid : fromDBsavedUUIDs) {
-                copyFromDB.giveUserDataToProcessors(uuid, new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        allUserData.add(data);
-                    }
-                });
-            }
-            while (fromDBsavedUUIDs.size() > allUserData.size()) {
-
-            }
+            List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
             clearAndCopyToDB.saveMultipleUserData(allUserData);
-            clearAndCopyToDB.saveCommandUse(copyFromDB.getCommandUse());
+            clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());            
         } catch (SQLException | NullPointerException e) {
             Log.toLog("ManageUtils.move", e);
             return false;

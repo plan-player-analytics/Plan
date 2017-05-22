@@ -25,6 +25,7 @@ public class FactionsMaxPower extends PluginData {
     public FactionsMaxPower() {
         super("Factions", "maxpower");
         super.setPrefix("Max Power: ");
+        super.setIcon("bolt");
     }
 
     @Override

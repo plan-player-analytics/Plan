@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package test.java.main.java.com.djrapitops.plan;
 
 import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
@@ -24,15 +18,13 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class PhraseTest {
-    
-    private Plan plan;
-    
+
     /**
      *
      */
     public PhraseTest() {
     }
-    
+
     /**
      *
      */
@@ -40,17 +32,16 @@ public class PhraseTest {
     public void setUp() {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
-        plan = t.getPlanMock();
     }
-    
+
     /**
      *
      */
     @Test
-    public void testToString() {        
+    public void testToString() {
         Phrase instance = Phrase.REPLACE0;
         String expResult = "REPLACE0";
-        instance.setText(expResult);        
+        instance.setText(expResult);
         String result = instance.toString();
         assertEquals(expResult, result);
     }

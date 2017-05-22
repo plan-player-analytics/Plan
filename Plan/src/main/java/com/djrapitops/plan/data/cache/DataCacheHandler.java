@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
@@ -37,8 +37,8 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  * This class is the main processing class that initializes Save, Clear, Process
  * and Get queue and Starts the asyncronous save task.
  *
- * It is used to store commanduse, locations, active sessions and UserData objects
- * in memory.
+ * It is used to store commanduse, locations, active sessions and UserData
+ * objects in memory.
  *
  * It's methods can be used to access all the data it stores and to clear them.
  *
@@ -49,7 +49,7 @@ public class DataCacheHandler extends LocationCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
-    private HashMap<String, Integer> commandUse;
+    private Map<String, Integer> commandUse;
 
     // Plan
     private final Plan plugin;
@@ -245,7 +245,7 @@ public class DataCacheHandler extends LocationCache {
      * If processTask has unprocessed information, it will be processed.
      */
     public void saveCacheOnDisable() {
-        long time = new Date().getTime();
+        long time = MiscUtils.getTime();
         Log.debug("SaveCacheOnDisable! " + time);
         saveTask.stop();
         getTask.stop();
@@ -269,8 +269,16 @@ public class DataCacheHandler extends LocationCache {
         data.addAll(dataCache.values());
         Log.debug("SAVING, DataCache size: " + dataCache.keySet().size());
         try {
-            db.saveMultipleUserData(data);
             db.saveCommandUse(commandUse);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        try {
+            db.saveMultipleUserData(data);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        try {
             db.close();
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
@@ -339,7 +347,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     private void saveHandlerDataToCache(Player player) {
-        long time = new Date().getTime();
+        long time = MiscUtils.getTime();
         UUID uuid = player.getUniqueId();
         addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
     }

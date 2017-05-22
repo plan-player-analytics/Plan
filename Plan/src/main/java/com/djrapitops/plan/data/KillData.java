@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -65,4 +66,35 @@ public class KillData {
     public int getVictimUserID() {
         return victimUserID;
     }
+
+    @Override
+    public String toString() {
+        return "{victim:" + victim + "|victimUserID:" + victimUserID + "|date:" + date + "|weapon:" + weapon + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final KillData other = (KillData) obj;
+        if (this.date != other.date) {
+            return false;
+        }
+        if (!Objects.equals(this.weapon, other.weapon)) {
+            return false;
+        }
+        if (!Objects.equals(this.victim, other.victim)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

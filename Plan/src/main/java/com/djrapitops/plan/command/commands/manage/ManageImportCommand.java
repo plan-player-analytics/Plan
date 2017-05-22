@@ -4,17 +4,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
-import main.java.com.djrapitops.plan.data.importing.Importer;
-import main.java.com.djrapitops.plan.data.importing.OnTimeImporter;
+import main.java.com.djrapitops.plan.data.handling.importing.ImportUtils;
+import main.java.com.djrapitops.plan.data.handling.importing.Importer;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.Bukkit;
+import static org.bukkit.Bukkit.getOfflinePlayers;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,9 +26,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
- * 
+ *
  * Supported plugins (v3.0.0) : OnTime
- * 
+ *
  * @author Rsl1122
  * @since 2.3.0
  */
@@ -57,10 +60,9 @@ public class ManageImportCommand extends SubCommand {
             sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin);
             return true;
         }
-        HashMap<String, Importer> importPlugins = new HashMap<>();
-        importPlugins.put("ontime", new OnTimeImporter(plugin));
+        Map<String, Importer> importPlugins = ImportUtils.getImporters();
 
-        if (!importPlugins.get(importFromPlugin).isEnabled()) {
+        if (!importPlugins.keySet().contains(importFromPlugin) || !ImportUtils.isPluginEnabled(importFromPlugin)) {
             sender.sendMessage(Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin);
             return true;
         }
@@ -70,20 +72,18 @@ public class ManageImportCommand extends SubCommand {
             return true;
         }
 
+        final Importer importer = importPlugins.get(importFromPlugin);
         // Header
-        sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
-        Set<UUID> uuids = new HashSet<>();
-        for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
-            uuids.add(p.getUniqueId());
-        }
-        HashMap<UUID, Long> numbericData = importPlugins.get(importFromPlugin).grabNumericData(uuids);
         BukkitTask asyncImportTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if (importFromPlugin.equals("ontime")) {
-                    if (ManageUtils.importOnTime(numbericData, plugin)) {
-                        sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
-                    }
+                sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
+                List<UUID> uuids = Arrays.stream(getOfflinePlayers()).map(p -> p.getUniqueId()).collect(Collectors.toList());
+                if (importer.importData(uuids)) {
+                    sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
+                } else {
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+
                 }
                 this.cancel();
             }

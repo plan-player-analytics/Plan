@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import java.util.Date;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -8,6 +7,7 @@ import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,7 +45,7 @@ public class QuickAnalyzeCommand extends SubCommand {
                 plugin.getServer().getScheduler().cancelTask(bootAnID);
             }
             analysisCache.updateCache();
-        } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60000) {
+        } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
             analysisCache.updateCache();
         }
 
