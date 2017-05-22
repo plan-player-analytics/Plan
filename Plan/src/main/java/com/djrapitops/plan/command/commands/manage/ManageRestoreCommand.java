@@ -99,6 +99,9 @@ public class ManageRestoreCommand extends SubCommand {
                         return;
                     }
                     if (ManageUtils.clearAndCopy(copyToDB, backupDB, uuids)) {
+                        if (copyToDB.getConfigName().equals(plugin.getDB().getConfigName())) {
+                            plugin.getHandler().getCommandUseFromDb();
+                        }
                         sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());

@@ -1,27 +1,17 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *

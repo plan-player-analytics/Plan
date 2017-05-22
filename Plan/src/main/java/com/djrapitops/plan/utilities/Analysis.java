@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
@@ -31,6 +28,8 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.ui.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import org.bukkit.GameMode;
@@ -239,6 +238,9 @@ public class Analysis {
         analysisData.setTotalmobkills(sorted.getTotalMobKills());
         analysisData.setRefreshDate(now);
         analysisData.setGenderData(sorted.getGenders());
+        analysisData.setPunchCardData(PunchCardGraphCreator.generateDataArray(sorted.getSessiondata()));
+        analysisData.setSessionDistributionData(SessionLengthDistributionGraphCreator.generateDataArraySessions(sorted.getSessiondata()));
+        analysisData.setPlaytimeDistributionData(SessionLengthDistributionGraphCreator.generateDataArray(sorted.getPlaytimes().values()));
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
         analysisCache.cache(analysisData);
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {

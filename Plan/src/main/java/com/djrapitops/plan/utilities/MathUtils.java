@@ -23,7 +23,7 @@ public class MathUtils {
     public static long averageLong(Collection<Long> values) {
         return averageLong(values.stream());
     }
-    
+
     public static long averageLong(Stream<Long> values) {
         OptionalDouble average = values.mapToLong(i -> i).average();
         if (average.isPresent()) {
@@ -45,7 +45,7 @@ public class MathUtils {
     public static double average(int total, int size) {
         return 1.0 * total / size;
     }
-    
+
     public static long countTrueBoolean(Stream<Boolean> values) {
         return values.filter(i -> i).count();
     }
@@ -66,5 +66,24 @@ public class MathUtils {
         return values
                 .mapToDouble(value -> (Double) value)
                 .sum();
+    }
+
+    public static int getBiggest(Collection<Integer> values) {
+        int biggest = 1;
+        for (Integer value : values) {
+            if (value > biggest) {
+                biggest = value;
+            }
+        }
+        return biggest;
+    }
+    public static long getBiggestLong(Collection<Long> values) {
+        long biggest = 1;
+        for (Long value : values) {
+            if (value > biggest) {
+                biggest = value;
+            }
+        }
+        return biggest;
     }
 }

@@ -26,6 +26,11 @@ public class PunchCardGraphCreator {
         int[][] dataArray = createDataArray(daysAndHours);
         int big = findBiggestValue(dataArray);
         int[][] scaled = scale(dataArray, big);
+        StringBuilder arrayBuilder = buildString(scaled);
+        return arrayBuilder.toString();
+    }
+
+    private static StringBuilder buildString(int[][] scaled) {
         StringBuilder arrayBuilder = new StringBuilder();
         arrayBuilder.append("[");
         arrayBuilder.append("{").append("x:").append(-1).append(", y:").append(-1).append(", r:").append(1).append("}");
@@ -45,7 +50,7 @@ public class PunchCardGraphCreator {
             }
         }
         arrayBuilder.append("]");
-        return arrayBuilder.toString();
+        return arrayBuilder;
     }
 
     private static int[][] createDataArray(List<int[]> daysAndHours) {
@@ -62,13 +67,18 @@ public class PunchCardGraphCreator {
         List<int[]> daysAndHours = sessionStarts.stream().map(start -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
-            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2;
-            if (dayOfWeek == -1) {
-                dayOfWeek = 6;
-            }
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
+
+            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2;
             if (hourOfDay == 24) {
                 hourOfDay = 0;
+                dayOfWeek += 1;
+            }
+            if (dayOfWeek > 6) {
+                dayOfWeek = 0;
+            }
+            if (dayOfWeek < 0) {
+                dayOfWeek = 6;
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
