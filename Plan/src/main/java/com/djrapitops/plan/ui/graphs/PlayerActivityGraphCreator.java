@@ -47,7 +47,7 @@ public class PlayerActivityGraphCreator {
 
             if (lastSavedPValue != lastPValue || i - lastSaveI > (scale / (long) 75)) {
                 lastSaveI = i;
-                labels.add("\"" + FormatUtils.formatTimeStamp(i + "") + "\"");
+                labels.add("\"" + FormatUtils.formatTimeStamp(i) + "\"");
                 lastSavedPValue = lastPValue;
                 playersOnline.add(lastPValue);
             }

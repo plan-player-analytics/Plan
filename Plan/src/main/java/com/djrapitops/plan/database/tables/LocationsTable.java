@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import org.bukkit.Location;
@@ -132,16 +133,55 @@ public class LocationsTable extends Table {
                 if (location == null) {
                     continue;
                 }
-                statement.setInt(1, userId);
-                statement.setInt(2, (int) location.getBlockX());
-                statement.setInt(3, (int) location.getBlockZ());
                 World world = location.getWorld();
                 if (world == null) {
                     continue;
                 }
+                statement.setInt(1, userId);
+                statement.setInt(2, (int) location.getBlockX());
+                statement.setInt(3, (int) location.getBlockZ());
                 statement.setString(4, world.getName());
                 statement.addBatch();
                 commitRequired = true;
+            }
+            if (commitRequired) {
+                statement.executeBatch();
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    public void saveAdditionalLocationsLists(Map<Integer, List<Location>> locations) throws SQLException {
+        if (locations == null || locations.isEmpty()) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnUserID + ", "
+                    + columnCoordinatesX + ", "
+                    + columnCoordinatesZ + ", "
+                    + columnWorld
+                    + ") VALUES (?, ?, ?, ?)");
+            boolean commitRequired = false;
+            for (Integer id : locations.keySet()) {
+                List<Location> newLocations = locations.get(id);
+                if (newLocations == null || newLocations.isEmpty()) {
+                    continue;
+                }
+                for (Location location : newLocations) {
+                    World world = location.getWorld();
+                    if (world == null) {
+                        continue;
+                    }
+                    statement.setInt(1, id);
+                    statement.setInt(2, (int) location.getBlockX());
+                    statement.setInt(3, (int) location.getBlockZ());
+                    statement.setString(4, world.getName());
+                    statement.addBatch();
+                    commitRequired = true;
+                }
             }
             if (commitRequired) {
                 statement.executeBatch();

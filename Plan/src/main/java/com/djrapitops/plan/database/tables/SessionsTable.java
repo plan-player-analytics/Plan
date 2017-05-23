@@ -4,7 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -134,6 +137,81 @@ public class SessionsTable extends Table {
                 statement.setLong(3, end);
                 statement.addBatch();
                 commitRequired = true;
+            }
+            if (commitRequired) {
+                statement.executeBatch();
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<Integer, List<SessionData>> getSessionData(Collection<Integer> ids) throws SQLException {
+        if (ids == null || ids.isEmpty()) {
+            return new HashMap<>();
+        }
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<Integer, List<SessionData>> sessions = new HashMap<>();
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            for (Integer id : ids) {
+                sessions.put(id, new ArrayList<>());
+            }
+            while (set.next()) {
+                Integer id = set.getInt(columnUserID);
+                if (!ids.contains(id)) {
+                    Log.debug("Session-Ids did not contain: " + id);
+                    continue;
+                }
+                sessions.get(id).add(new SessionData(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
+            }
+            set.close();
+            statement.close();
+
+            return sessions;
+        } finally {
+            close(set);
+            close(statement);
+        }
+    }
+
+    public void saveSessionData(Map<Integer, List<SessionData>> sessions) throws SQLException {
+        if (sessions == null || sessions.isEmpty()) {
+            return;
+        }
+        Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnUserID + ", "
+                    + columnSessionStart + ", "
+                    + columnSessionEnd
+                    + ") VALUES (?, ?, ?)");
+
+            boolean commitRequired = false;
+            for (Integer id : sessions.keySet()) {
+                List<SessionData> sessionList = sessions.get(id);
+                List<SessionData> s = saved.get(id);
+                if (s != null) {
+                    sessionList.removeAll(s);
+                }
+                if (sessionList.isEmpty()) {
+                    continue;
+                }
+                for (SessionData session : sessionList) {
+                    long end = session.getSessionEnd();
+                    long start = session.getSessionStart();
+                    if (end < start) {
+                        continue;
+                    }
+                    statement.setInt(1, id);
+                    statement.setLong(2, start);
+                    statement.setLong(3, end);
+                    statement.addBatch();
+                    commitRequired = true;
+                }
             }
             if (commitRequired) {
                 statement.executeBatch();

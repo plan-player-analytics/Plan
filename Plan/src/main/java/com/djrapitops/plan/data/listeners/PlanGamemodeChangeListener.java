@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,6 +42,6 @@ public class PlanGamemodeChangeListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        handler.addToPool(new GamemodeInfo(p.getUniqueId(), new Date().getTime(), event.getNewGameMode()));
+        handler.addToPool(new GamemodeInfo(p.getUniqueId(), MiscUtils.getTime(), event.getNewGameMode()));
     }
 }

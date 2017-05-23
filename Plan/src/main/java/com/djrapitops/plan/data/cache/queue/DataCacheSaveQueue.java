@@ -133,7 +133,7 @@ class SaveConsumer implements Runnable {
         UUID uuid = data.getUuid();
         Log.debug(uuid + ": Saving: " + uuid);
         try {
-            db.saveUserData(uuid, data);
+            db.saveUserData(data);
             data.stopAccessing();
             Log.debug(uuid + ": Saved!");
             if (data.shouldClearAfterSave()) {

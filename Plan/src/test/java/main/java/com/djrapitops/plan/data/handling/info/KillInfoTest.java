@@ -6,7 +6,6 @@
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
 import java.sql.SQLException;
-import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
@@ -14,6 +13,7 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -51,7 +51,7 @@ public class KillInfoTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         Plan plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 

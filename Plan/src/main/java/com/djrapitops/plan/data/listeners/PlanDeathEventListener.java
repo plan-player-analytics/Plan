@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import java.util.Date;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class PlanDeathEventListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(EntityDeathEvent event) {
-        long time = new Date().getTime();
+        long time = MiscUtils.getTime();
         LivingEntity dead = event.getEntity();
         Player killer = dead.getKiller();
         boolean killerIsPlayer = killer != null;

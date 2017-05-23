@@ -10,7 +10,7 @@ This page is an in depth documentation of all permissions & commands.
 
 Command | Permission | Default | Description
 --- | ---- | ------ | ---------------------------------
-/plan | plan.? | OP | Base command, Shows help. Alias for /plan inspect [player] when used like /plan [player]
+/plan | plan.? | true | Base command, Shows help. Alias for /plan inspect [player] when used like /plan [player]
 /plan inspect | plan.inspect | true | Gives the link to player page of the player who issued the command.
 /plan inspect [player] | plan.inspect.other | OP | Gives link to player page of the given playername, CaSe-SenSiTiVe.
 /plan qinspect | plan.qinspect | OP | Displays information about the issuing player in the chatbox.

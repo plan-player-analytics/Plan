@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -209,7 +208,7 @@ public class Plan extends JavaPlugin {
             public void run() {
                 if (!analysisCache.isCached()) {
                     analysisCache.updateCache();
-                } else if (new Date().getTime() - analysisCache.getData().getRefreshDate() > 60000) {
+                } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
                     analysisCache.updateCache();
                 }
             }

@@ -5,8 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Date;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  * This class manages the messages going to the Bukkit's Logger.
@@ -99,7 +99,7 @@ public class Log {
             }
             FileWriter fw = new FileWriter(log, true);
             try (PrintWriter pw = new PrintWriter(fw)) {
-                String timestamp = FormatUtils.formatTimeStamp(new Date().getTime() + "");
+                String timestamp = FormatUtils.formatTimeStamp(MiscUtils.getTime());
                 pw.println("[" + timestamp + "] " + message);
                 pw.flush();
             }

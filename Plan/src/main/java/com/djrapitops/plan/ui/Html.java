@@ -34,6 +34,7 @@ public enum Html {
     COLOR_f("<span class=\"white\">"),
     //
     FONT_AWESOME_ICON("<i class=\"fa fa-REPLACE0\" aria-hidden=\"true\"></i>"),
+    MINOTAR_SMALL_IMG("<img style=\"float: left; padding: 2px 2px 0px 2px\" alt=\"" + REPLACE0 + "\" src=\"https://minotar.net/avatar/" + REPLACE0 + "/19\">"),
     SPAN("" + REPLACE0 + "</span>"),
     BUTTON("<a class=\"button\" href=\"" + REPLACE0 + "\">" + REPLACE1 + "</a>"),
     BUTTON_CLASS("class=\"button\""),

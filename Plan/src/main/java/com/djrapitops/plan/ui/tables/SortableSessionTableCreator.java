@@ -37,9 +37,9 @@ public class SortableSessionTableCreator {
                     continue;
                 }
                 html += Html.TABLELINE_3_CUSTOMKEY.parse(
-                        start + "", FormatUtils.formatTimeStamp(start + ""),
-                        end + "", FormatUtils.formatTimeStamp(end + ""),
-                        length + "", FormatUtils.formatTimeAmount(length + "")
+                        start + "", FormatUtils.formatTimeStamp(start),
+                        end + "", FormatUtils.formatTimeStamp(end),
+                        length + "", FormatUtils.formatTimeAmount(length)
                 );
                 i++;
             }

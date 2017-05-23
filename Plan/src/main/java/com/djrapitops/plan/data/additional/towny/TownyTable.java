@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.additional.towny;
 
 import com.massivecraft.factions.entity.MPlayer;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import java.io.Serializable;
 import java.util.List;
@@ -46,8 +47,17 @@ public class TownyTable extends PluginData {
             html.append(Html.TABLELINE_4.parse(Html.TOWN_NO_TOWNS.parse(), "", "", ""));
         } else {
             for (Town t : towns) {
+                if (t == null) {
+                    continue;
+                }
                 String name = t.getName();
-                String mayor = t.getMayor().getName();
+                Resident mayorR = t.getMayor();
+                String mayor;
+                if (mayorR != null) {
+                    mayor = mayorR.getName();
+                } else {
+                    mayor = "None";
+                }
                 String residents = t.getNumResidents() + "";
                 String land = t.getPurchasedBlocks() + "";
                 String leaderPage = Html.LINK.parse(HtmlUtils.getInspectUrl(mayor), mayor);

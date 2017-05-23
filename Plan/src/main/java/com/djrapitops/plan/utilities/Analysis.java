@@ -28,6 +28,10 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.ui.graphs.SessionLengthDistributionGraphCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
+import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -73,15 +77,6 @@ public class Analysis {
         }).runTaskAsynchronously(plugin);
     }
 
-    /**
-     * @param analysisCache
-     * @deprecated Does nothing anymore, use analyze(AnalysisCacheHandler,
-     * Database)
-     */
-    @Deprecated
-    public void analyze(AnalysisCacheHandler analysisCache) {
-    }
-
     private List<UUID> fetchPlayersInDB(Database db) {
         try {
             log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
@@ -106,52 +101,37 @@ public class Analysis {
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
-        List<UserData> rawData = new ArrayList<>();
-        List<UUID> added = new ArrayList<>();
-        List<UUID> uuids = fetchPlayersInDB(db);
-        if (uuids.isEmpty()) {
-            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
-            return false;
-        }
-        uuids.stream().forEach((uuid) -> {
-            inspectCache.cache(uuid);
-        });
         log(Phrase.ANALYSIS_FETCH_DATA + "");
-        while (rawData.size() != uuids.size()) {
-            uuids.stream()
-                    .filter((uuid) -> (!added.contains(uuid)))
-                    .forEach((uuid) -> {
-                        if (inspectCache.isCached(uuid)) {
-                            UserData userData = inspectCache.getFromCache(uuid);
-                            if (userData != null) {
-                                rawData.add(userData);
-                                userData.access();
-                                added.add(uuid);
-                            }
-                        }
-                    });
+        try {
+            inspectCache.cacheAllUserData(db);
+        } catch (Exception ex) {
+            Log.toLog(this.getClass().getName(), ex);
+            Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL + "");
         }
-        if (added.isEmpty()) {
+        List<UserData> rawData = inspectCache.getCachedUserData();
+        if (rawData.isEmpty()) {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
-        return analyzeData(rawData, uuids, analysisCache);
+        return analyzeData(rawData, analysisCache);
     }
 
     /**
      *
      * @param rawData
-     * @param uuids
      * @param analysisCache
      * @return
      */
-    public boolean analyzeData(List<UserData> rawData, List<UUID> uuids, AnalysisCacheHandler analysisCache) {
+    public boolean analyzeData(List<UserData> rawData, AnalysisCacheHandler analysisCache) {
+        List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
         // Create empty Dataset
+        long now = MiscUtils.getTime();
         final RawAnalysisData sorted = new RawAnalysisData();
         sorted.setCommandUse(plugin.getHandler().getCommandUse());
         log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
         AnalysisData analysisData = new AnalysisData();
-        analysisData.setSortablePlayersTable(AnalysisUtils.createSortablePlayersTable(rawData));
+        String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
+        analysisData.setSortablePlayersTable(playersTable);
         sorted.fillGeolocations();
         // Fill Dataset with userdata.
         rawData.stream().forEach((uData) -> {
@@ -201,7 +181,7 @@ public class Analysis {
                 sorted.addTotalBanned(1);
             } else if (uData.getLoginTimes() == 1) {
                 sorted.addJoinleaver(1);
-            } else if (AnalysisUtils.isActive(uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
+            } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
                 sorted.addActive(1);
                 sorted.getPlaytimes().put(html, playTime);
             } else {
@@ -246,7 +226,7 @@ public class Analysis {
         long totalPlaytime = sorted.getTotalPlaytime();
         analysisData.setTotalPlayTime(totalPlaytime);
         analysisData.setAveragePlayTime(totalPlaytime / rawData.size());
-        analysisData.setSessionAverage(AnalysisUtils.average(AnalysisUtils.transformSessionDataToLengths(sorted.getSessiondata())));
+        analysisData.setSessionAverage(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(sorted.getSessiondata())));
         analysisData.setTotalLoginTimes(sorted.getTotalLoginTimes());
         createActivityVisalization(uuids.size(), sorted.getTotalBanned(), sorted.getActive(), sorted.getInactive(), sorted.getJoinleaver(), analysisData);
         analysisData.setOps(sorted.getOps());
@@ -256,8 +236,11 @@ public class Analysis {
         analysisData.setTotaldeaths(sorted.getTotalDeaths());
         analysisData.setTotalkills(sorted.getTotalKills());
         analysisData.setTotalmobkills(sorted.getTotalMobKills());
-        analysisData.setRefreshDate(new Date().getTime());
+        analysisData.setRefreshDate(now);
         analysisData.setGenderData(sorted.getGenders());
+        analysisData.setPunchCardData(PunchCardGraphCreator.generateDataArray(sorted.getSessiondata()));
+        analysisData.setSessionDistributionData(SessionLengthDistributionGraphCreator.generateDataArraySessions(sorted.getSessiondata()));
+        analysisData.setPlaytimeDistributionData(SessionLengthDistributionGraphCreator.generateDataArray(sorted.getPlaytimes().values()));
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
         analysisCache.cache(analysisData);
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
@@ -269,7 +252,8 @@ public class Analysis {
     private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
         Map<String, Integer> commandUse = raw.getCommandUse();
         if (!commandUse.isEmpty()) {
-            data.setCommandUseTableHtml(AnalysisUtils.createTableOutOfMap(commandUse));
+            String tableHtml = SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
+            data.setCommandUseTableHtml(tableHtml);
             data.setTotalCommands(commandUse.size());
         } else {
             data.setCommandUseTableHtml(Html.ERROR_TABLE_2.parse());
@@ -363,49 +347,49 @@ public class Analysis {
     }
 
     private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
-        Map<String, String> replaceMap = new HashMap<>();
-        HookHandler hookHandler = Plan.getInstance().getHookHandler();
-        List<PluginData> sources = hookHandler.getAdditionalDataSources();
-        for (PluginData source : sources) {
+        final Map<String, String> replaceMap = new HashMap<>();
+        final HookHandler hookHandler = plugin.getHookHandler();
+        final List<PluginData> sources = hookHandler.getAdditionalDataSources();
+        final AnalysisType[] totalTypes = new AnalysisType[]{
+            AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
+        };
+        final AnalysisType[] avgTypes = new AnalysisType[]{
+            AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
+        };
+        final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
+        final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
+        sources.parallelStream().forEach(source -> {
             Log.debug("Analyzing source: " + source.getPlaceholder("").replace("%", ""));
             try {
-                List<AnalysisType> analysisTypes = source.getAnalysisTypes();
+                final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
-                    continue;
+                    return;
                 }
                 if (analysisTypes.contains(AnalysisType.HTML)) {
                     replaceMap.put(source.getPlaceholder(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), uuids.get(0)));
-                    continue;
+                    return;
                 }
-                AnalysisType[] totalTypes = new AnalysisType[]{
-                    AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
-                };
                 for (AnalysisType type : totalTypes) {
                     if (analysisTypes.contains(type)) {
                         replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getTotal(type, source, uuids));
                     }
                 }
-                AnalysisType[] avgTypes = new AnalysisType[]{
-                    AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
-                };
                 for (AnalysisType type : avgTypes) {
                     if (analysisTypes.contains(type)) {
                         replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getAverage(type, source, uuids));
                     }
                 }
-                AnalysisType t = AnalysisType.BOOLEAN_PERCENTAGE;
-                if (analysisTypes.contains(t)) {
-                    replaceMap.put(source.getPlaceholder(t.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(t, source, uuids));
+                if (analysisTypes.contains(bool)) {
+                    replaceMap.put(source.getPlaceholder(bool.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(bool, source, uuids));
                 }
-                t = AnalysisType.BOOLEAN_TOTAL;
-                if (analysisTypes.contains(t)) {
-                    replaceMap.put(source.getPlaceholder(t.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(t, source, uuids));
+                if (analysisTypes.contains(boolTot)) {
+                    replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
             } catch (Throwable e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
                 Log.toLog(this.getClass().getName(), e);
             }
-        }
+        });
         return replaceMap;
     }
 }

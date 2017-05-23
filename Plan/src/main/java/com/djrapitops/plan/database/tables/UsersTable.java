@@ -4,15 +4,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import me.edge209.OnTime.OnTimeAPI.data;
 import org.bukkit.GameMode;
 
 /**
@@ -172,8 +178,7 @@ public class UsersTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
         PreparedStatement statement = null;
@@ -247,6 +252,37 @@ public class UsersTable extends Table {
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
+            }
+        } finally {
+            close(set);
+            close(statement);
+        }
+    }
+    
+    public void addUserInformationToUserData(List<UserData> data) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                if (!userDatas.keySet().contains(uuid)) {
+                    continue;
+                }
+                UserData uData = userDatas.get(uuid);
+                uData.getDemData().setAge(set.getInt(columnDemAge));
+                uData.getDemData().setGender(Gender.parse(set.getString(columnDemGender)));
+                uData.getDemData().setGeoLocation(set.getString(columnDemGeoLocation));
+                uData.setLastGamemode(GameMode.valueOf(set.getString(columnLastGM)));
+                uData.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
+                uData.setPlayTime(set.getLong(columnPlayTime));
+                uData.setLoginTimes(set.getInt(columnLoginTimes));
+                uData.setLastPlayed(set.getLong(columnLastPlayed));
+                uData.setDeaths(set.getInt(columnDeaths));
+                uData.setMobKills(set.getInt(columnMobKills));
             }
         } finally {
             close(set);
@@ -343,7 +379,7 @@ public class UsersTable extends Table {
      * @return
      * @throws SQLException
      */
-    public List<UserData> saveUserDataInformationBatch(List<UserData> data) throws SQLException {
+    public List<UserData> saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
         PreparedStatement statement = null;
         try {
             List<UserData> saveLast = new ArrayList<>();
@@ -414,6 +450,47 @@ public class UsersTable extends Table {
             }
             return saveLast;
         } finally {
+            close(statement);
+        }
+    }
+
+    public Map<UUID, Integer> getUserIds(Collection<UUID> uuids) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<UUID, Integer> ids = new HashMap<>();
+            statement = prepareStatement("SELECT " + columnUUID + ", " + columnID + " FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                if (!uuids.contains(uuid)) {
+                    continue;
+                }
+                ids.put(uuid, set.getInt(columnID));
+            }
+            return ids;
+        } finally {
+            close(set);
+            close(statement);
+        }
+    }
+
+    public Map<UUID, Integer> getAllUserIds() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<UUID, Integer> ids = new HashMap<>();
+            statement = prepareStatement("SELECT " + columnUUID + ", " + columnID + " FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                ids.put(uuid, set.getInt(columnID));
+            }
+            return ids;
+        } finally {
+            close(set);
             close(statement);
         }
     }

@@ -6,12 +6,12 @@
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -53,7 +53,7 @@ public class DataCacheSaveQueueTest {
         plan = t.getPlanMock();
         calledSaveUserData = false;
         calledSaveUserData2 = false;
-        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 

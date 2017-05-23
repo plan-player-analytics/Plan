@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
@@ -20,6 +19,7 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,7 +61,7 @@ public class DataCacheGetQueueTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 

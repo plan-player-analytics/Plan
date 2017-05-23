@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -22,6 +25,10 @@ import org.bukkit.entity.Player;
  * @author Rsl1122
  */
 public class MiscUtils {
+
+    public static long getTime() {
+        return new Date().getTime();
+    }
 
     /**
      * Checks the version and returns response String.
@@ -80,7 +87,7 @@ public class MiscUtils {
     public static String getPlayerName(String[] args, CommandSender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }
-    
+
     /**
      * Used by the inspect command.
      *

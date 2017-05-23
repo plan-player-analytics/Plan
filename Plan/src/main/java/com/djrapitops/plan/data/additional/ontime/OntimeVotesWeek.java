@@ -25,7 +25,7 @@ public class OntimeVotesWeek extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public OntimeVotesWeek() {
-        super("OnTime", "votes_7d", AnalysisType.INT_TOTAL);
+        super("OnTime", "votes_7d", AnalysisType.LONG_TOTAL);
         super.setAnalysisOnly(false);
         super.setIcon("check");
         super.setPrefix("Votes Last 7d: ");
@@ -49,12 +49,12 @@ public class OntimeVotesWeek extends PluginData {
     public Serializable getValue(UUID uuid) {
         OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (!offlinePlayer.hasPlayedBefore()) {
-            return 0;
+            return -1L;
         }
         String name = offlinePlayer.getName();
         long votesTotal = OnTimeAPI.getPlayerTimeData(name, OnTimeAPI.data.WEEKVOTE);
         if (votesTotal == -1) {
-            return 0;
+            return -1L;
         }
         return votesTotal;
     }

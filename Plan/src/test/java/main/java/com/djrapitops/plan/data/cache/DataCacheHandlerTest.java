@@ -7,9 +7,9 @@ package test.java.main.java.com.djrapitops.plan.data.cache;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
@@ -18,6 +18,7 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -64,7 +65,7 @@ public class DataCacheHandlerTest {
         plan = t.getPlanMock();
         calledSaveCommandUse = false;
         calledSaveUserData = false;
-        db = new SQLiteDB(plan, "debug" + new Date().getTime()) {
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 
@@ -93,17 +94,17 @@ public class DataCacheHandlerTest {
             }
 
             @Override
-            public void saveCommandUse(HashMap<String, Integer> c) {
+            public void saveCommandUse(Map<String, Integer> c) {
                 calledSaveCommandUse = true;
             }
 
             @Override
-            public void saveUserData(UUID uuid, UserData data) throws SQLException {
+            public void saveUserData(UserData data) throws SQLException {
                 calledSaveUserData = true;
             }
 
             @Override
-            public void saveMultipleUserData(List<UserData> data) throws SQLException {
+            public void saveMultipleUserData(Collection<UserData> data) throws SQLException {
                 calledSaveMultiple = true;
             }
         };
@@ -133,7 +134,7 @@ public class DataCacheHandlerTest {
     public void testGetUserDataForProcessingCache() throws SQLException, InterruptedException {
 //        db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         handler.getUserDataForProcessing(new DBCallableProcessor() {
             @Override
             public void process(UserData d) {
@@ -154,7 +155,7 @@ public class DataCacheHandlerTest {
     @Test
     public void testGetUserDataForProcessingDontCache() throws SQLException, InterruptedException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        db.saveUserData(data.getUuid(), data);
+        db.saveUserData(data);
         handler.getUserDataForProcessing(new DBCallableProcessor() {
             @Override
             public void process(UserData d) {

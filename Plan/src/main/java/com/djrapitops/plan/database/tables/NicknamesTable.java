@@ -4,7 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -159,6 +162,90 @@ public class NicknamesTable extends Table {
             if (commitRequired) {
                 statement.executeBatch();
 
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<Integer, List<String>> getNicknames(Collection<Integer> ids) throws SQLException {
+        if (ids == null || ids.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<Integer, List<String>> nicks = new HashMap<>();
+            Map<Integer, String> lastNicks = new HashMap<>();
+            for (Integer id : ids) {
+                nicks.put(id, new ArrayList<>());
+            }
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+
+                Integer id = set.getInt(columnUserID);
+                if (!ids.contains(id)) {
+                    Log.debug("Nicknames-Ids did not contain: " + id);
+                    continue;
+                }
+                String nickname = set.getString(columnNick);
+                if (nickname.isEmpty()) {
+                    continue;
+                }
+                nicks.get(id).add(nickname);
+                if (set.getBoolean(columnCurrent)) {
+                    lastNicks.put(id, nickname);
+                }
+            }
+            for (Integer id : lastNicks.keySet()) {
+                String lastNick = lastNicks.get(id);
+                List<String> list = nicks.get(id);
+                list.remove(lastNick);
+                list.add(lastNick);
+            }
+
+            return nicks;
+        } finally {
+            close(set);
+            close(statement);
+        }
+    }
+
+    public void saveNickLists(Map<Integer, Set<String>> nicknames, Map<Integer, String> lastNicks) throws SQLException {
+        if (nicknames == null || nicknames.isEmpty()) {
+            return;
+        }
+        Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
+        PreparedStatement statement = null;
+        try {
+            boolean commitRequired = false;
+            statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnUserID + ", "
+                    + columnCurrent + ", "
+                    + columnNick
+                    + ") VALUES (?, ?, ?)");
+            for (Integer id : nicknames.keySet()) {
+                Set<String> newNicks = nicknames.get(id);
+                String lastNick = lastNicks.get(id);
+                List<String> s = saved.get(id);
+                if (s != null) {
+                    newNicks.removeAll(s);
+                }
+                if (newNicks.isEmpty()) {
+                    continue;
+                }
+                for (String name : newNicks) {
+                    statement.setInt(1, id);
+                    statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
+                    statement.setString(3, name);
+                    statement.addBatch();
+                    commitRequired = true;
+                }
+            }
+            if (commitRequired) {
+                statement.executeBatch();
             }
         } finally {
             close(statement);

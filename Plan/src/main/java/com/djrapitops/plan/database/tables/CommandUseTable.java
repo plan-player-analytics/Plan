@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
@@ -48,11 +49,10 @@ public class CommandUseTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
-    public HashMap<String, Integer> getCommandUse() throws SQLException {
-        HashMap<String, Integer> commandUse = new HashMap<>();
+    public Map<String, Integer> getCommandUse() throws SQLException {
+        Map<String, Integer> commandUse = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -74,34 +74,37 @@ public class CommandUseTable extends Table {
      * @throws SQLException
      * @throws NullPointerException
      */
-    public void saveCommandUse(HashMap<String, Integer> data) throws SQLException, NullPointerException {
+    public void saveCommandUse(Map<String, Integer> data) throws SQLException, NullPointerException {
         if (data.isEmpty()) {
             return;
         }
         PreparedStatement statement = null;
         try {
-            removeAllData();
+            if (!removeAllData()) {
+                Log.debug("CommandUse Table clear failed.");
+            }
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnCommand + ", "
                     + columnTimesUsed
                     + ") VALUES (?, ?)");
             boolean commitRequired = false;
             for (String key : data.keySet()) {
+                Integer amount = data.get(key);
+//                Log.debug("Saving Command: "+key+" "+amount);
                 if (key.length() > 20) {
                     continue;
                 }
                 statement.setString(1, key);
-                statement.setInt(2, data.get(key));
+                statement.setInt(2, amount);
                 statement.addBatch();
                 commitRequired = true;
             }
-
             if (commitRequired) {
+                Log.debug("CommandUse: Executing batch, size: "+data.size());
                 statement.executeBatch();
             }
         } finally {
             close(statement);
         }
     }
-
 }

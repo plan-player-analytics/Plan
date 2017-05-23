@@ -5,9 +5,9 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
-import java.util.Date;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -62,7 +62,7 @@ public class NewPlayerCreatorTest {
         UserData result = NewPlayerCreator.createNewPlayer(p);
         UserData exp = new UserData(p, new DemographicsData());
         exp.setLastGamemode(GameMode.SURVIVAL);
-        exp.setLastPlayed(new Date().getTime());
+        exp.setLastPlayed(MiscUtils.getTime());
         long zero = Long.parseLong("0");
         exp.setPlayTime(zero);
         exp.setTimesKicked(0);
@@ -82,7 +82,7 @@ public class NewPlayerCreatorTest {
         UserData result = NewPlayerCreator.createNewPlayer(p);
         UserData exp = new UserData(p, new DemographicsData());
         exp.setLastGamemode(GameMode.SPECTATOR);
-        exp.setLastPlayed(new Date().getTime());
+        exp.setLastPlayed(MiscUtils.getTime());
         long zero = Long.parseLong("0");
         exp.setPlayTime(zero);
         exp.setTimesKicked(0);
@@ -102,7 +102,7 @@ public class NewPlayerCreatorTest {
         UserData result = NewPlayerCreator.createNewPlayer(p, GameMode.CREATIVE);
         UserData exp = new UserData(p, new DemographicsData());
         exp.setLastGamemode(GameMode.CREATIVE);
-        exp.setLastPlayed(new Date().getTime());
+        exp.setLastPlayed(MiscUtils.getTime());
         long zero = Long.parseLong("0");
         exp.setPlayTime(zero);
         exp.setTimesKicked(0);

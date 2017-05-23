@@ -30,9 +30,9 @@ public class FormatUtilsTest {
      */
     @Test
     public void testFormatTimeAmount() {
-        String string = "" + 1000L;
+        long second = 1000L;
         String expResult = "1s";
-        String result = FormatUtils.formatTimeAmount(string);
+        String result = FormatUtils.formatTimeAmount(second);
         assertEquals(expResult, result);
     }
 
@@ -44,7 +44,7 @@ public class FormatUtilsTest {
         Date before = new Date(300000L);
         Date now = new Date(310000L);
         String expResult = "10s";
-        String result = FormatUtils.formatTimeAmountSinceDate(before, now);
+        String result = FormatUtils.formatTimeAmountDifference(before.getTime(), now.getTime());
         assertEquals(expResult, result);
     }
 
@@ -53,21 +53,9 @@ public class FormatUtilsTest {
      */
     @Test
     public void testFormatTimeStamp() {
-        String string = "0";
+        long epochZero = 0L;
         String expResult = "Jan 01 02:00:00";
-        String result = FormatUtils.formatTimeStamp(string);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testFormatTimeAmountSinceString() {
-        String string = "" + new Date(310000L).toInstant().getEpochSecond() * 1000L;
-        Date now = new Date(300000L);
-        String expResult = "10s";
-        String result = FormatUtils.formatTimeAmountSinceString(string, now);
+        String result = FormatUtils.formatTimeStamp(epochZero);
         assertEquals(expResult, result);
     }
 

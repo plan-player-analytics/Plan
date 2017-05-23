@@ -7,10 +7,10 @@ package test.java.main.java.com.djrapitops.plan.utilities;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class AnalysisUtilsTest {
      */
     @Test
     public void testIsActive() {
-        long lastPlayed = new Date().getTime();
+        long lastPlayed = MiscUtils.getTime();
         long playTime = 12638934876L;
         int loginTimes = 4;
         boolean expResult = true;
@@ -61,7 +61,7 @@ public class AnalysisUtilsTest {
      */
     @Test
     public void testIsNotActive2() {
-        long lastPlayed = new Date().getTime();
+        long lastPlayed = MiscUtils.getTime();
         long playTime = 0L;
         int loginTimes = 4;
         boolean expResult = false;
@@ -74,7 +74,7 @@ public class AnalysisUtilsTest {
      */
     @Test
     public void testIsNotActive3() {
-        long lastPlayed = new Date().getTime();
+        long lastPlayed = MiscUtils.getTime();
         long playTime = 12638934876L;
         int loginTimes = 0;
         boolean expResult = false;
@@ -137,33 +137,5 @@ public class AnalysisUtilsTest {
         expResult.add(20L);
         List<Long> result = AnalysisUtils.transformSessionDataToLengths(data);
         assertEquals(expResult, result);
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testAverage() {
-        Collection<Long> o = new ArrayList<>();
-        o.add(0L);
-        o.add(1L);
-        o.add(2L);        
-        o.add(3L);
-        o.add(4L);
-        long expResult = 2L;
-        long result = AnalysisUtils.average(o);
-        assertEquals(expResult, result);
-    }
-    
-    /**
-     *
-     */
-    @Test
-    public void testAverageEmpty() {
-        Collection<Long> list = new ArrayList<>();
-        long expResult = 0L;
-        long result = AnalysisUtils.average(list);
-        assertEquals(expResult, result);
-    }
-    
+    }    
 }

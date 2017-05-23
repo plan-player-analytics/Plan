@@ -5,6 +5,8 @@
  */
 package test.java.main.java.com.djrapitops.plan;
 
+import java.util.ArrayList;
+import java.util.List;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
@@ -51,7 +53,7 @@ public class SettingsTest {
      */
     @Test
     public void testToString() {
-        assertEquals("sqlite",Settings.DB_TYPE.toString());
+        assertEquals("sqlite", Settings.DB_TYPE.toString());
     }
 
     /**
@@ -59,9 +61,17 @@ public class SettingsTest {
      */
     @Test
     public void testGetNumber() {
-        assertEquals(8804,Settings.WEBSERVER_PORT.getNumber());
+        assertEquals(8804, Settings.WEBSERVER_PORT.getNumber());
     }
 
+    @Test
+    public void testGetStringList() {
+        List<String> exp = new ArrayList<>();
+        exp.add("ExampleTown");
+        List<String> result = Settings.HIDE_TOWNS.getStringList();
+        assertEquals(exp, result);
+    }
+    
     /**
      *
      */
