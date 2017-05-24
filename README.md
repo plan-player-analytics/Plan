@@ -12,8 +12,8 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
 - [API](documentation/API.md)
 - [Dependencies](documentation/Dependencies.md)
 - Data, Collection & Visualisation
-  - Gathering the data & Data cache
-  - Stored data & data format
+  - [Gathering the data & Data cache](documentation/DataGathering.md)
+  - [Stored data & data format](documentation/StoredData.md)
   - Analysis
   - Visualization
 - Guides
