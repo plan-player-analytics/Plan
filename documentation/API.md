@@ -247,6 +247,7 @@ getPlayerHtmlAsString(UUID uuid) | Returns the full html for Inspect page. If is
 
 ## Cache methods
 Method | Description
+-- | --
 updateAnalysisCache() | Run's the analysis & places AnalysisData to the cache.
 getAnalysisDataFromCache() | Returns the AnalysisData in the cache.
 cacheUserDataToInspectCache(UUID uuid) | Caches the UserData of the player to InspectCache from cache or the database. Call from Async thread.
