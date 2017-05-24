@@ -223,3 +223,73 @@ public Serializable getValue(UUID uuid) {
 	return "";
 }
 ```
+
+# Accessing the Data & Modification
+In addition to the Plugins tab methods the API provides methods for accessing the data of Analysis & Players.  
+Before using these methods you might want to read about the Caches to understand the difference between DataCache, InspectCache & AnalysisCache
+- [Gathering the data & Data Cache](/documentation/DataGathering.md)
+
+## Utility methods
+Method | Returns | Description
+-- | -- | --
+playerNameToUUID(String) | UUID of the player or null | Uses [UUIDFetcher](/Plan/src/main/java/com/djrapitops/plan/utilities/UUIDFetcher.java) to fetch the UUID
+getPlayerName(UUID) | Players username | Get's the OfflinePlayer and asks for it's name.
+isEnabled() | boolean | Check whether or not Plan enabled successfully
+isPlayersDataInspectCached(UUID uuid) | boolean | Check if player's data is in the InspectCache
+isAnalysisCached() | boolean | Check if the AnalysisData is cached.
+getPlayerInspectPageLink(String name) | Web address | Get the Inspect page link for a player.
+
+## Web methods
+Method | Description
+-- | --
+getAnalysisHtmlAsString() | Returns the full html for Analysis page. If isAnalysisCached() is false, will return html for a 404.
+getPlayerHtmlAsString(UUID uuid) | Returns the full html for Inspect page. If isPlayersDataInspectCached(UUID) is false, will return html for a 404.
+
+## Cache methods
+Method | Description
+updateAnalysisCache() | Run's the analysis & places AnalysisData to the cache.
+getAnalysisDataFromCache() | Returns the AnalysisData in the cache.
+cacheUserDataToInspectCache(UUID uuid) | Caches the UserData of the player to InspectCache from cache or the database. Call from Async thread.
+scheduleForGet(UUID uuid, DBCallableProcessor processor) | Schedule a UserData object to be fetched from the database or cache if the player is online.
+scheduleEventHandlingInfo(HandlingInfo info) | Cause your own Event to modify the UserData object that is stored in the database.
+placeDataToCache(UserData data) | Used to cache a UserData object. If data is already cached it will be overridden. (Use with caution)
+saveCachedData() | Saves all UserData in the Cache to the database. Should be only called from an Asyncronous thread.
+
+### DBCallableProcessor
+scheduleForGet uses [DBCallableProcessor interface](/Plan/src/main/java/com/djrapitops/plan/data/cache/DBCallableProcessor.java).
+The processor's method is called after the fetch is complete.
+
+UUID is the uuid of the player.
+
+Example:
+```
+DBCallableProcessor p = new DBCallableProcessor() {
+	@Override
+	public void process(UserData data) {
+		// Do something with the data
+	}
+};
+Plan.getPlanAPI().scheduleForGet(uuid, p);
+```
+
+### HandlingInfo
+scheduleEventHandlingInfo uses [HandlingInfo abstract class](/Plan/src/main/java/com/djrapitops/plan/data/handling/info/HandlingInfo.java).
+This object can modify the UserData in the cache. If the data is not in the cache prior to processing the data, it will be fetched & placed there.
+
+UUID is the uuid of the player.
+
+Example:
+```
+long time = new Date().getTime();
+HandlingInfo i = new HandlingInfo(uuid, InfoType.OTHER, time) {
+	@Override
+	public boolean process(UserData data) {
+		if (uuid.equals(data.getUuid()) {
+			// Modify the data in some way
+			return true;
+		}
+		return false;
+	}
+};
+Plan.getPlanAPI().scheduleEventHandlingInfo(i);
+```
