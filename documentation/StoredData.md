@@ -6,7 +6,7 @@ This Article is about the information stored in the Database.
 ## Stored Data & Format
 
 Data | Format in DB | Location in DB | Description
--- | -- | ----
+-- | -- | ---- | --
 UUID | varchar | plan_users | UUID of the player, used for saving & processing all the information
 Age | integer | plan_users | Age of the player, gathered from chat. -1 if not known
 Gender | varchar | plan_users | String representation of the [Gender Enum](/Plan/src/main/java/com/djrapitops/plan/api/Gender.java)
