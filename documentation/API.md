@@ -4,12 +4,25 @@
 - [API class](/Plan/src/main/java/com/djrapitops/plan/api/API.java)
 - [API Javadocs](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/api/API.html)
 
-Accessing the API Methods:
+## Accessing the API Methods:
+Install the Plan.jar as a local dependency if you're using Maven.
+Add soft-depend or depend in the plugin.yml
+
 ```
-API planAPI = Plan.getPlanAPI(); // Throws IllegalStateException if onEnable() method for Plan has not yet been called.
+import main.java.com.djrapitops.plan.api.API;
+
+if (getPluginManager().isPluginEnabled("Plan")) {
+    try {
+        // Throws IllegalStateException if onEnable() method for Plan has not yet been called.    
+        // Throws NoClassDefError if Plan is not installed
+        API planAPI = Plan.getPlanAPI(); 
+    } catch (Throwable e) {
+        // Do something (Plan is not installed)
+    }
+}
 ```
 
-# Basics
+# Plugins Tab
 
 - [PluginData](/Plan/src/main/java/com/djrapitops/plan/data/additional/PluginData.java)
 - [PluginData Javadoc](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/data/additional/PluginData.html)
@@ -21,15 +34,77 @@ API planAPI = Plan.getPlanAPI(); // Throws IllegalStateException if onEnable() m
 
 Plan has a flexible data addition system since 3.1.0. With it you can add Averages, Totals, Percentages, Tables & Other Html elements to the Plugins tab on the Analysis and/or Inspect pages.
 
-To add data a class that extends PluginData class is needed. One PluginData object should only contain data for one user, but tables & other elements are an exception.  
+To add data **a class that extends PluginData class is needed.**  
+One PluginData object should only contain data for one user, but tables & other elements are an exception.  
 
-Examples:
+### Registering the data point
+
+```
+PluginData yourPluginDataObject = new YourClassThatExtendsPluginData();
+Plan.getPlanAPI().addPluginDataSource(yourPluginDataObject);
+```
+
+**If you register multiple data sources, they will appear in the order they were registered.**
+
+## Building the PluginData object
+
+### Super Constructors
+Constructor determines if the datapoint can be analyzed or not & how it should be analyzed.  
+The Inspect page visibility can be changed with another method call.
+
+Constructor | Parameters | Description
+-- | -- | --
+super(pluginName, placeholder) | Name of the plugin & the placeholder, eg: "stepsTaken" | This datapoint will be only shown on the Inspect page
+super(pluginName, placeholder, AnalysisType.INT_TOTAL) | Type is determined by return value of getValue(UUID)-method | This datapoint will be shown on the Analysis page with total for all Players
+super(pluginName, plaheholder, AnalysisType.INT_AVG, AnalysisType.INT_TOTAL) | The constructor takes as many AnalysisTypes as needed. | This datapoint will be shown on the Analysis page with the total and average for all Players
+
+### Method calls in the contructor
+There are multiple methods that change the appearance of the PluginData object on the webpage:
+
+Method | Description
+-- | --
+super.analysisOnly(boolean) | Determine whether or not the datapoint should be only shown on the Analysis page, Set to false to show it on the Inspect page as well.
+super.setPrefix(String) | For example: super.setPrefix("Steps taken: "), determines the prefix
+super.setSuffix(String) | For example: super.setSuffix(" steps"), determines the suffix.
+super.setIcon(String) | Set the font awesome icon name: [Font Awesome Icons](http://fontawesome.io/icons/)
+
+To not show the datapoint on Analysis page, do not give the constructor any AnalysisType variables.
+
+### getHtmlReplaceValue(String modifier, UUID uuid)-method
+
+This method is used by Inspect page & by Analysis Page when AnalysisType.HTML is specified.  
+**It should use the parseContainer(String modifier, String value) method when returning a value.**  
+
+The Prefix, Suffix & Icon are added to the value automatically when using the parseContainer(String modifier, String value)-method.  
+Example:
+```
+@Override
+public String getHtmlReplaceValue(String modifier, UUID uuid) {
+	return parseContainer(modifier, stepCounter.getSteps(uuid)+"");
+}
+```
+
+UUID is the UUID of the player whose Inspect page is displayed OR Random UUID on Analysispage when AnalysisType.HTML is specified
+
+### getValue(UUID uuid)-method
+
+This method is used by Analysis when calculating Totals & Averages for each PluginData object.
+The return type is Serializable, so Integer, Double, Long, Boolean & String can be returned.
+What type you return determines what AnalýsisType you should use in the super constructor.
+
+**-1** should be returned if the player has no value / Your plugin has no data on the player  
+If -1 is returned, the value is ignored when calculating Averages & Totals.
+
+**Wrong AnalysisType will cause an exception during calculation** - It is caught per AnalysisType, so test your plugin with /plan analyze.
+
+# Examples:
 - Basic Example
-- Inspect Example
 - Analysis Example
 - Table Example
 
 ## Basic Example
+
+This class will show "Steps Taken" on the Inspect page.
 
 ```
 public class StepCounterSteps extends PluginData {
@@ -42,86 +117,34 @@ public class StepCounterSteps extends PluginData {
 		// A call to super constructor: PluginName, PlaceholderName
 		super("StepCounter", "stepsTaken");
 		
+		super.setPrefix("Steps taken: ")
+		super.setSuffix(" steps");
+		super.setIcon("wheelchair");
+		
 		this.stepCounter = stepCounter; // Setting the plugin
+		
+		// Registering to the API, this can be done outside the class as well.
+		API api = Plan.getPlanAPI();
+		if (api.isEnabled()) {
+			api.addPluginDataSource(this);
+		}
 	}
 	
 	// Required method.
 	// This method is used with AnalysisType.HTML and for Inspect page's values.
 	// All return values should use parseContainer(String modifier, String value)-method, more on that down below.
 	@Override
-    public String getHtmlReplaceValue(String modifier, UUID uuid) {
+   	public String getHtmlReplaceValue(String modifier, UUID uuid) {
 		return parseContainer(modifier, stepCounter.getSteps(uuid)+"");
 	}
 	
 	// Required method.
 	// This method is used to calculate values for the Analysis page.
 	@Override
-    public Serializable getValue(UUID uuid) {
+    	public Serializable getValue(UUID uuid) {
 		return stepCounter.getSteps(uuid);
 	}
 }
-```
-
-**At the moment registering this data source will have Only show up on Inspect page.** It is disregarded on analysis page. Two variables inside PluginData determine what should be done with the datapoint:
-
-- List<AnalysisType> analysisTypes
-- boolean analysisOnly
-
-- analysisOnly is 'true' by default. - Inspect page will ignore the data.  
-- analysisOnly is set to 'false' automatically when using the super constructor without AnalysisType parameters.
-- analysisTypes is empty. - Thus Analysis page will ignore the data.  
-
-## Registering the data point
-
-This might be the easiest step.
-get the API and call a single method - all done!
-
-```
-Plan.getPlanAPI().addPluginDataSource(new StepCounterSteps(stepCounter));
-```
-
-**If you register multiple data sources, they will appear in the order they were registered.**
-
-## Inspect Example
-
-We can add the data to the Inspect page with `super.setAnalysisOnly(false);`-call inside the constructor:
-```
-public StepCounterSteps(StepCounterPlugin stepCounter) {
-	super("StepCounter", "stepsTaken");
-	
-	super.setAnalysisOnly(false); //
-	
-	this.stepCounter = stepCounter;
-}
-```
-
-Now on the inspect page, there will be a "StepCounter" plugin box. Inside the box, however **is only a single number**
-This is because no prefix has been set.
-
-Let's do that:
-```
-public StepCounterSteps(StepCounterPlugin stepCounter) {
-	super("StepCounter", "stepsTaken");
-	
-	super.setPrefix("Steps taken: ")
-	//super.setSuffix(" steps"); // You can also define the suffix
-	
-	super.setAnalysisOnly(false);
-	this.stepCounter = stepCounter;
-}
-```
-
-Why should parseContainer(String modifier, String value)-method be used with getHtmlReplaceValue-method?
-
-- Automatically add `<div class="plugin-data"></div>` wrap around the text.
-- Automatically add the prefix, suffix & icon to the value.
-
-Wait, icons?
-[Font Awesome Icons](http://fontawesome.io/icons/) can be used. They are added before the prefix when parseContainer method is called.
-To set the icon call `super.setIcon(iconName)` in the constructor. Icon-names are visible on the linked page.
-
-```
-super.setIcon("wheelchair");
 ```
 
 ## Analysis Example
@@ -129,38 +152,23 @@ super.setIcon("wheelchair");
 Adding data to the Analysis page is straightforward as well. Please note that one class can add a data to both Analysis & Inspect pages.
 
 To add data to the Analysis page, analysisTypes need to be set.
-This is done in the super constructor. There are three ways to set them:
-```
-List:
-List<AnalysisType> types = new ArrayList<>();
-types.add(AnalysisType.LONG_AVG);
-types.add(AnalysisType.LONG_TOTAL);
-super("StepCounter", "stepsTaken", types);
-```
-```
-Array:
-AnalysisType[] types = new AnalysisType{AnalysisType.LONG_AVG, AnalysisType.LONG_TOTAL};
-super("StepCounter", "stepsTaken", types);
-```
-```
-Values (1):
-super("StepCounter", "stepsTaken", AnalysisType.LONG_AVG);
-
-Values (many):
-super("StepCounter", "stepsTaken", AnalysisType.LONG_AVG, AnalysisType.LONG_TOTAL);
-```
+This is done in the super constructor.
 
 Refer to AnalysisType for what types you should add. The type depends on the return of the getValue(UUID uuid)-method you have written.
 
 - [AnalysisType](/Plan/src/main/java/com/djrapitops/plan/data/additional/AnalysisType.java)
 - [AnalysisType Javadoc](https://rsl1122.github.io/Plan-PlayerAnalytics/main/java/com/djrapitops/plan/data/additional/AnalysisType.html)
 
-AnalysisType.HTML is for all other elements you might want to add.
+AnalysisType.HTML is for all other elements you might want to add - parseContainer method will be used instead of the getValue method.
+
+**If you want this same datapoint to show data on the inspect page call super.analysisOnly(false);**
+
+Good example is the [FactionsPower](/Plan/src/main/java/com/djrapitops/plan/data/additional/factions/FactionsPower.java)
 
 ## Table Example
 
 A good example is the [AdvancedAchievementsTable](/Plan/src/main/java/com/djrapitops/plan/data/additional/advancedachievements/AdvanceAchievementsTable.java).
-You can use the [Html Enum] to quickly create table html.
+You can use the [Html Enum](/Plan/src/main/java/com/djrapitops/plan/ui/Html.java) to quickly create table html.
 The Html Enum has easy lines for 2, 3 & 4 line columns - More than that will most likely not fit in the box.
 the parse(String... p)-method takes as many strings as parameters as needed to replace all the REPLACE# placeholders on the line.
 
