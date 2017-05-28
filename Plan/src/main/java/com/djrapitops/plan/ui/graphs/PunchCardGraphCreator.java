@@ -122,7 +122,6 @@ public class PunchCardGraphCreator {
 
         int[][] scaled = new int[7][24];
         for (int i = 0; i < 7; i++) {
-            Log.debug("Scaling: " + Arrays.toString(dataArray[i]) + " | " + big);
             for (int j = 0; j < 24; j++) {
                 int value = (int) ((dataArray[i][j] * 10.0) / big);
                 if (value != 0) {
@@ -130,7 +129,6 @@ public class PunchCardGraphCreator {
                 }
                 scaled[i][j] = value;
             }
-            Log.debug(" Scaled: " + Arrays.toString(scaled[i]));
         }
 
         return scaled;

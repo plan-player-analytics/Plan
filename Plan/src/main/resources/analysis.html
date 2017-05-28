@@ -4,6 +4,7 @@
 <title>Plan | Server Analysis</title>
 <meta name="description" content="Player Analysis window">
 <meta name="author" content="Rsl1122">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />        
 <script src="https://use.fontawesome.com/df48eb908b.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -13,7 +14,7 @@ header {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 10%;
+	height: 88px;
 	padding: 0px;
 	background-color: #348e0f;
 	z-index: 1;
@@ -35,7 +36,7 @@ body {
     background-color: #5cb239;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 5.4%;
+    padding-top: 88px;
 	text-align: left;
 }
 .sidenav p {
@@ -76,7 +77,7 @@ body {
 }
 
 .main-wrapper {
-	margin-top: 5.5%;
+	margin-top: 88px;
 	transform: translate3d(0, 0, 0);
 	opacity: 0;
 	transition: 1.5s;
@@ -87,22 +88,31 @@ body {
 	padding: 5px;
 	text-decoration: none;!important;
 	color: #000
-	width: 100%;
+	text-align: left;
+	margin: 5px;
+	padding: 5px;
 }
 
 .box p {
 	color: #000;
 }
-
 .tab {
 	width: 20%;
 	height: 100%;
 	float: left;
+	display: flex;
+	text-align: left;
+	align-content: flex-start;
 }
 .content {
-  text-align: center;
-  padding: 5px;
-  margin: 0px;
+	text-align: center;
+	padding: 5px;
+	margin: 0px;
+}
+.row {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
 }
 .columns {
 	display: flex;
@@ -110,22 +120,9 @@ body {
 .column {
     flex: 1;
 }
-.column-one {
-    order: 1;
-}
-.column-two {
-    order: 2;
-}
-.column-three {
-    order: 3;
-}
-.about {
-  text-align: left;
-  margin: 5px;
-  padding: 5px;
-}
 .box-area {
 	width: 100%;
+	display: flex;
 }
 .infobox {
 	margin-left: 3px;
@@ -225,19 +222,74 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .plugin-data {
     color: #000;
 }
+header img {
+	float: right; 
+	padding: 5px;
+	display: inline;
+}
+header p {
+	float: right; 
+	text-align: right;
+}
+#navbutton {
+	display: none;
+	font-size: 40px;
+	cursor:pointer;
+}
+@media only screen and (max-width: 850px) {
+	#navbutton {
+		display: inline;
+	}	
+	.sidenav p {
+		display: none;
+	}
+	header {
+		margin: 0px;
+		padding 0px;
+	}
+	header h1 {
+		margin: 0px;
+	}
+	header img {
+		margin: 0px;
+		padding: 0px;
+		margin-right: 0px;
+	}
+	header p {
+		margin: 0px;
+		margin-top: 5px;
+	}
+	.tab {
+		flex-direction: column;
+	}
+        .columns {
+                flex-direction: column;
+        }
+	.row {
+		width: 100%;
+	}
+	.sidenav {
+		width: 0%;
+		transition: 0s;
+	}
+	.main-limiter {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
 </style>
 </head>
 <body>
 	<header>
 		<div class="header-content">
-			<img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
-			<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-			<h1>Plan | Server Analysis</h1>
+			<img src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
+			<p>Player Analytics v.%version%</p>
+			<h1><span id="navbutton" onclick="openNav()">&#9776; </span>Plan | Server Analysis</h1>
 		</div>
 	</header>
 <div id="content" class="content">
 	
-	<div class="sidenav">
+	<div id="sidenav" class="sidenav">
 		<p>Last Refresh: <br>%refresh% ago</p>
 		<a href="javascript:void(0)" class="nav-button">
 			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
@@ -261,11 +313,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			<i class="fa fa-cubes" aria-hidden="true"></i> Plugins
 		</a>
 	</div>
-	<div class="main-limiter">
+	<div id="limiter" class="main-limiter">
 		<div id="main" class="main-wrapper">
 			<div class="tab">
-				<div class="columns">
-					<div class="about box column">
+				<div class="row">
+					<div class="box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
@@ -284,8 +336,17 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
+						<canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas><br/>
 					</div>
-					<div class="about box column">
+					<div class=" box column" style="order: 5;">
+						<p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
+						<div class="buttons">                                
+							%recentlogins%
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-info-circle" aria-hidden="true"></i><span class="header-text"> Information</span></div>
@@ -304,17 +365,12 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
-						<canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas><br/>
-					</div>
-					<div class="about box column">
 						<p><i class="fa fa-clock-o" aria-hidden="true"></i> Total Playtime: %totalplaytime% | <i class="fa fa-clock-o" aria-hidden="true"></i> Player Average: %avgplaytime%<br/>
 						<i class="fa fa-clock-o" aria-hidden="true"></i> Average Session Length: %sessionaverage%<br/>
 						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times: %totallogins%<br/>                                
 						<b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
+					</div>
+					<div class=" box column">
 						<p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Gamemode Usage</span></p><br/>
 						<div class="box-area">                                
 							<div class="infobox" style="background-color: #%gm0col%; width: 20%;">
@@ -370,23 +426,13 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
-						<p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
-						<div class="buttons">                                
-							%recentlogins%
-						</div>
-					</div>
-					<div class="about box column">
 						<canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
 				</div>
 			</div>
 			<div class="tab">
-				<div class="columns">
-					<div class="about box column">
+				<div class="row">
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 24h</span></div>
@@ -406,6 +452,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							</div>
 						</div>
 						<canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
+					</div>
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 7d</span></div>
@@ -425,6 +473,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							</div>
 						</div>
 						<canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
+					</div>
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity - Last 30d</span></div>
@@ -445,7 +495,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 						</div>
 						<canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
 					</div>
-					<div class="about box column">
+				</div>
+				<div class="row">
+					<div class="box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Playerbase Composition</span></div>
@@ -519,6 +571,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							</div>
 						</div><br><br>
 						<canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas><br>
+					</div>
+					<div class=" box column">
 						<p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
 						<div class="buttons">                                
 							%recentlogins%
@@ -526,9 +580,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 					</div>
 				</div>
 			</div>
-                        <div class="tab">
-				<div class="columns">
-					<div class="about box column">
+            <div class="tab">
+				<div class="row">
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon" style="width: 50%">
 								<div class="header-label"><i class="fa fa-braille" aria-hidden="true"></i><span class="header-text"> PunchCard</span></div>
@@ -547,8 +601,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
+						<canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
-					<div class="about box column">
+				</div>
+				<div class="row">
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Length Distribution</span></div>
@@ -567,18 +624,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
-						<canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
-					</div>
-					<div class="about box column">
 						<canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
 				</div>
 				<!--<div class="columns">
-					<div class="about box column">
+					<div class=" box column">
                                             <div class="headerbox">
 							<div class="header-icon" style="width: 50%">
 								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Playtime Distribution</span></div>
@@ -599,14 +649,14 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 						</div>
                                             <canvas id="playdistribution" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
-					<div class="about box column">
+					<div class=" box column">
                                             
 					</div>
 				</div>-->
 			</div>
 			<div class="tab">
-				<div class="columns">
-					<div class="about box column">
+				<div class="row" style="width: 100%;">
+					<div class="box column">
 						<div class="headerbox" style="width: 97%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-list-alt" aria-hidden="true"></i><span class="header-text"> Playerlist</span></div>
@@ -625,10 +675,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
                                 </div>
                             </div>
                         </div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
 						<table class="sortable table">
                             <thead>
                                 <tr>
@@ -649,8 +695,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 				</div>
 			</div>
 			<div class="tab">
-				<div class="columns">
-					<div class="about box column">
+				<div class="row"  style="width: 100%;">
+					<div class=" box column">
 						<div class="headerbox" style="width: 97%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-terminal" aria-hidden="true"></i><span class="header-text"> Command usage</span></div>
@@ -669,10 +715,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
                                 </div>
                             </div>
                         </div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
 						<table class="sortable table">
                             <thead>
                                 <tr>
@@ -688,8 +730,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 				</div>
 			</div>
 			<div class="tab">
-				<div class="columns">
-					<div class="about box column">
+				<div class="row">
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-globe" aria-hidden="true"></i><span class="header-text"> Geolocations</span></div>
@@ -708,8 +750,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="about box column">
+						<div style="width:100%;"><div id="cloropleth"></div></div> 
+					</div>					
+				</div>
+				<div class="row">
+					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
 								<div class="header-label"><i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i><span class="header-text"> Gender Distribution</span></div>
@@ -741,23 +786,26 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
-						<div style="width:100%;"><div id="cloropleth"></div></div> 
-					</div>
-					<div class="about box column">
 						<canvas id="genderPie" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
 				</div>
 			</div>
-			<div class="tab">
+			<div class="tab" style="display: block;">
 				%plugins%
 			</div>
 		</div>
 	</div>
 <script>
+function openNav() {
+    document.getElementById("sidenav").style.width = "100%";
+    document.getElementById("limiter").style.display = "none";
+	document.getElementById("navbutton").onclick = function () { closeNav(); };
+}
+function closeNav() {
+    document.getElementById("sidenav").style.width = "0%";
+    document.getElementById("limiter").style.display = "block";
+    document.getElementById("navbutton").onclick = function () { openNav(); };
+}
 var navButtons = document.getElementsByClassName("nav-button");
 var tabs = document.getElementsByClassName("tab");
 var slideIndex = 0;
@@ -775,6 +823,9 @@ openFunc(0);
 
 function openFunc(i) {
 	return function() {
+		if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+			closeNav();
+		}
 		var max = navButtons.length;
 		var perc = -100 / navButtons.length;
 		slideIndex = i;

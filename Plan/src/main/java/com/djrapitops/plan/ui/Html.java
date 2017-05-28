@@ -39,6 +39,7 @@ public enum Html {
     BUTTON("<a class=\"button\" href=\"" + REPLACE0 + "\">" + REPLACE1 + "</a>"),
     BUTTON_CLASS("class=\"button\""),
     LINK("<a class=\"link\" href=\"" + REPLACE0 + "\">" + REPLACE1 + "</a>"),
+    LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"" + REPLACE0 + "\">" + REPLACE1 + "</a>"),
     LINK_CLASS("class=\"link\""),
     IMG("<img src=\"" + REPLACE0 + "\">"),
     COLUMNS_DIV_WRAPPER("<div class=\"columns\">" + REPLACE0 + "</div>"),

@@ -12,7 +12,7 @@ header {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 10%;
+	height: 88px;
 	padding: 0px;
 	background-color: #348e0f;
 	z-index: 1;
@@ -34,7 +34,7 @@ body {
     background-color: #5cb239;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 5.4%;
+    padding-top: 88px;
 	text-align: left;
 }
 .sidenav p {
@@ -75,7 +75,7 @@ body {
 }
 
 .main-wrapper {
-	margin-top: 5.5%;
+	padding-top: 88px;
 	transform: translate3d(0, 0, 0);
 	opacity: 0;
 	transition: 1.5s;
@@ -86,7 +86,9 @@ body {
 	padding: 5px;
 	text-decoration: none;
 	color: #000;
-	width: 100%;
+	text-align: left;
+	margin: 5px;
+	padding: 5px;
 }
 
 .box p {
@@ -97,6 +99,14 @@ body {
 	width: 20%;
 	height: 100%;
 	float: left;
+	display: flex;
+	text-align: left;
+	align-content: flex-start;
+}
+.row {
+	width: 50%;
+	display: flex;
+	flex-direction: column;
 }
 .content {
   text-align: center;
@@ -108,20 +118,6 @@ body {
 }
 .column {
     flex: 1;
-}
-.column-one {
-    order: 1;
-}
-.column-two {
-    order: 2;
-}
-.column-three {
-    order: 3;
-}
-.about {
-  text-align: left;
-  margin: 5px;
-  padding: 5px;
 }
 .box-area {
 	width: 100%;
@@ -272,6 +268,52 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .white {
 	color: #FFFFFF;
 }
+#navbutton {
+	display: none;
+	font-size: 40px;
+	cursor:pointer;
+}
+@media only screen and (max-width: 850px) {
+	#navbutton {
+		display: inline;
+	}	
+	.sidenav p {
+		display: none;
+	}
+	header {
+		margin: 0px;
+		padding 0px;
+	}
+	header h1 {
+		margin: 0px;
+	}
+	header img {
+		margin: 0px;
+		padding: 0px;
+		margin-right: 0px;
+	}
+	header p {
+		margin: 0px;
+		margin-top: 5px;
+	}
+	.tab {
+		flex-direction: column;
+	}
+        .columns {
+                flex-direction: column;
+        }
+	.row {
+		width: 100%;
+	}
+	.sidenav {
+		width: 0%;
+		transition: 0s;
+	}
+	.main-limiter {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
 </style>
 </head>
 <body>
@@ -279,11 +321,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		<div class="header-content">
 			<img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
 			<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-			<h1>Plan | Inspect Player %name%%op%</h1>
+			<h1><span id="navbutton" onclick="openNav()">&#9776; </span>Plan | Inspect Player %name%%op%</h1>
 		</div>
 	</header>
 <div id="content" class="content">
-	<div class="sidenav">
+	<div id="sidenav" class="sidenav">
 		<p>Has Connected from ips:<br>%ips%</p>
 		<a href="javascript:void(0)" class="nav-button">
 			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
@@ -295,10 +337,10 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			<i class="fa fa-cubes" aria-hidden="true"></i> Plugins
 		</a>
 	</div>
-	<div class="main-limiter">
+	<div id="limiter" class="main-limiter">
 		<div id="main" class="main-wrapper">
 			<div class="tab">
-				<div class="columns">
+				<div class="row">
 					<div class="about box column">
 						<div class="headerbox">
 							<div class="header-icon">
@@ -318,30 +360,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity: 7d</span></div>
-							</div>
-							<div class="infobox" style="float: right;">
-								<div class="info-icon">
-									<i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%lastseen%
-									</div>
-									<div class="info-label">
-										Last seen
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
 						<img style="float: right; padding: 5px" alt="%name%" src="http://cravatar.eu/head/%name%/128.png">
 						<p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline%%banned%<br/>
 							<i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>                    
@@ -354,11 +372,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							<i class="fa fa-play" aria-hidden="true"></i> Age: %age% | <i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i> Gender: %gender%<br/>     
 							<i class="fa fa-tag" aria-hidden="true"></i> UUID: %uuid%</p>
 					</div>
-					<div class="about box column">
-						<canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
-					</div>
-				</div>
-				<div class="columns">
 					<div class="about box column">
 						<div class="headerbox">
 							<div class="header-icon" style="width: 50%">
@@ -378,30 +391,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span class="header-text"> Last 10 Kills</span></div>
-							</div>
-							<div class="infobox" style="float: right;">
-								<div class="info-icon">
-									<i class="fa fa-crosshairs" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%playerkills%
-									</div>
-									<div class="info-label">
-										Player Kills
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
 						<div class="box-area">                                
 							<div class="infobox" style="float: left; background-color: #%gm0col%; width: 45%;">
 								<div class="info-icon">
@@ -458,13 +447,54 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 						</div>
 						<canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
+				</div>
+				<div class="row">
 					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity: 7d</span></div>
+							</div>
+							<div class="infobox" style="float: right;">
+								<div class="info-icon">
+									<i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+								</div>
+								<div class="info-text" style="width: 70%;">
+									<div class="info-number">
+										%lastseen%
+									</div>
+									<div class="info-label">
+										Last seen
+									</div>
+								</div>
+							</div>
+						</div>
+						<canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
+					</div>
+					<div class="about box column">
+						<div class="headerbox">
+							<div class="header-icon">
+								<div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span class="header-text"> Last 10 Kills</span></div>
+							</div>
+							<div class="infobox" style="float: right;">
+								<div class="info-icon">
+									<i class="fa fa-crosshairs" aria-hidden="true"></i>
+								</div>
+								<div class="info-text" style="width: 70%;">
+									<div class="info-number">
+										%playerkills%
+									</div>
+									<div class="info-label">
+										Player Kills
+									</div>
+								</div>
+							</div>
+						</div>
 						%killstable%
 					</div>
 				</div>
 			</div>
 			<div class="tab">
-				<div class="columns">
+				<div class="row">
 					<div class="about box column">
 						<div class="headerbox">
 							<div class="header-icon" style="width: 50%">
@@ -484,7 +514,10 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
+						<canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
+				</div>
+				<div class="row">
 					<div class="about box column">
 						<div class="headerbox">
 							<div class="header-icon">
@@ -504,23 +537,26 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="columns">
-					<div class="about box column">
-						<canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
-					</div>
-					<div class="about box column">
 						<canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
 					</div>
 				</div>
 			</div>
-			<div class="tab">
+			<div class="tab" style="display: block;">
 				%plugins%
 			</div>
 		</div>
 	</div>
 <script>
+function openNav() {
+    document.getElementById("sidenav").style.width = "100%";
+    document.getElementById("limiter").style.display = "none";
+	document.getElementById("navbutton").onclick = function () { closeNav(); };
+}
+function closeNav() {
+    document.getElementById("sidenav").style.width = "0%";
+    document.getElementById("limiter").style.display = "block";
+    document.getElementById("navbutton").onclick = function () { openNav(); };
+}
 var navButtons = document.getElementsByClassName("nav-button");
 var tabs = document.getElementsByClassName("tab");
 var slideIndex = 0;
@@ -538,6 +574,9 @@ openFunc(0);
 
 function openFunc(i) {
 	return function() {
+		if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+			closeNav();
+		}
 		var max = navButtons.length;
 		var perc = -100 / navButtons.length;
 		slideIndex = i;

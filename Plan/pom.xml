@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <packaging>jar</packaging>
     <repositories>
         <!--        <repository>
@@ -48,9 +48,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.gamingmesh</groupId>
+            <artifactId>jobs</artifactId>
+            <version>3.9.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>mcore</artifactId>
             <version>2.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gmail.nossr50</groupId>
+            <artifactId>mcmmo</artifactId>
+            <version>1.5.07</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

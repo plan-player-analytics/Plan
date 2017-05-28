@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.additional.factions.FactionsHook;
+import main.java.com.djrapitops.plan.data.additional.jobs.JobsHook;
+import main.java.com.djrapitops.plan.data.additional.mcmmo.McmmoHook;
 import main.java.com.djrapitops.plan.data.additional.ontime.OnTimeHook;
 import main.java.com.djrapitops.plan.data.additional.towny.TownyHook;
 import main.java.com.djrapitops.plan.data.additional.vault.VaultHook;
@@ -70,6 +72,14 @@ public class HookHandler {
         }
         try {
             FactionsHook factionsHook = new FactionsHook(this);
+        } catch (NoClassDefFoundError e) {
+        }
+        try {
+            McmmoHook mcMmoHook = new McmmoHook(this);
+        } catch (NoClassDefFoundError e) {
+        }
+        try {
+            JobsHook jobsHook = new JobsHook(this);
         } catch (NoClassDefFoundError e) {
         }
         try {
@@ -177,7 +187,14 @@ public class HookHandler {
             if (source.analysisOnly()) {
                 continue;
             }
-            addReplace.put(source.getPlaceholder(""), source.getHtmlReplaceValue("", uuid));
+            try {
+                addReplace.put(source.getPlaceholder(""), source.getHtmlReplaceValue("", uuid));
+            } catch (Exception e) {
+                addReplace.put(source.getPlaceholder(""), "Error occurred: " + e);
+                Log.error("PluginDataSource caused an exception: " + source.getSourcePlugin());
+                Log.toLog("PluginDataSource caused an exception: " + source.getSourcePlugin());
+                Log.toLog(this.getClass().getName(), e);
+            }
         }
         return addReplace;
     }
