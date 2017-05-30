@@ -11,6 +11,7 @@ import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 /**
  *
@@ -63,6 +64,7 @@ public class SessionsTable extends Table {
      * @throws SQLException
      */
     public List<SessionData> getSessionData(int userId) throws SQLException {
+        Benchmark.start("Get Sessions");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -79,6 +81,7 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Sessions");
         }
     }
 
@@ -112,6 +115,7 @@ public class SessionsTable extends Table {
         if (sessions == null) {
             return;
         }
+        Benchmark.start("Save Sessions");
         sessions.removeAll(getSessionData(userId));
         if (sessions.isEmpty()) {
             return;
@@ -143,6 +147,7 @@ public class SessionsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save Sessions");
         }
     }
 
@@ -150,6 +155,7 @@ public class SessionsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
+        Benchmark.start("Get Sessions multiple "+ids.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -162,7 +168,6 @@ public class SessionsTable extends Table {
             while (set.next()) {
                 Integer id = set.getInt(columnUserID);
                 if (!ids.contains(id)) {
-                    Log.debug("Session-Ids did not contain: " + id);
                     continue;
                 }
                 sessions.get(id).add(new SessionData(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
@@ -174,6 +179,7 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Sessions multiple "+ids.size());
         }
     }
 
@@ -181,6 +187,7 @@ public class SessionsTable extends Table {
         if (sessions == null || sessions.isEmpty()) {
             return;
         }
+        Benchmark.start("Save Sessions multiple "+sessions.size());
         Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
         PreparedStatement statement = null;
         try {
@@ -218,6 +225,7 @@ public class SessionsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.start("Save Sessions multiple "+sessions.size());
         }
     }
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -20,6 +21,7 @@ public class SortablePlayersTableCreator {
      * @return
      */
     public static String createSortablePlayersTable(Collection<UserData> data) {
+        Benchmark.start("Create Players table "+data.size());
         String html = "";
         long now = MiscUtils.getTime();
         for (UserData uData : data) {
@@ -41,6 +43,7 @@ public class SortablePlayersTableCreator {
             } catch (NullPointerException e) {
             }
         }
+        Benchmark.stop("Create Players table "+data.size());
         return html;
     }
 }

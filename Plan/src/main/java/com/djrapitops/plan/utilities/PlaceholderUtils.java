@@ -31,6 +31,7 @@ public class PlaceholderUtils {
      * @return HashMap that contains string for each placeholder.
      */
     public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
+        Benchmark.start("Replace Placeholders Anaysis");
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
         replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
@@ -127,6 +128,8 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
+        replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
+        Benchmark.stop("Replace Placeholders Anaysis");
         return replaceMap;
     }
 
@@ -138,6 +141,7 @@ public class PlaceholderUtils {
      * @throws java.io.FileNotFoundException if planliteplayer.html is not found
      */
     public static Map<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
+        Benchmark.start("Replace Placeholders Inspect");
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
@@ -211,10 +215,19 @@ public class PlaceholderUtils {
         replaceMap.put("%datasessiondistribution%", distribution[0]);
         replaceMap.put("%labelssessiondistribution%", distribution[1]);
         replaceMap.put("%inaccuratedatawarning%", (now - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
+        String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
+        String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};
+        for (int i = 0; i < colors.length; i++) {
+            if (!defaultCols[i].equals(colors[i])) {
+                replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
+            }
+        }
+        replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);
         replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
+        Benchmark.stop("Replace Placeholders Inspect");
         return replaceMap;
     }
 }

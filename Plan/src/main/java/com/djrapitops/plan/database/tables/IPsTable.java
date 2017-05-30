@@ -14,13 +14,14 @@ import java.util.Map;
 import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 /**
  *
  * @author Rsl1122
  */
 public class IPsTable extends Table {
-
+    
     private final String columnUserID;
     private final String columnIP;
 
@@ -83,6 +84,7 @@ public class IPsTable extends Table {
      * @throws SQLException
      */
     public List<InetAddress> getIPAddresses(int userId) throws SQLException {
+        Benchmark.start("Get Ips");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -100,6 +102,7 @@ public class IPsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Ips");
         }
     }
 
@@ -113,6 +116,7 @@ public class IPsTable extends Table {
         if (ips == null) {
             return;
         }
+        Benchmark.start("Save Ips");
         ips.removeAll(getIPAddresses(userId));
         if (ips.isEmpty()) {
             return;
@@ -138,13 +142,15 @@ public class IPsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save Ips");
         }
     }
-
+    
     public Map<Integer, Set<InetAddress>> getIPList(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
+        Benchmark.start("Get Ips Multiple " + ids.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -157,7 +163,6 @@ public class IPsTable extends Table {
             while (set.next()) {
                 Integer id = set.getInt(columnUserID);
                 if (!ids.contains(id)) {
-                    Log.debug("Ips-Ids did not contain: " + id);
                     continue;
                 }
                 try {
@@ -169,13 +174,15 @@ public class IPsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Ips Multiple " + ids.size());
         }
     }
-
+    
     public void saveIPList(Map<Integer, Set<InetAddress>> ips) throws SQLException {
         if (ips == null || ips.isEmpty()) {
             return;
         }
+        Benchmark.start("Save Ips Multiple " + ips.size());
         Map<Integer, Set<InetAddress>> saved = getIPList(ips.keySet());
         PreparedStatement statement = null;
         try {
@@ -208,6 +215,7 @@ public class IPsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Get Ips Multiple " + ips.size());
         }
     }
 }

@@ -8,7 +8,6 @@ package test.java.main.java.com.djrapitops.plan.data.cache;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
@@ -69,6 +68,11 @@ public class DataCacheHandlerTest {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 
+            }
+            
+            @Override
+            public void convertBukkitDataToDB() {
+                
             }
 
             @Override

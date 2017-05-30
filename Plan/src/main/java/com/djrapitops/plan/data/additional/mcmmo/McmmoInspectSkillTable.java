@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +44,9 @@ public class McmmoInspectSkillTable extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
+        if (!Plan.getInstance().getHandler().getDataCache().containsKey(uuid)) {
+            return parseContainer("", Html.TABLELINE_2.parse("User not known/online", ""));
+        }
         McMMOPlayer user = UserManager.getOfflinePlayer(getOfflinePlayer(uuid));
         if (user == null) {
             return parseContainer("", Html.TABLELINE_2.parse("User not known/online", ""));

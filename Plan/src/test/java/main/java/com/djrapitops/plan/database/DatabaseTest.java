@@ -47,6 +47,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -82,6 +84,11 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+            
+            @Override
+            public void convertBukkitDataToDB() {
+                
+            }
         };
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = 0;
@@ -98,11 +105,15 @@ public class DatabaseTest {
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
         EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"))).andReturn(op);
-        op = MockUtils.mockPlayer2();
-        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
-        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
-        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
-        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op);
+        OfflinePlayer op2 = MockUtils.mockPlayer2();
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op2);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op2);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op2);
+        EasyMock.expect(Bukkit.getOfflinePlayer(UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80"))).andReturn(op2);
+        EasyMock.expect(Bukkit.getOfflinePlayers()).andReturn(new OfflinePlayer[]{op, op2});
+        EasyMock.expect(Bukkit.getOfflinePlayers()).andReturn(new OfflinePlayer[]{op, op2});
+        EasyMock.expect(Bukkit.getOfflinePlayers()).andReturn(new OfflinePlayer[]{op, op2});
+        EasyMock.expect(Bukkit.getOfflinePlayers()).andReturn(new OfflinePlayer[]{op, op2});
         PowerMock.replay(Bukkit.class);
 //        BukkitScheduler mockScheduler = Mockito.mock(BukkitScheduler.class);
 //        EasyMock.expect(Bukkit.getScheduler()).andReturn(mockScheduler);
@@ -165,6 +176,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+            @Override
+            public void convertBukkitDataToDB() {
+                
+            }
         }.getConfigName());
     }
 
@@ -177,6 +192,10 @@ public class DatabaseTest {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 
+            }
+            @Override
+            public void convertBukkitDataToDB() {
+                
             }
         }.getName());
     }
@@ -341,6 +360,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+            @Override
+            public void convertBukkitDataToDB() {
+                
+            }
         };
         backup.init();
         ManageUtils.clearAndCopy(backup, db, db.getSavedUUIDs());
@@ -373,6 +396,10 @@ public class DatabaseTest {
             @Override
             public void startConnectionPingTask(Plan plugin) {
 
+            }
+            @Override
+            public void convertBukkitDataToDB() {
+                
             }
         };
         backup.init();

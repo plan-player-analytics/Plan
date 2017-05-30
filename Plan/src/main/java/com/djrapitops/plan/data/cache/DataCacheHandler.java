@@ -21,6 +21,7 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
@@ -29,6 +30,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -191,6 +193,7 @@ public class DataCacheHandler extends LocationCache {
      * @param data UserData object with the UUID inside used as key.
      */
     public void cache(UserData data) {
+        data.setOnline(true);
         dataCache.put(data.getUuid(), data);
         Log.info(Phrase.CACHE_ADD.parse(data.getUuid().toString()));
     }
@@ -246,11 +249,13 @@ public class DataCacheHandler extends LocationCache {
      */
     public void saveCacheOnDisable() {
         long time = MiscUtils.getTime();
-        Log.debug("SaveCacheOnDisable! " + time);
+        Benchmark.start("SaveCacheOnDisable");
+        Log.debug("SaveCacheOnDisable!");
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
         List<HandlingInfo> toProcess = processTask.stop();
+        Benchmark.start("ProcessOnlineHandlingInfo");
         Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         Log.debug("Online: " + onlinePlayers.size());
@@ -265,6 +270,7 @@ public class DataCacheHandler extends LocationCache {
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
+        Benchmark.stop("ProcessOnlineHandlingInfo");
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
         Log.debug("SAVING, DataCache size: " + dataCache.keySet().size());
@@ -283,6 +289,7 @@ public class DataCacheHandler extends LocationCache {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        Benchmark.stop("SaveCacheOnDisable");
         Log.debug("SaveCacheOnDisable_END");
     }
 

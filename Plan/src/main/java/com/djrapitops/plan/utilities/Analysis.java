@@ -1,11 +1,9 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
@@ -35,7 +33,6 @@ import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -66,6 +63,7 @@ public class Analysis {
      * @param analysisCache Cache that the data is saved to.
      */
     public void runAnalysis(AnalysisCacheHandler analysisCache) {
+        Benchmark.start("Analysis");
         log(Phrase.ANALYSIS_START + "");
         // Async task for Analysis
         BukkitTask asyncAnalysisTask = (new BukkitRunnable() {
@@ -75,21 +73,6 @@ public class Analysis {
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
-    }
-
-    private List<UUID> fetchPlayersInDB(Database db) {
-        try {
-            log(Phrase.ANALYSIS_FETCH_PLAYERS + "");
-            Set<UUID> savedUUIDs = db.getSavedUUIDs();
-            List<UUID> uuids = savedUUIDs.parallelStream()
-                    .filter(uuid -> uuid != null)
-                    .filter((uuid) -> (getOfflinePlayer(uuid).hasPlayedBefore()))
-                    .collect(Collectors.toList());
-            return uuids;
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return new ArrayList<>();
     }
 
     /**
@@ -102,6 +85,7 @@ public class Analysis {
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
         log(Phrase.ANALYSIS_FETCH_DATA + "");
+        Benchmark.start("Analysis Fetch Phase");
         try {
             inspectCache.cacheAllUserData(db);
         } catch (Exception ex) {
@@ -113,6 +97,7 @@ public class Analysis {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
+        Benchmark.stop("Analysis Fetch Phase");
         return analyzeData(rawData, analysisCache);
     }
 
@@ -123,19 +108,22 @@ public class Analysis {
      * @return
      */
     public boolean analyzeData(List<UserData> rawData, AnalysisCacheHandler analysisCache) {
+        Benchmark.start("Analysis UUID transform");
+        Benchmark.start("Analysis Phase");
         List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
-        // Create empty Dataset
+        Benchmark.stop("Analysis UUID transform");
+        Benchmark.start("Analysis Create Empty dataset");
         long now = MiscUtils.getTime();
         final RawAnalysisData sorted = new RawAnalysisData();
         sorted.setCommandUse(plugin.getHandler().getCommandUse());
-        log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
         AnalysisData analysisData = new AnalysisData();
+        Benchmark.stop("Analysis Create Empty dataset");
+        log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
         String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
         analysisData.setSortablePlayersTable(playersTable);
         sorted.fillGeolocations();
-        // Fill Dataset with userdata.
+        Benchmark.start("Analysis Fill Dataset");
         rawData.stream().forEach((uData) -> {
-//            try {
             Map<GameMode, Long> gmTimes = uData.getGmTimes();
             if (gmTimes != null) {
                 Long survival = gmTimes.get(GameMode.SURVIVAL);
@@ -214,11 +202,8 @@ public class Analysis {
                         break;
                 }
             }
-            //} catch (NullPointerException e) {
-//                plugin.logError(Phrase.DATA_CORRUPTION_WARN.parse(uData.getUuid() + ""));
-//                plugin.toLog(this.getClass().getName(), e);
-//            }
         });
+        Benchmark.stop("Analysis Fill Dataset");
         createCloroplethMap(analysisData, sorted.getGeolocations(), sorted.getGeocodes());
         // Analyze & Save RawAnalysisData to AnalysisData
         createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
@@ -243,6 +228,7 @@ public class Analysis {
         analysisData.setPlaytimeDistributionData(SessionLengthDistributionGraphCreator.generateDataArray(sorted.getPlaytimes().values()));
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
         analysisCache.cache(analysisData);
+        Benchmark.stop("Analysis");
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
             Log.info(Phrase.ANALYSIS_COMPLETE + "");
         }
@@ -250,6 +236,7 @@ public class Analysis {
     }
 
     private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
+
         Map<String, Integer> commandUse = raw.getCommandUse();
         if (!commandUse.isEmpty()) {
             String tableHtml = SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
@@ -262,13 +249,16 @@ public class Analysis {
     }
 
     private void createActivityVisalization(int total, int totalBanned, int active, int inactive, int joinleaver, AnalysisData data) {
+        Benchmark.start("Analysis Activity Visualization");
         data.setActive(active);
         data.setInactive(inactive);
         data.setBanned(totalBanned);
         data.setJoinleaver(joinleaver);
         data.setTotal(total);
+        Benchmark.stop("Analysis Activity Visualization");
     }
 
+    // TODO Refactor
     private void analyzeAverageAge(List<Integer> ages, AnalysisData data) {
         int totalAge = 0;
         for (int age : ages) {
@@ -284,6 +274,7 @@ public class Analysis {
     }
 
     private void createGamemodeUsageVisualization(long gmZero, long gmOne, long gmTwo, long gmThree, AnalysisData data) {
+        Benchmark.start("Analysis GMVisualization");
         long gmTotal = gmZero + gmOne + gmTwo + gmThree;
         HashMap<GameMode, Long> totalGmTimes = new HashMap<>();
         totalGmTimes.put(GameMode.SURVIVAL, gmZero);
@@ -297,6 +288,7 @@ public class Analysis {
         data.setGm1Perc((gmOne * 1.0 / gmTotal));
         data.setGm2Perc((gmTwo * 1.0 / gmTotal));
         data.setGm3Perc((gmThree * 1.0 / gmTotal));
+        Benchmark.stop("Analysis GMVisualization");
     }
 
     private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered) {
@@ -311,9 +303,15 @@ public class Analysis {
         data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
         data.setNewPlayersMonth(AnalysisUtils.getNewPlayers(registered, scaleMonth, now));
 
-        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleDay, maxPlayers);
-        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleWeek, maxPlayers);
-        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sData, scaleMonth, maxPlayers);
+        List<SessionData> sessions = sData.stream()
+                .filter(session -> (session != null))
+                .filter(session -> session.isValid())
+                .filter((session) -> (session.getSessionStart() >= now-scaleMonth || session.getSessionEnd() >= now-scaleMonth))
+                .collect(Collectors.toList());
+        
+        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleDay, maxPlayers);
+        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleWeek, maxPlayers);
+        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleMonth, maxPlayers);
 
         data.setPlayersDataArray(new String[]{dayArray[0], dayArray[1], weekArray[0], weekArray[1], monthArray[0], monthArray[1]});
     }
@@ -325,6 +323,7 @@ public class Analysis {
     }
 
     private void createCloroplethMap(AnalysisData aData, Map<String, Integer> geolocations, Map<String, String> geocodes) {
+        Benchmark.start("Analysis Chloropleth map");
         String locations = "[";
         String z = "[";
         String text = "[";
@@ -344,6 +343,7 @@ public class Analysis {
         aData.setGeomapCountries(locations.replace(",]", "]"));
         aData.setGeomapZ(z.replace(",]", "]"));
         aData.setGeomapCodes(text.replace(",]", "]"));
+        Benchmark.stop("Analysis Chloropleth map");
     }
 
     private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
@@ -358,8 +358,9 @@ public class Analysis {
         };
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
+        Log.debug("Analyzing additional sources: " + sources.size());
         sources.parallelStream().forEach(source -> {
-            Log.debug("Analyzing source: " + source.getPlaceholder("").replace("%", ""));
+            Benchmark.start("Source " + source.getPlaceholder("").replace("%", ""));
             try {
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
@@ -388,6 +389,8 @@ public class Analysis {
             } catch (Throwable e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
                 Log.toLog(this.getClass().getName(), e);
+            } finally {
+                Benchmark.stop("Source " + source.getPlaceholder("").replace("%", ""));
             }
         });
         return replaceMap;

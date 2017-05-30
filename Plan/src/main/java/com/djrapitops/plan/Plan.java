@@ -385,7 +385,7 @@ public class Plan extends JavaPlugin {
         }
         return INSTANCE;
     }
-
+    
     /**
      * Used to set the current instance of Plan.
      *

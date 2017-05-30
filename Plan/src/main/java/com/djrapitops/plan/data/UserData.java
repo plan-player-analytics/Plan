@@ -229,6 +229,9 @@ public class UserData {
      * @param addIps a Collection of InetAddresses the player has logged from.
      */
     public void addIpAddresses(Collection<InetAddress> addIps) {
+        if (addIps.isEmpty()) {
+            return;
+        }
         ips.addAll(addIps.stream().filter(ip -> ip != null).collect(Collectors.toList()));
 
     }
@@ -939,5 +942,13 @@ public class UserData {
      */
     public void setClearAfterSave(boolean clearAfterSave) {
         this.clearAfterSave = clearAfterSave;
+    }
+
+    public void setBanned(boolean isBanned) {
+        this.isBanned = isBanned;
+    }
+
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
     }
 }

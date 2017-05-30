@@ -6,15 +6,29 @@ import java.util.List;
 import java.util.Random;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
+import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import test.java.utils.TestInit;
 
 /**
  *
  * @author Rsl1122
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(JavaPlugin.class)
 public class PlayerActivityGraphCreatorTest {
 
+    @Before
+    public void setUp() {
+        TestInit t = new TestInit();
+        assertTrue(t.setUp());
+    }
+    
     /**
      *
      */

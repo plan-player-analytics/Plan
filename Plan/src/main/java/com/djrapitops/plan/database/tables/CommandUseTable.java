@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 /**
  *
@@ -52,6 +53,7 @@ public class CommandUseTable extends Table {
      * @return @throws SQLException
      */
     public Map<String, Integer> getCommandUse() throws SQLException {
+        Benchmark.start("Get CommandUse");
         Map<String, Integer> commandUse = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -65,6 +67,7 @@ public class CommandUseTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get CommandUse");
         }
     }
 
@@ -78,6 +81,7 @@ public class CommandUseTable extends Table {
         if (data.isEmpty()) {
             return;
         }
+        Benchmark.start("Save Commanduse");
         PreparedStatement statement = null;
         try {
             if (!removeAllData()) {
@@ -105,6 +109,7 @@ public class CommandUseTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save Commanduse");
         }
     }
 }

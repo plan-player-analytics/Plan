@@ -9,16 +9,29 @@ import java.util.Date;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.*;
 
 /**
  *
  * @author Rsl1122
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(JavaPlugin.class)
 public class FormatUtilsTest {
 
+    @Before
+    public void setUp() {
+        TestInit t = new TestInit();
+        assertTrue(t.setUp());
+    }
+    
     /**
      *
      */

@@ -54,6 +54,7 @@ public class AnalysisUtils {
      * @return
      */
     public static int getNewPlayers(List<Long> registered, long scale, long now) {
+        Benchmark.start("Get new players for "+registered.size()+" "+scale+" | ");
         int newPlayers = 0;
         if (!registered.isEmpty()) {
             newPlayers = registered.stream()
@@ -62,7 +63,7 @@ public class AnalysisUtils {
                     .map((_item) -> 1).reduce(newPlayers, Integer::sum);
         }
         // Filters out register dates before scale
-
+        Benchmark.stop("Get new players for "+registered.size()+" "+scale+" | ");
         return newPlayers;
     }
 

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -91,6 +92,7 @@ public class LocationsTable extends Table {
      * @throws SQLException
      */
     public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
+        Benchmark.start("Get Locations");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -105,6 +107,7 @@ public class LocationsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Locations");
         }
     }
 
@@ -118,6 +121,7 @@ public class LocationsTable extends Table {
         if (locations == null || locations.isEmpty()) {
             return;
         }
+        Benchmark.start("Save Locations "+locations.size());
         List<Location> newLocations = new ArrayList<>();
         newLocations.addAll(locations);
         PreparedStatement statement = null;
@@ -149,6 +153,7 @@ public class LocationsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save Locations "+locations.size());
         }
     }
 
@@ -156,6 +161,7 @@ public class LocationsTable extends Table {
         if (locations == null || locations.isEmpty()) {
             return;
         }
+        Benchmark.start("Save Locations Multiple "+locations.size());
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -188,6 +194,7 @@ public class LocationsTable extends Table {
             }
         } finally {
             close(statement);
+             Benchmark.stop("Save Locations Multiple "+locations.size());
         }
     }
 }

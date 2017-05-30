@@ -284,7 +284,7 @@ header p {
 		<div class="header-content">
 			<img src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
 			<p>Player Analytics v.%version%</p>
-			<h1><span id="navbutton" onclick="openNav()">&#9776; </span>Plan | Server Analysis</h1>
+			<h1><span id="navbutton" onclick="openNav()">&#9776; </span>%servername% | Server Analysis</h1>
 		</div>
 	</header>
 <div id="content" class="content">
@@ -808,7 +808,10 @@ function closeNav() {
 }
 var navButtons = document.getElementsByClassName("nav-button");
 var tabs = document.getElementsByClassName("tab");
-var slideIndex = 0;
+var slideIndex = window.localStorage.getItem("AnalysisSlideIndex");
+if (slideIndex == null) {
+    slideIndex = 0;
+}
 var x = document.getElementById("main");
 
 x.style.transform = "translate3d(0px,0px,0)";
@@ -819,7 +822,7 @@ for (i=0; i < navButtons.length; i++) {
 	tabs[i].style.width = ""+100/navButtons.length+"%";
 }
 x.style.opacity = "1";
-openFunc(0);
+openFunc(slideIndex)();
 
 function openFunc(i) {
 	return function() {
@@ -827,11 +830,20 @@ function openFunc(i) {
 			closeNav();
 		}
 		var max = navButtons.length;
+                for (var j = 0; j < max; j++) {                    
+                    if (j == i) {
+                        navButtons[j].classList.add('active');
+                        continue;
+                    }
+                    if (navButtons[j].classList.contains('active')) {
+                        navButtons[j].classList.remove('active');
+                    }
+                }
 		var perc = -100 / navButtons.length;
 		slideIndex = i;
 		if (slideIndex>max) {slideIndex=0};
 		if (slideIndex<0) {slideIndex=max};
-	
+                window.localStorage.setItem("AnalysisSlideIndex", slideIndex);
 		var value = slideIndex*perc;
 		x.style.transition = "0.5s";
 		x.style.transform = "translate3d("+value+"%,0px,0)";

@@ -77,7 +77,7 @@ public class SessionLengthDistributionGraphCreator {
         List<Long> unused = new ArrayList<>(lengths);
         Map<Long, Integer> values = new HashMap<>();
         long lengthInMinutes = 5;
-        while (!unused.isEmpty()) {
+        while (!unused.isEmpty() && lengthInMinutes < 120) {
             long length = lengthInMinutes * 60 * 1000;
             List<Long> lessThan = unused.stream().filter(l -> l < length).collect(Collectors.toList());
             values.put(lengthInMinutes, lessThan.size());

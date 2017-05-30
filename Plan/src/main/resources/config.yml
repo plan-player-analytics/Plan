@@ -32,6 +32,14 @@ Settings:
       AddressSecurityCode: bAkEd
 
 Customization:
+  ServerName: 'Plan'
+  Formats:
+    TimeAmount:
+      Days: '%days%d '
+      Hours: '%hours%h '
+      Minutes: '%minutes%m '
+      Seconds: '%seconds%s'
+    DecimalPoints: '#.##'
   Colors:
     Commands:
       Main: '&2'
@@ -68,6 +76,15 @@ Customization:
     Male: 'male, boy, man, boe, sir, mr, guy, he, männlich, maskulin, junge, mann'
     IgnoreWhen: 'sure, think, with, are, you, din'
   Plugins:
+    Enabled:
+      AdvancedAchievements: true
+      Essentials: true
+      Factions: true
+      Jobs: true
+      McMMO: true
+      OnTime: true
+      Towny: true
+      Vault: true
     Factions:
       HideFactions:
         - ExampleFaction

@@ -109,7 +109,6 @@ public class HtmlUtils {
         Log.debug("Html parsing for:" + pluginNames + ", " + (evenSize));
         for (int i = 0; i < evenSize; i++) {
             String name = pluginNames.get(i);
-            Log.debug("Html parsing: " + name);
             if (i % 2 == 0) {
                 temp = Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)));
             } else {

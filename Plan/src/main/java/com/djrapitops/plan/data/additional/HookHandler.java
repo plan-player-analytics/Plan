@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.factions.FactionsHook;
 import main.java.com.djrapitops.plan.data.additional.jobs.JobsHook;
 import main.java.com.djrapitops.plan.data.additional.mcmmo.McmmoHook;
@@ -63,35 +64,51 @@ public class HookHandler {
 
     private void hook() {
         try {
-            AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(this);
+            if (Settings.ENABLED_AA.isTrue()) {
+                AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            EssentialsHook essentialsHook = new EssentialsHook(this);
+            if (Settings.ENABLED_ESS.isTrue()) {
+                EssentialsHook essentialsHook = new EssentialsHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            FactionsHook factionsHook = new FactionsHook(this);
+            if (Settings.ENABLED_FAC.isTrue()) {
+                FactionsHook factionsHook = new FactionsHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            McmmoHook mcMmoHook = new McmmoHook(this);
+            if (Settings.ENABLED_MCM.isTrue()) {
+                McmmoHook mcMmoHook = new McmmoHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            JobsHook jobsHook = new JobsHook(this);
+            if (Settings.ENABLED_JOB.isTrue()) {
+                JobsHook jobsHook = new JobsHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            OnTimeHook onTimeHook = new OnTimeHook(this);
+            if (Settings.ENABLED_ONT.isTrue()) {
+                OnTimeHook onTimeHook = new OnTimeHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            TownyHook townyHook = new TownyHook(this);
+            if (Settings.ENABLED_TOW.isTrue()) {
+                TownyHook townyHook = new TownyHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
         try {
-            VaultHook vaultHook = new VaultHook(this);
+            if (Settings.ENABLED_VAU.isTrue()) {
+                VaultHook vaultHook = new VaultHook(this);
+            }
         } catch (NoClassDefFoundError e) {
         }
     }

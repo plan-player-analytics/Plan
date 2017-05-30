@@ -12,6 +12,7 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 /**
  *
@@ -89,6 +90,7 @@ public class KillsTable extends Table {
      * @throws SQLException
      */
     public List<KillData> getPlayerKills(int userId) throws SQLException {
+        Benchmark.start("Get Kills");
         UsersTable usersTable = db.getUsersTable();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -106,6 +108,7 @@ public class KillsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Kills");
         }
     }
 
@@ -119,6 +122,7 @@ public class KillsTable extends Table {
         if (kills == null) {
             return;
         }
+        Benchmark.start("Save Kills");
         kills.removeAll(getPlayerKills(userId));
         if (kills.isEmpty()) {
             return;
@@ -148,6 +152,7 @@ public class KillsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save Kills");
         }
     }
 
@@ -155,7 +160,7 @@ public class KillsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-
+        Benchmark.start("Get Kills multiple "+ids.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -169,7 +174,6 @@ public class KillsTable extends Table {
                 int killerID = set.getInt(columnKillerUserID);
                 int victimID = set.getInt(columnVictimUserID);
                 if (!ids.contains(killerID)) {
-                    Log.debug("Kills-Ids did not contain: " + killerID);
                     continue;
                 }
                 UUID victimUUID = uuids.get(victimID);
@@ -179,14 +183,15 @@ public class KillsTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Kills multiple "+ids.size());
         }
     }
 
     public void savePlayerKills(Map<Integer, List<KillData>> kills, Map<Integer, UUID> uuids) throws SQLException {
         if (kills == null || kills.isEmpty()) {
-            Log.debug("Save multiple - Kills was empty.");
             return;
         }
+        Benchmark.start("Save Kills multiple "+kills.size());
         Map<Integer, List<KillData>> saved = getPlayerKills(kills.keySet(), uuids);
 
         PreparedStatement statement = null;
@@ -201,7 +206,6 @@ public class KillsTable extends Table {
             for (Integer id : kills.keySet()) {
                 List<KillData> playerKills = kills.get(id);
                 List<KillData> s = saved.get(id);
-                Log.debug("Saving:" + playerKills + " Saved: " + s);
                 if (s != null) {
                     playerKills.removeAll(s);
                 }
@@ -222,6 +226,7 @@ public class KillsTable extends Table {
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save Kills multiple "+kills.size());
         }
     }
 }

@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.utilities;
 
 import java.text.DecimalFormat;
 import java.util.Date;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Location;
 
 /**
@@ -58,20 +59,20 @@ public class FormatUtils {
         x /= 24;
         long days = x;
         if (days != 0) {
-            builder.append(days).append("d ");
+            builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", ""+days));
         }
         if (hours != 0) {
-            builder.append(hours).append("h ");
+            builder.append(Settings.FORMAT_HOURS.toString().replace("%hours%", ""+hours));
         }
         if (minutes != 0) {
-            builder.append(minutes).append("m ");
+            builder.append(Settings.FORMAT_MINUTES.toString().replace("%minutes%", ""+minutes));
         }
         if (seconds != 0) {
-            builder.append(seconds).append("s");
+            builder.append(Settings.FORMAT_SECONDS.toString().replace("%seconds%", ""+seconds));
         }
         String formattedTime = builder.toString();
         if (formattedTime.isEmpty()) {
-            return "0s";
+            return Settings.FORMAT_SECONDS.toString().replace("%seconds%", "0");
         }
         return formattedTime;
     }
@@ -132,7 +133,7 @@ public class FormatUtils {
      * @return
      */
     public static String cutDecimals(double d) {
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
 //        df.setRoundingMode(RoundingMode.CEILING);
         return df.format(d);
     }

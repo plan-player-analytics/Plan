@@ -6,6 +6,7 @@ import com.gmail.nossr50.util.player.UserManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -15,7 +16,8 @@ import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MathUtils;
 import org.apache.commons.lang.StringUtils;
-import static org.bukkit.Bukkit.getOfflinePlayers;
+import static org.bukkit.Bukkit.getOnlinePlayers;
+import org.bukkit.entity.Player;
 
 /**
  * PluginData class for McMMO-plugin.
@@ -40,7 +42,7 @@ public class McmmoAnalysisSkillTable extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        List<PlayerProfile> profiles = Arrays.stream(getOfflinePlayers())
+        List<PlayerProfile> profiles = getOnlinePlayers().stream()
                 .filter(p -> p != null)
                 .map(p -> UserManager.getOfflinePlayer(p))
                 .filter(u -> u != null)

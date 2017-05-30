@@ -84,6 +84,7 @@ public class Log {
      * @param message Message to log to Errors.txt [timestamp] Message
      */
     public static void toLog(String message) {
+        Log.debug(message);
         Plan plan = Plan.getInstance();
         if (plan == null) {
             return;

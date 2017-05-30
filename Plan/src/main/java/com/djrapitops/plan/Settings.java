@@ -20,6 +20,14 @@ public enum Settings {
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
+    ENABLED_AA("Customization.Plugins.Enabled.AdvancedAchievements"),
+    ENABLED_ESS("Customization.Plugins.Enabled.Essentials"),
+    ENABLED_FAC("Customization.Plugins.Enabled.Factions"),
+    ENABLED_JOB("Customization.Plugins.Enabled.Jobs"),
+    ENABLED_MCM("Customization.Plugins.Enabled.McMMO"),
+    ENABLED_ONT("Customization.Plugins.Enabled.OnTime"),
+    ENABLED_TOW("Customization.Plugins.Enabled.Towny"),
+    ENABLED_VAU("Customization.Plugins.Enabled.Vault"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
@@ -40,6 +48,14 @@ public enum Settings {
     LOCALE("Settings.Locale"),
     WEBSERVER_IP("Settings.WebServer.InternalIP"),
     SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode"),
+    //
+    SERVER_NAME("Customization.ServerName"),
+    //
+    FORMAT_DAYS("Customization.Formats.TimeAmount.Days"),
+    FORMAT_HOURS("Customization.Formats.TimeAmount.Hours"),
+    FORMAT_MINUTES("Customization.Formats.TimeAmount.Minutes"),
+    FORMAT_SECONDS("Customization.Formats.TimeAmount.Seconds"),
+    FORMAT_DECIMALS("Customization.Formats.DecimalPoints"),
     //
     COLOR_MAIN("Customization.Colors.Commands.Main"),
     COLOR_SEC("Customization.Colors.Commands.Secondary"),

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,11 +16,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.Gender;
+import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
-import me.edge209.OnTime.OnTimeAPI.data;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayers;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  *
@@ -40,6 +46,11 @@ public class UsersTable extends Table {
     private final String columnPlayerKills;
     private final String columnDeaths;
     private final String columnMobKills;
+    private final String columnRegistered;
+    private final String columnOP;
+    private final String columnName;
+    private final String columnBanned;
+    private final String columnContainsBukkitData;
 
     /**
      *
@@ -61,6 +72,12 @@ public class UsersTable extends Table {
         columnMobKills = "mob_kills";
         columnPlayerKills = "player_kills"; // Removed in 2.7.0
         columnDeaths = "deaths";
+        // Added in 3.3.0
+        columnRegistered = "registered";
+        columnOP = "opped";
+        columnName = "name";
+        columnBanned = "banned";
+        columnContainsBukkitData = "contains_bukkit_data";
     }
 
     /**
@@ -82,17 +99,53 @@ public class UsersTable extends Table {
                     + columnLoginTimes + " integer NOT NULL, "
                     + columnLastPlayed + " bigint NOT NULL, "
                     + columnDeaths + " int NOT NULL, "
-                    + columnMobKills + " int NOT NULL"
+                    + columnMobKills + " int NOT NULL, "
+                    + columnRegistered + " bigint NOT NULL, "
+                    + columnOP + " boolean NOT NULL DEFAULT 0, "
+                    + columnName + " varchar(16) NOT NULL, "
+                    + columnBanned + " boolean NOT NULL DEFAULT 0, "
+                    + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0"
                     + (usingMySQL ? ", PRIMARY KEY (" + columnID + ")" : "")
                     + ")"
             );
-            if (getVersion() < 3) {
+            int version = getVersion();
+            if (version < 3) {
                 alterTablesV3();
+            }
+            if (version < 4) {
+                alterTablesV4();
             }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return false;
+        }
+    }
+
+    private void alterTablesV4() {
+        String[] queries;
+        if (usingMySQL) {
+            queries = new String[]{
+                "ALTER TABLE " + tableName + " ADD " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
+                "ALTER TABLE " + tableName + " ADD " + columnOP + " boolean NOT NULL DEFAULT 0",
+                "ALTER TABLE " + tableName + " ADD " + columnBanned + " boolean NOT NULL DEFAULT 0",
+                "ALTER TABLE " + tableName + " ADD " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
+                "ALTER TABLE " + tableName + " ADD " + columnRegistered + " bigint NOT NULL DEFAULT 0"
+            };
+        } else {
+            queries = new String[]{
+                "ALTER TABLE " + tableName + " ADD COLUMN " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
+                "ALTER TABLE " + tableName + " ADD COLUMN " + columnOP + " boolean NOT NULL DEFAULT 0",
+                "ALTER TABLE " + tableName + " ADD COLUMN " + columnBanned + " boolean NOT NULL DEFAULT 0",
+                "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
+                "ALTER TABLE " + tableName + " ADD COLUMN " + columnRegistered + " bigint NOT NULL DEFAULT 0"
+            };
+        }
+        for (String query : queries) {
+            try {
+                execute(query);
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -181,6 +234,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
+        Benchmark.start("Get Saved UUIDS");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -198,6 +252,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get Saved UUIDS");
         }
     }
 
@@ -229,12 +284,170 @@ public class UsersTable extends Table {
         }
     }
 
+    public UserData getUserData(UUID uuid) throws SQLException {
+        Benchmark.start(uuid + " Get UserData");
+        boolean containsBukkitData = getContainsBukkitData(uuid);
+        UserData data = null;
+        if (containsBukkitData) {
+            data = getUserDataForKnown(uuid);
+        }
+        if (data == null) {
+            data = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+            addUserInformationToUserData(data);
+        }
+        Benchmark.stop(uuid + " Get UserData");
+        return data;
+    }
+
+    private boolean getContainsBukkitData(UUID uuid) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        boolean containsBukkitData = false;
+        try {
+            statement = prepareStatement("SELECT " + columnContainsBukkitData + " FROM " + tableName + " WHERE (" + columnUUID + "=?)");
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            while (set.next()) {
+                containsBukkitData = set.getBoolean(columnContainsBukkitData);
+            }
+        } finally {
+            close(statement);
+            close(set);
+        }
+        return containsBukkitData;
+    }
+
+    public List<UserData> getUserData(Collection<UUID> uuids) throws SQLException {
+        Benchmark.start("Get UserData Multiple " + uuids.size());
+        List<UUID> containsBukkitData = getContainsBukkitData(uuids);
+        List<UserData> datas = new ArrayList<>();
+        datas.addAll(getUserDataForKnown(containsBukkitData));
+        uuids.removeAll(containsBukkitData);
+
+        List<UserData> noBukkitData = new ArrayList<>();
+        Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
+        for (UUID uuid : uuids) {
+            UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+            noBukkitData.add(uData);
+        }
+        Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
+        addUserInformationToUserData(noBukkitData);
+        datas.addAll(noBukkitData);
+        Benchmark.stop("Get UserData Multiple " + uuids.size());
+        return datas;
+    }
+
+    public List<UUID> getContainsBukkitData(Collection<UUID> uuids) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<UUID> containsBukkitData = new ArrayList<>();
+        try {
+            statement = prepareStatement("SELECT " + columnContainsBukkitData + ", " + columnUUID + " FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                if (!uuids.contains(uuid)) {
+                    continue;
+                }
+                boolean contains = set.getBoolean(columnContainsBukkitData);
+                if (contains) {
+                    containsBukkitData.add(uuid);
+                }
+            }
+        } finally {
+            close(statement);
+            close(set);
+        }
+        return containsBukkitData;
+    }
+
+    private UserData getUserDataForKnown(UUID uuid) throws SQLException {
+        Benchmark.start("getUserDataForKnown UserData");
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUUID + "=?)");
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            while (set.next()) {
+                DemographicsData demData = new DemographicsData();
+                demData.setAge(set.getInt(columnDemAge));
+                demData.setGender(Gender.parse(set.getString(columnDemGender)));
+                demData.setGeoLocation(set.getString(columnDemGeoLocation));
+                GameMode gm = GameMode.valueOf(set.getString(columnLastGM));
+                boolean op = set.getBoolean(columnOP);
+                boolean banned = set.getBoolean(columnBanned);
+                String name = set.getString(columnName);
+                long registered = set.getLong(columnRegistered);
+                UserData data = new UserData(uuid, registered, null, op, gm, demData, name, false);
+                data.setBanned(banned);
+                data.setLastGamemode(gm);
+                data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
+                data.setPlayTime(set.getLong(columnPlayTime));
+                data.setLoginTimes(set.getInt(columnLoginTimes));
+                data.setLastPlayed(set.getLong(columnLastPlayed));
+                data.setDeaths(set.getInt(columnDeaths));
+                data.setMobKills(set.getInt(columnMobKills));
+                return data;
+            }
+        } finally {
+            close(set);
+            close(statement);
+            Benchmark.stop("getUserDataForKnown UserData");
+        }
+        return null;
+    }
+
+    private List<UserData> getUserDataForKnown(Collection<UUID> uuids) throws SQLException {
+        Benchmark.start("getUserDataForKnown Multiple " + uuids.size());
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<UserData> datas = new ArrayList<>();
+        try {
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                if (!uuids.contains(uuid)) {
+                    continue;
+                }
+                DemographicsData demData = new DemographicsData();
+                demData.setAge(set.getInt(columnDemAge));
+                demData.setGender(Gender.parse(set.getString(columnDemGender)));
+                demData.setGeoLocation(set.getString(columnDemGeoLocation));
+                GameMode gm = GameMode.valueOf(set.getString(columnLastGM));
+                boolean op = set.getBoolean(columnOP);
+                boolean banned = set.getBoolean(columnBanned);
+                String name = set.getString(columnName);
+                long registered = set.getLong(columnRegistered);
+                UserData data = new UserData(uuid, registered, null, op, gm, demData, name, false);
+                data.setBanned(banned);
+                data.setLastGamemode(gm);
+                data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
+                data.setPlayTime(set.getLong(columnPlayTime));
+                data.setLoginTimes(set.getInt(columnLoginTimes));
+                data.setLastPlayed(set.getLong(columnLastPlayed));
+                data.setDeaths(set.getInt(columnDeaths));
+                data.setMobKills(set.getInt(columnMobKills));
+                datas.add(data);
+            }
+        } finally {
+            close(set);
+            close(statement);
+            Benchmark.stop("getUserDataForKnown Multiple " + uuids.size());
+        }
+        return datas;
+    }
+
     /**
      *
      * @param data
      * @throws SQLException
      */
     public void addUserInformationToUserData(UserData data) throws SQLException {
+        Benchmark.start("addUserInformationToUserData UserData");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -256,10 +469,12 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("addUserInformationToUserData UserData");
         }
     }
-    
+
     public void addUserInformationToUserData(List<UserData> data) throws SQLException {
+        Benchmark.start("addUserInformationToUserData Multiple " + data.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -287,6 +502,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("addUserInformationToUserData Multiple " + data.size());
         }
     }
 
@@ -296,6 +512,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void saveUserDataInformation(UserData data) throws SQLException {
+        Benchmark.start("Save UserInfo");
         PreparedStatement statement = null;
         try {
             UUID uuid = data.getUuid();
@@ -312,7 +529,12 @@ public class UsersTable extends Table {
                         + columnLoginTimes + "=?, "
                         + columnLastPlayed + "=?, "
                         + columnDeaths + "=?, "
-                        + columnMobKills + "=? "
+                        + columnMobKills + "=?, "
+                        + columnContainsBukkitData + "=?, "
+                        + columnOP + "=?, "
+                        + columnBanned + "=?, "
+                        + columnName + "=?, "
+                        + columnRegistered + "=? "
                         + "WHERE UPPER(" + columnUUID + ") LIKE UPPER(?)";
 
                 statement = prepareStatement(sql);
@@ -331,7 +553,12 @@ public class UsersTable extends Table {
                 statement.setLong(8, data.getLastPlayed());
                 statement.setInt(9, data.getDeaths());
                 statement.setInt(10, data.getMobKills());
-                statement.setString(11, uuid.toString());
+                statement.setBoolean(11, data.getName() != null);
+                statement.setBoolean(12, data.isOp());
+                statement.setBoolean(13, data.isBanned());
+                statement.setString(14, data.getName());
+                statement.setLong(15, data.getRegistered());
+                statement.setString(16, uuid.toString());
                 update = statement.executeUpdate();
             }
             if (update == 0) {
@@ -347,8 +574,13 @@ public class UsersTable extends Table {
                         + columnLoginTimes + ", "
                         + columnLastPlayed + ", "
                         + columnDeaths + ", "
-                        + columnMobKills
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + columnMobKills + ", "
+                        + columnContainsBukkitData + ", "
+                        + columnOP + ", "
+                        + columnBanned + ", "
+                        + columnName + ", "
+                        + columnRegistered
+                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 statement.setString(1, uuid.toString());
                 statement.setInt(2, data.getDemData().getAge());
@@ -366,10 +598,16 @@ public class UsersTable extends Table {
                 statement.setLong(9, data.getLastPlayed());
                 statement.setInt(10, data.getDeaths());
                 statement.setInt(11, data.getMobKills());
+                statement.setBoolean(12, data.getName() != null);
+                statement.setBoolean(13, data.isOp());
+                statement.setBoolean(14, data.isBanned());
+                statement.setString(15, data.getName());
+                statement.setLong(16, data.getRegistered());
                 statement.execute();
             }
         } finally {
             close(statement);
+            Benchmark.stop("Save UserInfo");
         }
     }
 
@@ -380,6 +618,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public List<UserData> saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
+        Benchmark.start("Save UserInfo multiple " + data.size());
         PreparedStatement statement = null;
         try {
             List<UserData> saveLast = new ArrayList<>();
@@ -393,7 +632,12 @@ public class UsersTable extends Table {
                     + columnLoginTimes + "=?, "
                     + columnLastPlayed + "=?, "
                     + columnDeaths + "=?, "
-                    + columnMobKills + "=? "
+                    + columnMobKills + "=?, "
+                    + columnContainsBukkitData + "=?, "
+                    + columnOP + "=?, "
+                    + columnBanned + "=?, "
+                    + columnName + "=?, "
+                    + columnRegistered + "=? "
                     + "WHERE " + columnUUID + "=?";
             statement = prepareStatement(uSQL);
             boolean commitRequired = false;
@@ -435,7 +679,12 @@ public class UsersTable extends Table {
                     statement.setLong(8, uData.getLastPlayed());
                     statement.setInt(9, uData.getDeaths());
                     statement.setInt(10, uData.getMobKills());
-                    statement.setString(11, uData.getUuid().toString());
+                    statement.setBoolean(11, uData.getName() != null);
+                    statement.setBoolean(12, uData.isOp());
+                    statement.setBoolean(13, uData.isBanned());
+                    statement.setString(14, uData.getName());
+                    statement.setLong(15, uData.getRegistered());
+                    statement.setString(16, uuid.toString());
                     statement.addBatch();
                 } catch (SQLException | NullPointerException e) {
                     saveLast.add(uData);
@@ -451,10 +700,12 @@ public class UsersTable extends Table {
             return saveLast;
         } finally {
             close(statement);
+            Benchmark.stop("Save UserInfo multiple " + data.size());
         }
     }
 
     public Map<UUID, Integer> getUserIds(Collection<UUID> uuids) throws SQLException {
+        Benchmark.start("Get User IDS " + uuids.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -473,10 +724,12 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get User IDS " + uuids.size());
         }
     }
 
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
+        Benchmark.start("Get User IDS ALL");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -492,6 +745,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
+            Benchmark.stop("Get User IDS ALL");
         }
     }
 
