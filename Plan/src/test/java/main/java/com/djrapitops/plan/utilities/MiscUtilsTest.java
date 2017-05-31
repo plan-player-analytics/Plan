@@ -6,7 +6,6 @@
 package test.java.main.java.com.djrapitops.plan.utilities;
 
 import java.util.Set;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -59,9 +58,7 @@ public class MiscUtilsTest {
     @Test
     public void testCheckVersion() {
         String versionG = "2.10.9";
-        String result = MiscUtils.checkVersion("2.0.0", versionG);
-        String exp = Phrase.VERSION_NEW_AVAILABLE.parse(versionG);
-        assertEquals(exp, result);
+        assertTrue(MiscUtils.checkVersion("2.0.0", versionG));
     }
 
     /**
@@ -69,9 +66,12 @@ public class MiscUtilsTest {
      */
     @Test
     public void testCheckVersion2() {
-        String result = MiscUtils.checkVersion("3.0.0", "2.10.9");
-        String exp = Phrase.VERSION_LATEST + "";
-        assertEquals(exp, result);
+        assertTrue(!MiscUtils.checkVersion("3.0.0", "2.10.9"));
+    }
+
+    @Test
+    public void testCheckVersion5() {
+        assertTrue(MiscUtils.checkVersion("2.10.9", "3.0.0"));
     }
 
     /**
@@ -79,9 +79,7 @@ public class MiscUtilsTest {
      */
     @Test
     public void testCheckVersion3() {
-        String result = MiscUtils.checkVersion("2.11.0", "2.10.9");
-        String exp = Phrase.VERSION_LATEST + "";
-        assertEquals(exp, result);
+        assertTrue(!MiscUtils.checkVersion("2.11.0", "2.10.9"));
     }
 
     /**
@@ -89,9 +87,7 @@ public class MiscUtilsTest {
      */
     @Test
     public void testCheckVersion4() {
-        String result = MiscUtils.checkVersion("2.11.0", "2.11.0");
-        String exp = Phrase.VERSION_LATEST + "";
-        assertEquals(exp, result);
+        assertTrue(!MiscUtils.checkVersion("2.11.0", "2.11.0"));
     }
 
     /**
@@ -181,7 +177,7 @@ public class MiscUtilsTest {
             boolean equalToExp1 = r.getName().equals(exp1.getName());
             boolean equalToExp2 = r.getName().equals(exp2.getName());
             if (!(equalToExp1 || equalToExp2)) {
-                fail("Unknown result!: "+r.getName());
+                fail("Unknown result!: " + r.getName());
             }
         }
     }
@@ -197,7 +193,7 @@ public class MiscUtilsTest {
         assertEquals(1, result.size());
         for (OfflinePlayer r : result) {
             if (!r.getName().equals(exp2.getName())) {
-                fail("Unknown result!: "+r.getName());
+                fail("Unknown result!: " + r.getName());
             }
         }
     }

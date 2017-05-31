@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -21,13 +18,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Utility method class containing various static methods.
+ * 
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class MiscUtils {
 
+    /**
+     * Used to get the current time as milliseconds.
+     *
+     * @return Epoch ms.
+     */
     public static long getTime() {
-        return new Date().getTime();
+        return System.currentTimeMillis();
     }
 
     /**
@@ -40,7 +44,11 @@ public class MiscUtils {
             Plan plugin = Plan.getInstance();
             String cVersion = plugin.getDescription().getVersion();
             String gitVersion = getGitVersion();
-            return checkVersion(cVersion, gitVersion);
+            if (checkVersion(cVersion, gitVersion)) {
+                return Phrase.VERSION_NEW_AVAILABLE.parse(gitVersion);
+            } else {
+                return Phrase.VERSION_LATEST + "";
+            }
         } catch (IOException | NumberFormatException e) {
             Log.error(Phrase.VERSION_CHECK_ERROR + "");
         }
@@ -68,14 +76,10 @@ public class MiscUtils {
      * @return
      * @throws NumberFormatException
      */
-    public static String checkVersion(String currentVersion, String gitVersion) throws NumberFormatException {
+    public static boolean checkVersion(String currentVersion, String gitVersion) throws NumberFormatException {
         int newestVersionNumber = FormatUtils.parseVersionNumber(gitVersion);
         int currentVersionNumber = FormatUtils.parseVersionNumber(currentVersion);
-        if (newestVersionNumber > currentVersionNumber) {
-            return Phrase.VERSION_NEW_AVAILABLE.parse(gitVersion);
-        } else {
-            return Phrase.VERSION_LATEST + "";
-        }
+        return newestVersionNumber > currentVersionNumber;
     }
 
     /**
@@ -93,6 +97,7 @@ public class MiscUtils {
      *
      * @param args Arguments of a command, must not be empty if console sender.
      * @param sender Command sender
+     * @param perm
      * @return The name of the player (first argument or sender)
      */
     public static String getPlayerName(String[] args, CommandSender sender, Permissions perm) {

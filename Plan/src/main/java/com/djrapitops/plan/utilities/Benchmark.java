@@ -12,11 +12,20 @@ public class Benchmark {
     
     private static Map<String, Long> starts = new HashMap<>();    
     
+    /**
+     *
+     * @param source
+     */
     public static void start(String source) {
         starts.put(source, System.nanoTime());
         Log.debug(source);
     }
     
+    /**
+     *
+     * @param source
+     * @return
+     */
     public static long stop(String source) {
         Long s = starts.get(source);
         if (s != null) {

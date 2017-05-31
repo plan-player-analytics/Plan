@@ -30,6 +30,14 @@ public class AnalysisUtils {
         return isActive(MiscUtils.getTime(), lastPlayed, playTime, loginTimes);
     }
 
+    /**
+     *
+     * @param now
+     * @param lastPlayed
+     * @param playTime
+     * @param loginTimes
+     * @return
+     */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
@@ -162,6 +170,13 @@ public class AnalysisUtils {
         }
     }
 
+    /**
+     *
+     * @param analysisType
+     * @param source
+     * @param uuids
+     * @return
+     */
     public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
         if (analysisType == AnalysisType.BOOLEAN_PERCENTAGE) {
             try {
@@ -177,6 +192,13 @@ public class AnalysisUtils {
         return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
     }
 
+    /**
+     *
+     * @param analysisType
+     * @param source
+     * @param uuids
+     * @return
+     */
     public static String getBooleanTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
         if (analysisType == AnalysisType.BOOLEAN_TOTAL) {
             try {

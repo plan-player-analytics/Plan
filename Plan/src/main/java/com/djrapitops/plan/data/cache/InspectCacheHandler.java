@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  * This class stores UserData objects used for displaying the Html pages.
@@ -22,7 +24,8 @@ public class InspectCacheHandler {
 
     private DataCacheHandler handler;
     private Plan plugin;
-    private HashMap<UUID, UserData> cache;
+    private Map<UUID, UserData> cache;
+    private Map<UUID, Long> cacheTimes;
 
     /**
      * Class constructor.
@@ -33,6 +36,7 @@ public class InspectCacheHandler {
         this.handler = plugin.getHandler();
         this.plugin = plugin;
         this.cache = new HashMap<>();
+        cacheTimes = new HashMap<>();
     }
 
     /**
@@ -48,11 +52,19 @@ public class InspectCacheHandler {
             @Override
             public void process(UserData data) {
                 cache.put(uuid, new UserData(data));
+                cacheTimes.put(uuid, MiscUtils.getTime());
             }
         };
         handler.getUserDataForProcessing(cacher, uuid, false);
     }
 
+    /**
+     * Used to cache all UserData to the InspectCache from the cache and
+     * provided database.
+     *
+     * @param db Database to cache from if data is not in the cache.
+     * @throws SQLException If Database is not properly enabled
+     */
     public void cacheAllUserData(Database db) throws SQLException {
         Set<UUID> cachedUserData = handler.getDataCache().keySet();
         for (UUID uuid : cachedUserData) {
@@ -66,8 +78,11 @@ public class InspectCacheHandler {
         }
         savedUUIDs.removeAll(cachedUserData);
         List<UserData> userDataForUUIDS = db.getUserDataForUUIDS(savedUUIDs);
+        long time = MiscUtils.getTime();
         for (UserData uData : userDataForUUIDS) {
-            cache.put(uData.getUuid(), uData);
+            UUID uuid = uData.getUuid();
+            cache.put(uuid, uData);
+            cacheTimes.put(uuid, time);
         }
     }
 
@@ -81,6 +96,13 @@ public class InspectCacheHandler {
         return cache.get(uuid);
     }
 
+    public long getCacheTime(UUID uuid) {
+        if (cacheTimes.containsKey(uuid)) {
+            return cacheTimes.get(uuid);
+        }
+        return -1;
+    }
+
     /**
      * Check if the data of a player is in the inspect cache.
      *
@@ -90,7 +112,12 @@ public class InspectCacheHandler {
     public boolean isCached(UUID uuid) {
         return cache.containsKey(uuid);
     }
-    
+
+    /**
+     * Used to get all cached userdata objects.
+     *
+     * @return List of cached userdata objects.
+     */
     public List<UserData> getCachedUserData() {
         return new ArrayList<>(cache.values());
     }

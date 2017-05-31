@@ -151,6 +151,12 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param ids
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, List<SessionData>> getSessionData(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
@@ -183,6 +189,11 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param sessions
+     * @throws SQLException
+     */
     public void saveSessionData(Map<Integer, List<SessionData>> sessions) throws SQLException {
         if (sessions == null || sessions.isEmpty()) {
             return;

@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.data.additional.jobs;
 
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.PlayerManager;
-import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -29,6 +28,9 @@ import static org.bukkit.Bukkit.getOfflinePlayers;
  */
 public class JobsAnalysisJobTable extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public JobsAnalysisJobTable() {
         super("Jobs", "analysistable", AnalysisType.HTML);
         final String job = Html.FONT_AWESOME_ICON.parse("suitcase") + " Job";

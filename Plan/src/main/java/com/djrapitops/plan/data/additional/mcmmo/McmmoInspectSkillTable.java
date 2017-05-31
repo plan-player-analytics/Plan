@@ -32,6 +32,9 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
  */
 public class McmmoInspectSkillTable extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public McmmoInspectSkillTable() {
         super("McMMO", "inspectskilltable");
         super.setAnalysisOnly(false);

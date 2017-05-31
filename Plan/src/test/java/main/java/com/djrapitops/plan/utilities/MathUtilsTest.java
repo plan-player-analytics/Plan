@@ -19,9 +19,15 @@ import org.junit.Test;
  */
 public class MathUtilsTest {
 
+    /**
+     *
+     */
     public MathUtilsTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testAverageInt() {
         List<Integer> l = new ArrayList<>();
@@ -34,6 +40,9 @@ public class MathUtilsTest {
         assertTrue(exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testAverageIntEmpty() {
         List<Integer> l = new ArrayList<>();
@@ -42,6 +51,9 @@ public class MathUtilsTest {
         assertTrue(result + "/" + exp, exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testAverageLong_Collection() {
         List<Long> l = new ArrayList<>();
@@ -54,6 +66,9 @@ public class MathUtilsTest {
         assertTrue(result + "/" + exp, exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testAverageDouble() {
         List<Double> l = new ArrayList<>();
@@ -67,6 +82,9 @@ public class MathUtilsTest {
 
     }
 
+    /**
+     *
+     */
     @Test
     public void testAverage() {
         double exp = 10;
@@ -74,6 +92,9 @@ public class MathUtilsTest {
         assertTrue(result + "/" + exp, exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCountTrueBoolean() {
         List<Boolean> l = new ArrayList<>();
@@ -88,6 +109,9 @@ public class MathUtilsTest {
         assertTrue(result + "/" + exp, exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSumInt() {
         List<Serializable> l = new ArrayList<>();
@@ -100,6 +124,9 @@ public class MathUtilsTest {
         assertTrue(result + "/" + exp, exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSumLong() {
         List<Serializable> l = new ArrayList<>();
@@ -112,6 +139,9 @@ public class MathUtilsTest {
         assertTrue(result + "/" + exp, exp == result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testSumDouble() {
         List<Serializable> l = new ArrayList<>();

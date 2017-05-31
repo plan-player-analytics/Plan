@@ -145,6 +145,11 @@ public class HtmlUtils {
         return html.toString();
     }
     
+    /**
+     *
+     * @param string
+     * @return
+     */
     public static String swapColorsToSpan(String string) {
         Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
             Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,

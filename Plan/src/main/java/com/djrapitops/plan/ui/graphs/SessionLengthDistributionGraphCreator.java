@@ -22,11 +22,21 @@ import main.java.com.djrapitops.plan.utilities.MathUtils;
  */
 public class SessionLengthDistributionGraphCreator {
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static String[] generateDataArraySessions(Collection<SessionData> data) {
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(data);
         return generateDataArray(lengths);
     }
     
+    /**
+     *
+     * @param lengths
+     * @return
+     */
     public static String[] generateDataArray(Collection<Long> lengths) {
         Map<Long, Integer> values = getValues(lengths);
         Map<Long, Integer> scaled = scale(values);

@@ -24,15 +24,54 @@ import org.bukkit.World;
  */
 public abstract class Database {
 
+    /**
+     * Instance of Plan used with this database.
+     */
     protected final Plan plugin;
+
+    /**
+     * Table representing plan_users in the database.
+     */
     protected UsersTable usersTable;
+
+    /**
+     * Table representing plan_gamemodetimes in the database.
+     */
     protected GMTimesTable gmTimesTable;
+
+    /**
+     * Table representing plan_kills in the database.
+     */
     protected KillsTable killsTable;
+
+    /**
+     * Table representing plan_locations in the database.
+     */
     protected LocationsTable locationsTable;
+
+    /**
+     * Table representing plan_nicknames in the database.
+     */
     protected NicknamesTable nicknamesTable;
+
+    /**
+     * Table representing plan_sessions in the database.
+     */
     protected SessionsTable sessionsTable;
+
+    /**
+     * Table representing plan_ips in the database.
+     */
     protected IPsTable ipsTable;
+
+    /**
+     * Table representing plan_commandusages in the database.
+     */
     protected CommandUseTable commandUseTable;
+
+    /**
+     * Table representing plan_version in the database.
+     */
     protected VersionTable versionTable;
 
     /**
@@ -81,6 +120,15 @@ public abstract class Database {
      */
     public abstract void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException;
 
+    /**
+     * Used to get all UserData for multiple UUIDs.
+     *
+     * Should only be called from async thread.
+     *
+     * @param uuids UUIDs to fetch data for.
+     * @return Data for matching UUIDs.
+     * @throws SQLException If database error occurs.
+     */
     public abstract List<UserData> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException;
 
     /**
@@ -239,6 +287,14 @@ public abstract class Database {
         return getLocations(Integer.parseInt(userId), worlds);
     }
 
+    /**
+     *
+     * @param userId
+     * @param worlds
+     * @return
+     * @throws SQLException
+     * @deprecated
+     */
     @Deprecated
     public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
         return locationsTable.getLocations(userId, worlds);

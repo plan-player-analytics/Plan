@@ -157,6 +157,11 @@ public class LocationsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param locations
+     * @throws SQLException
+     */
     public void saveAdditionalLocationsLists(Map<Integer, List<Location>> locations) throws SQLException {
         if (locations == null || locations.isEmpty()) {
             return;

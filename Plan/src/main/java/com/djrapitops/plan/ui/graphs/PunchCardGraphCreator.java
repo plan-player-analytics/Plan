@@ -19,6 +19,11 @@ import main.java.com.djrapitops.plan.data.SessionData;
  */
 public class PunchCardGraphCreator {
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static String generateDataArray(Collection<SessionData> data) {
         // Initialize dataset
         List<Long> sessionStarts = getSessionStarts(data);

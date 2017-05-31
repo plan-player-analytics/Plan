@@ -173,6 +173,12 @@ public class NicknamesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param ids
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, List<String>> getNicknames(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
@@ -218,6 +224,12 @@ public class NicknamesTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param nicknames
+     * @param lastNicks
+     * @throws SQLException
+     */
     public void saveNickLists(Map<Integer, Set<String>> nicknames, Map<Integer, String> lastNicks) throws SQLException {
         if (nicknames == null || nicknames.isEmpty()) {
             return;

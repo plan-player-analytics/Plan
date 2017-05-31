@@ -23,6 +23,9 @@ import test.java.utils.TestInit;
 @PrepareForTest(JavaPlugin.class)
 public class PlayerActivityGraphCreatorTest {
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();

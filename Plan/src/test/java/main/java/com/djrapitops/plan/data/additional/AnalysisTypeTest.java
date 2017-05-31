@@ -15,14 +15,23 @@ import static org.junit.Assert.*;
  */
 public class AnalysisTypeTest {
     
+    /**
+     *
+     */
     public AnalysisTypeTest() {
     }
     
+    /**
+     *
+     */
     @Test
     public void testGetModifier() {
         assertEquals("Average ", AnalysisType.INT_AVG.getModifier());
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPlaceholderModifier() {
         assertEquals("totalInt_", AnalysisType.INT_TOTAL.getPlaceholderModifier());

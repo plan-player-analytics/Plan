@@ -22,6 +22,9 @@ import main.java.com.djrapitops.plan.ui.Html;
  */
 public class JobsInspectJobTable extends PluginData {
 
+    /**
+     * Class Constructor, sets the parameters of the PluginData object.
+     */
     public JobsInspectJobTable() {
         super("Jobs", "inspecttable");
         super.setAnalysisOnly(false);
@@ -33,18 +36,21 @@ public class JobsInspectJobTable extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        PlayerManager pm = Jobs.getPlayerManager();
-        PlayerInfo info = pm.getPlayerInfo(uuid);
-        JobsPlayer player = pm.getJobsPlayerOffline(info);
-        List<JobProgression> progression = player.getJobProgression();
-        if (progression.isEmpty()) {
-            return parseContainer("", Html.TABLELINE_2.parse("No Jobs.", ""));
+        try {
+            PlayerManager pm = Jobs.getPlayerManager();
+            PlayerInfo info = pm.getPlayerInfo(uuid);
+            JobsPlayer player = pm.getJobsPlayerOffline(info);
+            List<JobProgression> progression = player.getJobProgression();
+            if (!progression.isEmpty()) {
+                StringBuilder html = new StringBuilder();
+                for (JobProgression job : progression) {
+                    html.append(Html.TABLELINE_2.parse(job.getJob().getName(), "" + job.getLevel()));
+                }
+                return parseContainer("", html.toString());
+            }
+        } catch (NullPointerException e) {
         }
-        StringBuilder html = new StringBuilder();
-        for (JobProgression job : progression) {
-            html.append(Html.TABLELINE_2.parse(job.getJob().getName(), "" + job.getLevel()));
-        }
-        return parseContainer("", html.toString());
+        return parseContainer("", Html.TABLELINE_2.parse("No Jobs.", ""));
     }
 
     @Override

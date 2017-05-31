@@ -284,6 +284,12 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
     public UserData getUserData(UUID uuid) throws SQLException {
         Benchmark.start(uuid + " Get UserData");
         boolean containsBukkitData = getContainsBukkitData(uuid);
@@ -317,6 +323,12 @@ public class UsersTable extends Table {
         return containsBukkitData;
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public List<UserData> getUserData(Collection<UUID> uuids) throws SQLException {
         Benchmark.start("Get UserData Multiple " + uuids.size());
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
@@ -337,6 +349,12 @@ public class UsersTable extends Table {
         return datas;
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public List<UUID> getContainsBukkitData(Collection<UUID> uuids) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -473,6 +491,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     */
     public void addUserInformationToUserData(List<UserData> data) throws SQLException {
         Benchmark.start("addUserInformationToUserData Multiple " + data.size());
         PreparedStatement statement = null;
@@ -704,6 +727,12 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public Map<UUID, Integer> getUserIds(Collection<UUID> uuids) throws SQLException {
         Benchmark.start("Get User IDS " + uuids.size());
         PreparedStatement statement = null;
@@ -728,6 +757,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
         Benchmark.start("Get User IDS ALL");
         PreparedStatement statement = null;

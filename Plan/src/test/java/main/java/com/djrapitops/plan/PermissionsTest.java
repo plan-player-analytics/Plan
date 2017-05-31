@@ -18,14 +18,23 @@ import test.java.utils.MockUtils;
  */
 public class PermissionsTest {
     
+    /**
+     *
+     */
     public PermissionsTest() {
     }
 
+    /**
+     *
+     */
     @Test
     public void testUserHasThisPermission() {
         assertTrue(Permissions.INSPECT_OTHER.userHasThisPermission(MockUtils.mockPlayer()));
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetPermission() {
         assertEquals("plan.inspect.other", Permissions.INSPECT_OTHER.getPermission());

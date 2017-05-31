@@ -885,26 +885,58 @@ public class AnalysisData {
         this.genderData = genderData;
     }
 
+    /**
+     * Get the data for the Session Punchcard
+     *
+     * @return Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
+     */
     public String getPunchCardData() {
         return punchCardData;
     }
 
+    /**
+     * Set the data for the Session Punchcard
+     *
+     * @param punchCardData Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
+     */
     public void setPunchCardData(String punchCardData) {
         this.punchCardData = punchCardData;
     }
 
+    /**
+     * Get the data and labels for the session distribution barchart.
+     *
+     * @return index 0: [0, 5, 4], 1: ["0-5", "5-10", "10-15"]
+     */
     public String[] getSessionDistributionData() {
         return sessionDistributionData;
     }
 
+    /**
+     * Set the data and labels for the session distribution barchart.
+     *
+     * @param sessionDistributionData index 0: [0, 5, 4], 1: ["0-5", "5-10",
+     * "10-15"]
+     */
     public void setSessionDistributionData(String[] sessionDistributionData) {
         this.sessionDistributionData = sessionDistributionData;
     }
 
+    /**
+     * Get the data and labels for the playtime distribution barchart.
+     *
+     * @return index 0: [0, 5, 4], 1: ["0-5", "5-10", "10-15"]
+     */
     public String[] getPlaytimeDistributionData() {
         return playtimeDistributionData;
     }
 
+    /**
+     * Set the data and labels for the playtime distribution barchart.
+     *
+     * @param playtimeDistributionData index 0: [0, 5, 4], 1: ["0-5", "5-10",
+     * "10-15"]
+     */
     public void setPlaytimeDistributionData(String[] playtimeDistributionData) {
         this.playtimeDistributionData = playtimeDistributionData;
     }

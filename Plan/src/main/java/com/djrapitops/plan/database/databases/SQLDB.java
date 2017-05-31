@@ -146,6 +146,9 @@ public abstract class SQLDB extends Database {
         return true;
     }
 
+    /**
+     *
+     */
     public void convertBukkitDataToDB() {
         new BukkitRunnable() {
             @Override
@@ -316,6 +319,12 @@ public abstract class SQLDB extends Database {
         Benchmark.stop("DB Give userdata to processors");
     }
 
+    /**
+     *
+     * @param uuidsCol
+     * @return
+     * @throws SQLException
+     */
     @Override
     public List<UserData> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
         if (uuidsCol == null || uuidsCol.isEmpty()) {

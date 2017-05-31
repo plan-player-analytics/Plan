@@ -26,6 +26,9 @@ import test.java.utils.*;
 @PrepareForTest(JavaPlugin.class)
 public class FormatUtilsTest {
 
+    /**
+     *
+     */
     @Before
     public void setUp() {
         TestInit t = new TestInit();

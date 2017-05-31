@@ -258,16 +258,9 @@ public class Analysis {
         Benchmark.stop("Analysis Activity Visualization");
     }
 
-    // TODO Refactor
     private void analyzeAverageAge(List<Integer> ages, AnalysisData data) {
-        int totalAge = 0;
-        for (int age : ages) {
-            totalAge += age;
-        }
-        double averageAge;
-        if (!ages.isEmpty()) {
-            averageAge = totalAge * 1.0 / ages.size();
-        } else {
+        double averageAge = MathUtils.averageInt(ages.stream());
+        if (averageAge == 0) {
             averageAge = -1;
         }
         data.setAverageAge(averageAge);

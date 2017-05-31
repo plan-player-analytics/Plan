@@ -33,6 +33,7 @@ public class PlaceholderUtils {
     public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
         Benchmark.start("Replace Placeholders Anaysis");
         HashMap<String, String> replaceMap = new HashMap<>();
+        replaceMap.put("%currenttime%", MiscUtils.getTime()+"");
         replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
         replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
         replaceMap.put("%gm2%", (int) (data.getGm2Perc() * 100) + "%");
@@ -128,6 +129,7 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
+        replaceMap.put("%refreshlong%", data.getRefreshDate()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         Benchmark.stop("Replace Placeholders Anaysis");
         return replaceMap;
@@ -142,6 +144,7 @@ public class PlaceholderUtils {
      */
     public static Map<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
         Benchmark.start("Replace Placeholders Inspect");
+        
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
@@ -222,6 +225,8 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
+        replaceMap.put("%refreshlong%", plugin.getInspectCache().getCacheTime(uuid)+"");
+        replaceMap.put("%currenttime%", MiscUtils.getTime()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);

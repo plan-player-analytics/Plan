@@ -146,6 +146,12 @@ public class IPsTable extends Table {
         }
     }
     
+    /**
+     *
+     * @param ids
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, Set<InetAddress>> getIPList(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
@@ -178,6 +184,11 @@ public class IPsTable extends Table {
         }
     }
     
+    /**
+     *
+     * @param ips
+     * @throws SQLException
+     */
     public void saveIPList(Map<Integer, Set<InetAddress>> ips) throws SQLException {
         if (ips == null || ips.isEmpty()) {
             return;

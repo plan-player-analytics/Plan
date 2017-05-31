@@ -944,10 +944,19 @@ public class UserData {
         this.clearAfterSave = clearAfterSave;
     }
 
+    /**
+     * Set the banned value.
+     *
+     * @param isBanned true/false
+     */
     public void setBanned(boolean isBanned) {
         this.isBanned = isBanned;
     }
 
+    /**
+     * Set the online value.
+     * @param isOnline true/false
+     */
     public void setOnline(boolean isOnline) {
         this.isOnline = isOnline;
     }

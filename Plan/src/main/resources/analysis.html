@@ -279,7 +279,7 @@ header p {
 }
 </style>
 </head>
-<body>
+<body onload="countUpTimer()">
 	<header>
 		<div class="header-content">
 			<img src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
@@ -290,7 +290,7 @@ header p {
 <div id="content" class="content">
 	
 	<div id="sidenav" class="sidenav">
-		<p>Last Refresh: <br>%refresh% ago</p>
+		<p>Last Refresh: <br><span id="divTime">%refresh%</span> ago</p>
 		<a href="javascript:void(0)" class="nav-button">
 			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
 		</a>
@@ -823,6 +823,7 @@ for (i=0; i < navButtons.length; i++) {
 }
 x.style.opacity = "1";
 openFunc(slideIndex)();
+countUpTimer();
 
 function openFunc(i) {
 	return function() {
@@ -849,6 +850,42 @@ function openFunc(i) {
 		x.style.transform = "translate3d("+value+"%,0px,0)";
 	};
 }
+var serverTime = new Date(%currenttime%);
+var now = new Date();
+var timediff = serverTime.getTime()-now.getTime();
+function countUpTimer() {
+		var now = new Date();
+		var begin = new Date(%refreshlong%-timediff);
+		var out = "";
+		
+		var seconds = now.getTime() - begin.getTime();
+		seconds = Math.floor(seconds / 1000);
+						
+		var dd = Math.floor(seconds / 86400);
+		seconds -= (dd * 86400);
+		
+		var dh = Math.floor(seconds / 3600);
+		seconds -= (dh * 3600);
+		
+		var dm = Math.floor(seconds / 60);
+		seconds -= (dm * 60);
+		
+		seconds = Math.floor(seconds);
+		
+		if (dd != 0) {
+			out += dd.toString() + "d ";
+		}
+		if (dh != 0) {
+			out += dh.toString() + "h ";
+		}
+		if (dm != 0) {
+			out += dm.toString() + "m ";
+		}		
+		out += seconds.toString() + "s ";
+						
+		document.getElementById('divTime').innerHTML = out;
+		setTimeout('countUpTimer()', 1000);
+	}	
 </script>
 <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
