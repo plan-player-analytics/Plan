@@ -14,11 +14,12 @@ import main.java.com.djrapitops.plan.database.tables.NicknamesTable;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.database.tables.VersionTable;
-import org.bukkit.Location;
-import org.bukkit.World;
 
 /**
  * Abstract class representing a Database.
+ *
+ * All methods should be only called from an asyncronous thread, unless stated
+ * otherwise.
  *
  * @author Rsl1122
  */
@@ -134,21 +135,6 @@ public abstract class Database {
     /**
      * Used to save UserData object of a user.
      *
-     * @param uuid UUID of the player
-     * @param data UserData of the Player.
-     * @throws SQLException If a database error occurs.
-     * @deprecated Separate UUID no longer required.
-     */
-    @Deprecated
-    public void saveUserData(UUID uuid, UserData data) throws SQLException {
-        if (uuid.equals(data.getUuid())) {
-            saveUserData(data);
-        }
-    }
-
-    /**
-     * Used to save UserData object of a user.
-     *
      * @param data UserData of the Player.
      * @throws SQLException If a database error occurs.
      */
@@ -178,12 +164,16 @@ public abstract class Database {
     /**
      * Used to get the name of the database type.
      *
+     * Thread safe.
+     *
      * @return SQLite/MySQL
      */
     public abstract String getName();
 
     /**
      * Used to get the config name of the database type.
+     *
+     * Thread safe.
      *
      * @return sqlite/mysql
      */
@@ -238,127 +228,101 @@ public abstract class Database {
     /**
      * Used to save CommandUse map.
      *
-     * @param data
+     * @param data String command (key), Integer times used
      * @throws SQLException If a database error occurs.
      * @throws NullPointerException If the database has not initialized tables.
      */
-    @Deprecated
     public void saveCommandUse(Map<String, Integer> data) throws SQLException, NullPointerException {
         commandUseTable.saveCommandUse(data);
     }
 
     /**
+     * Used to fetch the saved UUIDs in the users table.
      *
-     * @return @throws SQLException If a database error occurs.
+     * @return Set of saved UUIDs
+     * @throws SQLException If a database error occurs.
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
         return usersTable.getSavedUUIDs();
     }
 
     /**
+     * Used to get the Command usage mep.
      *
-     * @return @throws SQLException If a database error occurs.
+     * @return String command (key), Integer times used
+     * @throws SQLException If a database error occurs.
      */
-    @Deprecated
     public Map<String, Integer> getCommandUse() throws SQLException {
         return commandUseTable.getCommandUse();
     }
 
     /**
+     * Used to get the users table.
      *
-     * @param uuid
-     * @return
-     * @throws SQLException If a database error occurs.
-     */
-    @Deprecated
-    public int getUserId(String uuid) throws SQLException {
-        return usersTable.getUserId(uuid);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param worlds
-     * @return
-     * @throws SQLException If a database error occurs.
-     */
-    @Deprecated
-    public List<Location> getLocations(String userId, HashMap<String, World> worlds) throws SQLException {
-        return getLocations(Integer.parseInt(userId), worlds);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param worlds
-     * @return
-     * @throws SQLException
-     * @deprecated
-     */
-    @Deprecated
-    public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
-        return locationsTable.getLocations(userId, worlds);
-    }
-
-    /**
-     *
-     * @return
+     * @return Table representing plan_users
      */
     public UsersTable getUsersTable() {
         return usersTable;
     }
 
     /**
+     * Used to get the users table.
      *
-     * @return
+     * @return Table representing plan_sessions
      */
     public SessionsTable getSessionsTable() {
         return sessionsTable;
     }
 
     /**
+     * Used to get the gm times table.
      *
-     * @return
+     * @return Table representing plan_gamemodetimes
      */
     public GMTimesTable getGmTimesTable() {
         return gmTimesTable;
     }
 
     /**
+     * Used to get the kills table.
      *
-     * @return
+     * @return Table representing plan_kills
      */
     public KillsTable getKillsTable() {
         return killsTable;
     }
 
     /**
+     * Used to get the locations table.
      *
-     * @return
+     * @return Table representing plan_locations
      */
     public LocationsTable getLocationsTable() {
         return locationsTable;
     }
 
     /**
+     * Used to get the ips table.
      *
-     * @return
+     * @return Table representing plan_ips
      */
     public IPsTable getIpsTable() {
         return ipsTable;
     }
 
     /**
+     * Used to get the nicknames table.
      *
-     * @return
+     * @return Table representing plan_nicknames
      */
     public NicknamesTable getNicknamesTable() {
         return nicknamesTable;
     }
 
     /**
+     * Used to get the command usage table.
      *
-     * @return
+     * @return Table representing plan_commandusages
      */
     public CommandUseTable getCommandUseTable() {
         return commandUseTable;

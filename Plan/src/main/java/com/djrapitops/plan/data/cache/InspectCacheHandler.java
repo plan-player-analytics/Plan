@@ -96,6 +96,12 @@ public class InspectCacheHandler {
         return cache.get(uuid);
     }
 
+    /**
+     * Returns the Epoch millisecond the data was cached to the inspect cache.
+     *
+     * @param uuid UUID of the player.
+     * @return -1 when not cached or Epoch millisecond.
+     */
     public long getCacheTime(UUID uuid) {
         if (cacheTimes.containsKey(uuid)) {
             return cacheTimes.get(uuid);

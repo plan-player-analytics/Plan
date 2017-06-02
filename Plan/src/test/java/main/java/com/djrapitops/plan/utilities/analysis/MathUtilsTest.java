@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test.java.main.java.com.djrapitops.plan.utilities;
+package test.java.main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import main.java.com.djrapitops.plan.utilities.MathUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 

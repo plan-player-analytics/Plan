@@ -16,6 +16,7 @@ public enum Settings {
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
     ANALYSIS_LOG_FINISHED("Settings.Analysis.NotifyWhenFinished"),
+    ANALYSIS_EXPORT("Settings.Analysis.Export.Enabled"),
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
@@ -48,6 +49,7 @@ public enum Settings {
     LOCALE("Settings.Locale"),
     WEBSERVER_IP("Settings.WebServer.InternalIP"),
     SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode"),
+    ANALYSIS_EXPORT_PATH("Settings.Analysis.Export.DestinationFolder"),
     //
     SERVER_NAME("Customization.ServerName"),
     //
@@ -124,7 +126,7 @@ public enum Settings {
     public int getNumber() {
         return Plan.getInstance().getConfig().getInt(configPath);
     }
-    
+
     public List<String> getStringList() {
         return Plan.getInstance().getConfig().getStringList(configPath);
     }

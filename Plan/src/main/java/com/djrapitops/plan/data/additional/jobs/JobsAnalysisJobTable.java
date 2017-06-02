@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.MathUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import static org.bukkit.Bukkit.getOfflinePlayers;
 
 /**

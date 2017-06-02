@@ -35,16 +35,14 @@ public class PlayerActivityGraphCreator {
         List<Long> sessionStarts = s.get(0);
         List<Long> sessionEnds = s.get(1);
 
-        Benchmark.start("Player Activity Graph Before Addition");
         int amount = (int) sessionStarts.stream().filter(start -> start < nowMinusScale).count();
         for (int i = amount; i > 0; i--) {
             sessionStarts.add(nowMinusScale);
         }
-        Benchmark.stop("Player Activity Graph Before Addition");
         Benchmark.start("Player Activity Graph Amount Calculation");
-        
+
         Map<Long, Integer> change = transformIntoChangeMap(sessionStarts, sessionEnds);
-        
+
         long lastPValue = 0;
         long lastSavedPValue = -1;
         long lastSaveIndex = 0;
@@ -115,7 +113,6 @@ public class PlayerActivityGraphCreator {
      * @return
      */
     public static List<List<Long>> filterAndTransformSessions(List<SessionData> sessionData, long nowMinusScale) {
-        Benchmark.start("Player Activity Graph Transform " + sessionData.size() + " " + nowMinusScale);
         List<Long[]> values = sessionData.parallelStream()
                 .filter(session -> (session != null))
                 .filter(session -> session.isValid())
@@ -131,7 +128,6 @@ public class PlayerActivityGraphCreator {
         List<List<Long>> r = new ArrayList<>();
         r.add(sessionStarts);
         r.add(sessionEnds);
-        Benchmark.stop("Player Activity Graph Transform " + sessionData.size() + " " + nowMinusScale);
         return r;
     }
 

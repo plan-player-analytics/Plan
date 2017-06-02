@@ -60,7 +60,7 @@ public class DataCacheSaveQueueTest {
             }
 
             @Override
-            public void saveUserData(UUID uuid, UserData data) throws SQLException {
+            public void saveUserData(UserData data) throws SQLException {
                 if (calledSaveUserData) {
                     calledSaveUserData2 = true;
                 }

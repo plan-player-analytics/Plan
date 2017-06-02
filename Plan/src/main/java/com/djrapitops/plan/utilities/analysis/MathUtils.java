@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
 import java.util.Collection;

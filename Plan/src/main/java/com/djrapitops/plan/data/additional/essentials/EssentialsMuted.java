@@ -41,7 +41,7 @@ public class EssentialsMuted extends PluginData {
         if (user != null) {
             return parseContainer("", user.isMuted() ? "Yes" : "No");
         }
-        return "";
+        return parseContainer(modifier, "No");
     }
 
     @Override

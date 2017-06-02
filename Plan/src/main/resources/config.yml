@@ -8,6 +8,9 @@ Settings:
     LogProgressOnConsole: false
     NotifyWhenFinished: true
     MinutesPlayedUntilConsidiredActive: 10
+    Export:
+      Enabled: false
+      DestinationFolder: 'Analysis Results'
   Cache:
     Processing:
       GetLimit: 2000

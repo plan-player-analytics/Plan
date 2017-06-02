@@ -9,8 +9,8 @@ import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
-import main.java.com.djrapitops.plan.utilities.Analysis;
-import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
@@ -886,7 +886,7 @@ public class AnalysisData {
     }
 
     /**
-     * Get the data for the Session Punchcard
+     * Get the data for the Session Punchcard.
      *
      * @return Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
      */
@@ -895,7 +895,7 @@ public class AnalysisData {
     }
 
     /**
-     * Set the data for the Session Punchcard
+     * Set the data for the Session Punchcard.
      *
      * @param punchCardData Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
      */

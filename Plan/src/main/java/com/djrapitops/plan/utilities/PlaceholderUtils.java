@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;

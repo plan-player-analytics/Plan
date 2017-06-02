@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -11,6 +11,9 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  *

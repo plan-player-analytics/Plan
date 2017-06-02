@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.MathUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *

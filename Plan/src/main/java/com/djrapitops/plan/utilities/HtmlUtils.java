@@ -106,7 +106,6 @@ public class HtmlUtils {
         StringBuilder html = new StringBuilder();
         String temp = "";
         int evenSize = pluginNames.size() - (pluginNames.size() % 2);
-        Log.debug("Html parsing for:" + pluginNames + ", " + (evenSize));
         for (int i = 0; i < evenSize; i++) {
             String name = pluginNames.get(i);
             if (i % 2 == 0) {
@@ -134,7 +133,6 @@ public class HtmlUtils {
     }
 
     private static String getContent(String name, List<String> placeholders) {
-        Log.debug("Getting content for: "+name);
         StringBuilder html = new StringBuilder();
         html.append(Html.HEADER.parse(name));
         html.append(Html.PLUGIN_CONTAINER_START.parse());

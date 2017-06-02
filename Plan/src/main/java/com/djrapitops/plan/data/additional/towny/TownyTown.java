@@ -37,7 +37,7 @@ public class TownyTown extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (!offlinePlayer.hasPlayedBefore()) {
-            return "";
+            return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
         }
         String name = offlinePlayer.getName();
         try {
@@ -50,7 +50,7 @@ public class TownyTown extends PluginData {
             }
             return parseContainer("", town);
         } catch (NotRegisteredException ex) {
-            return "";
+            return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
         }
     }
 

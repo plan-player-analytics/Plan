@@ -65,8 +65,8 @@ public class KillHandlingTest {
             }
 
             @Override
-            public int getUserId(String uuid) {
-                return 1;
+            public void convertBukkitDataToDB() {
+
             }
         };
         when(plan.getDB()).thenReturn(db);
@@ -89,7 +89,8 @@ public class KillHandlingTest {
     public void testProcessKillInfoPlayer() throws SQLException {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         Player dead = MockUtils.mockPlayer2();
-//        db.saveUserData(dead.getUniqueId(), new UserData(dead, new DemographicsData()));
+        db.init();
+        db.saveUserData(new UserData(dead, new DemographicsData()));
         KillHandling.processKillInfo(data, 10L, dead, "TestWeapon");
         KillData expected = new KillData(dead.getUniqueId(), 1, "TestWeapon", 10L);
         assertTrue("Didn't add the kill", data.getPlayerKills().size() == 1);

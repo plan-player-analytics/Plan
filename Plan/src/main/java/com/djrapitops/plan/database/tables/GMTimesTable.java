@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.bukkit.GameMode;
 
 /**
@@ -120,7 +119,7 @@ public class GMTimesTable extends Table {
         if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;
         }
-        
+
         PreparedStatement statement = null;
         GameMode[] gms = new GameMode[]{GameMode.SURVIVAL, GameMode.CREATIVE, GameMode.ADVENTURE, GameMode.SPECTATOR};
         int update = 0;
@@ -147,12 +146,12 @@ public class GMTimesTable extends Table {
             }
             update = statement.executeUpdate();
         } finally {
-            close(statement);            
+            close(statement);
         }
         if (update == 0) {
             addNewGMTimesRow(userId, gamemodeTimes);
         }
-        
+
     }
 
     private void addNewGMTimesRow(int userId, Map<GameMode, Long> gamemodeTimes) throws SQLException {

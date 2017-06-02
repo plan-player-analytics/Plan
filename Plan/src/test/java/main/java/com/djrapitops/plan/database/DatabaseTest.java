@@ -275,7 +275,7 @@ public class DatabaseTest {
         db.saveUserData(data2);
         data.addNickname("s); DROP TABLE plan_users;--");
         db.saveUserData(data);
-        assertTrue("Removed Users table.", db.getUserId(data2.getUuid().toString()) != -1);
+        assertTrue("Removed Users table.", db.getUsersTable().getUserId(data2.getUuid().toString()) != -1);
     }
 
     /**

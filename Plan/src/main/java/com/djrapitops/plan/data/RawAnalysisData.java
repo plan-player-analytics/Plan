@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import main.java.com.djrapitops.plan.utilities.Analysis;
+import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
 /**
  * This class is used for storing combined data of several UserData objects

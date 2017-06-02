@@ -21,7 +21,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
  * @author Rsl1122
  */
 public class IPsTable extends Table {
-    
+
     private final String columnUserID;
     private final String columnIP;
 
@@ -145,7 +145,7 @@ public class IPsTable extends Table {
             Benchmark.stop("Save Ips");
         }
     }
-    
+
     /**
      *
      * @param ids
@@ -183,7 +183,7 @@ public class IPsTable extends Table {
             Benchmark.stop("Get Ips Multiple " + ids.size());
         }
     }
-    
+
     /**
      *
      * @param ips

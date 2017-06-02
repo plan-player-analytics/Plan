@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.data.cache;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.utilities.Analysis;
+import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
 /**
  * This class is used to store the most recent AnalysisData object and to run
