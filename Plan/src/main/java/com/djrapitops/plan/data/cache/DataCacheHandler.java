@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * This Class contains the Cache.
@@ -338,7 +337,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void saveCommandUse() {
         try {
-            db.saveCommandUse(commandUse);
+            db.saveCommandUse(new HashMap<>(commandUse));
         } catch (SQLException | NullPointerException e) {
             Log.toLog(this.getClass().getName(), e);
         }
