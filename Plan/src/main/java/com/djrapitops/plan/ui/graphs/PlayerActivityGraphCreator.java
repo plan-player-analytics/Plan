@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,9 +11,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
@@ -65,11 +68,35 @@ public class PlayerActivityGraphCreator {
                 playersOnline.add(lastPValue);
             }
         }
+        if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
+            long average = MathUtils.averageLong(playersOnline.stream());
+            double standardDiviation = getStandardDiviation(playersOnline, average);
+            if (standardDiviation > 3) {
+                for (int i = 0; i < playersOnline.size(); i++) {
+                    long value = playersOnline.get(i);
+                    if (value - average > 3 * standardDiviation) {
+                        playersOnline.set(i, (long) maxPlayers + 10);
+                    }
+                }
+            }
+        }
         Benchmark.stop("Player Activity Graph Amount Calculation");
+        playersOnline.add(0L);
+        playersOnline.add(0L);
+        playersOnline.add(0L);
         playersOnline.add(0L);
         playersOnline.add((long) maxPlayers);
         Benchmark.stop("Generate Player Activity Graph " + sessionData.size() + " " + scale + " |");
         return new String[]{playersOnline.toString(), labels.toString()};
+    }
+
+    private static double getStandardDiviation(List<Long> players, long avg) {
+        List<Double> valueMinusAvg = players.stream()
+                .map(p -> Math.pow(Math.abs(p - avg), 2))
+                .collect(Collectors.toList());
+        int size = valueMinusAvg.size();
+        double sum = MathUtils.sumDouble(valueMinusAvg.stream().map(p -> (Serializable) p));
+        return Math.sqrt(sum / size);
     }
 
     private static Map<Long, Integer> transformIntoChangeMap(List<Long> sessionStarts, List<Long> sessionEnds) {

@@ -70,7 +70,14 @@ public class AnalysisData {
     private String geomapZ;
     private String geomapCodes;
 
-    private int[] genderData;
+    private int avgUniqJoins;
+    private int avgUniqJoinsDay;
+    private int avgUniqJoinsWeek;
+    private int avgUniqJoinsMonth;
+
+    private int uniqueJoinsDay;
+    private int uniqueJoinsWeek;
+    private int uniqueJoinsMonth;
 
     /**
      * Class constructor.
@@ -78,6 +85,13 @@ public class AnalysisData {
      * All data has to be set with setters to avoid NPEs.
      */
     public AnalysisData() {
+        avgUniqJoins = 0;
+        avgUniqJoinsDay = 0;
+        avgUniqJoinsWeek = 0;
+        avgUniqJoinsMonth = 0;
+        uniqueJoinsDay = 0;
+        uniqueJoinsWeek = 0;
+        uniqueJoinsMonth = 0;
         sortablePlayersTable = Html.ERROR_NOT_SET + "";
         commandUseTableHtml = Html.ERROR_NOT_SET + "";
         recentPlayers = Html.ERROR_NOT_SET + "";
@@ -88,7 +102,6 @@ public class AnalysisData {
         sessionDistributionData = new String[]{"[]", "[]"};
         playtimeDistributionData = new String[]{"[]", "[]"};
         playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
-        genderData = new int[]{0, 0, 0};
         additionalDataReplaceMap = new HashMap<>();
     }
 
@@ -192,9 +205,6 @@ public class AnalysisData {
             return false;
         }
         if (!Arrays.deepEquals(this.playersDataArray, other.playersDataArray)) {
-            return false;
-        }
-        if (!Arrays.equals(this.genderData, other.genderData)) {
             return false;
         }
         return true;
@@ -863,29 +873,6 @@ public class AnalysisData {
     }
 
     /**
-     * Get the integer array containing 3 numbers.
-     *
-     * 0 Male, 1 Female, 2 Unknown.
-     *
-     * @return for example [0, 4, 5] when 0 male, 4 female and 5 unknown.
-     */
-    public int[] getGenderData() {
-        return genderData;
-    }
-
-    /**
-     *
-     * Set the integer array containing 3 numbers.
-     *
-     * 0 Male, 1 Female, 2 Unknown.
-     *
-     * @param genderData for example [0, 4, 5]
-     */
-    public void setGenderData(int[] genderData) {
-        this.genderData = genderData;
-    }
-
-    /**
      * Get the data for the Session Punchcard.
      *
      * @return Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
@@ -939,5 +926,61 @@ public class AnalysisData {
      */
     public void setPlaytimeDistributionData(String[] playtimeDistributionData) {
         this.playtimeDistributionData = playtimeDistributionData;
+    }
+
+    public int getAvgUniqJoins() {
+        return avgUniqJoins;
+    }
+
+    public int getAvgUniqJoinsDay() {
+        return avgUniqJoinsDay;
+    }
+
+    public int getAvgUniqJoinsWeek() {
+        return avgUniqJoinsWeek;
+    }
+
+    public int getAvgUniqJoinsMonth() {
+        return avgUniqJoinsMonth;
+    }
+
+    public void setAvgUniqJoins(int avgUniqJoins) {
+        this.avgUniqJoins = avgUniqJoins;
+    }
+
+    public void setAvgUniqJoinsDay(int avgUniqJoinsDay) {
+        this.avgUniqJoinsDay = avgUniqJoinsDay;
+    }
+
+    public void setAvgUniqJoinsWeek(int avgUniqJoinsWeek) {
+        this.avgUniqJoinsWeek = avgUniqJoinsWeek;
+    }
+
+    public void setAvgUniqJoinsMonth(int avgUniqJoinsMonth) {
+        this.avgUniqJoinsMonth = avgUniqJoinsMonth;
+    }
+
+    public int getUniqueJoinsDay() {
+        return uniqueJoinsDay;
+    }
+
+    public void setUniqueJoinsDay(int uniqueJoinsDay) {
+        this.uniqueJoinsDay = uniqueJoinsDay;
+    }
+
+    public int getUniqueJoinsWeek() {
+        return uniqueJoinsWeek;
+    }
+
+    public void setUniqueJoinsWeek(int uniqueJoinsWeek) {
+        this.uniqueJoinsWeek = uniqueJoinsWeek;
+    }
+
+    public int getUniqueJoinsMonth() {
+        return uniqueJoinsMonth;
+    }
+
+    public void setUniqueJoinsMonth(int uniqueJoinsMonth) {
+        this.uniqueJoinsMonth = uniqueJoinsMonth;
     }
 }

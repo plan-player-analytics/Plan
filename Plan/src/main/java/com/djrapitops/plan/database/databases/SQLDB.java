@@ -31,8 +31,6 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public abstract class SQLDB extends Database {
 
-    final Plan plugin;
-
     private final boolean supportsModification;
 
     private Connection connection;
@@ -44,7 +42,6 @@ public abstract class SQLDB extends Database {
      */
     public SQLDB(Plan plugin, boolean supportsModification) {
         super(plugin);
-        this.plugin = plugin;
         this.supportsModification = supportsModification;
         boolean usingMySQL = getName().equals("MySQL");
 
@@ -158,6 +155,7 @@ public abstract class SQLDB extends Database {
                     Set<UUID> uuids = usersTable.getSavedUUIDs();
                     uuids.removeAll(usersTable.getContainsBukkitData(uuids));
                     if (uuids.isEmpty()) {
+                        Log.debug("No conversion necessary.");
                         return;
                     }
                     Log.info("Beginning Bukkit Data -> DB Conversion for " + uuids.size() + " players");
@@ -313,9 +311,9 @@ public abstract class SQLDB extends Database {
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
         data.setPlayerKills(killsTable.getPlayerKills(userId));
-        for (DBCallableProcessor processor : processors) {
+        processors.stream().forEach((processor) -> {
             processor.process(data);
-        }
+        });
         Benchmark.stop("DB Give userdata to processors");
     }
 
@@ -333,12 +331,9 @@ public abstract class SQLDB extends Database {
 
         Benchmark.start("DB get UserData for " + uuidsCol.size());
         Map<UUID, Integer> userIds = usersTable.getAllUserIds();
-        Set<UUID> remove = new HashSet<>();
-        for (UUID uuid : uuidsCol) {
-            if (!userIds.containsKey(uuid)) {
-                remove.add(uuid);
-            }
-        }
+        Set<UUID> remove = uuidsCol.stream()
+                .filter((uuid) -> (!userIds.containsKey(uuid)))
+                .collect(Collectors.toSet());
         List<UUID> uuids = new ArrayList<>(uuidsCol);
         Log.debug("Data not found for: " + remove.size());
         uuids.removeAll(remove);
@@ -426,23 +421,20 @@ public abstract class SQLDB extends Database {
             gmTimesTable.saveGMTimes(id, gmTimes.get(id));
         }
         Benchmark.stop("Save GMTimes");
-        for (Integer id : locations.keySet()) {
-            UUID uuid = uuids.get(id);
-            if (uuid != null) {
-                UserData uData = userDatas.get(uuid);
-                if (uData != null) {
+        userDatas.values().stream()
+                .filter(u -> u != null)
+                .filter(uData -> uData.isAccessed())
+                .forEach(uData -> {
                     uData.stopAccessing();
-                }
-            }
-        }
+                });
         // Save leftovers
-        for (UserData userData : saveLast) {
+        saveLast.stream().forEach((userData) -> {
             try {
                 saveUserData(userData);
             } catch (SQLException | NullPointerException e) {
                 exceptions.add(e);
             }
-        }
+        });
         if (!exceptions.isEmpty()) {
             Log.error("SEVERE: MULTIPLE ERRORS OCCURRED: " + exceptions.size());
             Log.toLog(this.getClass().getName(), exceptions);
@@ -476,74 +468,6 @@ public abstract class SQLDB extends Database {
         killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
         gmTimesTable.saveGMTimes(userId, data.getGmTimes());
         data.stopAccessing();
-    }
-
-    /**
-     *
-     * @param userId
-     * @param locations
-     * @throws SQLException
-     */
-    @Deprecated
-    public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
-        locationsTable.saveAdditionalLocationsList(userId, locations);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param names
-     * @param lastNick
-     * @throws SQLException
-     */
-    @Deprecated
-    public void saveNickList(int userId, Set<String> names, String lastNick) throws SQLException {
-        nicknamesTable.saveNickList(userId, names, lastNick);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param sessions
-     * @throws SQLException
-     * @deprecated Use sessionsTable instead.
-     */
-    @Deprecated
-    public void saveSessionList(int userId, List<SessionData> sessions) throws SQLException {
-        sessionsTable.saveSessionData(userId, sessions);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param kills
-     * @throws SQLException
-     */
-    @Deprecated
-    public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
-        killsTable.savePlayerKills(userId, kills);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param ips
-     * @throws SQLException
-     */
-    @Deprecated
-    public void saveIPList(int userId, Set<InetAddress> ips) throws SQLException {
-        ipsTable.saveIPList(userId, ips);
-    }
-
-    /**
-     *
-     * @param userId
-     * @param gamemodeTimes
-     * @throws SQLException
-     */
-    @Deprecated
-    public void saveGMTimes(int userId, Map<GameMode, Long> gamemodeTimes) throws SQLException {
-        gmTimesTable.saveGMTimes(userId, gamemodeTimes);
     }
 
     /**

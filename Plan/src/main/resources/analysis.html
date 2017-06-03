@@ -336,7 +336,8 @@ header p {
 								</div>
 							</div>
 						</div>
-						<canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas><br/>
+						<canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>
+                                                <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
 					</div>
 					<div class=" box column" style="order: 5;">
 						<p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o" aria-hidden="true"></i><span class="header-text"> Recent Logins</span></p>
@@ -367,7 +368,8 @@ header p {
 						</div>
 						<p><i class="fa fa-clock-o" aria-hidden="true"></i> Total Playtime: %totalplaytime% | <i class="fa fa-clock-o" aria-hidden="true"></i> Player Average: %avgplaytime%<br/>
 						<i class="fa fa-clock-o" aria-hidden="true"></i> Average Session Length: %sessionaverage%<br/>
-						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times: %totallogins%<br/>                                
+						<i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times: %totallogins%<br/>
+                                                <i class="fa fa-user-circle-o" aria-hidden="true"></i> Average Unique Players/Day: %avguniquejoins%<br>
 						<b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
 					</div>
 					<div class=" box column">
@@ -452,6 +454,7 @@ header p {
 							</div>
 						</div>
 						<canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
+                                                <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
 					</div>
 					<div class=" box column">
 						<div class="headerbox">
@@ -473,6 +476,7 @@ header p {
 							</div>
 						</div>
 						<canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
+                                                <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsweek% | <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek%</p>
 					</div>
 					<div class=" box column">
 						<div class="headerbox">
@@ -494,6 +498,7 @@ header p {
 							</div>
 						</div>
 						<canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
+                                                <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Playes: %uniquejoinsmonth% | <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth%</p>
 					</div>
 				</div>
 				<div class="row">
@@ -585,7 +590,7 @@ header p {
 					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon" style="width: 50%">
-								<div class="header-label"><i class="fa fa-braille" aria-hidden="true"></i><span class="header-text"> PunchCard</span></div>
+								<div class="header-label"><i class="fa fa-braille" aria-hidden="true"></i><span class="header-text"> PunchCard - Last 30d</span></div>
 							</div>
 							<div class="infobox" >
 								<div class="info-icon">
@@ -730,7 +735,7 @@ header p {
 				</div>
 			</div>
 			<div class="tab">
-				<div class="row">
+				<div class="row" style="width: 100%;">
 					<div class=" box column">
 						<div class="headerbox">
 							<div class="header-icon">
@@ -752,42 +757,6 @@ header p {
 						</div>
 						<div style="width:100%;"><div id="cloropleth"></div></div> 
 					</div>					
-				</div>
-				<div class="row">
-					<div class=" box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i><span class="header-text"> Gender Distribution</span></div>
-							</div>                                
-							<div class="infobox" style="width: 22%; background-color: %genderfcolor%">
-								<div class="info-icon">
-									<i class="fa fa-female" aria-hidden="true"></i>
-								</div>
-								<div class="info-text">
-									<div class="info-number">
-										%genderfemale%
-									</div>
-									<div class="info-label">
-										Female
-									</div>
-								</div>
-							</div>
-							<div class="infobox" style="width: 22%; background-color: %gendermcolor%">
-								<div class="info-icon">
-									<i class="fa fa-male" aria-hidden="true"></i>
-								</div>
-								<div class="info-text">
-									<div class="info-number">
-										%gendermale%
-									</div>
-									<div class="info-label">
-										Male
-									</div>
-								</div>
-							</div>
-						</div>
-						<canvas id="genderPie" width="1000" height="600" style="width: 95%;"></canvas>
-					</div>
 				</div>
 			</div>
 			<div class="tab" style="display: block;">
@@ -931,8 +900,7 @@ function countUpTimer() {
 	var ctxweek = document.getElementById("playerChartWeek");        
 	var ctxmonth = document.getElementById("playerChartMonth");        
 	var ctxactivitypie = document.getElementById("activityPie");        
-	var ctxgmpie = document.getElementById("gmPie");        
-	var ctxgenderpie = document.getElementById("genderPie");        
+	var ctxgmpie = document.getElementById("gmPie");
 	var dataday = {
 		labels: %labelsday%,
 		datasets: [
@@ -1054,29 +1022,7 @@ function countUpTimer() {
 			   }
 		   }
 	   }
-	});
-	var dataGenderPie = {
-		labels: %genderlabels%,
-		datasets: [
-			{
-				data: %genderdata%,
-				backgroundColor: [%gendercolors%],
-				hoverBackgroundColor: [%gendercolors%]
-			}
-		]
-	}
-	var GenderPie = new Chart(ctxgenderpie, {
-	   type: 'doughnut',
-	   data: dataGenderPie,
-	   options: {
-		   legend: {
-			   position: 'right',
-			   labels: {
-				   padding: 7
-			   }
-		   }
-	   }
-	});
+	});	
 	var playersChartDay = new Chart(ctxday, {
 		type: 'line',
 		data: dataday,

@@ -16,6 +16,7 @@ public enum Settings {
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
     ANALYSIS_LOG_FINISHED("Settings.Analysis.NotifyWhenFinished"),
+    ANALYSIS_REMOVE_OUTLIERS("Settings.Analysis.RemoveOutliersFromVisualization"),
     ANALYSIS_EXPORT("Settings.Analysis.Export.Enabled"),
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
@@ -78,9 +79,6 @@ public enum Settings {
     HCOLOR_GMP_1("Customization.Colors.HTML.GamemodePie.Creative"),
     HCOLOR_GMP_2("Customization.Colors.HTML.GamemodePie.Adventure"),
     HCOLOR_GMP_3("Customization.Colors.HTML.GamemodePie.Spectator"),
-    HCOLOR_GENP_M("Customization.Colors.HTML.GenderPie.Male"),
-    HCOLOR_GENP_F("Customization.Colors.HTML.GenderPie.Female"),
-    HCOLOR_GENP_U("Customization.Colors.HTML.GenderPie.Unknown"),
     // StringList
     HIDE_FACTIONS("Customization.Plugins.Factions.HideFactions"),
     HIDE_TOWNS("Customization.Plugins.Towny.HideTowns");

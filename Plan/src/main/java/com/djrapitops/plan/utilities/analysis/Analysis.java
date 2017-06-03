@@ -128,7 +128,7 @@ public class Analysis {
 
         // Analyze & Save RawAnalysisData to AnalysisData
         createCloroplethMap(analysisData, sorted.getGeolocations(), sorted.getGeocodes());
-        createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered());
+        createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered(), sorted.getSortedSessionData());
         analysisData.setRecentPlayers(RecentPlayersButtonsCreator.createRecentLoginsButtons(sorted.getLatestLogins(), 20));
         long totalPlaytime = sorted.getTotalPlaytime();
         analysisData.setTotalPlayTime(totalPlaytime);
@@ -144,18 +144,18 @@ public class Analysis {
         analysisData.setTotalkills(sorted.getTotalKills());
         analysisData.setTotalmobkills(sorted.getTotalMobKills());
         analysisData.setRefreshDate(now);
-        analysisData.setGenderData(sorted.getGenders());
         analysisData.setPunchCardData(PunchCardGraphCreator.generateDataArray(sorted.getSessiondata()));
         analysisData.setSessionDistributionData(SessionLengthDistributionGraphCreator.generateDataArraySessions(sorted.getSessiondata()));
         analysisData.setPlaytimeDistributionData(SessionLengthDistributionGraphCreator.generateDataArray(sorted.getPlaytimes().values()));
-        
+
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
-        
+
         analysisCache.cache(analysisData);
         Benchmark.stop("Analysis");
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
             Log.info(Phrase.ANALYSIS_COMPLETE + "");
         }
+//        LocationAnalysis.performAnalysis(analysisData, plugin.getDB());
         if (Settings.ANALYSIS_EXPORT.isTrue()) {
             ExportUtility.export(plugin, analysisData, rawData);
         }
@@ -227,25 +227,11 @@ public class Analysis {
             sorted.addTotalDeaths(uData.getDeaths());
             List<SessionData> sessions = uData.getSessions();
             if (!sessions.isEmpty()) {
-                sorted.getSessiondata().addAll(sessions);
+                sorted.addSessions(uData.getUuid(), sessions);
             }
             sorted.getRegistered().add(uData.getRegistered());
             sorted.addGeoloc(demData.getGeoLocation());
             uData.stopAccessing();
-            Gender gender = demData.getGender();
-            if (null != gender) {
-                switch (gender) {
-                    case MALE:
-                        sorted.addToGender(0, 1);
-                        break;
-                    case FEMALE:
-                        sorted.addToGender(1, 1);
-                        break;
-                    default:
-                        sorted.addToGender(2, 1);
-                        break;
-                }
-            }
         });
         Benchmark.stop("Analysis Fill Dataset");
         return sorted;
@@ -300,7 +286,7 @@ public class Analysis {
         Benchmark.stop("Analysis GMVisualization");
     }
 
-    private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered) {
+    private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered, Map<UUID, List<SessionData>> sortedSData) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
 
         long scaleDay = 86400 * 1000;
@@ -312,6 +298,19 @@ public class Analysis {
         data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
         data.setNewPlayersMonth(AnalysisUtils.getNewPlayers(registered, scaleMonth, now));
 
+        Benchmark.start("Analysis Unique/day");
+        data.setAvgUniqJoins(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, -1));
+        data.setAvgUniqJoinsDay(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleDay));
+        data.setAvgUniqJoinsWeek(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleWeek));
+        data.setAvgUniqJoinsMonth(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleMonth));
+        Benchmark.stop("Analysis Unique/day");
+        
+        Benchmark.start("Analysis Unique");
+        data.setUniqueJoinsDay(AnalysisUtils.getUniqueJoins(sortedSData, scaleDay));
+        data.setUniqueJoinsWeek(AnalysisUtils.getUniqueJoins(sortedSData, scaleWeek));
+        data.setUniqueJoinsMonth(AnalysisUtils.getUniqueJoins(sortedSData, scaleMonth));
+        Benchmark.stop("Analysis Unique");
+        
         List<SessionData> sessions = sData.stream()
                 .filter(session -> (session != null))
                 .filter(session -> session.isValid())

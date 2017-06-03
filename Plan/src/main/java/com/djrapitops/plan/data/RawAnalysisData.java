@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
 /**
@@ -34,11 +35,11 @@ public class RawAnalysisData {
     private Map<String, Long> latestLogins;
     private Map<String, Long> playtimes;
     private List<SessionData> sessiondata;
+    private Map<UUID, List<SessionData>> sortedSessionData;
     private Map<String, Integer> commandUse;
     private Map<String, Integer> geolocations;
     private Map<String, String> geocodes;
     private List<Long> registered;
-    private int[] genders;
 
     /**
      * Constructor for a new empty dataset.
@@ -56,16 +57,17 @@ public class RawAnalysisData {
         inactive = 0;
         totalKills = 0;
         totalMobKills = 0;
+        totalDeaths = 0;
         ops = 0;
         ages = new ArrayList<>();
         latestLogins = new HashMap<>();
         playtimes = new HashMap<>();
         sessiondata = new ArrayList<>();
+        sortedSessionData = new HashMap<>();
         commandUse = new HashMap<>();
         geolocations = new HashMap<>();
         geocodes = new HashMap<>();
         registered = new ArrayList<>();
-        genders = new int[]{0, 0, 0};
     }
 
     /**
@@ -368,6 +370,15 @@ public class RawAnalysisData {
         return sessiondata;
     }
 
+    public Map<UUID, List<SessionData>> getSortedSessionData() {
+        return sortedSessionData;
+    }
+    
+    public void addSessions(UUID uuid, List<SessionData> sessions) {
+        sessiondata.addAll(sessions);
+        sortedSessionData.put(uuid, sessions);
+    }
+
     /**
      *
      * @param commandUse
@@ -390,30 +401,5 @@ public class RawAnalysisData {
      */
     public List<Long> getRegistered() {
         return registered;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int[] getGenders() {
-        return genders;
-    }
-
-    /**
-     *
-     * @param gender
-     */
-    public void setGenders(int[] gender) {
-        this.genders = gender;
-    }
-
-    /**
-     *
-     * @param i
-     * @param amount
-     */
-    public void addToGender(int i, int amount) {
-        this.genders[i] = this.genders[i] + amount;
     }
 }
