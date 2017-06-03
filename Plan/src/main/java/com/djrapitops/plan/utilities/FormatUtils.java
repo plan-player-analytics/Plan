@@ -11,14 +11,30 @@ import org.bukkit.Location;
  */
 public class FormatUtils {
 
+    /**
+     *
+     * @param ms
+     * @return
+     */
     public static String formatTimeAmount(long ms) {
         return formatMilliseconds(ms);
     }
 
+    /**
+     *
+     * @param before
+     * @param after
+     * @return
+     */
     public static String formatTimeAmountDifference(long before, long after) {
         return formatMilliseconds(Math.abs(after - before));
     }
 
+    /**
+     *
+     * @param epochMs
+     * @return
+     */
     public static String formatTimeStamp(long epochMs) {
         Date sfd = new Date(epochMs);
         return ("" + sfd).substring(4, 19);

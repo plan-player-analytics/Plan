@@ -9,8 +9,8 @@ import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
-import main.java.com.djrapitops.plan.utilities.Analysis;
-import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
@@ -70,7 +70,14 @@ public class AnalysisData {
     private String geomapZ;
     private String geomapCodes;
 
-    private int[] genderData;
+    private int avgUniqJoins;
+    private int avgUniqJoinsDay;
+    private int avgUniqJoinsWeek;
+    private int avgUniqJoinsMonth;
+
+    private int uniqueJoinsDay;
+    private int uniqueJoinsWeek;
+    private int uniqueJoinsMonth;
 
     /**
      * Class constructor.
@@ -78,6 +85,13 @@ public class AnalysisData {
      * All data has to be set with setters to avoid NPEs.
      */
     public AnalysisData() {
+        avgUniqJoins = 0;
+        avgUniqJoinsDay = 0;
+        avgUniqJoinsWeek = 0;
+        avgUniqJoinsMonth = 0;
+        uniqueJoinsDay = 0;
+        uniqueJoinsWeek = 0;
+        uniqueJoinsMonth = 0;
         sortablePlayersTable = Html.ERROR_NOT_SET + "";
         commandUseTableHtml = Html.ERROR_NOT_SET + "";
         recentPlayers = Html.ERROR_NOT_SET + "";
@@ -88,7 +102,6 @@ public class AnalysisData {
         sessionDistributionData = new String[]{"[]", "[]"};
         playtimeDistributionData = new String[]{"[]", "[]"};
         playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
-        genderData = new int[]{0, 0, 0};
         additionalDataReplaceMap = new HashMap<>();
     }
 
@@ -192,9 +205,6 @@ public class AnalysisData {
             return false;
         }
         if (!Arrays.deepEquals(this.playersDataArray, other.playersDataArray)) {
-            return false;
-        }
-        if (!Arrays.equals(this.genderData, other.genderData)) {
             return false;
         }
         return true;
@@ -863,49 +873,114 @@ public class AnalysisData {
     }
 
     /**
-     * Get the integer array containing 3 numbers.
+     * Get the data for the Session Punchcard.
      *
-     * 0 Male, 1 Female, 2 Unknown.
-     *
-     * @return for example [0, 4, 5] when 0 male, 4 female and 5 unknown.
+     * @return Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
      */
-    public int[] getGenderData() {
-        return genderData;
-    }
-
-    /**
-     *
-     * Set the integer array containing 3 numbers.
-     *
-     * 0 Male, 1 Female, 2 Unknown.
-     *
-     * @param genderData for example [0, 4, 5]
-     */
-    public void setGenderData(int[] genderData) {
-        this.genderData = genderData;
-    }
-
     public String getPunchCardData() {
         return punchCardData;
     }
 
+    /**
+     * Set the data for the Session Punchcard.
+     *
+     * @param punchCardData Array of x y r coordinates: [{x: 4, y: 5, r: 4}]
+     */
     public void setPunchCardData(String punchCardData) {
         this.punchCardData = punchCardData;
     }
 
+    /**
+     * Get the data and labels for the session distribution barchart.
+     *
+     * @return index 0: [0, 5, 4], 1: ["0-5", "5-10", "10-15"]
+     */
     public String[] getSessionDistributionData() {
         return sessionDistributionData;
     }
 
+    /**
+     * Set the data and labels for the session distribution barchart.
+     *
+     * @param sessionDistributionData index 0: [0, 5, 4], 1: ["0-5", "5-10",
+     * "10-15"]
+     */
     public void setSessionDistributionData(String[] sessionDistributionData) {
         this.sessionDistributionData = sessionDistributionData;
     }
 
+    /**
+     * Get the data and labels for the playtime distribution barchart.
+     *
+     * @return index 0: [0, 5, 4], 1: ["0-5", "5-10", "10-15"]
+     */
     public String[] getPlaytimeDistributionData() {
         return playtimeDistributionData;
     }
 
+    /**
+     * Set the data and labels for the playtime distribution barchart.
+     *
+     * @param playtimeDistributionData index 0: [0, 5, 4], 1: ["0-5", "5-10",
+     * "10-15"]
+     */
     public void setPlaytimeDistributionData(String[] playtimeDistributionData) {
         this.playtimeDistributionData = playtimeDistributionData;
+    }
+
+    public int getAvgUniqJoins() {
+        return avgUniqJoins;
+    }
+
+    public int getAvgUniqJoinsDay() {
+        return avgUniqJoinsDay;
+    }
+
+    public int getAvgUniqJoinsWeek() {
+        return avgUniqJoinsWeek;
+    }
+
+    public int getAvgUniqJoinsMonth() {
+        return avgUniqJoinsMonth;
+    }
+
+    public void setAvgUniqJoins(int avgUniqJoins) {
+        this.avgUniqJoins = avgUniqJoins;
+    }
+
+    public void setAvgUniqJoinsDay(int avgUniqJoinsDay) {
+        this.avgUniqJoinsDay = avgUniqJoinsDay;
+    }
+
+    public void setAvgUniqJoinsWeek(int avgUniqJoinsWeek) {
+        this.avgUniqJoinsWeek = avgUniqJoinsWeek;
+    }
+
+    public void setAvgUniqJoinsMonth(int avgUniqJoinsMonth) {
+        this.avgUniqJoinsMonth = avgUniqJoinsMonth;
+    }
+
+    public int getUniqueJoinsDay() {
+        return uniqueJoinsDay;
+    }
+
+    public void setUniqueJoinsDay(int uniqueJoinsDay) {
+        this.uniqueJoinsDay = uniqueJoinsDay;
+    }
+
+    public int getUniqueJoinsWeek() {
+        return uniqueJoinsWeek;
+    }
+
+    public void setUniqueJoinsWeek(int uniqueJoinsWeek) {
+        this.uniqueJoinsWeek = uniqueJoinsWeek;
+    }
+
+    public int getUniqueJoinsMonth() {
+        return uniqueJoinsMonth;
+    }
+
+    public void setUniqueJoinsMonth(int uniqueJoinsMonth) {
+        this.uniqueJoinsMonth = uniqueJoinsMonth;
     }
 }

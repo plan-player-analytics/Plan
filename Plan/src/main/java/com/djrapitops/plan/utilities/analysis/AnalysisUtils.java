@@ -1,8 +1,13 @@
-package main.java.com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,6 +16,8 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  *
@@ -30,6 +37,14 @@ public class AnalysisUtils {
         return isActive(MiscUtils.getTime(), lastPlayed, playTime, loginTimes);
     }
 
+    /**
+     *
+     * @param now
+     * @param lastPlayed
+     * @param playTime
+     * @param loginTimes
+     * @return
+     */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
         if (timeToActive < 0) {
@@ -54,7 +69,6 @@ public class AnalysisUtils {
      * @return
      */
     public static int getNewPlayers(List<Long> registered, long scale, long now) {
-        Benchmark.start("Get new players for "+registered.size()+" "+scale+" | ");
         int newPlayers = 0;
         if (!registered.isEmpty()) {
             newPlayers = registered.stream()
@@ -63,7 +77,6 @@ public class AnalysisUtils {
                     .map((_item) -> 1).reduce(newPlayers, Integer::sum);
         }
         // Filters out register dates before scale
-        Benchmark.stop("Get new players for "+registered.size()+" "+scale+" | ");
         return newPlayers;
     }
 
@@ -162,6 +175,13 @@ public class AnalysisUtils {
         }
     }
 
+    /**
+     *
+     * @param analysisType
+     * @param source
+     * @param uuids
+     * @return
+     */
     public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
         if (analysisType == AnalysisType.BOOLEAN_PERCENTAGE) {
             try {
@@ -177,6 +197,13 @@ public class AnalysisUtils {
         return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
     }
 
+    /**
+     *
+     * @param analysisType
+     * @param source
+     * @param uuids
+     * @return
+     */
     public static String getBooleanTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
         if (analysisType == AnalysisType.BOOLEAN_TOTAL) {
             try {
@@ -197,5 +224,75 @@ public class AnalysisUtils {
         Log.toLog("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
         Log.toLog("com.djrapitops.plan.utilities.AnalysisUtils", e);
         return source.parseContainer("", "Exception during calculation.");
+    }
+
+    public static Integer getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
+        long now = MiscUtils.getTime();
+        long nowMinusScale = now - scale;
+        Set<UUID> uniqueJoins = new HashSet<>();
+        sessions.keySet().stream().forEach((uuid) -> {
+            List<SessionData> s = sessions.get(uuid);
+            for (SessionData session : s) {
+                if (session.getSessionStart() < nowMinusScale) {
+                    continue;
+                }
+                uniqueJoins.add(uuid);
+            }
+        });
+        return uniqueJoins.size();
+    }
+
+    public static Integer getUniqueJoinsPerDay(Map<UUID, List<SessionData>> sessions, long scale) {
+        Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
+        long now = MiscUtils.getTime();
+        long nowMinusScale = now - scale;
+        sessions.keySet().stream().forEach((uuid) -> {
+            List<SessionData> s = sessions.get(uuid);
+            for (SessionData session : s) {
+                if (scale != -1) {
+                    if (session.getSessionStart() < nowMinusScale) {
+                        continue;
+                    }
+                }
+                int day = getDayOfYear(session);
+                if (!uniqueJoins.containsKey(day)) {
+                    uniqueJoins.put(day, new HashSet<>());
+                }
+                uniqueJoins.get(day).add(uuid);
+            }
+        });
+        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(s -> s.size()));
+        int size = uniqueJoins.keySet().size();
+        if (size == 0) {
+            return 0;
+        }
+        return total / size;
+    }
+
+    public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
+        List<int[]> daysAndHours = sessionStarts.stream().map((Long start) -> {
+            Calendar day = Calendar.getInstance();
+            day.setTimeInMillis(start);
+            int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
+            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2;
+            if (hourOfDay == 24) {
+                hourOfDay = 0;
+                dayOfWeek += 1;
+            }
+            if (dayOfWeek > 6) {
+                dayOfWeek = 0;
+            }
+            if (dayOfWeek < 0) {
+                dayOfWeek = 6;
+            }
+            return new int[]{dayOfWeek, hourOfDay};
+        }).collect(Collectors.toList());
+        return daysAndHours;
+    }
+
+    private static int getDayOfYear(SessionData session) {
+        Calendar day = Calendar.getInstance();
+        day.setTimeInMillis(session.getSessionStart());
+        return day.get(Calendar.DAY_OF_YEAR);
     }
 }

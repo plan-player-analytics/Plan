@@ -41,8 +41,7 @@ public class VersionTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     @Override
     public int getVersion() throws SQLException {

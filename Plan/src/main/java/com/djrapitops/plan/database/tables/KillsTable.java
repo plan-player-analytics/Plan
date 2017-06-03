@@ -156,6 +156,13 @@ public class KillsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param ids
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, List<KillData>> getPlayerKills(Collection<Integer> ids, Map<Integer, UUID> uuids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
@@ -187,6 +194,12 @@ public class KillsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param kills
+     * @param uuids
+     * @throws SQLException
+     */
     public void savePlayerKills(Map<Integer, List<KillData>> kills, Map<Integer, UUID> uuids) throws SQLException {
         if (kills == null || kills.isEmpty()) {
             return;

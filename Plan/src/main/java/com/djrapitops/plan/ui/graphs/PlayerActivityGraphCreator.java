@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -10,9 +11,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
@@ -35,16 +38,14 @@ public class PlayerActivityGraphCreator {
         List<Long> sessionStarts = s.get(0);
         List<Long> sessionEnds = s.get(1);
 
-        Benchmark.start("Player Activity Graph Before Addition");
         int amount = (int) sessionStarts.stream().filter(start -> start < nowMinusScale).count();
         for (int i = amount; i > 0; i--) {
             sessionStarts.add(nowMinusScale);
         }
-        Benchmark.stop("Player Activity Graph Before Addition");
         Benchmark.start("Player Activity Graph Amount Calculation");
-        
+
         Map<Long, Integer> change = transformIntoChangeMap(sessionStarts, sessionEnds);
-        
+
         long lastPValue = 0;
         long lastSavedPValue = -1;
         long lastSaveIndex = 0;
@@ -67,11 +68,35 @@ public class PlayerActivityGraphCreator {
                 playersOnline.add(lastPValue);
             }
         }
+        if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
+            long average = MathUtils.averageLong(playersOnline.stream());
+            double standardDiviation = getStandardDiviation(playersOnline, average);
+            if (standardDiviation > 3) {
+                for (int i = 0; i < playersOnline.size(); i++) {
+                    long value = playersOnline.get(i);
+                    if (value - average > 3 * standardDiviation) {
+                        playersOnline.set(i, (long) maxPlayers + 10);
+                    }
+                }
+            }
+        }
         Benchmark.stop("Player Activity Graph Amount Calculation");
+        playersOnline.add(0L);
+        playersOnline.add(0L);
+        playersOnline.add(0L);
         playersOnline.add(0L);
         playersOnline.add((long) maxPlayers);
         Benchmark.stop("Generate Player Activity Graph " + sessionData.size() + " " + scale + " |");
         return new String[]{playersOnline.toString(), labels.toString()};
+    }
+
+    private static double getStandardDiviation(List<Long> players, long avg) {
+        List<Double> valueMinusAvg = players.stream()
+                .map(p -> Math.pow(Math.abs(p - avg), 2))
+                .collect(Collectors.toList());
+        int size = valueMinusAvg.size();
+        double sum = MathUtils.sumDouble(valueMinusAvg.stream().map(p -> (Serializable) p));
+        return Math.sqrt(sum / size);
     }
 
     private static Map<Long, Integer> transformIntoChangeMap(List<Long> sessionStarts, List<Long> sessionEnds) {
@@ -115,7 +140,6 @@ public class PlayerActivityGraphCreator {
      * @return
      */
     public static List<List<Long>> filterAndTransformSessions(List<SessionData> sessionData, long nowMinusScale) {
-        Benchmark.start("Player Activity Graph Transform " + sessionData.size() + " " + nowMinusScale);
         List<Long[]> values = sessionData.parallelStream()
                 .filter(session -> (session != null))
                 .filter(session -> session.isValid())
@@ -131,7 +155,6 @@ public class PlayerActivityGraphCreator {
         List<List<Long>> r = new ArrayList<>();
         r.add(sessionStarts);
         r.add(sessionEnds);
-        Benchmark.stop("Player Activity Graph Transform " + sessionData.size() + " " + nowMinusScale);
         return r;
     }
 

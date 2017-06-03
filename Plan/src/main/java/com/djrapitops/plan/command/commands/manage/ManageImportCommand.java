@@ -1,11 +1,8 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Permissions;
@@ -15,10 +12,7 @@ import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.handling.importing.ImportUtils;
 import main.java.com.djrapitops.plan.data.handling.importing.Importer;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import org.bukkit.Bukkit;
 import static org.bukkit.Bukkit.getOfflinePlayers;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -55,14 +49,13 @@ public class ManageImportCommand extends SubCommand {
         }
 
         String importFromPlugin = args[0].toLowerCase();
-        List<String> supportedImports = Arrays.asList(new String[]{"ontime"});
-        if (!supportedImports.contains(importFromPlugin)) {
+        Map<String, Importer> importPlugins = ImportUtils.getImporters();
+        if (!importPlugins.keySet().contains(importFromPlugin)) {
             sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin);
             return true;
         }
-        Map<String, Importer> importPlugins = ImportUtils.getImporters();
 
-        if (!importPlugins.keySet().contains(importFromPlugin) || !ImportUtils.isPluginEnabled(importFromPlugin)) {
+        if (!ImportUtils.isPluginEnabled(importFromPlugin)) {
             sender.sendMessage(Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin);
             return true;
         }
@@ -73,7 +66,6 @@ public class ManageImportCommand extends SubCommand {
         }
 
         final Importer importer = importPlugins.get(importFromPlugin);
-        // Header
         BukkitTask asyncImportTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -83,7 +75,6 @@ public class ManageImportCommand extends SubCommand {
                     sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
                 } else {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
-
                 }
                 this.cancel();
             }

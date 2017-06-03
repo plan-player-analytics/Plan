@@ -6,12 +6,15 @@
 package main.java.com.djrapitops.plan.ui.graphs;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
@@ -19,10 +22,15 @@ import main.java.com.djrapitops.plan.data.SessionData;
  */
 public class PunchCardGraphCreator {
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static String generateDataArray(Collection<SessionData> data) {
         // Initialize dataset
         List<Long> sessionStarts = getSessionStarts(data);
-        List<int[]> daysAndHours = getDaysAndHours(sessionStarts);
+        List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
         int[][] dataArray = createDataArray(daysAndHours);
         int big = findBiggestValue(dataArray);
         int[][] scaled = scale(dataArray, big);
@@ -60,36 +68,65 @@ public class PunchCardGraphCreator {
             int h = dAndH[1];
             dataArray[d][h] = dataArray[d][h] + 1;
         }
+        for (int i = 0; i < 7; i++) {
+            Log.debug("   " + Arrays.toString(dataArray[i]));
+        }
+        if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
+            int avg = findAverage(dataArray);
+            double standardDiviation = getStandardDiviation(dataArray, avg);
+            Log.debug("Diviation: " + standardDiviation);
+            if (standardDiviation > 3) {
+                for (int i = 0; i < 7; i++) {
+                    for (int j = 0; j < 24; j++) {
+                        int value = dataArray[i][j];
+                        if (value - avg > 3 * standardDiviation) {
+                            dataArray[i][j] = (int) (avg);
+                        }
+                    }
+                }
+                for (int i = 0; i < 7; i++) {
+                    Log.debug("   " + Arrays.toString(dataArray[i]));
+                }
+            }
+        }
         return dataArray;
     }
 
-    private static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
-        List<int[]> daysAndHours = sessionStarts.stream().map(start -> {
-            Calendar day = Calendar.getInstance();
-            day.setTimeInMillis(start);
-            int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
+    private static double getStandardDiviation(int[][] array, int avg) {
+        int[][] valueMinusAvg = new int[7][24];
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 24; j++) {
+                valueMinusAvg[i][j] = (int) Math.pow(Math.abs(array[i][j] - avg), 2);
+            }
+        }
+        int size = array.length * array[0].length;
+        int sum = sum(valueMinusAvg);
+        return Math.sqrt(sum / size);
+    }
 
-            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2;
-            if (hourOfDay == 24) {
-                hourOfDay = 0;
-                dayOfWeek += 1;
+    private static int findAverage(int[][] array) {
+        int total = sum(array);
+        int size = array.length * array[0].length;
+        return (int) MathUtils.average(total, size);
+    }
+
+    private static int sum(int[][] array) {
+        int total = 0;
+        for (int[] is : array) {
+            for (int i : is) {
+                total += i;
             }
-            if (dayOfWeek > 6) {
-                dayOfWeek = 0;
-            }
-            if (dayOfWeek < 0) {
-                dayOfWeek = 6;
-            }
-            return new int[]{dayOfWeek, hourOfDay};
-        }).collect(Collectors.toList());
-        return daysAndHours;
+        }
+        return total;
     }
 
     private static List<Long> getSessionStarts(Collection<SessionData> data) {
+        long now = MiscUtils.getTime();
         List<Long> sessionStarts = data.stream()
                 .filter(s -> s != null)
                 .filter(s -> s.isValid())
                 .map(s -> s.getSessionStart())
+                .filter(start -> now - start < (long) 2592000 * (long) 1000)
                 .sorted()
                 .collect(Collectors.toList());
         return sessionStarts;
@@ -130,7 +167,10 @@ public class PunchCardGraphCreator {
                 scaled[i][j] = value;
             }
         }
-
+        Log.debug("Biggest value: " + big);
+        for (int i = 0; i < 7; i++) {
+            Log.debug("   " + Arrays.toString(scaled[i]));
+        }
         return scaled;
     }
 }

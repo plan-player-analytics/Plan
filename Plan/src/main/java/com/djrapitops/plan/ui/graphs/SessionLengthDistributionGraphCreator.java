@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.MathUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
@@ -22,11 +22,21 @@ import main.java.com.djrapitops.plan.utilities.MathUtils;
  */
 public class SessionLengthDistributionGraphCreator {
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     public static String[] generateDataArraySessions(Collection<SessionData> data) {
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(data);
         return generateDataArray(lengths);
     }
     
+    /**
+     *
+     * @param lengths
+     * @return
+     */
     public static String[] generateDataArray(Collection<Long> lengths) {
         Map<Long, Integer> values = getValues(lengths);
         Map<Long, Integer> scaled = scale(values);

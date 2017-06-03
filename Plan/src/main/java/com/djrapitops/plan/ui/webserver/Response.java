@@ -69,11 +69,11 @@ public class Response {
                     String playerName = requestArgs[3].trim();
                     UUID uuid = UUIDFetcher.getUUIDOf(playerName);
                     if (uuid == null) {
-                        String errorMessage = "HTTP/1.1 404 UUID not Found\r\n"
+                        String errorMessage = "HTTP/1.1 500 UUID not Found\r\n"
                                 + "Content-Type: text/html;\r\n"
                                 + "Content-Length: 30\r\n"
                                 + "\r\n"
-                                + "<h1>404 - Player doesn't exist</h1>";
+                                + "<h1>500 - Player has no UUID. </h1>";
                         output.write(errorMessage.getBytes());
                         return;
                     }
@@ -87,11 +87,11 @@ public class Response {
                             output.write((htmlDef + dataHtml).getBytes());
                         } catch (NullPointerException e) {
                             Log.toLog(this.getClass().getName(), e);
-                            String errorMessage = "HTTP/1.1 404 Error\r\n"
+                            String errorMessage = "HTTP/1.1 500 Error\r\n"
                                     + "Content-Type: text/html;\r\n"
                                     + "Content-Length: 30\r\n"
                                     + "\r\n"
-                                    + "<h1>404 - Error has occurred..</h1>";
+                                    + "<h1>500 - Error has occurred..</h1>";
                             output.write(errorMessage.getBytes());
                         }
                         return;

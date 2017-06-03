@@ -41,7 +41,7 @@ public class EssentialsJailed extends PluginData {
         if (user != null) {
             return parseContainer(modifier, user.isJailed() ? "Yes" : "No");
         }
-        return "";
+        return parseContainer(modifier, "No");
     }
 
     @Override

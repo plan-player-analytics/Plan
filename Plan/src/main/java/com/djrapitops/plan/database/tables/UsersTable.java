@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,10 +20,7 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayers;
 import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -284,6 +280,12 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
     public UserData getUserData(UUID uuid) throws SQLException {
         Benchmark.start(uuid + " Get UserData");
         boolean containsBukkitData = getContainsBukkitData(uuid);
@@ -317,6 +319,12 @@ public class UsersTable extends Table {
         return containsBukkitData;
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public List<UserData> getUserData(Collection<UUID> uuids) throws SQLException {
         Benchmark.start("Get UserData Multiple " + uuids.size());
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
@@ -337,6 +345,12 @@ public class UsersTable extends Table {
         return datas;
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public List<UUID> getContainsBukkitData(Collection<UUID> uuids) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -473,6 +487,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     */
     public void addUserInformationToUserData(List<UserData> data) throws SQLException {
         Benchmark.start("addUserInformationToUserData Multiple " + data.size());
         PreparedStatement statement = null;
@@ -704,6 +723,12 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     * @throws SQLException
+     */
     public Map<UUID, Integer> getUserIds(Collection<UUID> uuids) throws SQLException {
         Benchmark.start("Get User IDS " + uuids.size());
         PreparedStatement statement = null;
@@ -728,6 +753,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
         Benchmark.start("Get User IDS ALL");
         PreparedStatement statement = null;

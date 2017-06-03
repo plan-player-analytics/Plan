@@ -15,6 +15,8 @@ The plugin uses placeholders to place the values into the html. Here I will go t
 
 Placeholder | Description | Example
 ---------- | ------------------------------------- | -----
+%currenttime% | Server epoch ms, used for clock. | 1496486156
+%refreshlong% | Epoch ms of last refresh (server time) | 1496486156
 %uuid% | Players UUID or 'Hidden' if config setting for UUID visibility is disabled. | 88493cd1-567a-49aa-acaa-84197b5de595
 %lastseen% | A formatted version of the last Epoch second the user was seen. | Feb 02 18:03:12
 %logintimes% | How many times the user has logged in | 34
@@ -64,6 +66,8 @@ Placeholder | Description | Example
 
 Placeholder | Description | Example
 ---------- | ------------------------------------- | -----
+%currenttime% | Server epoch ms, used for clock. | 1496486156
+%refreshlong% | Epoch ms of last refresh (server time) | 1496486156
 %gm0% | Total percentage all players have spent in SURVIVAL | 66%
 %gm1% | Total percentage all players have spent in CREATIVE | 19%
 %gm2% | Total percentage all players have spent in ADVENTURE | 10%
@@ -92,6 +96,13 @@ Placeholder | Description | Example
 %sessionaverage% | Formatted time amount of the average session length | 4m 30s
 %version% | Version of Plan | 3.2.0
 %planlite% | Replaced with an empty string. Old feature. | 
+%uniquejoinsday% | Replaced with number of unique players | 5
+%uniquejoinsweek% | Replaced with number of unique players | 47
+%uniquejoinsmonth% | Replaced with number of unique players | 234
+%avguniquejoins% | Replaced with number of average joins / day | 56
+%avguniquejoinsday% | Replaced with number of average joins / day in last 24h | 56
+%avguniquejoinsweek% | Replaced with number of average joins / day in last 7d | 60
+%avguniquejoinsmonth% | Replaced with number of average joins / day in last 30d | 59
 %sortabletable% | Multi column table containing all players | [Created with this code](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/ui/tables/SortablePlayersTableCreator.java)
 %dataday% | Data for 24h online activity | [0, 0, 0, 0, 1]
 %dataweek% | Data for 7d online activity | [0, 0, 0, 0, 1]
@@ -106,12 +117,6 @@ Placeholder | Description | Example
 %geomapz% | Number array for Chloropleth map | [...]
 %gmdata% | Data for the sectors on the gm usage pie | [43242, 432423421, 35345, 5432534]
 %gmlabels% | Labels for the sectors of gm pie. | ["Survival", "Creative", "Adventure", "Spectator"]
-%genderdata% | Data for the sectors on the Gender pie | [3, 4, 5]
-%gendermale% | Amount of male players | 3
-%genderfemale% | Amount of female players | 4
-%gendercolors% | Colors for the gender pie in the config | [#ffffff, #000000, #ffffff]
-%genderfcolor% | Color of the FEMALE sector in gender pie | #ffffff
-%gendermcolor% | Color of the MALE sector in gender pie | #000000
 %activecol% | Color of the ACTIVE sector in config | ffffff
 %inactivecol% | Color of the INACTIVE sector in config | 000000
 %joinleavecol% | Color of the UNKNOWN sector in config | ffffff

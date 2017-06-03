@@ -21,7 +21,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
  * @author Rsl1122
  */
 public class IPsTable extends Table {
-    
+
     private final String columnUserID;
     private final String columnIP;
 
@@ -145,7 +145,13 @@ public class IPsTable extends Table {
             Benchmark.stop("Save Ips");
         }
     }
-    
+
+    /**
+     *
+     * @param ids
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, Set<InetAddress>> getIPList(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
@@ -177,7 +183,12 @@ public class IPsTable extends Table {
             Benchmark.stop("Get Ips Multiple " + ids.size());
         }
     }
-    
+
+    /**
+     *
+     * @param ips
+     * @throws SQLException
+     */
     public void saveIPList(Map<Integer, Set<InetAddress>> ips) throws SQLException {
         if (ips == null || ips.isEmpty()) {
             return;

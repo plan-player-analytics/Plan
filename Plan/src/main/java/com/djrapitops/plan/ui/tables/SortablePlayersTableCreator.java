@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.ui.tables;
 import java.util.Collection;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
-import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;

@@ -11,6 +11,9 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public abstract class Hook {
 
+    /**
+     * Is the plugin being hooked properly enabled?
+     */
     protected boolean enabled;
 
     /**

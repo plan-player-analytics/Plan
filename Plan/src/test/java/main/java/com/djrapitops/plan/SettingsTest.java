@@ -64,6 +64,9 @@ public class SettingsTest {
         assertEquals(8804, Settings.WEBSERVER_PORT.getNumber());
     }
 
+    /**
+     *
+     */
     @Test
     public void testGetStringList() {
         List<String> exp = new ArrayList<>();

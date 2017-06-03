@@ -325,8 +325,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		</div>
 	</header>
 <div id="content" class="content">
-	<div id="sidenav" class="sidenav">
-		<p>Has Connected from ips:<br>%ips%</p>
+	<div id="sidenav" class="sidenav">		
+		<p>Last Refresh: <br><span id="divTime">%refresh%</span> ago</p>
 		<a href="javascript:void(0)" class="nav-button">
 			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
 		</a>
@@ -370,7 +370,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							<br/>
 							<i class="fa fa-globe" aria-hidden="true"></i> Geolocation: %geoloc%<br/>
 							<i class="fa fa-play" aria-hidden="true"></i> Age: %age% | <i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i> Gender: %gender%<br/>     
-							<i class="fa fa-tag" aria-hidden="true"></i> UUID: %uuid%</p>
+							<i class="fa fa-tag" aria-hidden="true"></i> UUID: %uuid%<br/>
+							<i class="fa fa-globe" aria-hidden="true"></i> Has Connected from ips: %ips%</p>
 					</div>
 					<div class="about box column">
 						<div class="headerbox">
@@ -559,7 +560,7 @@ function closeNav() {
 }
 var navButtons = document.getElementsByClassName("nav-button");
 var tabs = document.getElementsByClassName("tab");
-var slideIndex = window.localStorage.getItem("InspectSlideIndex");
+var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
 if (slideIndex == null) {
     slideIndex = 0;
 }
@@ -574,6 +575,7 @@ for (i=0; i < navButtons.length; i++) {
 }
 x.style.opacity = "1";
 openFunc(slideIndex)();
+countUpTimer();
 
 function openFunc(i) {
 	return function() {
@@ -594,12 +596,49 @@ function openFunc(i) {
 		slideIndex = i;                
 		if (slideIndex>max) {slideIndex=0};
 		if (slideIndex<0) {slideIndex=max};
-                window.localStorage.setItem("InspectSlideIndex", slideIndex);
+                window.sessionStorage.setItem("InspectSlideIndex", slideIndex);
 		var value = slideIndex*perc;
 		x.style.transition = "0.5s";
 		x.style.transform = "translate3d("+value+"%,0px,0)";
 	};
 }
+
+var serverTime = new Date(%currenttime%);
+var now = new Date();
+var timediff = serverTime.getTime()-now.getTime();
+function countUpTimer() {
+		var now = new Date();
+		var begin = new Date(%refreshlong%-timediff);
+		var out = "";
+		
+		var seconds = now.getTime() - begin.getTime();
+		seconds = Math.floor(seconds / 1000);
+						
+		var dd = Math.floor(seconds / 86400);
+		seconds -= (dd * 86400);
+		
+		var dh = Math.floor(seconds / 3600);
+		seconds -= (dh * 3600);
+		
+		var dm = Math.floor(seconds / 60);
+		seconds -= (dm * 60);
+		
+		seconds = Math.floor(seconds);
+		
+		if (dd != 0) {
+			out += dd.toString() + "d ";
+		}
+		if (dh != 0) {
+			out += dh.toString() + "h ";
+		}
+		if (dm != 0) {
+			out += dm.toString() + "m ";
+		}		
+		out += seconds.toString() + "s ";
+						
+		document.getElementById('divTime').innerHTML = out;
+		setTimeout('countUpTimer()', 1000);
+	}
 </script>
 <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>

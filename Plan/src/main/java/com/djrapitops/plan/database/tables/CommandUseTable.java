@@ -104,7 +104,7 @@ public class CommandUseTable extends Table {
                 commitRequired = true;
             }
             if (commitRequired) {
-                Log.debug("CommandUse: Executing batch, size: "+data.size());
+                Log.debug("CommandUse: Executing batch, size: " + data.size());
                 statement.executeBatch();
             }
         } finally {

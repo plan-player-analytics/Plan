@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ public class PlaceholderUtils {
     public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
         Benchmark.start("Replace Placeholders Anaysis");
         HashMap<String, String> replaceMap = new HashMap<>();
+        replaceMap.put("%currenttime%", MiscUtils.getTime()+"");
         replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
         replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
         replaceMap.put("%gm2%", (int) (data.getGm2Perc() * 100) + "%");
@@ -62,6 +65,13 @@ public class PlaceholderUtils {
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
+        replaceMap.put("%uniquejoinsday%", data.getUniqueJoinsDay()+"");
+        replaceMap.put("%uniquejoinsweek%", data.getUniqueJoinsWeek()+"");
+        replaceMap.put("%uniquejoinsmonth%", data.getUniqueJoinsMonth()+"");
+        replaceMap.put("%avguniquejoins%", data.getAvgUniqJoins()+"");
+        replaceMap.put("%avguniquejoinsday%", data.getAvgUniqJoinsDay()+"");
+        replaceMap.put("%avguniquejoinsweek%", data.getAvgUniqJoinsWeek()+"");
+        replaceMap.put("%avguniquejoinsmonth%", data.getAvgUniqJoinsMonth()+"");
         replaceMap.put("%dataday%", data.getPlayersDataArray()[0]);
         replaceMap.put("%labelsday%", data.getPlayersDataArray()[1]);
         replaceMap.put("%dataweek%", data.getPlayersDataArray()[2]);
@@ -99,14 +109,6 @@ public class PlaceholderUtils {
         replaceMap.put("%gmlabels%", "[\"Survival\", \"Creative\", \"Adventure\", \"Spectator\"]");
         replaceMap.put("%gmcolors%", "\"#" + Settings.HCOLOR_GMP_0 + "\",\"#" + Settings.HCOLOR_GMP_1
                 + "\",\"#" + Settings.HCOLOR_GMP_2 + "\",\"#" + Settings.HCOLOR_GMP_3 + "\"");
-        replaceMap.put("%genderdata%", Arrays.toString(data.getGenderData()));
-        replaceMap.put("%gendermale%", data.getGenderData()[0] + "");
-        replaceMap.put("%genderfemale%", data.getGenderData()[1] + "");
-        replaceMap.put("%genderlabels%", "[\"Male\", \"Female\", \"Unknown\"]");
-        replaceMap.put("%gendercolors%", "\"#" + Settings.HCOLOR_GENP_M + "\",\"#" + Settings.HCOLOR_GENP_F
-                + "\",\"#" + Settings.HCOLOR_GENP_U + "\"");
-        replaceMap.put("%genderfcolor%", "#" + Settings.HCOLOR_GENP_F);
-        replaceMap.put("%gendermcolor%", "#" + Settings.HCOLOR_GENP_M);
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(data.getSessionAverage()));
         replaceMap.put("%geomapcountries%", data.getGeomapCountries());
         replaceMap.put("%geomapz%", data.getGeomapZ());
@@ -128,6 +130,7 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
+        replaceMap.put("%refreshlong%", data.getRefreshDate()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         Benchmark.stop("Replace Placeholders Anaysis");
         return replaceMap;
@@ -142,6 +145,7 @@ public class PlaceholderUtils {
      */
     public static Map<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
         Benchmark.start("Replace Placeholders Inspect");
+        
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
@@ -222,6 +226,8 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
+        replaceMap.put("%refreshlong%", plugin.getInspectCache().getCacheTime(uuid)+"");
+        replaceMap.put("%currenttime%", MiscUtils.getTime()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);

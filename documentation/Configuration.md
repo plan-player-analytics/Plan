@@ -24,6 +24,9 @@ Config.Point | Version introduced | Type | Default | Description
 LogProgressOnConsole | 2.4.0 | boolean | false | More detailed analysis progress to console.
 NotifyWhenFinished | 3.0.0 | boolean | true | Enables ["Analysis Complete"-message](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/Phrase.java#L73) will be shown on the console after analysis is complete.
 MinutesPlayedUntilConsidiredActive | 2.0.0 | Integer | 10 | This setting affects how the Analysis treats player's activity. Whether or not a player is active is determined with 3 values: Last Login, Playtime and Login Times. If the player has logged in in the last 2 weeks, has playtime higher than in the config, and has logged in 3 times, the player is considered active. Otherwise the player is counted as inactive.
+RemoveOutliersFromVisualization | 3.4.0 | boolean | true | This setting attempts to remove big spikes from data visualization.
+Export.Enabled | 3.4.0 | boolean | false | Enables export of html pages after analysis
+Export.DestinationFolder | 3.4.0 | String | 'Analysis Results' | Path to the export folder. Will be created if doesn't exist. If contains ':' will be regarded as full filepath.
 
 ## Cache settings
 

@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -17,15 +15,28 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 
 /**
+ * Abstract class used for importing data from other plugins.
  *
  * @author Rsl1122
+ * @since 3.2.0
  */
 public abstract class Importer {
 
+    /**
+     * Constructor.
+     */
     public Importer() {
 
     }
 
+    /**
+     * Method used for the import.
+     *
+     * Creates UserData for players that have not been saved to the database.
+     *
+     * @param uuids UUIDs to be imported
+     * @return success
+     */
     public boolean importData(Collection<UUID> uuids) {
         Plan plan = Plan.getInstance();
         DataCacheHandler handler = plan.getHandler();
@@ -49,5 +60,12 @@ public abstract class Importer {
         return true;
     }
 
+    /**
+     * Method used for getting the HandlingInfo object for the import data.
+     *
+     * @param uuid UUID of the player
+     * @return HandlingInfo object that modifies the UserData so that the data
+     * is imported.
+     */
     public abstract HandlingInfo importData(UUID uuid);
 }

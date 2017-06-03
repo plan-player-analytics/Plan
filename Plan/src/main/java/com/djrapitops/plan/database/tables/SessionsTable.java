@@ -151,11 +151,17 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param ids
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, List<SessionData>> getSessionData(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-        Benchmark.start("Get Sessions multiple "+ids.size());
+        Benchmark.start("Get Sessions multiple " + ids.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -179,15 +185,20 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Sessions multiple "+ids.size());
+            Benchmark.stop("Get Sessions multiple " + ids.size());
         }
     }
 
+    /**
+     *
+     * @param sessions
+     * @throws SQLException
+     */
     public void saveSessionData(Map<Integer, List<SessionData>> sessions) throws SQLException {
         if (sessions == null || sessions.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Sessions multiple "+sessions.size());
+        Benchmark.start("Save Sessions multiple " + sessions.size());
         Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
         PreparedStatement statement = null;
         try {
@@ -225,7 +236,7 @@ public class SessionsTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.start("Save Sessions multiple "+sessions.size());
+            Benchmark.stop("Save Sessions multiple " + sessions.size());
         }
     }
 }

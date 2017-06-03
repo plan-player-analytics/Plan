@@ -91,7 +91,7 @@ public class LocationsTable extends Table {
      * @return
      * @throws SQLException
      */
-    public List<Location> getLocations(int userId, HashMap<String, World> worlds) throws SQLException {
+    public List<Location> getLocations(int userId, Map<String, World> worlds) throws SQLException {
         Benchmark.start("Get Locations");
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -111,6 +111,29 @@ public class LocationsTable extends Table {
         }
     }
 
+    public Map<Integer, List<Location>> getAllLocations(Map<String, World> worlds) throws SQLException {
+        Benchmark.start("Get Locations Multiple");
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        Map<Integer, List<Location>> locations = new HashMap<>();
+        try {
+            statement = prepareStatement("SELECT * FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                int id = set.getInt(columnID);
+                if (!locations.containsKey(id)) {
+                    locations.put(id, new ArrayList<>());
+                }
+                locations.get(id).add(new Location(worlds.get(set.getString(columnWorld)), set.getInt(columnCoordinatesX), 0, set.getInt(columnCoordinatesZ)));
+            }
+            return locations;
+        } finally {
+            close(set);
+            close(statement);
+            Benchmark.stop("Get Locations Multiple");
+        }
+    }
+
     /**
      *
      * @param userId
@@ -121,7 +144,7 @@ public class LocationsTable extends Table {
         if (locations == null || locations.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Locations "+locations.size());
+        Benchmark.start("Save Locations " + locations.size());
         List<Location> newLocations = new ArrayList<>();
         newLocations.addAll(locations);
         PreparedStatement statement = null;
@@ -153,15 +176,20 @@ public class LocationsTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Locations "+locations.size());
+            Benchmark.stop("Save Locations " + locations.size());
         }
     }
 
+    /**
+     *
+     * @param locations
+     * @throws SQLException
+     */
     public void saveAdditionalLocationsLists(Map<Integer, List<Location>> locations) throws SQLException {
         if (locations == null || locations.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Locations Multiple "+locations.size());
+        Benchmark.start("Save Locations Multiple " + locations.size());
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -194,7 +222,7 @@ public class LocationsTable extends Table {
             }
         } finally {
             close(statement);
-             Benchmark.stop("Save Locations Multiple "+locations.size());
+            Benchmark.stop("Save Locations Multiple " + locations.size());
         }
     }
 }

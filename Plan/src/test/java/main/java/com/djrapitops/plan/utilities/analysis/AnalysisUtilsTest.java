@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test.java.main.java.com.djrapitops.plan.utilities;
+package test.java.main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.utilities.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;

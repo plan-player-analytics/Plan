@@ -4,8 +4,12 @@ import com.hm.achievement.api.AdvancedAchievementsAPI;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
@@ -47,13 +51,24 @@ public class AdvancedAchievementsTable extends PluginData {
     }
 
     @Override
-    public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
+    public String getHtmlReplaceValue(String modifierPrefix, UUID uuidUnused) {
         StringBuilder html = new StringBuilder();
-        List<OfflinePlayer> offlinePlayers = Arrays.stream(getOfflinePlayers()).filter(p -> p.hasPlayedBefore()).collect(Collectors.toList());
+        Map<UUID, OfflinePlayer> offlinePlayers = Arrays.stream(getOfflinePlayers()).filter(p -> p.hasPlayedBefore()).collect(Collectors.toMap(p -> p.getUniqueId(), Function.identity()));
         if (offlinePlayers.isEmpty()) {
             html.append(Html.TABLELINE_2.parse("No Players.", ""));
+        } else if (aaAPI.getAdvancedAchievementsVersionCode() >= 520) {
+            Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
+            for (UUID uuid : achievementsMap.keySet()) {
+                OfflinePlayer p = offlinePlayers.get(uuid);
+                if (p == null) {
+                    continue;
+                }
+                String inspectUrl = HtmlUtils.getInspectUrl(p.getName());
+                int achievements = achievementsMap.get(uuid);
+                html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, p.getName()), achievements+""));
+            }
         } else {
-            for (OfflinePlayer p : offlinePlayers) {
+            for (OfflinePlayer p : offlinePlayers.values()) {
                 String inspectUrl = HtmlUtils.getInspectUrl(p.getName());
                 String achievements = aaAPI.getPlayerTotalAchievements(p.getUniqueId()) + "";
                 html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, p.getName()), achievements));
