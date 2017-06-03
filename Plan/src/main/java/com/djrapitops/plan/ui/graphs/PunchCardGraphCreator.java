@@ -75,16 +75,18 @@ public class PunchCardGraphCreator {
             int avg = findAverage(dataArray);
             double standardDiviation = getStandardDiviation(dataArray, avg);
             Log.debug("Diviation: " + standardDiviation);
-            for (int i = 0; i < 7; i++) {
-                for (int j = 0; j < 24; j++) {
-                    int value = dataArray[i][j];
-                    if (value - avg > 3 * standardDiviation) {
-                        dataArray[i][j] = (int) (avg);
+            if (standardDiviation > 3) {
+                for (int i = 0; i < 7; i++) {
+                    for (int j = 0; j < 24; j++) {
+                        int value = dataArray[i][j];
+                        if (value - avg > 3 * standardDiviation) {
+                            dataArray[i][j] = (int) (avg);
+                        }
                     }
                 }
-            }
-            for (int i = 0; i < 7; i++) {
-                Log.debug("   " + Arrays.toString(dataArray[i]));
+                for (int i = 0; i < 7; i++) {
+                    Log.debug("   " + Arrays.toString(dataArray[i]));
+                }
             }
         }
         return dataArray;
