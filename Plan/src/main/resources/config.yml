@@ -14,9 +14,9 @@ Settings:
       DestinationFolder: 'Analysis Results'
   Cache:
     Processing:
-      GetLimit: 2000
-      SaveLimit: 1000
-      ClearLimit: 1000
+      GetLimit: 5000
+      SaveLimit: 2500
+      ClearLimit: 2500
     AnalysisCache:
       RefreshAnalysisCacheOnEnable: true
       RefreshEveryXMinutes: -1

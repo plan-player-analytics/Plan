@@ -630,6 +630,7 @@ header p {
 							</div>
 						</div>
 						<canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
+                                                <p>If the graph contains more sessions than login times, likely cause is use of /reload (Restarts sessions).</p>
 					</div>
 				</div>
 				<!--<div class="columns">
@@ -1028,6 +1029,12 @@ function countUpTimer() {
 		data: dataday,
 		options: {
 			scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%
+                                    }
+                                }],
 				xAxes: [{
 						display: false
 				}]
@@ -1039,6 +1046,12 @@ function countUpTimer() {
 		data: dataday,
 		options: {
 			scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%
+                                    }
+                                }],
 				xAxes: [{
 						display: false
 				}]
@@ -1050,6 +1063,12 @@ function countUpTimer() {
 		data: dataweek,
 		options: {
 			scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%
+                                    }
+                                }],
 				xAxes: [{
 						display: false
 				}]
@@ -1061,6 +1080,12 @@ function countUpTimer() {
 		data: datamonth,
 		options: {
 			scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%
+                                    }
+                                }],
 				xAxes: [{
 						display: false
 				}]
@@ -1130,14 +1155,18 @@ function countUpTimer() {
                                     ticks: {
                                             callback: function(value, index, values) {
                                                     return hour(value);
-                                            }
+                                            },
+                                            suggestedMax: 25,
+                                            suggestedMin: -1
                                     }
                             }],
                             yAxes: [{
                                     ticks: {
                                             callback: function(value, index, values) {
                                                     return day(value);						
-                                            }
+                                            },
+                                            suggestedMax: 7,
+                                            suggestedMin: -1
                                     }
                             }]
                     }
@@ -1178,7 +1207,7 @@ function countUpTimer() {
                         tooltips: {
 				callbacks: {
 					label: function(tooltipItems, data) {
-						return tooltipItems.xLabel+'utes: '+tooltipItems.yLabel+'%';
+						return tooltipItems.xLabel+'utes: '+tooltipItems.yLabel+' sessions';
 					}
 				}
 			},
@@ -1186,7 +1215,7 @@ function countUpTimer() {
                                 yAxes: [{
 					ticks: {
 						callback: function(value, index, values) {
-							return value+'%';						
+							return value+'';						
 						}
 					}
 				}]

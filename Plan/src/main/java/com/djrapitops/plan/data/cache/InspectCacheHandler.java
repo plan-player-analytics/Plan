@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.ExportUtility;
 
 /**
  * This class stores UserData objects used for displaying the Html pages.
@@ -53,6 +55,11 @@ public class InspectCacheHandler {
             public void process(UserData data) {
                 cache.put(uuid, new UserData(data));
                 cacheTimes.put(uuid, MiscUtils.getTime());
+                try {
+                    ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()));
+                } catch (IOException ex) {
+                    Log.toLog(this.getClass().getName(), ex);
+                }
             }
         };
         handler.getUserDataForProcessing(cacher, uuid, false);
@@ -81,7 +88,7 @@ public class InspectCacheHandler {
         long time = MiscUtils.getTime();
         for (UserData uData : userDataForUUIDS) {
             UUID uuid = uData.getUuid();
-            cache.put(uuid, uData);
+            cache.put(uuid, new UserData(uData));
             cacheTimes.put(uuid, time);
         }
     }

@@ -307,14 +307,6 @@ public class DataCacheHandlerTest {
      *
      */
     @Test
-    public void testGetMaxPlayers() {
-        assertEquals(20, handler.getMaxPlayers());
-    }
-
-    /**
-     *
-     */
-    @Test
     public void testHandleCommand() {
         handler.handleCommand("/plan");
         assertEquals((Integer) 1, handler.getCommandUse().get("/plan"));
