@@ -41,10 +41,10 @@ public class PunchCardGraphCreator {
     private static StringBuilder buildString(int[][] scaled) {
         StringBuilder arrayBuilder = new StringBuilder();
         arrayBuilder.append("[");
-        arrayBuilder.append("{").append("x:").append(-1).append(", y:").append(-1).append(", r:").append(1).append("}");
-        arrayBuilder.append(",");
-        arrayBuilder.append("{").append("x:").append(25).append(", y:").append(7).append(", r:").append(1).append("}");
-        arrayBuilder.append(",");
+//        arrayBuilder.append("{").append("x:").append(-1).append(", y:").append(-1).append(", r:").append(1).append("}");
+//        arrayBuilder.append(",");
+//        arrayBuilder.append("{").append("x:").append(25).append(", y:").append(7).append(", r:").append(1).append("}");
+//        arrayBuilder.append(",");
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {
                 int value = scaled[i][j];
@@ -68,9 +68,6 @@ public class PunchCardGraphCreator {
             int h = dAndH[1];
             dataArray[d][h] = dataArray[d][h] + 1;
         }
-        for (int i = 0; i < 7; i++) {
-            Log.debug("   " + Arrays.toString(dataArray[i]));
-        }
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             int avg = findAverage(dataArray);
             double standardDiviation = getStandardDiviation(dataArray, avg);
@@ -83,9 +80,6 @@ public class PunchCardGraphCreator {
                             dataArray[i][j] = (int) (avg);
                         }
                     }
-                }
-                for (int i = 0; i < 7; i++) {
-                    Log.debug("   " + Arrays.toString(dataArray[i]));
                 }
             }
         }
@@ -167,10 +161,7 @@ public class PunchCardGraphCreator {
                 scaled[i][j] = value;
             }
         }
-        Log.debug("Biggest value: " + big);
-        for (int i = 0; i < 7; i++) {
-            Log.debug("   " + Arrays.toString(scaled[i]));
-        }
+        Log.debug("Punchcard Biggest value: " + big);
         return scaled;
     }
 }

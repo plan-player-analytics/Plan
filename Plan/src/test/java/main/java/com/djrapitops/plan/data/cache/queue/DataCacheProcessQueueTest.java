@@ -104,7 +104,7 @@ public class DataCacheProcessQueueTest {
             }
         });
         Thread.sleep(1000);
-        assertTrue(q.stop().isEmpty());
+        assertTrue(q.stopAndReturnLeftovers().isEmpty());
 
     }
 
@@ -129,7 +129,7 @@ public class DataCacheProcessQueueTest {
         l.add(h);
         q.addToPool(l);
         Thread.sleep(1000);
-        assertTrue(q.stop().isEmpty());
+        assertTrue(q.stopAndReturnLeftovers().isEmpty());
     }
 
     /**
