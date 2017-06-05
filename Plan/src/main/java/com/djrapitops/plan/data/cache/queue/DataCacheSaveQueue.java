@@ -20,10 +20,7 @@ import main.java.com.djrapitops.plan.database.Database;
  * @author Rsl1122
  * @since 3.0.0
  */
-public class DataCacheSaveQueue {
-
-    private BlockingQueue<UserData> q;
-    private SaveSetup s;
+public class DataCacheSaveQueue extends Queue<UserData>{
 
     /**
      * Class constructor, starts the new Thread for saving.
@@ -33,9 +30,9 @@ public class DataCacheSaveQueue {
      * UserData.clearAfterSave() is true
      */
     public DataCacheSaveQueue(Plan plugin, DataCacheClearQueue clear) {
-        q = new ArrayBlockingQueue(Settings.PROCESS_SAVE_LIMIT.getNumber());
-        s = new SaveSetup();
-        s.go(q, clear, plugin.getDB());
+        super(new ArrayBlockingQueue(Settings.PROCESS_SAVE_LIMIT.getNumber()));
+        setup = new SaveSetup(queue, clear, plugin.getDB());
+        setup.go();
     }
 
     /**
@@ -46,7 +43,7 @@ public class DataCacheSaveQueue {
     public void scheduleForSave(UserData data) {
         Log.debug(data.getUuid() + ": Scheduling for save");
         try {
-            q.add(data);
+            queue.add(data);
         } catch (IllegalStateException e) {
             Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
@@ -60,7 +57,7 @@ public class DataCacheSaveQueue {
     public void scheduleForSave(Collection<UserData> data) {
         Log.debug("Scheduling for save: " + data.stream().map(u -> u.getUuid()).collect(Collectors.toList()));
         try {
-            q.addAll(data);
+            queue.addAll(data);
         } catch (IllegalStateException e) {
             Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
@@ -74,7 +71,7 @@ public class DataCacheSaveQueue {
     public void scheduleNewPlayer(UserData data) {
         Log.debug(data.getUuid() + ": Scheduling new Player");
         try {
-            q.add(data);
+            queue.add(data);
         } catch (IllegalStateException e) {
             Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
         }
@@ -87,45 +84,23 @@ public class DataCacheSaveQueue {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        return new ArrayList<>(q).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
-    }
-
-    /**
-     * Stops all activites and clears the queue.
-     */
-    public void stop() {
-        if (s != null) {
-            s.stop();
-        }
-        s = null;
-        q.clear();
+        return new ArrayList<>(queue).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
     }
 }
 
-class SaveConsumer implements Runnable {
+class SaveConsumer extends Consumer<UserData> {
 
-    private final BlockingQueue<UserData> queue;
     private Database db;
     private DataCacheClearQueue clear;
-    private boolean run;
 
     SaveConsumer(BlockingQueue q, DataCacheClearQueue clear, Database db) {
-        queue = q;
+        super(q);
         this.db = db;
         this.clear = clear;
         run = true;
     }
 
     @Override
-    public void run() {
-        try {
-            while (run) {
-                consume(queue.take());
-            }
-        } catch (InterruptedException ex) {
-        }
-    }
-
     void consume(UserData data) {
         if (db == null) {
             return;
@@ -147,8 +122,8 @@ class SaveConsumer implements Runnable {
         }
     }
 
-    void stop() {
-        run = false;
+    @Override
+    void clearVariables() {
         if (db != null) {
             db = null;
         }
@@ -158,20 +133,8 @@ class SaveConsumer implements Runnable {
     }
 }
 
-class SaveSetup {
-
-    private SaveConsumer one;
-    private SaveConsumer two;
-
-    void go(BlockingQueue<UserData> q, DataCacheClearQueue clear, Database db) {
-        one = new SaveConsumer(q, clear, db);
-        two = new SaveConsumer(q, clear, db);
-        new Thread(one).start();
-        new Thread(two).start();
-    }
-
-    void stop() {
-        one.stop();
-        two.stop();
+class SaveSetup extends Setup<UserData>{
+    SaveSetup(BlockingQueue<UserData> q, DataCacheClearQueue clear, Database db) {
+        super(new SaveConsumer(q, clear, db), new SaveConsumer(q, clear, db));
     }
 }

@@ -5,7 +5,7 @@ The plugin uses two .html files: `analysis.html` and `player.html`
 If the `/plugins/Plan/` folder contains either of the files, they will be used instead of the ones found inside the .jar.
 This means you can copy the html files from the jar to the folder and edit them.
 
-Page version: **3.2.0**
+Page version: **3.4.0**
 
 ## Placeholders
 The plugin uses placeholders to place the values into the html. Here I will go through each placeholder.

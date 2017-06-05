@@ -63,6 +63,7 @@ public class Plan extends JavaPlugin {
     private HashSet<Database> databases;
     private WebSocketServer uiServer;
     private HookHandler hookHandler;
+    private ServerVariableHolder variable;
 
     private int bootAnalysisTaskID;
 
@@ -81,7 +82,9 @@ public class Plan extends JavaPlugin {
         getDataFolder().mkdirs();
 
         initLocale();
-
+        
+        variable = new ServerVariableHolder(this);
+        
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
@@ -132,6 +135,7 @@ public class Plan extends JavaPlugin {
         }
 
         hookHandler = new HookHandler();
+        
         Log.debug("Verboose debug messages are enabled.");
         Log.info(Phrase.ENABLED + "");
     }
@@ -369,6 +373,10 @@ public class Plan extends JavaPlugin {
         Log.info("Using locale: " + usingLocale);
     }
 
+    public ServerVariableHolder getVariable() {
+        return variable;
+    }
+    
     /**
      * Used to get the current instance of Plan.
      *

@@ -45,7 +45,7 @@ public class PlayerActivityGraphCreatorTest {
     public void testGenerateDataArray() {
         List<SessionData> sessionData = createRandomSessionDataList();
         long scale = 2592000L * 1000L;
-        String result = PlayerActivityGraphCreator.generateDataArray(sessionData, scale, 20)[1];
+        String result = PlayerActivityGraphCreator.generateDataArray(sessionData, scale)[1];
         assertTrue("0", 0 < result.length());
     }
 

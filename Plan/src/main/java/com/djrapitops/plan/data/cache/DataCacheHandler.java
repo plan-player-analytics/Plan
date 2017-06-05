@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * This Class contains the Cache.
@@ -65,7 +64,6 @@ public class DataCacheHandler extends LocationCache {
 
     // Variables
     private int timesSaved;
-    private int maxPlayers;
 
     /**
      * Class Constructor.
@@ -84,7 +82,6 @@ public class DataCacheHandler extends LocationCache {
         startQueues();
 
         timesSaved = 0;
-        maxPlayers = plugin.getServer().getMaxPlayers();
 
         commandUse = new HashMap<>();
         if (!getCommandUseFromDb()) {
@@ -254,7 +251,7 @@ public class DataCacheHandler extends LocationCache {
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
-        List<HandlingInfo> toProcess = processTask.stop();
+        List<HandlingInfo> toProcess = processTask.stopAndReturnLeftovers();
         Benchmark.start("ProcessOnlineHandlingInfo");
         Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
@@ -338,7 +335,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void saveCommandUse() {
         try {
-            db.saveCommandUse(commandUse);
+            db.saveCommandUse(new HashMap<>(commandUse));
         } catch (SQLException | NullPointerException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -348,15 +345,23 @@ public class DataCacheHandler extends LocationCache {
      * Refreshes the calculations for all online players with ReloadInfo.
      */
     public void saveHandlerDataToCache() {
-        Bukkit.getServer().getOnlinePlayers().parallelStream().forEach((p) -> {
-            saveHandlerDataToCache(p);
+        Bukkit.getServer().getOnlinePlayers().stream().forEach((p) -> {
+            saveHandlerDataToCache(p, false);
         });
     }
 
-    private void saveHandlerDataToCache(Player player) {
+    private void saveHandlerDataToCache(Player player, boolean pool) {
         long time = MiscUtils.getTime();
         UUID uuid = player.getUniqueId();
-        addToPool(new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode()));
+        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode());
+        if (!pool) {
+            UserData data = dataCache.get(uuid);
+            if (data != null) {
+                info.process(data);
+                return;
+            }            
+        }
+        addToPool(info);
     }
 
     /**
@@ -475,20 +480,11 @@ public class DataCacheHandler extends LocationCache {
                         newPlayer(player);
                     }
                     startSession(uuid);
-                    saveHandlerDataToCache(player);
+                    saveHandlerDataToCache(player, true);
                 }
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
-    }
-
-    /**
-     * Used by Analysis for Player activity graphs.
-     *
-     * @return Maximum number of players defined in server.properties.
-     */
-    public int getMaxPlayers() {
-        return maxPlayers;
     }
 
     /**
@@ -501,5 +497,21 @@ public class DataCacheHandler extends LocationCache {
             commandUse.put(command, 0);
         }
         commandUse.put(command, commandUse.get(command) + 1);
+    }
+
+    public DataCacheSaveQueue getSaveTask() {
+        return saveTask;
+    }
+
+    public DataCacheClearQueue getClearTask() {
+        return clearTask;
+    }
+
+    public DataCacheProcessQueue getProcessTask() {
+        return processTask;
+    }
+
+    public DataCacheGetQueue getGetTask() {
+        return getTask;
     }
 }
