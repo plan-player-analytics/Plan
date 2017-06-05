@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package main.java.com.djrapitops.plan.utilities;
+package main.java.com.djrapitops.plan.utilities.uuid;
 
 import com.google.common.collect.ImmutableList;
 import java.io.InputStreamReader;

@@ -70,8 +70,16 @@ public class FormatUtilsTest {
     @Test
     public void testFormatTimeStamp() {
         long epochZero = 0L;
-        String expResult = "Jan 01 02:00:00";
+        String expResult = "Jan 01, 02:00";
         String result = FormatUtils.formatTimeStamp(epochZero);
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testFormatTimeStampYear() {
+        long epochZero = 0L;
+        String expResult = "Jan 01 1970, 02:00";
+        String result = FormatUtils.formatTimeStampYear(epochZero);
         assertEquals(expResult, result);
     }
 

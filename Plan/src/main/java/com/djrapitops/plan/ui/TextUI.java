@@ -40,7 +40,7 @@ public class TextUI {
         String ball = sec + " " + Phrase.BALL + main;
         return new String[]{
             sec + " " + Phrase.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
-            ball + " Registered: " + sec + FormatUtils.formatTimeStamp(d.getRegistered()),
+            ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
             ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
             ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),
             ball + " Login times: " + sec + d.getLoginTimes(),

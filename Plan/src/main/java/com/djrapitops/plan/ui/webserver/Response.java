@@ -6,7 +6,7 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
-import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 /**
  *
@@ -67,7 +67,7 @@ public class Response {
             if (command.equals("player")) {
                 if (requestArgs.length > 3) {
                     String playerName = requestArgs[3].trim();
-                    UUID uuid = UUIDFetcher.getUUIDOf(playerName);
+                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     if (uuid == null) {
                         String errorMessage = "HTTP/1.1 500 UUID not Found\r\n"
                                 + "Content-Type: text/html;\r\n"

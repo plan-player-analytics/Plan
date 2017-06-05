@@ -5,7 +5,6 @@
  */
 package main.java.com.djrapitops.plan.ui.graphs;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,9 +67,6 @@ public class PunchCardGraphCreator {
             int h = dAndH[1];
             dataArray[d][h] = dataArray[d][h] + 1;
         }
-        for (int i = 0; i < 7; i++) {
-            Log.debug("   " + Arrays.toString(dataArray[i]));
-        }
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             int avg = findAverage(dataArray);
             double standardDiviation = getStandardDiviation(dataArray, avg);
@@ -83,9 +79,6 @@ public class PunchCardGraphCreator {
                             dataArray[i][j] = (int) (avg);
                         }
                     }
-                }
-                for (int i = 0; i < 7; i++) {
-                    Log.debug("   " + Arrays.toString(dataArray[i]));
                 }
             }
         }
@@ -168,9 +161,6 @@ public class PunchCardGraphCreator {
             }
         }
         Log.debug("Biggest value: " + big);
-        for (int i = 0; i < 7; i++) {
-            Log.debug("   " + Arrays.toString(scaled[i]));
-        }
         return scaled;
     }
 }

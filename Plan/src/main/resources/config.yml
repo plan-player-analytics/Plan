@@ -4,6 +4,10 @@ Settings:
   UseTextUI: false
   Data:
     GatherLocations: true
+    ChatListener: true
+    GatherKillData: true
+    GamemodeChangeListener: true
+    GatherCommandUsage: true
   Analysis:
     LogProgressOnConsole: false
     NotifyWhenFinished: true
@@ -39,6 +43,8 @@ Customization:
   ServerName: 'Plan'
   Formats:
     TimeAmount:
+      Year: '1 year, '
+      Years: '%years% years, '
       Days: '%days%d '
       Hours: '%hours%h '
       Minutes: '%minutes%m '

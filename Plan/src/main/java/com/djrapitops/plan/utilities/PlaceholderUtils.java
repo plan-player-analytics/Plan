@@ -150,7 +150,7 @@ public class PlaceholderUtils {
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
         replaceMap.put("%uuid%", (showIPandUUID ? "" + uuid : Html.HIDDEN.parse()));
-        replaceMap.put("%lastseen%", FormatUtils.formatTimeStamp(data.getLastPlayed()));
+        replaceMap.put("%lastseen%", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
         replaceMap.put("%logintimes%", "" + data.getLoginTimes());
         replaceMap.put("%geoloc%", data.getDemData().getGeoLocation());
         long now = MiscUtils.getTime();
@@ -189,7 +189,7 @@ public class PlaceholderUtils {
         replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : Html.HIDDEN.parse()));
         replaceMap.put("%nicknames%", HtmlUtils.removeXSS(HtmlUtils.swapColorsToSpan(data.getNicknames().toString())));
         replaceMap.put("%name%", data.getName());
-        replaceMap.put("%registered%", FormatUtils.formatTimeStamp(data.getRegistered()));
+        replaceMap.put("%registered%", FormatUtils.formatTimeStampYear(data.getRegistered()));
         replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount(data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? Html.BANNED.parse() : "");

@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * This Class contains the Cache.
@@ -195,7 +194,7 @@ public class DataCacheHandler extends LocationCache {
     public void cache(UserData data) {
         data.setOnline(true);
         dataCache.put(data.getUuid(), data);
-        Log.info(Phrase.CACHE_ADD.parse(data.getUuid().toString()));
+        Log.debug(Phrase.CACHE_ADD.parse(data.getUuid().toString()));
     }
 
     /**
@@ -381,7 +380,7 @@ public class DataCacheHandler extends LocationCache {
             }
         } else {
             dataCache.remove(uuid);
-            Log.info(Phrase.CACHE_REMOVE.parse(uuid.toString()));
+            Log.debug(Phrase.CACHE_REMOVE.parse(uuid.toString()));
         }
     }
 

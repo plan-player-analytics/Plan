@@ -19,7 +19,7 @@ import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.GameMode;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
@@ -669,7 +669,7 @@ public class UsersTable extends Table {
                     UUID uuid = uData.getUuid();
                     if (uuid == null) {
                         try {
-                            uData.setUuid(UUIDFetcher.getUUIDOf(uData.getName()));
+                            uData.setUuid(UUIDUtility.getUUIDOf(uData.getName(), db));
                         } catch (Exception ex) {
                             continue;
                         }
@@ -755,8 +755,7 @@ public class UsersTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
         Benchmark.start("Get User IDS ALL");
@@ -785,5 +784,24 @@ public class UsersTable extends Table {
      */
     public String getColumnID() {
         return columnID;
+    }
+
+    public UUID getUuidOf(String playername) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT " + columnUUID + " FROM " + tableName + " WHERE (UPPER(" + columnName + ")=UPPER(?))");
+            statement.setString(1, playername);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                return uuid;
+            }
+            return null;
+        } finally {
+            close(set);
+            close(statement);
+        }
     }
 }

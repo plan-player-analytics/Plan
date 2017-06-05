@@ -40,7 +40,6 @@ import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -110,7 +109,6 @@ public class Plan extends JavaPlugin {
 
         this.api = new API(this);
         handler.handleReload();
-        ConsoleCommandSender consoleSender = getServer().getConsoleSender();
 
         bootAnalysisTaskID = -1;
         if (Settings.WEBSERVER_ENABLED.isTrue()) {
@@ -125,10 +123,10 @@ public class Plan extends JavaPlugin {
             }
         } else if (!(Settings.SHOW_ALTERNATIVE_IP.isTrue())
                 || (Settings.USE_ALTERNATIVE_UI.isTrue())) {
-            consoleSender.sendMessage(Phrase.PREFIX + "" + Phrase.ERROR_NO_DATA_VIEW);
+            Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
         }
         if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && getServer().getIp().isEmpty()) {
-            consoleSender.sendMessage(Phrase.NOTIFY_EMPTY_IP + "");
+            Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
         hookHandler = new HookHandler();
@@ -161,11 +159,29 @@ public class Plan extends JavaPlugin {
 
     private void registerListeners() {
         final PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new PlanChatListener(this), this);
+
         pluginManager.registerEvents(new PlanPlayerListener(this), this);
-        pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
-        pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
-        pluginManager.registerEvents(new PlanDeathEventListener(this), this);
+
+        if (Settings.GATHERCHAT.isTrue()) {
+            pluginManager.registerEvents(new PlanChatListener(this), this);
+        } else {
+            Log.infoColor(Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
+        }
+        if (Settings.GATHERGMTIMES.isTrue()) {
+            pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
+        } else {
+            Log.infoColor(Phrase.NOTIFY_DISABLED_GMLISTENER + "");
+        }
+        if (Settings.GATHERCOMMANDS.isTrue()) {
+            pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
+        } else {
+            Log.infoColor(Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
+        }
+        if (Settings.GATHERKILLS.isTrue()) {
+            pluginManager.registerEvents(new PlanDeathEventListener(this), this);
+        } else {
+            Log.infoColor(Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
+        }
         if (Settings.GATHERLOCATIONS.isTrue()) {
             pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
         }

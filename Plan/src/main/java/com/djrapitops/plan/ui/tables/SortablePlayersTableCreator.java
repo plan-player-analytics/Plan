@@ -36,7 +36,7 @@ public class SortablePlayersTableCreator {
                         banOunknownOactiveOinactive,
                         uData.getPlayTime() + "", FormatUtils.formatTimeAmount(uData.getPlayTime()),
                         uData.getLoginTimes() + "",
-                        uData.getRegistered() + "", FormatUtils.formatTimeStamp(uData.getRegistered()),
+                        uData.getRegistered() + "", FormatUtils.formatTimeStampYear(uData.getRegistered()),
                         uData.getLastPlayed() + "", FormatUtils.formatTimeStamp(uData.getLastPlayed()),
                         uData.getDemData().getGeoLocation()
                 );

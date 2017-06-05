@@ -10,7 +10,7 @@ import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -50,7 +50,7 @@ public class QuickInspectCommand extends SubCommand {
             public void run() {
                 UUID uuid;
                 try {
-                    uuid = UUIDFetcher.getUUIDOf(playerName);
+                    uuid = UUIDUtility.getUUIDOf(playerName);
                     if (uuid == null) {
                         throw new Exception("Username doesn't exist.");
                     }

@@ -34,7 +34,11 @@ public enum Phrase {
     DB_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
     DB_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
     NOTIFY_EMPTY_IP(ChatColor.YELLOW + "" + PREFIX + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
-    //
+    NOTIFY_DISABLED_CHATLISTENER(ChatColor.YELLOW + "Chat listener disabled, nickname info inaccurate."),
+    NOTIFY_DISABLED_GMLISTENER(ChatColor.YELLOW + "Gamemode change listener disabled, Gm times info inaccurate."),
+    NOTIFY_DISABLED_COMMANDLISTENER(ChatColor.YELLOW + "Command usage listener disabled."),
+    NOTIFY_DISABLED_DEATHLISTENER(ChatColor.YELLOW + "Death listener disabled, player & mob kills not recorded."),
+//
     CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),
     CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),
     CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),
