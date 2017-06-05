@@ -130,7 +130,7 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        replaceMap.put("%graphmaxplayers%", plugin.getVariable().getMaxPlayers()+"");
+        replaceMap.put("%graphmaxplayers%", Settings.GRAPH_PLAYERS_USEMAXPLAYERS_SCALE.isTrue() ? plugin.getVariable().getMaxPlayers()+"" : "2");
         replaceMap.put("%refreshlong%", data.getRefreshDate()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         Benchmark.stop("Replace Placeholders Anaysis");

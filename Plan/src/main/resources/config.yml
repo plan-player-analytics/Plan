@@ -41,6 +41,9 @@ Settings:
 
 Customization:
   ServerName: 'Plan'
+  Graphs:
+    PlayersOnlineGraph:
+      UseMaxPlayersAsScale: true
   Formats:
     TimeAmount:
       Year: '1 year, '

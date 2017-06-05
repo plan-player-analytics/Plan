@@ -6,6 +6,7 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 /**
@@ -36,14 +37,17 @@ public class Response {
      * @throws IOException
      */
     public void sendStaticResource() throws IOException {
+        Benchmark.start("Webserver Response");
         try {
             if (request == null) {
                 return;
             }
-            if (request.getUri() == null) {
+            String requestUri = request.getUri();
+            if (requestUri == null) {
                 return;
             }
-            String[] requestArgs = request.getUri().split("/");
+            Log.debug("Request: " + requestUri);
+            String[] requestArgs = requestUri.split("/");
             boolean forbidden = false;
             String securityCode = "";
             if (requestArgs.length <= 2) {
@@ -116,6 +120,8 @@ public class Response {
             output.write(errorMessage.getBytes());
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
+        } finally {
+            Benchmark.stop("Webserver Response");
         }
     }
 

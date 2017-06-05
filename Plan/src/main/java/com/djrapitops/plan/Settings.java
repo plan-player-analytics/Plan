@@ -25,6 +25,7 @@ public enum Settings {
     GATHERGMTIMES("Settings.Data.GamemodeChangeListener"),
     GATHERCOMMANDS("Settings.Data.GatherCommandUsage"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
+    GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
     ENABLED_AA("Customization.Plugins.Enabled.AdvancedAchievements"),
     ENABLED_ESS("Customization.Plugins.Enabled.Essentials"),
     ENABLED_FAC("Customization.Plugins.Enabled.Factions"),

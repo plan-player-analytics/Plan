@@ -40,6 +40,7 @@ import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -82,7 +83,14 @@ public class Plan extends JavaPlugin {
 
         initLocale();
         
-        variable = new ServerVariableHolder(this);
+        Server server = getServer(); 
+        variable = new ServerVariableHolder(server);
+        
+        Log.debug("-------------------------------------");
+        Log.debug("Debug log, Server Start: Plan v."+getDescription().getVersion());               
+        Log.debug("Server: "+server.getBukkitVersion()+" | V."+server.getVersion());        
+        Log.debug("Version: "+server.getVersion());        
+        Log.debug("-------------------------------------");
         
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
@@ -99,7 +107,7 @@ public class Plan extends JavaPlugin {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
             Log.error(Phrase.DB_FAILURE_DISABLE.toString());
-            getServer().getPluginManager().disablePlugin(this);
+            server.getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -128,13 +136,13 @@ public class Plan extends JavaPlugin {
                 || (Settings.USE_ALTERNATIVE_UI.isTrue())) {
             Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
         }
-        if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && getServer().getIp().isEmpty()) {
+        if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && server.getIp().isEmpty()) {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
         hookHandler = new HookHandler();
         
-        Log.debug("Verboose debug messages are enabled.");
+        Log.debug("Verboose debug messages are enabled.");        
         Log.info(Phrase.ENABLED + "");
     }
 
