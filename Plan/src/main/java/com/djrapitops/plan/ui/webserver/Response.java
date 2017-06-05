@@ -65,7 +65,7 @@ public class Response {
             }
             String command = requestArgs[2].toLowerCase();
             if (command.equals("player")) {
-                if (requestArgs.length >= 3) {
+                if (requestArgs.length > 3) {
                     String playerName = requestArgs[3].trim();
                     UUID uuid = UUIDFetcher.getUUIDOf(playerName);
                     if (uuid == null) {
