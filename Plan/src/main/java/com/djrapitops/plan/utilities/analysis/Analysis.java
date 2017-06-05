@@ -20,6 +20,7 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.Html;
@@ -99,7 +100,7 @@ public class Analysis {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
-        Benchmark.stop("Analysis Fetch Phase");
+        ;
         return analyzeData(rawData, analysisCache);
     }
 
@@ -115,11 +116,21 @@ public class Analysis {
         List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
         Benchmark.stop("Analysis UUID transform");
         Benchmark.start("Analysis Create Empty dataset");
-        Map<String, Integer> commandUse = plugin.getHandler().getCommandUse();
+        DataCacheHandler handler = plugin.getHandler();
+        Map<UUID, SessionData> activeSessions = handler.getActiveSessions();
         long now = MiscUtils.getTime();
+        rawData.stream().forEach((data) -> {
+            SessionData session = activeSessions.get(data.getUuid());
+            List<SessionData> sessions = data.getSessions();
+            if (session != null && !sessions.contains(session)) {
+                sessions.add(session);
+            }
+        });
+        Map<String, Integer> commandUse = handler.getCommandUse();
+
         AnalysisData analysisData = new AnalysisData();
         Benchmark.stop("Analysis Create Empty dataset");
-        log(Phrase.ANALYSIS_BEGIN_ANALYSIS + "");
+        log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", Benchmark.stop("Analysis Fetch Phase") + ""));
         String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
         analysisData.setSortablePlayersTable(playersTable);
 
@@ -150,14 +161,13 @@ public class Analysis {
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
         analysisCache.cache(analysisData);
-        Benchmark.stop("Analysis");
+        long time = Benchmark.stop("Analysis");
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
-            Log.info(Phrase.ANALYSIS_COMPLETE + "");
+            Log.info(Phrase.ANALYSIS_COMPLETE.parse(time + "", HtmlUtils.getServerAnalysisUrl()));
         }
-//        LocationAnalysis.performAnalysis(analysisData, plugin.getDB());
-        if (Settings.ANALYSIS_EXPORT.isTrue()) {
-            ExportUtility.export(plugin, analysisData, rawData);
-        }
+//        LocationAnalysis.performAnalysis(analysisData, plugin.getDB());        
+        ExportUtility.export(plugin, analysisData, rawData);
+
         return true;
     }
 
@@ -291,7 +301,6 @@ public class Analysis {
         long scaleDay = 86400 * 1000;
         long scaleWeek = 604800 * 1000;
         long scaleMonth = (long) 2592000 * (long) 1000;
-        int maxPlayers = plugin.getHandler().getMaxPlayers();
 
         data.setNewPlayersDay(AnalysisUtils.getNewPlayers(registered, scaleDay, now));
         data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
@@ -303,22 +312,22 @@ public class Analysis {
         data.setAvgUniqJoinsWeek(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleWeek));
         data.setAvgUniqJoinsMonth(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleMonth));
         Benchmark.stop("Analysis Unique/day");
-        
+
         Benchmark.start("Analysis Unique");
         data.setUniqueJoinsDay(AnalysisUtils.getUniqueJoins(sortedSData, scaleDay));
         data.setUniqueJoinsWeek(AnalysisUtils.getUniqueJoins(sortedSData, scaleWeek));
         data.setUniqueJoinsMonth(AnalysisUtils.getUniqueJoins(sortedSData, scaleMonth));
         Benchmark.stop("Analysis Unique");
-        
+
         List<SessionData> sessions = sData.stream()
                 .filter(session -> (session != null))
                 .filter(session -> session.isValid())
                 .filter((session) -> (session.getSessionStart() >= now - scaleMonth || session.getSessionEnd() >= now - scaleMonth))
                 .collect(Collectors.toList());
 
-        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleDay, maxPlayers);
-        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleWeek, maxPlayers);
-        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleMonth, maxPlayers);
+        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleDay);
+        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleWeek);
+        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleMonth);
 
         data.setPlayersDataArray(new String[]{dayArray[0], dayArray[1], weekArray[0], weekArray[1], monthArray[0], monthArray[1]});
     }

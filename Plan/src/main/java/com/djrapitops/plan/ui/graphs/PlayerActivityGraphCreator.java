@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -27,10 +28,9 @@ public class PlayerActivityGraphCreator {
      *
      * @param sessionData
      * @param scale
-     * @param maxPlayers
      * @return
      */
-    public static String[] generateDataArray(List<SessionData> sessionData, long scale, int maxPlayers) {
+    public static String[] generateDataArray(List<SessionData> sessionData, long scale) {
         Benchmark.start("Generate Player Activity Graph " + sessionData.size() + " " + scale + " |");
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
         long nowMinusScale = now - scale;
@@ -75,17 +75,12 @@ public class PlayerActivityGraphCreator {
                 for (int i = 0; i < playersOnline.size(); i++) {
                     long value = playersOnline.get(i);
                     if (value - average > 3 * standardDiviation) {
-                        playersOnline.set(i, (long) maxPlayers + 10);
+                        playersOnline.set(i, (long) Plan.getInstance().getVariable().getMaxPlayers() + 10);
                     }
                 }
             }
         }
         Benchmark.stop("Player Activity Graph Amount Calculation");
-        playersOnline.add(0L);
-        playersOnline.add(0L);
-        playersOnline.add(0L);
-        playersOnline.add(0L);
-        playersOnline.add((long) maxPlayers);
         Benchmark.stop("Generate Player Activity Graph " + sessionData.size() + " " + scale + " |");
         return new String[]{playersOnline.toString(), labels.toString()};
     }
@@ -142,7 +137,7 @@ public class PlayerActivityGraphCreator {
     public static List<List<Long>> filterAndTransformSessions(List<SessionData> sessionData, long nowMinusScale) {
         List<Long[]> values = sessionData.parallelStream()
                 .filter(session -> (session != null))
-                .filter(session -> session.isValid())
+                .filter(session -> session.isValid() || session.getSessionEnd() == -1)
                 .filter((session) -> (session.getSessionStart() >= nowMinusScale || session.getSessionEnd() >= nowMinusScale))
                 .map(session -> new Long[]{session.getSessionStart(), session.getSessionEnd()})
                 .collect(Collectors.toList());
@@ -150,7 +145,10 @@ public class PlayerActivityGraphCreator {
         List<Long> sessionEnds = new ArrayList<>();
         for (Long[] startAndEnd : values) {
             sessionStarts.add(getSecond(startAndEnd[0]));
-            sessionEnds.add(getSecond(startAndEnd[1]));
+            Long end = startAndEnd[1];
+            if (end != -1) {
+                sessionEnds.add(getSecond(end));
+            }
         }
         List<List<Long>> r = new ArrayList<>();
         r.add(sessionStarts);

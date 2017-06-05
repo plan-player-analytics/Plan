@@ -20,10 +20,7 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
  * @author Rsl1122
  * @since 3.0.0
  */
-public class DataCacheProcessQueue {
-
-    private BlockingQueue<HandlingInfo> queue;
-    private ProcessSetup setup;
+public class DataCacheProcessQueue extends Queue<HandlingInfo> {
 
     /**
      * Class constructor, starts the new Thread for processing.
@@ -31,9 +28,9 @@ public class DataCacheProcessQueue {
      * @param handler current instance of DataCachehandler.
      */
     public DataCacheProcessQueue(DataCacheHandler handler) {
-        queue = new ArrayBlockingQueue(20000);
-        setup = new ProcessSetup();
-        setup.go(queue, handler);
+        super(new ArrayBlockingQueue(20000));
+        setup = new ProcessSetup(queue, handler);
+        setup.go();
     }
 
     /**
@@ -72,48 +69,18 @@ public class DataCacheProcessQueue {
     public boolean containsUUID(UUID uuid) {
         return new ArrayList<>(queue).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
     }
-
-    /**
-     * Stops all activites and clears the queue.
-     *
-     * @return unprocessed HandlingInfo objects.
-     */
-    public List<HandlingInfo> stop() {
-        try {
-            if (setup != null) {
-                setup.stop();
-                return new ArrayList<>(queue);
-            }
-            return new ArrayList<>();
-        } finally {
-            setup = null;
-            queue.clear();
-        }
-    }
 }
 
-class ProcessConsumer implements Runnable {
+class ProcessConsumer extends Consumer<HandlingInfo> {
 
-    private final BlockingQueue<HandlingInfo> queue;
     private DataCacheHandler handler;
-    private boolean run;
 
     ProcessConsumer(BlockingQueue q, DataCacheHandler h) {
+        super(q);
         handler = h;
-        queue = q;
-        run = true;
     }
 
     @Override
-    public void run() {
-        try {
-            while (run) {
-                consume(queue.take());
-            }
-        } catch (InterruptedException ex) {
-        }
-    }
-
     void consume(HandlingInfo info) {
         if (handler == null) {
             return;
@@ -130,28 +97,16 @@ class ProcessConsumer implements Runnable {
         handler.getUserDataForProcessing(p, info.getUuid());
     }
 
-    void stop() {
-        run = false;
+    @Override
+    void clearVariables() {
         if (handler != null) {
             handler = null;
         }
     }
 }
 
-class ProcessSetup {
-
-    private ProcessConsumer one;
-    private ProcessConsumer two;
-
-    void go(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
-        one = new ProcessConsumer(q, h);
-        two = new ProcessConsumer(q, h);
-        new Thread(one).start();
-        new Thread(two).start();
-    }
-
-    void stop() {
-        one.stop();
-        two.stop();
+class ProcessSetup extends Setup<HandlingInfo> {
+    ProcessSetup(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
+        super(new ProcessConsumer(q, h), new ProcessConsumer(q, h));
     }
 }

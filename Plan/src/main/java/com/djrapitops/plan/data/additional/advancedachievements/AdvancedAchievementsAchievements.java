@@ -42,22 +42,24 @@ public class AdvancedAchievementsAchievements extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        if (MiscUtils.getTime()- lastRefresh > 60000) {
+        if (MiscUtils.getTime() - lastRefresh > 60000) {
             totalAchievements = aaAPI.getPlayersTotalAchievements();
         }
-        if (totalAchievements.containsKey(uuid)) {
-            return parseContainer(modifierPrefix,totalAchievements.get(uuid) + "");
+        Integer total = totalAchievements.get(uuid);
+        if (total != null) {
+            return parseContainer(modifierPrefix, total + "");
         }
-        return parseContainer(modifierPrefix, 0+"");
+        return parseContainer(modifierPrefix, 0 + "");
     }
 
     @Override
     public Serializable getValue(UUID uuid) {
-        if (MiscUtils.getTime()- lastRefresh > 60000) {
+        if (MiscUtils.getTime() - lastRefresh > 60000) {
             totalAchievements = aaAPI.getPlayersTotalAchievements();
         }
-        if (totalAchievements.containsKey(uuid)) {
-            return totalAchievements.get(uuid);
+        Integer total = totalAchievements.get(uuid);
+        if (total != null) {
+            return total;
         }
         return -1;
     }

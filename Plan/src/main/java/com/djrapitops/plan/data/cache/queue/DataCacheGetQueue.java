@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -21,10 +22,7 @@ import main.java.com.djrapitops.plan.database.Database;
  * @author Rsl1122
  * @since 3.0.0
  */
-public class DataCacheGetQueue {
-
-    private BlockingQueue<HashMap<UUID, List<DBCallableProcessor>>> q;
-    private GetSetup s;
+public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>>> {
 
     /**
      * Class constructor, starts the new Thread for fetching.
@@ -32,9 +30,9 @@ public class DataCacheGetQueue {
      * @param plugin current instance of Plan
      */
     public DataCacheGetQueue(Plan plugin) {
-        q = new ArrayBlockingQueue(Settings.PROCESS_GET_LIMIT.getNumber());
-        s = new GetSetup();
-        s.go(q, plugin.getDB());
+        super(new ArrayBlockingQueue(Settings.PROCESS_GET_LIMIT.getNumber()));
+        setup = new GetSetup(queue, plugin.getDB());
+        setup.go();
     }
 
     /**
@@ -47,52 +45,29 @@ public class DataCacheGetQueue {
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
         Log.debug(uuid + ": Scheduling for get");
         try {
-            HashMap<UUID, List<DBCallableProcessor>> map = new HashMap<>();
+            Map<UUID, List<DBCallableProcessor>> map = new HashMap<>();
             if (map.get(uuid) == null) {
                 map.put(uuid, new ArrayList<>());
             }
             map.get(uuid).addAll(Arrays.asList(processors));
-            q.add(map);
+            queue.add(map);
         } catch (IllegalStateException e) {
             Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber() + ""));
         }
     }
-
-    /**
-     * Stops the activities and clears the queue.
-     */
-    public void stop() {
-        if (s != null) {
-            s.stop();
-        }
-        s = null;
-        q.clear();
-    }
 }
 
-class GetConsumer implements Runnable {
+class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
 
-    private final BlockingQueue<HashMap<UUID, List<DBCallableProcessor>>> queue;
     private Database db;
-    private boolean run;
 
     GetConsumer(BlockingQueue q, Database db) {
-        queue = q;
+        super(q);
         this.db = db;
-        run = true;
     }
 
     @Override
-    public void run() {
-        try {
-            while (run) {
-                consume(queue.take());
-            }
-        } catch (InterruptedException ex) {
-        }
-    }
-
-    void consume(HashMap<UUID, List<DBCallableProcessor>> processors) {
+    void consume(Map<UUID, List<DBCallableProcessor>> processors) {
         if (db == null) {
             return;
         }
@@ -116,28 +91,17 @@ class GetConsumer implements Runnable {
         }
     }
 
-    void stop() {
-        run = false;
+    @Override
+    void clearVariables() {
         if (db != null) {
             db = null;
         }
     }
 }
 
-class GetSetup {
+class GetSetup extends Setup<Map<UUID, List<DBCallableProcessor>>> {
 
-    private GetConsumer one;
-    private GetConsumer two;
-
-    void go(BlockingQueue<HashMap<UUID, List<DBCallableProcessor>>> q, Database db) {
-        one = new GetConsumer(q, db);
-        two = new GetConsumer(q, db);
-        new Thread(one).start();
-        new Thread(two).start();
-    }
-
-    void stop() {
-        one.stop();
-        two.stop();
+    GetSetup(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
+        super(new GetConsumer(q, db), new GetConsumer(q, db));
     }
 }

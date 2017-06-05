@@ -15,10 +15,7 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
  * @author Rsl1122
  * @since 3.0.0
  */
-public class DataCacheClearQueue {
-
-    private BlockingQueue<UUID> q;
-    private ClearSetup s;
+public class DataCacheClearQueue extends Queue<UUID>{
 
     /**
      * Class constructor, starts the new Thread for clearing.
@@ -26,9 +23,9 @@ public class DataCacheClearQueue {
      * @param handler current instance of DataCachehandler.
      */
     public DataCacheClearQueue(DataCacheHandler handler) {
-        q = new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber());
-        s = new ClearSetup();
-        s.go(q, handler);
+        super(new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
+        setup = new ClearSetup(queue, handler);
+        setup.go();
     }
 
     /**
@@ -38,7 +35,7 @@ public class DataCacheClearQueue {
      */
     public void scheduleForClear(UUID uuid) {
         Log.debug(uuid + ": Scheduling for clear");
-        q.add(uuid);
+        queue.add(uuid);
     }
 
     /**
@@ -52,46 +49,23 @@ public class DataCacheClearQueue {
         }
         Log.debug("Scheduling for clear: " + uuids);
         try {
-            q.addAll(uuids);
+            queue.addAll(uuids);
         } catch (IllegalStateException e) {
             Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber() + ""));
         }
     }
-
-    /**
-     * Stops all activity and clears the queue.
-     */
-    public void stop() {
-        if (s != null) {
-            s.stop();
-        }
-        s = null;
-        q.clear();
-    }
 }
 
-class ClearConsumer implements Runnable {
+class ClearConsumer extends Consumer<UUID> implements Runnable {
 
-    private final BlockingQueue<UUID> queue;
     private DataCacheHandler handler;
-    private boolean run;
 
     ClearConsumer(BlockingQueue q, DataCacheHandler handler) {
-        queue = q;
+        super(q);
         this.handler = handler;
-        run = true;
     }
 
     @Override
-    public void run() {
-        try {
-            while (run) {
-                consume(queue.take());
-            }
-        } catch (InterruptedException ex) {
-        }
-    }
-
     void consume(UUID uuid) {
         if (handler == null) {
             return;
@@ -108,24 +82,16 @@ class ClearConsumer implements Runnable {
         }
     }
 
-    void stop() {
-        run = false;
+    @Override
+    void clearVariables() {
         if (handler != null) {
             handler = null;
         }
     }
 }
 
-class ClearSetup {
-
-    private ClearConsumer one;
-
-    void go(BlockingQueue<UUID> q, DataCacheHandler handler) {
-        one = new ClearConsumer(q, handler);
-        new Thread(one).start();
-    }
-
-    void stop() {
-        one.stop();
+class ClearSetup extends Setup<UUID> {
+    public ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
+        super(new ClearConsumer(q, handler));
     }
 }

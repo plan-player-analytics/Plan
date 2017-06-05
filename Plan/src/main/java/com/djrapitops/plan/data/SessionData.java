@@ -32,6 +32,10 @@ public class SessionData {
         this.sessionEnd = sessionEnd;
     }
 
+    public SessionData(SessionData s) {
+        this.sessionStart = s.getSessionStart();
+        this.sessionEnd = s.getSessionEnd();
+    }
     /**
      * Ends the session with given end point.
      *

@@ -130,6 +130,7 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
+        replaceMap.put("%graphmaxplayers%", plugin.getVariable().getMaxPlayers()+"");
         replaceMap.put("%refreshlong%", data.getRefreshDate()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         Benchmark.stop("Replace Placeholders Anaysis");
@@ -205,7 +206,8 @@ public class PlaceholderUtils {
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
-        String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000, 2);
+        String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000);
+        replaceMap.put("%graphmaxplayers%", 2+"");
         replaceMap.put("%dataweek%", playersDataArray[0]);
         replaceMap.put("%labelsweek%", playersDataArray[1]);
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");

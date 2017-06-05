@@ -39,9 +39,9 @@ public class SessionLengthDistributionGraphCreator {
      */
     public static String[] generateDataArray(Collection<Long> lengths) {
         Map<Long, Integer> values = getValues(lengths);
-        Map<Long, Integer> scaled = scale(values);
-        StringBuilder arrayBuilder = buildString(scaled);
-        StringBuilder labelBuilder = buildLabels(scaled);
+//        Map<Long, Integer> scaled = scale(values);
+        StringBuilder arrayBuilder = buildString(values);
+        StringBuilder labelBuilder = buildLabels(values);
         return new String[]{arrayBuilder.toString(), labelBuilder.toString()};
     }
 
