@@ -88,7 +88,7 @@ public class Plan extends JavaPlugin {
         
         Log.debug("-------------------------------------");
         Log.debug("Debug log, Server Start: Plan v."+getDescription().getVersion());               
-        Log.debug("Server: "+server.getBukkitVersion()+" | V."+server.getVersion());        
+        Log.debug("Server: "+server.getBukkitVersion());      
         Log.debug("Version: "+server.getVersion());        
         Log.debug("-------------------------------------");
         

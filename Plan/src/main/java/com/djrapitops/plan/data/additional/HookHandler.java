@@ -209,7 +209,7 @@ public class HookHandler {
             } catch (Exception e) {
                 addReplace.put(source.getPlaceholder(""), "Error occurred: " + e);
                 Log.error("PluginDataSource caused an exception: " + source.getSourcePlugin());
-                Log.toLog("PluginDataSource caused an exception: " + source.getSourcePlugin());
+                Log.toLog("PluginDataSource caused an exception: " + source.getSourcePlugin(), Log.getErrorsFilename());
                 Log.toLog(this.getClass().getName(), e);
             }
         }

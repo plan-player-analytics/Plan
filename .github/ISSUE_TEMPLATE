@@ -1,23 +1,41 @@
 Feel free to use the template below to report your issue, for suggestions you can use whatever works for you :)
 Remember to use the Preview button to ensure the errors are displayed properly
 
-**Plan Version:** 
-**Server Version:** eg. Paper-1.11.2 or Spigot-1.9.1
-**Database Type:** 
-**Command Causing Issue:** (None if thrown without commands)
+If your issue is about a command timeout, please follow the instructions at the bottom of the issue template.
+
+----
+
+**Plan Version:** <Version>
+**Server Version:** <Server Version>
+**Database Type:** <Mysql/sqlite>
+
+**Issue Caused by:** <Caused by>
+
+----
 
 **Description:**
-What happens & When does it happen
+
 
 **Steps to Reproduce:**
 
-1. Do this
-2. Do something else
+1. 
+2. 
 
 **Proposed Solution:**
-Possible proposed solution if you have one
 
-**Stack Trace - Console/Errors.txt contents:**
+
+----
+
+**Console/Errors.txt/DebugLog.txt contents:**
 ```
 Place any stack traces inside these symbols (```)
 ```
+
+----
+
+Instructions for reporting timeout issues:
+
+- Enable file debug mode by changing config setting "Debug" to "file"
+- Reload the plugin
+- Run the command that causes the timeout message to show
+- Copy the contents of DebugLog.txt inside the code brackets above

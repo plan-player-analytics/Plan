@@ -330,17 +330,20 @@ public class UsersTable extends Table {
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
         List<UserData> datas = new ArrayList<>();
         datas.addAll(getUserDataForKnown(containsBukkitData));
+        
         uuids.removeAll(containsBukkitData);
-
-        List<UserData> noBukkitData = new ArrayList<>();
-        Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
-        for (UUID uuid : uuids) {
-            UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
-            noBukkitData.add(uData);
+        if (!uuids.isEmpty()) {
+            List<UserData> noBukkitData = new ArrayList<>();
+            Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
+            for (UUID uuid : uuids) {
+                UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+                noBukkitData.add(uData);
+            }
+            Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
+            addUserInformationToUserData(noBukkitData);
+            datas.addAll(noBukkitData);
         }
-        Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
-        addUserInformationToUserData(noBukkitData);
-        datas.addAll(noBukkitData);
+        
         Benchmark.stop("Get UserData Multiple " + uuids.size());
         return datas;
     }
@@ -698,7 +701,7 @@ public class UsersTable extends Table {
                 i++;
             }
             if (commitRequired) {
-                Log.debug("Executing session batch: "+i);
+                Log.debug("Executing session batch: " + i);
                 statement.executeBatch();
             }
         } finally {

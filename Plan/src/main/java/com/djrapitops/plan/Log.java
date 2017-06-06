@@ -19,7 +19,7 @@ public class Log {
 
     final private static String DEBUG = "DebugLog.txt";
     final private static String ERRORS = "Errors.txt";
-    
+
     /**
      * Logs the message to the console as INFO.
      *
@@ -30,13 +30,16 @@ public class Log {
         if (instance != null) {
             instance.getLogger().info(message);
         }
+        if (!message.contains("[DEBUG]")) {
+            debug(message);
+        }
     }
 
     public static void infoColor(String message) {
         ConsoleCommandSender consoleSender = Plan.getInstance().getServer().getConsoleSender();
         consoleSender.sendMessage(Phrase.PREFIX + message);
     }
-    
+
     /**
      * Logs an error message to the console as ERROR.
      *
@@ -57,7 +60,7 @@ public class Log {
     public static void debug(String message) {
         String debugMode = Settings.DEBUG.toString().toLowerCase();
         boolean both = debugMode.equals("true") || debugMode.equals("both");
-        boolean logConsole = Settings.DEBUG.isTrue() || both;
+        boolean logConsole = Settings.DEBUG.isTrue() || both || debugMode.equals("console");
         boolean logFile = debugMode.equals("file") || both;
         if (logConsole) {
             info("[DEBUG] " + message);
@@ -95,16 +98,6 @@ public class Log {
     }
 
     /**
-     * Logs a message to the Errors.txt with a timestamp.
-     *
-     * @param message Message to log to Errors.txt [timestamp] Message
-     */
-    @Deprecated
-    public static void toLog(String message) {
-        toLog(message, ERRORS);
-    }
-
-    /**
      * Logs a message to the a given file with a timestamp.
      *
      * @param message Message to log to Errors.txt [timestamp] Message
@@ -136,10 +129,6 @@ public class Log {
         } catch (IOException e) {
             Log.error("Failed to create" + filename + "file");
         }
-    }
-
-    public static String getDEBUG() {
-        return DEBUG;
     }
 
     public static String getErrorsFilename() {

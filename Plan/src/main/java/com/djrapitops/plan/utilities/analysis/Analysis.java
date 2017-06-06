@@ -111,8 +111,8 @@ public class Analysis {
      * @return
      */
     public boolean analyzeData(List<UserData> rawData, AnalysisCacheHandler analysisCache) {
-        Benchmark.start("Analysis UUID transform");
         Benchmark.start("Analysis Phase");
+        Benchmark.start("Analysis UUID transform");
         List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
         Benchmark.stop("Analysis UUID transform");
         Benchmark.start("Analysis Create Empty dataset");
@@ -157,7 +157,8 @@ public class Analysis {
         analysisData.setPunchCardData(PunchCardGraphCreator.generateDataArray(sorted.getSessiondata()));
         analysisData.setSessionDistributionData(SessionLengthDistributionGraphCreator.generateDataArraySessions(sorted.getSessiondata()));
         analysisData.setPlaytimeDistributionData(SessionLengthDistributionGraphCreator.generateDataArray(sorted.getPlaytimes().values()));
-
+        Benchmark.stop("Analysis Phase");
+        log(Phrase.ANALYSIS_THIRD_PARTY + "");
         analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
         analysisCache.cache(analysisData);

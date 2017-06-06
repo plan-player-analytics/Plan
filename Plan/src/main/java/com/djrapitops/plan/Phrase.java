@@ -74,6 +74,7 @@ public enum Phrase {
     ANALYSIS_FAIL_NO_PLAYERS(ANALYSIS + "Analysis failed, no known players."),
     ANALYSIS_FAIL_NO_DATA(ANALYSIS + "Analysis failed, no data in the database."),
     ANALYSIS_BEGIN_ANALYSIS(ANALYSIS + "Data Fetched (REPLACE0 users, took REPLACE1ms), beginning Analysis of data.."),
+    ANALYSIS_THIRD_PARTY(ANALYSIS+"Analyzing additional data sources (3rd party)"),
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete. (took REPLACE0ms) REPLACE1"),
     DATA_CORRUPTION_WARN("Some data might be corrupted: " + REPLACE0),
     //
