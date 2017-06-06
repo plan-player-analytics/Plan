@@ -156,6 +156,7 @@ public class LocationsTable extends Table {
                     + columnWorld
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
+            int i = 0;
             for (Location location : newLocations) {
                 if (location == null) {
                     continue;
@@ -170,8 +171,10 @@ public class LocationsTable extends Table {
                 statement.setString(4, world.getName());
                 statement.addBatch();
                 commitRequired = true;
+                i++;
             }
             if (commitRequired) {
+                Log.debug("Executing locations batch: "+i);
                 statement.executeBatch();
             }
         } finally {
@@ -199,6 +202,7 @@ public class LocationsTable extends Table {
                     + columnWorld
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
+            int i = 0;
             for (Integer id : locations.keySet()) {
                 List<Location> newLocations = locations.get(id);
                 if (newLocations == null || newLocations.isEmpty()) {
@@ -215,9 +219,11 @@ public class LocationsTable extends Table {
                     statement.setString(4, world.getName());
                     statement.addBatch();
                     commitRequired = true;
+                    i++;
                 }
             }
             if (commitRequired) {
+                Log.debug("Executing locations batch: "+i);
                 statement.executeBatch();
             }
         } finally {

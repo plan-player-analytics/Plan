@@ -17,8 +17,8 @@ import org.bukkit.command.ConsoleCommandSender;
  */
 public class Log {
 
-    final protected static String DEBUG = "DebugLog.txt";
-    final protected static String ERRORS = "Errors.txt";
+    final private static String DEBUG = "DebugLog.txt";
+    final private static String ERRORS = "Errors.txt";
     
     /**
      * Logs the message to the console as INFO.
@@ -136,5 +136,13 @@ public class Log {
         } catch (IOException e) {
             Log.error("Failed to create" + filename + "file");
         }
+    }
+
+    public static String getDEBUG() {
+        return DEBUG;
+    }
+
+    public static String getErrorsFilename() {
+        return ERRORS;
     }
 }

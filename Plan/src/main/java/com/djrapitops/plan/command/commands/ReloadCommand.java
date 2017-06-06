@@ -31,8 +31,8 @@ public class ReloadCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        plugin.reloadConfig();
         plugin.onDisable();
+        plugin.reloadConfig();
         plugin.onEnable();
         sender.sendMessage(Phrase.RELOAD_COMPLETE + "");
         return true;

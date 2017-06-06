@@ -232,6 +232,9 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean wasSeenBefore(UUID uuid) {
+        if (uuid == null) {
+            return false;
+        }
         try {
             return usersTable.getUserId(uuid.toString()) != -1;
         } catch (SQLException e) {
@@ -248,6 +251,9 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean removeAccount(String uuid) throws SQLException {
+        if (uuid == null || uuid.isEmpty()) {
+            return false;
+        }
         try {
             Benchmark.start("Database remove Account " + uuid);
             try {
@@ -284,7 +290,6 @@ public abstract class SQLDB extends Database {
         try {
             checkConnection();
         } catch (Exception e) {
-            Log.toLog("Preparing for Exception report - Processors: " + processors.toString());
             Log.toLog(this.getClass().getName(), e);
             return;
         }
@@ -376,9 +381,7 @@ public abstract class SQLDB extends Database {
         if (data.isEmpty()) {
             return;
         }
-        Set<Throwable> exceptions = new HashSet<>();
-        List<UserData> saveLast = usersTable.saveUserDataInformationBatch(data);
-        data.removeAll(saveLast);
+        usersTable.saveUserDataInformationBatch(data);
         // Transform to map
         Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
         // Get UserIDs
@@ -397,7 +400,6 @@ public abstract class SQLDB extends Database {
             Integer id = userIds.get(uuid);
             UserData uData = userDatas.get(uuid);
             if (id == -1) {
-                saveLast.add(uData);
                 Log.debug("User not seen before, saving last: " + uuid);
                 continue;
             }
@@ -427,18 +429,6 @@ public abstract class SQLDB extends Database {
                 .forEach(uData -> {
                     uData.stopAccessing();
                 });
-        // Save leftovers
-        saveLast.stream().forEach((userData) -> {
-            try {
-                saveUserData(userData);
-            } catch (SQLException | NullPointerException e) {
-                exceptions.add(e);
-            }
-        });
-        if (!exceptions.isEmpty()) {
-            Log.error("SEVERE: MULTIPLE ERRORS OCCURRED: " + exceptions.size());
-            Log.toLog(this.getClass().getName(), exceptions);
-        }
         Benchmark.stop("DB Save multiple Userdata");
     }
 

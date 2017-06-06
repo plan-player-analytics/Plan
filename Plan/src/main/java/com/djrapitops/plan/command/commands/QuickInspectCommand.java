@@ -1,18 +1,17 @@
 package main.java.com.djrapitops.plan.command.commands;
 
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.CommandUtils;
+import main.java.com.djrapitops.plan.command.Condition;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,39 +44,26 @@ public class QuickInspectCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
-        BukkitTask inspectTask = new BukkitRunnable() {
+        final BukkitTask inspectTask = new BukkitRunnable() {
             @Override
             public void run() {
-                UUID uuid;
-                try {
-                    uuid = UUIDUtility.getUUIDOf(playerName);
-                    if (uuid == null) {
-                        throw new Exception("Username doesn't exist.");
+                UUID uuid = CommandUtils.getUUID(playerName);
+                Condition[] preConditions = new Condition[]{
+                    new Condition(CommandUtils.uuidIsValid(uuid), Phrase.USERNAME_NOT_VALID.toString()),
+                    new Condition(CommandUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString()),
+                    new Condition(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString())
+                };
+
+                for (Condition condition : preConditions) {
+                    if (!condition.pass()) {
+                        sender.sendMessage(condition.getFailMsg());
+                        this.cancel();
+                        return;
                     }
-                } catch (Exception e) {
-                    sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
-                    this.cancel();
-                    return;
-                }
-                OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-                if (!p.hasPlayedBefore()) {
-                    sender.sendMessage(Phrase.USERNAME_NOT_SEEN.toString());
-                    this.cancel();
-                    return;
-                }
-                if (!plugin.getDB().wasSeenBefore(uuid)) {
-                    sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
-                    this.cancel();
-                    return;
                 }
                 sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
                 inspectCache.cache(uuid);
-                int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
-                if (configValue <= 0) {
-                    configValue = 4;
-                }
-                final int available = configValue;
-                BukkitTask inspectMessageSenderTask = new BukkitRunnable() {
+                final BukkitTask inspectMessageSenderTask = new BukkitRunnable() {
                     private int timesrun = 0;
 
                     @Override
@@ -90,6 +76,7 @@ public class QuickInspectCommand extends SubCommand {
                             this.cancel();
                         }
                         if (timesrun > 10) {
+                            Log.debug("Command Timeout Message, QuickInspect.");
                             sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Qinspect"));
                             this.cancel();
                         }

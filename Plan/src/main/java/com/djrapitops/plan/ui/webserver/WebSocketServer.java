@@ -109,7 +109,9 @@ public class WebSocketServer {
         Log.info(Phrase.WEBSERVER_CLOSE + "");
         shutdown = true;
         try {
-            server.close();
+            if (server != null) {
+                server.close();
+            }
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }

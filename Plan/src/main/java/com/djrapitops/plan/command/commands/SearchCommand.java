@@ -7,8 +7,9 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.CommandUtils;
+import main.java.com.djrapitops.plan.command.Condition;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -45,18 +46,19 @@ public class SearchCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
+        if (!CommandUtils.pluginHasViewCapability()) {
             sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString());
             return true;
         }
-        if (args.length != 1) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString());
+        Condition c = new Condition(args.length != 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString());
+        if (c.pass()) {
+            sender.sendMessage(c.getFailMsg());
             return true;
         }
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         Set<OfflinePlayer> matches = MiscUtils.getMatchingDisplaynames(args[0]);
-        BukkitTask searchTask = new BukkitRunnable() {
+        final BukkitTask searchTask = new BukkitRunnable() {
             @Override
             public void run() {
                 Set<UUID> uuids = new HashSet<>();
@@ -67,13 +69,6 @@ public class SearchCommand extends SubCommand {
                         inspectCache.cache(uuid);
                     }
                 }
-
-                int configValue = Settings.CLEAR_INSPECT_CACHE.getNumber();
-                if (configValue <= 0) {
-                    configValue = 4;
-                }
-                final int available = configValue;
-
                 sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0]);
                 // Results
                 if (uuids.isEmpty()) {
@@ -94,7 +89,7 @@ public class SearchCommand extends SubCommand {
                         } else {
                             sender.sendMessage(message);
                             Player player = (Player) sender;
-                            BukkitTask link = new BukkitRunnable() {
+                            final BukkitTask link = new BukkitRunnable() {
                                 @Override
                                 public void run() {
                                     Bukkit.getServer().dispatchCommand(
@@ -107,7 +102,6 @@ public class SearchCommand extends SubCommand {
                         }
                     }
                 }
-                sender.sendMessage(Phrase.CMD_RESULTS_AVAILABLE.parse(available + ""));
                 sender.sendMessage(Phrase.CMD_FOOTER + "");
             }
         }.runTaskAsynchronously(plugin);

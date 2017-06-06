@@ -209,6 +209,7 @@ public class SessionsTable extends Table {
                     + ") VALUES (?, ?, ?)");
 
             boolean commitRequired = false;
+            int i = 0;
             for (Integer id : sessions.keySet()) {
                 List<SessionData> sessionList = sessions.get(id);
                 List<SessionData> s = saved.get(id);
@@ -229,14 +230,16 @@ public class SessionsTable extends Table {
                     statement.setLong(3, end);
                     statement.addBatch();
                     commitRequired = true;
+                    i++;
                 }
             }
             if (commitRequired) {
-                statement.executeBatch();
+                Log.debug("Executing session batch: "+i);
+                statement.executeBatch();                
             }
+            Benchmark.stop("Save Sessions multiple " + sessions.size());
         } finally {
             close(statement);
-            Benchmark.stop("Save Sessions multiple " + sessions.size());
         }
     }
 }

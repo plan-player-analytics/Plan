@@ -1,10 +1,12 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.CommandType;
+import main.java.com.djrapitops.plan.command.CommandUtils;
 import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
@@ -41,26 +43,19 @@ public class AnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!Settings.WEBSERVER_ENABLED.isTrue()) {
-            if (!Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
-                if (!Settings.USE_ALTERNATIVE_UI.isTrue()) {
-                    sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "");
-                    return true;
-                }
-            }
+        if (!CommandUtils.pluginHasViewCapability()) {
+            sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "");
+            return true;
         }
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-        if (!analysisCache.isCached()) {
+        if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
                 plugin.getServer().getScheduler().cancelTask(bootAnID);
             }
             analysisCache.updateCache();
-        } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
-            analysisCache.updateCache();
         }
-
-        BukkitTask analysisMessageSenderTask = new BukkitRunnable() {
+        final BukkitTask analysisMessageSenderTask = new BukkitRunnable() {
             private int timesrun = 0;
 
             @Override
@@ -69,8 +64,10 @@ public class AnalyzeCommand extends SubCommand {
                 if (analysisCache.isCached()) {
                     sendAnalysisMessage(sender);
                     this.cancel();
+                    return;
                 }
                 if (timesrun > 10) {
+                    Log.debug("Command Timeout Message, Analysis.");
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                     this.cancel();
                 }
@@ -82,9 +79,11 @@ public class AnalyzeCommand extends SubCommand {
     /**
      * Used to send the message after /plan analysis.
      *
+     * Final because
+     *
      * @param sender Command sender.
      */
-    public void sendAnalysisMessage(CommandSender sender) {
+    final public void sendAnalysisMessage(CommandSender sender) {
         boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
         sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
         if (textUI) {
