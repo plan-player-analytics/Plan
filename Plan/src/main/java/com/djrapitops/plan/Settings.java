@@ -10,8 +10,7 @@ import java.util.List;
  * @since 2.3.2
  */
 public enum Settings {
-    // Boolean
-    DEBUG("Settings.Debug"),
+    // Boolean    
     WEBSERVER_ENABLED("Settings.WebServer.Enabled"),
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
@@ -21,7 +20,12 @@ public enum Settings {
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERLOCATIONS("Settings.Data.GatherLocations"),
+    GATHERCHAT("Settings.Data.ChatListener"),
+    GATHERKILLS("Settings.Data.GatherKillData"),
+    GATHERGMTIMES("Settings.Data.GamemodeChangeListener"),
+    GATHERCOMMANDS("Settings.Data.GatherCommandUsage"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
+    GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
     ENABLED_AA("Customization.Plugins.Enabled.AdvancedAchievements"),
     ENABLED_ESS("Customization.Plugins.Enabled.Essentials"),
     ENABLED_FAC("Customization.Plugins.Enabled.Factions"),
@@ -41,6 +45,7 @@ public enum Settings {
     PROCESS_SAVE_LIMIT("Settings.Cache.Processing.SaveLimit"),
     PROCESS_CLEAR_LIMIT("Settings.Cache.Processing.ClearLimit"),
     // String
+    DEBUG("Settings.Debug"),
     ALTERNATIVE_IP("Settings.WebServer.AlternativeIP"),
     DB_TYPE("database.type"),
     DEM_TRIGGERS("Customization.DemographicsTriggers.Trigger"),
@@ -54,6 +59,8 @@ public enum Settings {
     //
     SERVER_NAME("Customization.ServerName"),
     //
+    FORMAT_YEAR("Customization.Formats.TimeAmount.Year"),
+    FORMAT_YEARS("Customization.Formats.TimeAmount.Years"),
     FORMAT_DAYS("Customization.Formats.TimeAmount.Days"),
     FORMAT_HOURS("Customization.Formats.TimeAmount.Hours"),
     FORMAT_MINUTES("Customization.Formats.TimeAmount.Minutes"),

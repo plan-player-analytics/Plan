@@ -1,7 +1,9 @@
 package main.java.com.djrapitops.plan.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.commands.*;
@@ -89,6 +91,7 @@ public class PlanCommand implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        Log.debug("Registered command with arguments: "+Arrays.toString(args));
         if (args.length < 1) {
             sendDefaultCommand(sender, cmd, commandLabel, args);
             return true;

@@ -156,14 +156,17 @@ public class NicknamesTable extends Table {
                     + columnNick
                     + ") VALUES (?, ?, ?)");
             boolean commitRequired = false;
+            int i = 0;
             for (String name : names) {
                 statement.setInt(1, userId);
                 statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
                 statement.setString(3, name);
                 statement.addBatch();
                 commitRequired = true;
+                i++;
             }
             if (commitRequired) {
+                Log.debug("Executing nicknames batch: "+i);
                 statement.executeBatch();
 
             }

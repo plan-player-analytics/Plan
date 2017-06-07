@@ -6,7 +6,6 @@
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.sql.SQLException;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,21 +64,30 @@ public class WebSocketServer {
                 @Override
                 public void run() {
                     while (!shutdown) {
-                        Socket socket;
-                        InputStream input;
-                        OutputStream output;
+                        Socket socket = null;
+                        InputStream input = null;
+                        OutputStream output = null;
                         try {
                             socket = server.accept();
                             input = socket.getInputStream();
                             output = socket.getOutputStream();
                             Request request = new Request(input);
                             request.parse();
-
                             Response response = new Response(output, dataReqHandler);
                             response.setRequest(request);
                             response.sendStaticResource();
-                            socket.close();
-                        } catch (IOException e) {
+                        } catch (IOException e) {                            
+                        } finally {
+                            Closeable[] close = new Closeable[]{input, output, socket};
+                            for (Closeable closeable : close) {
+                                try {
+                                    if (closeable != null) {
+                                        closeable.close();
+                                    }
+                                } catch (IOException e) {
+                                    
+                                }
+                            }
                         }
                     }
                     this.cancel();
@@ -99,7 +109,9 @@ public class WebSocketServer {
         Log.info(Phrase.WEBSERVER_CLOSE + "");
         shutdown = true;
         try {
-            server.close();
+            if (server != null) {
+                server.close();
+            }
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }

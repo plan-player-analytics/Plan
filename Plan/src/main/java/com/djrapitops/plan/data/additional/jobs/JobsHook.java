@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.data.additional.jobs;
 import main.java.com.djrapitops.plan.data.additional.Hook;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.additional.mcmmo.McmmoAnalysisSkillTable;
 
 /**
  * A Class responsible for hooking to Jobs and registering data sources.

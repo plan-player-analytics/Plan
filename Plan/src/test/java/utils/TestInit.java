@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;

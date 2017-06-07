@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -62,6 +63,7 @@ public class QuickAnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
                 if (timesrun > 10) {
+                    Log.debug("Command Timeout Message, QuickAnalyze.");
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                     this.cancel();
                 }

@@ -34,7 +34,11 @@ public enum Phrase {
     DB_TYPE_DOES_NOT_EXIST("That database type doesn't exist."),
     DB_FAILURE_DISABLE("Database initialization has failed, disabling Plan."),
     NOTIFY_EMPTY_IP(ChatColor.YELLOW + "" + PREFIX + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!"),
-    //
+    NOTIFY_DISABLED_CHATLISTENER(ChatColor.YELLOW + "Chat listener disabled, nickname info inaccurate."),
+    NOTIFY_DISABLED_GMLISTENER(ChatColor.YELLOW + "Gamemode change listener disabled, Gm times info inaccurate."),
+    NOTIFY_DISABLED_COMMANDLISTENER(ChatColor.YELLOW + "Command usage listener disabled."),
+    NOTIFY_DISABLED_DEATHLISTENER(ChatColor.YELLOW + "Death listener disabled, player & mob kills not recorded."),
+//
     CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),
     CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),
     CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),
@@ -70,6 +74,7 @@ public enum Phrase {
     ANALYSIS_FAIL_NO_PLAYERS(ANALYSIS + "Analysis failed, no known players."),
     ANALYSIS_FAIL_NO_DATA(ANALYSIS + "Analysis failed, no data in the database."),
     ANALYSIS_BEGIN_ANALYSIS(ANALYSIS + "Data Fetched (REPLACE0 users, took REPLACE1ms), beginning Analysis of data.."),
+    ANALYSIS_THIRD_PARTY(ANALYSIS+"Analyzing additional data sources (3rd party)"),
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete. (took REPLACE0ms) REPLACE1"),
     DATA_CORRUPTION_WARN("Some data might be corrupted: " + REPLACE0),
     //

@@ -19,7 +19,7 @@ import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.UUIDFetcher;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.GameMode;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
@@ -330,17 +330,20 @@ public class UsersTable extends Table {
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
         List<UserData> datas = new ArrayList<>();
         datas.addAll(getUserDataForKnown(containsBukkitData));
+        
         uuids.removeAll(containsBukkitData);
-
-        List<UserData> noBukkitData = new ArrayList<>();
-        Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
-        for (UUID uuid : uuids) {
-            UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
-            noBukkitData.add(uData);
+        if (!uuids.isEmpty()) {
+            List<UserData> noBukkitData = new ArrayList<>();
+            Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
+            for (UUID uuid : uuids) {
+                UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+                noBukkitData.add(uData);
+            }
+            Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
+            addUserInformationToUserData(noBukkitData);
+            datas.addAll(noBukkitData);
         }
-        Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
-        addUserInformationToUserData(noBukkitData);
-        datas.addAll(noBukkitData);
+        
         Benchmark.stop("Get UserData Multiple " + uuids.size());
         return datas;
     }
@@ -633,11 +636,80 @@ public class UsersTable extends Table {
     /**
      *
      * @param data
-     * @return
      * @throws SQLException
      */
-    public List<UserData> saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
+    public void saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
         Benchmark.start("Save UserInfo multiple " + data.size());
+        try {
+            List<UserData> newUserdata = updateExistingUserData(data);
+            Benchmark.start("Insert new UserInfo multiple " + newUserdata.size());
+            insertNewUserData(newUserdata);
+            Benchmark.stop("Insert new UserInfo multiple " + newUserdata.size());
+        } finally {
+            Benchmark.stop("Save UserInfo multiple " + data.size());
+        }
+    }
+
+    private void insertNewUserData(Collection<UserData> data) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnUUID + ", "
+                    + columnDemAge + ", "
+                    + columnDemGender + ", "
+                    + columnDemGeoLocation + ", "
+                    + columnLastGM + ", "
+                    + columnLastGMSwapTime + ", "
+                    + columnPlayTime + ", "
+                    + columnLoginTimes + ", "
+                    + columnLastPlayed + ", "
+                    + columnDeaths + ", "
+                    + columnMobKills + ", "
+                    + columnContainsBukkitData + ", "
+                    + columnOP + ", "
+                    + columnBanned + ", "
+                    + columnName + ", "
+                    + columnRegistered
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            boolean commitRequired = false;
+            int i = 0;
+            for (UserData uData : data) {
+                UUID uuid = uData.getUuid();
+                statement.setString(1, uuid.toString());
+                statement.setInt(2, uData.getDemData().getAge());
+                statement.setString(3, uData.getDemData().getGender().toString().toLowerCase());
+                statement.setString(4, uData.getDemData().getGeoLocation());
+                GameMode gm = uData.getLastGamemode();
+                if (gm != null) {
+                    statement.setString(5, uData.getLastGamemode().name());
+                } else {
+                    statement.setString(5, GameMode.SURVIVAL.name());
+                }
+                statement.setLong(6, uData.getLastGmSwapTime());
+                statement.setLong(7, uData.getPlayTime());
+                statement.setInt(8, uData.getLoginTimes());
+                statement.setLong(9, uData.getLastPlayed());
+                statement.setInt(10, uData.getDeaths());
+                statement.setInt(11, uData.getMobKills());
+                statement.setBoolean(12, uData.getName() != null);
+                statement.setBoolean(13, uData.isOp());
+                statement.setBoolean(14, uData.isBanned());
+                statement.setString(15, uData.getName());
+                statement.setLong(16, uData.getRegistered());
+                statement.addBatch();
+                commitRequired = true;
+                i++;
+            }
+            if (commitRequired) {
+                Log.debug("Executing session batch: " + i);
+                statement.executeBatch();
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    private List<UserData> updateExistingUserData(Collection<UserData> data) throws SQLException {
         PreparedStatement statement = null;
         try {
             List<UserData> saveLast = new ArrayList<>();
@@ -661,65 +733,61 @@ public class UsersTable extends Table {
             statement = prepareStatement(uSQL);
             boolean commitRequired = false;
             Set<UUID> savedUUIDs = getSavedUUIDs();
+            int i = 0;
             for (UserData uData : data) {
-                try {
-                    if (uData == null) {
-                        continue;
-                    }
-                    UUID uuid = uData.getUuid();
-                    if (uuid == null) {
-                        try {
-                            uData.setUuid(UUIDFetcher.getUUIDOf(uData.getName()));
-                        } catch (Exception ex) {
-                            continue;
-                        }
-                    }
-                    uuid = uData.getUuid();
-                    if (uuid == null) {
-                        continue;
-                    }
-                    if (!savedUUIDs.contains(uuid)) {
-                        saveLast.add(uData);
-                        continue;
-                    }
-                    uData.access();
-                    statement.setInt(1, uData.getDemData().getAge());
-                    statement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
-                    statement.setString(3, uData.getDemData().getGeoLocation());
-                    GameMode gm = uData.getLastGamemode();
-                    if (gm != null) {
-                        statement.setString(4, uData.getLastGamemode().name());
-                    } else {
-                        statement.setString(4, GameMode.SURVIVAL.name());
-                    }
-                    statement.setLong(5, uData.getLastGmSwapTime());
-                    statement.setLong(6, uData.getPlayTime());
-                    statement.setInt(7, uData.getLoginTimes());
-                    statement.setLong(8, uData.getLastPlayed());
-                    statement.setInt(9, uData.getDeaths());
-                    statement.setInt(10, uData.getMobKills());
-                    statement.setBoolean(11, uData.getName() != null);
-                    statement.setBoolean(12, uData.isOp());
-                    statement.setBoolean(13, uData.isBanned());
-                    statement.setString(14, uData.getName());
-                    statement.setLong(15, uData.getRegistered());
-                    statement.setString(16, uuid.toString());
-                    statement.addBatch();
-                } catch (SQLException | NullPointerException e) {
-                    saveLast.add(uData);
-                    uData.stopAccessing();
+                if (uData == null) {
                     continue;
                 }
+                UUID uuid = uData.getUuid();
+                if (uuid == null) {
+                    try {
+                        uData.setUuid(UUIDUtility.getUUIDOf(uData.getName(), db));
+                    } catch (Exception ex) {
+                        continue;
+                    }
+                }
+                uuid = uData.getUuid();
+                if (uuid == null) {
+                    continue;
+                }
+                if (!savedUUIDs.contains(uuid)) {
+                    saveLast.add(uData);
+                    continue;
+                }
+                uData.access();
+                statement.setInt(1, uData.getDemData().getAge());
+                statement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
+                statement.setString(3, uData.getDemData().getGeoLocation());
+                GameMode gm = uData.getLastGamemode();
+                if (gm != null) {
+                    statement.setString(4, uData.getLastGamemode().name());
+                } else {
+                    statement.setString(4, GameMode.SURVIVAL.name());
+                }
+                statement.setLong(5, uData.getLastGmSwapTime());
+                statement.setLong(6, uData.getPlayTime());
+                statement.setInt(7, uData.getLoginTimes());
+                statement.setLong(8, uData.getLastPlayed());
+                statement.setInt(9, uData.getDeaths());
+                statement.setInt(10, uData.getMobKills());
+                statement.setBoolean(11, uData.getName() != null);
+                statement.setBoolean(12, uData.isOp());
+                statement.setBoolean(13, uData.isBanned());
+                statement.setString(14, uData.getName());
+                statement.setLong(15, uData.getRegistered());
+                statement.setString(16, uuid.toString());
+                statement.addBatch();
                 uData.stopAccessing();
                 commitRequired = true;
+                i++;
             }
             if (commitRequired) {
+                Log.debug("Executing userinfo batch update: " + i);
                 statement.executeBatch();
             }
             return saveLast;
         } finally {
             close(statement);
-            Benchmark.stop("Save UserInfo multiple " + data.size());
         }
     }
 
@@ -755,8 +823,7 @@ public class UsersTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
         Benchmark.start("Get User IDS ALL");
@@ -785,5 +852,24 @@ public class UsersTable extends Table {
      */
     public String getColumnID() {
         return columnID;
+    }
+
+    public UUID getUuidOf(String playername) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT " + columnUUID + " FROM " + tableName + " WHERE (UPPER(" + columnName + ")=UPPER(?))");
+            statement.setString(1, playername);
+            set = statement.executeQuery();
+            while (set.next()) {
+                String uuidS = set.getString(columnUUID);
+                UUID uuid = UUID.fromString(uuidS);
+                return uuid;
+            }
+            return null;
+        } finally {
+            close(set);
+            close(statement);
+        }
     }
 }

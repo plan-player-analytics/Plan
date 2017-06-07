@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import org.bukkit.command.ConsoleCommandSender;
 
 /**
  * This class manages the messages going to the Bukkit's Logger.
@@ -15,6 +16,9 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
  * @since 3.0.0
  */
 public class Log {
+
+    final private static String DEBUG = "DebugLog.txt";
+    final private static String ERRORS = "Errors.txt";
 
     /**
      * Logs the message to the console as INFO.
@@ -26,6 +30,14 @@ public class Log {
         if (instance != null) {
             instance.getLogger().info(message);
         }
+        if (!message.contains("[DEBUG]")) {
+            debug(message);
+        }
+    }
+
+    public static void infoColor(String message) {
+        ConsoleCommandSender consoleSender = Plan.getInstance().getServer().getConsoleSender();
+        consoleSender.sendMessage(Phrase.PREFIX + message);
     }
 
     /**
@@ -46,8 +58,15 @@ public class Log {
      * @param message "Message" will show up as [INFO][Plan]: [DEBUG] Message
      */
     public static void debug(String message) {
-        if (Settings.DEBUG.isTrue()) {
+        String debugMode = Settings.DEBUG.toString().toLowerCase();
+        boolean both = debugMode.equals("true") || debugMode.equals("both");
+        boolean logConsole = Settings.DEBUG.isTrue() || both || debugMode.equals("console");
+        boolean logFile = debugMode.equals("file") || both;
+        if (logConsole) {
             info("[DEBUG] " + message);
+        }
+        if (logFile) {
+            toLog(message, DEBUG);
         }
     }
 
@@ -59,11 +78,11 @@ public class Log {
      */
     public static void toLog(String source, Throwable e) {
         error(Phrase.ERROR_LOGGED.parse(e.toString()));
-        toLog(source + " Caught " + e);
+        toLog(source + " Caught " + e, ERRORS);
         for (StackTraceElement x : e.getStackTrace()) {
-            toLog("  " + x);
+            toLog("  " + x, ERRORS);
         }
-        toLog("");
+        toLog("", ERRORS);
     }
 
     /**
@@ -79,12 +98,15 @@ public class Log {
     }
 
     /**
-     * Logs a message to the Errors.txt with a timestamp.
+     * Logs a message to the a given file with a timestamp.
      *
      * @param message Message to log to Errors.txt [timestamp] Message
+     * @param filename Name of the file to write to.
      */
-    public static void toLog(String message) {
-        Log.debug(message);
+    public static void toLog(String message, String filename) {
+        if (filename.equals(ERRORS)) {
+            Log.debug(message);
+        }
         Plan plan = Plan.getInstance();
         if (plan == null) {
             return;
@@ -93,19 +115,23 @@ public class Log {
         if (!folder.exists()) {
             folder.mkdir();
         }
-        File log = new File(folder, "Errors.txt");
+        File log = new File(folder, filename);
         try {
             if (!log.exists()) {
                 log.createNewFile();
             }
             FileWriter fw = new FileWriter(log, true);
             try (PrintWriter pw = new PrintWriter(fw)) {
-                String timestamp = FormatUtils.formatTimeStamp(MiscUtils.getTime());
+                String timestamp = FormatUtils.formatTimeStampSecond(MiscUtils.getTime());
                 pw.println("[" + timestamp + "] " + message);
                 pw.flush();
             }
         } catch (IOException e) {
-            plan.getLogger().severe("Failed to create Errors.txt file");
+            Log.error("Failed to create" + filename + "file");
         }
+    }
+
+    public static String getErrorsFilename() {
+        return ERRORS;
     }
 }

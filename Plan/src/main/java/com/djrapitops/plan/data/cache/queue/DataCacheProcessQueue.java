@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

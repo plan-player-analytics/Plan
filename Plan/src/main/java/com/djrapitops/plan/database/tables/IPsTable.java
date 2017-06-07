@@ -202,6 +202,7 @@ public class IPsTable extends Table {
                     + columnIP
                     + ") VALUES (?, ?)");
             boolean commitRequired = false;
+            int i = 0;
             for (Integer id : ips.keySet()) {
                 Set<InetAddress> ipAddresses = ips.get(id);
                 Set<InetAddress> s = saved.get(id);
@@ -219,14 +220,16 @@ public class IPsTable extends Table {
                     statement.setString(2, ip.getHostAddress());
                     statement.addBatch();
                     commitRequired = true;
+                    i++;
                 }
             }
             if (commitRequired) {
+                Log.debug("Executing ips batch: "+i);
                 statement.executeBatch();
             }
+            Benchmark.stop("Save Ips Multiple " + ips.size());
         } finally {
-            close(statement);
-            Benchmark.stop("Get Ips Multiple " + ips.size());
+            close(statement);            
         }
     }
 }

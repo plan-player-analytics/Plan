@@ -82,19 +82,59 @@ public class CommandUseTable extends Table {
             return;
         }
         Benchmark.start("Save Commanduse");
+        Map<String, Integer> newData = new HashMap<>(data);
+        Map<String, Integer> saved = getCommandUse();
+        newData.keySet().removeAll(saved.keySet());
+        insertCommands(newData);
+        Map<String, Integer> updateData = new HashMap<>(data);
+        updateData.keySet().removeAll(newData.keySet());
+        for (String cmd : saved.keySet()) {
+            Integer toSave = updateData.get(cmd);
+            if (toSave != null) {
+                if (toSave <= saved.get(cmd)) {
+                    updateData.remove(cmd);
+                }
+            }
+        }
+        updateCommands(updateData);
+        Benchmark.stop("Save Commanduse");
+    }
+
+    private void updateCommands(Map<String, Integer> data) throws SQLException {
         PreparedStatement statement = null;
         try {
-            if (!removeAllData()) {
-                Log.debug("CommandUse Table clear failed.");
-            }
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnCommand + ", "
-                    + columnTimesUsed
-                    + ") VALUES (?, ?)");
+            String updateStatement = "UPDATE " + tableName + " SET " + columnTimesUsed + "=? WHERE (" + columnCommand + "=?)";
+            statement = prepareStatement(updateStatement);
             boolean commitRequired = false;
             for (String key : data.keySet()) {
                 Integer amount = data.get(key);
-//                Log.debug("Saving Command: "+key+" "+amount);
+                if (key.length() > 20) {
+                    continue;
+                }
+                statement.setInt(1, amount);
+                statement.setString(2, key);
+                statement.addBatch();
+                commitRequired = true;
+            }
+            if (commitRequired) {
+                statement.executeBatch();
+            }
+        } finally {
+            close(statement);
+        }
+    }
+
+    private void insertCommands(Map<String, Integer> data) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            String insertStatement = "INSERT INTO " + tableName + " ("
+                    + columnCommand + ", "
+                    + columnTimesUsed
+                    + ") VALUES (?, ?)";
+            statement = prepareStatement(insertStatement);
+            boolean commitRequired = false;
+            for (String key : data.keySet()) {
+                Integer amount = data.get(key);
                 if (key.length() > 20) {
                     continue;
                 }
@@ -104,12 +144,10 @@ public class CommandUseTable extends Table {
                 commitRequired = true;
             }
             if (commitRequired) {
-                Log.debug("CommandUse: Executing batch, size: " + data.size());
                 statement.executeBatch();
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Commanduse");
         }
     }
 }

@@ -11,8 +11,8 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.database.Database;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * Abstract class used for importing data from other plugins.

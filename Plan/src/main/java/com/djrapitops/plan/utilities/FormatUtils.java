@@ -36,8 +36,30 @@ public class FormatUtils {
      * @return
      */
     public static String formatTimeStamp(long epochMs) {
-        Date sfd = new Date(epochMs);
-        return ("" + sfd).substring(4, 19);
+        Date date = new Date(epochMs);
+        String timeStamp = date.toString();
+        // "EEE MMM dd HH:mm:ss zzz yyyy"
+        // "0123456789012345678901234567"
+        String day = timeStamp.substring(4, 10);
+        String clock = timeStamp.substring(11, 16);
+        return day + ", " + clock;
+    }
+
+    public static String formatTimeStampSecond(long epochMs) {
+        Date date = new Date(epochMs);
+        String timeStamp = date.toString();
+        String day = timeStamp.substring(4, 10);
+        String clock = timeStamp.substring(11, 19);
+        return day + ", " + clock;
+    }
+
+    public static String formatTimeStampYear(long epochMs) {
+        Date date = new Date(epochMs);
+        String timeStamp = date.toString();
+        String year = timeStamp.substring(24);
+        String day = timeStamp.substring(4, 10);
+        String clock = timeStamp.substring(11, 16);
+        return day + " " + year + ", " + clock;
     }
 
     /**
@@ -73,18 +95,27 @@ public class FormatUtils {
         x /= 60;
         long hours = x % 24;
         x /= 24;
-        long days = x;
+        long days = x % 365;
+        x /= 365;
+        long years = x;
+        if (years != 0) {
+            if (years == 1) {
+                builder.append(Settings.FORMAT_YEAR.toString());
+            } else {
+                builder.append(Settings.FORMAT_YEARS.toString().replace("%years%", "" + years));
+            }
+        }
         if (days != 0) {
-            builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", ""+days));
+            builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", "" + days));
         }
         if (hours != 0) {
-            builder.append(Settings.FORMAT_HOURS.toString().replace("%hours%", ""+hours));
+            builder.append(Settings.FORMAT_HOURS.toString().replace("%hours%", "" + hours));
         }
         if (minutes != 0) {
-            builder.append(Settings.FORMAT_MINUTES.toString().replace("%minutes%", ""+minutes));
+            builder.append(Settings.FORMAT_MINUTES.toString().replace("%minutes%", "" + minutes));
         }
         if (seconds != 0) {
-            builder.append(Settings.FORMAT_SECONDS.toString().replace("%seconds%", ""+seconds));
+            builder.append(Settings.FORMAT_SECONDS.toString().replace("%seconds%", "" + seconds));
         }
         String formattedTime = builder.toString();
         if (formattedTime.isEmpty()) {

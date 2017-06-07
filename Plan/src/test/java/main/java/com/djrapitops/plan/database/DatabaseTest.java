@@ -37,8 +37,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.*;
 import org.easymock.EasyMock;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -235,12 +233,16 @@ public class DatabaseTest {
         c.put("/help", 21);
         c.put("/roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
         db.saveCommandUse(c);
+        c.remove("/roiergbnougbierubieugbeigubeigubgierbgeugeg");
         Map<String, Integer> commandUse = db.getCommandUse();
-        assertTrue("Doesn't contain /plan", commandUse.containsKey("/plan"));
-        assertTrue("Doesn't contain /tp", commandUse.containsKey("/tp"));
-        assertTrue("Doesn't contain /pla", commandUse.containsKey("/pla"));
-        assertTrue("Doesn't contain /help", commandUse.containsKey("/help"));
-        assertTrue("Contains too long cmd", !commandUse.containsKey("/roiergbnougbierubieugbeigubeigubgierbgeugeg"));
+        assertEquals(c, commandUse);
+        c.put("/test", 3);
+        c.put("/tp", 6);
+        c.put("/pla", 4);
+        db.saveCommandUse(c);
+        c.put("/pla", 7);
+        commandUse = db.getCommandUse();
+        assertEquals(c, commandUse);
     }
 
     /**
