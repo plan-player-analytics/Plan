@@ -16,6 +16,10 @@ Debug | 3.0.0 | boolean | false | Enables debug messages on console.
 Locale | 2.5.0 | String | default | Two letter Locale combination. Can be set to one of the Available locales. If a faulty combination is used, default locale will be used. [Available locales](https://github.com/Rsl1122/Plan-PlayerAnalytics/tree/master/Plan/localization)
 UseTextUI | 3.0.0 | boolean | false | Redirects */plan inspect* and */plan analyze* commands to display same messages as */plan qinspect* & */plan qanalyze*
 Data.GatherLocations | 2.2.0 | boolean | true | Enables [PlanPlayerMoveEventListener](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/data/listeners/PlanPlayerMoveListener.java)
+Data.ChatListener | 3.4.2 | boolean | true | Enables Chat listener
+Data.GatherKillData | 3.4.2 | boolean | true | Enables Death listener
+Data.GamemodeChangeListener | 3.4.2 | boolean | true | Enables Gamemode Change listener
+Data.GatherCommandUsage | 3.4.2 | boolean | true | Enables CommandPreprocess listener
 
 ## Analysis settings
 
@@ -57,6 +61,7 @@ Security.AddressSecurityCode | 2.5.0 | String | bAkEd | This string is added to 
 Config.Point | Version introduced | Type | Default | Description
 --- | ---- | ------ | --- | ---------------------------------
 ServerName | 3.3.0 | String | 'Plan' | Changes the Name in the Header of Analysis & Inspect pages.
+Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale | 3.4.2 | boolean | true | Determines whether or not to use max players in server.yml as the default scale for Players Online graphs.
 Formats.TimeAmount | 3.3.0 | String | '%days%d ' | Changes the format used when formatting Time Amounts 
 Formats.DecimalPoints | 3.3.0 | String | #.## | Changes how many decimals are displayed after doubles. (For 3 use #.### etc.)
 Colors.Commands | 2.1.0 | String |  | Color codes used with the */plan* commands. 
@@ -80,5 +85,5 @@ mysql.database | 2.0.0 | String | Plan | Name of the database that has alread
 
 ## End
 If you don't see explanation for a config point or need help setting up the plugin, don't hesitate to ask for help! :)
-- [Ask for help with an issue](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
+- [Ask for help with an issue](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new)
 - [Ask for help in the spigot thread](https://www.spigotmc.org/threads/plan-player-analytics.197391/)
