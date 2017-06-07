@@ -1,5 +1,8 @@
 package main.java.com.djrapitops.plan.api;
 
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
@@ -241,5 +244,34 @@ public class API {
      */
     public UUID playerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
+    }
+    
+    /**
+     * Get the saved UUIDs in the database.
+     * 
+     * Should be called from async thread.
+     * 
+     * @return Collection of UUIDs that can be found in the database.
+     * @throws SQLException If database error occurs.
+     * @since 3.4.2
+     */
+    public Collection<UUID> getSavedUUIDs() throws SQLException {
+        return plugin.getDB().getSavedUUIDs();
+    }
+    
+    /**
+     * Get the saved UserData in the database for a collection of UUIDs.
+     * 
+     * Will not contain data for UUIDs not found in the database.
+     * 
+     * Should be called from async thread.
+     * 
+     * @param uuids Collection of UUIDs that can be found in the database.
+     * @return List of all Data in the database.
+     * @throws SQLException If database error occurs.
+     * @since 3.4.2
+     */
+    public List<UserData> getUserDataOfUsers(Collection<UUID> uuids) throws SQLException {
+        return plugin.getDB().getUserDataForUUIDS(uuids);
     }
 }
