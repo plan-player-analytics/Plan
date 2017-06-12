@@ -49,6 +49,10 @@ public class HtmlUtils {
         return html;
     }
 
+    public static String getServerAnalysisUrlWithProtocol() {
+        return Settings.LINK_PROTOCOL.toString()+getServerAnalysisUrl();
+    }
+    
     /**
      *
      * @return
@@ -61,10 +65,14 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = "http://" + ip + "/" + securityCode + "/server";
+        String url = /*"http:*/"//" + ip + "/" + securityCode + "/server";
         return url;
     }
 
+    public static String getInspectUrlWithProtocol(String playerName) {
+        return Settings.LINK_PROTOCOL.toString()+getInspectUrl(playerName);
+    }
+    
     /**
      *
      * @param playerName
@@ -78,7 +86,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = "http://" + ip + "/" + securityCode + "/player/" + playerName;
+        String url = /*"http:*/"//" + ip + "/" + securityCode + "/player/" + playerName;
         return url;
     }
 

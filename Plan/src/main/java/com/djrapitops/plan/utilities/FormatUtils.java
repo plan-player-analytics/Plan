@@ -106,18 +106,34 @@ public class FormatUtils {
             }
         }
         if (days != 0) {
-            builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", "" + days));
+            if (days == 1) {
+                builder.append(Settings.FORMAT_DAY.toString());
+            } else {
+                builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", "" + days));
+            }
         }
         if (hours != 0) {
-            builder.append(Settings.FORMAT_HOURS.toString().replace("%hours%", "" + hours));
+            String h = Settings.FORMAT_HOURS.toString().replace("%hours%", "" + hours);
+            if (h.contains("%zero%") && (hours+"").length() == 1) {
+                builder.append('0');
+            }
+            builder.append(h);
         }
         if (minutes != 0) {
-            builder.append(Settings.FORMAT_MINUTES.toString().replace("%minutes%", "" + minutes));
+            String m = Settings.FORMAT_MINUTES.toString().replace("%minutes%", "" + minutes);
+            if (m.contains("%zero%") && (minutes+"").length() == 1) {
+                builder.append('0');
+            }
+            builder.append(m);            
         }
-        if (seconds != 0) {
-            builder.append(Settings.FORMAT_SECONDS.toString().replace("%seconds%", "" + seconds));
+        if (seconds != 0) {            
+            String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", "" + seconds);
+            if (s.contains("%zero%") && (seconds+"").length() == 1) {
+                builder.append('0');
+            }
+            builder.append(s);
         }
-        String formattedTime = builder.toString();
+        String formattedTime = builder.toString().replace("%zero%", "");
         if (formattedTime.isEmpty()) {
             return Settings.FORMAT_SECONDS.toString().replace("%seconds%", "0");
         }

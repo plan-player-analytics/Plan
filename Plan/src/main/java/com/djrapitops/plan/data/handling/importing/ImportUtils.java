@@ -1,7 +1,10 @@
 package main.java.com.djrapitops.plan.data.handling.importing;
 
+import com.djrapitops.pluginbridge.plan.Bridge;
+import com.djrapitops.pluginbridge.plan.importing.OnTimeImporter;
 import java.util.HashMap;
 import java.util.Map;
+import main.java.com.djrapitops.plan.Log;
 import static org.bukkit.Bukkit.getPluginManager;
 
 /**
@@ -29,7 +32,13 @@ public class ImportUtils {
      */
     public static Map<String, Importer> getImporters() {
         Map<String, Importer> importers = new HashMap<>();
-        importers.put("ontime", new OnTimeImporter());
+        try {            
+            importers.put("ontime", new OnTimeImporter());
+        } catch (Throwable e) {
+            Log.toLog("ImportUtils.getImporters", e);
+            Log.error("Plan Plugin Bridge not included in the plugin jar.");
+        }
+        
         return importers;
     }
 }

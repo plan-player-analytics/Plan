@@ -101,7 +101,7 @@ public class InspectCommand extends SubCommand {
             sender.sendMessage(TextUI.getInspectMessages(uuid));
         } else {
             // Link
-            String url = HtmlUtils.getInspectUrl(playerName);
+            String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
             String message = Phrase.CMD_LINK + "";
             boolean console = !(sender instanceof Player);
             if (console) {

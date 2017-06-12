@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import main.java.com.djrapitops.plan.data.additional.essentials.EssentialsHook;
-import main.java.com.djrapitops.plan.data.additional.advancedachievements.AdvancedAchievementsHook;
+import com.djrapitops.pluginbridge.plan.Bridge;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,13 +9,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.additional.factions.FactionsHook;
-import main.java.com.djrapitops.plan.data.additional.jobs.JobsHook;
-import main.java.com.djrapitops.plan.data.additional.mcmmo.McmmoHook;
-import main.java.com.djrapitops.plan.data.additional.ontime.OnTimeHook;
-import main.java.com.djrapitops.plan.data.additional.towny.TownyHook;
-import main.java.com.djrapitops.plan.data.additional.vault.VaultHook;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
@@ -35,7 +27,12 @@ public class HookHandler {
      */
     public HookHandler() {
         additionalDataSources = new ArrayList<>();
-        hook();
+        try {
+            Bridge.hook(this);
+        } catch (Throwable e) {
+            Log.toLog(this.getClass().getName(), e);
+            Log.error("Plan Plugin Bridge not included in the plugin jar.");
+        }
     }
 
     /**
@@ -60,57 +57,6 @@ public class HookHandler {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
-    }
-
-    private void hook() {
-        try {
-            if (Settings.ENABLED_AA.isTrue()) {
-                AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_ESS.isTrue()) {
-                EssentialsHook essentialsHook = new EssentialsHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_FAC.isTrue()) {
-                FactionsHook factionsHook = new FactionsHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_MCM.isTrue()) {
-                McmmoHook mcMmoHook = new McmmoHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_JOB.isTrue()) {
-                JobsHook jobsHook = new JobsHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_ONT.isTrue()) {
-                OnTimeHook onTimeHook = new OnTimeHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_TOW.isTrue()) {
-                TownyHook townyHook = new TownyHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
-        try {
-            if (Settings.ENABLED_VAU.isTrue()) {
-                VaultHook vaultHook = new VaultHook(this);
-            }
-        } catch (NoClassDefFoundError e) {
-        }
     }
 
     /**

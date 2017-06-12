@@ -35,6 +35,7 @@ Settings:
     InternalIP: 0.0.0.0
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
+    LinkProtocol: http
     Security:
       DisplayIPsAndUUIDs: true
       AddressSecurityCode: bAkEd
@@ -48,6 +49,7 @@ Customization:
     TimeAmount:
       Year: '1 year, '
       Years: '%years% years, '
+      Day: '1d '
       Days: '%days%d '
       Hours: '%hours%h '
       Minutes: '%minutes%m '

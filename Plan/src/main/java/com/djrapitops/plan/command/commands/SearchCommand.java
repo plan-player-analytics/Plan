@@ -81,7 +81,7 @@ public class SearchCommand extends SubCommand {
                         String name = match.getName();
                         sender.sendMessage(Phrase.CMD_MATCH + name);
                         // Link
-                        String url = HtmlUtils.getInspectUrl(name);
+                        String url = HtmlUtils.getInspectUrlWithProtocol(name);
                         String message = Phrase.CMD_LINK + "";
                         boolean console = !(sender instanceof Player);
                         if (console) {

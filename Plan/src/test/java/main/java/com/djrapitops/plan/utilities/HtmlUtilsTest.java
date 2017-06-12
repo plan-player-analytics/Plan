@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -83,7 +84,7 @@ public class HtmlUtilsTest {
      */
     @Test
     public void testGetServerAnalysisUrl() throws FileNotFoundException {
-        String result = HtmlUtils.getServerAnalysisUrl();
+        String result = HtmlUtils.getServerAnalysisUrlWithProtocol();
         String exp = "http://0.0.0.0:8804/bAkEd/server";
         assertEquals(exp, result);
     }
@@ -95,7 +96,7 @@ public class HtmlUtilsTest {
     public void testGetInspectUrl() {
         String playerName = "Test";
         String expResult = "http://0.0.0.0:8804/bAkEd/player/Test";
-        String result = HtmlUtils.getInspectUrl(playerName);
+        String result = HtmlUtils.getInspectUrlWithProtocol(playerName);
         assertEquals(expResult, result);
     }
 

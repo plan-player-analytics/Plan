@@ -751,7 +751,9 @@ public class UsersTable extends Table {
                     continue;
                 }
                 if (!savedUUIDs.contains(uuid)) {
-                    saveLast.add(uData);
+                    if (!saveLast.contains(uData)) {
+                        saveLast.add(uData);
+                    }                    
                     continue;
                 }
                 uData.access();

@@ -83,7 +83,7 @@ public class API {
      * @return ip:port/security/player/Playername
      */
     public String getPlayerInspectPageLink(String name) {
-        return HtmlUtils.getInspectUrl(name);
+        return HtmlUtils.getInspectUrlWithProtocol(name);
     }
 
     /**

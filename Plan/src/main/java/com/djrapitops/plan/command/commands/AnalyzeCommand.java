@@ -90,7 +90,7 @@ public class AnalyzeCommand extends SubCommand {
             sender.sendMessage(TextUI.getAnalysisMessages());
         } else {
             // Link
-            String url = HtmlUtils.getServerAnalysisUrl();
+            String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
             String message = Phrase.CMD_LINK + "";
             boolean console = !(sender instanceof Player);
             if (console) {

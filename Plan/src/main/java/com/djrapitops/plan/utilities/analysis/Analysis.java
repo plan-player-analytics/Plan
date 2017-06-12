@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -164,7 +164,7 @@ public class Analysis {
         analysisCache.cache(analysisData);
         long time = Benchmark.stop("Analysis");
         if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
-            Log.info(Phrase.ANALYSIS_COMPLETE.parse(time + "", HtmlUtils.getServerAnalysisUrl()));
+            Log.info(Phrase.ANALYSIS_COMPLETE.parse(time + "", HtmlUtils.getServerAnalysisUrlWithProtocol()));
         }
 //        LocationAnalysis.performAnalysis(analysisData, plugin.getDB());        
         ExportUtility.export(plugin, analysisData, rawData);

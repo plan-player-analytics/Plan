@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Settings;
@@ -47,6 +48,7 @@ public class DataCacheClearQueue extends Queue<UUID>{
         if (uuids.isEmpty()) {
             return;
         }
+        uuids = uuids.stream().filter(u -> u != null).collect(Collectors.toList());
         Log.debug("Scheduling for clear: " + uuids);
         try {
             queue.addAll(uuids);
