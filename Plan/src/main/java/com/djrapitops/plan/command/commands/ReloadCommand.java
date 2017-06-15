@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
  */
 public class ReloadCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Subcommand constructor.
@@ -24,7 +24,7 @@ public class ReloadCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ReloadCommand(Plan plugin) {
-        super("reload", Permissions.MANAGE, Phrase.CMD_USG_RELOAD + "", CommandType.CONSOLE, "");
+        super("reload", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_RELOAD + "");
 
         this.plugin = plugin;
     }

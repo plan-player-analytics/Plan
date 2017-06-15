@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
@@ -200,6 +201,25 @@ public class SessionsTable extends Table {
         }
         Benchmark.start("Save Sessions multiple " + sessions.size());
         Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
+        for (Integer id : sessions.keySet()) {
+            List<SessionData> sessionList = sessions.get(id);
+            List<SessionData> s = saved.get(id);
+            if (s != null) {
+                sessionList.removeAll(s);
+            }
+            if (sessionList.isEmpty()) {
+                continue;
+            }
+            saved.put(id, sessionList);
+        }
+        List<List<Container<SessionData>>> batches = splitIntoBatches(sessions);
+        for (List<Container<SessionData>> batch : batches) {
+            saveSessionBatch(batch);
+        }
+        Benchmark.stop("Save Sessions multiple " + sessions.size());
+    }
+
+    private void saveSessionBatch(List<Container<SessionData>> batch) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -210,34 +230,23 @@ public class SessionsTable extends Table {
 
             boolean commitRequired = false;
             int i = 0;
-            for (Integer id : sessions.keySet()) {
-                List<SessionData> sessionList = sessions.get(id);
-                List<SessionData> s = saved.get(id);
-                if (s != null) {
-                    sessionList.removeAll(s);
-                }
-                if (sessionList.isEmpty()) {
+            for (Container<SessionData> data : batch) {
+                SessionData session = data.getObject();
+                int id = data.getId();
+                if (!session.isValid()) {
                     continue;
                 }
-                for (SessionData session : sessionList) {
-                    long end = session.getSessionEnd();
-                    long start = session.getSessionStart();
-                    if (end < start) {
-                        continue;
-                    }
-                    statement.setInt(1, id);
-                    statement.setLong(2, start);
-                    statement.setLong(3, end);
-                    statement.addBatch();
-                    commitRequired = true;
-                    i++;
-                }
+                statement.setInt(1, id);
+                statement.setLong(2, session.getSessionStart());
+                statement.setLong(3, session.getSessionEnd());
+                statement.addBatch();
+                commitRequired = true;
+                i++;
             }
             if (commitRequired) {
-                Log.debug("Executing session batch: "+i);
-                statement.executeBatch();                
+                Log.debug("Executing session batch: " + i);
+                statement.executeBatch();
             }
-            Benchmark.stop("Save Sessions multiple " + sessions.size());
         } finally {
             close(statement);
         }

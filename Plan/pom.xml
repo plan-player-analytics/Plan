@@ -15,6 +15,12 @@
         <!--        SoftDepended Plugins-->
         <dependency>
             <groupId>com.djrapitops</groupId>
+            <artifactId>BukkitPluginDependency</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
             <version>3.4.3</version>
             <scope>compile</scope>
@@ -113,19 +119,20 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>org/**</exclude>
-                                <exclude>javassist/**</exclude>
-                                <exclude>mockito-extensions/**</exclude>
-                                <exclude>net/**</exclude>
-                                <exclude>junit/**</exclude>
-                                <exclude>com/thoughtworks/**</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>                    
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.powermock:*</exclude>
+                            <exclude>org.javassist:*</exclude>
+                            <exclude>com.thoughtworks.xstream:*</exclude>
+                            <exclude>xmlpull:*</exclude>
+                            <exclude>xpp3:*</exclude>
+                            <exclude>org.objenesis:*</exclude>
+                            <exclude>cglib:*</exclude>
+                            <exclude>org.*:*</exclude>
+                            <exclude>org.easymock:*</exclude>
+                            <exclude>junit:*</exclude>
+                        </excludes>
+                    </artifactSet>
                 </configuration>
             </plugin>
             <plugin>

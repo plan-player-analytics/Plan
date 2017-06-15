@@ -415,5 +415,5 @@ public class DatabaseTest {
         assertTrue("Doesn't contain /tp", commandUse.containsKey("/tp"));
         assertTrue("Doesn't contain /pla", commandUse.containsKey("/pla"));
         assertTrue("Doesn't contain /help", commandUse.containsKey("/help"));
-    }
+    }    
 }

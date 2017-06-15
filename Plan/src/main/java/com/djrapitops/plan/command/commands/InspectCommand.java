@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import main.java.com.djrapitops.plan.command.CommandUtils;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -7,9 +9,7 @@ import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.Condition;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -30,8 +30,8 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class InspectCommand extends SubCommand {
 
-    private Plan plugin;
-    private InspectCacheHandler inspectCache;
+    private final Plan plugin;
+    private final InspectCacheHandler inspectCache;
 
     /**
      * Class Constructor.
@@ -39,7 +39,7 @@ public class InspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InspectCommand(Plan plugin) {
-        super("inspect", Permissions.INSPECT, Phrase.CMD_USG_INSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
+        super("inspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.INSPECT.getPermission(), Phrase.CMD_USG_INSPECT + "", Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -75,7 +75,7 @@ public class InspectCommand extends SubCommand {
                     private int timesrun = 0;
 
                     @Override
-                    public void run() {                        
+                    public void run() {
                         timesrun++;
                         if (inspectCache.isCached(uuid)) {
                             sendInspectMsg(sender, playerName, uuid);
@@ -85,7 +85,7 @@ public class InspectCommand extends SubCommand {
                         if (timesrun > 10) {
                             Log.debug("Command Timeout Message, Inspect.");
                             sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
-                            this.cancel();                            
+                            this.cancel();
                         }
                     }
 

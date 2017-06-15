@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.utilities.VersionUtils;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,7 +18,7 @@ import org.bukkit.command.CommandSender;
  */
 public class InfoCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Subcommand Constructor.
@@ -26,7 +26,7 @@ public class InfoCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InfoCommand(Plan plugin) {
-        super("info", Permissions.INFO, Phrase.CMD_USG_INFO + "", CommandType.CONSOLE, "");
+        super("info", CommandType.CONSOLE,Permissions.INFO.getPermission(), Phrase.CMD_USG_INFO + "");
 
         this.plugin = plugin;
     }
@@ -38,7 +38,7 @@ public class InfoCommand extends SubCommand {
         String[] messages = {
             Phrase.CMD_INFO_HEADER + "",
             Phrase.CMD_INFO_VERSION.parse(plugin.getDescription().getVersion()),
-            Phrase.CMD_BALL.toString() + tColor + " " + MiscUtils.checkVersion(),
+            Phrase.CMD_BALL.toString() + tColor + " " + VersionUtils.checkVersion(plugin),
             Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()),
             Phrase.CMD_FOOTER + ""
         };

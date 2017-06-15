@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,8 +10,6 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
@@ -34,7 +34,7 @@ public class ManageRestoreCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRestoreCommand(Plan plugin) {
-        super("restore", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_RESTORE + "", CommandType.CONSOLE, Phrase.ARG_RESTORE + "");
+        super("restore", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_RESTORE + "", Phrase.ARG_RESTORE + "");
 
         this.plugin = plugin;
     }

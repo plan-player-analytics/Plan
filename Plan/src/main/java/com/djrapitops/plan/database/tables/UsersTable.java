@@ -874,4 +874,9 @@ public class UsersTable extends Table {
             close(statement);
         }
     }
+    
+    public Map<Integer, Long> getLoginTimes(Collection<UUID> uuids) {
+        //TODO
+        return new HashMap<>();
+    }
 }

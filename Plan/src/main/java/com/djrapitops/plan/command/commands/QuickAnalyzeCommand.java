@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -23,8 +23,8 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class QuickAnalyzeCommand extends SubCommand {
 
-    private Plan plugin;
-    private AnalysisCacheHandler analysisCache;
+    private final Plan plugin;
+    private final AnalysisCacheHandler analysisCache;
 
     /**
      * Subcommand Constructor.
@@ -32,7 +32,7 @@ public class QuickAnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QuickAnalyzeCommand(Plan plugin) {
-        super("qanalyze, qanalyse, qanalysis", Permissions.QUICK_ANALYZE, Phrase.CMD_USG_QANALYZE.parse(), CommandType.CONSOLE, "");
+        super("qanalyze, qanalyse, qanalysis", CommandType.CONSOLE, Permissions.QUICK_ANALYZE.getPermission(), Phrase.CMD_USG_QANALYZE.parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }

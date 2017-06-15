@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -7,8 +9,6 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.command.Command;
@@ -31,7 +31,7 @@ public class ManageRemoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRemoveCommand(Plan plugin) {
-        super("remove", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_REMOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + " [-a]");
+        super("remove", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_REMOVE + "", Phrase.ARG_PLAYER + " [-a]");
 
         this.plugin = plugin;
     }

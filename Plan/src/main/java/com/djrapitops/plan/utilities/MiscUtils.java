@@ -35,54 +35,6 @@ public class MiscUtils {
     }
 
     /**
-     * Checks the version and returns response String.
-     *
-     * @return String informing about status of plugins version.
-     */
-    public static String checkVersion() {
-        try {
-            Plan plugin = Plan.getInstance();
-            String cVersion = plugin.getDescription().getVersion();
-            String gitVersion = getGitVersion();
-            if (checkVersion(cVersion, gitVersion)) {
-                return Phrase.VERSION_NEW_AVAILABLE.parse(gitVersion);
-            } else {
-                return Phrase.VERSION_LATEST + "";
-            }
-        } catch (IOException | NumberFormatException e) {
-            Log.error(Phrase.VERSION_CHECK_ERROR + "");
-        }
-        return Phrase.VERSION_FAIL + "";
-    }
-
-    private static String getGitVersion() throws IOException {
-        URL githubUrl = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
-        String lineWithVersion = "";
-        Scanner websiteScanner = new Scanner(githubUrl.openStream());
-        while (websiteScanner.hasNextLine()) {
-            String line = websiteScanner.nextLine();
-            if (line.toLowerCase().contains("version")) {
-                lineWithVersion = line;
-                break;
-            }
-        }
-        return lineWithVersion.split(": ")[1];
-    }
-
-    /**
-     *
-     * @param currentVersion
-     * @param gitVersion
-     * @return
-     * @throws NumberFormatException
-     */
-    public static boolean checkVersion(String currentVersion, String gitVersion) throws NumberFormatException {
-        int newestVersionNumber = FormatUtils.parseVersionNumber(gitVersion);
-        int currentVersionNumber = FormatUtils.parseVersionNumber(currentVersion);
-        return newestVersionNumber > currentVersionNumber;
-    }
-
-    /**
      *
      * @param args
      * @param sender

@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.command.Command;
@@ -28,7 +28,7 @@ public class ManageBackupCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageBackupCommand(Plan plugin) {
-        super("backup", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_BACKUP + "", CommandType.CONSOLE, "<DB>");
+        super("backup", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_BACKUP + "", "<DB>");
 
         this.plugin = plugin;
     }

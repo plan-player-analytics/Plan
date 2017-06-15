@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,8 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -151,6 +154,7 @@ public abstract class SQLDB extends Database {
             @Override
             public void run() {
                 try {
+                    clean();
                     Benchmark.start("Convert Bukkitdata to DB data");
                     Set<UUID> uuids = usersTable.getSavedUUIDs();
                     uuids.removeAll(usersTable.getContainsBukkitData(uuids));
@@ -465,8 +469,45 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void clean() {
+        Log.info("Cleaning the database.");
         try {
             checkConnection();
+            Map<Integer, List<SessionData>> allSessions = sessionsTable.getSessionData(usersTable.getAllUserIds().values());
+            Benchmark.start("Combine Sessions");
+            int before = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
+            Log.debug("Sessions before: " + before);
+            Map<Integer, Integer> beforeM = new HashMap<>();
+            Map<Integer, Integer> afterM = new HashMap<>();
+            for (Integer id : allSessions.keySet()) {
+                List<SessionData> sessions = allSessions.get(id);
+                beforeM.put(id, sessions.size());
+                if (sessions.isEmpty()) {
+                    afterM.put(id, 0);
+                    continue;
+                }
+                List<SessionData> combined = ManageUtils.combineSessions(sessions);
+                afterM.put(id, combined.size());
+                allSessions.put(id, combined);
+            }
+            int after = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
+            Log.debug("Sessions after: " + after);
+            if (before - after > 50) {
+                Benchmark.start("Save combined sessions");
+                Iterator<Integer> iterator = new HashSet<>(allSessions.keySet()).iterator();
+                while (iterator.hasNext()) {
+                    int id = iterator.next();
+                    if (afterM.get(id) < beforeM.get(id)) {
+                        sessionsTable.removeUserSessions(id);
+                    } else {
+                        allSessions.remove(id);
+                    }
+                }
+                sessionsTable.saveSessionData(allSessions);
+                Benchmark.stop("Save combined sessions");
+            }
+            Benchmark.stop("Combine Sessions");
+            Log.info("Combined " + (before - after) + " sessions.");
+            Log.info("Clean complete.");
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
