@@ -19,6 +19,8 @@
  */
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.javaplugin.ColorScheme;
+import com.djrapitops.javaplugin.RslPlugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,7 +44,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -53,7 +54,7 @@ import org.bukkit.scheduler.BukkitTask;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class Plan extends JavaPlugin {
+public class Plan extends RslPlugin<Plan> {
 
     private API api;
     private DataCacheHandler handler;
@@ -79,19 +80,25 @@ public class Plan extends JavaPlugin {
     @Override
     public void onEnable() {
         setInstance(this);
-        getDataFolder().mkdirs();
+        super.setDebugMode(Settings.DEBUG.toString());
+        super.setColorScheme(new ColorScheme(Phrase.COLOR_MAIN.color(), Phrase.COLOR_SEC.color(), Phrase.COLOR_TER.color()));
+        super.setLogPrefix("[Plan]");
+        super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
+        super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
+        super.onEnableDefaultTasks();
 
         initLocale();
-        
-        Server server = getServer(); 
+
+        Server server = getServer();
         variable = new ServerVariableHolder(server);
-        
+
         Log.debug("-------------------------------------");
-        Log.debug("Debug log, Server Start: Plan v."+getDescription().getVersion());               
-        Log.debug("Server: "+server.getBukkitVersion());      
-        Log.debug("Version: "+server.getVersion());        
+        Log.debug("Debug log: Plan v." + getDescription().getVersion());
+        Log.debug("Implements RslPlugin v." + getRslVersion());
+        Log.debug("Server: " + server.getBukkitVersion());
+        Log.debug("Version: " + server.getVersion());
         Log.debug("-------------------------------------");
-        
+
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
@@ -99,8 +106,6 @@ public class Plan extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         getConfig().options().header(Phrase.CONFIG_HEADER + "");
         saveConfig();
-
-        Log.info(MiscUtils.checkVersion());
 
         Log.info(Phrase.DB_INIT + "");
         if (initDatabase()) {
@@ -136,13 +141,13 @@ public class Plan extends JavaPlugin {
                 || (Settings.USE_ALTERNATIVE_UI.isTrue())) {
             Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
         }
-        if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && server.getIp().isEmpty()) {
+        if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && variable.getIp().isEmpty()) {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
         hookHandler = new HookHandler();
-        
-        Log.debug("Verboose debug messages are enabled.");        
+
+        Log.debug("Verboose debug messages are enabled.");
         Log.info(Phrase.ENABLED + "");
     }
 
@@ -175,27 +180,27 @@ public class Plan extends JavaPlugin {
         pluginManager.registerEvents(new PlanPlayerListener(this), this);
 
         if (Settings.GATHERCHAT.isTrue()) {
-            pluginManager.registerEvents(new PlanChatListener(this), this);
+            registerListener(new PlanChatListener(this));
         } else {
             Log.infoColor(Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
         }
         if (Settings.GATHERGMTIMES.isTrue()) {
-            pluginManager.registerEvents(new PlanGamemodeChangeListener(this), this);
+            registerListener(new PlanGamemodeChangeListener(this));
         } else {
             Log.infoColor(Phrase.NOTIFY_DISABLED_GMLISTENER + "");
         }
         if (Settings.GATHERCOMMANDS.isTrue()) {
-            pluginManager.registerEvents(new PlanCommandPreprocessListener(this), this);
+            registerListener(new PlanCommandPreprocessListener(this));
         } else {
             Log.infoColor(Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
         }
         if (Settings.GATHERKILLS.isTrue()) {
-            pluginManager.registerEvents(new PlanDeathEventListener(this), this);
+            registerListener(new PlanDeathEventListener(this));
         } else {
             Log.infoColor(Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
         }
         if (Settings.GATHERLOCATIONS.isTrue()) {
-            pluginManager.registerEvents(new PlanPlayerMoveListener(this), this);
+            registerListener(new PlanPlayerMoveListener(this));
         }
     }
 
@@ -400,32 +405,6 @@ public class Plan extends JavaPlugin {
     public ServerVariableHolder getVariable() {
         return variable;
     }
-    
-    /**
-     * Used to get the current instance of Plan.
-     *
-     * Instance is set on the first line of onEnable method.
-     *
-     * @return current instance of Plan, Singleton.
-     * @throws IllegalStateException If onEnable method has not been called and
-     * the instance is null.
-     */
-    public static Plan getInstance() {
-        Plan INSTANCE = PlanHolder.INSTANCE;
-        if (INSTANCE == null) {
-            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
-        }
-        return INSTANCE;
-    }
-
-    /**
-     * Used to set the current instance of Plan.
-     *
-     * @param plan The newly enabled Plan instance.
-     */
-    public static void setInstance(Plan plan) {
-        PlanHolder.INSTANCE = plan;
-    }
 
     /**
      * Used to get the PlanAPI. @see API
@@ -435,15 +414,14 @@ public class Plan extends JavaPlugin {
      * Plan and the instance is null.
      */
     public static API getPlanAPI() throws IllegalStateException {
-        Plan INSTANCE = PlanHolder.INSTANCE;
+        Plan INSTANCE = getInstance();
         if (INSTANCE == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
         }
         return INSTANCE.api;
     }
-
-    private static class PlanHolder {
-
-        private static Plan INSTANCE = null;
+    
+    public static Plan getInstance() {
+        return (Plan) getPluginInstance();
     }
 }

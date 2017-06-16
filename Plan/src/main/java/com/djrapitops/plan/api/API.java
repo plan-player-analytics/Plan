@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.api;
 
+import com.djrapitops.javaplugin.utilities.UUIDFetcher;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +15,6 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDFetcher;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
 
@@ -83,7 +83,7 @@ public class API {
      * @return ip:port/security/player/Playername
      */
     public String getPlayerInspectPageLink(String name) {
-        return HtmlUtils.getInspectUrl(name);
+        return HtmlUtils.getInspectUrlWithProtocol(name);
     }
 
     /**

@@ -71,7 +71,7 @@ public class PlayerActivityGraphCreator {
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             long average = MathUtils.averageLong(playersOnline.stream());
             double standardDiviation = getStandardDiviation(playersOnline, average);
-            if (standardDiviation > 3) {
+            if (standardDiviation > 3.5) {
                 for (int i = 0; i < playersOnline.size(); i++) {
                     long value = playersOnline.get(i);
                     if (value - average > 3 * standardDiviation) {

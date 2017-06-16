@@ -319,7 +319,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <body>
 	<header>
 		<div class="header-content">
-			<img style="float: right; padding: 5px" src="http://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
+			<img style="float: right; padding: 5px" src="https://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
 			<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
 			<h1><span id="navbutton" onclick="openNav()">&#9776; </span>%servername% | Inspect Player %name%%op%</h1>
 		</div>
@@ -360,7 +360,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-						<img style="float: right; padding: 5px" alt="%name%" src="http://cravatar.eu/head/%name%/128.png">
+						<img style="float: right; padding: 5px" alt="%name%" src="https://cravatar.eu/head/%name%/128.png">
 						<p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline%%banned%<br/>
 							<i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>                    
 							<i class="fa fa-clock-o" aria-hidden="true"></i> Playtime: %playtime%<br/>
@@ -549,6 +549,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		</div>
 	</div>
 <script>
+var serverTime = new Date(%currenttime%);
+var now = new Date();
+var timediff = serverTime.getTime()-now.getTime();
 function openNav() {
     document.getElementById("sidenav").style.width = "100%";
     document.getElementById("limiter").style.display = "none";
@@ -604,9 +607,6 @@ function openFunc(i) {
 	};
 }
 
-var serverTime = new Date(%currenttime%);
-var now = new Date();
-var timediff = serverTime.getTime()-now.getTime();
 function countUpTimer() {
 		var now = new Date();
 		var begin = new Date(%refreshlong%-timediff);
@@ -641,7 +641,7 @@ function countUpTimer() {
 		setTimeout('countUpTimer()', 1000);
 	}
 </script>
-<script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
 <script>

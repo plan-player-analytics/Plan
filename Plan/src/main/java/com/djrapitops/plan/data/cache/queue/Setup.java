@@ -8,7 +8,7 @@ package main.java.com.djrapitops.plan.data.cache.queue;
  */
 public abstract class Setup<T> {
 
-    private Consumer<T>[] consumers;
+    private final Consumer<T>[] consumers;
 
     /**
      * Constructor, defines consumers.

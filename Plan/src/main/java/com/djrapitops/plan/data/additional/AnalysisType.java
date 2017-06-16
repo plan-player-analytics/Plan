@@ -1,9 +1,5 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import main.java.com.djrapitops.plan.data.additional.advancedachievements.AdvancedAchievementsTable;
-import main.java.com.djrapitops.plan.data.additional.factions.FactionsTable;
-import main.java.com.djrapitops.plan.data.additional.towny.TownyTable;
-
 /**
  * This class contains Enum values for different types of Analysis that can be
  * performed on values of PluginData.
@@ -102,10 +98,6 @@ public enum AnalysisType {
      *
      * Can be used to add Tables, Images (for example maps) and other html
      * elements.
-     *
-     * @see AdvancedAchievementsTable
-     * @see FactionsTable
-     * @see TownyTable
      */
     HTML;
 

@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -23,7 +23,7 @@ public class ManageStatusCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageStatusCommand(Plan plugin) {
-        super("status", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_STATUS + "", CommandType.CONSOLE, "");
+        super("status", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_STATUS + "");
 
         this.plugin = plugin;
     }

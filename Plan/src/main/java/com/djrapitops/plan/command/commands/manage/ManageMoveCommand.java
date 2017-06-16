@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -7,8 +9,6 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.command.Command;
@@ -17,9 +17,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This manage subcommand is used to move all data from one database to another.
- * 
+ *
  * Destination database will be cleared.
- * 
+ *
  * @author Rsl1122
  * @since 2.3.0
  */
@@ -33,11 +33,11 @@ public class ManageMoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageMoveCommand(Plan plugin) {
-        super("move", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_MOVE + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_MOVE + "");
+        super("move", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_MOVE + "", Phrase.ARG_MOVE + "");
 
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2) {

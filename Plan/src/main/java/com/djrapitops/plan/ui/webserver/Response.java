@@ -49,13 +49,15 @@ public class Response {
             Log.debug("Request: " + requestUri);
             String[] requestArgs = requestUri.split("/");
             boolean forbidden = false;
-            String securityCode = "";
+            String givenCode = "";
+            String securityCode = Settings.SECURITY_CODE + "";
             if (requestArgs.length <= 2) {
                 forbidden = true;
             } else {
-                securityCode = requestArgs[1];
+                givenCode = requestArgs[1];
             }
-            if (!securityCode.equals(Settings.SECURITY_CODE + "")) {
+            
+            if (!givenCode.equals(securityCode)) {
                 forbidden = true;
             }
             if (forbidden) {

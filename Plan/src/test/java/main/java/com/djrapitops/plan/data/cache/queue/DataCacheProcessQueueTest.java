@@ -92,6 +92,7 @@ public class DataCacheProcessQueueTest {
      *
      * @throws InterruptedException
      */
+    @Ignore("Scheduler")
     @Test
     public void testAddToPool_HandlingInfo() throws InterruptedException {
         DataCacheProcessQueue q = new DataCacheProcessQueue(handler);
@@ -112,6 +113,7 @@ public class DataCacheProcessQueueTest {
      *
      * @throws InterruptedException
      */
+    @Ignore("Scheduler")
     @Test
     public void testAddToPool_Collection() throws InterruptedException {
         DataCacheProcessQueue q = new DataCacheProcessQueue(handler);

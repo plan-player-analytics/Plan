@@ -3,18 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.4.2</version>
+    <version>3.4.3</version>
     <packaging>jar</packaging>
-    <repositories>
-        <!--        <repository>
-            <id>bukkit-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>-->
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -24,58 +14,16 @@
         </dependency>
         <!--        SoftDepended Plugins-->
         <dependency>
-            <groupId>com.hm</groupId>
-            <artifactId>advanced.achievements</artifactId>
-            <version>5.2</version>
-            <scope>provided</scope>
+            <groupId>com.djrapitops</groupId>
+            <artifactId>BukkitPluginDependency</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.edge209</groupId>
-            <artifactId>ontime</artifactId>
-            <version>4.1.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.earth2me</groupId>
-            <artifactId>essentials</artifactId>
-            <version>2.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>factions</artifactId>
-            <version>2.10.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gamingmesh</groupId>
-            <artifactId>jobs</artifactId>
-            <version>3.9.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>mcore</artifactId>
-            <version>2.10.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcmmo</artifactId>
-            <version>1.5.07</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.palmergames</groupId>
-            <artifactId>towny</artifactId>
-            <version>0.91.4.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.6</version>
-            <scope>provided</scope>
+            <groupId>com.djrapitops</groupId>
+            <artifactId>PlanPluginBridge</artifactId>
+            <version>3.4.3</version>
+            <scope>compile</scope>
         </dependency>
         <!--         -->  
         <dependency>
@@ -156,6 +104,35 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.powermock:*</exclude>
+                            <exclude>org.javassist:*</exclude>
+                            <exclude>com.thoughtworks.xstream:*</exclude>
+                            <exclude>xmlpull:*</exclude>
+                            <exclude>xpp3:*</exclude>
+                            <exclude>org.objenesis:*</exclude>
+                            <exclude>cglib:*</exclude>
+                            <exclude>org.*:*</exclude>
+                            <exclude>org.easymock:*</exclude>
+                            <exclude>junit:*</exclude>
+                        </excludes>
+                    </artifactSet>
                 </configuration>
             </plugin>
             <plugin>

@@ -34,6 +34,7 @@ public enum Settings {
     ENABLED_ONT("Customization.Plugins.Enabled.OnTime"),
     ENABLED_TOW("Customization.Plugins.Enabled.Towny"),
     ENABLED_VAU("Customization.Plugins.Enabled.Vault"),
+    LINK_PROTOCOL("Settings.WebServer.LinkProtocol"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
@@ -61,6 +62,7 @@ public enum Settings {
     //
     FORMAT_YEAR("Customization.Formats.TimeAmount.Year"),
     FORMAT_YEARS("Customization.Formats.TimeAmount.Years"),
+    FORMAT_DAY("Customization.Formats.TimeAmount.Day"),
     FORMAT_DAYS("Customization.Formats.TimeAmount.Days"),
     FORMAT_HOURS("Customization.Formats.TimeAmount.Hours"),
     FORMAT_MINUTES("Customization.Formats.TimeAmount.Minutes"),

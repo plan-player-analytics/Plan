@@ -5,11 +5,13 @@
  */
 package test.java.utils;
 
+import com.djrapitops.javaplugin.utilities.PluginLog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -63,6 +65,10 @@ public class TestInit {
 //            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
             when(planMock.getServer()).thenReturn(mockServer);
             when(planMock.getLogger()).thenReturn(Logger.getGlobal());
+            ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
+            when(planMock.getVariable()).thenReturn(serverVariableHolder);
+            PluginLog<Plan> log = new PluginLog(planMock, "console", "");
+            when(planMock.getPluginLogger()).thenReturn(log);
             Plan.setInstance(planMock);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
             Settings.DEBUG.setValue(true);

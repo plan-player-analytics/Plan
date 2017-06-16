@@ -49,22 +49,30 @@ public class HtmlUtils {
         return html;
     }
 
+    public static String getServerAnalysisUrlWithProtocol() {
+        return Settings.LINK_PROTOCOL.toString()+":"+getServerAnalysisUrl();
+    }
+    
     /**
      *
      * @return
      */
     public static String getServerAnalysisUrl() {
         int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = Plan.getInstance().getServer().getIp() + ":" + port;
+        String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
         String securityCode = Settings.SECURITY_CODE.toString();
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = "http://" + ip + "/" + securityCode + "/server";
+        String url = /*"http:*/"//" + ip + "/" + securityCode + "/server";
         return url;
     }
 
+    public static String getInspectUrlWithProtocol(String playerName) {
+        return Settings.LINK_PROTOCOL.toString()+":"+getInspectUrl(playerName);
+    }
+    
     /**
      *
      * @param playerName
@@ -72,13 +80,13 @@ public class HtmlUtils {
      */
     public static String getInspectUrl(String playerName) {
         int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = Plan.getInstance().getServer().getIp() + ":" + port;
+        String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
         String securityCode = Settings.SECURITY_CODE.toString();
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = "http://" + ip + "/" + securityCode + "/player/" + playerName;
+        String url = /*"http:*/"//" + ip + "/" + securityCode + "/player/" + playerName;
         return url;
     }
 

@@ -1,13 +1,13 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import java.sql.SQLException;
 import java.util.Arrays;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +29,7 @@ public class ManageClearCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageClearCommand(Plan plugin) {
-        super("clear", Permissions.MANAGE, Phrase.CMD_USG_MANAGE_CLEAR + "", CommandType.CONSOLE_WITH_ARGUMENTS, "<DB> [-a]");
+        super("clear", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAR + "", "<DB> [-a]");
 
         this.plugin = plugin;
     }

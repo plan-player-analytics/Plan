@@ -43,6 +43,6 @@ public class PlanCommandPreprocessListener implements Listener {
             Log.debug("Ignored command, player had ignore permission.");
             return;
         }
-        handler.handleCommand(event.getMessage().split(" ")[0]);
+        handler.handleCommand(event.getMessage().split(" ")[0].toLowerCase());
     }
 }

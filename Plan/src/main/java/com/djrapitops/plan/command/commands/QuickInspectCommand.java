@@ -1,14 +1,14 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.CommandUtils;
 import main.java.com.djrapitops.plan.command.Condition;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -26,8 +26,8 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class QuickInspectCommand extends SubCommand {
 
-    private Plan plugin;
-    private InspectCacheHandler inspectCache;
+    private final Plan plugin;
+    private final InspectCacheHandler inspectCache;
 
     /**
      * Class Constructor.
@@ -35,7 +35,7 @@ public class QuickInspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QuickInspectCommand(Plan plugin) {
-        super("qinspect", Permissions.QUICK_INSPECT, Phrase.CMD_USG_QINSPECT + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_PLAYER + "");
+        super("qinspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.QUICK_INSPECT.getPermission(), Phrase.CMD_USG_QINSPECT + "",  Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();

@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.javaplugin.utilities.FormattingUtils;
 import java.text.DecimalFormat;
-import java.util.Date;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Location;
 
@@ -36,30 +36,15 @@ public class FormatUtils {
      * @return
      */
     public static String formatTimeStamp(long epochMs) {
-        Date date = new Date(epochMs);
-        String timeStamp = date.toString();
-        // "EEE MMM dd HH:mm:ss zzz yyyy"
-        // "0123456789012345678901234567"
-        String day = timeStamp.substring(4, 10);
-        String clock = timeStamp.substring(11, 16);
-        return day + ", " + clock;
+        return FormattingUtils.formatTimeStamp(epochMs);
     }
 
     public static String formatTimeStampSecond(long epochMs) {
-        Date date = new Date(epochMs);
-        String timeStamp = date.toString();
-        String day = timeStamp.substring(4, 10);
-        String clock = timeStamp.substring(11, 19);
-        return day + ", " + clock;
+        return FormattingUtils.formatTimeStampSecond(epochMs);
     }
 
     public static String formatTimeStampYear(long epochMs) {
-        Date date = new Date(epochMs);
-        String timeStamp = date.toString();
-        String year = timeStamp.substring(24);
-        String day = timeStamp.substring(4, 10);
-        String clock = timeStamp.substring(11, 16);
-        return day + " " + year + ", " + clock;
+        return FormattingUtils.formatTimeStampYear(epochMs);
     }
 
     /**
@@ -69,7 +54,7 @@ public class FormatUtils {
      * @return
      */
     public static String removeLetters(String dataPoint) {
-        return dataPoint.replaceAll("[^\\d.]", "");
+        return FormattingUtils.removeLetters(dataPoint);
     }
 
     /**
@@ -78,11 +63,7 @@ public class FormatUtils {
      * @return
      */
     public static String removeNumbers(String dataPoint) {
-        for (char c : removeLetters(dataPoint).toCharArray()) {
-            dataPoint = dataPoint.replace(c + "", "");
-        }
-        dataPoint = dataPoint.replace(" ", "");
-        return dataPoint;
+        return FormattingUtils.removeNumbers(dataPoint);
     }
 
     // Formats long in milliseconds into d:h:m:s string
@@ -106,18 +87,34 @@ public class FormatUtils {
             }
         }
         if (days != 0) {
-            builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", "" + days));
+            if (days == 1) {
+                builder.append(Settings.FORMAT_DAY.toString());
+            } else {
+                builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", "" + days));
+            }
         }
         if (hours != 0) {
-            builder.append(Settings.FORMAT_HOURS.toString().replace("%hours%", "" + hours));
+            String h = Settings.FORMAT_HOURS.toString().replace("%hours%", "" + hours);
+            if (h.contains("%zero%") && (hours + "").length() == 1) {
+                builder.append('0');
+            }
+            builder.append(h);
         }
         if (minutes != 0) {
-            builder.append(Settings.FORMAT_MINUTES.toString().replace("%minutes%", "" + minutes));
+            String m = Settings.FORMAT_MINUTES.toString().replace("%minutes%", "" + minutes);
+            if (m.contains("%zero%") && (minutes + "").length() == 1) {
+                builder.append('0');
+            }
+            builder.append(m);
         }
         if (seconds != 0) {
-            builder.append(Settings.FORMAT_SECONDS.toString().replace("%seconds%", "" + seconds));
+            String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", "" + seconds);
+            if (s.contains("%zero%") && (seconds + "").length() == 1) {
+                builder.append('0');
+            }
+            builder.append(s);
         }
-        String formattedTime = builder.toString();
+        String formattedTime = builder.toString().replace("%zero%", "");
         if (formattedTime.isEmpty()) {
             return Settings.FORMAT_SECONDS.toString().replace("%seconds%", "0");
         }
@@ -132,15 +129,7 @@ public class FormatUtils {
      * @throws NumberFormatException When wrong format
      */
     public static int parseVersionNumber(String versionString) throws NumberFormatException {
-        String[] versionArray = versionString.split("\\.");
-        if (versionArray.length != 3) {
-            throw new NumberFormatException("Wrong format used");
-        }
-        int main = Integer.parseInt(versionArray[0]) * 10000;
-        int major = Integer.parseInt(versionArray[1]) * 100;
-        int minor = Integer.parseInt(versionArray[2]);
-        int versionNumber = main + major + minor;
-        return versionNumber;
+        return FormattingUtils.parseVersionNumber(versionString);
     }
 
     /**
@@ -150,18 +139,7 @@ public class FormatUtils {
      * @return One array with contents of the multiple
      */
     public static String[] mergeArrays(String[]... arrays) {
-        int arraySize = 0;
-        for (String[] array : arrays) {
-            arraySize += array.length;
-        }
-        String[] result = new String[arraySize];
-        int j = 0;
-        for (String[] array : arrays) {
-            for (String string : array) {
-                result[j++] = string;
-            }
-        }
-        return result;
+        return FormattingUtils.mergeArrays(arrays);
     }
 
     /**
@@ -171,7 +149,7 @@ public class FormatUtils {
      * @return Readable location format.
      */
     public static String formatLocation(Location loc) {
-        return "x " + loc.getBlockX() + " z " + loc.getBlockZ() + " in " + loc.getWorld();
+        return FormattingUtils.formatLocation(loc);
     }
 
     /**

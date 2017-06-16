@@ -330,7 +330,7 @@ public class UsersTable extends Table {
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
         List<UserData> datas = new ArrayList<>();
         datas.addAll(getUserDataForKnown(containsBukkitData));
-        
+
         uuids.removeAll(containsBukkitData);
         if (!uuids.isEmpty()) {
             List<UserData> noBukkitData = new ArrayList<>();
@@ -343,7 +343,7 @@ public class UsersTable extends Table {
             addUserInformationToUserData(noBukkitData);
             datas.addAll(noBukkitData);
         }
-        
+
         Benchmark.stop("Get UserData Multiple " + uuids.size());
         return datas;
     }
@@ -751,7 +751,9 @@ public class UsersTable extends Table {
                     continue;
                 }
                 if (!savedUUIDs.contains(uuid)) {
-                    saveLast.add(uData);
+                    if (!saveLast.contains(uData)) {
+                        saveLast.add(uData);
+                    }
                     continue;
                 }
                 uData.access();
@@ -846,6 +848,26 @@ public class UsersTable extends Table {
         }
     }
 
+    public Map<Integer, Integer> getLoginTimes() throws SQLException {
+        Benchmark.start("Get Logintimes");
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<Integer, Integer> ids = new HashMap<>();
+            statement = prepareStatement("SELECT " + columnID + ", " + columnLoginTimes + " FROM " + tableName);
+            set = statement.executeQuery();
+            while (set.next()) {
+                Integer id = set.getInt(columnID);
+                ids.put(id, set.getInt(columnLoginTimes));
+            }
+            return ids;
+        } finally {
+            close(set);
+            close(statement);
+            Benchmark.stop("Get Logintimes");
+        }
+    }
+
     /**
      *
      * @return
@@ -871,5 +893,10 @@ public class UsersTable extends Table {
             close(set);
             close(statement);
         }
+    }
+
+    public Map<Integer, Long> getLoginTimes(Collection<UUID> uuids) {
+        //TODO
+        return new HashMap<>();
     }
 }

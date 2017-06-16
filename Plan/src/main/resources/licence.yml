@@ -62,8 +62,11 @@ The code & resources can be modified & run if the following conditions apply:
         a1: Modifyer was paid to modify part of the software for customization of visual appearance of the software or fix Exceptions & Errors caused
             by updates to Minecraft Server software.
 
-			
+
 4. Usage of part of code in another software
+
+This part (4) of the licence does not include the usage of the API of the plugin,
+or adding the compiled code as provided dependency. Such use is allowed.
 
 Usage of a part of code in another software is allowed if following conditions apply:
     a. The software falls under this licence

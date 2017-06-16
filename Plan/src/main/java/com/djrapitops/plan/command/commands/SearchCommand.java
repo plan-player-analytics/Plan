@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.SubCommand;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,10 +9,8 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandType;
 import main.java.com.djrapitops.plan.command.CommandUtils;
 import main.java.com.djrapitops.plan.command.Condition;
-import main.java.com.djrapitops.plan.command.SubCommand;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -39,7 +39,7 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", Permissions.SEARCH, Phrase.CMD_USG_SEARCH + "", CommandType.CONSOLE_WITH_ARGUMENTS, Phrase.ARG_SEARCH + "");
+        super("search", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.SEARCH.getPermission(), Phrase.CMD_USG_SEARCH + "", Phrase.ARG_SEARCH + "");
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
     }
@@ -81,7 +81,7 @@ public class SearchCommand extends SubCommand {
                         String name = match.getName();
                         sender.sendMessage(Phrase.CMD_MATCH + name);
                         // Link
-                        String url = HtmlUtils.getInspectUrl(name);
+                        String url = HtmlUtils.getInspectUrlWithProtocol(name);
                         String message = Phrase.CMD_LINK + "";
                         boolean console = !(sender instanceof Player);
                         if (console) {

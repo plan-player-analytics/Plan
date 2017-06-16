@@ -1,17 +1,22 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
@@ -69,11 +74,59 @@ public class ManageUtils {
             clearAndCopyToDB.removeAllData();
             List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
             clearAndCopyToDB.saveMultipleUserData(allUserData);
-            clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());            
+            clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());
         } catch (SQLException | NullPointerException e) {
             Log.toLog("ManageUtils.move", e);
             return false;
         }
         return true;
+    }
+
+    public static boolean containsCombinable(List<SessionData> sessions) {
+        return containsCombinable(sessions, 5000);
+    }
+
+    private static boolean containsCombinable(List<SessionData> sessions, int threshold) {
+        // Checks if there are starts & ends that are the same, or less than threshold ms away from each other.
+        return sessions.stream()
+                .anyMatch(s -> sessions.stream()
+                        .filter(ses -> !ses.equals(s))
+                        .map(ses -> ses.getSessionStart())
+                        .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
+    }
+
+    public static List<SessionData> combineSessions(List<SessionData> sessions, Integer loginTimes) {
+        return combineSessions(sessions, loginTimes, 5000);
+    }
+
+    private static List<SessionData> combineSessions(List<SessionData> sessions, Integer loginTimes, int threshold) {
+        if (threshold >= 35000) {
+            return sessions;
+        }
+        List<SessionData> newSessions = new ArrayList<>();
+        List<SessionData> removed = new ArrayList<>();
+        Iterator<SessionData> iterator = sessions.iterator();
+        while (iterator.hasNext()) {
+            SessionData session = iterator.next();
+            if (removed.contains(session)) {
+                continue;
+            }
+            List<SessionData> close = sessions.stream().filter(ses -> Math.abs(session.getSessionEnd() - ses.getSessionStart()) < threshold).collect(Collectors.toList());
+            if (!close.isEmpty()) {
+                long big = MathUtils.getBiggestLong(close.stream().map((SessionData ses) -> ses.getSessionEnd()).collect(Collectors.toList()));
+                session.endSession(big);
+                removed.addAll(close);
+            }
+            newSessions.add(session);
+        }
+        if (loginTimes == newSessions.size()) {
+            return newSessions;
+        }
+        boolean containsCombinable = containsCombinable(newSessions, threshold);
+        if (containsCombinable) {
+            return combineSessions(newSessions, threshold + 1000);
+        } else {
+            return newSessions;
+        }
     }
 }

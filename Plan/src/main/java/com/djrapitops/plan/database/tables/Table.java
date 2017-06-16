@@ -3,7 +3,11 @@ package main.java.com.djrapitops.plan.database.tables;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.database.Container;
+import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
 /**
@@ -122,5 +126,9 @@ public abstract class Table {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         }
+    }
+    
+    protected <T> List<List<Container<T>>> splitIntoBatches(Map<Integer, List<T>> objects) {
+        return DBUtils.splitIntoBatches(objects);
     }
 }

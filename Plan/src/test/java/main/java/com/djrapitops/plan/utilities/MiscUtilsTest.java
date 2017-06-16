@@ -56,44 +56,6 @@ public class MiscUtilsTest {
      *
      */
     @Test
-    public void testCheckVersion() {
-        String versionG = "2.10.9";
-        assertTrue(MiscUtils.checkVersion("2.0.0", versionG));
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testCheckVersion2() {
-        assertTrue(!MiscUtils.checkVersion("3.0.0", "2.10.9"));
-    }
-
-    @Test
-    public void testCheckVersion5() {
-        assertTrue(MiscUtils.checkVersion("2.10.9", "3.0.0"));
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testCheckVersion3() {
-        assertTrue(!MiscUtils.checkVersion("2.11.0", "2.10.9"));
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testCheckVersion4() {
-        assertTrue(!MiscUtils.checkVersion("2.11.0", "2.11.0"));
-    }
-
-    /**
-     *
-     */
-    @Test
     public void testGetPlayerDisplaynameArgsPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
         CommandSender sender = MockUtils.mockPlayer();

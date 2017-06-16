@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.File;
@@ -52,7 +47,7 @@ public class ExportUtility {
         Benchmark.start("Exporting Html pages");
         try {
             File folder = getFolder();
-            writeAnalysisHtml(analysisData, folder);
+            writeAnalysisHtml(analysisData, new File(folder, "server"));
             File playersFolder = getPlayersFolder(folder);
             for (UserData userData : rawData) {
                 writeInspectHtml(userData, playersFolder);
@@ -85,14 +80,14 @@ public class ExportUtility {
         Files.write(inspectHtmlFile.toPath(), Arrays.asList(inspectHtml));
     }
 
-    public static void writeAnalysisHtml(AnalysisData analysisData, File folder) throws FileNotFoundException, IOException {
+    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws FileNotFoundException, IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
         String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getHtmlStringFromResource("analysis.html"),
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "./player/");
-        File analysisHtmlFile = new File(folder, "analysis.html");
+        File analysisHtmlFile = new File(serverFolder, "index.html");
         if (analysisHtmlFile.exists()) {
             analysisHtmlFile.delete();
         }
