@@ -5,6 +5,6 @@ In order to fork the project, some dependencies need to be installed locally.
 
 - [CraftBukkit-1.11.2](https://www.spigotmc.org/wiki/buildtools/)
 
-- [PlanPluginBridge] Link soon
+- [PlanPluginBridge](/PlanPluginBridge) (Included in the Repository)
 
 - [BukkitPluginDependency](https://github.com/Rsl1122/BukkitPluginDependency/releases)
