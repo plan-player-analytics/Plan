@@ -154,7 +154,6 @@ public abstract class SQLDB extends Database {
             @Override
             public void run() {
                 try {
-                    clean();
                     Benchmark.start("Convert Bukkitdata to DB data");
                     Set<UUID> uuids = usersTable.getSavedUUIDs();
                     uuids.removeAll(usersTable.getContainsBukkitData(uuids));
@@ -472,41 +471,8 @@ public abstract class SQLDB extends Database {
         Log.info("Cleaning the database.");
         try {
             checkConnection();
-            Map<Integer, List<SessionData>> allSessions = sessionsTable.getSessionData(usersTable.getAllUserIds().values());
-            Benchmark.start("Combine Sessions");
-            int before = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
-            Log.debug("Sessions before: " + before);
-            Map<Integer, Integer> beforeM = new HashMap<>();
-            Map<Integer, Integer> afterM = new HashMap<>();
-            for (Integer id : allSessions.keySet()) {
-                List<SessionData> sessions = allSessions.get(id);
-                beforeM.put(id, sessions.size());
-                if (sessions.isEmpty()) {
-                    afterM.put(id, 0);
-                    continue;
-                }
-                List<SessionData> combined = ManageUtils.combineSessions(sessions);
-                afterM.put(id, combined.size());
-                allSessions.put(id, combined);
-            }
-            int after = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
-            Log.debug("Sessions after: " + after);
-            if (before - after > 50) {
-                Benchmark.start("Save combined sessions");
-                Iterator<Integer> iterator = new HashSet<>(allSessions.keySet()).iterator();
-                while (iterator.hasNext()) {
-                    int id = iterator.next();
-                    if (afterM.get(id) < beforeM.get(id)) {
-                        sessionsTable.removeUserSessions(id);
-                    } else {
-                        allSessions.remove(id);
-                    }
-                }
-                sessionsTable.saveSessionData(allSessions);
-                Benchmark.stop("Save combined sessions");
-            }
-            Benchmark.stop("Combine Sessions");
-            Log.info("Combined " + (before - after) + " sessions.");
+            commandUseTable.clean();
+            sessionsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);

@@ -45,6 +45,7 @@ public class Analysis {
 
     private final Plan plugin;
     private final InspectCacheHandler inspectCache;
+    private int taskId = -1;
 
     /**
      * Class Constructor.
@@ -66,13 +67,18 @@ public class Analysis {
      * @param analysisCache Cache that the data is saved to.
      */
     public void runAnalysis(AnalysisCacheHandler analysisCache) {
+        if (isAnalysisBeingRun()) {
+            return;
+        }
         Benchmark.start("Analysis");
         log(Phrase.ANALYSIS_START + "");
         // Async task for Analysis
         BukkitTask asyncAnalysisTask = (new BukkitRunnable() {
             @Override
             public void run() {
+                taskId = this.getTaskId();
                 analyze(analysisCache, plugin.getDB());
+                taskId = -1;
                 this.cancel();
             }
         }).runTaskAsynchronously(plugin);
@@ -413,5 +419,9 @@ public class Analysis {
         });
         Benchmark.stop("Analysis 3rd party");
         return replaceMap;
+    }
+    
+    public boolean isAnalysisBeingRun() {
+        return taskId != -1;
     }
 }

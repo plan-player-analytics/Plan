@@ -15,7 +15,7 @@ public class AnalysisCacheHandler {
 
     private final Plan plugin;
     private AnalysisData cache;
-    private Analysis analysis;
+    private final Analysis analysis;
 
     /**
      * Class Constructor.
@@ -33,7 +33,6 @@ public class AnalysisCacheHandler {
      * Runs analysis, cache method is called after analysis is complete.
      */
     public void updateCache() {
-        cache = null;
         analysis.runAnalysis(this);
     }
 
@@ -62,5 +61,9 @@ public class AnalysisCacheHandler {
      */
     public boolean isCached() {
         return (cache != null);
+    }
+    
+    public boolean isAnalysisBeingRun() {
+        return analysis.isAnalysisBeingRun();
     }
 }

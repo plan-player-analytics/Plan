@@ -138,6 +138,7 @@ public enum Phrase {
     CMD_USG_MANAGE_COMBINE("Copy data from one database to another & combine values"),
     CMD_USG_MANAGE_IMPORT("Import Data from supported plugins to Active Database."),
     CMD_USG_MANAGE_CLEAR("Clear data from one database"),
+    CMD_USG_MANAGE_CLEAN("Clear incorrect data from the database"),
     CMD_USG_MANAGE_REMOVE("Remove players's data from the Active Database."),
     CMD_USG_MANAGE_STATUS("Check the status of the Active Database."),
     CMD_USG_MANAGE_HELP("Show managment help."),

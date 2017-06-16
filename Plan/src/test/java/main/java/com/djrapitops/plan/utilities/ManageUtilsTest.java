@@ -78,7 +78,7 @@ public class ManageUtilsTest {
         data.add(new SessionData(0, 100));
         data.add(new SessionData(threshold, threshold * 2));
         data.add(new SessionData(threshold * 2 + 100, threshold * 3));
-        SessionData get = ManageUtils.combineSessions(data).get(0);
+        SessionData get = ManageUtils.combineSessions(data, 1).get(0);
         SessionData exp = new SessionData(0, threshold * 3);
         assertEquals(exp, get);
     }
@@ -90,7 +90,7 @@ public class ManageUtilsTest {
         data.add(new SessionData(threshold, threshold * 2));
         data.add(new SessionData(threshold * 2 + 100, threshold * 3));
         data.add(new SessionData(threshold * 3 + 200, threshold * 4));
-        SessionData get = ManageUtils.combineSessions(data).get(0);
+        SessionData get = ManageUtils.combineSessions(data, 1).get(0);
         SessionData exp = new SessionData(0, threshold * 4);
         assertEquals(exp, get);
     }
@@ -101,7 +101,7 @@ public class ManageUtilsTest {
         data.add(new SessionData(0, 100));
         data.add(new SessionData(threshold, threshold * 2));
         data.add(new SessionData(threshold * 3 + 200, threshold * 4));
-        List<SessionData> result = ManageUtils.combineSessions(data);
+        List<SessionData> result = ManageUtils.combineSessions(data, 2);
         SessionData exp = new SessionData(0, threshold * 2);
         assertEquals(exp, result.get(0));
         SessionData exp2 = new SessionData(threshold * 3 + 200, threshold * 4);
@@ -115,7 +115,7 @@ public class ManageUtilsTest {
         data.add(new SessionData(threshold, threshold * 2));
         data.add(new SessionData(threshold * 3 + 200, threshold * 4));
         data.add(new SessionData(threshold * 5 - 200, threshold * 5));
-        List<SessionData> result = ManageUtils.combineSessions(data);
+        List<SessionData> result = ManageUtils.combineSessions(data, 2);
         SessionData exp = new SessionData(0, threshold * 2);
         assertEquals(exp, result.get(0));
         SessionData exp2 = new SessionData(threshold * 3 + 200, threshold * 5);
@@ -130,7 +130,7 @@ public class ManageUtilsTest {
         data.add(new SessionData(threshold * 5, threshold * 5 + 100));
         data.add(new SessionData(threshold * 8, threshold * 8 + 200));
         data.add(new SessionData(threshold * 9 - 200, threshold * 10));
-        List<SessionData> result = ManageUtils.combineSessions(data);
+        List<SessionData> result = ManageUtils.combineSessions(data, 3);
         SessionData exp = new SessionData(0, threshold * 2);
         assertEquals(exp, result.get(0));
         SessionData exp2 = new SessionData(threshold * 5, threshold * 5 + 100);

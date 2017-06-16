@@ -56,7 +56,7 @@ public class QuickAnalyzeCommand extends SubCommand {
             @Override
             public void run() {
                 timesrun++;
-                if (analysisCache.isCached()) {
+                if (analysisCache.isCached() && !analysisCache.isAnalysisBeingRun()) {
                     sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
                     sender.sendMessage(TextUI.getAnalysisMessages());
                     sender.sendMessage(Phrase.CMD_FOOTER + "");

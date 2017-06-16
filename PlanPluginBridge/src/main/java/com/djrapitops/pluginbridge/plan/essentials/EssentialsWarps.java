@@ -3,9 +3,14 @@ package com.djrapitops.pluginbridge.plan.essentials;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Warps;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.ui.Html;
 
 /**
  * PluginData class for Essentials-plugin.
@@ -13,14 +18,14 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
  * Registered to the plugin by EssentialsHook
  *
  * Gives a list of warps as a String value.
- * 
+ *
  * @author Rsl1122
  * @since 3.1.0
  * @see EssentialsHook
  */
 public class EssentialsWarps extends PluginData {
 
-    private Essentials essentials;
+    private final Essentials essentials;
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.
@@ -30,17 +35,34 @@ public class EssentialsWarps extends PluginData {
     public EssentialsWarps(Essentials essentials) {
         super("Essentials", "warps", AnalysisType.HTML);
         this.essentials = essentials;
-        super.setIcon("map-marker");
-        super.setPrefix("Warps: ");
+        String warps = Html.FONT_AWESOME_ICON.parse("map-marker") + " Warps";
+        String command = Html.FONT_AWESOME_ICON.parse("fa-terminal") + " Command";
+        super.setPrefix(Html.TABLE_START_2.parse(warps, command));
+        super.setSuffix(Html.TABLE_END.parse());
     }
 
     @Override
     public String getHtmlReplaceValue(String modifier, UUID uuid) {
         Warps warps = essentials.getWarps();
         if (!warps.isEmpty()) {
-            return parseContainer("", warps.getList().toString());
+            Collection<String> warplist = warps.getList();
+
+            return parseContainer("", getTableContents(new ArrayList<>(warplist)));
         }
-        return parseContainer("", "No Warps.");
+        return parseContainer("", Html.TABLELINE_2.parse("No Warps.", ""));
+    }
+
+    private String getTableContents(List<String> warps) {
+        Collections.sort(warps);
+        StringBuilder html = new StringBuilder();
+        if (warps.isEmpty()) {
+            html.append(Html.TABLELINE_4.parse(Html.FACTION_NO_FACTIONS.parse(), "", "", ""));
+        } else {
+            for (String warp : warps) {
+                html.append(Html.TABLELINE_2.parse(warp, "/warp " + warp));
+            }
+        }
+        return html.toString();
     }
 
     @Override

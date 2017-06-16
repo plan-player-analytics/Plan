@@ -61,7 +61,7 @@ public class AnalyzeCommand extends SubCommand {
             @Override
             public void run() {
                 timesrun++;
-                if (analysisCache.isCached()) {
+                if (analysisCache.isCached() && !analysisCache.isAnalysisBeingRun()) {
                     sendAnalysisMessage(sender);
                     this.cancel();
                     return;

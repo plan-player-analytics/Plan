@@ -766,6 +766,9 @@ header p {
 		</div>
 	</div>
 <script>
+var serverTime = new Date(%currenttime%);
+var now = new Date();
+var timediff = serverTime.getTime()-now.getTime();
 function openNav() {
     document.getElementById("sidenav").style.width = "100%";
     document.getElementById("limiter").style.display = "none";
@@ -820,9 +823,6 @@ function openFunc(i) {
 		x.style.transform = "translate3d("+value+"%,0px,0)";
 	};
 }
-var serverTime = new Date(%currenttime%);
-var now = new Date();
-var timediff = serverTime.getTime()-now.getTime();
 function countUpTimer() {
 		var now = new Date();
 		var begin = new Date(%refreshlong%-timediff);

@@ -83,15 +83,26 @@ public class ManageUtils {
     }
 
     public static boolean containsCombinable(List<SessionData> sessions) {
-        // Checks if there are starts & ends that are the same, or less than 5000 ms away from each other.
+        return containsCombinable(sessions, 5000);
+    }
+
+    private static boolean containsCombinable(List<SessionData> sessions, int threshold) {
+        // Checks if there are starts & ends that are the same, or less than threshold ms away from each other.
         return sessions.stream()
                 .anyMatch(s -> sessions.stream()
                         .filter(ses -> !ses.equals(s))
                         .map(ses -> ses.getSessionStart())
-                        .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < 5000)));
+                        .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
     }
 
-    public static List<SessionData> combineSessions(List<SessionData> sessions) {
+    public static List<SessionData> combineSessions(List<SessionData> sessions, Integer loginTimes) {
+        return combineSessions(sessions, loginTimes, 5000);
+    }
+
+    private static List<SessionData> combineSessions(List<SessionData> sessions, Integer loginTimes, int threshold) {
+        if (threshold >= 35000) {
+            return sessions;
+        }
         List<SessionData> newSessions = new ArrayList<>();
         List<SessionData> removed = new ArrayList<>();
         Iterator<SessionData> iterator = sessions.iterator();
@@ -100,7 +111,7 @@ public class ManageUtils {
             if (removed.contains(session)) {
                 continue;
             }
-            List<SessionData> close = sessions.stream().filter(ses -> Math.abs(session.getSessionEnd() - ses.getSessionStart()) < 5000).collect(Collectors.toList());
+            List<SessionData> close = sessions.stream().filter(ses -> Math.abs(session.getSessionEnd() - ses.getSessionStart()) < threshold).collect(Collectors.toList());
             if (!close.isEmpty()) {
                 long big = MathUtils.getBiggestLong(close.stream().map((SessionData ses) -> ses.getSessionEnd()).collect(Collectors.toList()));
                 session.endSession(big);
@@ -108,9 +119,12 @@ public class ManageUtils {
             }
             newSessions.add(session);
         }
-        boolean containsCombinable = containsCombinable(newSessions);
+        if (loginTimes == newSessions.size()) {
+            return newSessions;
+        }
+        boolean containsCombinable = containsCombinable(newSessions, threshold);
         if (containsCombinable) {
-            return combineSessions(newSessions);
+            return combineSessions(newSessions, threshold + 1000);
         } else {
             return newSessions;
         }

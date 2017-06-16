@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
@@ -61,7 +62,13 @@ public class CommandUseTable extends Table {
             statement = prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             while (set.next()) {
-                commandUse.put(set.getString(columnCommand), set.getInt(columnTimesUsed));
+                String cmd = set.getString(columnCommand);
+                int amountUsed = set.getInt(columnTimesUsed);
+                Integer get = commandUse.get(cmd);
+                if (get != null && get > amountUsed) {
+                    continue;
+                }
+                commandUse.put(cmd, amountUsed);
             }
             return commandUse;
         } finally {
@@ -149,5 +156,12 @@ public class CommandUseTable extends Table {
         } finally {
             close(statement);
         }
+    }
+
+    public void clean() throws SQLException {
+        Map<String, Integer> commandUse = getCommandUse();
+        removeAllData();
+        saveCommandUse(commandUse);
+        Plan.getInstance().getHandler().getCommandUseFromDb();
     }
 }

@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 public class DBUtils {
 
     public static <T> List<List<Container<T>>> splitIntoBatches(Map<Integer, List<T>> objects) {
+        int batchSize = 2048;
         List<List<Container<T>>> wrappedBatches = new ArrayList<>();
 
         int i = 0;
@@ -29,8 +30,8 @@ public class DBUtils {
                     wrappedBatches.add(new ArrayList<>());
                 }
                 wrappedBatches.get(j).add(new Container<>(object, entry.getKey()));
-                i++;
-                if (i % 1024 == 0) {
+                i++;                
+                if (i % batchSize == 0) {
                     j++;
                 }
             }
