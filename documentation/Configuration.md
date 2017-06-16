@@ -53,6 +53,7 @@ Port | 2.0.0 | Integer | 8804 | Port of the Webserver
 InternalIP | 3.0.0 | String | 0.0.0.0 | Internal InetAddress to start the WebSocketServer on. [Code enabling the socket server](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/ui/webserver/WebSocketServer.java#L56)
 ShowAlternativeServerIP | 2.0.0 | boolean | false | Enables the use of the link below in the inspect and analyze commands.
 AlternativeIP | 2.0.0 | String | `your.ip.here:%port%` | Address to use as link in inspect and analyze commands if setting above is enabled. %port% will be replaced with the Port automatically. If you have port-forwarded an alternate address to the webserver port, %port% is not required.
+LinkProtocol | 3.4.3 | String | http | Changes the protocol in links given by the commands. SHOULD NOT BE CHANGED IF NOT USING EXTERNAL WEBSERVER.
 Security.DisplayIPsAndUUIDs | 2.5.0 | boolean | true | Toggles visibility of UUIDs and IPs on player Inspect page.
 Security.AddressSecurityCode | 2.5.0 | String | bAkEd | This string is added to the url so that outsiders can not access the `/server` and `/player/<playername>` pages just by knowing your IP and that your server uses Plan. Example: bAkEd -> `localhost:8804/bAkEd/server`
 
@@ -62,7 +63,7 @@ Config.Point | Version introduced | Type | Default | Description
 --- | ---- | ------ | --- | ---------------------------------
 ServerName | 3.3.0 | String | 'Plan' | Changes the Name in the Header of Analysis & Inspect pages.
 Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale | 3.4.2 | boolean | true | Determines whether or not to use max players in server.yml as the default scale for Players Online graphs.
-Formats.TimeAmount | 3.3.0 | String | '%days%d ' | Changes the format used when formatting Time Amounts 
+Formats.TimeAmount | 3.3.0 | String | '%days%d ' | Changes the format used when formatting Time Amounts. Include %zero% to add a 0 in front of single numbers.
 Formats.DecimalPoints | 3.3.0 | String | #.## | Changes how many decimals are displayed after doubles. (For 3 use #.### etc.)
 Colors.Commands | 2.1.0 | String |  | Color codes used with the */plan* commands. 
 Colors.HTML | 2.1.0 | String |  | These HTML Color codes are used when generating the Html pages. Use without the # (hashtag)
