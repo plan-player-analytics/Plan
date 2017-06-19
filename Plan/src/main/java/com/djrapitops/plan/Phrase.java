@@ -65,7 +65,7 @@ public enum Phrase {
     NOT_IN_FAC("Not in a faction"),
     //
     ANALYSIS("Analysis | "),
-    COMMAND_TIMEOUT(ChatColor.RED + "" + PREFIX + "REPLACE0 Command timed out! Error most likely on console."),
+    COMMAND_TIMEOUT(ChatColor.RED + "" + PREFIX + "REPLACE0 Command timed out! Check '/plan status' & console."),
     ANALYSIS_START(ANALYSIS + "Beginning analysis of user data.."),
     ANALYSIS_BOOT_NOTIFY(ANALYSIS + "Boot analysis in 30 seconds.."),
     ANALYSIS_BOOT(ANALYSIS + "Starting Boot Analysis.."),
@@ -110,6 +110,7 @@ public enum Phrase {
     CMD_INFO_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Info"),
     CMD_INFO_VERSION(CMD_BALL + "" + COLOR_MAIN.color() + " Version: " + COLOR_SEC.color() + REPLACE0),
     CMD_SEARCH_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Search results for: "),
+    CMD_SEARCH_SEARCHING(CMD_FOOTER + "" + COLOR_MAIN.color() + " Searching.."),
     CMD_HELP_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Help"),
     CMD_MANAGE_HELP_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Managment Help"),
     CMD_MANAGE_STATUS_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Database status"),
@@ -123,7 +124,7 @@ public enum Phrase {
     CMD_PASS_PLANLITE("UNUSED"),
     CMD_RESULTS_AVAILABLE(COLOR_SEC.color() + "   Results will be available for " + COLOR_TER.color() + REPLACE0 + COLOR_SEC.color() + " minutes."),
     CMD_NO_RESULTS(CMD_BALL + " No results for " + COLOR_SEC.color() + REPLACE0 + COLOR_MAIN.color() + "."),
-    CMD_MATCH(COLOR_SEC.color() + " Matching player: " + COLOR_TER.color()),
+    CMD_MATCH(COLOR_SEC.color() + " Matching players: " + COLOR_TER.color()),
     //
     CMD_USG_ANALYZE("View the Server Analysis"),
     CMD_USG_QANALYZE("View the Server QuickAnalysis"),

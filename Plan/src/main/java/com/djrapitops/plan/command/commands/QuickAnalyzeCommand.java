@@ -2,6 +2,8 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -11,8 +13,6 @@ import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This subcommand is used to run the analysis and to view some of the data in
@@ -50,7 +50,7 @@ public class QuickAnalyzeCommand extends SubCommand {
             analysisCache.updateCache();
         }
 
-        BukkitTask analysisMessageSenderTask = new BukkitRunnable() {
+        RslTask analysisMessageSenderTask = new RslBukkitRunnable<Plan>("QanalysisMessageSenderTask") {
             private int timesrun = 0;
 
             @Override
@@ -68,7 +68,7 @@ public class QuickAnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 1 * 20, 5 * 20);
+        }.runTaskTimer(1 * 20, 5 * 20);
         return true;
     }
 }

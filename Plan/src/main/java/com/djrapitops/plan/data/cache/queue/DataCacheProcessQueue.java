@@ -75,7 +75,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     private DataCacheHandler handler;
 
     ProcessConsumer(BlockingQueue q, DataCacheHandler h) {
-        super(q);
+        super(q, "ProcessQueueConsumer");
         handler = h;
     }
 

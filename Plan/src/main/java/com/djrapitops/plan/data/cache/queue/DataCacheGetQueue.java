@@ -62,7 +62,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
     private Database db;
 
     GetConsumer(BlockingQueue q, Database db) {
-        super(q);
+        super(q, "GetQueueConsumer");
         this.db = db;
     }
 

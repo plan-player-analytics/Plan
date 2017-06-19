@@ -94,7 +94,7 @@ class SaveConsumer extends Consumer<UserData> {
     private DataCacheClearQueue clear;
 
     SaveConsumer(BlockingQueue q, DataCacheClearQueue clear, Database db) {
-        super(q);
+        super(q, "SaveQueueConsumer");
         this.db = db;
         this.clear = clear;
         run = true;

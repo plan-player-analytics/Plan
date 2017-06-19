@@ -63,7 +63,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
     private DataCacheHandler handler;
 
     ClearConsumer(BlockingQueue q, DataCacheHandler handler) {
-        super(q);
+        super(q, "ClearQueueConsumer");
         this.handler = handler;
     }
 

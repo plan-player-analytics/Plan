@@ -2,12 +2,14 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.command.CommandUtils;
+import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -16,8 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.
@@ -43,7 +43,7 @@ public class AnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!CommandUtils.pluginHasViewCapability()) {
+        if (!ConditionUtils.pluginHasViewCapability()) {
             sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "");
             return true;
         }
@@ -55,7 +55,7 @@ public class AnalyzeCommand extends SubCommand {
             }
             analysisCache.updateCache();
         }
-        final BukkitTask analysisMessageSenderTask = new BukkitRunnable() {
+        final RslTask task = new RslBukkitRunnable<Plan>("AnalysisMessageSenderTask") {
             private int timesrun = 0;
 
             @Override
@@ -72,7 +72,7 @@ public class AnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 1 * 20, 5 * 20);
+        }.runTaskTimer(1 * 20, 5 * 20);
         return true;
     }
 

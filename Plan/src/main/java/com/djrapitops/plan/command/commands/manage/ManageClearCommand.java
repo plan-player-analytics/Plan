@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import java.sql.SQLException;
 import java.util.Arrays;
 import main.java.com.djrapitops.plan.Log;
@@ -11,7 +12,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This manage subcommand is used to clear a database of all data.
@@ -64,7 +64,7 @@ public class ManageClearCommand extends SubCommand {
         }
 
         final Database clearThisDB = clearDB;
-        (new BukkitRunnable() {
+        (new RslBukkitRunnable<Plan>("DBClearTask") {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
@@ -80,7 +80,7 @@ public class ManageClearCommand extends SubCommand {
                 }
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);
+        }).runTaskAsynchronously();
         return true;
     }
 }

@@ -2,20 +2,20 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.CommandUtils;
+import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.command.Condition;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This command is used to cache UserData to InspectCache and to view some of
@@ -35,7 +35,7 @@ public class QuickInspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QuickInspectCommand(Plan plugin) {
-        super("qinspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.QUICK_INSPECT.getPermission(), Phrase.CMD_USG_QINSPECT + "",  Phrase.ARG_PLAYER + "");
+        super("qinspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.QUICK_INSPECT.getPermission(), Phrase.CMD_USG_QINSPECT + "", Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -44,13 +44,13 @@ public class QuickInspectCommand extends SubCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
-        final BukkitTask inspectTask = new BukkitRunnable() {
+        final RslTask inspectTask = new RslBukkitRunnable<Plan>("QinspectTask") {
             @Override
             public void run() {
-                UUID uuid = CommandUtils.getUUID(playerName);
+                UUID uuid = ConditionUtils.getUUID(playerName);
                 Condition[] preConditions = new Condition[]{
-                    new Condition(CommandUtils.uuidIsValid(uuid), Phrase.USERNAME_NOT_VALID.toString()),
-                    new Condition(CommandUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString()),
+                    new Condition(ConditionUtils.uuidIsValid(uuid), Phrase.USERNAME_NOT_VALID.toString()),
+                    new Condition(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString()),
                     new Condition(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString())
                 };
 
@@ -63,7 +63,7 @@ public class QuickInspectCommand extends SubCommand {
                 }
                 sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
                 inspectCache.cache(uuid);
-                final BukkitTask inspectMessageSenderTask = new BukkitRunnable() {
+                final RslTask inspectMessageSenderTask = new RslBukkitRunnable<Plan>("QinspectMessageSenderTask") {
                     private int timesrun = 0;
 
                     @Override
@@ -81,9 +81,10 @@ public class QuickInspectCommand extends SubCommand {
                             this.cancel();
                         }
                     }
-                }.runTaskTimer(plugin, 1 * 20, 5 * 20);
+                }.runTaskTimer(1 * 20, 5 * 20);
+                this.cancel();
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously();
         return true;
     }
 }

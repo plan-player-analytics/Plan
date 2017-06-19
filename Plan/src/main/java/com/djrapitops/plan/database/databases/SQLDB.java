@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,11 +22,8 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -69,7 +66,7 @@ public abstract class SQLDB extends Database {
      */
     public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
-        new BukkitRunnable() {
+        new RslBukkitRunnable<Plan>("DBConnectionPingTask "+getName()) {
             @Override
             public void run() {
                 try {
@@ -80,7 +77,7 @@ public abstract class SQLDB extends Database {
                     connection = getNewConnection();
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20);
+        }.runTaskTimerAsynchronously(60 * 20, 60 * 20);
     }
 
     /**
@@ -150,7 +147,7 @@ public abstract class SQLDB extends Database {
      *
      */
     public void convertBukkitDataToDB() {
-        new BukkitRunnable() {
+        new RslBukkitRunnable<Plan>("BukkitDataConversionTask") {
             @Override
             public void run() {
                 try {
@@ -171,9 +168,11 @@ public abstract class SQLDB extends Database {
                     Log.info("Conversion complete, took: " + FormatUtils.formatTimeAmount(Benchmark.stop("Convert Bukkitdata to DB data")) + " ms");
                 } catch (SQLException ex) {
                     Log.toLog(this.getClass().getName(), ex);
+                } finally {
+                    this.cancel();
                 }
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously();
     }
 
     /**

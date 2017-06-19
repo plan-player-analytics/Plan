@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command;
 
 import com.djrapitops.javaplugin.command.CommandType;
+import com.djrapitops.javaplugin.command.StatusCommand;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.TreeCommand;
-import java.util.ArrayList;
-import java.util.List;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.commands.*;
 import org.bukkit.command.Command;
@@ -35,7 +35,7 @@ public class PlanCommand extends TreeCommand<Plan> implements CommandExecutor {
         }, "plan");
         super.setDefaultCommand("inspect");
 //        commands.add(new HelpCommand(plugin, this));
-        
+
     }
 
     @Override
@@ -48,5 +48,6 @@ public class PlanCommand extends TreeCommand<Plan> implements CommandExecutor {
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
         commands.add(new ManageCommand(plugin));
+        commands.add(new StatusCommand(plugin, Permissions.MANAGE.getPermission()));
     }
 }

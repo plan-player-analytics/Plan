@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +30,6 @@ import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeCompa
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -136,7 +136,7 @@ public class DataCacheHandler extends LocationCache {
         } else {
             clearAfterXsaves = configValue;
         }
-        BukkitTask asyncPeriodicCacheSaveTask = new BukkitRunnable() {
+        RslTask asyncPeriodicCacheSaveTask = new RslBukkitRunnable<Plan>("PeriodicCacheSaveTask") {
             @Override
             public void run() {
                 DataCacheHandler handler = Plan.getInstance().getHandler();
@@ -148,7 +148,7 @@ public class DataCacheHandler extends LocationCache {
                 saveCommandUse();
                 timesSaved++;
             }
-        }.runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
+        }.runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
     }
 
     /**
@@ -359,7 +359,7 @@ public class DataCacheHandler extends LocationCache {
             if (data != null) {
                 info.process(data);
                 return;
-            }            
+            }
         }
         addToPool(info);
     }
@@ -470,7 +470,7 @@ public class DataCacheHandler extends LocationCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        BukkitTask asyncReloadCacheUpdateTask = (new BukkitRunnable() {
+        RslTask asyncReloadCacheUpdateTask = (new RslBukkitRunnable<Plan>("ReloadCacheUpdateTask") {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -484,7 +484,7 @@ public class DataCacheHandler extends LocationCache {
                 }
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);
+        }).runTaskAsynchronously();
     }
 
     /**

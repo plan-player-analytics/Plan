@@ -1,5 +1,8 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import main.java.com.djrapitops.plan.Plan;
+
 /**
  * Abstract representation of a queue setup.
  *
@@ -21,7 +24,7 @@ public abstract class Setup<T> {
 
     void go() {
         for (Consumer<T> consumer : consumers) {
-            new Thread(consumer).start();
+            consumer.runTaskAsynchronously();
         }
     }
 

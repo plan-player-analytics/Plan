@@ -21,6 +21,8 @@ package main.java.com.djrapitops.plan;
 
 import com.djrapitops.javaplugin.ColorScheme;
 import com.djrapitops.javaplugin.RslPlugin;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,8 +46,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * Javaplugin class that contains methods for starting the plugin, logging to
@@ -236,7 +236,7 @@ public class Plan extends RslPlugin<Plan> {
     }
 
     private void startAnalysisRefreshTask(int analysisRefreshMinutes) throws IllegalStateException, IllegalArgumentException {
-        BukkitTask asyncPeriodicalAnalysisTask = new BukkitRunnable() {
+        RslTask task = new RslBukkitRunnable<Plan>("PeriodicalAnalysisTask") {
             @Override
             public void run() {
                 if (!analysisCache.isCached()) {
@@ -245,19 +245,19 @@ public class Plan extends RslPlugin<Plan> {
                     analysisCache.updateCache();
                 }
             }
-        }.runTaskTimerAsynchronously(this, analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
+        }.runTaskTimerAsynchronously(analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
     }
 
     private void startBootAnalysisTask() throws IllegalStateException, IllegalArgumentException {
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-        BukkitTask bootAnalysisTask = new BukkitRunnable() {
+        RslTask bootAnalysisTask = new RslBukkitRunnable<Plan>("BootAnalysisTask") {
             @Override
             public void run() {
                 Log.info(Phrase.ANALYSIS_BOOT + "");
                 analysisCache.updateCache();
                 this.cancel();
             }
-        }.runTaskLater(this, 30 * 20);
+        }.runTaskLaterAsynchronously(30 * 20);
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
     }
 
@@ -420,7 +420,7 @@ public class Plan extends RslPlugin<Plan> {
         }
         return INSTANCE.api;
     }
-    
+
     public static Plan getInstance() {
         return (Plan) getPluginInstance();
     }

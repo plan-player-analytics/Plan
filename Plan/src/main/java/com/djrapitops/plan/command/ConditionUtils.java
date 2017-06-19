@@ -13,7 +13,7 @@ import org.bukkit.OfflinePlayer;
  * @author Rsl1122
  * @since 3.5.0
  */
-public class CommandUtils {
+public class ConditionUtils {
 
     public static boolean pluginHasViewCapability() {
         final boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();

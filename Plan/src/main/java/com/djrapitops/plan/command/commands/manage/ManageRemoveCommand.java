@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -13,7 +14,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This manage subcommand is used to remove a single player's data from the
@@ -45,7 +45,7 @@ public class ManageRemoveCommand extends SubCommand {
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
-        (new BukkitRunnable() {
+        (new RslBukkitRunnable<Plan>("DBRemoveTask "+playerName) {
             @Override
             public void run() {
                 UUID uuid;

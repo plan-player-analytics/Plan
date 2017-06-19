@@ -2,6 +2,8 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +17,6 @@ import main.java.com.djrapitops.plan.data.handling.importing.Importer;
 import static org.bukkit.Bukkit.getOfflinePlayers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
@@ -66,7 +66,7 @@ public class ManageImportCommand extends SubCommand {
         }
 
         final Importer importer = importPlugins.get(importFromPlugin);
-        BukkitTask asyncImportTask = new BukkitRunnable() {
+        RslTask asyncImportTask = new RslBukkitRunnable<Plan>("ImportTask") {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
@@ -78,7 +78,7 @@ public class ManageImportCommand extends SubCommand {
                 }
                 this.cancel();
             }
-        }.runTaskAsynchronously(plugin);
+        }.runTaskAsynchronously();
         return true;
     }
 }

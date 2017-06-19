@@ -2,7 +2,9 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
-import main.java.com.djrapitops.plan.command.CommandUtils;
+import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslTask;
+import main.java.com.djrapitops.plan.command.ConditionUtils;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -19,8 +21,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This command is used to cache UserData to InspectCache and display the link.
@@ -47,18 +47,18 @@ public class InspectCommand extends SubCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!CommandUtils.pluginHasViewCapability()) {
+        if (!ConditionUtils.pluginHasViewCapability()) {
             sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT + "");
             return true;
         }
         String playerName = MiscUtils.getPlayerName(args, sender);
-        final BukkitTask inspectTask = new BukkitRunnable() {
+        final RslTask inspectTask = new RslBukkitRunnable<Plan>("InspectTask") {
             @Override
             public void run() {
-                UUID uuid = CommandUtils.getUUID(playerName);
+                UUID uuid = ConditionUtils.getUUID(playerName);
                 Condition[] preConditions = new Condition[]{
-                    new Condition(CommandUtils.uuidIsValid(uuid), Phrase.USERNAME_NOT_VALID.toString()),
-                    new Condition(CommandUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString()),
+                    new Condition(ConditionUtils.uuidIsValid(uuid), Phrase.USERNAME_NOT_VALID.toString()),
+                    new Condition(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString()),
                     new Condition(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString())
                 };
 
@@ -71,7 +71,7 @@ public class InspectCommand extends SubCommand {
                 }
                 sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
                 inspectCache.cache(uuid);
-                final BukkitTask inspectMessageSenderTask = new BukkitRunnable() {
+                final RslTask inspectMessageSenderTask = new RslBukkitRunnable<Plan>("InspectMessageSenderTask") {
                     private int timesrun = 0;
 
                     @Override
@@ -89,9 +89,10 @@ public class InspectCommand extends SubCommand {
                         }
                     }
 
-                }.runTaskTimer(plugin, 1 * 20, 5 * 20);
-            }
-        }.runTaskAsynchronously(plugin);
+                }.runTaskTimer(1 * 20, 5 * 20);
+                this.cancel();
+            }            
+        }.runTaskAsynchronously();
         return true;
     }
 

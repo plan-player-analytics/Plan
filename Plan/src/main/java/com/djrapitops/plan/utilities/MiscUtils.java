@@ -81,7 +81,7 @@ public class MiscUtils {
         List<OfflinePlayer> players = new ArrayList<>();
         players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
         Set<OfflinePlayer> matches = new HashSet<>();
-        players.parallelStream()
+        players.stream()
                 .filter(player -> (player.getName().toLowerCase().contains(search.toLowerCase())))
                 .forEach(player -> {
                     matches.add(player);
