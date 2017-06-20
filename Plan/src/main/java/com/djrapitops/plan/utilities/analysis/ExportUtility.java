@@ -44,18 +44,20 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
-        Benchmark.start("Exporting Html pages");
+        String processName = "Exporting Html pages";
+        plugin.processStatus().startExecution(processName);
         try {
             File folder = getFolder();
             writeAnalysisHtml(analysisData, new File(folder, "server"));
             File playersFolder = getPlayersFolder(folder);
+            plugin.processStatus().setStatus(processName, "Player html files.");
             for (UserData userData : rawData) {
                 writeInspectHtml(userData, playersFolder);
             }
         } catch (IOException ex) {
             Log.toLog("ExportUtils.export", ex);
         } finally {
-            Benchmark.stop("Exporting Html pages");
+            plugin.processStatus().finishExecution(processName);
         }
     }
 

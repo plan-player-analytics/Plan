@@ -19,7 +19,7 @@
  */
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.javaplugin.ColorScheme;
+import com.djrapitops.javaplugin.api.ColorScheme;
 import com.djrapitops.javaplugin.RslPlugin;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
@@ -93,7 +93,7 @@ public class Plan extends RslPlugin<Plan> {
         variable = new ServerVariableHolder(server);
 
         Log.debug("-------------------------------------");
-        Log.debug("Debug log: Plan v." + getDescription().getVersion());
+        Log.debug("Debug log: Plan v." + getVersion());
         Log.debug("Implements RslPlugin v." + getRslVersion());
         Log.debug("Server: " + server.getBukkitVersion());
         Log.debug("Version: " + server.getVersion());

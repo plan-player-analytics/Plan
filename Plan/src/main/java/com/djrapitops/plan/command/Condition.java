@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.command;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class Condition {
     final private String failMsg;

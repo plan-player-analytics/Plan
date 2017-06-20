@@ -5,7 +5,8 @@
  */
 package test.java.utils;
 
-import com.djrapitops.javaplugin.utilities.PluginLog;
+import com.djrapitops.javaplugin.status.ProcessStatus;
+import com.djrapitops.javaplugin.utilities.log.BukkitLog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -67,8 +68,10 @@ public class TestInit {
             when(planMock.getLogger()).thenReturn(Logger.getGlobal());
             ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
             when(planMock.getVariable()).thenReturn(serverVariableHolder);
-            PluginLog<Plan> log = new PluginLog(planMock, "console", "");
+            BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
             when(planMock.getPluginLogger()).thenReturn(log);
+            ProcessStatus<Plan> process = new ProcessStatus(planMock);
+            when(planMock.processStatus()).thenReturn(process);
             Plan.setInstance(planMock);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
             Settings.DEBUG.setValue(true);

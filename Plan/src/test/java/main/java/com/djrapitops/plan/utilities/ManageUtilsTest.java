@@ -22,7 +22,7 @@ import test.java.utils.TestInit;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})

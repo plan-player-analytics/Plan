@@ -12,7 +12,7 @@ import test.java.utils.MockUtils;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class PermissionsTest {
     

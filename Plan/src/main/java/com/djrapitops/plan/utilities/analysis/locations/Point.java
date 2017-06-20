@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.utilities.analysis.locations;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class Point {
 

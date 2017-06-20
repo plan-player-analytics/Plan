@@ -15,7 +15,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class MathUtilsTest {
 

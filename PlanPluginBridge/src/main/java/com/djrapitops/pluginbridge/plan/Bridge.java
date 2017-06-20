@@ -19,7 +19,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class Bridge {
     public static void hook(HookHandler handler) {

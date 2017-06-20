@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.database.Database;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class UUIDUtility {
 

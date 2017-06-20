@@ -10,7 +10,7 @@ import static org.bukkit.Bukkit.getPluginManager;
 /**
  * This class is responsible for static utility methods used for importing.
  *
- * @author Risto
+ * @author Rsl1122
  * @since 3.2.0
  */
 public class ImportUtils {
