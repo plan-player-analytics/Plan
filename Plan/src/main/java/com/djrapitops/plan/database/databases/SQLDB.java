@@ -66,7 +66,7 @@ public abstract class SQLDB extends Database {
      */
     public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
-        new RslBukkitRunnable<Plan>("DBConnectionPingTask "+getName()) {
+        new RslBukkitRunnable<Plan>("DBConnectionPingTask " + getName()) {
             @Override
             public void run() {
                 try {
@@ -87,12 +87,14 @@ public abstract class SQLDB extends Database {
     @Override
     public boolean init() {
         super.init();
+        setStatus("Init");
         Benchmark.start("Database Init " + getConfigName());
         try {
             if (!checkConnection()) {
                 return false;
             }
             convertBukkitDataToDB();
+            clean();
             return true;
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
@@ -158,6 +160,7 @@ public abstract class SQLDB extends Database {
                         Log.debug("No conversion necessary.");
                         return;
                     }
+                    setStatus("Bukkit Data Conversion");
                     Log.info("Beginning Bukkit Data -> DB Conversion for " + uuids.size() + " players");
                     int id = plugin.getBootAnalysisTaskID();
                     if (id != -1) {
@@ -169,6 +172,7 @@ public abstract class SQLDB extends Database {
                 } catch (SQLException ex) {
                     Log.toLog(this.getClass().getName(), ex);
                 } finally {
+                    setAvailable();
                     this.cancel();
                 }
             }
@@ -180,7 +184,7 @@ public abstract class SQLDB extends Database {
      * @return
      */
     public Table[] getAllTables() {
-        return new Table[]{usersTable, locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, commandUseTable};
+        return new Table[]{usersTable, locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, commandUseTable, tpsTable};
     }
 
     /**
@@ -188,7 +192,7 @@ public abstract class SQLDB extends Database {
      * @return
      */
     public Table[] getAllTablesInRemoveOrder() {
-        return new Table[]{locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, usersTable, commandUseTable};
+        return new Table[]{locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, usersTable, commandUseTable, tpsTable};
     }
 
     /**
@@ -206,6 +210,7 @@ public abstract class SQLDB extends Database {
         if (connection != null) {
             connection.close();
         }
+        setStatus("Closed");
     }
 
     /**
@@ -237,11 +242,14 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return false;
         }
+        setStatus("User exist check");
         try {
             return usersTable.getUserId(uuid.toString()) != -1;
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
             return false;
+        } finally {
+            setAvailable();
         }
     }
 
@@ -257,6 +265,7 @@ public abstract class SQLDB extends Database {
             return false;
         }
         try {
+            setStatus("Remove account " + uuid);
             Benchmark.start("Database remove Account " + uuid);
             try {
                 checkConnection();
@@ -277,6 +286,7 @@ public abstract class SQLDB extends Database {
                     && usersTable.removeUser(uuid);
         } finally {
             Benchmark.stop("Database remove Account " + uuid);
+            setAvailable();
         }
     }
 
@@ -299,6 +309,7 @@ public abstract class SQLDB extends Database {
         if (!wasSeenBefore(uuid)) {
             return;
         }
+        setStatus("Get single userdata for " + uuid);
         // Get the data
         UserData data = usersTable.getUserData(uuid);
 
@@ -322,6 +333,7 @@ public abstract class SQLDB extends Database {
             processor.process(data);
         });
         Benchmark.stop("DB Give userdata to processors");
+        setAvailable();
     }
 
     /**
@@ -335,7 +347,7 @@ public abstract class SQLDB extends Database {
         if (uuidsCol == null || uuidsCol.isEmpty()) {
             return new ArrayList<>();
         }
-
+        setStatus("Get userdata (multiple) for: " + uuidsCol.size());
         Benchmark.start("DB get UserData for " + uuidsCol.size());
         Map<UUID, Integer> userIds = usersTable.getAllUserIds();
         Set<UUID> remove = uuidsCol.stream()
@@ -368,6 +380,7 @@ public abstract class SQLDB extends Database {
             uData.setGmTimes(gmTimesTable.getGMTimes(id));
         }
         Benchmark.stop("DB get UserData for " + uuidsCol.size());
+        setAvailable();
         return data;
     }
 
@@ -383,6 +396,7 @@ public abstract class SQLDB extends Database {
         if (data.isEmpty()) {
             return;
         }
+        setStatus("Save userdata (multiple) for " + data.size());
         usersTable.saveUserDataInformationBatch(data);
         // Transform to map
         Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
@@ -432,6 +446,7 @@ public abstract class SQLDB extends Database {
                     uData.stopAccessing();
                 });
         Benchmark.stop("DB Save multiple Userdata");
+        setAvailable();
     }
 
     /**
@@ -448,6 +463,7 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return;
         }
+        setStatus("Save userdata: " + uuid);
         checkConnection();
         Log.debug("DB_Save: " + data);
         data.access();
@@ -460,6 +476,7 @@ public abstract class SQLDB extends Database {
         killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
         gmTimesTable.saveGMTimes(userId, data.getGmTimes());
         data.stopAccessing();
+        setAvailable();
     }
 
     /**
@@ -470,8 +487,8 @@ public abstract class SQLDB extends Database {
         Log.info("Cleaning the database.");
         try {
             checkConnection();
-            commandUseTable.clean();
-            sessionsTable.clean();
+            tpsTable.clean();
+//            sessionsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
@@ -484,11 +501,13 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean removeAllData() {
+        setStatus("Clearing all data");
         for (Table table : getAllTablesInRemoveOrder()) {
             if (!table.removeAllData()) {
                 return false;
             }
         }
+        setAvailable();
         return true;
     }
 
@@ -506,5 +525,13 @@ public abstract class SQLDB extends Database {
      */
     public Connection getConnection() {
         return connection;
+    }
+
+    private void setStatus(String status) {
+        plugin.processStatus().setStatus("DB-" + getName(), status);
+    }
+
+    private void setAvailable() {
+        setStatus("Running");
     }
 }
