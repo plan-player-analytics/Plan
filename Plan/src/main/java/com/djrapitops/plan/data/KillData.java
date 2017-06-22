@@ -95,6 +95,15 @@ public class KillData {
         }
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + Objects.hashCode(this.victim);
+        hash = 89 * hash + (int) (this.date ^ (this.date >>> 32));
+        hash = 89 * hash + Objects.hashCode(this.weapon);
+        return hash;
+    }
     
     
 }

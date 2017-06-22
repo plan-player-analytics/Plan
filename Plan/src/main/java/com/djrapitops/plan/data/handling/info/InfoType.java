@@ -12,13 +12,44 @@ package main.java.com.djrapitops.plan.data.handling.info;
  */
 public enum InfoType {
 
+    /**
+     *
+     */
     CHAT,
+
+    /**
+     *
+     */
     DEATH,
+
+    /**
+     *
+     */
     KILL,
+
+    /**
+     *
+     */
     GM,
+
+    /**
+     *
+     */
     LOGIN,
+
+    /**
+     *
+     */
     LOGOUT,
+
+    /**
+     *
+     */
     KICK,
+
+    /**
+     *
+     */
     RELOAD,
     /**
      * Used for events registered with the API.

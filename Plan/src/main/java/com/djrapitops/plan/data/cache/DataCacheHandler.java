@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -26,6 +28,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -51,6 +54,7 @@ public class DataCacheHandler extends LocationCache {
     // Cache
     private final HashMap<UUID, UserData> dataCache;
     private Map<String, Integer> commandUse;
+    private List<List<TPS>> unsavedTPSHistory;
 
     // Plan
     private final Plan plugin;
@@ -63,7 +67,7 @@ public class DataCacheHandler extends LocationCache {
     private DataCacheGetQueue getTask;
 
     // Variables
-    private int timesSaved;
+    
 
     /**
      * Class Constructor.
@@ -81,14 +85,13 @@ public class DataCacheHandler extends LocationCache {
 
         startQueues();
 
-        timesSaved = 0;
-
         commandUse = new HashMap<>();
         if (!getCommandUseFromDb()) {
             Log.error(Phrase.DB_FAILURE_DISABLE + "");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return;
         }
+        unsavedTPSHistory = new ArrayList<>();
         startAsyncPeriodicSaveTask();
     }
 
@@ -137,16 +140,23 @@ public class DataCacheHandler extends LocationCache {
             clearAfterXsaves = configValue;
         }
         RslTask asyncPeriodicCacheSaveTask = new RslBukkitRunnable<Plan>("PeriodicCacheSaveTask") {
+            private int timesSaved = 0;
+            
             @Override
             public void run() {
-                DataCacheHandler handler = Plan.getInstance().getHandler();
-                handler.saveHandlerDataToCache();
-                handler.saveCachedUserData();
-                if (timesSaved % clearAfterXsaves == 0) {
-                    handler.clearCache();
+                try {
+                    DataCacheHandler handler = Plan.getInstance().getHandler();
+                    handler.saveHandlerDataToCache();
+                    handler.saveCachedUserData();
+                    if (timesSaved % clearAfterXsaves == 0) {
+                        handler.clearCache();
+                    }
+                    saveCommandUse();
+                    saveUnsavedTPSHistory();
+                    timesSaved++;
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + "(" + this.getTaskName() + ")", e);
                 }
-                saveCommandUse();
-                timesSaved++;
             }
         }.runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
     }
@@ -281,6 +291,7 @@ public class DataCacheHandler extends LocationCache {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        saveUnsavedTPSHistory();
         try {
             db.close();
         } catch (SQLException e) {
@@ -339,6 +350,34 @@ public class DataCacheHandler extends LocationCache {
         } catch (SQLException | NullPointerException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+    }
+
+    public void saveUnsavedTPSHistory() {
+        List<TPS> averages = calculateAverageTpsForEachMinute();
+        if (averages.isEmpty()) {
+            return;
+        }
+        try {
+            db.getTpsTable().saveTPSData(averages);
+        } catch (SQLException ex) {
+            Log.toLog(this.getClass().getName(), ex);
+        }
+    }
+
+    private List<TPS> calculateAverageTpsForEachMinute() {
+        final List<TPS> averages = new ArrayList<>();
+        ArrayList<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
+        if (copy.isEmpty()) {
+            return new ArrayList<>();
+        }
+        for (List<TPS> history : copy) {
+            final long lastdate = history.get(history.size() - 1).getDate();
+            final double averageTPS = MathUtils.averageDouble(history.stream().map(t -> t.getTps()));
+            final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(t -> t.getPlayers()));
+            averages.add(new TPS(lastdate, averageTPS, averagePlayersOnline));
+        }
+        unsavedTPSHistory.removeAll(copy);
+        return averages;
     }
 
     /**
@@ -499,19 +538,39 @@ public class DataCacheHandler extends LocationCache {
         commandUse.put(command, commandUse.get(command) + 1);
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheSaveQueue getSaveTask() {
         return saveTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheClearQueue getClearTask() {
         return clearTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheProcessQueue getProcessTask() {
         return processTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheGetQueue getGetTask() {
         return getTask;
+    }
+
+    public void addTPSLastMinute(List<TPS> history) {
+        unsavedTPSHistory.add(history);
     }
 }

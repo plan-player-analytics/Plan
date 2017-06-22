@@ -30,15 +30,26 @@ public class ManageUtilsTest {
 
     private int threshold = 5000;
 
+    /**
+     *
+     */
     public ManageUtilsTest() {
     }
 
+    /**
+     *
+     * @throws IOException
+     * @throws Exception
+     */
     @Before
     public void setUp() throws IOException, Exception {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
     }
 
+    /**
+     *
+     */
     @Test
     public void testContainsCombinable() {
         List<SessionData> data = new ArrayList<>();
@@ -48,6 +59,9 @@ public class ManageUtilsTest {
         assertTrue(ManageUtils.containsCombinable(data));
     }
 
+    /**
+     *
+     */
     @Test
     public void testContainsCombinableFalse() {
         List<SessionData> data = new ArrayList<>();
@@ -56,6 +70,9 @@ public class ManageUtilsTest {
         assertTrue(!ManageUtils.containsCombinable(data));
     }
 
+    /**
+     *
+     */
     @Test
     public void testContainsCombinableFalse2() {
         List<SessionData> data = new ArrayList<>();
@@ -64,6 +81,9 @@ public class ManageUtilsTest {
         assertTrue(!ManageUtils.containsCombinable(data));
     }
 
+    /**
+     *
+     */
     @Test
     public void testContainsCombinableFalse3() {
         List<SessionData> data = new ArrayList<>();
@@ -72,6 +92,9 @@ public class ManageUtilsTest {
         assertTrue(!ManageUtils.containsCombinable(data));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCombineSessions() {
         List<SessionData> data = new ArrayList<>();
@@ -83,6 +106,9 @@ public class ManageUtilsTest {
         assertEquals(exp, get);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCombineSessions2() {
         List<SessionData> data = new ArrayList<>();
@@ -95,6 +121,9 @@ public class ManageUtilsTest {
         assertEquals(exp, get);
     }
 
+    /**
+     *
+     */
     @Test
     public void testCombineSessions3() {
         List<SessionData> data = new ArrayList<>();
@@ -108,6 +137,9 @@ public class ManageUtilsTest {
         assertEquals(exp2, result.get(1));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCombineSessions4() {
         List<SessionData> data = new ArrayList<>();
@@ -122,6 +154,9 @@ public class ManageUtilsTest {
         assertEquals(exp2, result.get(1));
     }
 
+    /**
+     *
+     */
     @Test
     public void testCombineSessions5() {
         List<SessionData> data = new ArrayList<>();

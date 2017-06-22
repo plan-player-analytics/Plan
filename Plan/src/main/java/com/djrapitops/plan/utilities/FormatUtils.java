@@ -39,10 +39,20 @@ public class FormatUtils {
         return FormattingUtils.formatTimeStamp(epochMs);
     }
 
+    /**
+     *
+     * @param epochMs
+     * @return
+     */
     public static String formatTimeStampSecond(long epochMs) {
         return FormattingUtils.formatTimeStampSecond(epochMs);
     }
 
+    /**
+     *
+     * @param epochMs
+     * @return
+     */
     public static String formatTimeStampYear(long epochMs) {
         return FormattingUtils.formatTimeStampYear(epochMs);
     }

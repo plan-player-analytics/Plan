@@ -15,6 +15,11 @@ import org.bukkit.OfflinePlayer;
  */
 public class ConditionUtils {
 
+    /**
+     * Check if the plugin can display the data.
+     *
+     * @return true/false
+     */
     public static boolean pluginHasViewCapability() {
         final boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         final boolean webserverIsOn = Settings.WEBSERVER_ENABLED.isTrue();
@@ -22,6 +27,13 @@ public class ConditionUtils {
         return webserverIsOn || usingAlternativeIP || usingTextUI;
     }
 
+    /**
+     * Get the uuid of a playername. Same as UUIDUtility
+     *
+     * @param playerName name of player.
+     * @return UUID
+     * @see UUIDUtility
+     */
     public static UUID getUUID(String playerName) {
         try {
             return UUIDUtility.getUUIDOf(playerName);
@@ -30,10 +42,22 @@ public class ConditionUtils {
         }
     }
 
+    /**
+     * Check if uuid is not null.
+     *
+     * @param uuid UUID
+     * @return is the uuid null?
+     */
     public static boolean uuidIsValid(UUID uuid) {
         return uuid != null;
     }
-    
+
+    /**
+     * Check if the player has played.
+     *
+     * @param uuid UUID of player
+     * @return has the player played before?
+     */
     public static boolean playerHasPlayed(UUID uuid) {
         if (!uuidIsValid(uuid)) {
             return false;

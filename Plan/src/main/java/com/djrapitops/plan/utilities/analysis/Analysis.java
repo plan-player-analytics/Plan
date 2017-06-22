@@ -428,6 +428,10 @@ public class Analysis {
         return replaceMap;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAnalysisBeingRun() {
         return taskId != -1;
     }

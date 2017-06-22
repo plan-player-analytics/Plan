@@ -256,6 +256,10 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     public void clean() throws SQLException {
         Map<Integer, Integer> loginTimes = db.getUsersTable().getLoginTimes();
         Map<Integer, List<SessionData>> allSessions = getSessionData(loginTimes.keySet());

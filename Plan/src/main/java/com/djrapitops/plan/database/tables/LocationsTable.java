@@ -111,6 +111,12 @@ public class LocationsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param worlds
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, List<Location>> getAllLocations(Map<String, World> worlds) throws SQLException {
         Benchmark.start("Get Locations Multiple");
         PreparedStatement statement = null;

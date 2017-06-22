@@ -22,6 +22,11 @@ import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
  */
 public class ExportUtility {
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
     public static File getFolder() throws IOException {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
         if (path.contains(":")) {
@@ -40,6 +45,12 @@ public class ExportUtility {
         return folder;
     }
 
+    /**
+     *
+     * @param plugin
+     * @param analysisData
+     * @param rawData
+     */
     public static void export(Plan plugin, AnalysisData analysisData, List<UserData> rawData) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
@@ -61,12 +72,24 @@ public class ExportUtility {
         }
     }
 
+    /**
+     *
+     * @param folder
+     * @return
+     */
     public static File getPlayersFolder(File folder) {
         File playersFolder = new File(folder, "player");
         playersFolder.mkdirs();
         return playersFolder;
     }
 
+    /**
+     *
+     * @param userData
+     * @param playersFolder
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void writeInspectHtml(UserData userData, File playersFolder) throws FileNotFoundException, IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
@@ -82,6 +105,13 @@ public class ExportUtility {
         Files.write(inspectHtmlFile.toPath(), Arrays.asList(inspectHtml));
     }
 
+    /**
+     *
+     * @param analysisData
+     * @param serverFolder
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws FileNotFoundException, IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;

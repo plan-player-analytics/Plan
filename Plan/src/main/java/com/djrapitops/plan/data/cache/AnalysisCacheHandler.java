@@ -63,6 +63,10 @@ public class AnalysisCacheHandler {
         return (cache != null);
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean isAnalysisBeingRun() {
         return analysis.isAnalysisBeingRun();
     }

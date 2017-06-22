@@ -336,6 +336,11 @@ public abstract class Database {
         return commandUseTable;
     }
 
+    /**
+     * Used to get the tps table.
+     *
+     * @return Table representing plan_tps
+     */
     public TPSTable getTpsTable() {
         return tpsTable;
     }

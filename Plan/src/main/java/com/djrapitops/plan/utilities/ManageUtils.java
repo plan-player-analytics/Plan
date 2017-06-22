@@ -82,6 +82,11 @@ public class ManageUtils {
         return true;
     }
 
+    /**
+     *
+     * @param sessions
+     * @return
+     */
     public static boolean containsCombinable(List<SessionData> sessions) {
         return containsCombinable(sessions, 5000);
     }
@@ -95,6 +100,12 @@ public class ManageUtils {
                         .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
     }
 
+    /**
+     *
+     * @param sessions
+     * @param loginTimes
+     * @return
+     */
     public static List<SessionData> combineSessions(List<SessionData> sessions, Integer loginTimes) {
         return combineSessions(sessions, loginTimes, 5000);
     }

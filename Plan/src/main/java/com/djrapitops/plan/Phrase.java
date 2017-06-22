@@ -38,7 +38,7 @@ public enum Phrase {
     NOTIFY_DISABLED_GMLISTENER(ChatColor.YELLOW + "Gamemode change listener disabled, Gm times info inaccurate."),
     NOTIFY_DISABLED_COMMANDLISTENER(ChatColor.YELLOW + "Command usage listener disabled."),
     NOTIFY_DISABLED_DEATHLISTENER(ChatColor.YELLOW + "Death listener disabled, player & mob kills not recorded."),
-//
+    //
     CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),
     CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),
     CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),
@@ -74,7 +74,7 @@ public enum Phrase {
     ANALYSIS_FAIL_NO_PLAYERS(ANALYSIS + "Analysis failed, no known players."),
     ANALYSIS_FAIL_NO_DATA(ANALYSIS + "Analysis failed, no data in the database."),
     ANALYSIS_BEGIN_ANALYSIS(ANALYSIS + "Data Fetched (REPLACE0 users, took REPLACE1ms), beginning Analysis of data.."),
-    ANALYSIS_THIRD_PARTY(ANALYSIS+"Analyzing additional data sources (3rd party)"),
+    ANALYSIS_THIRD_PARTY(ANALYSIS + "Analyzing additional data sources (3rd party)"),
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete. (took REPLACE0ms) REPLACE1"),
     DATA_CORRUPTION_WARN("Some data might be corrupted: " + REPLACE0),
     //
@@ -115,9 +115,9 @@ public enum Phrase {
     CMD_MANAGE_HELP_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Managment Help"),
     CMD_MANAGE_STATUS_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Database status"),
     CMD_MANAGE_STATUS_ACTIVE_DB(CMD_BALL + "" + COLOR_MAIN.color() + " Active Database: " + COLOR_SEC.color() + "REPLACE0"),
-    CMD_MANAGE_STATUS_QUEUE_SAVE(CMD_BALL + "" + COLOR_MAIN.color() + " Save Queue Size: " + COLOR_SEC.color() + "REPLACE0/"+Settings.PROCESS_SAVE_LIMIT.getNumber()),
-    CMD_MANAGE_STATUS_QUEUE_GET(CMD_BALL + "" + COLOR_MAIN.color() + " Get Queue Size: " + COLOR_SEC.color() + "REPLACE0/"+Settings.PROCESS_GET_LIMIT.getNumber()),
-    CMD_MANAGE_STATUS_QUEUE_CLEAR(CMD_BALL + "" + COLOR_MAIN.color() + " Clear Queue Size: " + COLOR_SEC.color() + "REPLACE0/"+Settings.PROCESS_CLEAR_LIMIT.getNumber()),
+    CMD_MANAGE_STATUS_QUEUE_SAVE(CMD_BALL + "" + COLOR_MAIN.color() + " Save Queue Size: " + COLOR_SEC.color() + "REPLACE0/" + Settings.PROCESS_SAVE_LIMIT.getNumber()),
+    CMD_MANAGE_STATUS_QUEUE_GET(CMD_BALL + "" + COLOR_MAIN.color() + " Get Queue Size: " + COLOR_SEC.color() + "REPLACE0/" + Settings.PROCESS_GET_LIMIT.getNumber()),
+    CMD_MANAGE_STATUS_QUEUE_CLEAR(CMD_BALL + "" + COLOR_MAIN.color() + " Clear Queue Size: " + COLOR_SEC.color() + "REPLACE0/" + Settings.PROCESS_CLEAR_LIMIT.getNumber()),
     CMD_MANAGE_STATUS_QUEUE_PROCESS(CMD_BALL + "" + COLOR_MAIN.color() + " Process Queue Size: " + COLOR_SEC.color() + "REPLACE0/20000"),
     CMD_CLICK_ME("Click Me"),
     CMD_LINK(COLOR_SEC.color() + " " + BALL + COLOR_MAIN.color() + " Link: " + COLOR_TER.color()),

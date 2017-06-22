@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ * Class containing static utility methods used by the Database classes.
  *
  * @author Rsl1122
  * @since 3.4.3
@@ -20,6 +21,14 @@ public class DBUtils {
 
     private static final int BATCH_SIZE = 2048;
 
+    /**
+     * Splits a collection of objects into lists with the size defined by
+     * BATCH_SIZE.
+     *
+     * @param <T> Object type
+     * @param objects Collection of the objects.
+//     * @return Lists with max size of BATCH_SIZE.
+     */
     public static <T> List<List<T>> splitIntoBatches(Collection<T> objects) {
         List<List<T>> batches = new ArrayList<>();
 
@@ -39,6 +48,12 @@ public class DBUtils {
         return batches;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param objects
+     * @return
+     */
     public static <T> List<List<Container<T>>> splitIntoBatchesId(Map<Integer, List<T>> objects) {
         List<List<Container<T>>> wrappedBatches = new ArrayList<>();
 

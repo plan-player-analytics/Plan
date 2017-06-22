@@ -24,6 +24,11 @@ public class TPSTable extends Table {
     private final String columnTPS;
     private final String columnPlayers;
 
+    /**
+     *
+     * @param db
+     * @param usingMySQL
+     */
     public TPSTable(SQLDB db, boolean usingMySQL) {
         super("plan_tps", db, usingMySQL);
         columnDate = "date";
@@ -47,6 +52,11 @@ public class TPSTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public List<TPS> getTPSData() throws SQLException {
         Benchmark.start("Get TPS");
         List<TPS> data = new ArrayList<>();
@@ -69,6 +79,11 @@ public class TPSTable extends Table {
         }
     }
     
+    /**
+     *
+     * @param data
+     * @throws SQLException
+     */
     public void saveTPSData(List<TPS> data) throws SQLException {
         List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
         for (List<TPS> batch : batches) {
@@ -104,6 +119,10 @@ public class TPSTable extends Table {
         }
     }
     
+    /**
+     *
+     * @throws SQLException
+     */
     public void clean() throws SQLException {
         PreparedStatement statement = null;
         try {

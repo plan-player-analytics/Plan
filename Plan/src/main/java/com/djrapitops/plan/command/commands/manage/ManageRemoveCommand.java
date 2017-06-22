@@ -45,7 +45,7 @@ public class ManageRemoveCommand extends SubCommand {
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
-        (new RslBukkitRunnable<Plan>("DBRemoveTask "+playerName) {
+        (new RslBukkitRunnable<Plan>("DBRemoveTask " + playerName) {
             @Override
             public void run() {
                 UUID uuid;

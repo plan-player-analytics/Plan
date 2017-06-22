@@ -49,6 +49,10 @@ public class HtmlUtils {
         return html;
     }
 
+    /**
+     *
+     * @return
+     */
     public static String getServerAnalysisUrlWithProtocol() {
         return Settings.LINK_PROTOCOL.toString()+":"+getServerAnalysisUrl();
     }
@@ -69,6 +73,11 @@ public class HtmlUtils {
         return url;
     }
 
+    /**
+     *
+     * @param playerName
+     * @return
+     */
     public static String getInspectUrlWithProtocol(String playerName) {
         return Settings.LINK_PROTOCOL.toString()+":"+getInspectUrl(playerName);
     }

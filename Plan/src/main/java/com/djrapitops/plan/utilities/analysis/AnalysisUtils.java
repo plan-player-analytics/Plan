@@ -226,6 +226,12 @@ public class AnalysisUtils {
         return source.parseContainer("", "Exception during calculation.");
     }
 
+    /**
+     *
+     * @param sessions
+     * @param scale
+     * @return
+     */
     public static Integer getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
@@ -242,6 +248,12 @@ public class AnalysisUtils {
         return uniqueJoins.size();
     }
 
+    /**
+     *
+     * @param sessions
+     * @param scale
+     * @return
+     */
     public static Integer getUniqueJoinsPerDay(Map<UUID, List<SessionData>> sessions, long scale) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
@@ -269,6 +281,11 @@ public class AnalysisUtils {
         return total / size;
     }
 
+    /**
+     *
+     * @param sessionStarts
+     * @return
+     */
     public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
         List<int[]> daysAndHours = sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();

@@ -37,6 +37,7 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.*;
+import main.java.com.djrapitops.plan.data.handling.TPSCountTimer;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
@@ -120,6 +121,7 @@ public class Plan extends RslPlugin<Plan> {
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
         registerListeners();
+        new TPSCountTimer(this).runTaskTimer(1000, 20);
 
         getCommand("plan").setExecutor(new PlanCommand(this));
 
@@ -402,6 +404,13 @@ public class Plan extends RslPlugin<Plan> {
         Log.info("Using locale: " + usingLocale);
     }
 
+    /**
+     * Used to get the object storing server variables that are constant after
+     * boot.
+     *
+     * @return ServerVariableHolder
+     * @see ServerVariableHolder
+     */
     public ServerVariableHolder getVariable() {
         return variable;
     }
@@ -421,6 +430,11 @@ public class Plan extends RslPlugin<Plan> {
         return INSTANCE.api;
     }
 
+    /**
+     * Used to get the plugin instance singleton.
+     *
+     * @return this object.
+     */
     public static Plan getInstance() {
         return (Plan) getPluginInstance();
     }

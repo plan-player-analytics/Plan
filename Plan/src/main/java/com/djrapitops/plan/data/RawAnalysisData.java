@@ -370,10 +370,19 @@ public class RawAnalysisData {
         return sessiondata;
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<UUID, List<SessionData>> getSortedSessionData() {
         return sortedSessionData;
     }
     
+    /**
+     *
+     * @param uuid
+     * @param sessions
+     */
     public void addSessions(UUID uuid, List<SessionData> sessions) {
         sessiondata.addAll(sessions);
         sortedSessionData.put(uuid, sessions);

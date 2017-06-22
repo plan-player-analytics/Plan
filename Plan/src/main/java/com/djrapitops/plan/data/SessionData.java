@@ -8,7 +8,7 @@ package main.java.com.djrapitops.plan.data;
  */
 public class SessionData {
 
-    private long sessionStart;
+    private final long sessionStart;
     private long sessionEnd;
 
     /**
@@ -32,6 +32,10 @@ public class SessionData {
         this.sessionEnd = sessionEnd;
     }
 
+    /**
+     * Constructor for copying the object.
+     * @param s SessionData to copy.
+     */
     public SessionData(SessionData s) {
         this.sessionStart = s.getSessionStart();
         this.sessionEnd = s.getSessionEnd();
@@ -107,5 +111,13 @@ public class SessionData {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + (int) (this.sessionStart ^ (this.sessionStart >>> 32));
+        hash = 97 * hash + (int) (this.sessionEnd ^ (this.sessionEnd >>> 32));
+        return hash;
     }
 }

@@ -848,6 +848,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, Integer> getLoginTimes() throws SQLException {
         Benchmark.start("Get Logintimes");
         PreparedStatement statement = null;
@@ -876,6 +881,12 @@ public class UsersTable extends Table {
         return columnID;
     }
 
+    /**
+     *
+     * @param playername
+     * @return
+     * @throws SQLException
+     */
     public UUID getUuidOf(String playername) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -895,6 +906,11 @@ public class UsersTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param uuids
+     * @return
+     */
     public Map<Integer, Long> getLoginTimes(Collection<UUID> uuids) {
         //TODO
         return new HashMap<>();

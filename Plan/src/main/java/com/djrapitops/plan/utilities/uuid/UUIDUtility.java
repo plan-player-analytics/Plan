@@ -18,10 +18,23 @@ import main.java.com.djrapitops.plan.database.Database;
  */
 public class UUIDUtility {
 
+    /**
+     *
+     * @param playername
+     * @return
+     * @throws Exception
+     */
     public static UUID getUUIDOf(String playername) throws Exception {
         return getUUIDOf(playername, Plan.getInstance().getDB());
     }
 
+    /**
+     *
+     * @param playername
+     * @param db
+     * @return
+     * @throws Exception
+     */
     public static UUID getUUIDOf(String playername, Database db) throws Exception {
         UUID uuid = null;
         try {

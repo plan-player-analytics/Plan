@@ -25,6 +25,11 @@ import org.bukkit.World;
  */
 public class LocationAnalysis {
 
+    /**
+     *
+     * @param data
+     * @param db
+     */
     public static void performAnalysis(AnalysisData data, Database db) {
         Benchmark.start("Location Analysis");
         try {
@@ -45,6 +50,12 @@ public class LocationAnalysis {
         Benchmark.stop("Location Analysis");
     }
 
+    /**
+     *
+     * @param freqPoints
+     * @param allPoints
+     * @return
+     */
     public static Map<Point, Object> cluster(Collection<Point> freqPoints, Collection<Point> allPoints) {
         Benchmark.start("LocAnalysis cluster");
         allPoints.removeAll(freqPoints);
@@ -55,6 +66,11 @@ public class LocationAnalysis {
         return new HashMap<>();
     }
 
+    /**
+     *
+     * @param points
+     * @return
+     */
     public static Set<Point> getFrequentPoints(Map<Point, Integer> points) {
         Benchmark.start("LocAnalysis getFrequentPoints");
         if (points.isEmpty()) {
@@ -66,6 +82,11 @@ public class LocationAnalysis {
         return freqPoints;
     }
 
+    /**
+     *
+     * @param locations
+     * @return
+     */
     public static Map<String, Map<Point, Integer>> getWorldPoints(Collection<Location> locations) {
         Benchmark.start("LocAnalysis getWorldPoints");
         Map<String, Map<Point, Integer>> pointMap = new HashMap<>();
@@ -89,6 +110,12 @@ public class LocationAnalysis {
         return pointMap;
     }
 
+    /**
+     *
+     * @param one
+     * @param two
+     * @return
+     */
     public static double distance(Point one, Point two) {
         return Math.hypot(one.getX() - two.getX(), one.getY() - one.getY());
     }

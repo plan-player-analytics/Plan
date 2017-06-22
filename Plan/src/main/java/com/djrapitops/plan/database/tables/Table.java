@@ -128,6 +128,12 @@ public abstract class Table {
         }
     }
     
+    /**
+     *
+     * @param <T>
+     * @param objects
+     * @return
+     */
     protected <T> List<List<Container<T>>> splitIntoBatches(Map<Integer, List<T>> objects) {
         return DBUtils.splitIntoBatchesId(objects);
     }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
@@ -44,9 +45,8 @@ public class JobsAnalysisJobTable extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         PlayerManager pm = Jobs.getPlayerManager();
-        List<List<JobProgression>> players = Arrays.stream(getOfflinePlayers())
-                .filter(p -> p != null)
-                .map(p -> pm.getPlayerInfo(p.getUniqueId()))
+        List<List<JobProgression>> players = Plan.getPlanAPI().getInspectCachedUserData().stream()
+                .map(p -> pm.getPlayerInfo(p.getUuid()))
                 .filter(i -> i != null)
                 .map(i -> pm.getJobsPlayerOffline(i))
                 .map(p -> p.getJobProgression())

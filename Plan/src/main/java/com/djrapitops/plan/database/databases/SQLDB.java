@@ -54,6 +54,7 @@ public abstract class SQLDB extends Database {
         nicknamesTable = new NicknamesTable(this, usingMySQL);
         commandUseTable = new CommandUseTable(this, usingMySQL);
         versionTable = new VersionTable(this, usingMySQL);
+        tpsTable = new TPSTable(this, usingMySQL);
 
         startConnectionPingTask(plugin);
     }

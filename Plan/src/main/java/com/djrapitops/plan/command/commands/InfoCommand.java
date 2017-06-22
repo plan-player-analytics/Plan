@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * This subcommand is used to view the version and the database type in use.
- * 
+ *
  * @author Rsl1122
  * @since 2.0.0
  */
@@ -26,7 +26,7 @@ public class InfoCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InfoCommand(Plan plugin) {
-        super("info", CommandType.CONSOLE,Permissions.INFO.getPermission(), Phrase.CMD_USG_INFO + "");
+        super("info", CommandType.CONSOLE, Permissions.INFO.getPermission(), Phrase.CMD_USG_INFO + "");
 
         this.plugin = plugin;
     }

@@ -928,58 +928,114 @@ public class AnalysisData {
         this.playtimeDistributionData = playtimeDistributionData;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoins() {
         return avgUniqJoins;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoinsDay() {
         return avgUniqJoinsDay;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoinsWeek() {
         return avgUniqJoinsWeek;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoinsMonth() {
         return avgUniqJoinsMonth;
     }
 
+    /**
+     *
+     * @param avgUniqJoins
+     */
     public void setAvgUniqJoins(int avgUniqJoins) {
         this.avgUniqJoins = avgUniqJoins;
     }
 
+    /**
+     *
+     * @param avgUniqJoinsDay
+     */
     public void setAvgUniqJoinsDay(int avgUniqJoinsDay) {
         this.avgUniqJoinsDay = avgUniqJoinsDay;
     }
 
+    /**
+     *
+     * @param avgUniqJoinsWeek
+     */
     public void setAvgUniqJoinsWeek(int avgUniqJoinsWeek) {
         this.avgUniqJoinsWeek = avgUniqJoinsWeek;
     }
 
+    /**
+     *
+     * @param avgUniqJoinsMonth
+     */
     public void setAvgUniqJoinsMonth(int avgUniqJoinsMonth) {
         this.avgUniqJoinsMonth = avgUniqJoinsMonth;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUniqueJoinsDay() {
         return uniqueJoinsDay;
     }
 
+    /**
+     *
+     * @param uniqueJoinsDay
+     */
     public void setUniqueJoinsDay(int uniqueJoinsDay) {
         this.uniqueJoinsDay = uniqueJoinsDay;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUniqueJoinsWeek() {
         return uniqueJoinsWeek;
     }
 
+    /**
+     *
+     * @param uniqueJoinsWeek
+     */
     public void setUniqueJoinsWeek(int uniqueJoinsWeek) {
         this.uniqueJoinsWeek = uniqueJoinsWeek;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUniqueJoinsMonth() {
         return uniqueJoinsMonth;
     }
 
+    /**
+     *
+     * @param uniqueJoinsMonth
+     */
     public void setUniqueJoinsMonth(int uniqueJoinsMonth) {
         this.uniqueJoinsMonth = uniqueJoinsMonth;
     }
