@@ -46,13 +46,16 @@ public class TPSCountTimer extends RslBukkitRunnable<Plan> {
     }
 
     public TPS calculateTPS(long diff, long now) {
-        long expectedDiff = 1000000000L; // 1 000 000 000 ns / 1 s
-        long difference = diff - expectedDiff;
-        if (difference < 1000000) { // If less than 1 millisecond it is forgiven.
-            difference = 0;
+        if (diff < 1000000000L) { // No tick count above 20
+            diff = 1000000000L; // 1 000 000 000ns = 1s
         }
-        double tpsN = 20 - ((difference / expectedDiff) * 20);
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
+        while (diff > 20000000000L) {
+            history.add(new TPS(now, 0, playersOnline));
+            diff -= 20000000000L;
+        }
+        double tpsN = 20000000000L / diff; // 20 000 000 000ns
+        
         TPS tps = new TPS(now, tpsN, playersOnline);
         return tps;
     }
