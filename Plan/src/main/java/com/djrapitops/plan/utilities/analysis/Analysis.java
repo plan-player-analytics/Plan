@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
+import java.util.ArrayList;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -30,6 +32,7 @@ import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.graphs.SessionLengthDistributionGraphCreator;
+import main.java.com.djrapitops.plan.ui.graphs.TPSGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -107,16 +110,24 @@ public class Analysis {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
             return false;
         }
-        return analyzeData(rawData, analysisCache);
+        List<TPS> tpsData = new ArrayList<>();
+        try {
+            tpsData = db.getTpsTable().getTPSData();
+            Log.debug("TPS Data Size: "+tpsData.size());
+        } catch (Exception ex) {
+            Log.toLog(this.getClass().getName(), ex);
+        }
+        return analyzeData(rawData, tpsData, analysisCache);
     }
 
     /**
      *
      * @param rawData
+     * @param tpsData
      * @param analysisCache
      * @return
      */
-    public boolean analyzeData(List<UserData> rawData, AnalysisCacheHandler analysisCache) {
+    public boolean analyzeData(List<UserData> rawData, List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
         try {
             plugin.processStatus().setStatus("Analysis", "Analysis Phase");
             Benchmark.start("Analysis Phase");
@@ -135,12 +146,14 @@ public class Analysis {
                 }
             });
             Map<String, Integer> commandUse = handler.getCommandUse();
-
             AnalysisData analysisData = new AnalysisData();
             Benchmark.stop("Analysis Create Empty dataset");
             log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", Benchmark.stop("Analysis Fetch Phase") + ""));
             String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
             analysisData.setSortablePlayersTable(playersTable);
+            
+            analysisData.setTpsData(TPSGraphCreator.generateDataArray(tpsData, now));
+            analysisData.setAverageTPS(MathUtils.averageDouble(tpsData.stream().map(t -> t.getTps())));
 
             RawAnalysisData sorted = fillDataset(commandUse, rawData, now);
 

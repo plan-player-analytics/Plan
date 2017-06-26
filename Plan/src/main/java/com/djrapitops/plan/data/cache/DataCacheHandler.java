@@ -366,10 +366,10 @@ public class DataCacheHandler extends LocationCache {
 
     private List<TPS> calculateAverageTpsForEachMinute() {
         final List<TPS> averages = new ArrayList<>();
-        ArrayList<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
-        if (copy.isEmpty()) {
+        if (unsavedTPSHistory.isEmpty()) {
             return new ArrayList<>();
         }
+        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);;        
         for (List<TPS> history : copy) {
             final long lastdate = history.get(history.size() - 1).getDate();
             final double averageTPS = MathUtils.averageDouble(history.stream().map(t -> t.getTps()));
@@ -571,6 +571,7 @@ public class DataCacheHandler extends LocationCache {
     }
 
     public void addTPSLastMinute(List<TPS> history) {
-        unsavedTPSHistory.add(history);
+        // Copy the contents to avoid reference, thus making the whole calculation pointless.
+        unsavedTPSHistory.add(new ArrayList<>(history));
     }
 }

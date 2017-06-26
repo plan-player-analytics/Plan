@@ -133,6 +133,11 @@ public class PlaceholderUtils {
         replaceMap.put("%graphmaxplayers%", Settings.GRAPH_PLAYERS_USEMAXPLAYERS_SCALE.isTrue() ? plugin.getVariable().getMaxPlayers()+"" : "2");
         replaceMap.put("%refreshlong%", data.getRefreshDate()+"");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
+        String[] tpsData = data.getTpsData();
+        replaceMap.put("%tpsdatalabels%", tpsData[0]);
+        replaceMap.put("%tpsdatatps%", tpsData[1]);
+        replaceMap.put("%tpsdataplayersonline%", tpsData[2]);
+        replaceMap.put("%averagetps%", data.getAverageTPS()+"");
         Benchmark.stop("Replace Placeholders Anaysis");
         return replaceMap;
     }

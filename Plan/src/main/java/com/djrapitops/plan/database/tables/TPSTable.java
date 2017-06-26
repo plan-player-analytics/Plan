@@ -128,7 +128,7 @@ public class TPSTable extends Table {
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnDate + "<?)");
             // More than 8 days ago.
-            statement.setLong(1, MiscUtils.getTime()-((691200) * 1000));
+            statement.setLong(1, MiscUtils.getTime()-((691200L) * 1000L));
             statement.execute();
         } finally {
             close(statement);

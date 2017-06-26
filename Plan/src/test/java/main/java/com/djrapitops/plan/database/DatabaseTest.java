@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,11 +25,13 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
@@ -82,10 +85,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
-            
+
             @Override
             public void convertBukkitDataToDB() {
-                
+
             }
         };
         File f = new File(plan.getDataFolder(), "Errors.txt");
@@ -174,9 +177,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+
             @Override
             public void convertBukkitDataToDB() {
-                
+
             }
         }.getConfigName());
     }
@@ -191,9 +195,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+
             @Override
             public void convertBukkitDataToDB() {
-                
+
             }
         }.getName());
     }
@@ -310,7 +315,7 @@ public class DatabaseTest {
         db.saveMultipleUserData(list);
         data.addPlayerKill(new KillData(MockUtils.getPlayer2UUID(), 2, "DiamondSword", 75843759L));
         data.setLocation(null);
-        data2.setLocation(null);        
+        data2.setLocation(null);
         DBCallableProcessor process = new DBCallableProcessor() {
             @Override
             public void process(UserData d) {
@@ -362,9 +367,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+
             @Override
             public void convertBukkitDataToDB() {
-                
+
             }
         };
         backup.init();
@@ -399,9 +405,10 @@ public class DatabaseTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
+
             @Override
             public void convertBukkitDataToDB() {
-                
+
             }
         };
         backup.init();
@@ -415,5 +422,38 @@ public class DatabaseTest {
         assertTrue("Doesn't contain /tp", commandUse.containsKey("/tp"));
         assertTrue("Doesn't contain /pla", commandUse.containsKey("/pla"));
         assertTrue("Doesn't contain /help", commandUse.containsKey("/help"));
-    }    
+    }
+    
+    @Test
+    public void testTPSSaving() throws SQLException {
+        db.init();
+        TPSTable tpsTable = db.getTpsTable();
+        List<TPS> expected = new ArrayList<>();
+        Random r = new Random();
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
+        tpsTable.saveTPSData(expected);
+        assertEquals(expected, tpsTable.getTPSData());
+    }
+    
+    @Test
+    public void testTPSClean() throws SQLException {
+        db.init();
+        TPSTable tpsTable = db.getTpsTable();
+        List<TPS> expected = new ArrayList<>();
+        Random r = new Random();
+        long now = System.currentTimeMillis();
+        expected.add(new TPS(now, r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(now-1000L, r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(now-3000L, r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(now-(690000L * 1000L), r.nextDouble(), r.nextInt(100000000)));
+        TPS tooOldTPS = new TPS(now-(691400L * 1000L), r.nextDouble(), r.nextInt(100000000));
+        expected.add(tooOldTPS);
+        tpsTable.saveTPSData(expected);
+        tpsTable.clean();
+        expected.remove(tooOldTPS);
+        assertEquals(expected, tpsTable.getTPSData());
+    }
 }

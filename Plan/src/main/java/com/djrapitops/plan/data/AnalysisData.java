@@ -40,6 +40,8 @@ public class AnalysisData {
     private String punchCardData;
     private String[] sessionDistributionData;
     private String[] playtimeDistributionData;
+    private String[] tpsData;
+    private double averageTPS;
 
     private int newPlayersMonth;
     private int newPlayersWeek;
@@ -92,6 +94,7 @@ public class AnalysisData {
         uniqueJoinsDay = 0;
         uniqueJoinsWeek = 0;
         uniqueJoinsMonth = 0;
+        averageTPS = 0;
         sortablePlayersTable = Html.ERROR_NOT_SET + "";
         commandUseTableHtml = Html.ERROR_NOT_SET + "";
         recentPlayers = Html.ERROR_NOT_SET + "";
@@ -101,6 +104,7 @@ public class AnalysisData {
         punchCardData = "[]";
         sessionDistributionData = new String[]{"[]", "[]"};
         playtimeDistributionData = new String[]{"[]", "[]"};
+        tpsData = new String[]{"[]", "[]", "[]"};
         playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
         additionalDataReplaceMap = new HashMap<>();
     }
@@ -1038,5 +1042,21 @@ public class AnalysisData {
      */
     public void setUniqueJoinsMonth(int uniqueJoinsMonth) {
         this.uniqueJoinsMonth = uniqueJoinsMonth;
+    }
+
+    public String[] getTpsData() {
+        return tpsData;
+    }
+
+    public void setTpsData(String[] tpsData) {
+        this.tpsData = tpsData;
+    }
+
+    public double getAverageTPS() {
+        return averageTPS;
+    }
+
+    public void setAverageTPS(double averageTPS) {
+        this.averageTPS = averageTPS;
     }
 }

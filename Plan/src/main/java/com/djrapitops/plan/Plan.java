@@ -37,7 +37,7 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.*;
-import main.java.com.djrapitops.plan.data.handling.TPSCountTimer;
+import main.java.com.djrapitops.plan.data.listeners.TPSCountTimer;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
