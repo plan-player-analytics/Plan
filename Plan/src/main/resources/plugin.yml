@@ -12,6 +12,7 @@ softdepend:
 - AdvancedAchievements
 - McMMO
 - Jobs
+- ASkyBlock
 
 commands:
   plan:

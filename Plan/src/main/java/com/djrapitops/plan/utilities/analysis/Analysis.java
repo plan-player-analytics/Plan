@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.ArrayList;
@@ -325,9 +326,9 @@ public class Analysis {
     private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered, Map<UUID, List<SessionData>> sortedSData) {
         long now = new Date().toInstant().getEpochSecond() * (long) 1000;
 
-        long scaleDay = 86400 * 1000;
-        long scaleWeek = 604800 * 1000;
-        long scaleMonth = (long) 2592000 * (long) 1000;
+        long scaleDay = TimeAmount.DAY.ms();
+        long scaleWeek = TimeAmount.WEEK.ms();
+        long scaleMonth = TimeAmount.MONTH.ms();
 
         data.setNewPlayersDay(AnalysisUtils.getNewPlayers(registered, scaleDay, now));
         data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));

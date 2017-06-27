@@ -51,24 +51,32 @@ public class AdvancedAchievementsTable extends PluginData {
         if (cachedUserData.isEmpty()) {
             html.append(Html.TABLELINE_2.parse("No Players.", ""));
         } else if (aaAPI.getAdvancedAchievementsVersionCode() >= 520) {
-            Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
-            for (UUID uuid : achievementsMap.keySet()) {
-                UserData uData = cachedUserData.get(uuid);
-                if (uData == null) {
-                    continue;
-                }
-                String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
-                int achievements = achievementsMap.get(uuid);
-                html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements+""));
-            }
+            appendTablelinesForV520Plus(cachedUserData, html);
         } else {
-            cachedUserData.values().stream().forEach((uData) -> {
-                String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
-                String achievements = aaAPI.getPlayerTotalAchievements(uData.getUuid()) + "";
-                html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
-            });
+            appendTablelinesForLessThanV520(cachedUserData, html);
         }
         return parseContainer("", html.toString());
+    }
+
+    private void appendTablelinesForLessThanV520(Map<UUID, UserData> cachedUserData, StringBuilder html) {
+        cachedUserData.values().stream().forEach((uData) -> {
+            String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
+            String achievements = aaAPI.getPlayerTotalAchievements(uData.getUuid()) + "";
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
+        });
+    }
+
+    private void appendTablelinesForV520Plus(Map<UUID, UserData> cachedUserData, StringBuilder html) {
+        Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
+        for (UUID uuid : achievementsMap.keySet()) {
+            UserData uData = cachedUserData.get(uuid);
+            if (uData == null) {
+                continue;
+            }
+            String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
+            int achievements = achievementsMap.get(uuid);
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements+""));
+        }
     }
 
     @Override

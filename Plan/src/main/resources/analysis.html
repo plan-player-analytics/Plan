@@ -653,7 +653,7 @@
                                                 %averagetps%
                                             </div>
                                             <div class="info-label">
-                                                Average
+                                                Average 7d
                                             </div>
                                         </div>
                                     </div>                                                
@@ -1040,6 +1040,7 @@
                                 pointRadius: 1,
                                 pointHitRadius: 10,
                                 spanGaps: false,
+                                yAxisID: 'A',
                                 data: %tpsdatatps%
                         }, {
                             label: "Players Online",
@@ -1060,6 +1061,7 @@
                                 pointRadius: 1,
                                 pointHitRadius: 10,
                                 spanGaps: false,
+                                yAxisID: 'B',
                                 data: %tpsdataplayersonline%
                         }]
                 };
@@ -1076,9 +1078,28 @@
 //                            },
                             scales: {
                                 yAxes: [{
-                                    display: true,
+                                    id: 'A',
+                                    type: 'linear',
+                                    position: 'left',
                                     ticks: {
-                                        suggestedMax: 21
+                                        suggestedMax: 21,
+                                        suggestedMin: 0
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'TPS'
+                                    }
+                                  }, {
+                                    id: 'B',
+                                    type: 'linear',
+                                    position: 'right',
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%,
+                                        suggestedMin: 0
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Players'
                                     }
                                 }],
                                 xAxes: [{

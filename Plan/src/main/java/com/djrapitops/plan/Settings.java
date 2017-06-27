@@ -26,6 +26,7 @@ public enum Settings {
     GATHERCOMMANDS("Settings.Data.GatherCommandUsage"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
+    PLAYERLIST_SHOW_IMAGES("Customization.SmallHeadImagesOnAnalysisPlayerlist"),
     ENABLED_AA("Customization.Plugins.Enabled.AdvancedAchievements"),
     ENABLED_ESS("Customization.Plugins.Enabled.Essentials"),
     ENABLED_FAC("Customization.Plugins.Enabled.Factions"),

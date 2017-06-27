@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.javaplugin.api.TimeAmount;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -128,7 +129,8 @@ public class TPSTable extends Table {
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnDate + "<?)");
             // More than 8 days ago.
-            statement.setLong(1, MiscUtils.getTime()-((691200L) * 1000L));
+            long eightDays = TimeAmount.DAY.ms()*8L;
+            statement.setLong(1, MiscUtils.getTime()-eightDays);
             statement.execute();
         } finally {
             close(statement);

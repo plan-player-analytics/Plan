@@ -42,6 +42,7 @@ Settings:
 
 Customization:
   ServerName: 'Plan'
+  SmallHeadImagesOnAnalysisPlayerlist: true
   Graphs:
     PlayersOnlineGraph:
       UseMaxPlayersAsScale: true

@@ -6,6 +6,7 @@
 package com.djrapitops.pluginbridge.plan;
 
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
+import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.essentials.EssentialsHook;
 import com.djrapitops.pluginbridge.plan.factions.FactionsHook;
 import com.djrapitops.pluginbridge.plan.jobs.JobsHook;
@@ -13,7 +14,6 @@ import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.ontime.OnTimeHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 
@@ -22,6 +22,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
  * @author Rsl1122
  */
 public class Bridge {
+
     public static void hook(HookHandler handler) {
         try {
             if (Settings.ENABLED_AA.isTrue()) {
@@ -69,6 +70,10 @@ public class Bridge {
             if (Settings.ENABLED_VAU.isTrue()) {
                 VaultHook vaultHook = new VaultHook(handler);
             }
+        } catch (NoClassDefFoundError e) {
+        }
+        try {
+            ASkyBlockHook askyblockHook = new ASkyBlockHook(handler);
         } catch (NoClassDefFoundError e) {
         }
     }

@@ -209,7 +209,11 @@ public class UserData {
 
     @Override
     public String toString() {
-        return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|location:" + location + "|locations:" + locations.size() + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|demData:" + demData + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
+        try {
+            return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|location:" + location + "|locations:" + locations.size() + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|demData:" + demData + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
+        } catch (Throwable e) {
+            return "UserData: Error on toString:" + e;
+        }
     }
 
     /**
@@ -955,6 +959,7 @@ public class UserData {
 
     /**
      * Set the online value.
+     *
      * @param isOnline true/false
      */
     public void setOnline(boolean isOnline) {

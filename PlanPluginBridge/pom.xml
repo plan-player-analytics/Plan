@@ -78,6 +78,12 @@
             <version>1.6</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.wasteofplastic.askyblock</groupId>
+            <artifactId>ASkyBlock</artifactId>
+            <version>3.0.6.8</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

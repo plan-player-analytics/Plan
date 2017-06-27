@@ -148,7 +148,7 @@ public abstract class PluginData {
      * @see AnalysisType
      */
     public final String parseContainer(String modifier, String contents) {
-        return "<div class=\"plugin-data\">" + Html.FONT_AWESOME_ICON.parse(icon) + " " + modifier + prefix + contents + suffix + "</div>";
+        return "<div class=\"plugin-data\">" + (icon.isEmpty() ? "" : Html.FONT_AWESOME_ICON.parse(icon)) + " " + modifier + prefix + contents + suffix + "</div>";
     }
 
     /**

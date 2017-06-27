@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.ui.tables;
 
 import java.util.Collection;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
@@ -21,18 +22,19 @@ public class SortablePlayersTableCreator {
      * @return
      */
     public static String createSortablePlayersTable(Collection<UserData> data) {
-        Benchmark.start("Create Players table "+data.size());
+        Benchmark.start("Create Players table " + data.size());
         String html = "";
         long now = MiscUtils.getTime();
+        boolean showImages = Settings.PLAYERLIST_SHOW_IMAGES.isTrue();
         for (UserData uData : data) {
             try {
                 String banOunknownOactiveOinactive = uData.isBanned() ? Html.GRAPH_BANNED.parse()
                         : uData.getLoginTimes() == 1 ? Html.GRAPH_UNKNOWN.parse()
                                 : AnalysisUtils.isActive(now, uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes()) ? Html.GRAPH_ACTIVE.parse()
                                 : Html.GRAPH_INACTIVE.parse();
-
+                String img = showImages ? Html.MINOTAR_SMALL_IMG.parse(uData.getName()) : "";
                 html += Html.TABLELINE_PLAYERS.parse(
-                        Html.MINOTAR_SMALL_IMG.parse(uData.getName()) + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()),
+                        img + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()),
                         banOunknownOactiveOinactive,
                         uData.getPlayTime() + "", FormatUtils.formatTimeAmount(uData.getPlayTime()),
                         uData.getLoginTimes() + "",
@@ -43,7 +45,7 @@ public class SortablePlayersTableCreator {
             } catch (NullPointerException e) {
             }
         }
-        Benchmark.stop("Create Players table "+data.size());
+        Benchmark.stop("Create Players table " + data.size());
         return html;
     }
 }

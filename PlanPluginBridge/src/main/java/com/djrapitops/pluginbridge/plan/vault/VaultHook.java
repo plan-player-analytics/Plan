@@ -4,17 +4,16 @@ import com.djrapitops.pluginbridge.plan.Hook;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.api.API;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import static org.bukkit.Bukkit.getServer;
 
 /**
- * A Class responsible for hooking to Vault and registering 1 data source.
+ * A Class responsible for hooking to Vault and registering data sources.
  *
  * @author Rsl1122
  * @since 3.1.0
  */
 public class VaultHook extends Hook {
-
-    private Economy econ;
 
     /**
      * Hooks the plugin and registers it's PluginData objects.
@@ -32,16 +31,16 @@ public class VaultHook extends Hook {
         }
 
         try {
-            this.econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
-            enabled = true;
+            Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+            hookH.addPluginDataSource(new EconomyBalance(econ));
         } catch (Throwable e) {
-            enabled = false;
         }
-
-        if (!enabled) {
-            return;
+        
+        try {
+            Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+//            hookH.addPluginDataSource(new PermGroupTable(permSys)); // Disabled due to getOfflinePlayers method
+            hookH.addPluginDataSource(new PermGroup(permSys));
+        } catch (Throwable e) {
         }
-
-        hookH.addPluginDataSource(new EconomyBalance(econ));
     }
 }

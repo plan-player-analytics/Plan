@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class TPSCountTimer extends RslBukkitRunnable<Plan> {
         if (diff > nanotime) { // First run's diff = nanotime + 1, no calc possible.
             return;
         }
+        diff -= TimeAmount.MILLISECOND.ns() * 40L; // 40ms Removed because the run appears to take 40-50ms, scewing the tps.
         TPS tps = calculateTPS(diff, now);
         history.add(tps);
         if (history.size() >= 60) {
@@ -46,16 +48,17 @@ public class TPSCountTimer extends RslBukkitRunnable<Plan> {
     }
 
     public TPS calculateTPS(long diff, long now) {
-        if (diff < 1000000000L) { // No tick count above 20
-            diff = 1000000000L; // 1 000 000 000ns = 1s
+        if (diff < TimeAmount.SECOND.ns()) { // No tick count above 20
+            diff = TimeAmount.SECOND.ns(); 
         }
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
-        while (diff > 20000000000L) {
+        long twentySeconds = 20L * TimeAmount.SECOND.ns();
+        while (diff > twentySeconds) {
             history.add(new TPS(now, 0, playersOnline));
-            diff -= 20000000000L;
+            diff -= twentySeconds;
         }
-        double tpsN = 20000000000L / diff; // 20 000 000 000ns
-        
+        double tpsN = twentySeconds / diff;
+
         TPS tps = new TPS(now, tpsN, playersOnline);
         return tps;
     }
