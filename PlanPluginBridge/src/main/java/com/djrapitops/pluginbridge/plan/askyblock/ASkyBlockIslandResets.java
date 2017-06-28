@@ -1,6 +1,5 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
-import com.djrapitops.pluginbridge.plan.advancedachievements.*;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import java.io.Serializable;
 import java.util.UUID;
@@ -19,7 +18,7 @@ public class ASkyBlockIslandResets extends PluginData {
     /**
      * Class Constructor, sets the parameters of the PluginData object.
      *
-     * @param aaAPI AdvancedAchievementsAPI given by AdvancedAchievementsHook
+     * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslandResets(ASkyBlockAPI aaAPI) {
         super("ASkyBlock", "islandresetsleft");

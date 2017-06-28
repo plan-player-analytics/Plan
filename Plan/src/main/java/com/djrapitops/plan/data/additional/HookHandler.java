@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
@@ -21,12 +22,16 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 public class HookHandler {
 
     private List<PluginData> additionalDataSources;
+    private final PluginConfigSectionHandler configHandler;
 
     /**
      * Class constructor, hooks to plugins.
+     *
+     * @param plugin Current instance of plan.
      */
-    public HookHandler() {
+    public HookHandler(Plan plugin) {
         additionalDataSources = new ArrayList<>();
+        configHandler = new PluginConfigSectionHandler(plugin);
         try {
             Bridge.hook(this);
         } catch (Throwable e) {
@@ -46,8 +51,18 @@ public class HookHandler {
      * @param dataSource an object extending the PluginData class.
      */
     public void addPluginDataSource(PluginData dataSource) {
-        Log.debug("Registered a new datasource: " + dataSource.getPlaceholder("").replace("%", ""));
-        additionalDataSources.add(dataSource);
+        try {
+            if (!configHandler.hasSection(dataSource)) {
+                configHandler.createSection(dataSource);
+            }
+            if (configHandler.isEnabled(dataSource)) {
+                Log.debug("Registered a new datasource: " + dataSource.getPlaceholder("").replace("%", ""));
+                additionalDataSources.add(dataSource);
+            }
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
+            Log.error("Attempting to register PluginDataSource caused an exception.");
+        }
     }
 
     /**

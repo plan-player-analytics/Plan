@@ -92,14 +92,7 @@ public class Plan extends RslPlugin<Plan> {
 
         Server server = getServer();
         variable = new ServerVariableHolder(server);
-
-        Log.debug("-------------------------------------");
-        Log.debug("Debug log: Plan v." + getVersion());
-        Log.debug("Implements RslPlugin v." + getRslVersion());
-        Log.debug("Server: " + server.getBukkitVersion());
-        Log.debug("Version: " + server.getVersion());
-        Log.debug("-------------------------------------");
-
+        
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
@@ -147,7 +140,7 @@ public class Plan extends RslPlugin<Plan> {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
-        hookHandler = new HookHandler();
+        hookHandler = new HookHandler(this);
 
         Log.debug("Verboose debug messages are enabled.");
         Log.info(Phrase.ENABLED + "");
@@ -162,17 +155,17 @@ public class Plan extends RslPlugin<Plan> {
     public void onDisable() {
         if (uiServer != null) {
             uiServer.stop();
-        }
+        }        
         Bukkit.getScheduler().cancelTasks(this);
         if (handler != null) {
             Log.info(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
+                taskStatus().cancelAllKnownTasks();
             });
-
             scheduler.shutdown();
-        }
+        }        
         Log.info(Phrase.DISABLED + "");
     }
 

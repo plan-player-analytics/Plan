@@ -13,6 +13,7 @@ softdepend:
 - McMMO
 - Jobs
 - ASkyBlock
+- GriefPrevention
 
 commands:
   plan:

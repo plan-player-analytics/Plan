@@ -88,15 +88,6 @@ Customization:
     Male: 'male, boy, man, boe, sir, mr, guy, he, männlich, maskulin, junge, mann'
     IgnoreWhen: 'sure, think, with, are, you, din'
   Plugins:
-    Enabled:
-      AdvancedAchievements: true
-      Essentials: true
-      Factions: true
-      Jobs: true
-      McMMO: true
-      OnTime: true
-      Towny: true
-      Vault: true
     Factions:
       HideFactions:
         - ExampleFaction

@@ -394,7 +394,9 @@ public class Analysis {
         Benchmark.start("Analysis 3rd party");
         final Map<String, String> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
-        final List<PluginData> sources = hookHandler.getAdditionalDataSources();
+        final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
+                .filter(p -> !p.getAnalysisTypes().isEmpty())
+                .collect(Collectors.toList());
         final AnalysisType[] totalTypes = new AnalysisType[]{
             AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
         };

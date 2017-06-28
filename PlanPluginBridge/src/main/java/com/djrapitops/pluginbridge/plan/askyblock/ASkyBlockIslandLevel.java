@@ -19,7 +19,7 @@ public class ASkyBlockIslandLevel extends PluginData {
     /**
      * Class Constructor, sets the parameters of the PluginData object.
      *
-     * @param aaAPI AdvancedAchievementsAPI given by AdvancedAchievementsHook
+     * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslandLevel(ASkyBlockAPI aaAPI) {
         super("ASkyBlock", "island_level", new AnalysisType[]{AnalysisType.INT_AVG});

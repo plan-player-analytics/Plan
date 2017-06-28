@@ -10,6 +10,10 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -84,6 +88,12 @@
             <version>3.0.6.8</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+	    <groupId>com.github.TechFortress</groupId>
+	    <artifactId>GriefPrevention</artifactId>
+	    <version>16.7.1</version>
+            <scope>provided</scope>
+	</dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

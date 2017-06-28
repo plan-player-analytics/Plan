@@ -18,7 +18,7 @@ public class ASkyBlockIslandName extends PluginData {
     /**
      * Class Constructor, sets the parameters of the PluginData object.
      *
-     * @param aaAPI AdvancedAchievementsAPI given by AdvancedAchievementsHook
+     * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslandName(ASkyBlockAPI aaAPI) {
         super("ASkyBlock", "islandname");

@@ -14,7 +14,6 @@ import com.djrapitops.pluginbridge.plan.mcmmo.McmmoHook;
 import com.djrapitops.pluginbridge.plan.ontime.OnTimeHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 
 /**
@@ -25,51 +24,35 @@ public class Bridge {
 
     public static void hook(HookHandler handler) {
         try {
-            if (Settings.ENABLED_AA.isTrue()) {
-                AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(handler);
-            }
+            AdvancedAchievementsHook advancedAchievementsHook = new AdvancedAchievementsHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_ESS.isTrue()) {
-                EssentialsHook essentialsHook = new EssentialsHook(handler);
-            }
+            EssentialsHook essentialsHook = new EssentialsHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_FAC.isTrue()) {
-                FactionsHook factionsHook = new FactionsHook(handler);
-            }
+            FactionsHook factionsHook = new FactionsHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_MCM.isTrue()) {
-                McmmoHook mcMmoHook = new McmmoHook(handler);
-            }
+            McmmoHook mcMmoHook = new McmmoHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_JOB.isTrue()) {
-                JobsHook jobsHook = new JobsHook(handler);
-            }
+            JobsHook jobsHook = new JobsHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_ONT.isTrue()) {
-                OnTimeHook onTimeHook = new OnTimeHook(handler);
-            }
+            OnTimeHook onTimeHook = new OnTimeHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_TOW.isTrue()) {
-                TownyHook townyHook = new TownyHook(handler);
-            }
+            TownyHook townyHook = new TownyHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
-            if (Settings.ENABLED_VAU.isTrue()) {
-                VaultHook vaultHook = new VaultHook(handler);
-            }
+            VaultHook vaultHook = new VaultHook(handler);
         } catch (NoClassDefFoundError e) {
         }
         try {
