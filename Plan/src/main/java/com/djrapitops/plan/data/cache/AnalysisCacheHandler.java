@@ -16,6 +16,7 @@ public class AnalysisCacheHandler {
     private final Plan plugin;
     private AnalysisData cache;
     private final Analysis analysis;
+    private boolean analysisEnabled;
 
     /**
      * Class Constructor.
@@ -27,6 +28,7 @@ public class AnalysisCacheHandler {
     public AnalysisCacheHandler(Plan plugin) {
         this.plugin = plugin;
         analysis = new Analysis(plugin);
+        analysisEnabled = true;
     }
 
     /**
@@ -69,5 +71,19 @@ public class AnalysisCacheHandler {
      */
     public boolean isAnalysisBeingRun() {
         return analysis.isAnalysisBeingRun();
+    }
+    
+    public boolean isAnalysisEnabled() {
+        return analysisEnabled;
+    }
+    
+    public void disableAnalysisTemporarily() {
+        analysisEnabled = false;
+        analysis.setTaskId(-2);
+    }
+    
+    public void enableAnalysis() {
+        analysis.setTaskId(-1);
+        analysisEnabled = true;
     }
 }

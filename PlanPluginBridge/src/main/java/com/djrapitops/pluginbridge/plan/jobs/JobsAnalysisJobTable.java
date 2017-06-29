@@ -4,7 +4,6 @@ import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.PlayerManager;
 import com.gamingmesh.jobs.container.JobProgression;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import static org.bukkit.Bukkit.getOfflinePlayers;
 
 /**
  * PluginData class for Jobs-plugin.

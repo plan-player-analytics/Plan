@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class QuickInspectCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
         final RslTask inspectTask = new RslBukkitRunnable<Plan>("QinspectTask") {
             @Override

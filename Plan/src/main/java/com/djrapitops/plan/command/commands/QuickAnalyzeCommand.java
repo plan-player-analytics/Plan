@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
@@ -11,8 +12,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This subcommand is used to run the analysis and to view some of the data in
@@ -38,8 +37,15 @@ public class QuickAnalyzeCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+        if (!analysisCache.isAnalysisEnabled()) {
+            sender.sendMessage(Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "");
+            if (!analysisCache.isCached()) {
+                return true;
+            }
+        } else {
+            sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+        }
         if (!analysisCache.isCached()) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
@@ -56,7 +62,7 @@ public class QuickAnalyzeCommand extends SubCommand {
             @Override
             public void run() {
                 timesrun++;
-                if (analysisCache.isCached() && !analysisCache.isAnalysisBeingRun()) {
+                if (analysisCache.isCached() && (!analysisCache.isAnalysisBeingRun() || !analysisCache.isAnalysisEnabled())) {
                     sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
                     sender.sendMessage(TextUI.getAnalysisMessages());
                     sender.sendMessage(Phrase.CMD_FOOTER + "");

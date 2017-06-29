@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import com.djrapitops.javaplugin.utilities.FormattingUtils;
@@ -43,7 +44,7 @@ public class SearchCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         Condition c = new Condition(args.length != 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString());
         if (c.pass()) {
             sender.sendMessage(c.getFailMsg());

@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.TreeCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -28,7 +29,7 @@ public class ManageCommand extends TreeCommand<Plan> {
     public ManageCommand(Plan plugin) {
         super(plugin, new SubCommand("manage,m", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE + "") {
             @Override
-            public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+            public boolean onCommand(ISender sender, String commandLabel, String[] args) {
                 return true;
             }
         }, "plan manage");

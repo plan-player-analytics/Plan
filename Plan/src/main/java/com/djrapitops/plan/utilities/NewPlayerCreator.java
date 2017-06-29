@@ -41,18 +41,19 @@ public class NewPlayerCreator {
      * @return a new UserData object
      */
     public static UserData createNewPlayer(OfflinePlayer player, GameMode gm) {
-        UserData data = new UserData(player, new DemographicsData());
+        long registered = player.getFirstPlayed();
+        UserData data = new UserData(player.getUniqueId(), registered, null, player.isOp(), GameMode.SURVIVAL, new DemographicsData(), player.getName(), player.isOnline());
         data.setLastGamemode(gm);
         data.setLastPlayed(MiscUtils.getTime());
-        long zero = Long.parseLong("0");
-        data.setPlayTime(zero);
+        data.setPlayTime(0L);
         data.setTimesKicked(0);
         data.setLoginTimes(0);
-        data.setLastGmSwapTime(zero);
+        data.setLastGmSwapTime(0L);
         data.setDeaths(0);
         data.setMobKills(0);
-        Log.debug(player.getUniqueId()+": Created a new UserData object.");
+        data.setBanned(false);
+        Log.debug(player.getUniqueId() + ": Created a new UserData object.");
         return data;
     }
-
+    
 }

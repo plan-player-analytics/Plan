@@ -325,7 +325,7 @@ public abstract class SQLDB extends Database {
         List<InetAddress> ips = ipsTable.getIPAddresses(userId);
         data.addIpAddresses(ips);
 
-        HashMap<GameMode, Long> times = gmTimesTable.getGMTimes(userId);
+        Map<GameMode, Long> times = gmTimesTable.getGMTimes(userId);
         data.setGmTimes(times);
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
@@ -370,6 +370,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
         Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
         Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
+        Map<Integer, Map<GameMode, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Log.debug("Sizes: UUID:" + uuids.size() + " DATA:" + data.size() + " ID:" + userIds.size() + " N:" + nicknames.size() + " I:" + ipList.size() + " K:" + playerKills.size() + " S:" + sessionData.size());
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();
@@ -378,7 +379,7 @@ public abstract class SQLDB extends Database {
             uData.addNicknames(nicknames.get(id));
             uData.addSessions(sessionData.get(id));
             uData.setPlayerKills(playerKills.get(id));
-            uData.setGmTimes(gmTimesTable.getGMTimes(id));
+            uData.setGmTimes(gmTimes.get(id));
         }
         Benchmark.stop("DB get UserData for " + uuidsCol.size());
         setAvailable();
@@ -435,11 +436,7 @@ public abstract class SQLDB extends Database {
         ipsTable.saveIPList(ips);
         killsTable.savePlayerKills(kills, uuids);
         sessionsTable.saveSessionData(sessions);
-        Benchmark.start("Save GMTimes");
-        for (Integer id : gmTimes.keySet()) {
-            gmTimesTable.saveGMTimes(id, gmTimes.get(id));
-        }
-        Benchmark.stop("Save GMTimes");
+        gmTimesTable.saveGMTimes(gmTimes);
         userDatas.values().stream()
                 .filter(u -> u != null)
                 .filter(uData -> uData.isAccessed())

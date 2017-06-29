@@ -67,7 +67,7 @@ public class DataCacheHandler extends LocationCache {
     private DataCacheGetQueue getTask;
 
     // Variables
-    
+    private boolean periodicTaskIsSaving = false;
 
     /**
      * Class Constructor.
@@ -141,10 +141,14 @@ public class DataCacheHandler extends LocationCache {
         }
         RslTask asyncPeriodicCacheSaveTask = new RslBukkitRunnable<Plan>("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
-            
+
             @Override
             public void run() {
+                if (periodicTaskIsSaving) {
+                    return;
+                }
                 try {
+                    periodicTaskIsSaving = true;
                     DataCacheHandler handler = Plan.getInstance().getHandler();
                     handler.saveHandlerDataToCache();
                     handler.saveCachedUserData();
@@ -156,6 +160,8 @@ public class DataCacheHandler extends LocationCache {
                     timesSaved++;
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + "(" + this.getTaskName() + ")", e);
+                } finally {
+                    periodicTaskIsSaving = false;
                 }
             }
         }.runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
@@ -243,6 +249,9 @@ public class DataCacheHandler extends LocationCache {
      * @param i Object that extends HandlingInfo.
      */
     public void addToPool(HandlingInfo i) {
+        if (i == null) {
+            return;
+        }
         Log.debug(i.getUuid() + ": Adding to pool, type:" + i.getType().name());
         processTask.addToPool(i);
     }
@@ -369,7 +378,7 @@ public class DataCacheHandler extends LocationCache {
         if (unsavedTPSHistory.isEmpty()) {
             return new ArrayList<>();
         }
-        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);;        
+        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);;
         for (List<TPS> history : copy) {
             final long lastdate = history.get(history.size() - 1).getDate();
             final double averageTPS = MathUtils.averageDouble(history.stream().map(t -> t.getTps()));

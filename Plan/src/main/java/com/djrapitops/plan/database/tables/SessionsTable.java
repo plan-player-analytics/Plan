@@ -224,6 +224,9 @@ public class SessionsTable extends Table {
     }
 
     private void saveSessionBatch(List<Container<SessionData>> batch) throws SQLException {
+        if (batch.isEmpty()) {
+            return;
+        }
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("

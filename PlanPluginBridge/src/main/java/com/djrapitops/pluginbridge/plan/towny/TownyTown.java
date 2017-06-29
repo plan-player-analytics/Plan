@@ -6,9 +6,9 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 import java.io.Serializable;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import org.bukkit.OfflinePlayer;
 
 /**
  * PluginData class for Towny-plugin.
@@ -35,11 +35,11 @@ public class TownyTown extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
-        if (!offlinePlayer.hasPlayedBefore()) {
+        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
+        if (data == null) {
             return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
         }
-        String name = offlinePlayer.getName();
+        String name = data.getName();
         try {
             Resident res = TownyUniverse.getDataSource().getResident(name);
             String town;
@@ -56,11 +56,11 @@ public class TownyTown extends PluginData {
 
     @Override
     public Serializable getValue(UUID uuid) {
-        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
-        if (!offlinePlayer.hasPlayedBefore()) {
-            return "";
+        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
+        if (data == null) {
+            return Phrase.NOT_IN_TOWN + "";
         }
-        String name = offlinePlayer.getName();
+        String name = data.getName();
         try {
             Resident res = TownyUniverse.getDataSource().getResident(name);
             String town;
@@ -71,7 +71,7 @@ public class TownyTown extends PluginData {
             }
             return town;
         } catch (NotRegisteredException ex) {
-            return "";
+            return ex + "";
         }
     }
 

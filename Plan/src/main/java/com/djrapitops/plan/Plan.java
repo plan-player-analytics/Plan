@@ -116,7 +116,7 @@ public class Plan extends RslPlugin<Plan> {
         registerListeners();
         new TPSCountTimer(this).runTaskTimer(1000, 20);
 
-        getCommand("plan").setExecutor(new PlanCommand(this));
+        registerCommand(new PlanCommand(this));
 
         this.api = new API(this);
         handler.handleReload();

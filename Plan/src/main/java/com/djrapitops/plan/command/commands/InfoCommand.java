@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.utilities.VersionUtils;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -32,7 +33,7 @@ public class InfoCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         ChatColor tColor = Phrase.COLOR_SEC.color();
 
         String[] messages = {

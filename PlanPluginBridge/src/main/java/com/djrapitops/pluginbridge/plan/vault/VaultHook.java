@@ -31,15 +31,16 @@ public class VaultHook extends Hook {
         }
 
         try {
-            Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
-            hookH.addPluginDataSource(new EconomyBalance(econ));
+            Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+            hookH.addPluginDataSource(new PermGroup(permSys));
+            hookH.addPluginDataSource(new PermGroupTable(permSys));
         } catch (Throwable e) {
         }
         
         try {
-            Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-//            hookH.addPluginDataSource(new PermGroupTable(permSys)); // Disabled due to getOfflinePlayers method
-            hookH.addPluginDataSource(new PermGroup(permSys));
+            Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+            hookH.addPluginDataSource(new EconomyBalance(econ));
+            hookH.addPluginDataSource(new EconomyBalanceTable(econ));
         } catch (Throwable e) {
         }
     }

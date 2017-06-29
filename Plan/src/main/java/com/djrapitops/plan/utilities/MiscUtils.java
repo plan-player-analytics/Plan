@@ -1,17 +1,14 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.io.IOException;
-import java.net.URL;
+import com.djrapitops.javaplugin.command.CommandUtils;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -40,7 +37,7 @@ public class MiscUtils {
      * @param sender
      * @return
      */
-    public static String getPlayerName(String[] args, CommandSender sender) {
+    public static String getPlayerName(String[] args, ISender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }
 
@@ -52,13 +49,13 @@ public class MiscUtils {
      * @param perm
      * @return The name of the player (first argument or sender)
      */
-    public static String getPlayerName(String[] args, CommandSender sender, Permissions perm) {
+    public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
         String playerName = "";
-        boolean isConsole = !(sender instanceof Player);
+        boolean isConsole = CommandUtils.isConsole(sender);
         if (isConsole) {
             playerName = args[0];
         } else if (args.length > 0) {
-            if (perm.userHasThisPermission(sender)) {
+            if (sender.hasPermission(perm.getPermission())) {
                 playerName = args[0];
             } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
                 playerName = sender.getName();

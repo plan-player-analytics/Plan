@@ -85,6 +85,7 @@ public enum Phrase {
     ERROR_LOGGED("Caught " + REPLACE0 + ". It has been logged to the Errors.txt"),
     ERROR_SESSIONDATA_INITIALIZATION("Player's session was initialized in a wrong way! (" + REPLACE0 + ")"),
     ERROR_ANALYSIS_FETCH_FAIL("Failed to fetch data for Analysis, Exception occurred."),
+    ERROR_ANALYSIS_DISABLED_TEMPORARILY(ChatColor.YELLOW + "Analysis has been temporarily disabled due to expensive task, use /plan status for info."),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
     MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED + "" + PREFIX + "Plugin not supported: "),
@@ -149,7 +150,7 @@ public enum Phrase {
     ARG_SEARCH("<part of playername>"),
     ARG_PLAYER("<player>"),
     ARG_RESTORE("<Filename.db> <dbTo> [-a]"),
-    ARG_IMPORT("<plugin> [-a]"),
+    ARG_IMPORT("<plugin>/list [import args]"),
     ARG_MOVE("<fromDB> <toDB> [-a]"),
     //
     USE_BACKUP("Use /plan manage backup <DB>"),
@@ -158,7 +159,7 @@ public enum Phrase {
     USE_PLAN("Use /plan for help"),
     USE_MOVE("Use /plan manage move <fromDB> <toDB> [-a]"),
     USE_COMBINE("Use /plan manage combine <fromDB> <toDB> [-a]"),
-    USE_IMPORT("Use /plan manage import <plugin> [-a]"),
+    USE_IMPORT("Use /plan manage import " + ARG_IMPORT),
     //
     WARN_REWRITE("Data in REPLACE0-database will be rewritten!"),
     WARN_OVERWRITE("Data in REPLACE0-database will be overwritten!"),

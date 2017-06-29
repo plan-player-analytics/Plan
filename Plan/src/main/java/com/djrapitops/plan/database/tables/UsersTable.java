@@ -17,6 +17,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -643,7 +644,12 @@ public class UsersTable extends Table {
         try {
             List<UserData> newUserdata = updateExistingUserData(data);
             Benchmark.start("Insert new UserInfo multiple " + newUserdata.size());
-            insertNewUserData(newUserdata);
+            List<List<UserData>> batches = DBUtils.splitIntoBatches(newUserdata);
+            for (List<UserData> batch : batches) {
+                Benchmark.start("Insert new UserInfo Batch " + batch.size());
+                insertNewUserData(batch);
+                Benchmark.stop("Insert new UserInfo Batch " + batch.size());
+            }
             Benchmark.stop("Insert new UserInfo multiple " + newUserdata.size());
         } finally {
             Benchmark.stop("Save UserInfo multiple " + data.size());
@@ -850,8 +856,7 @@ public class UsersTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public Map<Integer, Integer> getLoginTimes() throws SQLException {
         Benchmark.start("Get Logintimes");

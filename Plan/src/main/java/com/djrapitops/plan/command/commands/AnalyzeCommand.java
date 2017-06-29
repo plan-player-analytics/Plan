@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
@@ -15,8 +16,6 @@ import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -42,12 +41,19 @@ public class AnalyzeCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         if (!ConditionUtils.pluginHasViewCapability()) {
             sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "");
             return true;
         }
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+        if (!analysisCache.isAnalysisEnabled()) {
+            sender.sendMessage(Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "");
+            if (!analysisCache.isCached()) {
+                return true;
+            }
+        } else {
+            sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+        }
         if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
@@ -61,7 +67,7 @@ public class AnalyzeCommand extends SubCommand {
             @Override
             public void run() {
                 timesrun++;
-                if (analysisCache.isCached() && !analysisCache.isAnalysisBeingRun()) {
+                if (analysisCache.isCached() && (!analysisCache.isAnalysisBeingRun() || !analysisCache.isAnalysisEnabled())) {
                     sendAnalysisMessage(sender);
                     this.cancel();
                     return;
@@ -83,7 +89,7 @@ public class AnalyzeCommand extends SubCommand {
      *
      * @param sender Command sender.
      */
-    final public void sendAnalysisMessage(CommandSender sender) {
+    final public void sendAnalysisMessage(ISender sender) {
         boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
         sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
         if (textUI) {

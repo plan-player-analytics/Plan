@@ -1,7 +1,11 @@
 package com.djrapitops.pluginbridge.plan.ontime;
 
+import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import me.edge209.OnTime.OnTimeAPI;
@@ -33,11 +37,11 @@ public class OntimeReferMonth extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
-        if (!offlinePlayer.hasPlayedBefore()) {
-            return "";
+        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
+        if (data == null) {
+            return parseContainer(modifierPrefix, "No Referrals.");
         }
-        String name = offlinePlayer.getName();
+        String name = data.getName();
         long referTotal = OnTimeAPI.getPlayerTimeData(name, OnTimeAPI.data.MONTHREFER);
         if (referTotal == -1) {
             return parseContainer(modifierPrefix, "No Referrals.");
@@ -47,11 +51,11 @@ public class OntimeReferMonth extends PluginData {
 
     @Override
     public Serializable getValue(UUID uuid) {
-        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
-        if (!offlinePlayer.hasPlayedBefore()) {
+        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
+        if (data == null) {
             return -1L;
         }
-        String name = offlinePlayer.getName();
+        String name = data.getName();
         long referTotal = OnTimeAPI.getPlayerTimeData(name, OnTimeAPI.data.MONTHREFER);
         if (referTotal == -1) {
             return -1L;

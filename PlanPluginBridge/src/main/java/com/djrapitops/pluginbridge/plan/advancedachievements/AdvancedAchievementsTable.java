@@ -24,7 +24,7 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class AdvancedAchievementsTable extends PluginData {
 
-    private AdvancedAchievementsAPI aaAPI;
+    private final AdvancedAchievementsAPI aaAPI;
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.

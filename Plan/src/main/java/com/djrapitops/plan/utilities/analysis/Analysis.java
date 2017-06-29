@@ -451,4 +451,13 @@ public class Analysis {
     public boolean isAnalysisBeingRun() {
         return taskId != -1;
     }
+    
+    public void setTaskId(int id) {
+        if (id == -2) {
+            plugin.processStatus().setStatus("Analysis", "Temporarily Disabled");
+        } else if (id == -1) {
+            plugin.processStatus().setStatus("Analysis", "Enabled");
+        }
+        taskId = id;
+    } 
 }

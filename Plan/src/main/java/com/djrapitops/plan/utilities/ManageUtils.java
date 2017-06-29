@@ -75,6 +75,7 @@ public class ManageUtils {
             List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
             clearAndCopyToDB.saveMultipleUserData(allUserData);
             clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());
+            clearAndCopyToDB.getTpsTable().saveTPSData(copyFromDB.getTpsTable().getTPSData());
         } catch (SQLException | NullPointerException e) {
             Log.toLog("ManageUtils.move", e);
             return false;

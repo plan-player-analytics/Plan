@@ -2,12 +2,6 @@ package com.djrapitops.pluginbridge.plan.towny;
 
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import com.djrapitops.pluginbridge.plan.Hook;
-import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.API;
 
 /**
@@ -30,23 +24,8 @@ public class TownyHook extends Hook {
     public TownyHook(HookHandler hookH) throws NoClassDefFoundError {
         super("com.palmergames.bukkit.towny.Towny");
         if (enabled) {
-            hookH.addPluginDataSource(new TownyTable(getTopTowns()));
+            hookH.addPluginDataSource(new TownyTable());
             hookH.addPluginDataSource(new TownyTown());
         }
-    }
-
-    /**
-     * Used to get the list of Towns and filter out unnessecary ones.
-     *
-     * @return List of Towns sorted by amount of residents.
-     */
-    public List<Town> getTopTowns() {
-        List<Town> topTowns = TownyUniverse.getDataSource().getTowns();
-        Collections.sort(topTowns, new TownComparator());
-        List<String> hide = Settings.HIDE_TOWNS.getStringList();
-        List<Town> townNames = topTowns.stream()
-                .filter(town -> !hide.contains(town.getName()))
-                .collect(Collectors.toList());
-        return townNames;
     }
 }

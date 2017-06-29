@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
@@ -17,9 +18,6 @@ import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -46,7 +44,7 @@ public class InspectCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         if (!ConditionUtils.pluginHasViewCapability()) {
             sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_INSPECT + "");
             return true;
@@ -96,7 +94,7 @@ public class InspectCommand extends SubCommand {
         return true;
     }
 
-    private void sendInspectMsg(CommandSender sender, String playerName, UUID uuid) throws CommandException {
+    private void sendInspectMsg(ISender sender, String playerName, UUID uuid) {
         sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
         if (Settings.USE_ALTERNATIVE_UI.isTrue()) {
             sender.sendMessage(TextUI.getInspectMessages(uuid));

@@ -5,16 +5,19 @@
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
+import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
 import net.milkbowl.vault.permission.Permission;
 import org.apache.commons.lang3.StringUtils;
-import static org.bukkit.Bukkit.getOfflinePlayers;
 import org.bukkit.OfflinePlayer;
 
 /**
@@ -49,7 +52,8 @@ public class PermGroupTable extends PluginData {
 
     private String getTableLines() {
         Map<String, Integer> groups = new HashMap<>();
-        for (OfflinePlayer p : getOfflinePlayers()) {
+        List<FakeOfflinePlayer> userData = Plan.getPlanAPI().getInspectCachedUserData().stream().map(u -> new FakeOfflinePlayer(u)).collect(Collectors.toList());
+        for (OfflinePlayer p : userData) {
             String group = permSys.getPrimaryGroup(null, p);
             if (!groups.containsKey(group)) {
                 groups.put(group, 0);

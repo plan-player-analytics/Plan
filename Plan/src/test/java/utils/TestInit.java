@@ -6,6 +6,7 @@
 package test.java.utils;
 
 import com.djrapitops.javaplugin.status.ProcessStatus;
+import com.djrapitops.javaplugin.utilities.BenchmarkUtil;
 import com.djrapitops.javaplugin.utilities.log.BukkitLog;
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,6 +73,8 @@ public class TestInit {
             when(planMock.getPluginLogger()).thenReturn(log);
             ProcessStatus<Plan> process = new ProcessStatus(planMock);
             when(planMock.processStatus()).thenReturn(process);
+            BenchmarkUtil bench = new BenchmarkUtil();
+            when(planMock.benchmark()).thenReturn(bench);
             Plan.setInstance(planMock);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
             Settings.DEBUG.setValue(true);
