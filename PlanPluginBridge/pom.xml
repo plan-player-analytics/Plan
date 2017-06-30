@@ -14,6 +14,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>viaversion-repo</id>
+            <url>https://repo.viaversion.com</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -89,11 +93,28 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-	    <groupId>com.github.TechFortress</groupId>
-	    <artifactId>GriefPrevention</artifactId>
-	    <version>16.7.1</version>
+            <groupId>com.github.TechFortress</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>16.7.1</version>
             <scope>provided</scope>
-	</dependency>
+        </dependency>
+        <dependency>
+            <groupId>litebans</groupId>
+            <artifactId>api</artifactId>
+            <version>0.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.minimum</groupId>
+            <artifactId>minecraft.superbvote</artifactId>
+            <version>0.3.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>us.myles</groupId>
+            <artifactId>viaversion</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

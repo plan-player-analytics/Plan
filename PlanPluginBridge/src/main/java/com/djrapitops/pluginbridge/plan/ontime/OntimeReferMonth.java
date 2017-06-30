@@ -1,16 +1,12 @@
 package com.djrapitops.pluginbridge.plan.ontime;
 
-import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import me.edge209.OnTime.OnTimeAPI;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import org.bukkit.OfflinePlayer;
 
 /**
  * PluginData class for Ontime-plugin.

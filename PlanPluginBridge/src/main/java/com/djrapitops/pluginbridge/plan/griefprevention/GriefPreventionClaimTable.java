@@ -27,7 +27,7 @@ public class GriefPreventionClaimTable extends PluginData {
         this.dataStore = dataStore;
         String location = Html.FONT_AWESOME_ICON.parse("map-marker") + " Location";
         String size = Html.FONT_AWESOME_ICON.parse("map-o") + " Area";
-        super.setPrefix(Html.TABLE_START_3.parse(location, size));
+        super.setPrefix(Html.TABLE_START_2.parse(location, size));
         super.setSuffix(Html.TABLE_END.parse());
     }
 
@@ -48,7 +48,7 @@ public class GriefPreventionClaimTable extends PluginData {
                 .forEach(claim -> {
                     String location = FormattingUtils.formatLocation(claim.getGreaterBoundaryCorner());
                     String area = claim.getArea() + "";
-                    html.append(Html.TABLELINE_3.parse(location, area));
+                    html.append(Html.TABLELINE_2.parse(location, area));
                 });
         return html.toString();
     }

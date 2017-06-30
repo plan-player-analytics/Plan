@@ -14,6 +14,9 @@ softdepend:
 - Jobs
 - ASkyBlock
 - GriefPrevention
+- LiteBans
+- SuperbVote
+- ViaVersion
 
 commands:
   plan:
