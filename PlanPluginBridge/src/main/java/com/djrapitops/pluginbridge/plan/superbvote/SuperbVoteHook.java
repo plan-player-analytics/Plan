@@ -29,7 +29,8 @@ public class SuperbVoteHook extends Hook {
         super("io.minimum.minecraft.superbvote.SuperbVote");
         if (enabled) {
             VoteStorage store = getPlugin(SuperbVote.class).getVoteStorage();
-            hookH.addPluginDataSource(null);
+            hookH.addPluginDataSource(new SuperbVoteVotes(store));
+            hookH.addPluginDataSource(new SuperbVoteVotesTable(store));
         }
     }
 }

@@ -50,7 +50,7 @@ public class ViaVersionVersion extends PluginData {
         try {
             int protocolVersion = table.getProtocolVersion(uuid);
             if (protocolVersion == -1) {
-                parseContainer(modifierPrefix, "Not Yet Known");
+                return parseContainer(modifierPrefix, "Not Yet Known");
             }
             return parseContainer(modifierPrefix, Protocol.getMCVersion(protocolVersion));
         } catch (SQLException ex) {

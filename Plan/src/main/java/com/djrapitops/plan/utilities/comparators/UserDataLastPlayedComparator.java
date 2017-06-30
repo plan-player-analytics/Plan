@@ -15,6 +15,6 @@ import main.java.com.djrapitops.plan.data.UserData;
 public class UserDataLastPlayedComparator implements Comparator<UserData> {
     @Override
     public int compare(UserData u1, UserData u2) {
-        return Long.compare(u1.getLastPlayed(), u2.getLastPlayed());
+        return Long.compare(u2.getLastPlayed(), u1.getLastPlayed());
     }
 }

@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
@@ -118,7 +117,7 @@ public class ExportUtility {
         }
         String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getHtmlStringFromResource("analysis.html"),
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
-                .replace(HtmlUtils.getInspectUrl(""), "./player/");
+                .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");
         if (analysisHtmlFile.exists()) {
             analysisHtmlFile.delete();

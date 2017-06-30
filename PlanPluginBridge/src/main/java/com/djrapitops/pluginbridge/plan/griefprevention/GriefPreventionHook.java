@@ -26,7 +26,7 @@ public class GriefPreventionHook extends Hook {
      * @throws NoClassDefFoundError when the plugin class can not be found.
      */
     public GriefPreventionHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("me.ryanhamshire.GriefPrevention");
+        super("me.ryanhamshire.GriefPrevention.GriefPrevention");
         if (enabled) {
             DataStore dataStore = getPlugin(GriefPrevention.class).dataStore;
             hookH.addPluginDataSource(new GriefPreventionClaims(dataStore));

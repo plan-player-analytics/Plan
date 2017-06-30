@@ -119,9 +119,9 @@ public class GMTimesTable extends Table {
         Map<Integer, Map<GameMode, Long>> times = new HashMap<>();
         try {
             statement = prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            Map<GameMode, Long> gmTimes = new HashMap<>();
+            set = statement.executeQuery();            
             while (set.next()) {
+                Map<GameMode, Long> gmTimes = new HashMap<>();
                 int id = set.getInt(columnUserID);
                 if (!userIds.contains(id)) {
                     continue;
