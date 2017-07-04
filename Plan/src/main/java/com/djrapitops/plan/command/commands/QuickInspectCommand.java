@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -45,7 +46,7 @@ public class QuickInspectCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
-        final RslTask inspectTask = new RslBukkitRunnable<Plan>("QinspectTask") {
+        final RslTask inspectTask = plugin.getRunnableFactory().createNew(new RslRunnable("QinspectTask") {
             @Override
             public void run() {
                 UUID uuid = ConditionUtils.getUUID(playerName);
@@ -64,7 +65,7 @@ public class QuickInspectCommand extends SubCommand {
                 }
                 sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
                 inspectCache.cache(uuid);
-                final RslTask inspectMessageSenderTask = new RslBukkitRunnable<Plan>("QinspectMessageSenderTask") {
+                final RslTask inspectMessageSenderTask = plugin.getRunnableFactory().createNew(new RslRunnable("QinspectMessageSenderTask") {
                     private int timesrun = 0;
 
                     @Override
@@ -82,10 +83,10 @@ public class QuickInspectCommand extends SubCommand {
                             this.cancel();
                         }
                     }
-                }.runTaskTimer(1 * 20, 5 * 20);
+                }).runTaskTimer(1 * 20, 5 * 20);
                 this.cancel();
             }
-        }.runTaskAsynchronously();
+        }).runTaskAsynchronously();
         return true;
     }
 }

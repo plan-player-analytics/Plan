@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import com.djrapitops.javaplugin.utilities.FormattingUtils;
 import java.util.Arrays;
@@ -18,8 +19,6 @@ import main.java.com.djrapitops.plan.command.Condition;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This subcommand is used to search for a user, and to view all matches' data.
@@ -51,7 +50,7 @@ public class SearchCommand extends SubCommand {
             return true;
         }
         sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING + "");
-        final RslTask searchTask = new RslBukkitRunnable<Plan>("SearchTask: " + Arrays.toString(args)) {
+        final RslTask searchTask =plugin.getRunnableFactory().createNew(new RslRunnable("SearchTask: " + Arrays.toString(args)) {
             @Override
             public void run() {
                 try {
@@ -70,7 +69,7 @@ public class SearchCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }.runTaskAsynchronously();
+        }).runTaskAsynchronously();
         return true;
     }
 }

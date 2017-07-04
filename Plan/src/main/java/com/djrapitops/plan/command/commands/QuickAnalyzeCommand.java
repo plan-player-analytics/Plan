@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -56,7 +57,7 @@ public class QuickAnalyzeCommand extends SubCommand {
             analysisCache.updateCache();
         }
 
-        RslTask analysisMessageSenderTask = new RslBukkitRunnable<Plan>("QanalysisMessageSenderTask") {
+        RslTask analysisMessageSenderTask = plugin.getRunnableFactory().createNew(new RslRunnable("QanalysisMessageSenderTask") {
             private int timesrun = 0;
 
             @Override
@@ -74,7 +75,7 @@ public class QuickAnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(1 * 20, 5 * 20);
+        }).runTaskTimer(1 * 20, 5 * 20);
         return true;
     }
 }

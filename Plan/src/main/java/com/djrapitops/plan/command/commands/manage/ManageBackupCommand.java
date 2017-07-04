@@ -4,14 +4,13 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This manage subcommand is used to backup a database to a .db file.
@@ -62,7 +61,7 @@ public class ManageBackupCommand extends SubCommand {
                 return true;
             }
             final Database copyFromDB = database;
-            (new RslBukkitRunnable<Plan>("BackupTask") {
+            plugin.getRunnableFactory().createNew(new RslRunnable("BackupTask") {
                 @Override
                 public void run() {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());

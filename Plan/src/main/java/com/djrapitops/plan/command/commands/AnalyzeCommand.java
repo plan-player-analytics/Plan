@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.command.commands;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -61,7 +61,7 @@ public class AnalyzeCommand extends SubCommand {
             }
             analysisCache.updateCache();
         }
-        final RslTask task = new RslBukkitRunnable<Plan>("AnalysisMessageSenderTask") {
+        final RslTask task = plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new RslRunnable() {
             private int timesrun = 0;
 
             @Override
@@ -78,7 +78,7 @@ public class AnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(1 * 20, 5 * 20);
+        }).runTaskTimer(1 * 20, 5 * 20);
         return true;
     }
 

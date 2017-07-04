@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.Arrays;
 import java.util.List;
@@ -63,12 +63,12 @@ public class ManageImportCommand extends SubCommand {
             return true;
         }
 
-        String[] arguments = new String[args.length-1];
+        String[] arguments = new String[args.length - 1];
         for (int i = 1; i < args.length; i++) {
-            arguments[i-1] = args[i];
+            arguments[i - 1] = args[i];
         }
         final Importer importer = importPlugins.get(importFromPlugin);
-        RslTask asyncImportTask = new RslBukkitRunnable<Plan>("ImportTask") {
+        RslTask asyncImportTask = plugin.getRunnableFactory().createNew(new RslRunnable("ImportTask") {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
@@ -80,7 +80,7 @@ public class ManageImportCommand extends SubCommand {
                 }
                 this.cancel();
             }
-        }.runTaskAsynchronously();
+        }).runTaskAsynchronously();
         return true;
     }
 
@@ -88,7 +88,7 @@ public class ManageImportCommand extends SubCommand {
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
         Map<String, Importer> importers = ImportUtils.getImporters();
         for (String key : importers.keySet()) {
-            sender.sendMessage(Phrase.CMD_BALL+" "+key+": "+importers.get(key).getInfo());
+            sender.sendMessage(Phrase.CMD_BALL + " " + key + ": " + importers.get(key).getInfo());
         }
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
     }

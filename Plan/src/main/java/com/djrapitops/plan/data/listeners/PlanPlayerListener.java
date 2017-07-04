@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -57,7 +58,7 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
         Log.debug(uuid + ": PlayerJoinEvent");
-        RslTask asyncNewPlayerCheckTask = new RslBukkitRunnable<Plan>("NewPlayerCheckTask") {
+        RslTask asyncNewPlayerCheckTask = plugin.getRunnableFactory().createNew(new RslRunnable("NewPlayerCheckTask") {
             @Override
             public void run() {
                 LoginInfo loginInfo = new LoginInfo(uuid, MiscUtils.getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode(), 1);
@@ -72,7 +73,7 @@ public class PlanPlayerListener implements Listener {
                 Log.debug(uuid + ": PlayerJoinEvent_AsyncTask_END, New:" + isNewPlayer);
                 this.cancel();
             }
-        }.runTaskAsynchronously();
+        }).runTaskAsynchronously();
         Log.debug(uuid + ": PlayerJoinEvent_END");
     }
 

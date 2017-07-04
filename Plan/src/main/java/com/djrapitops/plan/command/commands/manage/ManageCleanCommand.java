@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -59,7 +60,7 @@ public class ManageCleanCommand extends SubCommand {
         }
 
         final Database clearThisDB = clearDB;
-        (new RslBukkitRunnable<Plan>("DBCleanTask") {
+        plugin.getRunnableFactory().createNew(new RslRunnable("DBCleanTask") {
             @Override
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());

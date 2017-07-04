@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -13,8 +14,6 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This manage subcommand is used to move all data from one database to another.
@@ -89,7 +88,7 @@ public class ManageMoveCommand extends SubCommand {
 
         final Database moveFromDB = fromDatabase;
         final Database moveToDB = toDatabase;
-        (new RslBukkitRunnable<Plan>("DBMoveTask") {
+        plugin.getRunnableFactory().createNew(new RslRunnable("DBMoveTask") {
             @Override
             public void run() {
                 final Collection<UUID> uuids = ManageUtils.getUUIDS(moveFromDB);

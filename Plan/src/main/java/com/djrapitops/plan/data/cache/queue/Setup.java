@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import main.java.com.djrapitops.plan.Plan;
 
 /**
@@ -10,7 +9,7 @@ import main.java.com.djrapitops.plan.Plan;
  * @param <T> Object this queue consumes.
  */
 public abstract class Setup<T> {
-
+    
     private final Consumer<T>[] consumers;
 
     /**
@@ -21,13 +20,13 @@ public abstract class Setup<T> {
     public Setup(Consumer<T>... consumers) {
         this.consumers = consumers;
     }
-
+    
     void go() {
         for (Consumer<T> consumer : consumers) {
-            consumer.runTaskAsynchronously();
+            Plan.getInstance().getRunnableFactory().createNew(consumer).runTaskAsynchronously();
         }
     }
-
+    
     void stop() {
         for (Consumer<T> consumer : consumers) {
             consumer.stop();

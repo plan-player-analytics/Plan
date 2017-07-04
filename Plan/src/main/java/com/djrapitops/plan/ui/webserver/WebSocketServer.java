@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +61,7 @@ public class WebSocketServer {
                 System.exit(1);
             }
             //Run server in seperate thread
-            (new RslBukkitRunnable<Plan>("WebServerTask") {
+            plugin.getRunnableFactory().createNew(new RslRunnable("WebServerTask") {
                 @Override
                 public void run() {
                     while (!shutdown) {

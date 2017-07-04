@@ -75,7 +75,7 @@ public class TestInit {
             when(planMock.processStatus()).thenReturn(process);
             BenchmarkUtil bench = new BenchmarkUtil();
             when(planMock.benchmark()).thenReturn(bench);
-            Plan.setInstance(planMock);
+            Plan.setInstance(Plan.class, planMock);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
             Settings.DEBUG.setValue(true);
             return true;

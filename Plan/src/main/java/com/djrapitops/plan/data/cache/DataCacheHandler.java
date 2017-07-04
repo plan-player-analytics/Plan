@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.cache;
 
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,6 +34,13 @@ import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeCompa
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
+import static org.bukkit.Bukkit.getOfflinePlayer;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -115,7 +123,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void startQueues() {
         clearTask = new DataCacheClearQueue(this);
-        saveTask = new DataCacheSaveQueue(plugin, clearTask);
+        saveTask = new DataCacheSaveQueue(plugin, this);
         getTask = new DataCacheGetQueue(plugin);
         processTask = new DataCacheProcessQueue(this);
     }
@@ -139,7 +147,7 @@ public class DataCacheHandler extends LocationCache {
         } else {
             clearAfterXsaves = configValue;
         }
-        RslTask asyncPeriodicCacheSaveTask = new RslBukkitRunnable<Plan>("PeriodicCacheSaveTask") {
+        RslTask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new RslRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
 
             @Override
@@ -159,12 +167,12 @@ public class DataCacheHandler extends LocationCache {
                     saveUnsavedTPSHistory();
                     timesSaved++;
                 } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + "(" + this.getTaskName() + ")", e);
+                    Log.toLog(this.getClass().getName() + "(" + this.getName() + ")", e);
                 } finally {
                     periodicTaskIsSaving = false;
                 }
             }
-        }.runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
+        }).runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
     }
 
     /**
@@ -518,7 +526,7 @@ public class DataCacheHandler extends LocationCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        RslTask asyncReloadCacheUpdateTask = (new RslBukkitRunnable<Plan>("ReloadCacheUpdateTask") {
+        RslTask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new RslRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {

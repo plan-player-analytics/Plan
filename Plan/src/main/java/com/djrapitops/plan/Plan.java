@@ -22,6 +22,7 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.javaplugin.api.ColorScheme;
 import com.djrapitops.javaplugin.RslPlugin;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -114,7 +115,7 @@ public class Plan extends RslPlugin<Plan> {
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
         registerListeners();
-        new TPSCountTimer(this).runTaskTimer(1000, 20);
+        getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, 20);
 
         registerCommand(new PlanCommand(this));
 
@@ -231,7 +232,7 @@ public class Plan extends RslPlugin<Plan> {
     }
 
     private void startAnalysisRefreshTask(int analysisRefreshMinutes) throws IllegalStateException, IllegalArgumentException {
-        RslTask task = new RslBukkitRunnable<Plan>("PeriodicalAnalysisTask") {
+        RslTask task = getRunnableFactory().createNew("PeriodicalAnalysisTask", new RslRunnable() {
             @Override
             public void run() {
                 if (!analysisCache.isCached()) {
@@ -240,19 +241,19 @@ public class Plan extends RslPlugin<Plan> {
                     analysisCache.updateCache();
                 }
             }
-        }.runTaskTimerAsynchronously(analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
+        }).runTaskTimerAsynchronously(analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
     }
 
     private void startBootAnalysisTask() throws IllegalStateException, IllegalArgumentException {
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-        RslTask bootAnalysisTask = new RslBukkitRunnable<Plan>("BootAnalysisTask") {
+        RslTask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new RslRunnable() {
             @Override
             public void run() {
                 Log.info(Phrase.ANALYSIS_BOOT + "");
                 analysisCache.updateCache();
                 this.cancel();
             }
-        }.runTaskLaterAsynchronously(30 * 20);
+        }).runTaskLaterAsynchronously(30 * 20);
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
     }
 
@@ -429,6 +430,6 @@ public class Plan extends RslPlugin<Plan> {
      * @return this object.
      */
     public static Plan getInstance() {
-        return (Plan) getPluginInstance();
+        return (Plan) getPluginInstance(Plan.class);
     }
 }

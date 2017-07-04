@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -67,7 +68,7 @@ public abstract class SQLDB extends Database {
      */
     public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
-        new RslBukkitRunnable<Plan>("DBConnectionPingTask " + getName()) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("DBConnectionPingTask " + getName()) {
             @Override
             public void run() {
                 try {
@@ -78,7 +79,7 @@ public abstract class SQLDB extends Database {
                     connection = getNewConnection();
                 }
             }
-        }.runTaskTimerAsynchronously(60 * 20, 60 * 20);
+        }).runTaskTimerAsynchronously(60 * 20, 60 * 20);
     }
 
     /**
@@ -150,7 +151,7 @@ public abstract class SQLDB extends Database {
      *
      */
     public void convertBukkitDataToDB() {
-        new RslBukkitRunnable<Plan>("BukkitDataConversionTask") {
+        plugin.getRunnableFactory().createNew(new RslRunnable("BukkitDataConversionTask") {
             @Override
             public void run() {
                 try {
@@ -177,7 +178,7 @@ public abstract class SQLDB extends Database {
                     this.cancel();
                 }
             }
-        }.runTaskAsynchronously();
+        }).runTaskAsynchronously();
     }
 
     /**

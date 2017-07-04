@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public class InspectCommand extends SubCommand {
             return true;
         }
         String playerName = MiscUtils.getPlayerName(args, sender);
-        final RslTask inspectTask = new RslBukkitRunnable<Plan>("InspectTask") {
+        final RslTask inspectTask = plugin.getRunnableFactory().createNew(new RslRunnable("InspectTask") {
             @Override
             public void run() {
                 UUID uuid = ConditionUtils.getUUID(playerName);
@@ -69,7 +70,7 @@ public class InspectCommand extends SubCommand {
                 }
                 sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
                 inspectCache.cache(uuid);
-                final RslTask inspectMessageSenderTask = new RslBukkitRunnable<Plan>("InspectMessageSenderTask") {
+                final RslTask inspectMessageSenderTask = plugin.getRunnableFactory().createNew(new RslRunnable("InspectMessageSenderTask") {
                     private int timesrun = 0;
 
                     @Override
@@ -87,10 +88,10 @@ public class InspectCommand extends SubCommand {
                         }
                     }
 
-                }.runTaskTimer(1 * 20, 5 * 20);
+                }).runTaskTimer(1 * 20, 5 * 20);
                 this.cancel();
             }            
-        }.runTaskAsynchronously();
+        }).runTaskAsynchronously();
         return true;
     }
 

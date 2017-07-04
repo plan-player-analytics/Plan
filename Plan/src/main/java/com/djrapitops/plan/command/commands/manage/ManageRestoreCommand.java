@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.io.File;
 import java.util.Arrays;
@@ -16,8 +17,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This manage subcommand is used to restore a backup.db file in the
@@ -72,7 +71,7 @@ public class ManageRestoreCommand extends SubCommand {
                 return true;
             }
             final Database copyToDB = database;
-            RslTask asyncRestoreTask = new RslBukkitRunnable<Plan>("RestoreTask") {
+            RslTask asyncRestoreTask = plugin.getRunnableFactory().createNew(new RslRunnable("RestoreTask") {
                 @Override
                 public void run() {
                     String backupDBName = args[0];
@@ -109,7 +108,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
                     this.cancel();
                 }
-            }.runTaskAsynchronously();
+            }).runTaskAsynchronously();
         } catch (NullPointerException e) {
             sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
         }

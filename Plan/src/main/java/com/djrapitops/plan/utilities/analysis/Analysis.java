@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.ArrayList;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -77,7 +78,7 @@ public class Analysis {
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START + "");
         // Async task for Analysis
-        RslTask asyncAnalysisTask = (new RslBukkitRunnable<Plan>("AnalysisTask") {
+        RslTask asyncAnalysisTask = plugin.getRunnableFactory().createNew(new RslRunnable("AnalysisTask") {
             @Override
             public void run() {
                 taskId = this.getTaskId();

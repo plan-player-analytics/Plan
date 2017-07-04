@@ -16,7 +16,7 @@ public class Log {
      * @param message "Message" will show up as [INFO][Plan]: Message
      */
     public static void info(String message) {
-        Plan.getPluginInstance().getPluginLogger().info(message);
+        Plan.getInstance().getPluginLogger().info(message);
     }
 
     /**

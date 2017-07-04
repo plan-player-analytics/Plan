@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.task.RslRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import main.java.com.djrapitops.plan.Plan;
@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
  *
  * @author Rsl1122
  */
-public class TPSCountTimer extends RslBukkitRunnable<Plan> {
+public class TPSCountTimer extends RslRunnable {
 
     private long lastCheckNano;
     private final Plan plugin;
