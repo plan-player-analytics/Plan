@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
@@ -13,9 +14,11 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
 
 /**
@@ -42,26 +45,33 @@ public class AnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!ConditionUtils.pluginHasViewCapability()) {
-            sender.sendMessage(Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "");
+        if (!Check.ifTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
             return true;
         }
-        if (!analysisCache.isAnalysisEnabled()) {
-            sender.sendMessage(Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "");
+        if (!Check.ifTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
             if (!analysisCache.isCached()) {
                 return true;
             }
-        } else {
-            sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         }
-        if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
+
+        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+        updateCache();
+        runMessageSenderTask(sender);
+        return true;
+    }
+
+    private void updateCache() {
+        if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
                 plugin.getServer().getScheduler().cancelTask(bootAnID);
             }
             analysisCache.updateCache();
         }
-        final RslTask task = plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new RslRunnable() {
+    }
+
+    private void runMessageSenderTask(ISender sender) {
+        plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new RslRunnable() {
             private int timesrun = 0;
 
             @Override
@@ -78,8 +88,7 @@ public class AnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }).runTaskTimer(1 * 20, 5 * 20);
-        return true;
+        }).runTaskTimer(TimeAmount.SECOND.ticks(), 5 * TimeAmount.SECOND.ticks());
     }
 
     /**
@@ -89,7 +98,7 @@ public class AnalyzeCommand extends SubCommand {
      *
      * @param sender Command sender.
      */
-    final public void sendAnalysisMessage(ISender sender) {
+    private void sendAnalysisMessage(ISender sender) {
         boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
         sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
         if (textUI) {
@@ -103,13 +112,17 @@ public class AnalyzeCommand extends SubCommand {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                Player player = (Player) sender;
-                Bukkit.getServer().dispatchCommand(
-                        Bukkit.getConsoleSender(),
-                        "tellraw " + player.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                sendLink(sender, url);
             }
         }
         sender.sendMessage(Phrase.CMD_FOOTER + "");
+    }
+
+    @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
+    private void sendLink(ISender sender, String url) throws CommandException {
+        plugin.getServer().dispatchCommand(
+                Bukkit.getConsoleSender(),
+                "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
+                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
     }
 }

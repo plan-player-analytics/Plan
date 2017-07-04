@@ -34,12 +34,14 @@ public class SessionData {
 
     /**
      * Constructor for copying the object.
+     *
      * @param s SessionData to copy.
      */
     public SessionData(SessionData s) {
         this.sessionStart = s.getSessionStart();
         this.sessionEnd = s.getSessionEnd();
     }
+
     /**
      * Ends the session with given end point.
      *

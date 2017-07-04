@@ -1,23 +1,21 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
-import main.java.com.djrapitops.plan.command.Condition;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This command is used to cache UserData to InspectCache and to view some of
@@ -46,47 +44,50 @@ public class QuickInspectCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
-        final RslTask inspectTask = plugin.getRunnableFactory().createNew(new RslRunnable("QinspectTask") {
+        plugin.getRunnableFactory().createNew(new RslRunnable("QinspectTask") {
             @Override
             public void run() {
-                UUID uuid = ConditionUtils.getUUID(playerName);
-                Condition[] preConditions = new Condition[]{
-                    new Condition(ConditionUtils.uuidIsValid(uuid), Phrase.USERNAME_NOT_VALID.toString()),
-                    new Condition(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString()),
-                    new Condition(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString())
-                };
-
-                for (Condition condition : preConditions) {
-                    if (!condition.pass()) {
-                        sender.sendMessage(condition.getFailMsg());
-                        this.cancel();
+                try {
+                    UUID uuid = ConditionUtils.getUUID(playerName);
+                    if (!Check.ifTrue(Verify.notNull(uuid), Phrase.USERNAME_NOT_VALID.toString(), sender)) {
                         return;
                     }
-                }
-                sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-                inspectCache.cache(uuid);
-                final RslTask inspectMessageSenderTask = plugin.getRunnableFactory().createNew(new RslRunnable("QinspectMessageSenderTask") {
-                    private int timesrun = 0;
-
-                    @Override
-                    public void run() {
-                        timesrun++;
-                        if (inspectCache.isCached(uuid)) {
-                            sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
-                            sender.sendMessage(TextUI.getInspectMessages(uuid));
-                            sender.sendMessage(Phrase.CMD_FOOTER + "");
-                            this.cancel();
-                        }
-                        if (timesrun > 10) {
-                            Log.debug("Command Timeout Message, QuickInspect.");
-                            sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Qinspect"));
-                            this.cancel();
-                        }
+                    if (!Check.ifTrue(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString(), sender)) {
+                        return;
                     }
-                }).runTaskTimer(1 * 20, 5 * 20);
-                this.cancel();
+                    if (!Check.ifTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
+                        return;
+                    }
+                    sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+                    inspectCache.cache(uuid);
+                    runMessageSenderTask(uuid, sender, playerName);
+                } finally {
+                    this.cancel();
+                }
             }
         }).runTaskAsynchronously();
         return true;
+    }
+
+    private void runMessageSenderTask(UUID uuid, ISender sender, String playerName) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("QinspectMessageSenderTask") {
+            private int timesrun = 0;
+
+            @Override
+            public void run() {
+                timesrun++;
+                if (inspectCache.isCached(uuid)) {
+                    sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
+                    sender.sendMessage(TextUI.getInspectMessages(uuid));
+                    sender.sendMessage(Phrase.CMD_FOOTER + "");
+                    this.cancel();
+                }
+                if (timesrun > 10) {
+                    Log.debug("Command Timeout Message, QuickInspect.");
+                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Qinspect"));
+                    this.cancel();
+                }
+            }
+        }).runTaskTimer(TimeAmount.SECOND.ticks(), 5 * TimeAmount.SECOND.ticks());
     }
 }

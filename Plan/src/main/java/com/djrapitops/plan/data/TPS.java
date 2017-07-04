@@ -92,6 +92,6 @@ public class TPS {
 
     @Override
     public String toString() {
-        return "TPS{" + date + "|" + tps + "|" + players+'}';
+        return "TPS{" + date + "|" + tps + "|" + players + '}';
     }
 }

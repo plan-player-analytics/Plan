@@ -54,9 +54,9 @@ public class HtmlUtils {
      * @return
      */
     public static String getServerAnalysisUrlWithProtocol() {
-        return Settings.LINK_PROTOCOL.toString()+":"+getServerAnalysisUrl();
+        return Settings.LINK_PROTOCOL.toString() + ":" + getServerAnalysisUrl();
     }
-    
+
     /**
      *
      * @return
@@ -69,7 +69,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/"//" + ip + "/" + securityCode + "/server";
+        String url = /*"http:*/ "//" + ip + "/" + securityCode + "/server";
         return url;
     }
 
@@ -79,9 +79,9 @@ public class HtmlUtils {
      * @return
      */
     public static String getInspectUrlWithProtocol(String playerName) {
-        return Settings.LINK_PROTOCOL.toString()+":"+getInspectUrl(playerName);
+        return Settings.LINK_PROTOCOL.toString() + ":" + getInspectUrl(playerName);
     }
-    
+
     /**
      *
      * @param playerName
@@ -95,7 +95,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/"//" + ip + "/" + securityCode + "/player/" + playerName;
+        String url = /*"http:*/ "//" + ip + "/" + securityCode + "/player/" + playerName;
         return url;
     }
 
@@ -133,7 +133,7 @@ public class HtmlUtils {
         if (!sizeIsEvenNumber) {
             int lastIndex = pluginNames.size() - 1;
             String name = pluginNames.get(lastIndex);
-            html.append(Html.COLUMNS_DIV_WRAPPER.parse(Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)))+Html.COLUMN_DIV_WRAPPER.parse("")));
+            html.append(Html.COLUMNS_DIV_WRAPPER.parse(Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name))) + Html.COLUMN_DIV_WRAPPER.parse("")));
         }
         String returnValue = html.toString();
         if (returnValue.isEmpty()) {
@@ -158,7 +158,7 @@ public class HtmlUtils {
         html.append("</div>");
         return html.toString();
     }
-    
+
     /**
      *
      * @param string

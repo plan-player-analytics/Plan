@@ -61,7 +61,7 @@ public class LocationCacheTest {
         assertTrue("Didn't contain location", result.contains(loc));
         assertTrue("Didn't contain location", result.contains(loc2));
     }
-    
+
     /**
      *
      */

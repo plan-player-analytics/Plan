@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,17 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.*;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
@@ -32,16 +27,8 @@ import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.entity.Player;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * This Class contains the Cache.
@@ -434,7 +421,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void clearFromCache(UUID uuid) {
         Log.debug(uuid + ": Clear");
-        if (getOfflinePlayer(uuid).isOnline()) {
+        if (Verify.notNull(getPlayer(uuid))) {
             Log.debug(uuid + ": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
@@ -480,15 +467,6 @@ public class DataCacheHandler extends LocationCache {
      * @param player Player the new UserData is created for
      */
     public void newPlayer(Player player) {
-        newPlayer(NewPlayerCreator.createNewPlayer(player));
-    }
-
-    /**
-     * Creates a new UserData instance and saves it to the Database.
-     *
-     * @param player Player the new UserData is created for
-     */
-    public void newPlayer(OfflinePlayer player) {
         newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.javaplugin.utilities.UUIDFetcher;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,7 @@ import org.bukkit.OfflinePlayer;
  */
 public class API {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Construcor.
@@ -168,7 +169,7 @@ public class API {
      */
     public String getPlayerHtmlAsString(UUID uuid) {
         WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
+        if (Verify.notNull(server)) {
             return server.getDataReqHandler().getInspectHtml(uuid);
         }
         DataRequestHandler reqH = new DataRequestHandler(plugin);
@@ -203,7 +204,7 @@ public class API {
      */
     public String getAnalysisHtmlAsString() {
         WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
+        if (Verify.notNull(server)) {
             return server.getDataReqHandler().getAnalysisHtml();
         }
         DataRequestHandler reqH = new DataRequestHandler(plugin);
@@ -299,7 +300,8 @@ public class API {
      * users in Plan database, because all data is InspectCached before analysis
      * begins.
      *
-     * @return Map of all Data in the InspectCache with UUID of the player as the key.
+     * @return Map of all Data in the InspectCache with UUID of the player as
+     * the key.
      * @since 3.5.0
      */
     public Map<UUID, UserData> getInspectCachedUserDataMap() {

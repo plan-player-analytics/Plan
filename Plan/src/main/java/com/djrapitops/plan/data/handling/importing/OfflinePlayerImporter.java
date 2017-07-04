@@ -14,7 +14,7 @@ public class OfflinePlayerImporter extends Importer {
     public OfflinePlayerImporter() {
         super.setInfo("Import all players who have not joined since Plan was installed.");
     }
-    
+
     @Override
     public HandlingInfo importData(UUID uuid, String... args) {
         return null;

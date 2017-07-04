@@ -55,8 +55,7 @@ public class TPSTable extends Table {
 
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
         Benchmark.start("Get TPS");
@@ -79,7 +78,7 @@ public class TPSTable extends Table {
             Benchmark.stop("Get TPS");
         }
     }
-    
+
     /**
      *
      * @param data
@@ -91,7 +90,7 @@ public class TPSTable extends Table {
             saveTPSBatch(batch);
         }
     }
-    
+
     private void saveTPSBatch(List<TPS> batch) throws SQLException {
         PreparedStatement statement = null;
         try {
@@ -119,7 +118,7 @@ public class TPSTable extends Table {
             close(statement);
         }
     }
-    
+
     /**
      *
      * @throws SQLException
@@ -129,8 +128,8 @@ public class TPSTable extends Table {
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnDate + "<?)");
             // More than 8 days ago.
-            long eightDays = TimeAmount.DAY.ms()*8L;
-            statement.setLong(1, MiscUtils.getTime()-eightDays);
+            long eightDays = TimeAmount.DAY.ms() * 8L;
+            statement.setLong(1, MiscUtils.getTime() - eightDays);
             statement.execute();
         } finally {
             close(statement);

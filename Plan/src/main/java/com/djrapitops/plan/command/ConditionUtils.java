@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command;
 
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -43,23 +44,13 @@ public class ConditionUtils {
     }
 
     /**
-     * Check if uuid is not null.
-     *
-     * @param uuid UUID
-     * @return is the uuid null?
-     */
-    public static boolean uuidIsValid(UUID uuid) {
-        return uuid != null;
-    }
-
-    /**
      * Check if the player has played.
      *
      * @param uuid UUID of player
      * @return has the player played before?
      */
     public static boolean playerHasPlayed(UUID uuid) {
-        if (!uuidIsValid(uuid)) {
+        if (!Verify.notNull(uuid)) {
             return false;
         }
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);

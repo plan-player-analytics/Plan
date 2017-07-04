@@ -34,14 +34,14 @@ public class ImportUtils {
      */
     public static Map<String, Importer> getImporters() {
         Map<String, Importer> importers = new HashMap<>();
-        try {            
+        try {
             importers.put("ontime", new OnTimeImporter());
             importers.put("offline", new OfflinePlayerImporter());
         } catch (Throwable e) {
             Log.toLog("ImportUtils.getImporters", e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }
-        
+
         return importers;
     }
 }

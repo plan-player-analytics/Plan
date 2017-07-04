@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import java.io.Closeable;
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class WebSocketServer {
                             Response response = new Response(output, dataReqHandler);
                             response.setRequest(request);
                             response.sendStaticResource();
-                        } catch (IOException e) {                            
+                        } catch (IOException e) {
                         } finally {
                             Closeable[] close = new Closeable[]{input, output, socket};
                             for (Closeable closeable : close) {
@@ -86,7 +85,7 @@ public class WebSocketServer {
                                         closeable.close();
                                     }
                                 } catch (IOException e) {
-                                    
+
                                 }
                             }
                         }

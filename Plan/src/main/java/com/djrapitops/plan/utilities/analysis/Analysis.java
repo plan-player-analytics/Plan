@@ -1,11 +1,9 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.ArrayList;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +22,7 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -115,7 +114,7 @@ public class Analysis {
         List<TPS> tpsData = new ArrayList<>();
         try {
             tpsData = db.getTpsTable().getTPSData();
-            Log.debug("TPS Data Size: "+tpsData.size());
+            Log.debug("TPS Data Size: " + tpsData.size());
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
         }
@@ -153,7 +152,7 @@ public class Analysis {
             log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", Benchmark.stop("Analysis Fetch Phase") + ""));
             String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
             analysisData.setSortablePlayersTable(playersTable);
-            
+
             analysisData.setTpsData(TPSGraphCreator.generateDataArray(tpsData, now));
             analysisData.setAverageTPS(MathUtils.averageDouble(tpsData.stream().map(t -> t.getTps())));
 
@@ -452,7 +451,7 @@ public class Analysis {
     public boolean isAnalysisBeingRun() {
         return taskId != -1;
     }
-    
+
     public void setTaskId(int id) {
         if (id == -2) {
             plugin.processStatus().setStatus("Analysis", "Temporarily Disabled");
@@ -460,5 +459,5 @@ public class Analysis {
             plugin.processStatus().setStatus("Analysis", "Enabled");
         }
         taskId = id;
-    } 
+    }
 }

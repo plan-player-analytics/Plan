@@ -4,6 +4,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,7 +40,9 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (Permissions.IGNORE_COMMANDUSE.userHasThisPermission(event.getPlayer())) {
+        Player player = event.getPlayer();
+
+        if (player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission())) {
             Log.debug("Ignored command, player had ignore permission.");
             return;
         }

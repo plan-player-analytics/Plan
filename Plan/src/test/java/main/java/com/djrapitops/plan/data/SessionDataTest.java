@@ -17,7 +17,7 @@ import org.junit.Test;
 public class SessionDataTest {
 
     private SessionData test;
-    
+
     /**
      *
      */
@@ -57,7 +57,7 @@ public class SessionDataTest {
         test.endSession(1L);
         assertTrue("Supposed to be valid.", test.isValid());
     }
-    
+
     /**
      *
      */
@@ -65,7 +65,7 @@ public class SessionDataTest {
     public void testInvalid() {
         assertTrue("Supposed to be invalid.", !test.isValid());
     }
-    
+
     /**
      *
      */
@@ -75,7 +75,7 @@ public class SessionDataTest {
         test.endSession(2);
         assertTrue("Supposed to be invalid.", !test.isValid());
     }
-    
+
     /**
      *
      */
@@ -85,7 +85,7 @@ public class SessionDataTest {
         test.endSession(3);
         assertTrue("Supposed to be valid.", test.isValid());
     }
-    
+
     /**
      *
      */
@@ -95,7 +95,7 @@ public class SessionDataTest {
         String result = test.toString();
         assertEquals(exp, result);
     }
-    
+
     /**
      *
      */
@@ -106,7 +106,7 @@ public class SessionDataTest {
         long result = test.getLength();
         assertEquals(exp, result);
     }
-    
+
     /**
      *
      */

@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +16,8 @@ import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableKillsTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableSessionTableCreator;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.GameMode;
 
 /**

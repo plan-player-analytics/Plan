@@ -3,9 +3,7 @@ package main.java.com.djrapitops.plan.command.commands;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
 import com.djrapitops.javaplugin.utilities.FormattingUtils;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,8 +13,7 @@ import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.Condition;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.OfflinePlayer;
 
@@ -29,7 +26,6 @@ import org.bukkit.OfflinePlayer;
 public class SearchCommand extends SubCommand {
 
     private final Plan plugin;
-    private final InspectCacheHandler inspectCache;
 
     /**
      * Class Constructor.
@@ -39,18 +35,21 @@ public class SearchCommand extends SubCommand {
     public SearchCommand(Plan plugin) {
         super("search", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.SEARCH.getPermission(), Phrase.CMD_USG_SEARCH + "", Phrase.ARG_SEARCH + "");
         this.plugin = plugin;
-        inspectCache = plugin.getInspectCache();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        Condition c = new Condition(args.length != 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString());
-        if (c.pass()) {
-            sender.sendMessage(c.getFailMsg());
+        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
         sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING + "");
-        final RslTask searchTask =plugin.getRunnableFactory().createNew(new RslRunnable("SearchTask: " + Arrays.toString(args)) {
+        
+        runSearchTask(args, sender);
+        return true;
+    }
+
+    private void runSearchTask(String[] args, ISender sender) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("SearchTask: " + Arrays.toString(args)) {
             @Override
             public void run() {
                 try {
@@ -70,6 +69,5 @@ public class SearchCommand extends SubCommand {
                 }
             }
         }).runTaskAsynchronously();
-        return true;
     }
 }

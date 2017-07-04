@@ -180,7 +180,7 @@ public class LocationsTable extends Table {
                 i++;
             }
             if (commitRequired) {
-                Log.debug("Executing locations batch: "+i);
+                Log.debug("Executing locations batch: " + i);
                 statement.executeBatch();
             }
         } finally {
@@ -229,7 +229,7 @@ public class LocationsTable extends Table {
                 }
             }
             if (commitRequired) {
-                Log.debug("Executing locations batch: "+i);
+                Log.debug("Executing locations batch: " + i);
                 statement.executeBatch();
             }
         } finally {

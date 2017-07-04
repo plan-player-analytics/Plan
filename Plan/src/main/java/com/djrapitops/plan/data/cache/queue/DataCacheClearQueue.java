@@ -16,7 +16,7 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
  * @author Rsl1122
  * @since 3.0.0
  */
-public class DataCacheClearQueue extends Queue<UUID>{
+public class DataCacheClearQueue extends Queue<UUID> {
 
     /**
      * Class constructor, starts the new Thread for clearing.
@@ -93,6 +93,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 }
 
 class ClearSetup extends Setup<UUID> {
+
     public ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
         super(new ClearConsumer(q, handler));
     }

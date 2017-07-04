@@ -15,7 +15,7 @@ import org.junit.Test;
  * @author Rsl1122
  */
 public class KillDataTest {
-    
+
     /**
      *
      */
@@ -61,5 +61,5 @@ public class KillDataTest {
         KillData k = new KillData(uuid, 1, "TestWeapon", 100L);
         assertEquals(k.getVictimUserID(), 1);
     }
-    
+
 }

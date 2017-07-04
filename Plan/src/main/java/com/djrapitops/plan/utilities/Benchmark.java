@@ -8,7 +8,7 @@ import main.java.com.djrapitops.plan.Plan;
  * @author Rsl1122
  */
 public class Benchmark {
-    
+
     /**
      *
      * @param source
@@ -17,7 +17,7 @@ public class Benchmark {
         Plan.getInstance().benchmark().start(source);
         Log.debug(source);
     }
-    
+
     /**
      *
      * @param source
@@ -26,7 +26,7 @@ public class Benchmark {
     public static long stop(String source) {
         long ms = Plan.getInstance().benchmark().stop(source);
         if (ms != -1) {
-            Log.debug(source + " took " + ms+" ms");
+            Log.debug(source + " took " + ms + " ms");
         }
         return ms;
     }

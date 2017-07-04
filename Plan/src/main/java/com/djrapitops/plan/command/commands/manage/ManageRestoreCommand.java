@@ -3,11 +3,9 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -16,6 +14,7 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
 /**
@@ -41,77 +40,71 @@ public class ManageRestoreCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        try {
-            if (args.length < 2) {
-                sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE + ""));
-                return true;
-            }
-            String db = args[1].toLowerCase();
-            if (!db.equals("mysql") && !db.equals("sqlite")) {
-                sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_DB + db);
-                return true;
-            }
-            if (!Arrays.asList(args).contains("-a")) {
-                sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])));
-                return true;
-            }
-            Database database = null;
-            for (Database sqldb : plugin.getDatabases()) {
-                if (db.equalsIgnoreCase(sqldb.getConfigName())) {
-                    database = sqldb;
-                    if (!database.init()) {
-                        sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-                        return true;
-                    }
-                }
-            }
-            if (database == null) {
-                sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-                Log.error(db + " was null!");
-                return true;
-            }
-            final Database copyToDB = database;
-            RslTask asyncRestoreTask = plugin.getRunnableFactory().createNew(new RslRunnable("RestoreTask") {
-                @Override
-                public void run() {
-                    String backupDBName = args[0];
+        if (!Check.ifTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE + ""), sender)) {
+            return true;
+        }
+        String db = args[1].toLowerCase();
+        boolean isCorrectDB = "sqlite".equals(db) || "mysql".equals(db);
 
-                    File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (backupDBName.contains(".db") ? "" : ".db"));
-                    if (!backupDBFile.exists()) {
-                        sender.sendMessage(Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0]);
-                        this.cancel();
+        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + db, sender)) {
+            return true;
+        }
+        if (!Check.ifTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])), sender)) {
+            return true;
+        }
+
+        final Database database = ManageUtils.getDB(plugin, db);
+
+        if (!Check.ifTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+            Log.error(db + " was null!");
+            return true;
+        }
+
+        runRestoreTask(args, sender, database);
+        return true;
+    }
+
+    private void runRestoreTask(String[] args, ISender sender, final Database database) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("RestoreTask") {
+            @Override
+            public void run() {
+                try {
+                    String backupDBName = args[0];
+                    boolean containsDBFileExtension = backupDBName.contains(".db");
+
+                    File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
+                    if (!Check.ifTrue(Verify.exists(backupDBFile), Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0], sender)) {
                         return;
                     }
-                    if (backupDBName.contains(".db")) {
+
+                    if (containsDBFileExtension) {
                         backupDBName = backupDBName.replace(".db", "");
                     }
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
                     if (!backupDB.init()) {
                         sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-                        this.cancel();
                         return;
                     }
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                     final Collection<UUID> uuids = ManageUtils.getUUIDS(backupDB);
-                    if (uuids.isEmpty()) {
-                        sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")");
-                        this.cancel();
+                    if (!Check.ifTrue(!Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")", sender)) {
                         return;
                     }
-                    if (ManageUtils.clearAndCopy(copyToDB, backupDB, uuids)) {
-                        if (copyToDB.getConfigName().equals(plugin.getDB().getConfigName())) {
+                    if (ManageUtils.clearAndCopy(database, backupDB, uuids)) {
+                        if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
                             plugin.getHandler().getCommandUseFromDb();
                         }
                         sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
                     }
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                } finally {
                     this.cancel();
                 }
-            }).runTaskAsynchronously();
-        } catch (NullPointerException e) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-        }
-        return true;
+            }
+        }).runTaskAsynchronously();
     }
 }

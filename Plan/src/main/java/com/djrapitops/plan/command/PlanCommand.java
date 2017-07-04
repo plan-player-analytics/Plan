@@ -1,21 +1,9 @@
 package main.java.com.djrapitops.plan.command;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.StatusCommand;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.TreeCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
+import com.djrapitops.javaplugin.command.*;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
-import main.java.com.djrapitops.plan.command.commands.InfoCommand;
-import main.java.com.djrapitops.plan.command.commands.InspectCommand;
-import main.java.com.djrapitops.plan.command.commands.ManageCommand;
-import main.java.com.djrapitops.plan.command.commands.QuickAnalyzeCommand;
-import main.java.com.djrapitops.plan.command.commands.QuickInspectCommand;
-import main.java.com.djrapitops.plan.command.commands.ReloadCommand;
-import main.java.com.djrapitops.plan.command.commands.SearchCommand;
-import org.bukkit.command.Command;
+import main.java.com.djrapitops.plan.command.commands.*;
 
 /**
  * CommandExecutor for the /plan command, and all subcommands.
@@ -33,15 +21,8 @@ public class PlanCommand extends TreeCommand<Plan> {
      * @param plugin Current instance of Plan
      */
     public PlanCommand(Plan plugin) {
-        super(plugin, new SubCommand("plan", CommandType.CONSOLE, "") {
-            @Override
-            public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-                return true;
-            }
-        }, "plan");
+        super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
         super.setDefaultCommand("inspect");
-//        commands.add(new HelpCommand(plugin, this));
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.List;
 
 /**
@@ -84,10 +85,10 @@ public enum Settings {
     // StringList
     HIDE_FACTIONS("Customization.Plugins.Factions.HideFactions"),
     HIDE_TOWNS("Customization.Plugins.Towny.HideTowns");
-
+    
     private final String configPath;
     private Boolean value;
-
+    
     private Settings(String path) {
         this.configPath = path;
     }
@@ -98,12 +99,12 @@ public enum Settings {
      * @return Boolean value of the config setting, false if not boolean.
      */
     public boolean isTrue() {
-        if (value != null) {
+        if (Verify.notNull(value)) {
             return value;
         }
         return Plan.getInstance().getConfig().getBoolean(configPath);
     }
-
+    
     public void setValue(Boolean value) {
         this.value = value;
     }
@@ -126,7 +127,7 @@ public enum Settings {
     public int getNumber() {
         return Plan.getInstance().getConfig().getInt(configPath);
     }
-
+    
     public List<String> getStringList() {
         return Plan.getInstance().getConfig().getStringList(configPath);
     }

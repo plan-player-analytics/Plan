@@ -40,6 +40,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.*;
 import org.easymock.EasyMock;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +50,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -423,7 +423,7 @@ public class DatabaseTest {
         assertTrue("Doesn't contain /pla", commandUse.containsKey("/pla"));
         assertTrue("Doesn't contain /help", commandUse.containsKey("/help"));
     }
-    
+
     @Test
     public void testTPSSaving() throws SQLException {
         db.init();
@@ -437,7 +437,7 @@ public class DatabaseTest {
         tpsTable.saveTPSData(expected);
         assertEquals(expected, tpsTable.getTPSData());
     }
-    
+
     @Test
     public void testTPSClean() throws SQLException {
         db.init();
@@ -446,10 +446,10 @@ public class DatabaseTest {
         Random r = new Random();
         long now = System.currentTimeMillis();
         expected.add(new TPS(now, r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(now-1000L, r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(now-3000L, r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(now-(690000L * 1000L), r.nextDouble(), r.nextInt(100000000)));
-        TPS tooOldTPS = new TPS(now-(691400L * 1000L), r.nextDouble(), r.nextInt(100000000));
+        expected.add(new TPS(now - 1000L, r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(now - 3000L, r.nextDouble(), r.nextInt(100000000)));
+        expected.add(new TPS(now - (690000L * 1000L), r.nextDouble(), r.nextInt(100000000)));
+        TPS tooOldTPS = new TPS(now - (691400L * 1000L), r.nextDouble(), r.nextInt(100000000));
         expected.add(tooOldTPS);
         tpsTable.saveTPSData(expected);
         tpsTable.clean();

@@ -1,17 +1,19 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
@@ -39,25 +41,32 @@ public class QuickAnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!analysisCache.isAnalysisEnabled()) {
-            sender.sendMessage(Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "");
+        if (!Check.ifTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
+            return true;
+        }
+        if (!Check.ifTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
             if (!analysisCache.isCached()) {
                 return true;
             }
-        } else {
-            sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
         }
-        if (!analysisCache.isCached()) {
+        updateCache();
+
+        runMessageSenderTask(sender);
+        return true;
+    }
+
+    private void updateCache() {
+        if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
                 plugin.getServer().getScheduler().cancelTask(bootAnID);
             }
             analysisCache.updateCache();
-        } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
-            analysisCache.updateCache();
         }
+    }
 
-        RslTask analysisMessageSenderTask = plugin.getRunnableFactory().createNew(new RslRunnable("QanalysisMessageSenderTask") {
+    private void runMessageSenderTask(ISender sender) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("QanalysisMessageSenderTask") {
             private int timesrun = 0;
 
             @Override
@@ -75,7 +84,6 @@ public class QuickAnalyzeCommand extends SubCommand {
                     this.cancel();
                 }
             }
-        }).runTaskTimer(1 * 20, 5 * 20);
-        return true;
+        }).runTaskTimer(TimeAmount.SECOND.ticks(), 5 * TimeAmount.SECOND.ticks());
     }
 }

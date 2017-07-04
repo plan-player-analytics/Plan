@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Rsl1122
  */
 public class HandlingInfoTimeComparatorTest {
-    
+
     /**
      *
      */
@@ -46,7 +46,7 @@ public class HandlingInfoTimeComparatorTest {
         assertEquals(two, i.get(1));
         assertEquals(one, i.get(2));
         assertEquals(four, i.get(3));
-        
+
     }
-    
+
 }

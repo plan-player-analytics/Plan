@@ -377,7 +377,7 @@ public class RawAnalysisData {
     public Map<UUID, List<SessionData>> getSortedSessionData() {
         return sortedSessionData;
     }
-    
+
     /**
      *
      * @param uuid

@@ -17,7 +17,7 @@ import org.junit.Test;
  * @author Rsl1122
  */
 public class HandlingInfoTest {
-    
+
     /**
      *
      */
@@ -30,13 +30,13 @@ public class HandlingInfoTest {
     @Test
     public void testGetUuid() {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
-        HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L ) {
+        HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L) {
             @Override
             public boolean process(UserData data) {
                 return true;
             }
         };
-        assertEquals(uuid,i.getUuid());
+        assertEquals(uuid, i.getUuid());
     }
 
     /**
@@ -45,13 +45,13 @@ public class HandlingInfoTest {
     @Test
     public void testGetType() {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
-        HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L ) {
+        HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L) {
             @Override
             public boolean process(UserData data) {
                 return true;
             }
         };
-        assertEquals(InfoType.CHAT,i.getType());
+        assertEquals(InfoType.CHAT, i.getType());
     }
 
     /**
@@ -60,12 +60,12 @@ public class HandlingInfoTest {
     @Test
     public void testGetTime() {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
-        HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L ) {
+        HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L) {
             @Override
             public boolean process(UserData data) {
                 return true;
             }
         };
-        assertEquals(10L,i.getTime());
+        assertEquals(10L, i.getTime());
     }
 }

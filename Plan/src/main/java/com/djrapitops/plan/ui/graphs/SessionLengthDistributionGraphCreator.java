@@ -31,7 +31,7 @@ public class SessionLengthDistributionGraphCreator {
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(data);
         return generateDataArray(lengths);
     }
-    
+
     /**
      *
      * @param lengths

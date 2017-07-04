@@ -112,14 +112,14 @@ public class GMTimesTable extends Table {
             close(statement);
         }
     }
-    
+
     public Map<Integer, Map<GameMode, Long>> getGMTimes(Collection<Integer> userIds) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         Map<Integer, Map<GameMode, Long>> times = new HashMap<>();
         try {
             statement = prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();            
+            set = statement.executeQuery();
             while (set.next()) {
                 Map<GameMode, Long> gmTimes = new HashMap<>();
                 int id = set.getInt(columnUserID);
@@ -132,7 +132,7 @@ public class GMTimesTable extends Table {
                 try {
                     gmTimes.put(GameMode.SPECTATOR, set.getLong(columnSpectatorTime));
                 } catch (NoSuchFieldError e) {
-                }                
+                }
                 times.put(id, gmTimes);
             }
             return times;
@@ -245,7 +245,7 @@ public class GMTimesTable extends Table {
             }
             gamemodeTimes.keySet().removeAll(savedIDs);
         } finally {
-            close(statement);            
+            close(statement);
         }
         addNewGMTimesRows(gamemodeTimes);
         Benchmark.stop("Save GMTimes");

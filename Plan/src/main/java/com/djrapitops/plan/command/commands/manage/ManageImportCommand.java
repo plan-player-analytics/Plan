@@ -4,7 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.utilities.FormattingUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.handling.importing.ImportUtils;
 import main.java.com.djrapitops.plan.data.handling.importing.Importer;
+import main.java.com.djrapitops.plan.utilities.Check;
 import static org.bukkit.Bukkit.getOfflinePlayers;
 
 /**
@@ -41,55 +42,56 @@ public class ManageImportCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-
-        if (args.length < 1) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString() + " " + Phrase.USE_IMPORT);
+        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + " " + Phrase.USE_IMPORT, sender)) {
             return true;
         }
 
         String importFromPlugin = args[0].toLowerCase();
-        if (importFromPlugin.equals("list")) {
-            list(sender);
-            return true;
-        }
+
         Map<String, Importer> importPlugins = ImportUtils.getImporters();
-        if (!importPlugins.keySet().contains(importFromPlugin)) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin);
+        if (importFromPlugin.equals("list")) {
+            list(importPlugins, sender);
             return true;
         }
 
-        if (!ImportUtils.isPluginEnabled(importFromPlugin)) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin);
+        if (!Check.ifTrue(importPlugins.keySet().contains(importFromPlugin), Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin, sender)) {
+            return true;
+        }
+        if (!Check.ifTrue(ImportUtils.isPluginEnabled(importFromPlugin), Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin, sender)) {
             return true;
         }
 
-        String[] arguments = new String[args.length - 1];
-        for (int i = 1; i < args.length; i++) {
-            arguments[i - 1] = args[i];
-        }
+        String[] importArguments = FormattingUtils.removeFirstArgument(args);
+        
         final Importer importer = importPlugins.get(importFromPlugin);
-        RslTask asyncImportTask = plugin.getRunnableFactory().createNew(new RslRunnable("ImportTask") {
-            @Override
-            public void run() {
-                sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
-                List<UUID> uuids = Arrays.stream(getOfflinePlayers()).map(p -> p.getUniqueId()).collect(Collectors.toList());
-                if (importer.importData(uuids, arguments)) {
-                    sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
-                } else {
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
-                }
-                this.cancel();
-            }
-        }).runTaskAsynchronously();
+        runImportTask(sender, importer, importArguments);
         return true;
     }
 
-    private void list(ISender sender) {
+    private void runImportTask(ISender sender, final Importer importer, String... importArguments) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("ImportTask") {
+            @Override
+            public void run() {
+                try {
+                    sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
+                    List<UUID> uuids = Arrays.stream(getOfflinePlayers()).map(p -> p.getUniqueId()).collect(Collectors.toList());
+                    if (importer.importData(uuids, importArguments)) {
+                        sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
+                    } else {
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                    }
+                } finally {
+                    this.cancel();
+                }
+            }
+        }).runTaskAsynchronously();
+    }
+
+    private void list(Map<String, Importer> importers, ISender sender) {
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
-        Map<String, Importer> importers = ImportUtils.getImporters();
-        for (String key : importers.keySet()) {
-            sender.sendMessage(Phrase.CMD_BALL + " " + key + ": " + importers.get(key).getInfo());
-        }
+        importers.entrySet().stream().forEach(e -> {
+            sender.sendMessage(Phrase.CMD_BALL + " " + e.getKey() + ": " + e.getValue().getInfo());
+        });
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
     }
 }

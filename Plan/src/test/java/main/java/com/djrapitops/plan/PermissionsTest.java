@@ -6,8 +6,8 @@
 package test.java.main.java.com.djrapitops.plan;
 
 import main.java.com.djrapitops.plan.Permissions;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import test.java.utils.MockUtils;
 
 /**
@@ -15,7 +15,7 @@ import test.java.utils.MockUtils;
  * @author Rsl1122
  */
 public class PermissionsTest {
-    
+
     /**
      *
      */
@@ -26,16 +26,8 @@ public class PermissionsTest {
      *
      */
     @Test
-    public void testUserHasThisPermission() {
-        assertTrue(Permissions.INSPECT_OTHER.userHasThisPermission(MockUtils.mockPlayer()));
-    }
-
-    /**
-     *
-     */
-    @Test
     public void testGetPermission() {
         assertEquals("plan.inspect.other", Permissions.INSPECT_OTHER.getPermission());
     }
-    
+
 }

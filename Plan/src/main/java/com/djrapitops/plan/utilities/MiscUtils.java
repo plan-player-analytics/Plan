@@ -11,12 +11,10 @@ import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * Utility method class containing various static methods.
- * 
+ *
  * @author Rsl1122
  * @since 2.0.0
  */

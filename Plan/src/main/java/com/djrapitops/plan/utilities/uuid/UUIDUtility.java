@@ -22,10 +22,13 @@ public class UUIDUtility {
      *
      * @param playername
      * @return
-     * @throws Exception
      */
-    public static UUID getUUIDOf(String playername) throws Exception {
-        return getUUIDOf(playername, Plan.getInstance().getDB());
+    public static UUID getUUIDOf(String playername) {
+        try {
+            return getUUIDOf(playername, Plan.getInstance().getDB());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -35,15 +38,18 @@ public class UUIDUtility {
      * @return
      * @throws Exception
      */
-    public static UUID getUUIDOf(String playername, Database db) throws Exception {
+    public static UUID getUUIDOf(String playername, Database db) {
         UUID uuid = null;
         try {
             uuid = db.getUsersTable().getUuidOf(playername);
         } catch (SQLException e) {
             Log.toLog("UUIDUtility", e);
         }
-        if (uuid == null) {
-            uuid = UUIDFetcher.getUUIDOf(playername);
+        try {
+            if (uuid == null) {
+                uuid = UUIDFetcher.getUUIDOf(playername);
+            }
+        } catch (Exception e) {
         }
         return uuid;
     }

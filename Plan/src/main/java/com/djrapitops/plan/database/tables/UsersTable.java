@@ -21,8 +21,8 @@ import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.GameMode;
 import static org.bukkit.Bukkit.getOfflinePlayer;
+import org.bukkit.GameMode;
 
 /**
  *

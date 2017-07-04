@@ -29,7 +29,7 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class ReloadInfoTest {
-    
+
     /**
      *
      */
@@ -68,7 +68,7 @@ public class ReloadInfoTest {
         assertTrue("Wrong location " + geo, geo.equals("United States"));
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
     }
-    
+
     /**
      *
      * @throws UnknownHostException
@@ -81,5 +81,5 @@ public class ReloadInfoTest {
         String nick = "TestProcessLoginInfo";
         ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, GameMode.CREATIVE);
         assertTrue(!i.process(data));
-    }    
+    }
 }

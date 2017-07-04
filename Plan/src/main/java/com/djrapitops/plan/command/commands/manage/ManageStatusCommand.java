@@ -6,8 +6,6 @@ import com.djrapitops.javaplugin.command.sender.ISender;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This manage subcommand is used to check the status of the database.

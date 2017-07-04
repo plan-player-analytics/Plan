@@ -3,15 +3,16 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
-import java.util.Arrays;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
 /**
  * This manage subcommand is used to clear a database of all data.
@@ -36,40 +37,41 @@ public class ManageClearCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "");
-            return true;
-        }
-        String dbToClear = args[0].toLowerCase();
-        if (!dbToClear.equals("mysql") && !dbToClear.equals("sqlite")) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_DB + dbToClear);
-            return true;
-        }
-        if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[0])));
+        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
             return true;
         }
 
-        Database clearDB = null;
-        for (Database database : plugin.getDatabases()) {
-            if (dbToClear.equalsIgnoreCase(database.getConfigName())) {
-                clearDB = database;
-                clearDB.init();
-            }
-        }
-        if (clearDB == null) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
-            Log.error(dbToClear + " was null!");
+        String dbName = args[0].toLowerCase();
+        boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
+
+        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + dbName, sender)) {
             return true;
         }
 
-        final Database clearThisDB = clearDB;
+        if (!Check.ifTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[0])), sender)) {
+            return true;
+        }
+
+        final Database database = ManageUtils.getDB(plugin, dbName);
+
+        // If DB is null return
+        if (!Check.ifTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+            Log.error(dbName + " was null!");
+            return true;
+        }
+
+        runClearTask(sender, database);
+        return true;
+    }
+
+    private void runClearTask(ISender sender, final Database database) {
         plugin.getRunnableFactory().createNew(new RslRunnable("DBClearTask") {
             @Override
             public void run() {
-                sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                 try {
-                    if (clearThisDB.removeAllData()) {
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+
+                    if (database.removeAllData()) {
                         sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS + "");
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
@@ -77,10 +79,10 @@ public class ManageClearCommand extends SubCommand {
                 } catch (SQLException e) {
                     Log.toLog(this.getClass().getName(), e);
                     sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                } finally {
+                    this.cancel();
                 }
-                this.cancel();
             }
         }).runTaskAsynchronously();
-        return true;
     }
 }

@@ -64,7 +64,7 @@ public class AnalysisCacheHandler {
     public boolean isCached() {
         return (cache != null);
     }
-    
+
     /**
      *
      * @return
@@ -72,16 +72,16 @@ public class AnalysisCacheHandler {
     public boolean isAnalysisBeingRun() {
         return analysis.isAnalysisBeingRun();
     }
-    
+
     public boolean isAnalysisEnabled() {
         return analysisEnabled;
     }
-    
+
     public void disableAnalysisTemporarily() {
         analysisEnabled = false;
         analysis.setTaskId(-2);
     }
-    
+
     public void enableAnalysis() {
         analysis.setTaskId(-1);
         analysisEnabled = true;

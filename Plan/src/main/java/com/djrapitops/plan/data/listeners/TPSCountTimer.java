@@ -49,7 +49,7 @@ public class TPSCountTimer extends RslRunnable {
 
     public TPS calculateTPS(long diff, long now) {
         if (diff < TimeAmount.SECOND.ns()) { // No tick count above 20
-            diff = TimeAmount.SECOND.ns(); 
+            diff = TimeAmount.SECOND.ns();
         }
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
         long twentySeconds = 20L * TimeAmount.SECOND.ns();

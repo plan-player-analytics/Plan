@@ -26,8 +26,8 @@ public class DBUtils {
      * BATCH_SIZE.
      *
      * @param <T> Object type
-     * @param objects Collection of the objects.
-//     * @return Lists with max size of BATCH_SIZE.
+     * @param objects Collection of the objects. // * @return Lists with max
+     * size of BATCH_SIZE.
      */
     public static <T> List<List<T>> splitIntoBatches(Collection<T> objects) {
         List<List<T>> batches = new ArrayList<>();

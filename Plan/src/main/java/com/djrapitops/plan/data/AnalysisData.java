@@ -9,9 +9,9 @@ import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
+import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
  * This class is used to store result data from Analysis at runtime.

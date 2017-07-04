@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
@@ -37,53 +39,51 @@ public class ManageRemoveCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString());
+        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
             return true;
         }
 
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.MANAGE);
 
+        runRemoveTask(playerName, sender, args);
+        return true;
+    }
+
+    private void runRemoveTask(String playerName, ISender sender, String[] args) {
         plugin.getRunnableFactory().createNew(new RslRunnable("DBRemoveTask " + playerName) {
             @Override
             public void run() {
-                UUID uuid;
                 try {
-                    uuid = UUIDUtility.getUUIDOf(playerName);
-                    if (uuid == null) {
-                        throw new Exception("Username doesn't exist.");
+                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                    String message = Phrase.USERNAME_NOT_VALID.toString();
+                    if (!Check.ifTrue(Verify.notNull(uuid), message, sender)) {
+                        return;
                     }
-                } catch (Exception e) {
-                    sender.sendMessage(Phrase.USERNAME_NOT_VALID.toString());
-                    this.cancel();
-                    return;
-                }
-                if (!plugin.getDB().wasSeenBefore(uuid)) {
-                    sender.sendMessage(Phrase.USERNAME_NOT_KNOWN.toString());
-                    this.cancel();
-                    return;
-                }
-                if (!Arrays.asList(args).contains("-a")) {
-                    sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName())));
-                    this.cancel();
-                    return;
-                }
+                    message = Phrase.USERNAME_NOT_KNOWN.toString();
+                    if (!Check.ifTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
+                        return;
+                    }
+                    message = Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName()));
+                    if (!Check.ifTrue(Verify.contains("-a", args), message, sender)) {
+                        return;
+                    }
 
-                sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                try {
-                    plugin.getHandler().getDataCache().remove(uuid);
-                    if (plugin.getDB().removeAccount(uuid.toString())) {
-                        sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
-                    } else {
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    try {
+                        plugin.getHandler().getDataCache().remove(uuid);
+                        if (plugin.getDB().removeAccount(uuid.toString())) {
+                            sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
+                        } else {
+                            sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                        }
+                    } catch (SQLException e) {
+                        Log.toLog(this.getClass().getName(), e);
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                     }
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                } finally {
+                    this.cancel();
                 }
-                this.cancel();
             }
         }).runTaskAsynchronously();
-        return true;
     }
 }

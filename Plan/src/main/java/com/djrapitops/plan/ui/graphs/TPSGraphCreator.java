@@ -15,11 +15,12 @@ import main.java.com.djrapitops.plan.utilities.comparators.TPSComparator;
  * @since 3.5.0
  */
 public class TPSGraphCreator {
+
     public static String[] generateDataArray(List<TPS> tpsData, long scale) {
         Benchmark.start("TPSGraph generate array");
         long now = MiscUtils.getTime();
-        List<TPS> filtered = filterTPS(tpsData, now-scale);
-        Log.debug("TPSGraph, filtered: "+filtered.size());
+        List<TPS> filtered = filterTPS(tpsData, now - scale);
+        Log.debug("TPSGraph, filtered: " + filtered.size());
         Collections.sort(filtered, new TPSComparator());
         List<Long> dates = filtered.stream().map(t -> t.getDate()).collect(Collectors.toList());
         List<Double> tps = filtered.stream().map(t -> t.getTps()).collect(Collectors.toList());

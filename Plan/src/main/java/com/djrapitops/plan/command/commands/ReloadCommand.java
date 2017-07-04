@@ -6,8 +6,6 @@ import com.djrapitops.javaplugin.command.sender.ISender;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This subcommand is used to reload the plugin.

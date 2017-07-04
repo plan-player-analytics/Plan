@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.Plan;
  * @param <T> Object this queue consumes.
  */
 public abstract class Setup<T> {
-    
+
     private final Consumer<T>[] consumers;
 
     /**
@@ -20,13 +20,13 @@ public abstract class Setup<T> {
     public Setup(Consumer<T>... consumers) {
         this.consumers = consumers;
     }
-    
+
     void go() {
         for (Consumer<T> consumer : consumers) {
             Plan.getInstance().getRunnableFactory().createNew(consumer).runTaskAsynchronously();
         }
     }
-    
+
     void stop() {
         for (Consumer<T> consumer : consumers) {
             consumer.stop();

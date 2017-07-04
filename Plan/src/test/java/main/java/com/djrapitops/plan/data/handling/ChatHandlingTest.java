@@ -27,7 +27,7 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class ChatHandlingTest {
-    
+
     /**
      *
      */
@@ -43,7 +43,7 @@ public class ChatHandlingTest {
         assertTrue("Not set up", t.setUp());
         Plan plan = t.getPlanMock();
     }
-    
+
     /**
      *
      */
@@ -64,7 +64,7 @@ public class ChatHandlingTest {
         ChatHandling.updateDemographicInformation("I'm male", data);
         assertTrue("Didn't update gender", data.getDemData().getGender() == Gender.MALE);
     }
-    
+
     /**
      *
      */
@@ -75,7 +75,7 @@ public class ChatHandlingTest {
         assertTrue("Updated gender", data.getDemData().getGender() == Gender.UNKNOWN);
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
-    
+
     /**
      *
      */
@@ -85,7 +85,7 @@ public class ChatHandlingTest {
         ChatHandling.updateDemographicInformation("I'm 100", data);
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
-    
+
     /**
      *
      */
@@ -96,7 +96,7 @@ public class ChatHandlingTest {
         assertTrue("Updated gender", data.getDemData().getGender() == Gender.UNKNOWN);
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
-    
+
     /**
      *
      */
@@ -107,7 +107,7 @@ public class ChatHandlingTest {
         assertTrue("Updated gender", data.getDemData().getGender() == Gender.UNKNOWN);
         assertTrue("Updated age", data.getDemData().getAge() == -1);
     }
-    
+
     /**
      *
      */
@@ -117,5 +117,5 @@ public class ChatHandlingTest {
         ChatHandling.updateDemographicInformation("im 18", data);
         assertTrue("Didn't update age", data.getDemData().getAge() == 18);
     }
-    
+
 }

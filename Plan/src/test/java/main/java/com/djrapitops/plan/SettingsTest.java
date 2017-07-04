@@ -74,7 +74,7 @@ public class SettingsTest {
         List<String> result = Settings.HIDE_TOWNS.getStringList();
         assertEquals(exp, result);
     }
-    
+
     /**
      *
      */

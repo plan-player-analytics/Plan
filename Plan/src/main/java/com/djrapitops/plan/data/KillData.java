@@ -104,6 +104,5 @@ public class KillData {
         hash = 89 * hash + Objects.hashCode(this.weapon);
         return hash;
     }
-    
-    
+
 }

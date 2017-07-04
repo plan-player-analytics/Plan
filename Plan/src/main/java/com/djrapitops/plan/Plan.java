@@ -19,11 +19,12 @@
  */
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.javaplugin.api.ColorScheme;
 import com.djrapitops.javaplugin.RslPlugin;
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
+import com.djrapitops.javaplugin.api.ColorScheme;
+import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,16 +39,14 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.*;
-import main.java.com.djrapitops.plan.data.listeners.TPSCountTimer;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.plugin.PluginManager;
 
 /**
  * Javaplugin class that contains methods for starting the plugin, logging to
@@ -59,16 +58,19 @@ import org.bukkit.plugin.PluginManager;
 public class Plan extends RslPlugin<Plan> {
 
     private API api;
+
     private DataCacheHandler handler;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
+    private HookHandler hookHandler;
+
     private Database db;
     private HashSet<Database> databases;
-    private WebSocketServer uiServer;
-    private HookHandler hookHandler;
-    private ServerVariableHolder variable;
 
-    private int bootAnalysisTaskID;
+    private WebSocketServer uiServer;
+
+    private ServerVariableHolder serverVariableHolder;
+    private int bootAnalysisTaskID = -1;
 
     /**
      * OnEnable method.
@@ -81,66 +83,83 @@ public class Plan extends RslPlugin<Plan> {
      */
     @Override
     public void onEnable() {
+        // Sets the Required variables for RslPlugin instance to function correctly
         setInstance(this);
         super.setDebugMode(Settings.DEBUG.toString());
         super.setColorScheme(new ColorScheme(Phrase.COLOR_MAIN.color(), Phrase.COLOR_SEC.color(), Phrase.COLOR_TER.color()));
         super.setLogPrefix("[Plan]");
         super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
         super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
+
+        // Initializes RslPlugin variables, Checks version & Logs the debug header
         super.onEnableDefaultTasks();
 
         initLocale();
+        serverVariableHolder = new ServerVariableHolder(getServer());
 
-        Server server = getServer();
-        variable = new ServerVariableHolder(server);
-        
-        databases = new HashSet<>();
-        databases.add(new MySQLDB(this));
-        databases.add(new SQLiteDB(this));
-
+        // Copy config
         getConfig().options().copyDefaults(true);
         getConfig().options().header(Phrase.CONFIG_HEADER + "");
         saveConfig();
 
+        // Initialize Database        
         Log.info(Phrase.DB_INIT + "");
-        if (initDatabase()) {
+        if (Check.ifTrue_Error(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
-            Log.error(Phrase.DB_FAILURE_DISABLE.toString());
-            server.getPluginManager().disablePlugin(this);
+            disablePlugin();
             return;
         }
 
+        // Initialize DataCache
         this.handler = new DataCacheHandler(this);
+
         this.inspectCache = new InspectCacheHandler(this);
+
         this.analysisCache = new AnalysisCacheHandler(this);
+
+        // TPS Count Task
+        super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+
         registerListeners();
-        getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, 20);
 
         registerCommand(new PlanCommand(this));
 
         this.api = new API(this);
+
         handler.handleReload();
 
-        bootAnalysisTaskID = -1;
-        if (Settings.WEBSERVER_ENABLED.isTrue()) {
+        // Analysis refresh settings
+        boolean bootAnalysisIsEnabled = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
+        int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
+        boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
+
+        // Data view settings
+        boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
+        boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        boolean usingAlternativeUI = Settings.USE_ALTERNATIVE_UI.isTrue();
+        boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
+
+        // Analysis refresh tasks
+        if (bootAnalysisIsEnabled) {
+            startBootAnalysisTask();
+        }
+        if (analysisRefreshTaskIsEnabled) {
+            startAnalysisRefreshTask(analysisRefreshMinutes);
+        }
+
+        // Webserver
+        if (webserverIsEnabled) {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
-            if (Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue()) {
-                startBootAnalysisTask();
-            }
-            int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
-            if (analysisRefreshMinutes != -1) {
-                startAnalysisRefreshTask(analysisRefreshMinutes);
-            }
-        } else if (!(Settings.SHOW_ALTERNATIVE_IP.isTrue())
-                || (Settings.USE_ALTERNATIVE_UI.isTrue())) {
+        } else if (!hasDataViewCapability) {
             Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
         }
-        if (!Settings.SHOW_ALTERNATIVE_IP.isTrue() && variable.getIp().isEmpty()) {
+        if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
 
+        // Hook plugins
         hookHandler = new HookHandler(this);
 
         Log.debug("Verboose debug messages are enabled.");
@@ -154,46 +173,45 @@ public class Plan extends RslPlugin<Plan> {
      */
     @Override
     public void onDisable() {
-        if (uiServer != null) {
+        // Stop the UI Server
+        if (Verify.notNull(uiServer)) {
             uiServer.stop();
-        }        
+        }
         Bukkit.getScheduler().cancelTasks(this);
-        if (handler != null) {
+        if (Verify.notNull(handler) && Verify.notNull(db)) {
+
+            // Saves the datacache to the database without Bukkit's Schedulers.
             Log.info(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
             });
-            scheduler.shutdown();
-        }        
+            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
+
+        }
         Log.info(Phrase.DISABLED + "");
     }
 
     private void registerListeners() {
-        final PluginManager pluginManager = getServer().getPluginManager();
 
-        pluginManager.registerEvents(new PlanPlayerListener(this), this);
+        registerListener(new PlanPlayerListener(this));
+        boolean chatListenerIsEnabled = Check.ifTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
+        boolean gamemodeChangeListenerIsEnabled = Check.ifTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER + "");
+        boolean commandListenerIsEnabled = Check.ifTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
+        boolean deathListenerIsEnabled = Check.ifTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
 
-        if (Settings.GATHERCHAT.isTrue()) {
+        if (chatListenerIsEnabled) {
             registerListener(new PlanChatListener(this));
-        } else {
-            Log.infoColor(Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
         }
-        if (Settings.GATHERGMTIMES.isTrue()) {
+        if (gamemodeChangeListenerIsEnabled) {
             registerListener(new PlanGamemodeChangeListener(this));
-        } else {
-            Log.infoColor(Phrase.NOTIFY_DISABLED_GMLISTENER + "");
         }
-        if (Settings.GATHERCOMMANDS.isTrue()) {
+        if (commandListenerIsEnabled) {
             registerListener(new PlanCommandPreprocessListener(this));
-        } else {
-            Log.infoColor(Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
         }
-        if (Settings.GATHERKILLS.isTrue()) {
+        if (deathListenerIsEnabled) {
             registerListener(new PlanDeathEventListener(this));
-        } else {
-            Log.infoColor(Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
         }
         if (Settings.GATHERLOCATIONS.isTrue()) {
             registerListener(new PlanPlayerMoveListener(this));
@@ -208,43 +226,44 @@ public class Plan extends RslPlugin<Plan> {
      * @return true if init was successful, false if not.
      */
     public boolean initDatabase() {
-        String type = Settings.DB_TYPE + "";
+        databases = new HashSet<>();
+        databases.add(new MySQLDB(this));
+        databases.add(new SQLiteDB(this));
 
-        db = null;
+        String dbType = (Settings.DB_TYPE + "").toLowerCase().trim();
+
         for (Database database : databases) {
-            if (type.equalsIgnoreCase(database.getConfigName())) {
+            String databaseType = database.getConfigName().toLowerCase().trim();
+            Log.debug(databaseType + ": " + Verify.equalsIgnoreCase(dbType, databaseType));
+            if (Verify.equalsIgnoreCase(dbType, databaseType)) {
                 this.db = database;
-
                 break;
             }
         }
-        if (db == null) {
-            Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString());
+        if (!Verify.notNull(db)) {
+            Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString() + " " + dbType);
             return false;
         }
-        if (!db.init()) {
-            Log.info(Phrase.DB_FAILURE_DISABLE.toString());
-            setEnabled(false);
-            return false;
-        }
-
-        return true;
+        return Check.ifTrue_Error(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
     }
 
-    private void startAnalysisRefreshTask(int analysisRefreshMinutes) throws IllegalStateException, IllegalArgumentException {
-        RslTask task = getRunnableFactory().createNew("PeriodicalAnalysisTask", new RslRunnable() {
+    private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
+        if (!Verify.positive(everyXMinutes)) {
+            return;
+        }
+        getRunnableFactory().createNew("PeriodicalAnalysisTask", new RslRunnable() {
             @Override
             public void run() {
                 if (!analysisCache.isCached()) {
                     analysisCache.updateCache();
-                } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > 60000) {
+                } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
                     analysisCache.updateCache();
                 }
             }
-        }).runTaskTimerAsynchronously(analysisRefreshMinutes * 60 * 20, analysisRefreshMinutes * 60 * 20);
+        }).runTaskTimerAsynchronously(everyXMinutes * TimeAmount.MINUTE.ticks(), everyXMinutes * TimeAmount.MINUTE.ticks());
     }
 
-    private void startBootAnalysisTask() throws IllegalStateException, IllegalArgumentException {
+    private void startBootAnalysisTask() throws IllegalStateException {
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
         RslTask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new RslRunnable() {
             @Override
@@ -253,8 +272,64 @@ public class Plan extends RslPlugin<Plan> {
                 analysisCache.updateCache();
                 this.cancel();
             }
-        }).runTaskLaterAsynchronously(30 * 20);
+        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
+    }
+
+    private void initLocale() {
+        String locale = Settings.LOCALE.toString().toUpperCase();
+        /*// Used to write a new Locale file
+        File genLocale = new File(getDataFolder(), "locale_EN.txt");
+        try {
+            genLocale.createNewFile();
+            FileWriter fw = new FileWriter(genLocale, true);
+            PrintWriter pw = new PrintWriter(fw);
+            for (Phrase p : Phrase.values()) {                
+                pw.println(p.name()+" <> "+p.parse());
+                pw.flush();            
+            }
+            pw.println("<<<<<<HTML>>>>>>");
+            for (Html h : Html.values()) {                
+                pw.println(h.name()+" <> "+h.parse());
+                pw.flush();            
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        File localeFile = new File(getDataFolder(), "locale.txt");
+        boolean skipLoc = false;
+        String usingLocale = "";
+        if (localeFile.exists()) {
+            Phrase.loadLocale(localeFile);
+            Html.loadLocale(localeFile);
+            skipLoc = true;
+            usingLocale = "locale.txt";
+        }
+        if (!locale.equals("DEFAULT")) {
+            try {
+                if (!skipLoc) {
+                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt");
+                    InputStream inputStream = localeURL.openStream();
+                    OutputStream outputStream = new FileOutputStream(localeFile);
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    Phrase.loadLocale(localeFile);
+                    Html.loadLocale(localeFile);
+                    usingLocale = locale;
+                    localeFile.delete();
+                }
+            } catch (FileNotFoundException ex) {
+                Log.error("Attempted using locale that doesn't exist.");
+                usingLocale = "Default: EN";
+            } catch (IOException e) {
+            }
+        } else {
+            usingLocale = "Default: EN";
+        }
+        Log.info("Using locale: " + usingLocale);
     }
 
     /**
@@ -332,73 +407,6 @@ public class Plan extends RslPlugin<Plan> {
     }
 
     /**
-     * Old method for getting the API.
-     *
-     * @deprecated Use Plan.getAPI() (static method) instead.
-     * @return the Plan API.
-     */
-    @Deprecated
-    public API getAPI() {
-        return api;
-    }
-
-    private void initLocale() {
-        String locale = Settings.LOCALE.toString().toUpperCase();
-        /*// Used to write a new Locale file
-        File genLocale = new File(getDataFolder(), "locale_EN.txt");
-        try {
-            genLocale.createNewFile();
-            FileWriter fw = new FileWriter(genLocale, true);
-            PrintWriter pw = new PrintWriter(fw);
-            for (Phrase p : Phrase.values()) {                
-                pw.println(p.name()+" <> "+p.parse());
-                pw.flush();            
-            }
-            pw.println("<<<<<<HTML>>>>>>");
-            for (Html h : Html.values()) {                
-                pw.println(h.name()+" <> "+h.parse());
-                pw.flush();            
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        File localeFile = new File(getDataFolder(), "locale.txt");
-        boolean skipLoc = false;
-        String usingLocale = "";
-        if (localeFile.exists()) {
-            Phrase.loadLocale(localeFile);
-            Html.loadLocale(localeFile);
-            skipLoc = true;
-            usingLocale = "locale.txt";
-        }
-        if (!locale.equals("DEFAULT")) {
-            try {
-                if (!skipLoc) {
-                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt");
-                    InputStream inputStream = localeURL.openStream();
-                    OutputStream outputStream = new FileOutputStream(localeFile);
-                    int read = 0;
-                    byte[] bytes = new byte[1024];
-                    while ((read = inputStream.read(bytes)) != -1) {
-                        outputStream.write(bytes, 0, read);
-                    }
-                    Phrase.loadLocale(localeFile);
-                    Html.loadLocale(localeFile);
-                    usingLocale = locale;
-                    localeFile.delete();
-                }
-            } catch (FileNotFoundException ex) {
-                Log.error("Attempted using locale that doesn't exist.");
-                usingLocale = "Default: EN";
-            } catch (IOException e) {
-            }
-        } else {
-            usingLocale = "Default: EN";
-        }
-        Log.info("Using locale: " + usingLocale);
-    }
-
-    /**
      * Used to get the object storing server variables that are constant after
      * boot.
      *
@@ -406,7 +414,18 @@ public class Plan extends RslPlugin<Plan> {
      * @see ServerVariableHolder
      */
     public ServerVariableHolder getVariable() {
-        return variable;
+        return serverVariableHolder;
+    }
+
+    /**
+     * Old method for getting the API.
+     *
+     * @deprecated Use Plan.getPlanAPI() (static method) instead.
+     * @return the Plan API.
+     */
+    @Deprecated
+    public API getAPI() {
+        return api;
     }
 
     /**

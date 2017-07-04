@@ -55,5 +55,5 @@ public class NewPlayerCreator {
         Log.debug(player.getUniqueId() + ": Created a new UserData object.");
         return data;
     }
-    
+
 }

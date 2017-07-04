@@ -42,17 +42,16 @@ public abstract class Table {
         this.db = db;
         this.usingMySQL = usingMySQL;
     }
-    
+
     /**
      *
      * @return
      */
     public abstract boolean createTable();
-    
+
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     protected Connection getConnection() throws SQLException {
         Connection connection = db.getConnection();
@@ -61,11 +60,10 @@ public abstract class Table {
         }
         return connection;
     }
-    
+
     /**
      *
-     * @return
-     * @throws SQLException
+     * @return @throws SQLException
      */
     public int getVersion() throws SQLException {
         return db.getVersion();
@@ -82,7 +80,7 @@ public abstract class Table {
         boolean success = connection.createStatement().execute(sql);
         return success;
     }
-    
+
     /**
      *
      * @param sql
@@ -92,7 +90,7 @@ public abstract class Table {
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return getConnection().prepareStatement(sql);
     }
-    
+
     /**
      *
      * @param toClose
@@ -113,7 +111,7 @@ public abstract class Table {
     public String getTableName() {
         return tableName;
     }
-    
+
     /**
      *
      * @return
@@ -127,7 +125,7 @@ public abstract class Table {
             return false;
         }
     }
-    
+
     /**
      *
      * @param <T>

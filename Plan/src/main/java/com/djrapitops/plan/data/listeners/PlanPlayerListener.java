@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.javaplugin.task.RslBukkitRunnable;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
 import java.util.UUID;

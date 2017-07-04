@@ -26,7 +26,7 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class ChatInfoTest {
-    
+
     /**
      *
      */
@@ -35,7 +35,7 @@ public class ChatInfoTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
     }
-    
+
     /**
      *
      */
@@ -54,7 +54,7 @@ public class ChatInfoTest {
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
         assertTrue("Didn't update gender", data.getDemData().getGender() == Gender.MALE);
     }
-    
+
     /**
      *
      */
@@ -66,7 +66,7 @@ public class ChatInfoTest {
         assertTrue("Didn't succeed", i.process(data));
         assertTrue("Didn't update age", data.getDemData().getAge() == 18);
     }
-    
+
     /**
      *
      */
@@ -78,7 +78,7 @@ public class ChatInfoTest {
         assertTrue("Didn't succeed", i.process(data));
         assertTrue("Didn't update gender", data.getDemData().getGender() == Gender.MALE);
     }
-    
+
     /**
      *
      */

@@ -166,7 +166,7 @@ public class NicknamesTable extends Table {
                 i++;
             }
             if (commitRequired) {
-                Log.debug("Executing nicknames batch: "+i);
+                Log.debug("Executing nicknames batch: " + i);
                 statement.executeBatch();
 
             }
@@ -186,7 +186,7 @@ public class NicknamesTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-        Benchmark.start("Get Nicknames Multiple "+ids.size());
+        Benchmark.start("Get Nicknames Multiple " + ids.size());
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -223,7 +223,7 @@ public class NicknamesTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Nicknames Multiple "+ids.size());
+            Benchmark.stop("Get Nicknames Multiple " + ids.size());
         }
     }
 
@@ -237,7 +237,7 @@ public class NicknamesTable extends Table {
         if (nicknames == null || nicknames.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Nicknames Multiple "+nicknames.size());
+        Benchmark.start("Save Nicknames Multiple " + nicknames.size());
         Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
         PreparedStatement statement = null;
         try {
@@ -270,7 +270,7 @@ public class NicknamesTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Nicknames Multiple "+nicknames.size());
+            Benchmark.stop("Save Nicknames Multiple " + nicknames.size());
         }
     }
 }

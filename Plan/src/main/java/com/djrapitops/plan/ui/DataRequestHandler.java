@@ -79,7 +79,7 @@ public class DataRequestHandler {
         } catch (FileNotFoundException ex) {
             return "<h1>404 analysis.html was not found</h1>";
         }
-    }    
+    }
 
     /**
      * Checks if the AnalysisData is cached.

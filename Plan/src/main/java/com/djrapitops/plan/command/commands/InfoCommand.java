@@ -8,8 +8,6 @@ import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This subcommand is used to view the version and the database type in use.
@@ -35,7 +33,6 @@ public class InfoCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         ChatColor tColor = Phrase.COLOR_SEC.color();
-
         String[] messages = {
             Phrase.CMD_INFO_HEADER + "",
             Phrase.CMD_INFO_VERSION.parse(plugin.getDescription().getVersion()),

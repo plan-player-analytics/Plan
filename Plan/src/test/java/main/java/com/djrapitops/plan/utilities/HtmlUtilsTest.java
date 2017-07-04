@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -25,7 +24,7 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class HtmlUtilsTest {
-    
+
     /**
      *
      */
@@ -40,7 +39,7 @@ public class HtmlUtilsTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
     }
-    
+
     /**
      *
      * @throws Exception
@@ -65,7 +64,7 @@ public class HtmlUtilsTest {
         String result = HtmlUtils.replacePlaceholders(html, replaceMap);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -108,5 +107,5 @@ public class HtmlUtilsTest {
         String xss = "<script></script><!--";
         boolean passed = HtmlUtils.removeXSS(xss).length() < xss.length();
         assertEquals(true, passed);
-    }    
+    }
 }

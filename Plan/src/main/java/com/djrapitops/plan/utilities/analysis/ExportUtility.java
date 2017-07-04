@@ -23,8 +23,7 @@ public class ExportUtility {
 
     /**
      *
-     * @return
-     * @throws IOException
+     * @return @throws IOException
      */
     public static File getFolder() throws IOException {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();

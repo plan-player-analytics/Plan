@@ -68,7 +68,7 @@ public class LoginInfoTest {
         assertTrue("Wrong location " + geo, geo.equals("United States"));
         assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
     }
-    
+
     /**
      *
      * @throws UnknownHostException

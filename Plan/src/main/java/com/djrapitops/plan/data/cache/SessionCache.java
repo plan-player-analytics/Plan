@@ -80,7 +80,7 @@ public class SessionCache {
      * Used to get the Map of active sessions.
      *
      * Used for testing.
-     * 
+     *
      * @return key:value UUID:SessionData
      */
     public Map<UUID, SessionData> getActiveSessions() {

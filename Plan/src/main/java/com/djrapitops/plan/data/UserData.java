@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data;
 
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -222,7 +223,7 @@ public class UserData {
      * @param ip InetAddress of the player.
      */
     public void addIpAddress(InetAddress ip) {
-        if (ip != null) {
+        if (Verify.notNull(ip)) {
             ips.add(ip);
         }
     }
@@ -236,7 +237,7 @@ public class UserData {
         if (addIps.isEmpty()) {
             return;
         }
-        ips.addAll(addIps.stream().filter(ip -> ip != null).collect(Collectors.toList()));
+        ips.addAll(addIps.stream().filter(ip -> Verify.notNull(ip)).collect(Collectors.toList()));
 
     }
 
@@ -248,7 +249,7 @@ public class UserData {
      * @param loc Location of the player.
      */
     public void addLocation(Location loc) {
-        if (loc != null) {
+        if (Verify.notNull(loc)) {
             locations.add(loc);
             location = loc;
         }
@@ -280,7 +281,7 @@ public class UserData {
      * @return was lastNick updated?
      */
     public boolean addNickname(String nick) {
-        if (nick != null && !nick.isEmpty()) {
+        if (!Verify.isEmpty(nick)) {
             boolean isNew = !nicknames.contains(nick);
             nicknames.add(nick);
             if (isNew) {
@@ -299,7 +300,7 @@ public class UserData {
      * @param addNicks Collection of nicknames.
      */
     public void addNicknames(Collection<String> addNicks) {
-        nicknames.addAll(addNicks.stream().filter(nick -> nick != null && !nick.isEmpty()).collect(Collectors.toList()));
+        nicknames.addAll(addNicks.stream().filter(nick -> !Verify.isEmpty(nick)).collect(Collectors.toList()));
     }
 
     /**
@@ -309,10 +310,10 @@ public class UserData {
      * @param time Milliseconds spent in the gamemode.
      */
     public void setGMTime(GameMode gm, long time) {
-        if (gmTimes == null) {
+        if (!Verify.notNull(gmTimes)) {
             gmTimes = new HashMap<>();
         }
-        if (gm != null) {
+        if (Verify.notNull(time)) {
             gmTimes.put(gm, time);
         }
     }
@@ -344,7 +345,7 @@ public class UserData {
      * @param session SessionData object
      */
     public void addSession(SessionData session) {
-        if (session != null && session.isValid()) {
+        if (Verify.notNull(session) && session.isValid()) {
             sessions.add(session);
         }
     }
@@ -358,7 +359,7 @@ public class UserData {
      */
     public void addSessions(Collection<SessionData> sessions) {
         Collection<SessionData> filteredSessions = sessions.stream()
-                .filter(session -> session != null)
+                .filter(session -> Verify.notNull(session))
                 .filter(session -> session.isValid())
                 .collect(Collectors.toList());
         if (sessions.size() != filteredSessions.size()) {
@@ -621,7 +622,7 @@ public class UserData {
      * @param locations a list of Locations.
      */
     public void setLocations(List<Location> locations) {
-        if (locations != null) {
+        if (Verify.notNull(locations)) {
             this.locations = locations;
         }
     }
@@ -632,7 +633,7 @@ public class UserData {
      * @param ips ips of the user.
      */
     public void setIps(Set<InetAddress> ips) {
-        if (ips != null) {
+        if (Verify.notNull(ips)) {
             this.ips = ips;
         }
     }
@@ -643,7 +644,7 @@ public class UserData {
      * @param nicknames nicknames of the user.
      */
     public void setNicknames(Set<String> nicknames) {
-        if (nicknames != null) {
+        if (Verify.notNull(nicknames)) {
             this.nicknames = nicknames;
         }
     }
@@ -707,7 +708,7 @@ public class UserData {
      * (After 1.8) keys.
      */
     public void setGmTimes(Map<GameMode, Long> gmTimes) {
-        if (gmTimes != null) {
+        if (Verify.notNull(gmTimes)) {
             this.gmTimes = gmTimes;
         }
     }
@@ -799,7 +800,7 @@ public class UserData {
      * @param playerKills list of players kills.
      */
     public void setPlayerKills(List<KillData> playerKills) {
-        if (playerKills != null) {
+        if (Verify.notNull(playerKills)) {
             this.playerKills = playerKills;
         }
     }

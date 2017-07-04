@@ -51,7 +51,7 @@ public class DeathInfoTest {
         assertTrue(i.process(data));
         assertEquals(1, data.getDeaths());
     }
-    
+
     /**
      *
      */

@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
-import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -30,13 +30,13 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class NewPlayerCreatorTest {
-    
+
     /**
      *
      */
     public NewPlayerCreatorTest() {
     }
-    
+
     /**
      *
      */
@@ -45,7 +45,7 @@ public class NewPlayerCreatorTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
     }
-    
+
     /**
      *
      */
@@ -112,5 +112,5 @@ public class NewPlayerCreatorTest {
         exp.setMobKills(0);
         assertTrue(exp.equals(result));
     }
-    
+
 }

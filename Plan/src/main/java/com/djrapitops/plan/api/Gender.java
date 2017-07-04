@@ -16,7 +16,7 @@ public enum Gender {
      * @return Gender Enum
      */
     public static Gender parse(String name) {
-        switch (name) {
+        switch (name.toLowerCase()) {
             case "female":
                 return Gender.FEMALE;
             case "male":
