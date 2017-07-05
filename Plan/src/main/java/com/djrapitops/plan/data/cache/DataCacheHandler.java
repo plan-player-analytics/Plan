@@ -73,17 +73,18 @@ public class DataCacheHandler extends LocationCache {
      * @param plugin Current instance of Plan
      */
     public DataCacheHandler(Plan plugin) {
-        super();
+        super(); // Initializes Session & Location cache.
+
         this.plugin = plugin;
         db = plugin.getDB();
-        dataCache = new HashMap<>();
 
+        dataCache = new HashMap<>();
         startQueues();
 
         commandUse = new HashMap<>();
         if (!getCommandUseFromDb()) {
             Log.error(Phrase.DB_FAILURE_DISABLE + "");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            plugin.disablePlugin();
             return;
         }
         unsavedTPSHistory = new ArrayList<>();
@@ -109,10 +110,10 @@ public class DataCacheHandler extends LocationCache {
      * Used to start all processing Queue Threads.
      */
     public void startQueues() {
-        clearTask = new DataCacheClearQueue(this);
-        saveTask = new DataCacheSaveQueue(plugin, this);
         getTask = new DataCacheGetQueue(plugin);
         processTask = new DataCacheProcessQueue(this);
+        clearTask = new DataCacheClearQueue(this);
+        saveTask = new DataCacheSaveQueue(plugin, this);
     }
 
     /**
@@ -124,7 +125,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
-        if (minutes <= 0) {
+        if (!Verify.positive(minutes)) {
             minutes = 5;
         }
         final int clearAfterXsaves;

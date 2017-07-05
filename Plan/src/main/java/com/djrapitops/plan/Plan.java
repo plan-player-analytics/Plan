@@ -44,6 +44,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
@@ -94,15 +95,20 @@ public class Plan extends RslPlugin<Plan> {
         // Initializes RslPlugin variables, Checks version & Logs the debug header
         super.onEnableDefaultTasks();
 
-        initLocale();
-        serverVariableHolder = new ServerVariableHolder(getServer());
+        processStatus().startExecution("Enable");
 
-        // Copy config
+        initLocale();
+        Benchmark.start("Enable: Reading server variables");
+        serverVariableHolder = new ServerVariableHolder(getServer());
+        Benchmark.stop("Enable: Reading server variables");
+
+        Benchmark.start("Enable: Copy default config");
         getConfig().options().copyDefaults(true);
         getConfig().options().header(Phrase.CONFIG_HEADER + "");
         saveConfig();
+        Benchmark.stop("Enable: Copy default config");
 
-        // Initialize Database        
+        Benchmark.start("Enable: Init Database");
         Log.info(Phrase.DB_INIT + "");
         if (Check.ifTrue_Error(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
@@ -110,35 +116,28 @@ public class Plan extends RslPlugin<Plan> {
             disablePlugin();
             return;
         }
+        Benchmark.stop("Enable: Init Database");
 
-        // Initialize DataCache
+        Benchmark.start("Enable: Init DataCache");
         this.handler = new DataCacheHandler(this);
-
         this.inspectCache = new InspectCacheHandler(this);
-
         this.analysisCache = new AnalysisCacheHandler(this);
+        Benchmark.stop("Enable: Init DataCache");
 
-        // TPS Count Task
         super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
-
         registerListeners();
-
         registerCommand(new PlanCommand(this));
 
         this.api = new API(this);
-
+        Benchmark.start("Enable: Handle Reload");
         handler.handleReload();
+        Benchmark.stop("Enable: Handle Reload");
 
+        Benchmark.start("Enable: Analysis refresh task registration");
         // Analysis refresh settings
         boolean bootAnalysisIsEnabled = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-
-        // Data view settings
-        boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
-        boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        boolean usingAlternativeUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-        boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
 
         // Analysis refresh tasks
         if (bootAnalysisIsEnabled) {
@@ -147,8 +146,15 @@ public class Plan extends RslPlugin<Plan> {
         if (analysisRefreshTaskIsEnabled) {
             startAnalysisRefreshTask(analysisRefreshMinutes);
         }
+        Benchmark.stop("Enable: Analysis refresh task registration");
 
-        // Webserver
+        Benchmark.start("Enable: Webserver Initialization");
+        // Data view settings
+        boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
+        boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+        boolean usingAlternativeUI = Settings.USE_ALTERNATIVE_UI.isTrue();
+        boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
+
         if (webserverIsEnabled) {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
@@ -158,12 +164,15 @@ public class Plan extends RslPlugin<Plan> {
         if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
+        Benchmark.stop("Enable: Webserver Initialization");
 
-        // Hook plugins
+        Benchmark.start("Enable: Hook to 3rd party plugins");
         hookHandler = new HookHandler(this);
+        Benchmark.stop("Enable: Hook to 3rd party plugins");
 
         Log.debug("Verboose debug messages are enabled.");
         Log.info(Phrase.ENABLED + "");
+        processStatus().finishExecution("Enable");
     }
 
     /**
@@ -179,13 +188,14 @@ public class Plan extends RslPlugin<Plan> {
         }
         Bukkit.getScheduler().cancelTasks(this);
         if (Verify.notNull(handler) && Verify.notNull(db)) {
-
+            Benchmark.start("DataCache OnDisable Save");
             // Saves the datacache to the database without Bukkit's Schedulers.
             Log.info(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
+                Benchmark.stop("DataCache OnDisable Save");
             });
             scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
 
@@ -194,7 +204,7 @@ public class Plan extends RslPlugin<Plan> {
     }
 
     private void registerListeners() {
-
+        Benchmark.start("Enable: Register Listeners");
         registerListener(new PlanPlayerListener(this));
         boolean chatListenerIsEnabled = Check.ifTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
         boolean gamemodeChangeListenerIsEnabled = Check.ifTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER + "");
@@ -216,6 +226,7 @@ public class Plan extends RslPlugin<Plan> {
         if (Settings.GATHERLOCATIONS.isTrue()) {
             registerListener(new PlanPlayerMoveListener(this));
         }
+        Benchmark.stop("Enable: Register Listeners");
     }
 
     /**
@@ -248,12 +259,14 @@ public class Plan extends RslPlugin<Plan> {
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
+        Benchmark.start("Enable: Schedule PeriodicAnalysisTask");
         if (!Verify.positive(everyXMinutes)) {
             return;
         }
         getRunnableFactory().createNew("PeriodicalAnalysisTask", new RslRunnable() {
             @Override
             public void run() {
+                Log.debug("Running PeriodicalAnalysisTask");
                 if (!analysisCache.isCached()) {
                     analysisCache.updateCache();
                 } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
@@ -261,19 +274,23 @@ public class Plan extends RslPlugin<Plan> {
                 }
             }
         }).runTaskTimerAsynchronously(everyXMinutes * TimeAmount.MINUTE.ticks(), everyXMinutes * TimeAmount.MINUTE.ticks());
+        Benchmark.stop("Enable: Schedule PeriodicAnalysisTask");
     }
 
     private void startBootAnalysisTask() throws IllegalStateException {
+        Benchmark.start("Enable: Schedule boot analysis task");
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
         RslTask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new RslRunnable() {
             @Override
             public void run() {
+                Log.debug("Running BootAnalysisTask");
                 Log.info(Phrase.ANALYSIS_BOOT + "");
                 analysisCache.updateCache();
                 this.cancel();
             }
         }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
+        Benchmark.stop("Enable: Schedule boot analysis task");
     }
 
     private void initLocale() {
@@ -296,6 +313,7 @@ public class Plan extends RslPlugin<Plan> {
         } catch (IOException ex) {
             Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
         }*/
+        Benchmark.start("Enable: Initializing locale");
         File localeFile = new File(getDataFolder(), "locale.txt");
         boolean skipLoc = false;
         String usingLocale = "";
@@ -329,6 +347,7 @@ public class Plan extends RslPlugin<Plan> {
         } else {
             usingLocale = "Default: EN";
         }
+        Benchmark.stop("Enable: Initializing locale");
         Log.info("Using locale: " + usingLocale);
     }
 

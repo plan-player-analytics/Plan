@@ -41,6 +41,7 @@ public class TestInit {
     public boolean setUp() {
         try {
             planMock = PowerMockito.mock(Plan.class);
+            Plan.setInstance(Plan.class, planMock);
             File configfile = new File(getClass().getResource("/config.yml").getPath());
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.load(configfile.getAbsolutePath());
@@ -67,15 +68,14 @@ public class TestInit {
 //            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
             when(planMock.getServer()).thenReturn(mockServer);
             when(planMock.getLogger()).thenReturn(Logger.getGlobal());
-            ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
-            when(planMock.getVariable()).thenReturn(serverVariableHolder);
             BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
             when(planMock.getPluginLogger()).thenReturn(log);
-            ProcessStatus<Plan> process = new ProcessStatus(planMock);
-            when(planMock.processStatus()).thenReturn(process);
             BenchmarkUtil bench = new BenchmarkUtil();
             when(planMock.benchmark()).thenReturn(bench);
-            Plan.setInstance(Plan.class, planMock);
+            ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
+            when(planMock.getVariable()).thenReturn(serverVariableHolder);
+            ProcessStatus<Plan> process = new ProcessStatus(planMock);
+            when(planMock.processStatus()).thenReturn(process);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
             Settings.DEBUG.setValue(true);
             return true;

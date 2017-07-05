@@ -313,7 +313,7 @@ public class UserData {
         if (!Verify.notNull(gmTimes)) {
             gmTimes = new HashMap<>();
         }
-        if (Verify.notNull(time)) {
+        if (Verify.notNull(gm)) {
             gmTimes.put(gm, time);
         }
     }

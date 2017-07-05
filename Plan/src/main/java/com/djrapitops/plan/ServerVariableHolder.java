@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan;
 
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.bukkit.Server;
 
 /**
@@ -19,9 +20,9 @@ public class ServerVariableHolder {
      *
      * @param server instance the plugin is running on.
      */
-    public ServerVariableHolder(Server server) {
+    public ServerVariableHolder(Server server) {        
         maxPlayers = server.getMaxPlayers();
-        ip = server.getIp();
+        ip = server.getIp();        
     }
 
     /**

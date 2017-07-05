@@ -4,6 +4,7 @@ import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import java.util.ArrayList;
 import java.util.List;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -36,6 +37,7 @@ public class TPSCountTimer extends RslRunnable {
         long diff = nanotime - lastCheckNano;
         lastCheckNano = nanotime;
         if (diff > nanotime) { // First run's diff = nanotime + 1, no calc possible.
+            Log.debug("First run of TPSCountTimer Task.");
             return;
         }
         diff -= TimeAmount.MILLISECOND.ns() * 40L; // 40ms Removed because the run appears to take 40-50ms, scewing the tps.

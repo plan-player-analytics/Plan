@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.task.RslRunnable;
 import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -406,9 +407,9 @@ public class Analysis {
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
         Log.debug("Analyzing additional sources: " + sources.size());
-        sources.parallelStream().forEach(source -> {
-            Benchmark.start("Source " + source.getPlaceholder("").replace("%", ""));
+        sources.parallelStream().filter(s -> Verify.notNull(s)).forEach(source -> {
             try {
+                Benchmark.start("Source " + source.getPlaceholder("").replace("%", ""));
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
                     return;
@@ -435,6 +436,7 @@ public class Analysis {
                 }
             } catch (Throwable e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
+
                 Log.toLog(this.getClass().getName(), e);
             } finally {
                 Benchmark.stop("Source " + source.getPlaceholder("").replace("%", ""));
