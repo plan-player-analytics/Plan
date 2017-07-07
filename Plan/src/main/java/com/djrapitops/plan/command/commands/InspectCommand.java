@@ -5,7 +5,7 @@ import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.CommandUtils;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;

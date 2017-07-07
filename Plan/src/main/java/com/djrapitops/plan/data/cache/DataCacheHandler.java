@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeCompa
 import org.bukkit.Bukkit;
 import static org.bukkit.Bukkit.getPlayer;
 import org.bukkit.entity.Player;
+import com.djrapitops.javaplugin.task.ITask;
+import static org.bukkit.Bukkit.getPlayer;
 
 /**
  * This Class contains the Cache.
@@ -135,7 +136,7 @@ public class DataCacheHandler extends LocationCache {
         } else {
             clearAfterXsaves = configValue;
         }
-        RslTask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new RslRunnable("PeriodicCacheSaveTask") {
+        ITask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new RslRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
 
             @Override
@@ -505,7 +506,7 @@ public class DataCacheHandler extends LocationCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        RslTask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new RslRunnable("ReloadCacheUpdateTask") {
+        ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new RslRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {

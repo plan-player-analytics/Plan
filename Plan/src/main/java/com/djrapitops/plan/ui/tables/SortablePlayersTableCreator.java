@@ -31,7 +31,7 @@ public class SortablePlayersTableCreator {
         int i = 0;
         Collections.sort(data, new UserDataLastPlayedComparator());
         for (UserData uData : data) {
-            if (i >= 1500) {
+            if (i >= 750) {
                 break;
             }
             try {

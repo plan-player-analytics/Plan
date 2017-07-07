@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;

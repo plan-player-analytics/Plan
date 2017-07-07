@@ -4,8 +4,7 @@ import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -15,6 +14,7 @@ import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.javaplugin.task.ITask;
 
 /**
  * This subcommand is used to run the analysis and to view some of the data in

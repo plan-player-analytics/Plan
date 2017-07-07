@@ -4,8 +4,7 @@ import com.djrapitops.javaplugin.api.TimeAmount;
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -20,6 +19,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
+import com.djrapitops.javaplugin.task.ITask;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.

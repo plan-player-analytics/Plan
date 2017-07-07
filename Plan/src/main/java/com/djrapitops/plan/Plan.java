@@ -22,8 +22,7 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.javaplugin.RslPlugin;
 import com.djrapitops.javaplugin.api.ColorScheme;
 import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +47,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
+import com.djrapitops.javaplugin.task.ITask;
 
 /**
  * Javaplugin class that contains methods for starting the plugin, logging to
@@ -280,7 +280,7 @@ public class Plan extends RslPlugin<Plan> {
     private void startBootAnalysisTask() throws IllegalStateException {
         Benchmark.start("Enable: Schedule boot analysis task");
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-        RslTask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new RslRunnable() {
+        ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new RslRunnable() {
             @Override
             public void run() {
                 Log.debug("Running BootAnalysisTask");

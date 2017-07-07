@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import java.util.concurrent.BlockingQueue;
 
 /**

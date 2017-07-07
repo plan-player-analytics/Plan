@@ -1,8 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.RslRunnable;
-import com.djrapitops.javaplugin.task.RslTask;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +40,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.GameMode;
+import com.djrapitops.javaplugin.task.ITask;
 
 /**
  *
@@ -78,7 +78,7 @@ public class Analysis {
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START + "");
         // Async task for Analysis
-        RslTask asyncAnalysisTask = plugin.getRunnableFactory().createNew(new RslRunnable("AnalysisTask") {
+        ITask asyncAnalysisTask = plugin.getRunnableFactory().createNew(new RslRunnable("AnalysisTask") {
             @Override
             public void run() {
                 taskId = this.getTaskId();

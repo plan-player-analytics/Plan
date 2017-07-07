@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import main.java.com.djrapitops.plan.Log;

@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.javaplugin.task.RslRunnable;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
