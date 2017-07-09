@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.net.InetAddress;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LoginHandling;
-import org.bukkit.GameMode;
 
 /**
  * HandlingInfo Class for refreshing data in the cache for online players.
@@ -29,7 +29,7 @@ public class ReloadInfo extends HandlingInfo {
      * @param nickname Nickname of the player
      * @param gm current gamemode of the player
      */
-    public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm) {
+    public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm) {
         super(uuid, InfoType.RELOAD, time);
         this.ip = ip;
         this.banned = banned;

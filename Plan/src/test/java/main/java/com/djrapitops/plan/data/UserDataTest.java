@@ -5,6 +5,7 @@
  */
 package test.java.main.java.com.djrapitops.plan.data;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -17,11 +18,12 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +31,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -58,7 +58,7 @@ public class UserDataTest {
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
         DemographicsData demData = new DemographicsData();
-        test = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, demData, "Testname", true);
+        test = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, Gamemode.CREATIVE, demData, "Testname", true);
     }
 
     /**
@@ -203,8 +203,10 @@ public class UserDataTest {
      */
     @Test
     public void testSetGMTime() {
-        test.setGMTime(GameMode.SURVIVAL, 1L);
-        assertTrue("" + test.getGmTimes().get(GameMode.SURVIVAL), test.getGmTimes().get(GameMode.SURVIVAL) == 1L);
+        final Gamemode gm = Gamemode.SURVIVAL;
+        test.setGMTime(gm, 1L);
+        final Long result = test.getGmTimes().get(gm);
+        assertTrue("" + result, result == 1L);
     }
 
     /**
@@ -213,8 +215,10 @@ public class UserDataTest {
     @Test
     public void testSetGMTimeWhenGMTimesNull() {
         test.setGmTimes(null);
-        test.setGMTime(GameMode.SURVIVAL, 1L);
-        assertTrue("" + test.getGmTimes().get(GameMode.SURVIVAL), test.getGmTimes().get(GameMode.SURVIVAL) == 1L);
+        final Gamemode gm = Gamemode.SURVIVAL;
+        test.setGMTime(gm, 1L);
+        final Long result = test.getGmTimes().get(gm);
+        assertTrue("" + result, result == 1L);
     }
 
     /**
@@ -231,16 +235,16 @@ public class UserDataTest {
      */
     @Test
     public void testSetAllGMTimes() {
-        HashMap<GameMode, Long> gmTimes = new HashMap<>();
+        HashMap<Gamemode, Long> gmTimes = new HashMap<>();
         gmTimes.put(null, 0L);
         test.setGmTimes(gmTimes);
         test.setAllGMTimes(1L, 2L, 3L, 4L);
-        Map<GameMode, Long> times = test.getGmTimes();
+        Map<Gamemode, Long> times = test.getGmTimes();
         assertTrue("Cleared gmTimes", !times.containsKey(null));
-        assertTrue("Not equal 0", times.get(GameMode.SURVIVAL) == 1L);
-        assertTrue("Not equal 1", times.get(GameMode.CREATIVE) == 2L);
-        assertTrue("Not equal 2", times.get(GameMode.ADVENTURE) == 3L);
-        assertTrue("Not equal 3", times.get(GameMode.SPECTATOR) == 4L);
+        assertTrue("Not equal 0", times.get(Gamemode.SURVIVAL) == 1L);
+        assertTrue("Not equal 1", times.get(Gamemode.CREATIVE) == 2L);
+        assertTrue("Not equal 2", times.get(Gamemode.ADVENTURE) == 3L);
+        assertTrue("Not equal 3", times.get(Gamemode.SPECTATOR) == 4L);
     }
 
     /**
@@ -359,7 +363,7 @@ public class UserDataTest {
      */
     @Test
     public void testEquals() {
-        assertTrue("Not Equals!", test.equals(new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, null, "Testname", true)));
+        assertTrue("Not Equals!", test.equals(new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, Gamemode.CREATIVE, null, "Testname", true)));
     }
 
     /**
@@ -367,7 +371,7 @@ public class UserDataTest {
      */
     @Test
     public void testEqualsNot() {
-        UserData notEqual = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, GameMode.CREATIVE, null, "WRONG", true);
+        UserData notEqual = new UserData(UUID.fromString("7f8149a0-b5a5-4fcd-80b5-6cff083a99f1"), 0, null, true, Gamemode.CREATIVE, null, "WRONG", true);
         assertTrue("Equals!", !notEqual.equals(test));
     }
 
@@ -395,7 +399,7 @@ public class UserDataTest {
     @Test
     public void testPlayerConstructor() {
         test = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, Gamemode.SURVIVAL, new DemographicsData(), "TestName", true);
         expected.updateBanned(true);
         assertTrue("Not equal!", test.equals(expected));
     }
@@ -407,7 +411,7 @@ public class UserDataTest {
     @Test
     public void testPlayerConstructorBrokenBanned() throws IOException {
         test = new UserData(MockUtils.mockBrokenPlayer(), new DemographicsData());
-        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, Gamemode.SURVIVAL, new DemographicsData(), "TestName", true);
         expected.updateBanned(false);
         assertTrue("Not equal!", test.equals(expected));
     }
@@ -418,7 +422,7 @@ public class UserDataTest {
     @Test
     public void testOfflinePlayerConstructor() {
         test = new UserData((OfflinePlayer) MockUtils.mockPlayer(), new DemographicsData());
-        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, Gamemode.SURVIVAL, new DemographicsData(), "TestName", true);
         expected.updateBanned(true);
         assertTrue("Not equal!", test.equals(expected));
     }
@@ -430,7 +434,7 @@ public class UserDataTest {
     @Test
     public void testOfflinePlayerConstructorBrokenBanned() throws IOException {
         test = new UserData((OfflinePlayer) MockUtils.mockBrokenPlayer(), new DemographicsData());
-        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, GameMode.SURVIVAL, new DemographicsData(), "TestName", true);
+        UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, new Location(MockUtils.mockWorld(), 0, 0, 0), true, Gamemode.SURVIVAL, new DemographicsData(), "TestName", true);
         expected.updateBanned(false);
         assertTrue("Not equal!", test.equals(expected));
     }

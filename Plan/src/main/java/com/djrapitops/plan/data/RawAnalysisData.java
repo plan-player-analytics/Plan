@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data;
 
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,48 +18,27 @@ import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
  */
 public class RawAnalysisData {
 
-    private long gmZero;
-    private long gmOne;
-    private long gmTwo;
-    private long gmThree;
-    private long totalLoginTimes;
-    private long totalPlaytime;
-    private int totalBanned;
-    private int active;
-    private int joinleaver;
-    private int inactive;
-    private long totalKills;
-    private long totalMobKills;
-    private long totalDeaths;
-    private int ops;
-    private List<Integer> ages;
-    private Map<String, Long> latestLogins;
-    private Map<String, Long> playtimes;
-    private List<SessionData> sessiondata;
-    private Map<UUID, List<SessionData>> sortedSessionData;
-    private Map<String, Integer> commandUse;
-    private Map<String, Integer> geolocations;
-    private Map<String, String> geocodes;
-    private List<Long> registered;
+    private final Map<RawData, Long> longValues;
+    private final Map<RawData, Integer> intValues;
+
+    private final List<Integer> ages;
+    private final List<Long> registered;
+    private final Map<String, Long> latestLogins;
+    private final Map<String, Long> playtimes;
+    private final List<SessionData> sessiondata;
+    private final Map<UUID, List<SessionData>> sortedSessionData;
+    private final Map<String, Integer> commandUse;
+    private final Map<String, Integer> geolocations;
+    private final Map<String, String> geocodes;
 
     /**
      * Constructor for a new empty dataset.
      */
     public RawAnalysisData() {
-        gmZero = 0;
-        gmOne = 0;
-        gmTwo = 0;
-        gmThree = 0;
-        totalLoginTimes = 0;
-        totalPlaytime = 0;
-        totalBanned = 0;
-        active = 0;
-        joinleaver = 0;
-        inactive = 0;
-        totalKills = 0;
-        totalMobKills = 0;
-        totalDeaths = 0;
-        ops = 0;
+        longValues = new HashMap<>();
+        intValues = new HashMap<>();
+        placeDefaultValues();
+
         ages = new ArrayList<>();
         latestLogins = new HashMap<>();
         playtimes = new HashMap<>();
@@ -68,6 +48,49 @@ public class RawAnalysisData {
         geolocations = new HashMap<>();
         geocodes = new HashMap<>();
         registered = new ArrayList<>();
+    }
+
+    private void placeDefaultValues() {
+        longValues.put(RawData.TIME_GM0, 0L);
+        longValues.put(RawData.TIME_GM1, 0L);
+        longValues.put(RawData.TIME_GM2, 0L);
+        longValues.put(RawData.TIME_GM3, 0L);
+        longValues.put(RawData.LOGINTIMES, 0L);
+        longValues.put(RawData.PLAYTIME, 0L);
+        longValues.put(RawData.KILLS, 0L);
+        longValues.put(RawData.MOBKILLS, 0L);
+        longValues.put(RawData.DEATHS, 0L);
+        intValues.put(RawData.AMOUNT_ACTIVE, 0);
+        intValues.put(RawData.AMOUNT_BANNED, 0);
+        intValues.put(RawData.AMOUNT_INACTIVE, 0);
+        intValues.put(RawData.AMOUNT_UNKNOWN, 0);
+        intValues.put(RawData.AMOUNT_OPS, 0);
+    }
+
+    public long getLong(RawData key) {
+        return Verify.nullCheck(longValues.get(key));
+    }
+
+    public int getInt(RawData key) {
+        return Verify.nullCheck(intValues.get(key));
+    }
+
+    @Deprecated
+    private void add(RawData key, long amount) {
+        addTo(key, amount);
+    }
+
+    public void addTo(RawData key, long amount) {
+        Verify.nullCheck(key);
+        Long l = longValues.get(key);
+        Integer i = intValues.get(key);
+        if (Verify.notNull(l)) {
+            longValues.replace(key, l + amount);
+        } else if (Verify.notNull(i)) {
+            intValues.replace(key, i + (int) amount);
+        } else {
+            throw new IllegalArgumentException("Incorrect key: " + key.name());
+        }
     }
 
     /**
@@ -116,230 +139,6 @@ public class RawAnalysisData {
 
     /**
      *
-     * @param gmZero
-     */
-    public void addToGmZero(long gmZero) {
-        this.gmZero += gmZero;
-    }
-
-    /**
-     *
-     * @param gmOne
-     */
-    public void addToGmOne(long gmOne) {
-        this.gmOne += gmOne;
-    }
-
-    /**
-     *
-     * @param gmTwo
-     */
-    public void addToGmTwo(long gmTwo) {
-        this.gmTwo += gmTwo;
-    }
-
-    /**
-     *
-     * @param gmThree
-     */
-    public void addGmThree(long gmThree) {
-        this.gmThree += gmThree;
-    }
-
-    /**
-     *
-     * @param totalLoginTimes
-     */
-    public void addTotalLoginTimes(long totalLoginTimes) {
-        this.totalLoginTimes += totalLoginTimes;
-    }
-
-    /**
-     *
-     * @param totalPlaytime
-     */
-    public void addTotalPlaytime(long totalPlaytime) {
-        this.totalPlaytime += totalPlaytime;
-    }
-
-    /**
-     *
-     * @param totalBanned
-     */
-    public void addTotalBanned(int totalBanned) {
-        this.totalBanned += totalBanned;
-    }
-
-    /**
-     *
-     * @param active
-     */
-    public void addActive(int active) {
-        this.active += active;
-    }
-
-    /**
-     *
-     * @param joinleaver
-     */
-    public void addJoinleaver(int joinleaver) {
-        this.joinleaver += joinleaver;
-    }
-
-    /**
-     *
-     * @param inactive
-     */
-    public void addInactive(int inactive) {
-        this.inactive += inactive;
-    }
-
-    /**
-     *
-     * @param totalKills
-     */
-    public void addTotalKills(long totalKills) {
-        this.totalKills += totalKills;
-    }
-
-    /**
-     *
-     * @param totalMobKills
-     */
-    public void addTotalMobKills(long totalMobKills) {
-        this.totalMobKills += totalMobKills;
-    }
-
-    /**
-     *
-     * @param totalDeaths
-     */
-    public void addTotalDeaths(long totalDeaths) {
-        this.totalDeaths += totalDeaths;
-    }
-
-    /**
-     *
-     * @param ops
-     */
-    public void addOps(int ops) {
-        this.ops += ops;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getGmZero() {
-        return gmZero;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getGmOne() {
-        return gmOne;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getGmTwo() {
-        return gmTwo;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getGmThree() {
-        return gmThree;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getTotalLoginTimes() {
-        return totalLoginTimes;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getTotalPlaytime() {
-        return totalPlaytime;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getTotalBanned() {
-        return totalBanned;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getActive() {
-        return active;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getJoinleaver() {
-        return joinleaver;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getInactive() {
-        return inactive;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getTotalKills() {
-        return totalKills;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getTotalMobKills() {
-        return totalMobKills;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getTotalDeaths() {
-        return totalDeaths;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getOps() {
-        return ops;
-    }
-
-    /**
-     *
      * @return
      */
     public List<Integer> getAges() {
@@ -370,10 +169,19 @@ public class RawAnalysisData {
         return sessiondata;
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<UUID, List<SessionData>> getSortedSessionData() {
         return sortedSessionData;
     }
-    
+
+    /**
+     *
+     * @param uuid
+     * @param sessions
+     */
     public void addSessions(UUID uuid, List<SessionData> sessions) {
         sessiondata.addAll(sessions);
         sortedSessionData.put(uuid, sessions);
@@ -384,7 +192,7 @@ public class RawAnalysisData {
      * @param commandUse
      */
     public void setCommandUse(Map<String, Integer> commandUse) {
-        this.commandUse = commandUse;
+        this.commandUse.putAll(commandUse);
     }
 
     /**
@@ -402,4 +210,5 @@ public class RawAnalysisData {
     public List<Long> getRegistered() {
         return registered;
     }
+
 }

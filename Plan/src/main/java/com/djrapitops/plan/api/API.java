@@ -1,10 +1,15 @@
 package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.javaplugin.utilities.UUIDFetcher;
+import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -15,8 +20,6 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import org.bukkit.OfflinePlayer;
 
 /**
  * This class contains the API methods.
@@ -33,7 +36,7 @@ import org.bukkit.OfflinePlayer;
  */
 public class API {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Construcor.
@@ -165,7 +168,7 @@ public class API {
      */
     public String getPlayerHtmlAsString(UUID uuid) {
         WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
+        if (Verify.notNull(server)) {
             return server.getDataReqHandler().getInspectHtml(uuid);
         }
         DataRequestHandler reqH = new DataRequestHandler(plugin);
@@ -182,8 +185,8 @@ public class API {
     }
 
     /**
-     * Run's the analysis with the current data in the cache and fetches rest from
-     * the database.
+     * Run's the analysis with the current data in the cache and fetches rest
+     * from the database.
      *
      * Starts a new Asyncronous task to run the analysis.
      */
@@ -200,7 +203,7 @@ public class API {
      */
     public String getAnalysisHtmlAsString() {
         WebSocketServer server = plugin.getUiServer();
-        if (server != null) {
+        if (Verify.notNull(server)) {
             return server.getDataReqHandler().getAnalysisHtml();
         }
         DataRequestHandler reqH = new DataRequestHandler(plugin);
@@ -224,12 +227,14 @@ public class API {
      *
      * @param uuid UUID of the player.
      * @return Playername, eg "Rsl1122"
+     * @throws NullPointerException If uuid is null.
      * @throws IllegalStateException If the player has not played on the server
      * before.
      */
-    public String getPlayerName(UUID uuid) throws IllegalStateException {
-        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
-        if (offlinePlayer.hasPlayedBefore()) {
+    public String getPlayerName(UUID uuid) throws IllegalStateException, NullPointerException {
+        Verify.nullCheck(uuid);
+        IOfflinePlayer offlinePlayer = Plan.getInstance().fetch().getOfflinePlayer(uuid);
+        if (Verify.notNull(offlinePlayer)) {
             return offlinePlayer.getName();
         }
         throw new IllegalStateException("Player has not played on this server before.");
@@ -245,12 +250,12 @@ public class API {
     public UUID playerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
     }
-    
+
     /**
      * Get the saved UUIDs in the database.
-     * 
+     *
      * Should be called from async thread.
-     * 
+     *
      * @return Collection of UUIDs that can be found in the database.
      * @throws SQLException If database error occurs.
      * @since 3.4.2
@@ -258,14 +263,14 @@ public class API {
     public Collection<UUID> getSavedUUIDs() throws SQLException {
         return plugin.getDB().getSavedUUIDs();
     }
-    
+
     /**
      * Get the saved UserData in the database for a collection of UUIDs.
-     * 
+     *
      * Will not contain data for UUIDs not found in the database.
-     * 
+     *
      * Should be called from async thread.
-     * 
+     *
      * @param uuids Collection of UUIDs that can be found in the database.
      * @return List of all Data in the database.
      * @throws SQLException If database error occurs.
@@ -273,5 +278,34 @@ public class API {
      */
     public List<UserData> getUserDataOfUsers(Collection<UUID> uuids) throws SQLException {
         return plugin.getDB().getUserDataForUUIDS(uuids);
+    }
+
+    /**
+     * Get the cached UserData objects in the InspectCache.
+     *
+     * This can be used with PluginData objects safely to get the data for all
+     * users in Plan database, because all data is InspectCached before analysis
+     * begins.
+     *
+     * @return List of all Data in the InspectCache.
+     * @since 3.5.0
+     */
+    public List<UserData> getInspectCachedUserData() {
+        return plugin.getInspectCache().getCachedUserData();
+    }
+
+    /**
+     * Get the cached UserData objects in the InspectCache in a Map form.
+     *
+     * This can be used with PluginData objects safely to get the data for all
+     * users in Plan database, because all data is InspectCached before analysis
+     * begins.
+     *
+     * @return Map of all Data in the InspectCache with UUID of the player as
+     * the key.
+     * @since 3.5.0
+     */
+    public Map<UUID, UserData> getInspectCachedUserDataMap() {
+        return getInspectCachedUserData().stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
     }
 }

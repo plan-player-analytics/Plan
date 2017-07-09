@@ -2,7 +2,9 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
-import java.util.Arrays;
+import com.djrapitops.javaplugin.command.sender.ISender;
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.Collection;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -10,10 +12,8 @@ import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This manage subcommand is used to move all data from one database to another.
@@ -25,7 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class ManageMoveCommand extends SubCommand {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -39,77 +39,74 @@ public class ManageMoveCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (args.length < 2) {
-            sender.sendMessage(Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MOVE + ""));
-            return true;
-        }
-        String fromDB = args[0].toLowerCase();
-        String toDB = args[1].toLowerCase();
-        if (!fromDB.equals("mysql") && !fromDB.equals("sqlite")) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_DB + fromDB);
-            return true;
-        }
-        if (!toDB.equals("mysql") && !toDB.equals("sqlite")) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_INCORRECT_DB + toDB);
-            return true;
-        }
-        if (fromDB.equals(toDB)) {
-            sender.sendMessage(Phrase.MANAGE_ERROR_SAME_DB + "");
-            return true;
-        }
-        if (!Arrays.asList(args).contains("-a")) {
-            sender.sendMessage(Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_OVERWRITE.parse(args[1])));
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+        if (!Check.ifTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MOVE + ""), sender)) {
             return true;
         }
 
-        Database fromDatabase = null;
-        Database toDatabase = null;
-        for (Database database : plugin.getDatabases()) {
-            if (fromDB.equalsIgnoreCase(database.getConfigName())) {
-                fromDatabase = database;
-                fromDatabase.init();
-            }
-            if (toDB.equalsIgnoreCase(database.getConfigName())) {
-                toDatabase = database;
-                toDatabase.init();
-            }
+        String fromDB = args[0].toLowerCase();
+        boolean isCorrectDB = "sqlite".equals(fromDB) || "mysql".equals(fromDB);
+
+        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + fromDB, sender)) {
+            return true;
         }
-        if (fromDatabase == null) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+
+        String toDB = args[1].toLowerCase();
+        isCorrectDB = "sqlite".equals(toDB) || "mysql".equals(toDB);
+
+        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + toDB, sender)) {
+            return true;
+        }
+        if (!Check.ifTrue(!Verify.equalsIgnoreCase(fromDB, toDB), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
+            return true;
+        }
+        if (!Check.ifTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[1])), sender)) {
+            return true;
+        }
+
+        final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
+
+        if (!Check.ifTrue(Verify.notNull(fromDatabase), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
             Log.error(fromDB + " was null!");
             return true;
         }
-        if (toDatabase == null) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+
+        final Database toDatabase = ManageUtils.getDB(plugin, toDB);
+
+        if (!Check.ifTrue(Verify.notNull(toDatabase), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
             Log.error(toDB + " was null!");
             return true;
         }
 
-        final Database moveFromDB = fromDatabase;
-        final Database moveToDB = toDatabase;
-        (new BukkitRunnable() {
+        runMoveTask(fromDatabase, toDatabase, sender);
+        return true;
+    }
+
+    private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {
+        plugin.getRunnableFactory().createNew(new RslRunnable("DBMoveTask") {
             @Override
             public void run() {
-                final Collection<UUID> uuids = ManageUtils.getUUIDS(moveFromDB);
-                if (uuids.isEmpty()) {
-                    sender.sendMessage(Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDB + ")");
-                    this.cancel();
-                    return;
-                }
-                sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
-                if (ManageUtils.clearAndCopy(moveToDB, moveFromDB, uuids)) {
-                    sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
-                    if (!toDB.equals(plugin.getDB().getConfigName())) {
-                        sender.sendMessage(Phrase.MANAGE_DB_CONFIG_REMINDER + "");
+                try {
+                    final Collection<UUID> uuids = ManageUtils.getUUIDS(fromDatabase);
+                    if (Check.ifTrue(Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDatabase.getName() + ")", sender)) {
+                        return;
                     }
-                } else {
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
-                }
-                this.cancel();
-            }
-        }).runTaskAsynchronously(plugin);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    if (ManageUtils.clearAndCopy(toDatabase, fromDatabase, uuids)) {
+                        sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
+                        boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
 
-        return true;
+                        Check.ifTrue(!movedToCurrentDatabase, Phrase.MANAGE_DB_CONFIG_REMINDER + "", sender);
+                    } else {
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                    }
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                } finally {
+                    this.cancel();
+                }
+            }
+        }).runTaskAsynchronously();
     }
 }

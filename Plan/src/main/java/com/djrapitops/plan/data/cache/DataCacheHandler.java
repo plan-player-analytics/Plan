@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +14,7 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
-import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.*;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
@@ -24,21 +22,18 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import static org.bukkit.Bukkit.getOfflinePlayer;
+import com.djrapitops.javaplugin.task.ITask;
+import com.djrapitops.javaplugin.utilities.player.IPlayer;
 
 /**
  * This Class contains the Cache.
  *
- * This class is the main processing class that initializes Save, Clear, Process
+ * This class is the main processing class that initialises Save, Clear, Process
  * and Get queue and Starts the asyncronous save task.
  *
- * It is used to store commanduse, locations, active sessions and UserData
+ * It is used to store command use, locations, active sessions and UserData
  * objects in memory.
  *
  * It's methods can be used to access all the data it stores and to clear them.
@@ -51,6 +46,7 @@ public class DataCacheHandler extends LocationCache {
     // Cache
     private final HashMap<UUID, UserData> dataCache;
     private Map<String, Integer> commandUse;
+    private List<List<TPS>> unsavedTPSHistory;
 
     // Plan
     private final Plan plugin;
@@ -63,7 +59,7 @@ public class DataCacheHandler extends LocationCache {
     private DataCacheGetQueue getTask;
 
     // Variables
-    private int timesSaved;
+    private boolean periodicTaskIsSaving = false;
 
     /**
      * Class Constructor.
@@ -74,21 +70,21 @@ public class DataCacheHandler extends LocationCache {
      * @param plugin Current instance of Plan
      */
     public DataCacheHandler(Plan plugin) {
-        super();
+        super(); // Initializes Session & Location cache.
+
         this.plugin = plugin;
         db = plugin.getDB();
+
         dataCache = new HashMap<>();
-
         startQueues();
-
-        timesSaved = 0;
 
         commandUse = new HashMap<>();
         if (!getCommandUseFromDb()) {
             Log.error(Phrase.DB_FAILURE_DISABLE + "");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            plugin.disablePlugin();
             return;
         }
+        unsavedTPSHistory = new ArrayList<>();
         startAsyncPeriodicSaveTask();
     }
 
@@ -111,10 +107,10 @@ public class DataCacheHandler extends LocationCache {
      * Used to start all processing Queue Threads.
      */
     public void startQueues() {
-        clearTask = new DataCacheClearQueue(this);
-        saveTask = new DataCacheSaveQueue(plugin, clearTask);
         getTask = new DataCacheGetQueue(plugin);
         processTask = new DataCacheProcessQueue(this);
+        clearTask = new DataCacheClearQueue(this);
+        saveTask = new DataCacheSaveQueue(plugin, this);
     }
 
     /**
@@ -126,7 +122,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
-        if (minutes <= 0) {
+        if (!Verify.positive(minutes)) {
             minutes = 5;
         }
         final int clearAfterXsaves;
@@ -136,19 +132,32 @@ public class DataCacheHandler extends LocationCache {
         } else {
             clearAfterXsaves = configValue;
         }
-        BukkitTask asyncPeriodicCacheSaveTask = new BukkitRunnable() {
+        ITask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new RslRunnable("PeriodicCacheSaveTask") {
+            private int timesSaved = 0;
+
             @Override
             public void run() {
-                DataCacheHandler handler = Plan.getInstance().getHandler();
-                handler.saveHandlerDataToCache();
-                handler.saveCachedUserData();
-                if (timesSaved % clearAfterXsaves == 0) {
-                    handler.clearCache();
+                if (periodicTaskIsSaving) {
+                    return;
                 }
-                saveCommandUse();
-                timesSaved++;
+                try {
+                    periodicTaskIsSaving = true;
+                    DataCacheHandler handler = Plan.getInstance().getHandler();
+                    handler.saveHandlerDataToCache();
+                    handler.saveCachedUserData();
+                    if (timesSaved % clearAfterXsaves == 0) {
+                        handler.clearCache();
+                    }
+                    saveCommandUse();
+                    saveUnsavedTPSHistory();
+                    timesSaved++;
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + "(" + this.getName() + ")", e);
+                } finally {
+                    periodicTaskIsSaving = false;
+                }
             }
-        }.runTaskTimerAsynchronously(plugin, 60 * 20 * minutes, 60 * 20 * minutes);
+        }).runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
     }
 
     /**
@@ -233,6 +242,9 @@ public class DataCacheHandler extends LocationCache {
      * @param i Object that extends HandlingInfo.
      */
     public void addToPool(HandlingInfo i) {
+        if (i == null) {
+            return;
+        }
         Log.debug(i.getUuid() + ": Adding to pool, type:" + i.getType().name());
         processTask.addToPool(i);
     }
@@ -254,15 +266,15 @@ public class DataCacheHandler extends LocationCache {
         List<HandlingInfo> toProcess = processTask.stopAndReturnLeftovers();
         Benchmark.start("ProcessOnlineHandlingInfo");
         Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
         Log.debug("Online: " + onlinePlayers.size());
-        for (Player p : onlinePlayers) {
-            UUID uuid = p.getUniqueId();
+        for (IPlayer p : onlinePlayers) {
+            UUID uuid = p.getUuid();
             endSession(uuid);
             if (dataCache.containsKey(uuid)) {
                 dataCache.get(uuid).addLocations(getLocationsForSaving(uuid));
             }
-            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGameMode(), getSession(uuid)));
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
@@ -281,6 +293,7 @@ public class DataCacheHandler extends LocationCache {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        saveUnsavedTPSHistory();
         try {
             db.close();
         } catch (SQLException e) {
@@ -341,25 +354,54 @@ public class DataCacheHandler extends LocationCache {
         }
     }
 
+    public void saveUnsavedTPSHistory() {
+        List<TPS> averages = calculateAverageTpsForEachMinute();
+        if (averages.isEmpty()) {
+            return;
+        }
+        try {
+            db.getTpsTable().saveTPSData(averages);
+        } catch (SQLException ex) {
+            Log.toLog(this.getClass().getName(), ex);
+        }
+    }
+
+    private List<TPS> calculateAverageTpsForEachMinute() {
+        final List<TPS> averages = new ArrayList<>();
+        if (unsavedTPSHistory.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);;
+        for (List<TPS> history : copy) {
+            final long lastdate = history.get(history.size() - 1).getDate();
+            final double averageTPS = MathUtils.averageDouble(history.stream().map(t -> t.getTps()));
+            final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(t -> t.getPlayers()));
+            averages.add(new TPS(lastdate, averageTPS, averagePlayersOnline));
+        }
+        unsavedTPSHistory.removeAll(copy);
+        return averages;
+    }
+
     /**
      * Refreshes the calculations for all online players with ReloadInfo.
      */
     public void saveHandlerDataToCache() {
-        Bukkit.getServer().getOnlinePlayers().stream().forEach((p) -> {
+        final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
+        onlinePlayers.stream().forEach((p) -> {
             saveHandlerDataToCache(p, false);
         });
     }
 
-    private void saveHandlerDataToCache(Player player, boolean pool) {
+    private void saveHandlerDataToCache(IPlayer player, boolean pool) {
         long time = MiscUtils.getTime();
-        UUID uuid = player.getUniqueId();
-        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode());
+        UUID uuid = player.getUuid();
+        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGamemode());
         if (!pool) {
             UserData data = dataCache.get(uuid);
             if (data != null) {
                 info.process(data);
                 return;
-            }            
+            }
         }
         addToPool(info);
     }
@@ -378,7 +420,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void clearFromCache(UUID uuid) {
         Log.debug(uuid + ": Clear");
-        if (getOfflinePlayer(uuid).isOnline()) {
+        if (Verify.notNull(plugin.fetch().getPlayer(uuid))) {
             Log.debug(uuid + ": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
@@ -423,16 +465,7 @@ public class DataCacheHandler extends LocationCache {
      *
      * @param player Player the new UserData is created for
      */
-    public void newPlayer(Player player) {
-        newPlayer(NewPlayerCreator.createNewPlayer(player));
-    }
-
-    /**
-     * Creates a new UserData instance and saves it to the Database.
-     *
-     * @param player Player the new UserData is created for
-     */
-    public void newPlayer(OfflinePlayer player) {
+    public void newPlayer(IPlayer player) {
         newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
@@ -470,11 +503,12 @@ public class DataCacheHandler extends LocationCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        BukkitTask asyncReloadCacheUpdateTask = (new BukkitRunnable() {
+        ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new RslRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    UUID uuid = player.getUniqueId();
+                final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
+                for (IPlayer player : onlinePlayers) {
+                    UUID uuid = player.getUuid();
                     boolean isNewPlayer = !db.wasSeenBefore(uuid);
                     if (isNewPlayer) {
                         newPlayer(player);
@@ -484,7 +518,7 @@ public class DataCacheHandler extends LocationCache {
                 }
                 this.cancel();
             }
-        }).runTaskAsynchronously(plugin);
+        }).runTaskAsynchronously();
     }
 
     /**
@@ -499,19 +533,40 @@ public class DataCacheHandler extends LocationCache {
         commandUse.put(command, commandUse.get(command) + 1);
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheSaveQueue getSaveTask() {
         return saveTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheClearQueue getClearTask() {
         return clearTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheProcessQueue getProcessTask() {
         return processTask;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataCacheGetQueue getGetTask() {
         return getTask;
+    }
+
+    public void addTPSLastMinute(List<TPS> history) {
+        // Copy the contents to avoid reference, thus making the whole calculation pointless.
+        unsavedTPSHistory.add(new ArrayList<>(history));
     }
 }

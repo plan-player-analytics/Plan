@@ -5,16 +5,16 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
-import java.util.Set;
+import com.djrapitops.javaplugin.command.sender.BukkitCMDSender;
+import com.djrapitops.javaplugin.command.sender.ISender;
+import java.util.List;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.easymock.EasyMock;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
@@ -58,7 +58,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplaynameArgsPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
-        CommandSender sender = MockUtils.mockPlayer();
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
         String expResult = "Rsl1122";
         String result = MiscUtils.getPlayerName(args, sender);
         assertEquals(expResult, result);
@@ -70,7 +70,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplaynameArgsNoPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
-        CommandSender sender = MockUtils.mockPlayer();
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
         String expResult = "Rsl1122";
         String result = MiscUtils.getPlayerName(args, sender);
         assertEquals(expResult, result);
@@ -82,7 +82,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplaynameNoArgsPerm() {
         String[] args = new String[]{};
-        CommandSender sender = MockUtils.mockPlayer();
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
         String expResult = "TestName";
         String result = MiscUtils.getPlayerName(args, sender);
         assertEquals(expResult, result);
@@ -94,7 +94,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplaynameNoArgsNoPerm() {
         String[] args = new String[]{};
-        CommandSender sender = MockUtils.mockPlayer2();
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
         String expResult = "TestName2";
         String result = MiscUtils.getPlayerName(args, sender);
         assertEquals(expResult, result);
@@ -106,7 +106,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplaynameOwnNameNoPerm() {
         String[] args = new String[]{"testname2"};
-        CommandSender sender = MockUtils.mockPlayer2();
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
         String expResult = "TestName2";
         String result = MiscUtils.getPlayerName(args, sender);
         assertEquals(expResult, result);
@@ -118,7 +118,7 @@ public class MiscUtilsTest {
     @Test
     public void testGetPlayerDisplaynameConsole() {
         String[] args = new String[]{"TestConsoleSender"};
-        CommandSender sender = MockUtils.mockConsoleSender();
+        ISender sender = new BukkitCMDSender(MockUtils.mockConsoleSender());
         String expResult = "TestConsoleSender";
         String result = MiscUtils.getPlayerName(args, sender);
         assertEquals(expResult, result);
@@ -127,21 +127,15 @@ public class MiscUtilsTest {
     /**
      *
      */
-    @Ignore("Inconsistant")
     @Test
     public void testGetMatchingDisplaynames() {
         String search = "testname";
-        OfflinePlayer exp1 = MockUtils.mockPlayer();
-        OfflinePlayer exp2 = MockUtils.mockPlayer2();
-        Set<OfflinePlayer> result = MiscUtils.getMatchingDisplaynames(search);
+        String exp1 = "TestName";
+        String exp2 = "TestName2";
+        List<String> result = MiscUtils.getMatchingPlayerNames(search);
         assertEquals(2, result.size());
-        for (OfflinePlayer r : result) {
-            boolean equalToExp1 = r.getName().equals(exp1.getName());
-            boolean equalToExp2 = r.getName().equals(exp2.getName());
-            if (!(equalToExp1 || equalToExp2)) {
-                fail("Unknown result!: " + r.getName());
-            }
-        }
+        assertEquals(exp1, result.get(0));
+        assertEquals(exp2, result.get(1));
     }
 
     /**
@@ -150,13 +144,9 @@ public class MiscUtilsTest {
     @Test
     public void testGetMatchingDisplaynames2() {
         String search = "2";
-        OfflinePlayer exp2 = MockUtils.mockPlayer2();
-        Set<OfflinePlayer> result = MiscUtils.getMatchingDisplaynames(search);
+        String exp2 = "TestName2";
+        List<String> result = MiscUtils.getMatchingPlayerNames(search);
         assertEquals(1, result.size());
-        for (OfflinePlayer r : result) {
-            if (!r.getName().equals(exp2.getName())) {
-                fail("Unknown result!: " + r.getName());
-            }
-        }
+        assertEquals(exp2, result.get(0));
     }
 }

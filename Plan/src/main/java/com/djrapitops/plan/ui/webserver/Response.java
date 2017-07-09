@@ -56,7 +56,7 @@ public class Response {
             } else {
                 givenCode = requestArgs[1];
             }
-            
+
             if (!givenCode.equals(securityCode)) {
                 forbidden = true;
             }

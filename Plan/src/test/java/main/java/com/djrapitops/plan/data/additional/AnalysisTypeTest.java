@@ -6,21 +6,21 @@
 package test.java.main.java.com.djrapitops.plan.data.additional;
 
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class AnalysisTypeTest {
-    
+
     /**
      *
      */
     public AnalysisTypeTest() {
     }
-    
+
     /**
      *
      */
@@ -36,5 +36,5 @@ public class AnalysisTypeTest {
     public void testGetPlaceholderModifier() {
         assertEquals("totalInt_", AnalysisType.INT_TOTAL.getPlaceholderModifier());
     }
-    
+
 }

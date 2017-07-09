@@ -2,17 +2,14 @@ package com.djrapitops.pluginbridge.plan.advancedachievements;
 
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import static org.bukkit.Bukkit.getOfflinePlayers;
-import org.bukkit.OfflinePlayer;
 
 /**
  * PluginData class for AdvancedAchievements-plugin.
@@ -27,7 +24,7 @@ import org.bukkit.OfflinePlayer;
  */
 public class AdvancedAchievementsTable extends PluginData {
 
-    private AdvancedAchievementsAPI aaAPI;
+    private final AdvancedAchievementsAPI aaAPI;
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.
@@ -50,28 +47,36 @@ public class AdvancedAchievementsTable extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuidUnused) {
         StringBuilder html = new StringBuilder();
-        Map<UUID, OfflinePlayer> offlinePlayers = Arrays.stream(getOfflinePlayers()).filter(p -> p.hasPlayedBefore()).collect(Collectors.toMap(p -> p.getUniqueId(), Function.identity()));
-        if (offlinePlayers.isEmpty()) {
+        Map<UUID, UserData> cachedUserData = Plan.getPlanAPI().getInspectCachedUserDataMap();
+        if (cachedUserData.isEmpty()) {
             html.append(Html.TABLELINE_2.parse("No Players.", ""));
         } else if (aaAPI.getAdvancedAchievementsVersionCode() >= 520) {
-            Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
-            for (UUID uuid : achievementsMap.keySet()) {
-                OfflinePlayer p = offlinePlayers.get(uuid);
-                if (p == null) {
-                    continue;
-                }
-                String inspectUrl = HtmlUtils.getInspectUrl(p.getName());
-                int achievements = achievementsMap.get(uuid);
-                html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, p.getName()), achievements+""));
-            }
+            appendTablelinesForV520Plus(cachedUserData, html);
         } else {
-            for (OfflinePlayer p : offlinePlayers.values()) {
-                String inspectUrl = HtmlUtils.getInspectUrl(p.getName());
-                String achievements = aaAPI.getPlayerTotalAchievements(p.getUniqueId()) + "";
-                html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, p.getName()), achievements));
-            }
+            appendTablelinesForLessThanV520(cachedUserData, html);
         }
         return parseContainer("", html.toString());
+    }
+
+    private void appendTablelinesForLessThanV520(Map<UUID, UserData> cachedUserData, StringBuilder html) {
+        cachedUserData.values().stream().forEach((uData) -> {
+            String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
+            String achievements = aaAPI.getPlayerTotalAchievements(uData.getUuid()) + "";
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
+        });
+    }
+
+    private void appendTablelinesForV520Plus(Map<UUID, UserData> cachedUserData, StringBuilder html) {
+        Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
+        for (UUID uuid : achievementsMap.keySet()) {
+            UserData uData = cachedUserData.get(uuid);
+            if (uData == null) {
+                continue;
+            }
+            String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
+            int achievements = achievementsMap.get(uuid);
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements+""));
+        }
     }
 
     @Override

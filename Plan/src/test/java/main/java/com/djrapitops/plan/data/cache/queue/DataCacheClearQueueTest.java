@@ -25,16 +25,16 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})
 public class DataCacheClearQueueTest {
-    
+
     private Plan plan;
     private DataCacheHandler handler;
-    
+
     /**
      *
      */
     public DataCacheClearQueueTest() {
     }
-    
+
     /**
      *
      */
@@ -43,9 +43,9 @@ public class DataCacheClearQueueTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
-        handler = new DataCacheHandler(plan) {            
+        handler = new DataCacheHandler(plan) {
             @Override
-            public boolean getCommandUseFromDb() {                
+            public boolean getCommandUseFromDb() {
                 return true;
             }
 
@@ -89,5 +89,5 @@ public class DataCacheClearQueueTest {
     @Test
     public void testStop() {
     }
-    
+
 }

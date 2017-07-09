@@ -111,6 +111,12 @@ public class LocationsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @param worlds
+     * @return
+     * @throws SQLException
+     */
     public Map<Integer, List<Location>> getAllLocations(Map<String, World> worlds) throws SQLException {
         Benchmark.start("Get Locations Multiple");
         PreparedStatement statement = null;
@@ -174,7 +180,7 @@ public class LocationsTable extends Table {
                 i++;
             }
             if (commitRequired) {
-                Log.debug("Executing locations batch: "+i);
+                Log.debug("Executing locations batch: " + i);
                 statement.executeBatch();
             }
         } finally {
@@ -223,7 +229,7 @@ public class LocationsTable extends Table {
                 }
             }
             if (commitRequired) {
-                Log.debug("Executing locations batch: "+i);
+                Log.debug("Executing locations batch: " + i);
                 statement.executeBatch();
             }
         } finally {

@@ -11,18 +11,33 @@ import org.bukkit.Server;
  */
 public class ServerVariableHolder {
 
-    private int maxPlayers;
-    private String ip;
+    private final int maxPlayers;
+    private final String ip;
 
+    /**
+     * Constructor, grabs the variables.
+     *
+     * @param server instance the plugin is running on.
+     */
     public ServerVariableHolder(Server server) {
         maxPlayers = server.getMaxPlayers();
         ip = server.getIp();
     }
 
+    /**
+     * Maximum amount of players defined in server.properties.
+     *
+     * @return number.
+     */
     public int getMaxPlayers() {
         return maxPlayers;
     }
 
+    /**
+     * Ip string in server.properties.
+     *
+     * @return the ip.
+     */
     public String getIp() {
         return ip;
     }

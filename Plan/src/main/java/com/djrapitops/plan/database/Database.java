@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.database.tables.KillsTable;
 import main.java.com.djrapitops.plan.database.tables.LocationsTable;
 import main.java.com.djrapitops.plan.database.tables.NicknamesTable;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
+import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.database.tables.VersionTable;
 
@@ -69,6 +70,13 @@ public abstract class Database {
      * Table representing plan_commandusages in the database.
      */
     protected CommandUseTable commandUseTable;
+
+    /**
+     * Table representing plan_tps in the database.
+     *
+     * @since 3.5.0
+     */
+    protected TPSTable tpsTable;
 
     /**
      * Table representing plan_version in the database.
@@ -326,5 +334,14 @@ public abstract class Database {
      */
     public CommandUseTable getCommandUseTable() {
         return commandUseTable;
+    }
+
+    /**
+     * Used to get the tps table.
+     *
+     * @return Table representing plan_tps
+     */
+    public TPSTable getTpsTable() {
+        return tpsTable;
     }
 }

@@ -34,7 +34,7 @@ public class FormatUtilsTest {
         TestInit t = new TestInit();
         assertTrue(t.setUp());
     }
-    
+
     /**
      *
      */
@@ -74,7 +74,10 @@ public class FormatUtilsTest {
         String result = FormatUtils.formatTimeStamp(epochZero);
         assertEquals(expResult, result);
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void testFormatTimeStampYear() {
         long epochZero = 0L;
@@ -104,7 +107,7 @@ public class FormatUtilsTest {
         String result = FormatUtils.removeNumbers(dataPoint);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -115,7 +118,7 @@ public class FormatUtilsTest {
         String result = FormatUtils.removeNumbers(dataPoint);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -126,7 +129,7 @@ public class FormatUtilsTest {
         int result = FormatUtils.parseVersionNumber(versionString);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -145,7 +148,7 @@ public class FormatUtilsTest {
     @Test
     public void testMergeArrays() {
         String[][] arrays = new String[][]{new String[]{"Test", "One"}, new String[]{"Test", "Two"}};
-        String[] expResult = new String[]{"Test", "One", "Test","Two"};
+        String[] expResult = new String[]{"Test", "One", "Test", "Two"};
         String[] result = FormatUtils.mergeArrays(arrays);
         assertArrayEquals(expResult, result);
     }

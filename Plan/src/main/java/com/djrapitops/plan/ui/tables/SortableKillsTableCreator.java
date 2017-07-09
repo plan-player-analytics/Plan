@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.ui.tables;
 
+import com.djrapitops.javaplugin.utilities.player.Fetch;
+import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
 import java.util.List;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.ui.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import org.bukkit.OfflinePlayer;
 
 /**
  *
@@ -30,7 +30,7 @@ public class SortableKillsTableCreator {
                     break;
                 }
                 long date = kill.getDate();
-                OfflinePlayer victim = getOfflinePlayer(kill.getVictim());
+                IOfflinePlayer victim = Fetch.getIOfflinePlayer(kill.getVictim());
                 String name = victim.getName();
                 html += Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         date + "", FormatUtils.formatTimeStamp(date),

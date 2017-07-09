@@ -5,6 +5,8 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.javaplugin.utilities.player.BukkitOfflinePlayer;
+import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +18,6 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -69,11 +70,11 @@ public class DataCacheProcessQueueTest {
             @Override
             public void getUserDataForProcessing(DBCallableProcessor p, UUID uuid) {
                 if (uuid.equals(MockUtils.getPlayerUUID())) {
-                    OfflinePlayer op = MockUtils.mockPlayer();
+                    IOfflinePlayer op = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer());
                     UserData d = new UserData(op, new DemographicsData());
                     p.process(d);
                 } else if (uuid.equals(MockUtils.getPlayer2UUID())) {
-                    OfflinePlayer op = MockUtils.mockPlayer2();
+                    IOfflinePlayer op = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer2());
                     UserData d = new UserData(op, new DemographicsData());
                     p.process(d);
                 }

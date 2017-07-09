@@ -38,7 +38,7 @@ public enum Phrase {
     NOTIFY_DISABLED_GMLISTENER(ChatColor.YELLOW + "Gamemode change listener disabled, Gm times info inaccurate."),
     NOTIFY_DISABLED_COMMANDLISTENER(ChatColor.YELLOW + "Command usage listener disabled."),
     NOTIFY_DISABLED_DEATHLISTENER(ChatColor.YELLOW + "Death listener disabled, player & mob kills not recorded."),
-//
+    //
     CACHE_SAVETASK_DISABLED("Attempted to schedule data for save after task was shut down."),
     CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),
     CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),
@@ -65,7 +65,7 @@ public enum Phrase {
     NOT_IN_FAC("Not in a faction"),
     //
     ANALYSIS("Analysis | "),
-    COMMAND_TIMEOUT(ChatColor.RED + "" + PREFIX + "REPLACE0 Command timed out! Error most likely on console."),
+    COMMAND_TIMEOUT(ChatColor.RED + "" + PREFIX + "REPLACE0 Command timed out! Check '/plan status' & console."),
     ANALYSIS_START(ANALYSIS + "Beginning analysis of user data.."),
     ANALYSIS_BOOT_NOTIFY(ANALYSIS + "Boot analysis in 30 seconds.."),
     ANALYSIS_BOOT(ANALYSIS + "Starting Boot Analysis.."),
@@ -74,7 +74,7 @@ public enum Phrase {
     ANALYSIS_FAIL_NO_PLAYERS(ANALYSIS + "Analysis failed, no known players."),
     ANALYSIS_FAIL_NO_DATA(ANALYSIS + "Analysis failed, no data in the database."),
     ANALYSIS_BEGIN_ANALYSIS(ANALYSIS + "Data Fetched (REPLACE0 users, took REPLACE1ms), beginning Analysis of data.."),
-    ANALYSIS_THIRD_PARTY(ANALYSIS+"Analyzing additional data sources (3rd party)"),
+    ANALYSIS_THIRD_PARTY(ANALYSIS + "Analyzing additional data sources (3rd party)"),
     ANALYSIS_COMPLETE(ANALYSIS + "Analysis Complete. (took REPLACE0ms) REPLACE1"),
     DATA_CORRUPTION_WARN("Some data might be corrupted: " + REPLACE0),
     //
@@ -85,6 +85,7 @@ public enum Phrase {
     ERROR_LOGGED("Caught " + REPLACE0 + ". It has been logged to the Errors.txt"),
     ERROR_SESSIONDATA_INITIALIZATION("Player's session was initialized in a wrong way! (" + REPLACE0 + ")"),
     ERROR_ANALYSIS_FETCH_FAIL("Failed to fetch data for Analysis, Exception occurred."),
+    ERROR_ANALYSIS_DISABLED_TEMPORARILY(ChatColor.YELLOW + "Analysis has been temporarily disabled due to expensive task, use /plan status for info."),
     //
     CMD_FOOTER(COLOR_TER.color() + "" + ARROWS_RIGHT),
     MANAGE_ERROR_INCORRECT_PLUGIN(ChatColor.RED + "" + PREFIX + "Plugin not supported: "),
@@ -110,20 +111,21 @@ public enum Phrase {
     CMD_INFO_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Info"),
     CMD_INFO_VERSION(CMD_BALL + "" + COLOR_MAIN.color() + " Version: " + COLOR_SEC.color() + REPLACE0),
     CMD_SEARCH_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Search results for: "),
+    CMD_SEARCH_SEARCHING(CMD_FOOTER + "" + COLOR_MAIN.color() + " Searching.."),
     CMD_HELP_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Help"),
     CMD_MANAGE_HELP_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Managment Help"),
     CMD_MANAGE_STATUS_HEADER(CMD_FOOTER + "" + COLOR_MAIN.color() + " Player Analytics - Database status"),
     CMD_MANAGE_STATUS_ACTIVE_DB(CMD_BALL + "" + COLOR_MAIN.color() + " Active Database: " + COLOR_SEC.color() + "REPLACE0"),
-    CMD_MANAGE_STATUS_QUEUE_SAVE(CMD_BALL + "" + COLOR_MAIN.color() + " Save Queue Size: " + COLOR_SEC.color() + "REPLACE0/"+Settings.PROCESS_SAVE_LIMIT.getNumber()),
-    CMD_MANAGE_STATUS_QUEUE_GET(CMD_BALL + "" + COLOR_MAIN.color() + " Get Queue Size: " + COLOR_SEC.color() + "REPLACE0/"+Settings.PROCESS_GET_LIMIT.getNumber()),
-    CMD_MANAGE_STATUS_QUEUE_CLEAR(CMD_BALL + "" + COLOR_MAIN.color() + " Clear Queue Size: " + COLOR_SEC.color() + "REPLACE0/"+Settings.PROCESS_CLEAR_LIMIT.getNumber()),
+    CMD_MANAGE_STATUS_QUEUE_SAVE(CMD_BALL + "" + COLOR_MAIN.color() + " Save Queue Size: " + COLOR_SEC.color() + "REPLACE0/" + Settings.PROCESS_SAVE_LIMIT.getNumber()),
+    CMD_MANAGE_STATUS_QUEUE_GET(CMD_BALL + "" + COLOR_MAIN.color() + " Get Queue Size: " + COLOR_SEC.color() + "REPLACE0/" + Settings.PROCESS_GET_LIMIT.getNumber()),
+    CMD_MANAGE_STATUS_QUEUE_CLEAR(CMD_BALL + "" + COLOR_MAIN.color() + " Clear Queue Size: " + COLOR_SEC.color() + "REPLACE0/" + Settings.PROCESS_CLEAR_LIMIT.getNumber()),
     CMD_MANAGE_STATUS_QUEUE_PROCESS(CMD_BALL + "" + COLOR_MAIN.color() + " Process Queue Size: " + COLOR_SEC.color() + "REPLACE0/20000"),
     CMD_CLICK_ME("Click Me"),
     CMD_LINK(COLOR_SEC.color() + " " + BALL + COLOR_MAIN.color() + " Link: " + COLOR_TER.color()),
     CMD_PASS_PLANLITE("UNUSED"),
     CMD_RESULTS_AVAILABLE(COLOR_SEC.color() + "   Results will be available for " + COLOR_TER.color() + REPLACE0 + COLOR_SEC.color() + " minutes."),
     CMD_NO_RESULTS(CMD_BALL + " No results for " + COLOR_SEC.color() + REPLACE0 + COLOR_MAIN.color() + "."),
-    CMD_MATCH(COLOR_SEC.color() + " Matching player: " + COLOR_TER.color()),
+    CMD_MATCH(COLOR_SEC.color() + " Matching players: " + COLOR_TER.color()),
     //
     CMD_USG_ANALYZE("View the Server Analysis"),
     CMD_USG_QANALYZE("View the Server QuickAnalysis"),
@@ -148,7 +150,7 @@ public enum Phrase {
     ARG_SEARCH("<part of playername>"),
     ARG_PLAYER("<player>"),
     ARG_RESTORE("<Filename.db> <dbTo> [-a]"),
-    ARG_IMPORT("<plugin> [-a]"),
+    ARG_IMPORT("<plugin>/list [import args]"),
     ARG_MOVE("<fromDB> <toDB> [-a]"),
     //
     USE_BACKUP("Use /plan manage backup <DB>"),
@@ -157,7 +159,7 @@ public enum Phrase {
     USE_PLAN("Use /plan for help"),
     USE_MOVE("Use /plan manage move <fromDB> <toDB> [-a]"),
     USE_COMBINE("Use /plan manage combine <fromDB> <toDB> [-a]"),
-    USE_IMPORT("Use /plan manage import <plugin> [-a]"),
+    USE_IMPORT("Use /plan manage import " + ARG_IMPORT),
     //
     WARN_REWRITE("Data in REPLACE0-database will be rewritten!"),
     WARN_OVERWRITE("Data in REPLACE0-database will be overwritten!"),

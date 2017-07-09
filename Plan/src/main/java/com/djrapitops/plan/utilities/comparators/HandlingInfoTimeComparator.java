@@ -18,5 +18,5 @@ public class HandlingInfoTimeComparator implements Comparator<HandlingInfo> {
     public int compare(HandlingInfo o1, HandlingInfo o2) {
         return ((Long) o1.getTime()).compareTo((Long) o2.getTime());
     }
-    
+
 }

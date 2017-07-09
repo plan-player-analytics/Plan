@@ -21,7 +21,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
  */
 public class AdvancedAchievementsAchievements extends PluginData {
 
-    private AdvancedAchievementsAPI aaAPI;
+    private final AdvancedAchievementsAPI aaAPI;
     private long lastRefresh;
     private Map<UUID, Integer> totalAchievements;
 
@@ -43,7 +43,7 @@ public class AdvancedAchievementsAchievements extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         if (MiscUtils.getTime() - lastRefresh > 60000) {
-            totalAchievements = aaAPI.getPlayersTotalAchievements();
+            refreshTotalAchievements();
         }
         Integer total = totalAchievements.get(uuid);
         if (total != null) {
@@ -52,10 +52,15 @@ public class AdvancedAchievementsAchievements extends PluginData {
         return parseContainer(modifierPrefix, 0 + "");
     }
 
+    private void refreshTotalAchievements() {
+        totalAchievements = aaAPI.getPlayersTotalAchievements();
+        lastRefresh = MiscUtils.getTime();
+    }
+
     @Override
     public Serializable getValue(UUID uuid) {
         if (MiscUtils.getTime() - lastRefresh > 60000) {
-            totalAchievements = aaAPI.getPlayersTotalAchievements();
+            refreshTotalAchievements();
         }
         Integer total = totalAchievements.get(uuid);
         if (total != null) {

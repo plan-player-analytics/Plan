@@ -24,6 +24,7 @@ public class OnTimeImporter extends Importer {
      * Constructor.
      */
     public OnTimeImporter() {
+        super.setInfo("Imports playtime from OnTime & resets GMTimes to survival");
     }
 
     /**
@@ -35,7 +36,7 @@ public class OnTimeImporter extends Importer {
      * @return HandlingInfo object
      */
     @Override
-    public HandlingInfo importData(UUID uuid) {
+    public HandlingInfo importData(UUID uuid, String... args) {
         OfflinePlayer p = getOfflinePlayer(uuid);
         Long playTime = OnTimeAPI.getPlayerTimeData(p.getName(), OnTimeAPI.data.TOTALPLAY);
         return new HandlingInfo(uuid, InfoType.OTHER, 0L) {

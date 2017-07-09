@@ -19,6 +19,11 @@ public class Log {
         Plan.getInstance().getPluginLogger().info(message);
     }
 
+    /**
+     * Sends a message to the console with the chatcolors.
+     *
+     * @param message Message to send.
+     */
     public static void infoColor(String message) {
         Plan.getInstance().getPluginLogger().infoColor(message);
     }
@@ -71,6 +76,11 @@ public class Log {
         Plan.getInstance().getPluginLogger().toLog(message, filename);
     }
 
+    /**
+     * Used to get the name for the error log file.
+     *
+     * @return Name of the error log file.
+     */
     public static String getErrorsFilename() {
         return Plan.getInstance().getPluginLogger().getErrorsFilename();
     }

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
@@ -66,7 +65,10 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        return new ArrayList<>(queue).stream().map(d -> d.getUuid()).collect(Collectors.toList()).contains(uuid);
+        if (uuid == null) {
+            return false;
+        }
+        return new ArrayList<>(queue).stream().anyMatch(info -> info.getUuid().equals(uuid));
     }
 }
 
@@ -75,13 +77,17 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     private DataCacheHandler handler;
 
     ProcessConsumer(BlockingQueue q, DataCacheHandler h) {
-        super(q);
+        super(q, "ProcessQueueConsumer");
         handler = h;
     }
 
     @Override
     void consume(HandlingInfo info) {
         if (handler == null) {
+            return;
+        }
+        if (handler.getGetTask().containsUUIDtoBeCached(info.getUuid())) { // Wait for get queue.
+            queue.add(info);
             return;
         }
         Log.debug(info.getUuid() + ": Processing type: " + info.getType().name());
@@ -105,6 +111,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
 }
 
 class ProcessSetup extends Setup<HandlingInfo> {
+
     ProcessSetup(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
         super(new ProcessConsumer(q, h), new ProcessConsumer(q, h));
     }

@@ -224,6 +224,9 @@ public class SessionsTable extends Table {
     }
 
     private void saveSessionBatch(List<Container<SessionData>> batch) throws SQLException {
+        if (batch.isEmpty()) {
+            return;
+        }
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -256,6 +259,10 @@ public class SessionsTable extends Table {
         }
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     public void clean() throws SQLException {
         Map<Integer, Integer> loginTimes = db.getUsersTable().getLoginTimes();
         Map<Integer, List<SessionData>> allSessions = getSessionData(loginTimes.keySet());

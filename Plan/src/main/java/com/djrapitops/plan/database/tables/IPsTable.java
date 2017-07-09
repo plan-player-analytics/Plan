@@ -224,12 +224,12 @@ public class IPsTable extends Table {
                 }
             }
             if (commitRequired) {
-                Log.debug("Executing ips batch: "+i);
+                Log.debug("Executing ips batch: " + i);
                 statement.executeBatch();
             }
             Benchmark.stop("Save Ips Multiple " + ips.size());
         } finally {
-            close(statement);            
+            close(statement);
         }
     }
 }

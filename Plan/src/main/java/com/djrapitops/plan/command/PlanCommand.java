@@ -1,15 +1,9 @@
 package main.java.com.djrapitops.plan.command;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.TreeCommand;
-import java.util.ArrayList;
-import java.util.List;
+import com.djrapitops.javaplugin.command.*;
+import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.commands.*;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 
 /**
  * CommandExecutor for the /plan command, and all subcommands.
@@ -17,7 +11,7 @@ import org.bukkit.command.CommandSender;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class PlanCommand extends TreeCommand<Plan> implements CommandExecutor {
+public class PlanCommand extends TreeCommand<Plan> {
 
     /**
      * CommandExecutor class Constructor.
@@ -27,15 +21,8 @@ public class PlanCommand extends TreeCommand<Plan> implements CommandExecutor {
      * @param plugin Current instance of Plan
      */
     public PlanCommand(Plan plugin) {
-        super(plugin, new SubCommand("plan", CommandType.CONSOLE, "") {
-            @Override
-            public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-                return true;
-            }
-        }, "plan");
+        super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
         super.setDefaultCommand("inspect");
-//        commands.add(new HelpCommand(plugin, this));
-        
     }
 
     @Override
@@ -48,5 +35,6 @@ public class PlanCommand extends TreeCommand<Plan> implements CommandExecutor {
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
         commands.add(new ManageCommand(plugin));
+        commands.add(new StatusCommand(plugin, Permissions.MANAGE.getPermission()));
     }
 }

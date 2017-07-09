@@ -20,7 +20,7 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
  */
 public class EssentialsMuted extends PluginData {
 
-    private Essentials essentials;
+    private final Essentials essentials;
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.

@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author Rsl1122
  */
 public class HtmlTest {
-    
+
     /**
      *
      */
@@ -54,7 +54,7 @@ public class HtmlTest {
         String result = instance.parse();
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */

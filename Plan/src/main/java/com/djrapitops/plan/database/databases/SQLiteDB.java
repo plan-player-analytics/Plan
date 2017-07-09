@@ -22,7 +22,7 @@ public class SQLiteDB extends SQLDB {
     public SQLiteDB(Plan plugin) {
         this(plugin, "database");
     }
-    
+
     /**
      *
      * @param plugin
@@ -42,7 +42,7 @@ public class SQLiteDB extends SQLDB {
     public Connection getNewConnection() {
         return getNewConnection(dbName);
     }
-    
+
     /**
      *
      * @param dbName
@@ -51,8 +51,8 @@ public class SQLiteDB extends SQLDB {
     public Connection getNewConnection(String dbName) {
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName+".db").getAbsolutePath());
-            
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath());
+
             return connection;
         } catch (ClassNotFoundException | SQLException e) {
             return null;

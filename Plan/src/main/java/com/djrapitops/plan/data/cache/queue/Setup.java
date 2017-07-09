@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import main.java.com.djrapitops.plan.Plan;
+
 /**
  * Abstract representation of a queue setup.
  *
@@ -21,7 +23,7 @@ public abstract class Setup<T> {
 
     void go() {
         for (Consumer<T> consumer : consumers) {
-            new Thread(consumer).start();
+            Plan.getInstance().getRunnableFactory().createNew(consumer).runTaskAsynchronously();
         }
     }
 

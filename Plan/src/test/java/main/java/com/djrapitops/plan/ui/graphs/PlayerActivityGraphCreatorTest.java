@@ -31,7 +31,7 @@ public class PlayerActivityGraphCreatorTest {
         TestInit t = new TestInit();
         assertTrue(t.setUp());
     }
-    
+
     /**
      *
      */

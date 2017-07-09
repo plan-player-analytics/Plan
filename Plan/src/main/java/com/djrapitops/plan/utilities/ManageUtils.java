@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,8 +31,9 @@ public class ManageUtils {
      * @param dbName Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
      * @return success?
+     * @throws java.sql.SQLException
      */
-    public static boolean backup(String dbName, Database copyFromDB) {
+    public static boolean backup(String dbName, Database copyFromDB) throws SQLException {
         Plan plugin = Plan.getInstance();
         Date now = new Date();
         SQLiteDB backupDB = new SQLiteDB(plugin,
@@ -68,13 +70,15 @@ public class ManageUtils {
      * @param copyFromDB Database where data will be copied from
      * @param fromDBsavedUUIDs UUID collection of saved uuids in the copyFromDB
      * @return success?
+     * @throws java.sql.SQLException
      */
-    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
+    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) throws SQLException {
         try {
             clearAndCopyToDB.removeAllData();
             List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
             clearAndCopyToDB.saveMultipleUserData(allUserData);
             clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());
+            clearAndCopyToDB.getTpsTable().saveTPSData(copyFromDB.getTpsTable().getTPSData());
         } catch (SQLException | NullPointerException e) {
             Log.toLog("ManageUtils.move", e);
             return false;
@@ -82,6 +86,11 @@ public class ManageUtils {
         return true;
     }
 
+    /**
+     *
+     * @param sessions
+     * @return
+     */
     public static boolean containsCombinable(List<SessionData> sessions) {
         return containsCombinable(sessions, 5000);
     }
@@ -95,6 +104,12 @@ public class ManageUtils {
                         .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
     }
 
+    /**
+     *
+     * @param sessions
+     * @param loginTimes
+     * @return
+     */
     public static List<SessionData> combineSessions(List<SessionData> sessions, Integer loginTimes) {
         return combineSessions(sessions, loginTimes, 5000);
     }
@@ -128,5 +143,20 @@ public class ManageUtils {
         } else {
             return newSessions;
         }
+    }
+
+    public static Database getDB(Plan plugin, String dbName) {
+        Database database = null;
+        for (Database sqldb : plugin.getDatabases()) {
+            String dbConfigName = sqldb.getConfigName();
+            if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
+                database = sqldb;
+                if (!database.init()) {
+                    return null;
+                }
+                break;
+            }
+        }
+        return database;
     }
 }

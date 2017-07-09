@@ -18,7 +18,7 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class SessionLengthDistributionGraphCreator {
 
@@ -31,7 +31,7 @@ public class SessionLengthDistributionGraphCreator {
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(data);
         return generateDataArray(lengths);
     }
-    
+
     /**
      *
      * @param lengths

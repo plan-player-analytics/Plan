@@ -39,7 +39,7 @@ public class DemographicsDataTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
     }
-    
+
     /**
      *
      */

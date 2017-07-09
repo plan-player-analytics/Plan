@@ -46,14 +46,18 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
         Log.debug(uuid + ": Scheduling for get");
         try {
             Map<UUID, List<DBCallableProcessor>> map = new HashMap<>();
-            if (map.get(uuid) == null) {
-                map.put(uuid, new ArrayList<>());
-            }
-            map.get(uuid).addAll(Arrays.asList(processors));
+            map.put(uuid, Arrays.asList(processors));
             queue.add(map);
         } catch (IllegalStateException e) {
             Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber() + ""));
         }
+    }
+
+    public boolean containsUUIDtoBeCached(UUID uuid) {
+        if (uuid == null) {
+            return false;
+        }
+        return new ArrayList<>(queue).stream().anyMatch((map) -> (map.get(uuid) != null && map.get(uuid).size() >= 2)); // Map has 2 processors if being cached
     }
 }
 
@@ -62,7 +66,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
     private Database db;
 
     GetConsumer(BlockingQueue q, Database db) {
-        super(q);
+        super(q, "GetQueueConsumer");
         this.db = db;
     }
 

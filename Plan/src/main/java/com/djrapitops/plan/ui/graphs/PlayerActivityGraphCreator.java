@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.ui.graphs;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +15,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
@@ -32,7 +32,7 @@ public class PlayerActivityGraphCreator {
      */
     public static String[] generateDataArray(List<SessionData> sessionData, long scale) {
         Benchmark.start("Generate Player Activity Graph " + sessionData.size() + " " + scale + " |");
-        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
+        long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         List<List<Long>> s = filterAndTransformSessions(sessionData, nowMinusScale);
         List<Long> sessionStarts = s.get(0);

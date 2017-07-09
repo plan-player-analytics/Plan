@@ -5,11 +5,11 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -53,13 +53,13 @@ public class LogoutInfoTest {
         data.updateBanned(false);
         long time = 20L;
         Exception ex = null;
-        data.setLastGamemode(GameMode.SURVIVAL);
-        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, GameMode.CREATIVE, new SessionData(0, 1));
+        data.setLastGamemode(Gamemode.SURVIVAL);
+        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, Gamemode.CREATIVE, new SessionData(0, 1));
         assertTrue(i.process(data));
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
         assertTrue("Playtime wrong", data.getPlayTime() == 10L);
         assertTrue("Banned wrong", data.isBanned());
-        assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
+        assertTrue("Didn't process gamemode", data.getLastGamemode() == Gamemode.CREATIVE);
         assertEquals(1, data.getSessions().size());
     }
 
@@ -73,7 +73,7 @@ public class LogoutInfoTest {
         data.updateBanned(false);
         long time = 20L;
         Exception ex = null;
-        LogoutInfo i = new LogoutInfo(null, time, true, GameMode.CREATIVE, new SessionData(0, 1));
+        LogoutInfo i = new LogoutInfo(null, time, true, Gamemode.CREATIVE, new SessionData(0, 1));
         try {
             assertTrue(!i.process(data));
         } catch (NullPointerException e) {
@@ -83,7 +83,7 @@ public class LogoutInfoTest {
         assertTrue("Last Played wrong", data.getLastPlayed() == 10L);
         assertTrue("Playtime wrong", data.getPlayTime() == 0L);
         assertTrue("Banned wrong", !data.isBanned());
-        assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.SURVIVAL);
+        assertTrue("Didn't process gamemode", data.getLastGamemode() == Gamemode.SURVIVAL);
         assertEquals(0, data.getSessions().size());
     }
 

@@ -5,7 +5,11 @@
  */
 package test.java.utils;
 
-import com.djrapitops.javaplugin.utilities.PluginLog;
+import com.djrapitops.javaplugin.status.ProcessStatus;
+import com.djrapitops.javaplugin.utilities.BenchmarkUtil;
+import com.djrapitops.javaplugin.utilities.compatibility.CompatibilityUtility;
+import com.djrapitops.javaplugin.utilities.log.BukkitLog;
+import com.djrapitops.javaplugin.utilities.player.Fetch;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -13,6 +17,7 @@ import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
@@ -39,6 +44,9 @@ public class TestInit {
     public boolean setUp() {
         try {
             planMock = PowerMockito.mock(Plan.class);
+            Plan.setInstance(Plan.class, planMock);
+            Plan.setInstance(planMock.getClass(), planMock);
+            CompatibilityUtility.setUtilityProviderPluginClass(planMock.getClass());
             File configfile = new File(getClass().getResource("/config.yml").getPath());
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.load(configfile.getAbsolutePath());
@@ -62,14 +70,21 @@ public class TestInit {
             Server mockServer = PowerMockito.mock(Server.class);
             when(mockServer.getIp()).thenReturn("0.0.0.0");
             when(mockServer.getMaxPlayers()).thenReturn(20);
-//            Mockito.doReturn("0.0.0.0").when(mockServer).getIp();
+            OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
+            when(mockServer.getOfflinePlayers()).thenReturn(ops);
+            
             when(planMock.getServer()).thenReturn(mockServer);
             when(planMock.getLogger()).thenReturn(Logger.getGlobal());
+            BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
+            when(planMock.getPluginLogger()).thenReturn(log);
+            BenchmarkUtil bench = new BenchmarkUtil();
+            when(planMock.benchmark()).thenReturn(bench);
             ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
             when(planMock.getVariable()).thenReturn(serverVariableHolder);
-            PluginLog<Plan> log = new PluginLog(planMock, "console", "");
-            when(planMock.getPluginLogger()).thenReturn(log);
-            Plan.setInstance(planMock);
+            ProcessStatus<Plan> process = new ProcessStatus(planMock);
+            when(planMock.processStatus()).thenReturn(process);
+            Fetch fetch = new Fetch(planMock);
+            when(planMock.fetch()).thenReturn(fetch);
 //            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
             Settings.DEBUG.setValue(true);
             return true;

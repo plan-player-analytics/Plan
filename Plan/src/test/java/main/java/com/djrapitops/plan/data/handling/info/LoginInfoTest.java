@@ -5,13 +5,13 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -57,7 +57,7 @@ public class LoginInfoTest {
         long time = 10L;
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(data.getUuid(), time, ip, true, nick, GameMode.CREATIVE, 1);
+        LoginInfo i = new LoginInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE, 1);
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
@@ -66,9 +66,9 @@ public class LoginInfoTest {
         assertTrue("Nick not last nick", data.getLastNick().equals(nick));
         String geo = data.getDemData().getGeoLocation();
         assertTrue("Wrong location " + geo, geo.equals("United States"));
-        assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
+        assertTrue("Didn't process gamemode", data.getLastGamemode() == Gamemode.CREATIVE);
     }
-    
+
     /**
      *
      * @throws UnknownHostException
@@ -79,7 +79,7 @@ public class LoginInfoTest {
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
         String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(null, time, ip, true, nick, GameMode.CREATIVE, 1);
+        LoginInfo i = new LoginInfo(null, time, ip, true, nick, Gamemode.CREATIVE, 1);
         assertTrue(!i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == 0L);
         assertTrue("Ip not added", !data.getIps().contains(ip));
@@ -87,7 +87,7 @@ public class LoginInfoTest {
         assertTrue("Nick not added", !data.getNicknames().contains(nick));
         String geo = data.getDemData().getGeoLocation();
         assertTrue("Wrong location " + geo, geo.equals("Not Known"));
-        assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.SURVIVAL);
+        assertTrue("Didn't process gamemode", data.getLastGamemode() == Gamemode.SURVIVAL);
     }
 
 }

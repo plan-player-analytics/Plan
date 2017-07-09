@@ -18,10 +18,10 @@
         <module name='RightCurly' />
         <module name='AvoidNestedBlocks' />
         <module name="NestedIfDepth">
-          <property name="max" value="2"/>
+            <property name="max" value="2"/>
         </module>
         <module name="NestedForDepth">
-          <property name="max" value="2"/>
+            <property name="max" value="2"/>
         </module>
         <module name="NestedTryDepth"/>
 

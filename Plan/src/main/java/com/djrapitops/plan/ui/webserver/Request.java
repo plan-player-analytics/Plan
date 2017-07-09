@@ -14,6 +14,7 @@ public class Request {
 
     /**
      * Creates a new Request object.
+     *
      * @param input InputStream to read the web request from.
      */
     public Request(InputStream input) {

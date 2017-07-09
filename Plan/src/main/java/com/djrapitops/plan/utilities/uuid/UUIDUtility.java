@@ -14,23 +14,42 @@ import main.java.com.djrapitops.plan.database.Database;
 
 /**
  *
- * @author Risto
+ * @author Rsl1122
  */
 public class UUIDUtility {
 
-    public static UUID getUUIDOf(String playername) throws Exception {
-        return getUUIDOf(playername, Plan.getInstance().getDB());
+    /**
+     *
+     * @param playername
+     * @return
+     */
+    public static UUID getUUIDOf(String playername) {
+        try {
+            return getUUIDOf(playername, Plan.getInstance().getDB());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public static UUID getUUIDOf(String playername, Database db) throws Exception {
+    /**
+     *
+     * @param playername
+     * @param db
+     * @return
+     * @throws Exception
+     */
+    public static UUID getUUIDOf(String playername, Database db) {
         UUID uuid = null;
         try {
             uuid = db.getUsersTable().getUuidOf(playername);
         } catch (SQLException e) {
             Log.toLog("UUIDUtility", e);
         }
-        if (uuid == null) {
-            uuid = UUIDFetcher.getUUIDOf(playername);
+        try {
+            if (uuid == null) {
+                uuid = UUIDFetcher.getUUIDOf(playername);
+            }
+        } catch (Exception e) {
         }
         return uuid;
     }

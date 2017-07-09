@@ -2,11 +2,10 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 
 import com.djrapitops.javaplugin.command.CommandType;
 import com.djrapitops.javaplugin.command.SubCommand;
+import com.djrapitops.javaplugin.command.sender.ISender;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * This manage subcommand is used to check the status of the database.
@@ -29,7 +28,7 @@ public class ManageStatusCommand extends SubCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         String[] messages = new String[]{
             Phrase.CMD_MANAGE_STATUS_HEADER + "",
             Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()),

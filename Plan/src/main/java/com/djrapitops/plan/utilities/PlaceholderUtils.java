@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +17,8 @@ import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableKillsTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableSessionTableCreator;
-import org.bukkit.GameMode;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  *
@@ -35,7 +35,7 @@ public class PlaceholderUtils {
     public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
         Benchmark.start("Replace Placeholders Anaysis");
         HashMap<String, String> replaceMap = new HashMap<>();
-        replaceMap.put("%currenttime%", MiscUtils.getTime()+"");
+        replaceMap.put("%currenttime%", MiscUtils.getTime() + "");
         replaceMap.put("%gm0%", (int) (data.getGm0Perc() * 100) + "%");
         replaceMap.put("%gm1%", (int) (data.getGm1Perc() * 100) + "%");
         replaceMap.put("%gm2%", (int) (data.getGm2Perc() * 100) + "%");
@@ -65,13 +65,13 @@ public class PlaceholderUtils {
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         replaceMap.put("%sortabletable%", data.getSortablePlayersTable());
-        replaceMap.put("%uniquejoinsday%", data.getUniqueJoinsDay()+"");
-        replaceMap.put("%uniquejoinsweek%", data.getUniqueJoinsWeek()+"");
-        replaceMap.put("%uniquejoinsmonth%", data.getUniqueJoinsMonth()+"");
-        replaceMap.put("%avguniquejoins%", data.getAvgUniqJoins()+"");
-        replaceMap.put("%avguniquejoinsday%", data.getAvgUniqJoinsDay()+"");
-        replaceMap.put("%avguniquejoinsweek%", data.getAvgUniqJoinsWeek()+"");
-        replaceMap.put("%avguniquejoinsmonth%", data.getAvgUniqJoinsMonth()+"");
+        replaceMap.put("%uniquejoinsday%", data.getUniqueJoinsDay() + "");
+        replaceMap.put("%uniquejoinsweek%", data.getUniqueJoinsWeek() + "");
+        replaceMap.put("%uniquejoinsmonth%", data.getUniqueJoinsMonth() + "");
+        replaceMap.put("%avguniquejoins%", data.getAvgUniqJoins() + "");
+        replaceMap.put("%avguniquejoinsday%", data.getAvgUniqJoinsDay() + "");
+        replaceMap.put("%avguniquejoinsweek%", data.getAvgUniqJoinsWeek() + "");
+        replaceMap.put("%avguniquejoinsmonth%", data.getAvgUniqJoinsMonth() + "");
         replaceMap.put("%dataday%", data.getPlayersDataArray()[0]);
         replaceMap.put("%labelsday%", data.getPlayersDataArray()[1]);
         replaceMap.put("%dataweek%", data.getPlayersDataArray()[2]);
@@ -130,9 +130,14 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        replaceMap.put("%graphmaxplayers%", Settings.GRAPH_PLAYERS_USEMAXPLAYERS_SCALE.isTrue() ? plugin.getVariable().getMaxPlayers()+"" : "2");
-        replaceMap.put("%refreshlong%", data.getRefreshDate()+"");
+        replaceMap.put("%graphmaxplayers%", Settings.GRAPH_PLAYERS_USEMAXPLAYERS_SCALE.isTrue() ? plugin.getVariable().getMaxPlayers() + "" : "2");
+        replaceMap.put("%refreshlong%", data.getRefreshDate() + "");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
+        String[] tpsData = data.getTpsData();
+        replaceMap.put("%tpsdatalabels%", tpsData[0]);
+        replaceMap.put("%tpsdatatps%", tpsData[1]);
+        replaceMap.put("%tpsdataplayersonline%", tpsData[2]);
+        replaceMap.put("%averagetps%", FormatUtils.cutDecimals(data.getAverageTPS()) + "");
         Benchmark.stop("Replace Placeholders Anaysis");
         return replaceMap;
     }
@@ -146,7 +151,7 @@ public class PlaceholderUtils {
      */
     public static Map<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
         Benchmark.start("Replace Placeholders Inspect");
-        
+
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
@@ -160,10 +165,10 @@ public class PlaceholderUtils {
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
-        Map<GameMode, Long> gmTimes = data.getGmTimes();
+        Map<Gamemode, Long> gmTimes = data.getGmTimes();
         long gmThree;
         try {
-            Long gm3 = gmTimes.get(GameMode.SPECTATOR);
+            Long gm3 = gmTimes.get(Gamemode.SPECTATOR);
             if (gm3 == null) {
                 gm3 = (long) 0;
             }
@@ -172,9 +177,9 @@ public class PlaceholderUtils {
             gmThree = 0;
         }
         long[] gmData = new long[]{
-            (gmTimes.get(GameMode.SURVIVAL) != null ? gmTimes.get(GameMode.SURVIVAL) : 0L),
-            (gmTimes.get(GameMode.CREATIVE) != null ? gmTimes.get(GameMode.CREATIVE) : 0L),
-            (gmTimes.get(GameMode.ADVENTURE) != null ? gmTimes.get(GameMode.ADVENTURE) : 0L),
+            (gmTimes.get(Gamemode.SURVIVAL) != null ? gmTimes.get(Gamemode.SURVIVAL) : 0L),
+            (gmTimes.get(Gamemode.CREATIVE) != null ? gmTimes.get(Gamemode.CREATIVE) : 0L),
+            (gmTimes.get(Gamemode.ADVENTURE) != null ? gmTimes.get(Gamemode.ADVENTURE) : 0L),
             gmThree
         };
         long total = gmData[0] + gmData[1] + gmData[2] + gmData[3];
@@ -207,7 +212,7 @@ public class PlaceholderUtils {
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
         String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000);
-        replaceMap.put("%graphmaxplayers%", 2+"");
+        replaceMap.put("%graphmaxplayers%", 2 + "");
         replaceMap.put("%dataweek%", playersDataArray[0]);
         replaceMap.put("%labelsweek%", playersDataArray[1]);
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
@@ -228,8 +233,8 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        replaceMap.put("%refreshlong%", plugin.getInspectCache().getCacheTime(uuid)+"");
-        replaceMap.put("%currenttime%", MiscUtils.getTime()+"");
+        replaceMap.put("%refreshlong%", plugin.getInspectCache().getCacheTime(uuid) + "");
+        replaceMap.put("%currenttime%", MiscUtils.getTime() + "");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);

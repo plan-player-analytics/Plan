@@ -5,10 +5,10 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -49,24 +49,24 @@ public class GamemodeInfoTest {
     public void testProcess() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         data.setPlayTime(100L);
-        data.setLastGamemode(GameMode.CREATIVE);
+        data.setLastGamemode(Gamemode.CREATIVE);
         data.setLastGmSwapTime(50L);
         data.setLastPlayed(1000L);
         long time = 2000L;
-        GamemodeInfo i = new GamemodeInfo(data.getUuid(), time, GameMode.SURVIVAL);
+        GamemodeInfo i = new GamemodeInfo(data.getUuid(), time, Gamemode.SURVIVAL);
         assertTrue(i.process(data));
-        Long result = data.getGmTimes().get(GameMode.CREATIVE);
-        assertTrue("Gamemode time was "+result, result == 1050L);
+        Long result = data.getGmTimes().get(Gamemode.CREATIVE);
+        assertTrue("Gamemode time was " + result, result == 1050L);
         result = data.getPlayTime();
-        assertTrue("Playtime was"+result, result == 1100L);
+        assertTrue("Playtime was" + result, result == 1100L);
         result = data.getLastPlayed();
-        assertTrue("Last Played was"+result, result == 2000L);
-        GameMode lastGM = data.getLastGamemode();
-        assertTrue("Last gm not Survival", lastGM == GameMode.SURVIVAL);
+        assertTrue("Last Played was" + result, result == 2000L);
+        Gamemode lastGM = data.getLastGamemode();
+        assertTrue("Last gm not Survival", lastGM == Gamemode.SURVIVAL);
         result = data.getLastGmSwapTime();
-        assertTrue("Last swaptime was "+result, result == 1100L);
+        assertTrue("Last swaptime was " + result, result == 1100L);
     }
-    
+
     /**
      *
      */
@@ -74,24 +74,24 @@ public class GamemodeInfoTest {
     public void testProcessWrongUUID() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         data.setPlayTime(100L);
-        data.setLastGamemode(GameMode.CREATIVE);
+        data.setLastGamemode(Gamemode.CREATIVE);
         data.setLastGmSwapTime(50L);
         data.setLastPlayed(1000L);
         long time = 2000L;
-        GamemodeInfo i = new GamemodeInfo(null, time, GameMode.SURVIVAL);
+        GamemodeInfo i = new GamemodeInfo(null, time, Gamemode.SURVIVAL);
         assertTrue(!i.process(data));
-        Long result = data.getGmTimes().get(GameMode.CREATIVE);
-        assertTrue("Gamemode time was "+result, result == 0L);
+        Long result = data.getGmTimes().get(Gamemode.CREATIVE);
+        assertTrue("Gamemode time was " + result, result == 0L);
         result = data.getPlayTime();
-        assertTrue("Playtime was"+result, result == 100L);
+        assertTrue("Playtime was" + result, result == 100L);
         result = data.getLastPlayed();
-        assertTrue("Last Played was"+result, result == 1000L);
-        GameMode lastGM = data.getLastGamemode();
-        assertTrue("Last gm not Survival", lastGM == GameMode.CREATIVE);
+        assertTrue("Last Played was" + result, result == 1000L);
+        Gamemode lastGM = data.getLastGamemode();
+        assertTrue("Last gm not Survival", lastGM == Gamemode.CREATIVE);
         result = data.getLastGmSwapTime();
-        assertTrue("Last swaptime was "+result, result == 50L);
+        assertTrue("Last swaptime was " + result, result == 50L);
     }
-    
+
     /**
      *
      */
@@ -99,22 +99,22 @@ public class GamemodeInfoTest {
     public void testProcessNullGM() {
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         data.setPlayTime(100L);
-        data.setLastGamemode(GameMode.CREATIVE);
+        data.setLastGamemode(Gamemode.CREATIVE);
         data.setLastGmSwapTime(50L);
         data.setLastPlayed(1000L);
         long time = 2000L;
         GamemodeInfo i = new GamemodeInfo(data.getUuid(), time, null);
         assertTrue(!i.process(data));
-        Long result = data.getGmTimes().get(GameMode.CREATIVE);
-        assertTrue("Gamemode time was "+result, result == 0L);
+        Long result = data.getGmTimes().get(Gamemode.CREATIVE);
+        assertTrue("Gamemode time was " + result, result == 0L);
         result = data.getPlayTime();
-        assertTrue("Playtime was"+result, result == 100L);
+        assertTrue("Playtime was" + result, result == 100L);
         result = data.getLastPlayed();
-        assertTrue("Last Played was"+result, result == 1000L);
-        GameMode lastGM = data.getLastGamemode();
-        assertTrue("Last gm not Survival", lastGM == GameMode.CREATIVE);
+        assertTrue("Last Played was" + result, result == 1000L);
+        Gamemode lastGM = data.getLastGamemode();
+        assertTrue("Last gm not Survival", lastGM == Gamemode.CREATIVE);
         result = data.getLastGmSwapTime();
-        assertTrue("Last swaptime was "+result, result == 50L);
+        assertTrue("Last swaptime was " + result, result == 50L);
     }
 
 }

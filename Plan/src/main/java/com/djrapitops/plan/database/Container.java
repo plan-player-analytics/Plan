@@ -1,29 +1,42 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.com.djrapitops.plan.database;
 
 /**
+ * Class to contain objects in the batches.
  *
  * @author Rsl1122
  * @since 3.4.3
- * @param <T>
+ * @param <T> Object stored.
  */
 public class Container<T> {
-    private T object;
-    private int id;
 
+    private final T object;
+    private final int id;
+
+    /**
+     * Constructor for the object.
+     *
+     * @param object Object to place inside the container.
+     * @param id UserID related to the object.
+     */
     public Container(T object, int id) {
         this.object = object;
         this.id = id;
     }
 
+    /**
+     * Get the object in the container.
+     *
+     * @return object.
+     */
     public T getObject() {
         return object;
     }
 
+    /**
+     * Get the UserID related to the object.
+     *
+     * @return userID
+     */
     public int getId() {
         return id;
     }

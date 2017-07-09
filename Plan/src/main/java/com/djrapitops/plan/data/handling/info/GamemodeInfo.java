@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.GamemodeHandling;
-import org.bukkit.GameMode;
 
 /**
  * HandlingInfo Class for GamemodeChangeEvent information.
@@ -13,7 +13,7 @@ import org.bukkit.GameMode;
  */
 public class GamemodeInfo extends HandlingInfo {
 
-    private GameMode currentGamemode;
+    private final Gamemode currentGamemode;
 
     /**
      * Constructor.
@@ -22,7 +22,7 @@ public class GamemodeInfo extends HandlingInfo {
      * @param time Epoch ms of the event.
      * @param gm Gamemode the player changed to.
      */
-    public GamemodeInfo(UUID uuid, long time, GameMode gm) {
+    public GamemodeInfo(UUID uuid, long time, Gamemode gm) {
         super(uuid, InfoType.GM, time);
         currentGamemode = gm;
     }

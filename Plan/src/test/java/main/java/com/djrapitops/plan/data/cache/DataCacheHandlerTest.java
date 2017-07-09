@@ -69,10 +69,10 @@ public class DataCacheHandlerTest {
             public void startConnectionPingTask(Plan plugin) {
 
             }
-            
+
             @Override
             public void convertBukkitDataToDB() {
-                
+
             }
 
             @Override

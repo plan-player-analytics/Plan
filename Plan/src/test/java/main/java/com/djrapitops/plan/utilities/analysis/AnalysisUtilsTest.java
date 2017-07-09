@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -27,7 +27,7 @@ import test.java.utils.TestInit;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class AnalysisUtilsTest {
-    
+
     /**
      *
      */
@@ -42,7 +42,7 @@ public class AnalysisUtilsTest {
         TestInit t = new TestInit();
         assertTrue("Not set up", t.setUp());
     }
-    
+
     /**
      *
      */
@@ -55,7 +55,7 @@ public class AnalysisUtilsTest {
         boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -67,8 +67,8 @@ public class AnalysisUtilsTest {
         boolean expResult = false;
         boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
-    }    
-    
+    }
+
     /**
      *
      */
@@ -81,7 +81,7 @@ public class AnalysisUtilsTest {
         boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -109,7 +109,7 @@ public class AnalysisUtilsTest {
         int result = AnalysisUtils.getNewPlayers(registered, scale, now);
         assertEquals(expResult, result);
     }
-    
+
     /**
      *
      */
@@ -137,5 +137,5 @@ public class AnalysisUtilsTest {
         expResult.add(20L);
         List<Long> result = AnalysisUtils.transformSessionDataToLengths(data);
         assertEquals(expResult, result);
-    }    
+    }
 }

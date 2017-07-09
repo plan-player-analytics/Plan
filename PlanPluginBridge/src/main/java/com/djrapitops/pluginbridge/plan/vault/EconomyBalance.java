@@ -1,7 +1,10 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
+import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import java.io.Serializable;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -22,7 +25,7 @@ import org.bukkit.OfflinePlayer;
  */
 public class EconomyBalance extends PluginData {
 
-    private Economy econ;
+    private final Economy econ;
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.
@@ -40,7 +43,11 @@ public class EconomyBalance extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        OfflinePlayer p = getOfflinePlayer(uuid);
+        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
+        if (data == null) {
+            return parseContainer(modifierPrefix, "0");
+        }
+        OfflinePlayer p = new FakeOfflinePlayer(data);
         if (this.econ.hasAccount(p)) {
             return parseContainer(modifierPrefix, this.econ.getBalance(p) + "");
         }

@@ -41,21 +41,21 @@ public enum AnalysisType {
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    INT_TOTAL("totalInt_"),
+    INT_TOTAL("totalInt_", "Total "),
     /**
      * Used when the getValue() method returns a long and total should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_TOTAL("totalLong_"),
+    LONG_TOTAL("totalLong_", "Total "),
     /**
      * Used when the getValue() method returns a double and total should be
      * calculated.
      *
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    DOUBLE_TOTAL("totalDouble_"),
+    DOUBLE_TOTAL("totalDouble_", "Total "),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
      * and average should be calculated.

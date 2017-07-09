@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
+import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +13,6 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -60,7 +60,7 @@ public class WebSocketServer {
                 System.exit(1);
             }
             //Run server in seperate thread
-            (new BukkitRunnable() {
+            plugin.getRunnableFactory().createNew(new RslRunnable("WebServerTask") {
                 @Override
                 public void run() {
                     while (!shutdown) {
@@ -76,7 +76,7 @@ public class WebSocketServer {
                             Response response = new Response(output, dataReqHandler);
                             response.setRequest(request);
                             response.sendStaticResource();
-                        } catch (IOException e) {                            
+                        } catch (IOException e) {
                         } finally {
                             Closeable[] close = new Closeable[]{input, output, socket};
                             for (Closeable closeable : close) {
@@ -85,14 +85,14 @@ public class WebSocketServer {
                                         closeable.close();
                                     }
                                 } catch (IOException e) {
-                                    
+
                                 }
                             }
                         }
                     }
                     this.cancel();
                 }
-            }).runTaskAsynchronously(plugin);
+            }).runTaskAsynchronously();
 
             ENABLED = true;
 

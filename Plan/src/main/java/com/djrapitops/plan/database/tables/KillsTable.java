@@ -255,13 +255,13 @@ public class KillsTable extends Table {
                     i++;
                 }
                 if (commitRequired) {
-                    Log.debug("Executing kills batch: "+i);
+                    Log.debug("Executing kills batch: " + i);
                     statement.executeBatch();
                 }
             }
             Benchmark.stop("Save Kills multiple " + kills.size());
         } finally {
-            close(statement);            
+            close(statement);
         }
     }
 }

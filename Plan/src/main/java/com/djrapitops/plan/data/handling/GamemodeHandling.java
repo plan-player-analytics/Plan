@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.data.handling;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.util.Map;
 import main.java.com.djrapitops.plan.data.UserData;
-import org.bukkit.GameMode;
 
 /**
  * Class containing static methods for processing information contained in a
@@ -21,17 +21,17 @@ public class GamemodeHandling {
      * @param time Epoch ms the event occurred.
      * @param newGM The Gamemode the player changed to.
      */
-    public static void processGamemodeInfo(UserData data, long time, GameMode newGM) {
+    public static void processGamemodeInfo(UserData data, long time, Gamemode newGM) {
         if (newGM == null) {
             return;
         }
 
-        GameMode lastGamemode = data.getLastGamemode();
+        Gamemode lastGamemode = data.getLastGamemode();
         if (lastGamemode == null) {
             data.setLastGamemode(newGM);
         }
         lastGamemode = data.getLastGamemode();
-        Map<GameMode, Long> times = data.getGmTimes();
+        Map<Gamemode, Long> times = data.getGmTimes();
         Long currentGMTime = times.get(lastGamemode);
         if (currentGMTime == null) {
             currentGMTime = 0L;

@@ -9,9 +9,9 @@ import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
+import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
 /**
  * This class is used to store result data from Analysis at runtime.
@@ -40,6 +40,8 @@ public class AnalysisData {
     private String punchCardData;
     private String[] sessionDistributionData;
     private String[] playtimeDistributionData;
+    private String[] tpsData;
+    private double averageTPS;
 
     private int newPlayersMonth;
     private int newPlayersWeek;
@@ -92,6 +94,7 @@ public class AnalysisData {
         uniqueJoinsDay = 0;
         uniqueJoinsWeek = 0;
         uniqueJoinsMonth = 0;
+        averageTPS = 0;
         sortablePlayersTable = Html.ERROR_NOT_SET + "";
         commandUseTableHtml = Html.ERROR_NOT_SET + "";
         recentPlayers = Html.ERROR_NOT_SET + "";
@@ -101,6 +104,7 @@ public class AnalysisData {
         punchCardData = "[]";
         sessionDistributionData = new String[]{"[]", "[]"};
         playtimeDistributionData = new String[]{"[]", "[]"};
+        tpsData = new String[]{"[]", "[]", "[]"};
         playersDataArray = new String[]{"[0]", "[\"No data\"]", "[0]", "[\"No data\"]", "[0]", "[\"No data\"]"};
         additionalDataReplaceMap = new HashMap<>();
     }
@@ -928,59 +932,131 @@ public class AnalysisData {
         this.playtimeDistributionData = playtimeDistributionData;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoins() {
         return avgUniqJoins;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoinsDay() {
         return avgUniqJoinsDay;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoinsWeek() {
         return avgUniqJoinsWeek;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAvgUniqJoinsMonth() {
         return avgUniqJoinsMonth;
     }
 
+    /**
+     *
+     * @param avgUniqJoins
+     */
     public void setAvgUniqJoins(int avgUniqJoins) {
         this.avgUniqJoins = avgUniqJoins;
     }
 
+    /**
+     *
+     * @param avgUniqJoinsDay
+     */
     public void setAvgUniqJoinsDay(int avgUniqJoinsDay) {
         this.avgUniqJoinsDay = avgUniqJoinsDay;
     }
 
+    /**
+     *
+     * @param avgUniqJoinsWeek
+     */
     public void setAvgUniqJoinsWeek(int avgUniqJoinsWeek) {
         this.avgUniqJoinsWeek = avgUniqJoinsWeek;
     }
 
+    /**
+     *
+     * @param avgUniqJoinsMonth
+     */
     public void setAvgUniqJoinsMonth(int avgUniqJoinsMonth) {
         this.avgUniqJoinsMonth = avgUniqJoinsMonth;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUniqueJoinsDay() {
         return uniqueJoinsDay;
     }
 
+    /**
+     *
+     * @param uniqueJoinsDay
+     */
     public void setUniqueJoinsDay(int uniqueJoinsDay) {
         this.uniqueJoinsDay = uniqueJoinsDay;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUniqueJoinsWeek() {
         return uniqueJoinsWeek;
     }
 
+    /**
+     *
+     * @param uniqueJoinsWeek
+     */
     public void setUniqueJoinsWeek(int uniqueJoinsWeek) {
         this.uniqueJoinsWeek = uniqueJoinsWeek;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getUniqueJoinsMonth() {
         return uniqueJoinsMonth;
     }
 
+    /**
+     *
+     * @param uniqueJoinsMonth
+     */
     public void setUniqueJoinsMonth(int uniqueJoinsMonth) {
         this.uniqueJoinsMonth = uniqueJoinsMonth;
+    }
+
+    public String[] getTpsData() {
+        return tpsData;
+    }
+
+    public void setTpsData(String[] tpsData) {
+        this.tpsData = tpsData;
+    }
+
+    public double getAverageTPS() {
+        return averageTPS;
+    }
+
+    public void setAverageTPS(double averageTPS) {
+        this.averageTPS = averageTPS;
     }
 }

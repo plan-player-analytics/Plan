@@ -1,10 +1,15 @@
 package com.djrapitops.pluginbridge.plan.factions;
 
 import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.Html;
@@ -29,20 +34,39 @@ public class FactionsTable extends PluginData {
      *
      * Uses Html to easily parse Html for the table.
      *
-     * @param factions List of filtered Factions.
      * @see FactionsHook
      * @see Html
      */
-    public FactionsTable(List<Faction> factions) {
+    public FactionsTable() {
         super("Factions", "factionstable", AnalysisType.HTML);
-        this.factions = factions;
+        this.factions = getTopFactions();
         super.setPrefix(Html.TABLE_FACTIONS_START.parse());
         super.setSuffix(Html.TABLE_END.parse());
+    }
+
+    /**
+     * Used to get the list of Factions and filter out unnessecary ones.
+     *
+     * @return List of Factions sorted by power
+     */
+    public final List<Faction> getTopFactions() {
+        List<Faction> topFactions = new ArrayList<>();
+        topFactions.addAll(FactionColl.get().getAll());
+        topFactions.remove(FactionColl.get().getWarzone());
+        topFactions.remove(FactionColl.get().getSafezone());
+        topFactions.remove(FactionColl.get().getNone());
+        List<String> hide = Settings.HIDE_FACTIONS.getStringList();
+        Collections.sort(topFactions, new FactionComparator());
+        List<Faction> factionNames = topFactions.stream()
+                .filter(faction -> !hide.contains(faction.getName()))
+                .collect(Collectors.toList());
+        return factionNames;
     }
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         StringBuilder html = new StringBuilder();
+        this.factions = getTopFactions();
         if (factions.isEmpty()) {
             html.append(Html.TABLELINE_4.parse(Html.FACTION_NO_FACTIONS.parse(), "", "", ""));
         } else {

@@ -1,25 +1,17 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import com.djrapitops.javaplugin.command.CommandUtils;
+import com.djrapitops.javaplugin.command.sender.ISender;
+import com.djrapitops.javaplugin.utilities.player.Fetch;
+import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-import main.java.com.djrapitops.plan.Log;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * Utility method class containing various static methods.
- * 
+ *
  * @author Rsl1122
  * @since 2.0.0
  */
@@ -40,7 +32,7 @@ public class MiscUtils {
      * @param sender
      * @return
      */
-    public static String getPlayerName(String[] args, CommandSender sender) {
+    public static String getPlayerName(String[] args, ISender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
     }
 
@@ -52,13 +44,13 @@ public class MiscUtils {
      * @param perm
      * @return The name of the player (first argument or sender)
      */
-    public static String getPlayerName(String[] args, CommandSender sender, Permissions perm) {
+    public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
         String playerName = "";
-        boolean isConsole = !(sender instanceof Player);
+        boolean isConsole = !CommandUtils.isPlayer(sender);
         if (isConsole) {
             playerName = args[0];
         } else if (args.length > 0) {
-            if (perm.userHasThisPermission(sender)) {
+            if (sender.hasPermission(perm.getPermission())) {
                 playerName = args[0];
             } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
                 playerName = sender.getName();
@@ -72,20 +64,18 @@ public class MiscUtils {
     }
 
     /**
-     * Get matching playernames from the offlineplayers
+     * Get matching player names from the offline players.
      *
      * @param search Part of a name to search for.
-     * @return Set of OfflinePlayers that match.
+     * @return Alphabetically sorted list of matching player names.
      */
-    public static Set<OfflinePlayer> getMatchingDisplaynames(String search) {
-        List<OfflinePlayer> players = new ArrayList<>();
-        players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
-        Set<OfflinePlayer> matches = new HashSet<>();
-        players.parallelStream()
-                .filter(player -> (player.getName().toLowerCase().contains(search.toLowerCase())))
-                .forEach(player -> {
-                    matches.add(player);
-                });
+    public static List<String> getMatchingPlayerNames(String search) {
+        final String searchFor = search.toLowerCase();
+        List<String> matches = Fetch.getIOfflinePlayers().stream()
+                .map(p -> p.getName())
+                .filter(name -> name.toLowerCase().contains(searchFor))
+                .collect(Collectors.toList());
+        Collections.sort(matches);
         return matches;
     }
 }
