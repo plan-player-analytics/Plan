@@ -93,17 +93,7 @@ public class ProtocolTable extends Table {
     }
 
     private boolean exists(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " + columnUUID + " FROM " + tableName + " WHERE " + columnUUID + "=?");
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            return set.next();
-        } finally {
-            close(set);
-            close(statement);
-        }
+        return getProtocolVersion(uuid) != -1;
     }
 
     private void updateProtocolVersion(UUID uuid, int version) throws SQLException {

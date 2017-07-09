@@ -32,7 +32,11 @@ public class FakeOfflinePlayer implements OfflinePlayer {
 
     @Override
     public String getName() {
-        return data.getName();
+        String name = data.getName();
+        if (name == null) {
+            name = "null";
+        }
+        return name;
     }
 
     @Override
