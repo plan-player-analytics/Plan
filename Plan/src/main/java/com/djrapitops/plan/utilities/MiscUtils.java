@@ -2,15 +2,12 @@ package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.javaplugin.command.CommandUtils;
 import com.djrapitops.javaplugin.command.sender.ISender;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import com.djrapitops.javaplugin.utilities.player.Fetch;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 /**
  * Utility method class containing various static methods.
@@ -49,7 +46,7 @@ public class MiscUtils {
      */
     public static String getPlayerName(String[] args, ISender sender, Permissions perm) {
         String playerName = "";
-        boolean isConsole = CommandUtils.isConsole(sender);
+        boolean isConsole = !CommandUtils.isPlayer(sender);
         if (isConsole) {
             playerName = args[0];
         } else if (args.length > 0) {
@@ -67,20 +64,18 @@ public class MiscUtils {
     }
 
     /**
-     * Get matching playernames from the offlineplayers
+     * Get matching player names from the offline players.
      *
      * @param search Part of a name to search for.
-     * @return Set of OfflinePlayers that match.
+     * @return Alphabetically sorted list of matching player names.
      */
-    public static Set<OfflinePlayer> getMatchingDisplaynames(String search) {
-        List<OfflinePlayer> players = new ArrayList<>();
-        players.addAll(Arrays.asList(Bukkit.getOfflinePlayers()));
-        Set<OfflinePlayer> matches = new HashSet<>();
-        players.stream()
-                .filter(player -> (player.getName().toLowerCase().contains(search.toLowerCase())))
-                .forEach(player -> {
-                    matches.add(player);
-                });
+    public static List<String> getMatchingPlayerNames(String search) {
+        final String searchFor = search.toLowerCase();
+        List<String> matches = Fetch.getIOfflinePlayers().stream()
+                .map(p -> p.getName())
+                .filter(name -> name.toLowerCase().contains(searchFor))
+                .collect(Collectors.toList());
+        Collections.sort(matches);
         return matches;
     }
 }

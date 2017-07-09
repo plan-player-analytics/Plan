@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
@@ -42,6 +43,6 @@ public class PlanGamemodeChangeListener implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        handler.addToPool(new GamemodeInfo(p.getUniqueId(), MiscUtils.getTime(), event.getNewGameMode()));
+        handler.addToPool(new GamemodeInfo(p.getUniqueId(), MiscUtils.getTime(), Gamemode.wrap(event.getNewGameMode())));
     }
 }

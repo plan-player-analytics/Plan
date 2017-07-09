@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.data.handling.importing;
 
+import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.javaplugin.utilities.player.Fetch;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,6 @@ import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
-import static org.bukkit.Bukkit.getOfflinePlayers;
-import org.bukkit.OfflinePlayer;
 
 /**
  * Abstract class used for importing data from other plugins.
@@ -79,13 +78,13 @@ public abstract class Importer {
             unSaved.removeAll(saved);
             String createUserObjects = "Creating new UserData objects for: " + unSaved.size();
             plan.processStatus().setStatus(processName, createUserObjects);
-            Map<UUID, OfflinePlayer> offlinePlayers = Arrays.stream(getOfflinePlayers()).collect(Collectors.toMap(OfflinePlayer::getUniqueId, Function.identity()));
+            Map<UUID, IOfflinePlayer> offlinePlayers = Fetch.getIOfflinePlayers().stream().collect(Collectors.toMap(IOfflinePlayer::getUuid, Function.identity()));
             Benchmark.start(createUserObjects);
-            List<OfflinePlayer> offlineP = unSaved.stream().map(uuid
+            List<IOfflinePlayer> offlineP = unSaved.stream().map(uuid
                     -> offlinePlayers.get(uuid)).collect(Collectors.toList());
             List<UserData> newUsers = new ArrayList<>();
-            for (OfflinePlayer p : offlineP) {
-                UserData newPlayer = NewPlayerCreator.createNewPlayer(p);
+            for (IOfflinePlayer p : offlineP) {
+                UserData newPlayer = NewPlayerCreator.createNewOfflinePlayer(p);
                 newPlayer.setLastPlayed(newPlayer.getRegistered());
                 newUsers.add(newPlayer);
                 plan.processStatus().setStatus(processName, "Creating new UserData objects: " + newUsers.size() + "/" + unSaved.size());

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.javaplugin.task.runnable.RslRunnable;
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,7 +23,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 
 /**
@@ -325,7 +325,7 @@ public abstract class SQLDB extends Database {
         List<InetAddress> ips = ipsTable.getIPAddresses(userId);
         data.addIpAddresses(ips);
 
-        Map<GameMode, Long> times = gmTimesTable.getGMTimes(userId);
+        Map<Gamemode, Long> times = gmTimesTable.getGMTimes(userId);
         data.setGmTimes(times);
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
@@ -370,7 +370,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
         Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
         Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
-        Map<Integer, Map<GameMode, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
+        Map<Integer, Map<Gamemode, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Log.debug("Sizes: UUID:" + uuids.size() + " DATA:" + data.size() + " ID:" + userIds.size() + " N:" + nicknames.size() + " I:" + ipList.size() + " K:" + playerKills.size() + " S:" + sessionData.size());
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();
@@ -412,7 +412,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, List<KillData>> kills = new HashMap<>();
         Map<Integer, UUID> uuids = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
         Map<Integer, List<SessionData>> sessions = new HashMap<>();
-        Map<Integer, Map<GameMode, Long>> gmTimes = new HashMap<>();
+        Map<Integer, Map<Gamemode, Long>> gmTimes = new HashMap<>();
         // Put to dataset
         for (UUID uuid : userDatas.keySet()) {
             Integer id = userIds.get(uuid);

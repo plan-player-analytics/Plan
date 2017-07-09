@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.javaplugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
-import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 /**
  *
@@ -19,8 +19,8 @@ public class NewPlayerCreator {
      * @param player Player the UserData is created for.
      * @return a new UserData object
      */
-    public static UserData createNewPlayer(Player player) {
-        return createNewPlayer((OfflinePlayer) player, player.getGameMode());
+    public static UserData createNewPlayer(IPlayer player) {
+        return createNewPlayer((IOfflinePlayer) player, player.getGamemode());
     }
 
     /**
@@ -29,8 +29,8 @@ public class NewPlayerCreator {
      * @param player OfflinePlayer the UserData is created for.
      * @return a new UserData object
      */
-    public static UserData createNewPlayer(OfflinePlayer player) {
-        return createNewPlayer(player, GameMode.SURVIVAL);
+    public static UserData createNewOfflinePlayer(IOfflinePlayer player) {
+        return createNewPlayer(player, Gamemode.SURVIVAL);
     }
 
     /**
@@ -40,9 +40,9 @@ public class NewPlayerCreator {
      * @param gm Gamemode set as the starting Gamemode
      * @return a new UserData object
      */
-    public static UserData createNewPlayer(OfflinePlayer player, GameMode gm) {
+    public static UserData createNewPlayer(IOfflinePlayer player, Gamemode gm) {
         long registered = player.getFirstPlayed();
-        UserData data = new UserData(player.getUniqueId(), registered, null, player.isOp(), GameMode.SURVIVAL, new DemographicsData(), player.getName(), player.isOnline());
+        UserData data = new UserData(player.getUniqueId(), registered, null, player.isOp(), Gamemode.SURVIVAL, new DemographicsData(), player.getName(), player.isOnline());
         data.setLastGamemode(gm);
         data.setLastPlayed(MiscUtils.getTime());
         data.setPlayTime(0L);

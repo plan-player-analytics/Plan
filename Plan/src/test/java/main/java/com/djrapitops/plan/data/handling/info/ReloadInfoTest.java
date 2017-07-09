@@ -5,13 +5,13 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -57,7 +57,7 @@ public class ReloadInfoTest {
         long time = 10L;
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, GameMode.CREATIVE);
+        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE);
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
@@ -66,7 +66,7 @@ public class ReloadInfoTest {
         assertTrue("Nick not last nick", data.getLastNick().equals(nick));
         String geo = data.getDemData().getGeoLocation();
         assertTrue("Wrong location " + geo, geo.equals("United States"));
-        assertTrue("Didn't process gamemode", data.getLastGamemode() == GameMode.CREATIVE);
+        assertTrue("Didn't process gamemode", data.getLastGamemode() == Gamemode.CREATIVE);
     }
 
     /**
@@ -79,7 +79,7 @@ public class ReloadInfoTest {
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, GameMode.CREATIVE);
+        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, Gamemode.CREATIVE);
         assertTrue(!i.process(data));
     }
 }

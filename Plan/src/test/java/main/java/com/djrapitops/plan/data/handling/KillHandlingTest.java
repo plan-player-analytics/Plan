@@ -18,17 +18,16 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.powermock.api.mockito.PowerMockito.when;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  *
@@ -103,9 +102,9 @@ public class KillHandlingTest {
      * @throws SQLException
      * @throws IOException
      */
-    @Ignore
     @Test
     public void testProcessKillInfoException() throws SQLException, IOException {
+        db.init();
         UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
         Player dead = MockUtils.mockPlayer2();
         KillHandling.processKillInfo(data, 10L, dead, "TestWeapon");

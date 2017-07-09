@@ -2,10 +2,9 @@ package main.java.com.djrapitops.plan.command;
 
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 /**
  * This class contains static methods used by the commands to check whether or
@@ -53,7 +52,6 @@ public class ConditionUtils {
         if (!Verify.notNull(uuid)) {
             return false;
         }
-        OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        return p.hasPlayedBefore();
+        return Plan.getInstance().fetch().hasPlayedBefore(uuid);
     }
 }

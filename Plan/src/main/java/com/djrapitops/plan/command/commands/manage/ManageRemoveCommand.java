@@ -6,7 +6,6 @@ import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;

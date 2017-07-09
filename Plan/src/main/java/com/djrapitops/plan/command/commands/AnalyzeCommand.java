@@ -19,7 +19,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
-import com.djrapitops.javaplugin.task.ITask;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.

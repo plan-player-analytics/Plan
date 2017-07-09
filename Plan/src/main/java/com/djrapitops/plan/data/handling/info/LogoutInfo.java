@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
-import org.bukkit.GameMode;
 
 /**
  * HandlingInfo Class for QuitEvent information.
@@ -28,7 +28,7 @@ public class LogoutInfo extends HandlingInfo {
      * @param sData session that has been ended at the moment of the logout
      * event.
      */
-    public LogoutInfo(UUID uuid, long time, boolean banned, GameMode gm, SessionData sData) {
+    public LogoutInfo(UUID uuid, long time, boolean banned, Gamemode gm, SessionData sData) {
         super(uuid, InfoType.LOGOUT, time);
         this.banned = banned;
         this.sData = sData;

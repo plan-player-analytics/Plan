@@ -48,6 +48,8 @@ import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import com.djrapitops.javaplugin.task.ITask;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 /**
  * Javaplugin class that contains methods for starting the plugin, logging to
@@ -293,26 +295,31 @@ public class Plan extends RslPlugin<Plan> {
         Benchmark.stop("Enable: Schedule boot analysis task");
     }
 
-    private void initLocale() {
-        String locale = Settings.LOCALE.toString().toUpperCase();
-        /*// Used to write a new Locale file
+    /**
+     * Used to write a new Locale file in the plugin's datafolder.
+     */
+    public void writeNewLocaleFile() {
         File genLocale = new File(getDataFolder(), "locale_EN.txt");
         try {
             genLocale.createNewFile();
             FileWriter fw = new FileWriter(genLocale, true);
             PrintWriter pw = new PrintWriter(fw);
-            for (Phrase p : Phrase.values()) {                
-                pw.println(p.name()+" <> "+p.parse());
-                pw.flush();            
+            for (Phrase p : Phrase.values()) {
+                pw.println(p.name() + " <> " + p.parse());
+                pw.flush();
             }
             pw.println("<<<<<<HTML>>>>>>");
-            for (Html h : Html.values()) {                
-                pw.println(h.name()+" <> "+h.parse());
-                pw.flush();            
+            for (Html h : Html.values()) {
+                pw.println(h.name() + " <> " + h.parse());
+                pw.flush();
             }
         } catch (IOException ex) {
-            Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+            Log.toLog(this.getClass().getName(), ex);
+        }
+    }
+
+    private void initLocale() {
+        String locale = Settings.LOCALE.toString().toUpperCase();
         Benchmark.start("Enable: Initializing locale");
         File localeFile = new File(getDataFolder(), "locale.txt");
         boolean skipLoc = false;
@@ -455,15 +462,15 @@ public class Plan extends RslPlugin<Plan> {
      * Plan and the instance is null.
      */
     public static API getPlanAPI() throws IllegalStateException {
-        Plan INSTANCE = getInstance();
-        if (INSTANCE == null) {
+        Plan instance = getInstance();
+        if (instance == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
         }
-        return INSTANCE.api;
+        return instance.api;
     }
 
     /**
-     * Used to get the plugin instance singleton.
+     * Used to get the plugin-instance singleton.
      *
      * @return this object.
      */

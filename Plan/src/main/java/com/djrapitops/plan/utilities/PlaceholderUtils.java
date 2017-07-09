@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +19,6 @@ import main.java.com.djrapitops.plan.ui.tables.SortableKillsTableCreator;
 import main.java.com.djrapitops.plan.ui.tables.SortableSessionTableCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import org.bukkit.GameMode;
 
 /**
  *
@@ -165,10 +165,10 @@ public class PlaceholderUtils {
         int age = data.getDemData().getAge();
         replaceMap.put("%age%", (age != -1) ? "" + age : Phrase.DEM_UNKNOWN + "");
         replaceMap.put("%gender%", "" + data.getDemData().getGender().name().toLowerCase());
-        Map<GameMode, Long> gmTimes = data.getGmTimes();
+        Map<Gamemode, Long> gmTimes = data.getGmTimes();
         long gmThree;
         try {
-            Long gm3 = gmTimes.get(GameMode.SPECTATOR);
+            Long gm3 = gmTimes.get(Gamemode.SPECTATOR);
             if (gm3 == null) {
                 gm3 = (long) 0;
             }
@@ -177,9 +177,9 @@ public class PlaceholderUtils {
             gmThree = 0;
         }
         long[] gmData = new long[]{
-            (gmTimes.get(GameMode.SURVIVAL) != null ? gmTimes.get(GameMode.SURVIVAL) : 0L),
-            (gmTimes.get(GameMode.CREATIVE) != null ? gmTimes.get(GameMode.CREATIVE) : 0L),
-            (gmTimes.get(GameMode.ADVENTURE) != null ? gmTimes.get(GameMode.ADVENTURE) : 0L),
+            (gmTimes.get(Gamemode.SURVIVAL) != null ? gmTimes.get(Gamemode.SURVIVAL) : 0L),
+            (gmTimes.get(Gamemode.CREATIVE) != null ? gmTimes.get(Gamemode.CREATIVE) : 0L),
+            (gmTimes.get(Gamemode.ADVENTURE) != null ? gmTimes.get(Gamemode.ADVENTURE) : 0L),
             gmThree
         };
         long total = gmData[0] + gmData[1] + gmData[2] + gmData[3];

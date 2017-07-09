@@ -8,7 +8,6 @@ package test.java.main.java.com.djrapitops.plan;
 import main.java.com.djrapitops.plan.Permissions;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import test.java.utils.MockUtils;
 
 /**
  *

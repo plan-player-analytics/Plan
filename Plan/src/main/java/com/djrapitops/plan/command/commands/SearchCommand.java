@@ -6,16 +6,12 @@ import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.FormattingUtils;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.OfflinePlayer;
 
 /**
  * This subcommand is used to search for a user, and to view all matches' data.
@@ -43,7 +39,7 @@ public class SearchCommand extends SubCommand {
             return true;
         }
         sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING + "");
-        
+
         runSearchTask(args, sender);
         return true;
     }
@@ -53,14 +49,12 @@ public class SearchCommand extends SubCommand {
             @Override
             public void run() {
                 try {
-                    Set<OfflinePlayer> matches = MiscUtils.getMatchingDisplaynames(args[0]);
-                    sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0] + " (" + matches.size() + ")");
+                    List<String> names = MiscUtils.getMatchingPlayerNames(args[0]);
+                    sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0] + " (" + names.size() + ")");
                     // Results
-                    if (matches.isEmpty()) {
+                    if (names.isEmpty()) {
                         sender.sendMessage(Phrase.CMD_NO_RESULTS.parse(Arrays.toString(args)));
                     } else {
-                        List<String> names = matches.stream().map(p -> p.getName()).collect(Collectors.toList());
-                        Collections.sort(names);
                         sender.sendMessage(Phrase.CMD_MATCH + "" + FormattingUtils.collectionToStringNoBrackets(names));
                     }
                     sender.sendMessage(Phrase.CMD_FOOTER + "");

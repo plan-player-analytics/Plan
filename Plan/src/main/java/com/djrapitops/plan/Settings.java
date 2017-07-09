@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.javaplugin.utilities.Verify;
 import java.util.List;
 
 /**

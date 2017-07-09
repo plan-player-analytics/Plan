@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.net.InetAddress;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LoginHandling;
-import org.bukkit.GameMode;
 
 /**
  * HandlingInfo Class for JoinEvent information.
@@ -31,7 +31,7 @@ public class LoginInfo extends HandlingInfo {
      * @param gm current gamemode of the player
      * @param loginTimes number the loginTimes should be incremented with.
      */
-    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm, int loginTimes) {
+    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, int loginTimes) {
         super(uuid, InfoType.LOGIN, time);
         this.ip = ip;
         this.banned = banned;
@@ -50,7 +50,7 @@ public class LoginInfo extends HandlingInfo {
      * @param nickname Nickname of the player
      * @param gm current gamemode of the player
      */
-    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, GameMode gm) {
+    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm) {
         this(uuid, time, ip, banned, nickname, gm, 0);
     }
 

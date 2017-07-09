@@ -4,7 +4,6 @@ import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,19 +24,16 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
-import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getPlayer;
-import org.bukkit.entity.Player;
 import com.djrapitops.javaplugin.task.ITask;
-import static org.bukkit.Bukkit.getPlayer;
+import com.djrapitops.javaplugin.utilities.player.IPlayer;
 
 /**
  * This Class contains the Cache.
  *
- * This class is the main processing class that initializes Save, Clear, Process
+ * This class is the main processing class that initialises Save, Clear, Process
  * and Get queue and Starts the asyncronous save task.
  *
- * It is used to store commanduse, locations, active sessions and UserData
+ * It is used to store command use, locations, active sessions and UserData
  * objects in memory.
  *
  * It's methods can be used to access all the data it stores and to clear them.
@@ -270,15 +266,15 @@ public class DataCacheHandler extends LocationCache {
         List<HandlingInfo> toProcess = processTask.stopAndReturnLeftovers();
         Benchmark.start("ProcessOnlineHandlingInfo");
         Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
         Log.debug("Online: " + onlinePlayers.size());
-        for (Player p : onlinePlayers) {
-            UUID uuid = p.getUniqueId();
+        for (IPlayer p : onlinePlayers) {
+            UUID uuid = p.getUuid();
             endSession(uuid);
             if (dataCache.containsKey(uuid)) {
                 dataCache.get(uuid).addLocations(getLocationsForSaving(uuid));
             }
-            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGameMode(), getSession(uuid)));
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
@@ -390,15 +386,16 @@ public class DataCacheHandler extends LocationCache {
      * Refreshes the calculations for all online players with ReloadInfo.
      */
     public void saveHandlerDataToCache() {
-        Bukkit.getServer().getOnlinePlayers().stream().forEach((p) -> {
+        final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
+        onlinePlayers.stream().forEach((p) -> {
             saveHandlerDataToCache(p, false);
         });
     }
 
-    private void saveHandlerDataToCache(Player player, boolean pool) {
+    private void saveHandlerDataToCache(IPlayer player, boolean pool) {
         long time = MiscUtils.getTime();
-        UUID uuid = player.getUniqueId();
-        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGameMode());
+        UUID uuid = player.getUuid();
+        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGamemode());
         if (!pool) {
             UserData data = dataCache.get(uuid);
             if (data != null) {
@@ -423,7 +420,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void clearFromCache(UUID uuid) {
         Log.debug(uuid + ": Clear");
-        if (Verify.notNull(getPlayer(uuid))) {
+        if (Verify.notNull(plugin.fetch().getPlayer(uuid))) {
             Log.debug(uuid + ": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
@@ -468,7 +465,7 @@ public class DataCacheHandler extends LocationCache {
      *
      * @param player Player the new UserData is created for
      */
-    public void newPlayer(Player player) {
+    public void newPlayer(IPlayer player) {
         newPlayer(NewPlayerCreator.createNewPlayer(player));
     }
 
@@ -509,8 +506,9 @@ public class DataCacheHandler extends LocationCache {
         ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new RslRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    UUID uuid = player.getUniqueId();
+                final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
+                for (IPlayer player : onlinePlayers) {
+                    UUID uuid = player.getUuid();
                     boolean isNewPlayer = !db.wasSeenBefore(uuid);
                     if (isNewPlayer) {
                         newPlayer(player);

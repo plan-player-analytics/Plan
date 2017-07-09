@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.javaplugin.utilities.player.Fetch;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.Gender;
 import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -21,7 +24,6 @@ import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.GameMode;
 
 /**
@@ -295,7 +297,7 @@ public class UsersTable extends Table {
             data = getUserDataForKnown(uuid);
         }
         if (data == null) {
-            data = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+            data = new UserData(Fetch.getOfflinePlayer(uuid, Plan.class), new DemographicsData());
             addUserInformationToUserData(data);
         }
         Benchmark.stop(uuid + " Get UserData");
@@ -337,7 +339,7 @@ public class UsersTable extends Table {
             List<UserData> noBukkitData = new ArrayList<>();
             Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
             for (UUID uuid : uuids) {
-                UserData uData = new UserData(getOfflinePlayer(uuid), new DemographicsData());
+                UserData uData = new UserData(Fetch.getOfflinePlayer(uuid, Plan.class), new DemographicsData());
                 noBukkitData.add(uData);
             }
             Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
@@ -393,7 +395,7 @@ public class UsersTable extends Table {
                 demData.setAge(set.getInt(columnDemAge));
                 demData.setGender(Gender.parse(set.getString(columnDemGender)));
                 demData.setGeoLocation(set.getString(columnDemGeoLocation));
-                GameMode gm = GameMode.valueOf(set.getString(columnLastGM));
+                Gamemode gm = Gamemode.valueOf(set.getString(columnLastGM));
                 boolean op = set.getBoolean(columnOP);
                 boolean banned = set.getBoolean(columnBanned);
                 String name = set.getString(columnName);
@@ -435,7 +437,7 @@ public class UsersTable extends Table {
                 demData.setAge(set.getInt(columnDemAge));
                 demData.setGender(Gender.parse(set.getString(columnDemGender)));
                 demData.setGeoLocation(set.getString(columnDemGeoLocation));
-                GameMode gm = GameMode.valueOf(set.getString(columnLastGM));
+                Gamemode gm = Gamemode.valueOf(set.getString(columnLastGM));
                 boolean op = set.getBoolean(columnOP);
                 boolean banned = set.getBoolean(columnBanned);
                 String name = set.getString(columnName);
@@ -476,7 +478,7 @@ public class UsersTable extends Table {
                 data.getDemData().setAge(set.getInt(columnDemAge));
                 data.getDemData().setGender(Gender.parse(set.getString(columnDemGender)));
                 data.getDemData().setGeoLocation(set.getString(columnDemGeoLocation));
-                data.setLastGamemode(GameMode.valueOf(set.getString(columnLastGM)));
+                data.setLastGamemode(Gamemode.valueOf(set.getString(columnLastGM)));
                 data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
@@ -514,7 +516,7 @@ public class UsersTable extends Table {
                 uData.getDemData().setAge(set.getInt(columnDemAge));
                 uData.getDemData().setGender(Gender.parse(set.getString(columnDemGender)));
                 uData.getDemData().setGeoLocation(set.getString(columnDemGeoLocation));
-                uData.setLastGamemode(GameMode.valueOf(set.getString(columnLastGM)));
+                uData.setLastGamemode(Gamemode.valueOf(set.getString(columnLastGM)));
                 uData.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 uData.setPlayTime(set.getLong(columnPlayTime));
                 uData.setLoginTimes(set.getInt(columnLoginTimes));
@@ -564,11 +566,11 @@ public class UsersTable extends Table {
                 statement.setInt(1, data.getDemData().getAge());
                 statement.setString(2, data.getDemData().getGender().toString().toLowerCase());
                 statement.setString(3, data.getDemData().getGeoLocation());
-                GameMode gm = data.getLastGamemode();
+                Gamemode gm = data.getLastGamemode();
                 if (gm != null) {
                     statement.setString(4, data.getLastGamemode().name());
                 } else {
-                    statement.setString(4, GameMode.SURVIVAL.name());
+                    statement.setString(4, Gamemode.SURVIVAL.name());
                 }
                 statement.setLong(5, data.getLastGmSwapTime());
                 statement.setLong(6, data.getPlayTime());
@@ -609,11 +611,11 @@ public class UsersTable extends Table {
                 statement.setInt(2, data.getDemData().getAge());
                 statement.setString(3, data.getDemData().getGender().toString().toLowerCase());
                 statement.setString(4, data.getDemData().getGeoLocation());
-                GameMode gm = data.getLastGamemode();
+                Gamemode gm = data.getLastGamemode();
                 if (gm != null) {
                     statement.setString(5, data.getLastGamemode().name());
                 } else {
-                    statement.setString(5, GameMode.SURVIVAL.name());
+                    statement.setString(5, Gamemode.SURVIVAL.name());
                 }
                 statement.setLong(6, data.getLastGmSwapTime());
                 statement.setLong(7, data.getPlayTime());
@@ -685,7 +687,7 @@ public class UsersTable extends Table {
                 statement.setInt(2, uData.getDemData().getAge());
                 statement.setString(3, uData.getDemData().getGender().toString().toLowerCase());
                 statement.setString(4, uData.getDemData().getGeoLocation());
-                GameMode gm = uData.getLastGamemode();
+                Gamemode gm = uData.getLastGamemode();
                 if (gm != null) {
                     statement.setString(5, uData.getLastGamemode().name());
                 } else {
@@ -766,7 +768,7 @@ public class UsersTable extends Table {
                 statement.setInt(1, uData.getDemData().getAge());
                 statement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
                 statement.setString(3, uData.getDemData().getGeoLocation());
-                GameMode gm = uData.getLastGamemode();
+                Gamemode gm = uData.getLastGamemode();
                 if (gm != null) {
                     statement.setString(4, uData.getLastGamemode().name());
                 } else {

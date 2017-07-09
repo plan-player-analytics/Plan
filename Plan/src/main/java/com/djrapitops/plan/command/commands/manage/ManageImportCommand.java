@@ -5,7 +5,7 @@ import com.djrapitops.javaplugin.command.SubCommand;
 import com.djrapitops.javaplugin.command.sender.ISender;
 import com.djrapitops.javaplugin.task.runnable.RslRunnable;
 import com.djrapitops.javaplugin.utilities.FormattingUtils;
-import java.util.Arrays;
+import com.djrapitops.javaplugin.utilities.player.Fetch;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,7 +16,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.handling.importing.ImportUtils;
 import main.java.com.djrapitops.plan.data.handling.importing.Importer;
 import main.java.com.djrapitops.plan.utilities.Check;
-import static org.bukkit.Bukkit.getOfflinePlayers;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
@@ -62,7 +61,7 @@ public class ManageImportCommand extends SubCommand {
         }
 
         String[] importArguments = FormattingUtils.removeFirstArgument(args);
-        
+
         final Importer importer = importPlugins.get(importFromPlugin);
         runImportTask(sender, importer, importArguments);
         return true;
@@ -74,7 +73,7 @@ public class ManageImportCommand extends SubCommand {
             public void run() {
                 try {
                     sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
-                    List<UUID> uuids = Arrays.stream(getOfflinePlayers()).map(p -> p.getUniqueId()).collect(Collectors.toList());
+                    List<UUID> uuids = Fetch.getIOfflinePlayers().stream().map(p -> p.getUniqueId()).collect(Collectors.toList());
                     if (importer.importData(uuids, importArguments)) {
                         sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
                     } else {

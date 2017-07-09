@@ -12,6 +12,7 @@
         </repository>
     </repositories>
     <dependencies>
+        <!--        Spigot 1.12 built with Buildtools for Database classes.-->  
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>

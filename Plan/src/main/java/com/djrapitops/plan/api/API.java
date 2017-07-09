@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.javaplugin.utilities.UUIDFetcher;
 import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -19,8 +20,6 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import org.bukkit.OfflinePlayer;
 
 /**
  * This class contains the API methods.
@@ -228,12 +227,14 @@ public class API {
      *
      * @param uuid UUID of the player.
      * @return Playername, eg "Rsl1122"
+     * @throws NullPointerException If uuid is null.
      * @throws IllegalStateException If the player has not played on the server
      * before.
      */
-    public String getPlayerName(UUID uuid) throws IllegalStateException {
-        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
-        if (offlinePlayer.hasPlayedBefore()) {
+    public String getPlayerName(UUID uuid) throws IllegalStateException, NullPointerException {
+        Verify.nullCheck(uuid);
+        IOfflinePlayer offlinePlayer = Plan.getInstance().fetch().getOfflinePlayer(uuid);
+        if (Verify.notNull(offlinePlayer)) {
             return offlinePlayer.getName();
         }
         throw new IllegalStateException("Player has not played on this server before.");
