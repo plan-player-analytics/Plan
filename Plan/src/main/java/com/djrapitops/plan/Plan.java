@@ -185,11 +185,11 @@ public class Plan extends RslPlugin<Plan> {
     @Override
     public void onDisable() {
         // Stop the UI Server
-        if (Verify.notNull(uiServer)) {
+        if (uiServer != null) {
             uiServer.stop();
         }
         Bukkit.getScheduler().cancelTasks(this);
-        if (Verify.notNull(handler) && Verify.notNull(db)) {
+        if (Verify.notNull(handler, db)) {
             Benchmark.start("DataCache OnDisable Save");
             // Saves the datacache to the database without Bukkit's Schedulers.
             Log.info(Phrase.CACHE_SAVE + "");
@@ -262,7 +262,7 @@ public class Plan extends RslPlugin<Plan> {
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
         Benchmark.start("Enable: Schedule PeriodicAnalysisTask");
-        if (!Verify.positive(everyXMinutes)) {
+        if (everyXMinutes <= 0) {
             return;
         }
         getRunnableFactory().createNew("PeriodicalAnalysisTask", new RslRunnable() {

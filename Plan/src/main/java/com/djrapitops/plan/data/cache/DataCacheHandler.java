@@ -122,7 +122,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
-        if (!Verify.positive(minutes)) {
+        if (minutes <= 0) {
             minutes = 5;
         }
         final int clearAfterXsaves;
@@ -420,7 +420,7 @@ public class DataCacheHandler extends LocationCache {
      */
     public void clearFromCache(UUID uuid) {
         Log.debug(uuid + ": Clear");
-        if (Verify.notNull(plugin.fetch().getPlayer(uuid))) {
+        if (plugin.fetch().isOnline(uuid)) {
             Log.debug(uuid + ": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
