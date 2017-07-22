@@ -27,18 +27,6 @@ public class AnalysisUtils {
 
     /**
      *
-     * @param lastPlayed
-     * @param playTime
-     * @param loginTimes
-     * @return
-     */
-    @Deprecated
-    public static boolean isActive(long lastPlayed, long playTime, int loginTimes) {
-        return isActive(MiscUtils.getTime(), lastPlayed, playTime, loginTimes);
-    }
-
-    /**
-     *
      * @param now
      * @param lastPlayed
      * @param playTime
@@ -232,7 +220,7 @@ public class AnalysisUtils {
      * @param scale
      * @return
      */
-    public static Integer getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
+    public static int getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         Set<UUID> uniqueJoins = new HashSet<>();
@@ -254,7 +242,7 @@ public class AnalysisUtils {
      * @param scale
      * @return
      */
-    public static Integer getUniqueJoinsPerDay(Map<UUID, List<SessionData>> sessions, long scale) {
+    public static int getUniqueJoinsPerDay(Map<UUID, List<SessionData>> sessions, long scale) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;

@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package test.java.utils;
 
-import com.djrapitops.javaplugin.status.ProcessStatus;
-import com.djrapitops.javaplugin.utilities.BenchmarkUtil;
-import com.djrapitops.javaplugin.utilities.compatibility.CompatibilityUtility;
-import com.djrapitops.javaplugin.utilities.log.BukkitLog;
-import com.djrapitops.javaplugin.utilities.player.Fetch;
+import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.utilities.BenchUtil;
+import com.djrapitops.plugin.utilities.log.BukkitLog;
+import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.status.ProcessStatus;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
@@ -19,8 +15,10 @@ import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -37,65 +35,80 @@ public class TestInit {
     public TestInit() {
     }
 
-    /**
-     *
-     * @return
-     */
-    public boolean setUp() {
-        try {
-            planMock = PowerMockito.mock(Plan.class);
-            Plan.setInstance(Plan.class, planMock);
-            Plan.setInstance(planMock.getClass(), planMock);
-            CompatibilityUtility.setUtilityProviderPluginClass(planMock.getClass());
-            File configfile = new File(getClass().getResource("/config.yml").getPath());
-            YamlConfiguration configuration = new YamlConfiguration();
-            configuration.load(configfile.getAbsolutePath());
-            when(planMock.getConfig()).thenReturn(configuration);
-            File testFolder = new File("temporaryTestFolder");
-            if (testFolder.exists()) {
-                for (File f : testFolder.listFiles()) {
-                    Files.deleteIfExists(f.toPath());
-                }
-            }
-            Files.deleteIfExists(new File("temporaryTestFolder").toPath());
-            testFolder = new File("temporaryTestFolder");
-            testFolder.mkdir();
-//
-            when(planMock.getDataFolder()).thenReturn(testFolder);
-            File analysis = new File(getClass().getResource("/analysis.html").getPath());
-            when(planMock.getResource("analysis.html")).thenReturn(new FileInputStream(analysis));
-            File player = new File(getClass().getResource("/player.html").getPath());
-            when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
+    public static TestInit init() throws Exception {
+        TestInit t = new TestInit();
+        assertTrue("Not set up", t.setUp());
+        return t;
+    }
 
-            Server mockServer = PowerMockito.mock(Server.class);
-            when(mockServer.getIp()).thenReturn("0.0.0.0");
-            when(mockServer.getMaxPlayers()).thenReturn(20);
-            OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
-            when(mockServer.getOfflinePlayers()).thenReturn(ops);
-            
-            when(planMock.getServer()).thenReturn(mockServer);
-            when(planMock.getLogger()).thenReturn(Logger.getGlobal());
-            BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
-            when(planMock.getPluginLogger()).thenReturn(log);
-            BenchmarkUtil bench = new BenchmarkUtil();
-            when(planMock.benchmark()).thenReturn(bench);
-            ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
-            when(planMock.getVariable()).thenReturn(serverVariableHolder);
-            ProcessStatus<Plan> process = new ProcessStatus(planMock);
-            when(planMock.processStatus()).thenReturn(process);
-            Fetch fetch = new Fetch(planMock);
-            when(planMock.fetch()).thenReturn(fetch);
-//            Mockito.doReturn("0.0.0.0").when(planMock).getServer().getIp();      
-            Settings.DEBUG.setValue(true);
-            return true;
-        } catch (Exception ex) {
-            System.out.println(ex);
-            StackTraceElement[] stackTrace = ex.getStackTrace();
-            for (StackTraceElement stackTraceElement : stackTrace) {
-                System.out.println(stackTraceElement);
+    @Deprecated // Use Test.init instead.
+    public boolean setUp() throws Exception {
+        planMock = PowerMockito.mock(Plan.class);
+        StaticHolder.setInstance(Plan.class, planMock);
+        StaticHolder.setInstance(planMock.getClass(), planMock);
+
+        YamlConfiguration config = mockConfig();
+        when(planMock.getConfig()).thenReturn(config);
+
+        File testFolder = getEmptyTestfolder();
+        when(planMock.getDataFolder()).thenReturn(testFolder);
+
+        // Html Files
+        File analysis = new File(getClass().getResource("/analysis.html").getPath());
+        when(planMock.getResource("analysis.html")).thenReturn(new FileInputStream(analysis));
+        File player = new File(getClass().getResource("/player.html").getPath());
+        when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
+
+        Server mockServer = mockServer();
+
+        when(planMock.getServer()).thenReturn(mockServer);
+
+        // Test log settings
+        when(planMock.getLogger()).thenReturn(Logger.getGlobal());
+        Settings.DEBUG.setValue(true);
+
+        // Abstract Plugin Framework Mocks.
+        BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
+        BenchUtil bench = new BenchUtil();
+        ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
+        ProcessStatus<Plan> process = new ProcessStatus(planMock);
+        Fetch fetch = new Fetch(planMock);
+
+        when(planMock.getPluginLogger()).thenReturn(log);
+        when(planMock.benchmark()).thenReturn(bench);
+        when(planMock.getVariable()).thenReturn(serverVariableHolder);
+        when(planMock.processStatus()).thenReturn(process);
+        when(planMock.fetch()).thenReturn(fetch);
+        return true;
+    }
+
+    private Server mockServer() {
+        Server mockServer = PowerMockito.mock(Server.class);
+        when(mockServer.getIp()).thenReturn("0.0.0.0");
+        when(mockServer.getMaxPlayers()).thenReturn(20);
+        OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
+        when(mockServer.getOfflinePlayers()).thenReturn(ops);
+        return mockServer;
+    }
+
+    private File getEmptyTestfolder() throws IOException {
+        File testFolder = new File("temporaryTestFolder");
+        if (testFolder.exists()) {
+            for (File f : testFolder.listFiles()) {
+                Files.deleteIfExists(f.toPath());
             }
-            return false;
         }
+        Files.deleteIfExists(new File("temporaryTestFolder").toPath());
+        testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
+    }
+
+    private YamlConfiguration mockConfig() throws IOException, InvalidConfigurationException {
+        File configfile = new File(getClass().getResource("/config.yml").getPath());
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.load(configfile.getAbsolutePath());
+        return configuration;
     }
 
     /**

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
 import java.util.Date;
@@ -31,8 +26,6 @@ public class FormatUtilsTest {
      */
     @Before
     public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue(t.setUp());
     }
 
     /**
@@ -45,7 +38,8 @@ public class FormatUtilsTest {
      *
      */
     @Test
-    public void testFormatTimeAmount() {
+    public void testFormatTimeAmount() throws Exception {
+        TestInit t = TestInit.init();
         long second = 1000L;
         String expResult = "1s";
         String result = FormatUtils.formatTimeAmount(second);
@@ -56,7 +50,8 @@ public class FormatUtilsTest {
      *
      */
     @Test
-    public void testFormatTimeAmountSinceDate() {
+    public void testFormatTimeAmountSinceDate() throws Exception {
+        TestInit.init();
         Date before = new Date(300000L);
         Date now = new Date(310000L);
         String expResult = "10s";
@@ -169,7 +164,8 @@ public class FormatUtilsTest {
      *
      */
     @Test
-    public void testCutDecimals() {
+    public void testCutDecimals() throws Exception {
+        TestInit.init();
         double d = 0.05234;
         String expResult = "0,05";
         String result = FormatUtils.cutDecimals(d);
@@ -180,7 +176,8 @@ public class FormatUtilsTest {
      *
      */
     @Test
-    public void testCutDecimals2() {
+    public void testCutDecimals2() throws Exception {
+        TestInit.init();
         double d = 0.05634;
         String expResult = "0,06";
         String result = FormatUtils.cutDecimals(d);

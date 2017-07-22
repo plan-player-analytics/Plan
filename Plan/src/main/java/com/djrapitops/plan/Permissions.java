@@ -23,6 +23,7 @@ public enum Permissions {
     RELOAD("plan.reload"),
     INFO("plan.info"),
     MANAGE("plan.manage"),
+    MANAGE_WEB("plan.webmanage"),
     //
     IGNORE_COMMANDUSE("plan.ignore.commanduse");
 
@@ -33,20 +34,20 @@ public enum Permissions {
     }
 
     /**
-     * Returns the string of the permission node in plugin.yml.
+     * Returns the permission node in plugin.yml.
      *
-     * @return line of the permission eg. plan.inspect
+     * @return permission node eg. plan.inspect
      */
     public String getPermission() {
         return permission;
     }
 
     /**
-     * Returns the string of the permission node in plugin.yml.
+     * Returns the permission node in plugin.yml.
      *
-     * Shortcut for getPermission
+     * Same as getPermission.
      *
-     * @return line of the permission eg. plan.inspect
+     * @return permission node eg. plan.inspect
      */
     public String getPerm() {
         return getPermission();

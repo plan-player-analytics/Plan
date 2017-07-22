@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 import java.util.Collection;
 import java.util.UUID;
@@ -40,22 +40,22 @@ public class ManageRestoreCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE + ""), sender)) {
+        if (!Check.isTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE + ""), sender)) {
             return true;
         }
         String db = args[1].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(db) || "mysql".equals(db);
 
-        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + db, sender)) {
+        if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + db, sender)) {
             return true;
         }
-        if (!Check.ifTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])), sender)) {
+        if (!Check.isTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])), sender)) {
             return true;
         }
 
         final Database database = ManageUtils.getDB(plugin, db);
 
-        if (!Check.ifTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
             Log.error(db + " was null!");
             return true;
         }
@@ -65,7 +65,7 @@ public class ManageRestoreCommand extends SubCommand {
     }
 
     private void runRestoreTask(String[] args, ISender sender, final Database database) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("RestoreTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("RestoreTask") {
             @Override
             public void run() {
                 try {
@@ -73,7 +73,7 @@ public class ManageRestoreCommand extends SubCommand {
                     boolean containsDBFileExtension = backupDBName.contains(".db");
 
                     File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
-                    if (!Check.ifTrue(Verify.exists(backupDBFile), Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0], sender)) {
+                    if (!Check.isTrue(Verify.exists(backupDBFile), Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0], sender)) {
                         return;
                     }
 
@@ -87,7 +87,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                     final Collection<UUID> uuids = ManageUtils.getUUIDS(backupDB);
-                    if (!Check.ifTrue(!Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")", sender)) {
+                    if (!Check.isTrue(!Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")", sender)) {
                         return;
                     }
                     if (ManageUtils.clearAndCopy(database, backupDB, uuids)) {

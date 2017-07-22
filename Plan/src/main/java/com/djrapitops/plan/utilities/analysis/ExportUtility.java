@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
@@ -57,6 +58,7 @@ public class ExportUtility {
         plugin.processStatus().startExecution(processName);
         try {
             File folder = getFolder();
+            writePlayersPageHtml(rawData, new File(folder, "players"));
             writeAnalysisHtml(analysisData, new File(folder, "server"));
             File playersFolder = getPlayersFolder(folder);
             plugin.processStatus().setStatus(processName, "Player html files.");
@@ -122,6 +124,13 @@ public class ExportUtility {
             analysisHtmlFile.delete();
         }
         Files.write(analysisHtmlFile.toPath(), Arrays.asList(analysisHtml));
+    }
+
+    private static void writePlayersPageHtml(List<UserData> rawData, File playersfolder) throws IOException {
+        String playersHtml = PlayersPageResponse.buildContent(rawData);
+        playersfolder.mkdirs();
+        File playersHtmlFile = new File(playersfolder, "index.html");
+        Files.write(playersHtmlFile.toPath(), Arrays.asList(new String[]{playersHtml}));
     }
 
 }

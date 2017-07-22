@@ -84,7 +84,7 @@ public class IPsTable extends Table {
      * @throws SQLException
      */
     public List<InetAddress> getIPAddresses(int userId) throws SQLException {
-        Benchmark.start("Get Ips");
+        Benchmark.start("Database: Get Ips");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -102,7 +102,7 @@ public class IPsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Ips");
+            Benchmark.stop("Database: Get Ips");
         }
     }
 
@@ -116,7 +116,7 @@ public class IPsTable extends Table {
         if (ips == null) {
             return;
         }
-        Benchmark.start("Save Ips");
+        Benchmark.start("Database: Save Ips");
         ips.removeAll(getIPAddresses(userId));
         if (ips.isEmpty()) {
             return;
@@ -142,7 +142,7 @@ public class IPsTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Ips");
+            Benchmark.stop("Database: Save Ips");
         }
     }
 
@@ -156,7 +156,7 @@ public class IPsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-        Benchmark.start("Get Ips Multiple " + ids.size());
+        Benchmark.start("Database: Get Ips Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -180,7 +180,7 @@ public class IPsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Ips Multiple " + ids.size());
+            Benchmark.stop("Database: Get Ips Multiple");
         }
     }
 
@@ -193,7 +193,7 @@ public class IPsTable extends Table {
         if (ips == null || ips.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Ips Multiple " + ips.size());
+        Benchmark.start("Database: Save Ips Multiple");
         Map<Integer, Set<InetAddress>> saved = getIPList(ips.keySet());
         PreparedStatement statement = null;
         try {
@@ -227,7 +227,7 @@ public class IPsTable extends Table {
                 Log.debug("Executing ips batch: " + i);
                 statement.executeBatch();
             }
-            Benchmark.stop("Save Ips Multiple " + ips.size());
+            Benchmark.stop("Database: Save Ips Multiple");
         } finally {
             close(statement);
         }

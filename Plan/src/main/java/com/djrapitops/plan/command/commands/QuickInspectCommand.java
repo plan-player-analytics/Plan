@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.Verify;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -13,9 +13,10 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
-import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 /**
  * This command is used to cache UserData to InspectCache and to view some of
@@ -44,18 +45,18 @@ public class QuickInspectCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         String playerName = MiscUtils.getPlayerName(args, sender, Permissions.QUICK_INSPECT_OTHER);
-        plugin.getRunnableFactory().createNew(new RslRunnable("QinspectTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("QinspectTask") {
             @Override
             public void run() {
                 try {
-                    UUID uuid = ConditionUtils.getUUID(playerName);
-                    if (!Check.ifTrue(Verify.notNull(uuid), Phrase.USERNAME_NOT_VALID.toString(), sender)) {
+                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                    if (!Check.isTrue(Verify.notNull(uuid), Phrase.USERNAME_NOT_VALID.toString(), sender)) {
                         return;
                     }
-                    if (!Check.ifTrue(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString(), sender)) {
+                    if (!Check.isTrue(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString(), sender)) {
                         return;
                     }
-                    if (!Check.ifTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
+                    if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
                         return;
                     }
                     sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
@@ -70,7 +71,7 @@ public class QuickInspectCommand extends SubCommand {
     }
 
     private void runMessageSenderTask(UUID uuid, ISender sender, String playerName) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("QinspectMessageSenderTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("QinspectMessageSenderTask") {
             private int timesrun = 0;
 
             @Override

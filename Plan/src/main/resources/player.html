@@ -369,7 +369,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							<i class="fa fa-crosshairs" aria-hidden="true"></i> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%<br/>
 							<br/>
 							<i class="fa fa-globe" aria-hidden="true"></i> Geolocation: %geoloc%<br/>
-							<i class="fa fa-play" aria-hidden="true"></i> Age: %age% | <i class="fa fa-male" aria-hidden="true"></i><i class="fa fa-female" aria-hidden="true"></i> Gender: %gender%<br/>     
 							<i class="fa fa-tag" aria-hidden="true"></i> UUID: %uuid%<br/>
 							<i class="fa fa-globe" aria-hidden="true"></i> Has Connected from ips: %ips%</p>
 					</div>
@@ -734,7 +733,18 @@ function countUpTimer() {
                                 yAxes: [{
                                     display: true,
                                     ticks: {
-                                        suggestedMax: %graphmaxplayers%
+                                        callback: function(value, index, values) {
+							switch (value) {
+                                                            case 0:
+                                                                return '0';
+                                                            case 1:
+                                                                return '1';
+                                                            default:
+                                                                return '';
+                                                        };
+						},
+                                        suggestedMax: 2,
+                                        suggestedMin: 0
                                     }
                                 }],
 				xAxes: [{

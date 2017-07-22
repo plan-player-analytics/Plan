@@ -3,7 +3,9 @@ package main.java.com.djrapitops.plan;
 import java.util.Collection;
 
 /**
- * This class manages the messages going to the Bukkit's Logger.
+ * This class manages the messages going to the Console Logger.
+ *
+ * Methods of Abtract Plugin Framework log utility are used.
  *
  * @author Rsl1122
  * @since 3.0.0

@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,9 +35,8 @@ public class KickInfoTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
     }
 
     /**
@@ -46,7 +44,7 @@ public class KickInfoTest {
      */
     @Test
     public void testProcess() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         KickInfo i = new KickInfo(data.getUuid());
         assertTrue(i.process(data));
         assertEquals(1, data.getTimesKicked());

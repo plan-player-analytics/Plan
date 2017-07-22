@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;

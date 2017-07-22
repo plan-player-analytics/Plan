@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.utilities.player.IPlayer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,8 +25,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
-import com.djrapitops.javaplugin.task.ITask;
-import com.djrapitops.javaplugin.utilities.player.IPlayer;
 
 /**
  * This Class contains the Cache.
@@ -41,7 +40,7 @@ import com.djrapitops.javaplugin.utilities.player.IPlayer;
  * @author Rsl1122
  * @since 2.0.0
  */
-public class DataCacheHandler extends LocationCache {
+public class DataCacheHandler extends SessionCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
@@ -132,7 +131,8 @@ public class DataCacheHandler extends LocationCache {
         } else {
             clearAfterXsaves = configValue;
         }
-        ITask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new RslRunnable("PeriodicCacheSaveTask") {
+        DataCacheHandler handler = this;
+        ITask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
 
             @Override
@@ -142,7 +142,6 @@ public class DataCacheHandler extends LocationCache {
                 }
                 try {
                     periodicTaskIsSaving = true;
-                    DataCacheHandler handler = Plan.getInstance().getHandler();
                     handler.saveHandlerDataToCache();
                     handler.saveCachedUserData();
                     if (timesSaved % clearAfterXsaves == 0) {
@@ -258,28 +257,24 @@ public class DataCacheHandler extends LocationCache {
      */
     public void saveCacheOnDisable() {
         long time = MiscUtils.getTime();
-        Benchmark.start("SaveCacheOnDisable");
-        Log.debug("SaveCacheOnDisable!");
+        Benchmark.start("Cache: SaveOnDisable");
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
         List<HandlingInfo> toProcess = processTask.stopAndReturnLeftovers();
-        Benchmark.start("ProcessOnlineHandlingInfo");
+        Benchmark.start("Cache: ProcessOnlineHandlingInfo");
         Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
         Log.debug("Online: " + onlinePlayers.size());
         for (IPlayer p : onlinePlayers) {
             UUID uuid = p.getUuid();
             endSession(uuid);
-            if (dataCache.containsKey(uuid)) {
-                dataCache.get(uuid).addLocations(getLocationsForSaving(uuid));
-            }
             toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         Collections.sort(toProcess, new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
-        Benchmark.stop("ProcessOnlineHandlingInfo");
+        Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
         Log.debug("SAVING, DataCache size: " + dataCache.keySet().size());
@@ -299,8 +294,7 @@ public class DataCacheHandler extends LocationCache {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
-        Benchmark.stop("SaveCacheOnDisable");
-        Log.debug("SaveCacheOnDisable_END");
+        Benchmark.stop("Cache: SaveOnDisable");
     }
 
     private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
@@ -331,8 +325,6 @@ public class DataCacheHandler extends LocationCache {
         DBCallableProcessor saveProcessor = new DBCallableProcessor() {
             @Override
             public void process(UserData data) {
-                data.addLocations(getLocationsForSaving(uuid));
-                clearLocations(uuid);
                 data.access();
                 data.setClearAfterSave(true);
                 saveTask.scheduleForSave(data);
@@ -503,7 +495,7 @@ public class DataCacheHandler extends LocationCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new RslRunnable("ReloadCacheUpdateTask") {
+        ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new AbsRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
                 final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();

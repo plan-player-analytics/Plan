@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.CommandUtils;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -12,13 +13,13 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
-import org.bukkit.entity.Player;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.
@@ -44,16 +45,33 @@ public class AnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
             return true;
         }
-        if (!Check.ifTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
             if (!analysisCache.isCached()) {
                 return true;
             }
         }
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+        plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
+            @Override
+            public void run() {
+                try {
+                    if (CommandUtils.isPlayer(sender)) {
+                        boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
+                        if (!senderHasWebUser) {
+                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + getName(), e);
+                } finally {
+                    this.cancel();
+                }
+            }
+        }).runTaskAsynchronously();
         updateCache();
         runMessageSenderTask(sender);
         return true;
@@ -70,7 +88,7 @@ public class AnalyzeCommand extends SubCommand {
     }
 
     private void runMessageSenderTask(ISender sender) {
-        plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new RslRunnable() {
+        plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new AbsRunnable() {
             private int timesrun = 0;
 
             @Override
@@ -106,7 +124,7 @@ public class AnalyzeCommand extends SubCommand {
             // Link
             String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
             String message = Phrase.CMD_LINK + "";
-            boolean console = !(sender instanceof Player);
+            boolean console = !CommandUtils.isPlayer(sender);
             if (console) {
                 sender.sendMessage(message + url);
             } else {

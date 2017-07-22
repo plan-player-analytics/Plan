@@ -5,10 +5,10 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling;
 
+import com.djrapitops.plugin.utilities.player.IPlayer;
 import java.io.IOException;
 import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.KillHandling;
@@ -24,10 +24,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
-import test.java.utils.TestInit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
+import test.java.utils.TestInit;
 
 /**
  *
@@ -50,13 +50,12 @@ public class KillHandlingTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
-            public void startConnectionPingTask(Plan plugin) {
+            public void startConnectionPingTask() {
 
             }
 
@@ -83,12 +82,12 @@ public class KillHandlingTest {
      */
     @Test
     public void testProcessKillInfoPlayer() throws SQLException {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        Player dead = MockUtils.mockPlayer2();
+        UserData data = MockUtils.mockUser();
+        IPlayer dead = MockUtils.mockIPlayer2();
         db.init();
-        db.saveUserData(new UserData(dead, new DemographicsData()));
-        KillHandling.processKillInfo(data, 10L, dead, "TestWeapon");
-        KillData expected = new KillData(dead.getUniqueId(), 1, "TestWeapon", 10L);
+        db.saveUserData(new UserData(dead));
+        KillHandling.processKillInfo(data, 10L, (Player) dead.getWrappedPlayerClass(), "TestWeapon");
+        KillData expected = new KillData(dead.getUuid(), 1, "TestWeapon", 10L);
         assertTrue("Didn't add the kill", data.getPlayerKills().size() == 1);
         KillData result = data.getPlayerKills().get(0);
         assertEquals(expected.getDate(), result.getDate());
@@ -105,8 +104,8 @@ public class KillHandlingTest {
     @Test
     public void testProcessKillInfoException() throws SQLException, IOException {
         db.init();
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
-        Player dead = MockUtils.mockPlayer2();
+        UserData data = MockUtils.mockUser();
+        Player dead = (Player) MockUtils.mockIPlayer2().getWrappedPlayerClass();
         KillHandling.processKillInfo(data, 10L, dead, "TestWeapon");
         assertTrue("Added the kill", data.getPlayerKills().isEmpty());
     }
@@ -117,7 +116,7 @@ public class KillHandlingTest {
      */
     @Test
     public void testProcessKillInfoMob() throws SQLException {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         int mobKills = data.getMobKills();
         int exp = mobKills + 1;
         KillHandling.processKillInfo(data, 10L, null, "TestWeapon");

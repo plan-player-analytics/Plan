@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -38,7 +38,7 @@ public class ManageRemoveCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
+        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
             return true;
         }
 
@@ -49,21 +49,21 @@ public class ManageRemoveCommand extends SubCommand {
     }
 
     private void runRemoveTask(String playerName, ISender sender, String[] args) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("DBRemoveTask " + playerName) {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("DBRemoveTask " + playerName) {
             @Override
             public void run() {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     String message = Phrase.USERNAME_NOT_VALID.toString();
-                    if (!Check.ifTrue(Verify.notNull(uuid), message, sender)) {
+                    if (!Check.isTrue(Verify.notNull(uuid), message, sender)) {
                         return;
                     }
                     message = Phrase.USERNAME_NOT_KNOWN.toString();
-                    if (!Check.ifTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
+                    if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
                         return;
                     }
                     message = Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName()));
-                    if (!Check.ifTrue(Verify.contains("-a", args), message, sender)) {
+                    if (!Check.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;
                     }
 

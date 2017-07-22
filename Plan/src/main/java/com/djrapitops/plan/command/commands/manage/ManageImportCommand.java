@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.FormattingUtils;
-import com.djrapitops.javaplugin.utilities.player.Fetch;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.FormattingUtils;
+import com.djrapitops.plugin.utilities.player.Fetch;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class ManageImportCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + " " + Phrase.USE_IMPORT, sender)) {
+        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + " " + Phrase.USE_IMPORT, sender)) {
             return true;
         }
 
@@ -53,10 +53,10 @@ public class ManageImportCommand extends SubCommand {
             return true;
         }
 
-        if (!Check.ifTrue(importPlugins.keySet().contains(importFromPlugin), Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin, sender)) {
+        if (!Check.isTrue(importPlugins.keySet().contains(importFromPlugin), Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin, sender)) {
             return true;
         }
-        if (!Check.ifTrue(ImportUtils.isPluginEnabled(importFromPlugin), Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin, sender)) {
+        if (!Check.isTrue(ImportUtils.isPluginEnabled(importFromPlugin), Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin, sender)) {
             return true;
         }
 
@@ -68,7 +68,7 @@ public class ManageImportCommand extends SubCommand {
     }
 
     private void runImportTask(ISender sender, final Importer importer, String... importArguments) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("ImportTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("ImportTask") {
             @Override
             public void run() {
                 try {

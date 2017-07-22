@@ -11,14 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
@@ -28,10 +26,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
-import test.java.utils.TestInit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
+import test.java.utils.TestInit;
 
 /**
  *
@@ -58,15 +56,14 @@ public class DataCacheHandlerTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
         plan = t.getPlanMock();
         calledSaveCommandUse = false;
         calledSaveUserData = false;
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
-            public void startConnectionPingTask(Plan plugin) {
+            public void startConnectionPingTask() {
 
             }
 
@@ -83,14 +80,12 @@ public class DataCacheHandlerTest {
             @Override
             public void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) {
                 if (uuid.equals(MockUtils.getPlayerUUID())) {
-                    OfflinePlayer op = MockUtils.mockPlayer();
-                    UserData d = new UserData(op, new DemographicsData());
+                    UserData d = MockUtils.mockUser();
                     for (DBCallableProcessor p : processors) {
                         p.process(d);
                     }
                 } else if (uuid.equals(MockUtils.getPlayer2UUID())) {
-                    OfflinePlayer op = MockUtils.mockPlayer2();
-                    UserData d = new UserData(op, new DemographicsData());
+                    UserData d = MockUtils.mockUser2();
                     for (DBCallableProcessor p : processors) {
                         p.process(d);
                     }
@@ -138,7 +133,7 @@ public class DataCacheHandlerTest {
     @Test
     public void testGetUserDataForProcessingCache() throws SQLException, InterruptedException {
 //        db.init();
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         db.saveUserData(data);
         handler.getUserDataForProcessing(new DBCallableProcessor() {
             @Override
@@ -159,7 +154,7 @@ public class DataCacheHandlerTest {
     @Ignore
     @Test
     public void testGetUserDataForProcessingDontCache() throws SQLException, InterruptedException {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         db.saveUserData(data);
         handler.getUserDataForProcessing(new DBCallableProcessor() {
             @Override
@@ -178,7 +173,7 @@ public class DataCacheHandlerTest {
     @Ignore("Scheduler")
     @Test
     public void testSaveCachedUserData() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         handler.getDataCache().put(data.getUuid(), data);
         handler.saveCachedUserData();
         assertTrue("Didn't call saveMultiple", calledSaveMultiple);
@@ -198,7 +193,7 @@ public class DataCacheHandlerTest {
     @Ignore
     @Test
     public void testSaveCacheOnDisable() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         handler.getDataCache().put(data.getUuid(), data);
         handler.startSession(data.getUuid());
         handler.saveCacheOnDisable();

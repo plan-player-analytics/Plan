@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.utilities.VersionUtils;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.Version;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -36,7 +36,7 @@ public class InfoCommand extends SubCommand {
         String[] messages = {
             Phrase.CMD_INFO_HEADER + "",
             Phrase.CMD_INFO_VERSION.parse(plugin.getDescription().getVersion()),
-            Phrase.CMD_BALL.toString() + tColor + " " + VersionUtils.checkVersion(plugin),
+            Phrase.CMD_BALL.toString() + tColor + " " + Version.checkVersion(plugin),
             Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()),
             Phrase.CMD_FOOTER + ""
         };

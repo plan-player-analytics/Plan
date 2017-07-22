@@ -19,7 +19,6 @@ public enum Settings {
     ANALYSIS_EXPORT("Settings.Analysis.Export.Enabled"),
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
-    GATHERLOCATIONS("Settings.Data.GatherLocations"),
     GATHERCHAT("Settings.Data.ChatListener"),
     GATHERKILLS("Settings.Data.GatherKillData"),
     GATHERGMTIMES("Settings.Data.GamemodeChangeListener"),
@@ -27,7 +26,6 @@ public enum Settings {
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
     PLAYERLIST_SHOW_IMAGES("Customization.SmallHeadImagesOnAnalysisPlayerlist"),
-    LINK_PROTOCOL("Settings.WebServer.LinkProtocol"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
@@ -48,8 +46,8 @@ public enum Settings {
     DEM_IGNORE("Customization.DemographicsTriggers.IgnoreWhen"),
     LOCALE("Settings.Locale"),
     WEBSERVER_IP("Settings.WebServer.InternalIP"),
-    SECURITY_CODE("Settings.WebServer.Security.AddressSecurityCode"),
     ANALYSIS_EXPORT_PATH("Settings.Analysis.Export.DestinationFolder"),
+    LINK_PROTOCOL("Settings.WebServer.LinkProtocol"),
     //
     SERVER_NAME("Customization.ServerName"),
     //

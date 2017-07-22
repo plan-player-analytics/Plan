@@ -5,13 +5,10 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
-import com.djrapitops.javaplugin.utilities.player.BukkitOfflinePlayer;
-import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -50,9 +47,8 @@ public class DataCacheProcessQueueTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
         handler = new DataCacheHandler(Plan.getInstance()) {
             @Override
             public boolean getCommandUseFromDb() {
@@ -70,12 +66,10 @@ public class DataCacheProcessQueueTest {
             @Override
             public void getUserDataForProcessing(DBCallableProcessor p, UUID uuid) {
                 if (uuid.equals(MockUtils.getPlayerUUID())) {
-                    IOfflinePlayer op = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer());
-                    UserData d = new UserData(op, new DemographicsData());
+                    UserData d = MockUtils.mockUser();
                     p.process(d);
                 } else if (uuid.equals(MockUtils.getPlayer2UUID())) {
-                    IOfflinePlayer op = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer2());
-                    UserData d = new UserData(op, new DemographicsData());
+                    UserData d = MockUtils.mockUser2();
                     p.process(d);
                 }
             }

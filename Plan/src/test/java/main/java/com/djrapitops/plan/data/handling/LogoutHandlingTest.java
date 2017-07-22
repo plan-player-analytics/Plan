@@ -5,26 +5,17 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
-import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
-import test.java.utils.TestInit;
 
 /**
  *
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
 public class LogoutHandlingTest {
 
     /**
@@ -37,10 +28,7 @@ public class LogoutHandlingTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
-        Plan plan = t.getPlanMock();
+    public void setUp() throws Exception {
     }
 
     /**
@@ -48,7 +36,7 @@ public class LogoutHandlingTest {
      */
     @Test
     public void testProcessLogoutInfo() {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         data.setLastPlayed(10L);
         data.updateBanned(false);
         long time = 20L;

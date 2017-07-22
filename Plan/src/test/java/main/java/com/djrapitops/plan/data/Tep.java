@@ -10,5 +10,5 @@ package test.java.main.java.com.djrapitops.plan.data;
  * @author ristolah
  */
 public class Tep {
-    
+
 }

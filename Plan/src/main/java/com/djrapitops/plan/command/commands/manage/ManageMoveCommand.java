@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.Verify;
 import java.util.Collection;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
@@ -40,40 +40,40 @@ public class ManageMoveCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MOVE + ""), sender)) {
+        if (!Check.isTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_MOVE + ""), sender)) {
             return true;
         }
 
         String fromDB = args[0].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(fromDB) || "mysql".equals(fromDB);
 
-        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + fromDB, sender)) {
+        if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + fromDB, sender)) {
             return true;
         }
 
         String toDB = args[1].toLowerCase();
         isCorrectDB = "sqlite".equals(toDB) || "mysql".equals(toDB);
 
-        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + toDB, sender)) {
+        if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + toDB, sender)) {
             return true;
         }
-        if (!Check.ifTrue(!Verify.equalsIgnoreCase(fromDB, toDB), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
+        if (!Check.isTrue(!Verify.equalsIgnoreCase(fromDB, toDB), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
             return true;
         }
-        if (!Check.ifTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[1])), sender)) {
+        if (!Check.isTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[1])), sender)) {
             return true;
         }
 
         final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
 
-        if (!Check.ifTrue(Verify.notNull(fromDatabase), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(fromDatabase), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
             Log.error(fromDB + " was null!");
             return true;
         }
 
         final Database toDatabase = ManageUtils.getDB(plugin, toDB);
 
-        if (!Check.ifTrue(Verify.notNull(toDatabase), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(toDatabase), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
             Log.error(toDB + " was null!");
             return true;
         }
@@ -83,12 +83,12 @@ public class ManageMoveCommand extends SubCommand {
     }
 
     private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("DBMoveTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("DBMoveTask") {
             @Override
             public void run() {
                 try {
                     final Collection<UUID> uuids = ManageUtils.getUUIDS(fromDatabase);
-                    if (Check.ifTrue(Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDatabase.getName() + ")", sender)) {
+                    if (Check.isTrue(Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDatabase.getName() + ")", sender)) {
                         return;
                     }
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
@@ -96,7 +96,7 @@ public class ManageMoveCommand extends SubCommand {
                         sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
                         boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
 
-                        Check.ifTrue(!movedToCurrentDatabase, Phrase.MANAGE_DB_CONFIG_REMINDER + "", sender);
+                        Check.isTrue(!movedToCurrentDatabase, Phrase.MANAGE_DB_CONFIG_REMINDER + "", sender);
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                     }

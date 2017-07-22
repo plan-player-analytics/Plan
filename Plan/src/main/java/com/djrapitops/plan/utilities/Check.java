@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.javaplugin.command.sender.ISender;
+import com.djrapitops.plugin.command.ISender;
 import main.java.com.djrapitops.plan.Log;
 
 /**
@@ -18,7 +18,7 @@ public class Check {
      * @param message Message to send if Condition is false
      * @return Condition
      */
-    public static boolean ifTrue(boolean condition, String message) {
+    public static boolean isTrue(boolean condition, String message) {
         if (!condition) {
             Log.infoColor(message);
         }
@@ -33,7 +33,7 @@ public class Check {
      * @param sender Sender to send message to
      * @return Condition
      */
-    public static boolean ifTrue(boolean condition, String message, ISender sender) {
+    public static boolean isTrue(boolean condition, String message, ISender sender) {
         if (!condition) {
             sender.sendMessage(message);
         }
@@ -47,7 +47,7 @@ public class Check {
      * @param message Message to send if Condition is false
      * @return Condition
      */
-    public static boolean ifTrue_Error(boolean condition, String message) {
+    public static boolean isTrue_Error(boolean condition, String message) {
         if (!condition) {
             Log.error(message);
             Log.toLog(message, Log.getErrorsFilename());

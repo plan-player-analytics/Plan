@@ -3,7 +3,6 @@ Settings:
   Locale: default
   UseTextUI: false
   Data:
-    GatherLocations: true
     ChatListener: true
     GatherKillData: true
     GamemodeChangeListener: true
@@ -38,7 +37,6 @@ Settings:
     LinkProtocol: http
     Security:
       DisplayIPsAndUUIDs: true
-      AddressSecurityCode: bAkEd
 
 Customization:
   ServerName: 'Plan'

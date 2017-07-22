@@ -101,7 +101,7 @@ public class NicknamesTable extends Table {
      * @throws SQLException
      */
     public List<String> getNicknames(int userId) throws SQLException {
-        Benchmark.start("Get Nicknames");
+        Benchmark.start("Database: Get Nicknames");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -128,7 +128,7 @@ public class NicknamesTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Nicknames");
+            Benchmark.stop("Database: Get Nicknames");
         }
     }
 
@@ -143,7 +143,7 @@ public class NicknamesTable extends Table {
         if (names == null || names.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Nicknames");
+        Benchmark.start("Database: Save Nicknames");
         names.removeAll(getNicknames(userId));
         if (names.isEmpty()) {
             return;
@@ -172,7 +172,7 @@ public class NicknamesTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Nicknames");
+            Benchmark.stop("Database: Save Nicknames");
         }
     }
 
@@ -186,7 +186,7 @@ public class NicknamesTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-        Benchmark.start("Get Nicknames Multiple " + ids.size());
+        Benchmark.start("Database: Get Nicknames Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -223,7 +223,7 @@ public class NicknamesTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Nicknames Multiple " + ids.size());
+            Benchmark.stop("Database: Get Nicknames Multiple");
         }
     }
 
@@ -237,7 +237,7 @@ public class NicknamesTable extends Table {
         if (nicknames == null || nicknames.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Nicknames Multiple " + nicknames.size());
+        Benchmark.start("Database: Save Nicknames Multiple");
         Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
         PreparedStatement statement = null;
         try {
@@ -270,7 +270,7 @@ public class NicknamesTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Nicknames Multiple " + nicknames.size());
+            Benchmark.stop("Database: Save Nicknames Multiple");
         }
     }
 }

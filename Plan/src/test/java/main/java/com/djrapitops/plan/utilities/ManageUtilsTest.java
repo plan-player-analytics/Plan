@@ -11,13 +11,13 @@ import java.util.List;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import test.java.utils.TestInit;
 
 /**
@@ -43,7 +43,7 @@ public class ManageUtilsTest {
      */
     @Before
     public void setUp() throws IOException, Exception {
-        TestInit t = new TestInit();
+        TestInit t = TestInit.init();
         assertTrue("Not set up", t.setUp());
     }
 

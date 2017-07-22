@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,9 +38,8 @@ public class DataCacheClearQueueTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
         plan = t.getPlanMock();
         handler = new DataCacheHandler(plan) {
             @Override

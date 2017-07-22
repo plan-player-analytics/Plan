@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.handling;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.plugin.utilities.player.Gamemode;
 import java.util.Map;
 import main.java.com.djrapitops.plan.data.UserData;
 
@@ -25,13 +25,14 @@ public class GamemodeHandling {
         if (newGM == null) {
             return;
         }
+        final String newGamemode = newGM.name();
+        String lastGamemode = data.getLastGamemode();
 
-        Gamemode lastGamemode = data.getLastGamemode();
         if (lastGamemode == null) {
-            data.setLastGamemode(newGM);
+            data.setLastGamemode(newGamemode);
         }
         lastGamemode = data.getLastGamemode();
-        Map<Gamemode, Long> times = data.getGmTimes();
+        Map<String, Long> times = data.getGmTimes();
         Long currentGMTime = times.get(lastGamemode);
         if (currentGMTime == null) {
             currentGMTime = 0L;
@@ -42,6 +43,6 @@ public class GamemodeHandling {
         long playtime = data.getPlayTime();
         data.setGMTime(lastGamemode, currentGMTime + (playtime - lastSwap));
         data.setLastGmSwapTime(playtime);
-        data.setLastGamemode(newGM);
+        data.setLastGamemode(newGamemode);
     }
 }

@@ -1,17 +1,17 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
@@ -40,10 +40,10 @@ public class QuickAnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
             return true;
         }
-        if (!Check.ifTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
             if (!analysisCache.isCached()) {
                 return true;
             }
@@ -65,7 +65,7 @@ public class QuickAnalyzeCommand extends SubCommand {
     }
 
     private void runMessageSenderTask(ISender sender) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("QanalysisMessageSenderTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("QanalysisMessageSenderTask") {
             private int timesrun = 0;
 
             @Override

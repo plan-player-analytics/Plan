@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.api;
 
-import com.djrapitops.javaplugin.utilities.UUIDFetcher;
-import com.djrapitops.javaplugin.utilities.Verify;
-import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.plugin.utilities.player.UUIDFetcher;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +18,7 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
-import main.java.com.djrapitops.plan.ui.DataRequestHandler;
+import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
@@ -26,6 +27,10 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  *
  * Methods can be called from Asyncronous task and are thread safe unless
  * otherwise stated.
+ *
+ * Use Plan.getPlanAPI() to get the API.
+ *
+ * More information about API methods can be found on Github.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -227,13 +232,13 @@ public class API {
      *
      * @param uuid UUID of the player.
      * @return Playername, eg "Rsl1122"
-     * @throws NullPointerException If uuid is null.
+     * @throws IllegalArgumentException If uuid is null.
      * @throws IllegalStateException If the player has not played on the server
      * before.
      */
-    public String getPlayerName(UUID uuid) throws IllegalStateException, NullPointerException {
+    public String getPlayerName(UUID uuid) throws IllegalStateException, IllegalArgumentException {
         Verify.nullCheck(uuid);
-        IOfflinePlayer offlinePlayer = Plan.getInstance().fetch().getOfflinePlayer(uuid);
+        IOfflinePlayer offlinePlayer = Fetch.getIOfflinePlayer(uuid);
         if (Verify.notNull(offlinePlayer)) {
             return offlinePlayer.getName();
         }

@@ -1,7 +1,7 @@
 name: Plan
 author: Rsl1122
 main: main.java.com.djrapitops.plan.Plan
-version: 3.5.1
+version: 3.5.2
 
 softdepend:
 - OnTime
@@ -80,6 +80,9 @@ permissions:
   plan.manage:
     description: Manage the database, clear, move, combine.
     default: op
+  plan.webmanage:
+    description: Manage the webusers, delete, list, check
+    default: op;
   
   plan.basic:
     children:
@@ -98,6 +101,7 @@ permissions:
       plan.analyze: true
       plan.inspect.other: true
       plan.qinspect.other: true
+      plan.webmanage: true
       plan.reload: true
   plan.*:
     children:

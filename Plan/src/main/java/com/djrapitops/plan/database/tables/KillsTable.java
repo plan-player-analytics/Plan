@@ -91,7 +91,7 @@ public class KillsTable extends Table {
      * @throws SQLException
      */
     public List<KillData> getPlayerKills(int userId) throws SQLException {
-        Benchmark.start("Get Kills");
+        Benchmark.start("Database: Get Kills");
         UsersTable usersTable = db.getUsersTable();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -109,7 +109,7 @@ public class KillsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Kills");
+            Benchmark.stop("Database: Get Kills");
         }
     }
 
@@ -123,7 +123,7 @@ public class KillsTable extends Table {
         if (kills == null) {
             return;
         }
-        Benchmark.start("Save Kills");
+        Benchmark.start("Database: Save Kills");
         kills.removeAll(getPlayerKills(userId));
         if (kills.isEmpty()) {
             return;
@@ -160,7 +160,7 @@ public class KillsTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Kills");
+            Benchmark.stop("Database: Save Kills");
         }
     }
 
@@ -175,7 +175,7 @@ public class KillsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-        Benchmark.start("Get Kills multiple " + ids.size());
+        Benchmark.start("Database: Get Kills multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -198,7 +198,7 @@ public class KillsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Kills multiple " + ids.size());
+            Benchmark.stop("Database: Get Kills multiple");
         }
     }
 
@@ -212,7 +212,7 @@ public class KillsTable extends Table {
         if (kills == null || kills.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Kills multiple " + kills.size());
+        Benchmark.start("Database: Save Kills multiple");
         Map<Integer, List<KillData>> saved = getPlayerKills(kills.keySet(), uuids);
 
         PreparedStatement statement = null;
@@ -259,7 +259,7 @@ public class KillsTable extends Table {
                     statement.executeBatch();
                 }
             }
-            Benchmark.stop("Save Kills multiple " + kills.size());
+            Benchmark.stop("Database: Save Kills multiple");
         } finally {
             close(statement);
         }

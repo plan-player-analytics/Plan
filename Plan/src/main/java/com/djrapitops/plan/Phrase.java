@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -206,10 +207,10 @@ public enum Phrase {
      * @param p Strings to replace REPLACE{x}:s with
      * @return String with placeholders replaced.
      */
-    public String parse(String... p) {
+    public String parse(Serializable... p) {
         String returnValue = this.toString();
         for (int i = 0; i < p.length; i++) {
-            returnValue = returnValue.replace("REPLACE" + i, p[i]);
+            returnValue = returnValue.replace("REPLACE" + i, p[i].toString());
         }
         return returnValue;
     }

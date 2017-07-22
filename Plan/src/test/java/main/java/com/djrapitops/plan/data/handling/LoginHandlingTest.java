@@ -7,25 +7,17 @@ package test.java.main.java.com.djrapitops.plan.data.handling;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LoginHandling;
-import org.bukkit.plugin.java.JavaPlugin;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
-import test.java.utils.TestInit;
 
 /**
  *
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
 public class LoginHandlingTest {
 
     /**
@@ -38,9 +30,7 @@ public class LoginHandlingTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
     }
 
     /**
@@ -49,7 +39,7 @@ public class LoginHandlingTest {
      */
     @Test
     public void testProcessLoginInfo() throws UnknownHostException {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         data.updateBanned(false);
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
@@ -62,7 +52,7 @@ public class LoginHandlingTest {
         assertTrue("Logintimes not +1", data.getLoginTimes() == loginTimes + 1);
         assertTrue("Nick not added", data.getNicknames().contains(nick));
         assertTrue("Nick not last nick", data.getLastNick().equals(nick));
-        String geo = data.getDemData().getGeoLocation();
+        String geo = data.getGeolocation();
         assertTrue("Wrong location " + geo, geo.equals("United States"));
     }
 
@@ -72,10 +62,10 @@ public class LoginHandlingTest {
      */
     @Test
     public void testUpdateGeolocation() throws UnknownHostException {
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         LoginHandling.updateGeolocation(ip, data);
-        String result = data.getDemData().getGeoLocation();
+        String result = data.getGeolocation();
         assertTrue("Wrong location " + result, result.equals("United States"));
     }
 

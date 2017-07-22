@@ -1,0 +1,59 @@
+package main.java.com.djrapitops.plan.command.commands.webuser;
+
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.task.AbsRunnable;
+import java.util.Collections;
+import java.util.List;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Permissions;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.utilities.comparators.WebUserComparator;
+
+/**
+ * Subcommand for checking WebUser list.
+ *
+ * @author Rsl1122
+ * @since 3.5.2
+ */
+public class WebListUsersCommand extends SubCommand {
+
+    private final Plan plugin;
+
+    public WebListUsersCommand(Plan plugin) {
+        super("list", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "List registered web users & permission levels.");
+        this.plugin = plugin;
+    }
+
+    @Override
+    public boolean onCommand(ISender sender, String commandLabel, String[] args) {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("Webuser List Task") {
+            @Override
+            public void run() {
+                try {
+                    ColorScheme cs = plugin.getColorScheme();
+                    String mCol = cs.getMainColor();
+                    String sCol = cs.getSecondaryColor();
+                    List<WebUser> users = plugin.getDB().getSecurityTable().getUsers();
+                    Collections.sort(users, new WebUserComparator());
+                    sender.sendMessage(Phrase.CMD_FOOTER.parse() + mCol + " WebUsers (" + users.size() + ")");
+                    for (WebUser user : users) {
+                        sender.sendMessage("  " + user.getPermLevel() + " : " + user.getName());
+                    }
+                    sender.sendMessage(Phrase.CMD_FOOTER.parse());
+                } catch (Exception ex) {
+                    Log.toLog(this.getClass().getName(), ex);
+                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.parse());
+                } finally {
+                    this.cancel();
+                }
+            }
+        }).runTaskAsynchronously();
+        return true;
+    }
+
+}

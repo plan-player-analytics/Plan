@@ -28,6 +28,7 @@ public class DBUtils {
      * @param <T> Object type
      * @param objects Collection of the objects. // * @return Lists with max
      * size of BATCH_SIZE.
+     * @return
      */
     public static <T> List<List<T>> splitIntoBatches(Collection<T> objects) {
         List<List<T>> batches = new ArrayList<>();
@@ -36,7 +37,7 @@ public class DBUtils {
         int j = 0;
 
         for (T obj : objects) {
-            if (batches.size() - 1 <= j) {
+            if (batches.size() <= j) {
                 batches.add(new ArrayList<>());
             }
             batches.get(j).add(obj);
@@ -62,7 +63,7 @@ public class DBUtils {
 
         for (Entry<Integer, List<T>> entry : objects.entrySet()) {
             for (T object : entry.getValue()) {
-                if (wrappedBatches.size() - 1 <= j) {
+                if (wrappedBatches.size() <= j) {
                     wrappedBatches.add(new ArrayList<>());
                 }
                 wrappedBatches.get(j).add(new Container<>(object, entry.getKey()));

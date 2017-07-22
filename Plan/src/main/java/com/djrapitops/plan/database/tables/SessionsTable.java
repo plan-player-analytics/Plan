@@ -69,7 +69,7 @@ public class SessionsTable extends Table {
      * @throws SQLException
      */
     public List<SessionData> getSessionData(int userId) throws SQLException {
-        Benchmark.start("Get Sessions");
+        Benchmark.start("Database: Get Sessions");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -86,7 +86,7 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Sessions");
+            Benchmark.stop("Database: Get Sessions");
         }
     }
 
@@ -120,7 +120,7 @@ public class SessionsTable extends Table {
         if (sessions == null) {
             return;
         }
-        Benchmark.start("Save Sessions");
+        Benchmark.start("Database: Save Sessions");
         sessions.removeAll(getSessionData(userId));
         if (sessions.isEmpty()) {
             return;
@@ -152,7 +152,7 @@ public class SessionsTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save Sessions");
+            Benchmark.stop("Database: Save Sessions");
         }
     }
 
@@ -166,7 +166,7 @@ public class SessionsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
-        Benchmark.start("Get Sessions multiple " + ids.size());
+        Benchmark.start("Database: Get Sessions multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -190,7 +190,7 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Sessions multiple " + ids.size());
+            Benchmark.stop("Database: Get Sessions multiple");
         }
     }
 
@@ -203,7 +203,7 @@ public class SessionsTable extends Table {
         if (sessions == null || sessions.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Sessions multiple " + sessions.size());
+        Benchmark.start("Database: Save Sessions multiple");
         Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
         for (Integer id : sessions.keySet()) {
             List<SessionData> sessionList = sessions.get(id);
@@ -220,7 +220,7 @@ public class SessionsTable extends Table {
         for (List<Container<SessionData>> batch : batches) {
             saveSessionBatch(batch);
         }
-        Benchmark.stop("Save Sessions multiple " + sessions.size());
+        Benchmark.stop("Database: Save Sessions multiple");
     }
 
     private void saveSessionBatch(List<Container<SessionData>> batch) throws SQLException {
@@ -266,7 +266,7 @@ public class SessionsTable extends Table {
     public void clean() throws SQLException {
         Map<Integer, Integer> loginTimes = db.getUsersTable().getLoginTimes();
         Map<Integer, List<SessionData>> allSessions = getSessionData(loginTimes.keySet());
-        Benchmark.start("Combine Sessions");
+        Benchmark.start("Database: Combine Sessions");
         int before = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
         Log.debug("Sessions before: " + before);
         Map<Integer, Integer> beforeM = new HashMap<>();
@@ -290,7 +290,7 @@ public class SessionsTable extends Table {
         int after = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
         Log.debug("Sessions after: " + after);
         if (before - after > 50) {
-            Benchmark.start("Save combined sessions");
+            Benchmark.start("Database: Save combined sessions");
             Iterator<Integer> iterator = new HashSet<>(allSessions.keySet()).iterator();
             while (iterator.hasNext()) {
                 int id = iterator.next();
@@ -301,9 +301,9 @@ public class SessionsTable extends Table {
                 }
             }
             saveSessionData(allSessions);
-            Benchmark.stop("Save combined sessions");
+            Benchmark.stop("Database: Save combined sessions");
         }
-        Benchmark.stop("Combine Sessions");
+        Benchmark.stop("Database: Combine Sessions");
         Log.info("Combined " + (before - after) + " sessions.");
     }
 }

@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
+import com.djrapitops.plugin.task.AbsRunnable;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -9,7 +9,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @param <T>
  */
-public abstract class Consumer<T> extends RslRunnable {
+public abstract class Consumer<T> extends AbsRunnable {
 
     boolean run;
     final BlockingQueue<T> queue;

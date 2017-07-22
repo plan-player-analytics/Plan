@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
@@ -46,7 +45,6 @@ public class LoginHandling {
      * @param data UserData of the player.
      */
     public static void updateGeolocation(InetAddress ip, UserData data) {
-        DemographicsData demData = data.getDemData();
         try {
             String result = "";
             URL url = new URL("http://freegeoip.net/csv/" + ip.getHostAddress());
@@ -60,10 +58,10 @@ public class LoginHandling {
 
             String[] results = result.split(",");
             if (!results[2].isEmpty()) {
-                demData.setGeoLocation(results[2]);
+                data.setGeolocation(results[2]);
             }
         } catch (Exception e) {
-            demData.setGeoLocation(Phrase.DEM_UNKNOWN + "");
+            data.setGeolocation(Phrase.DEM_UNKNOWN + "");
         }
     }
 }

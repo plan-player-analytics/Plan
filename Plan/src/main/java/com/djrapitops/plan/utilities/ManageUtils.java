@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.utilities.Verify;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,10 +35,10 @@ public class ManageUtils {
      */
     public static boolean backup(String dbName, Database copyFromDB) throws SQLException {
         Plan plugin = Plan.getInstance();
-        Date now = new Date();
-        SQLiteDB backupDB = new SQLiteDB(plugin,
-                dbName + "-backup-" + now.toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-"));
-        final Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
+        String timeStamp = new Date().toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-");
+        String fileName = dbName + "-backup-" + timeStamp;
+        SQLiteDB backupDB = new SQLiteDB(plugin, fileName);
+        Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
         if (uuids.isEmpty()) {
             return false;
         }

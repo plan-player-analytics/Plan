@@ -5,19 +5,16 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.javaplugin.command.sender.BukkitCMDSender;
-import com.djrapitops.javaplugin.command.sender.ISender;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
 import java.util.List;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.easymock.EasyMock;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
@@ -41,15 +38,7 @@ public class MiscUtilsTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
-        PowerMock.mockStatic(Bukkit.class);
-        OfflinePlayer op = MockUtils.mockPlayer();
-        OfflinePlayer op2 = MockUtils.mockPlayer2();
-        OfflinePlayer[] ops = new OfflinePlayer[]{op, op2};
-        EasyMock.expect(Bukkit.getOfflinePlayers()).andReturn(ops);
-        PowerMock.replay(Bukkit.class);
+    public void setUp() throws Exception {
     }
 
     /**
@@ -128,7 +117,8 @@ public class MiscUtilsTest {
      *
      */
     @Test
-    public void testGetMatchingDisplaynames() {
+    public void testGetMatchingDisplaynames() throws Exception {
+        TestInit.init();
         String search = "testname";
         String exp1 = "TestName";
         String exp2 = "TestName2";
@@ -142,7 +132,8 @@ public class MiscUtilsTest {
      *
      */
     @Test
-    public void testGetMatchingDisplaynames2() {
+    public void testGetMatchingDisplaynames2() throws Exception {
+        TestInit.init();
         String search = "2";
         String exp2 = "TestName2";
         List<String> result = MiscUtils.getMatchingPlayerNames(search);

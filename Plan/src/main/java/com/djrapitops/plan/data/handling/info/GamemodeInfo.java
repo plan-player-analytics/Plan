@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.plugin.utilities.player.Gamemode;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.GamemodeHandling;

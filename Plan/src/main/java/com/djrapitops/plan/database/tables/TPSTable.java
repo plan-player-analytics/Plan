@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.javaplugin.api.TimeAmount;
+import com.djrapitops.plugin.api.TimeAmount;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,7 +58,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
-        Benchmark.start("Get TPS");
+        Benchmark.start("Database: Get TPS");
         List<TPS> data = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -75,7 +75,7 @@ public class TPSTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get TPS");
+            Benchmark.stop("Database: Get TPS");
         }
     }
 
@@ -127,9 +127,9 @@ public class TPSTable extends Table {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnDate + "<?)");
-            // More than 8 days ago.
-            long eightDays = TimeAmount.DAY.ms() * 8L;
-            statement.setLong(1, MiscUtils.getTime() - eightDays);
+            // More than 5 Weeks ago.
+            long fiveWeeks = TimeAmount.WEEK.ms() * 5L;
+            statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
             statement.execute();
         } finally {
             close(statement);

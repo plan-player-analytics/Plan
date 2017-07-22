@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.plugin.task.AbsRunnable;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,7 +22,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import org.bukkit.Location;
 
 /**
  *
@@ -55,8 +53,9 @@ public abstract class SQLDB extends Database {
         commandUseTable = new CommandUseTable(this, usingMySQL);
         versionTable = new VersionTable(this, usingMySQL);
         tpsTable = new TPSTable(this, usingMySQL);
+        securityTable = new SecurityTable(this, usingMySQL);
 
-        startConnectionPingTask(plugin);
+        startConnectionPingTask();
     }
 
     /**
@@ -65,9 +64,9 @@ public abstract class SQLDB extends Database {
      * @throws IllegalArgumentException
      * @throws IllegalStateException
      */
-    public void startConnectionPingTask(Plan plugin) throws IllegalArgumentException, IllegalStateException {
+    public void startConnectionPingTask() throws IllegalArgumentException, IllegalStateException {
         // Maintains Connection.
-        plugin.getRunnableFactory().createNew(new RslRunnable("DBConnectionPingTask " + getName()) {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("DBConnectionPingTask " + getName()) {
             @Override
             public void run() {
                 try {
@@ -89,7 +88,7 @@ public abstract class SQLDB extends Database {
     public boolean init() {
         super.init();
         setStatus("Init");
-        Benchmark.start("Database Init " + getConfigName());
+        Benchmark.start("Database: Init " + getConfigName());
         try {
             if (!checkConnection()) {
                 return false;
@@ -101,7 +100,7 @@ public abstract class SQLDB extends Database {
             Log.toLog(this.getClass().getName(), e);
             return false;
         } finally {
-            Benchmark.stop("Database Init " + getConfigName());
+            Benchmark.stop("Database: Init " + getConfigName());
         }
     }
 
@@ -131,14 +130,18 @@ public abstract class SQLDB extends Database {
                 Log.info("New Database created.");
                 setVersion(4);
             }
-            Benchmark.start("Database create tables");
+            Benchmark.start("Database: Create tables");
             for (Table table : getAllTables()) {
                 if (!table.createTable()) {
                     Log.error("Failed to create table: " + table.getTableName());
                     return false;
                 }
             }
-            Benchmark.stop("Database create tables");
+            if (!securityTable.createTable()) {
+                Log.error("Failed to create table: " + securityTable.getTableName());
+                return false;
+            }
+            Benchmark.stop("Database: Create tables");
             if (!newDatabase && getVersion() < 4) {
                 setVersion(4);
             }
@@ -150,11 +153,11 @@ public abstract class SQLDB extends Database {
      *
      */
     public void convertBukkitDataToDB() {
-        plugin.getRunnableFactory().createNew(new RslRunnable("BukkitDataConversionTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("BukkitDataConversionTask") {
             @Override
             public void run() {
                 try {
-                    Benchmark.start("Convert Bukkitdata to DB data");
+                    Benchmark.start("Database: Convert Bukkitdata to DB data");
                     Set<UUID> uuids = usersTable.getSavedUUIDs();
                     uuids.removeAll(usersTable.getContainsBukkitData(uuids));
                     if (uuids.isEmpty()) {
@@ -169,7 +172,7 @@ public abstract class SQLDB extends Database {
                         plugin.getServer().getScheduler().cancelTask(id);
                     }
                     saveMultipleUserData(getUserDataForUUIDS(uuids));
-                    Log.info("Conversion complete, took: " + FormatUtils.formatTimeAmount(Benchmark.stop("Convert Bukkitdata to DB data")) + " ms");
+                    Log.info("Conversion complete, took: " + FormatUtils.formatTimeAmount(Benchmark.stop("Database: Convert Bukkitdata to DB data")) + " ms");
                 } catch (SQLException ex) {
                     Log.toLog(this.getClass().getName(), ex);
                 } finally {
@@ -185,7 +188,7 @@ public abstract class SQLDB extends Database {
      * @return
      */
     public Table[] getAllTables() {
-        return new Table[]{usersTable, locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, commandUseTable, tpsTable};
+        return new Table[]{usersTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, commandUseTable, tpsTable};
     }
 
     /**
@@ -267,7 +270,8 @@ public abstract class SQLDB extends Database {
         }
         try {
             setStatus("Remove account " + uuid);
-            Benchmark.start("Database remove Account " + uuid);
+            Benchmark.start("Database: Remove Account");
+            Log.debug("Removing Account: " + uuid);
             try {
                 checkConnection();
             } catch (Exception e) {
@@ -286,7 +290,7 @@ public abstract class SQLDB extends Database {
                     && killsTable.removeUserKillsAndVictims(userId)
                     && usersTable.removeUser(uuid);
         } finally {
-            Benchmark.stop("Database remove Account " + uuid);
+            Benchmark.stop("Database: Remove Account");
             setAvailable();
         }
     }
@@ -299,7 +303,7 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException {
-        Benchmark.start("DB Give userdata to processors");
+        Benchmark.start("Database: Give userdata to processors");
         try {
             checkConnection();
         } catch (Exception e) {
@@ -325,7 +329,7 @@ public abstract class SQLDB extends Database {
         List<InetAddress> ips = ipsTable.getIPAddresses(userId);
         data.addIpAddresses(ips);
 
-        Map<Gamemode, Long> times = gmTimesTable.getGMTimes(userId);
+        Map<String, Long> times = gmTimesTable.getGMTimes(userId);
         data.setGmTimes(times);
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
@@ -333,7 +337,7 @@ public abstract class SQLDB extends Database {
         processors.stream().forEach((processor) -> {
             processor.process(data);
         });
-        Benchmark.stop("DB Give userdata to processors");
+        Benchmark.stop("Database: Give userdata to processors");
         setAvailable();
     }
 
@@ -349,7 +353,7 @@ public abstract class SQLDB extends Database {
             return new ArrayList<>();
         }
         setStatus("Get userdata (multiple) for: " + uuidsCol.size());
-        Benchmark.start("DB get UserData for " + uuidsCol.size());
+        Benchmark.start("Database: Get UserData for " + uuidsCol.size());
         Map<UUID, Integer> userIds = usersTable.getAllUserIds();
         Set<UUID> remove = uuidsCol.stream()
                 .filter((uuid) -> (!userIds.containsKey(uuid)))
@@ -357,9 +361,9 @@ public abstract class SQLDB extends Database {
         List<UUID> uuids = new ArrayList<>(uuidsCol);
         Log.debug("Data not found for: " + remove.size());
         uuids.removeAll(remove);
-        Benchmark.start("Create UserData objects for " + userIds.size());
+        Benchmark.start("Database: Create UserData objects for " + userIds.size());
         List<UserData> data = usersTable.getUserData(new ArrayList<>(uuids));
-        Benchmark.stop("Create UserData objects for " + userIds.size());
+        Benchmark.stop("Database: Create UserData objects for " + userIds.size());
         if (data.isEmpty()) {
             return data;
         }
@@ -370,7 +374,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
         Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
         Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
-        Map<Integer, Map<Gamemode, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
+        Map<Integer, Map<String, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Log.debug("Sizes: UUID:" + uuids.size() + " DATA:" + data.size() + " ID:" + userIds.size() + " N:" + nicknames.size() + " I:" + ipList.size() + " K:" + playerKills.size() + " S:" + sessionData.size());
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();
@@ -381,7 +385,7 @@ public abstract class SQLDB extends Database {
             uData.setPlayerKills(playerKills.get(id));
             uData.setGmTimes(gmTimes.get(id));
         }
-        Benchmark.stop("DB get UserData for " + uuidsCol.size());
+        Benchmark.stop("Database: Get UserData for " + uuidsCol.size());
         setAvailable();
         return data;
     }
@@ -393,7 +397,7 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void saveMultipleUserData(Collection<UserData> data) throws SQLException {
-        Benchmark.start("DB Save multiple Userdata");
+        Benchmark.start("Database: Save multiple Userdata");
         checkConnection();
         if (data.isEmpty()) {
             return;
@@ -405,14 +409,13 @@ public abstract class SQLDB extends Database {
         // Get UserIDs
         Map<UUID, Integer> userIds = usersTable.getAllUserIds();
         // Empty dataset
-        Map<Integer, List<Location>> locations = new HashMap<>();
         Map<Integer, Set<String>> nicknames = new HashMap<>();
         Map<Integer, String> lastNicks = new HashMap<>();
         Map<Integer, Set<InetAddress>> ips = new HashMap<>();
         Map<Integer, List<KillData>> kills = new HashMap<>();
         Map<Integer, UUID> uuids = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
         Map<Integer, List<SessionData>> sessions = new HashMap<>();
-        Map<Integer, Map<Gamemode, Long>> gmTimes = new HashMap<>();
+        Map<Integer, Map<String, Long>> gmTimes = new HashMap<>();
         // Put to dataset
         for (UUID uuid : userDatas.keySet()) {
             Integer id = userIds.get(uuid);
@@ -422,7 +425,6 @@ public abstract class SQLDB extends Database {
                 continue;
             }
             uData.access();
-            locations.put(id, new ArrayList<>(uData.getLocations()));
             nicknames.put(id, new HashSet<>(uData.getNicknames()));
             lastNicks.put(id, uData.getLastNick());
             ips.put(id, new HashSet<>(uData.getIps()));
@@ -431,7 +433,6 @@ public abstract class SQLDB extends Database {
             gmTimes.put(id, uData.getGmTimes());
         }
         // Save
-        locationsTable.saveAdditionalLocationsLists(locations);
         nicknamesTable.saveNickLists(nicknames, lastNicks);
         ipsTable.saveIPList(ips);
         killsTable.savePlayerKills(kills, uuids);
@@ -443,7 +444,7 @@ public abstract class SQLDB extends Database {
                 .forEach(uData -> {
                     uData.stopAccessing();
                 });
-        Benchmark.stop("DB Save multiple Userdata");
+        Benchmark.stop("Database: Save multiple Userdata");
         setAvailable();
     }
 
@@ -468,7 +469,6 @@ public abstract class SQLDB extends Database {
         usersTable.saveUserDataInformation(data);
         int userId = usersTable.getUserId(uuid.toString());
         sessionsTable.saveSessionData(userId, new ArrayList<>(data.getSessions()));
-        locationsTable.saveAdditionalLocationsList(userId, data.getLocations());
         nicknamesTable.saveNickList(userId, new HashSet<>(data.getNicknames()), data.getLastNick());
         ipsTable.saveIPList(userId, new HashSet<>(data.getIps()));
         killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
@@ -486,6 +486,7 @@ public abstract class SQLDB extends Database {
         try {
             checkConnection();
             tpsTable.clean();
+            locationsTable.removeAllData();
 //            sessionsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {

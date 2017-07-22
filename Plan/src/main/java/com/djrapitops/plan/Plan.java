@@ -19,53 +19,56 @@
  */
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.javaplugin.RslPlugin;
-import com.djrapitops.javaplugin.api.ColorScheme;
-import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.BukkitPlugin;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
+import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.*;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.*;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import com.djrapitops.javaplugin.task.ITask;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 
 /**
- * Javaplugin class that contains methods for starting the plugin, logging to
- * the Bukkit console and various get methods.
+ * Main class for Bukkit that manages the plugin.
+ *
+ * Everything can be accessed through this class. Use Plan.getInstance() to get
+ * the initialised instance of Plan.
  *
  * @author Rsl1122
  * @since 1.0.0
  */
-public class Plan extends RslPlugin<Plan> {
+public class Plan extends BukkitPlugin<Plan> {
 
     private API api;
 
     private DataCacheHandler handler;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
-    private HookHandler hookHandler;
+    private HookHandler hookHandler; // Manages 3rd party data sources
 
     private Database db;
     private HashSet<Database> databases;
@@ -78,11 +81,7 @@ public class Plan extends RslPlugin<Plan> {
     /**
      * OnEnable method.
      *
-     * Creates the config file. Checks for new version. Initializes Database.
-     * Hooks to Supported plugins. Initializes DataCaches. Registers Listeners.
-     * Registers Command /plan and initializes API. Enables Webserver and
-     * analysis tasks if enabled in config. Warns about possible mistakes made
-     * in config.
+     * - Enables the plugin's subsystems.
      */
     @Override
     public void onEnable() {
@@ -94,7 +93,7 @@ public class Plan extends RslPlugin<Plan> {
         super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
         super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
 
-        // Initializes RslPlugin variables, Checks version & Logs the debug header
+        // Initializes BukkitPlugin variables, Checks version & Logs the debug header
         super.onEnableDefaultTasks();
 
         processStatus().startExecution("Enable");
@@ -112,7 +111,7 @@ public class Plan extends RslPlugin<Plan> {
 
         Benchmark.start("Enable: Init Database");
         Log.info(Phrase.DB_INIT + "");
-        if (Check.ifTrue_Error(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
+        if (Check.isTrue_Error(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
             disablePlugin();
@@ -128,7 +127,6 @@ public class Plan extends RslPlugin<Plan> {
 
         super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
         registerListeners();
-        registerCommand(new PlanCommand(this));
 
         this.api = new API(this);
         Benchmark.start("Enable: Handle Reload");
@@ -160,6 +158,8 @@ public class Plan extends RslPlugin<Plan> {
         if (webserverIsEnabled) {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
+            // Prevent passwords showing up on console.
+            Bukkit.getLogger().setFilter(new RegisterCommandFilter());
         } else if (!hasDataViewCapability) {
             Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
         }
@@ -167,6 +167,8 @@ public class Plan extends RslPlugin<Plan> {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
         Benchmark.stop("Enable: Webserver Initialization");
+
+        registerCommand(new PlanCommand(this));
 
         Benchmark.start("Enable: Hook to 3rd party plugins");
         hookHandler = new HookHandler(this);
@@ -188,16 +190,16 @@ public class Plan extends RslPlugin<Plan> {
         if (uiServer != null) {
             uiServer.stop();
         }
-        Bukkit.getScheduler().cancelTasks(this);
+        getServer().getScheduler().cancelTasks(this);
         if (Verify.notNull(handler, db)) {
-            Benchmark.start("DataCache OnDisable Save");
+            Benchmark.start("Disable: DataCache Save");
             // Saves the datacache to the database without Bukkit's Schedulers.
             Log.info(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
-                Benchmark.stop("DataCache OnDisable Save");
+                Benchmark.stop("Disable: DataCache Save");
             });
             scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
 
@@ -208,10 +210,10 @@ public class Plan extends RslPlugin<Plan> {
     private void registerListeners() {
         Benchmark.start("Enable: Register Listeners");
         registerListener(new PlanPlayerListener(this));
-        boolean chatListenerIsEnabled = Check.ifTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
-        boolean gamemodeChangeListenerIsEnabled = Check.ifTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER + "");
-        boolean commandListenerIsEnabled = Check.ifTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
-        boolean deathListenerIsEnabled = Check.ifTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
+        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
+        boolean gamemodeChangeListenerIsEnabled = Check.isTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER + "");
+        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
+        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
 
         if (chatListenerIsEnabled) {
             registerListener(new PlanChatListener(this));
@@ -224,9 +226,6 @@ public class Plan extends RslPlugin<Plan> {
         }
         if (deathListenerIsEnabled) {
             registerListener(new PlanDeathEventListener(this));
-        }
-        if (Settings.GATHERLOCATIONS.isTrue()) {
-            registerListener(new PlanPlayerMoveListener(this));
         }
         Benchmark.stop("Enable: Register Listeners");
     }
@@ -257,7 +256,7 @@ public class Plan extends RslPlugin<Plan> {
             Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString() + " " + dbType);
             return false;
         }
-        return Check.ifTrue_Error(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
+        return Check.isTrue_Error(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
@@ -265,7 +264,7 @@ public class Plan extends RslPlugin<Plan> {
         if (everyXMinutes <= 0) {
             return;
         }
-        getRunnableFactory().createNew("PeriodicalAnalysisTask", new RslRunnable() {
+        getRunnableFactory().createNew("PeriodicalAnalysisTask", new AbsRunnable() {
             @Override
             public void run() {
                 Log.debug("Running PeriodicalAnalysisTask");
@@ -282,7 +281,7 @@ public class Plan extends RslPlugin<Plan> {
     private void startBootAnalysisTask() throws IllegalStateException {
         Benchmark.start("Enable: Schedule boot analysis task");
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
-        ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new RslRunnable() {
+        ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new AbsRunnable() {
             @Override
             public void run() {
                 Log.debug("Running BootAnalysisTask");

@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.database.tables.IPsTable;
 import main.java.com.djrapitops.plan.database.tables.KillsTable;
 import main.java.com.djrapitops.plan.database.tables.LocationsTable;
 import main.java.com.djrapitops.plan.database.tables.NicknamesTable;
+import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
 import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
@@ -48,7 +49,10 @@ public abstract class Database {
 
     /**
      * Table representing plan_locations in the database.
+     *
+     * @deprecated Removed in 3.5.2
      */
+    @Deprecated
     protected LocationsTable locationsTable;
 
     /**
@@ -82,6 +86,8 @@ public abstract class Database {
      * Table representing plan_version in the database.
      */
     protected VersionTable versionTable;
+
+    protected SecurityTable securityTable;
 
     /**
      * Super constructor.
@@ -304,7 +310,9 @@ public abstract class Database {
      * Used to get the locations table.
      *
      * @return Table representing plan_locations
+     * @deprecated Removed in 3.5.2
      */
+    @Deprecated
     public LocationsTable getLocationsTable() {
         return locationsTable;
     }
@@ -343,5 +351,9 @@ public abstract class Database {
      */
     public TPSTable getTpsTable() {
         return tpsTable;
+    }
+
+    public SecurityTable getSecurityTable() {
+        return securityTable;
     }
 }

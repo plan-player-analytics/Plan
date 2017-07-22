@@ -1,10 +1,8 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
-import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
-import com.djrapitops.javaplugin.utilities.player.IPlayer;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.DemographicsData;
+import com.djrapitops.plugin.utilities.player.Gamemode;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
@@ -42,8 +40,8 @@ public class NewPlayerCreator {
      */
     public static UserData createNewPlayer(IOfflinePlayer player, Gamemode gm) {
         long registered = player.getFirstPlayed();
-        UserData data = new UserData(player.getUniqueId(), registered, null, player.isOp(), Gamemode.SURVIVAL, new DemographicsData(), player.getName(), player.isOnline());
-        data.setLastGamemode(gm);
+        UserData data = new UserData(player.getUniqueId(), registered, player.isOp(), "SURVIVAL", player.getName(), player.isOnline());
+        data.setLastGamemode(gm.name());
         data.setLastPlayed(MiscUtils.getTime());
         data.setPlayTime(0L);
         data.setTimesKicked(0);
@@ -52,7 +50,7 @@ public class NewPlayerCreator {
         data.setDeaths(0);
         data.setMobKills(0);
         data.setBanned(false);
-        Log.debug(player.getUniqueId() + ": Created a new UserData object.");
+        data.setGeolocation("Not Known");
         return data;
     }
 

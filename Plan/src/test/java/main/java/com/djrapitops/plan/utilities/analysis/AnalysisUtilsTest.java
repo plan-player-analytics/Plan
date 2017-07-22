@@ -38,9 +38,8 @@ public class AnalysisUtilsTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
     }
 
     /**
@@ -52,7 +51,7 @@ public class AnalysisUtilsTest {
         long playTime = 12638934876L;
         int loginTimes = 4;
         boolean expResult = true;
-        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
     }
 
@@ -65,7 +64,7 @@ public class AnalysisUtilsTest {
         long playTime = 0L;
         int loginTimes = 4;
         boolean expResult = false;
-        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
     }
 
@@ -78,7 +77,7 @@ public class AnalysisUtilsTest {
         long playTime = 12638934876L;
         int loginTimes = 0;
         boolean expResult = false;
-        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
     }
 
@@ -91,7 +90,7 @@ public class AnalysisUtilsTest {
         long playTime = 12638934876L;
         int loginTimes = 4;
         boolean expResult = false;
-        boolean result = AnalysisUtils.isActive(lastPlayed, playTime, loginTimes);
+        boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
         assertEquals(expResult, result);
     }
 

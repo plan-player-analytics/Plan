@@ -1,14 +1,12 @@
 package main.java.com.djrapitops.plan.command;
 
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.utilities.Verify;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 /**
- * This class contains static methods used by the commands to check whether or
- * not the command should proceed.
+ * This class contains methods used by commands
  *
  * @author Rsl1122
  * @since 3.5.0
@@ -28,25 +26,10 @@ public class ConditionUtils {
     }
 
     /**
-     * Get the uuid of a playername. Same as UUIDUtility
-     *
-     * @param playerName name of player.
-     * @return UUID
-     * @see UUIDUtility
-     */
-    public static UUID getUUID(String playerName) {
-        try {
-            return UUIDUtility.getUUIDOf(playerName);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * Check if the player has played.
      *
      * @param uuid UUID of player
-     * @return has the player played before?
+     * @return has the player played before, false if uuid is null.
      */
     public static boolean playerHasPlayed(UUID uuid) {
         if (!Verify.notNull(uuid)) {

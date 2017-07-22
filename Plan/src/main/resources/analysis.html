@@ -638,7 +638,7 @@
                         </div>
                     </div>
                     <div class="tab">
-                        <div class="row" style="width: 100%;">
+                        <div class="row">
                             <div class="box column">
                                 <div class="headerbox">
                                     <div class="header-icon" style="width: 50%">
@@ -661,15 +661,29 @@
                                 <canvas id="tps7d" width="1000" height="600" style="width: 95%;"></canvas>
                             </div>
                         </div>
-<!--                        <div class="row">
+                        <div class="row">
                             <div class="box column">
                                 <div class="headerbox">
                                     <div class="header-icon" style="width: 50%">
-                                        <div class="header-label"><i class="fa fa-cogs" aria-hidden="true"></i><span class="header-text"> Performance</span></div>
-                                    </div>                                             
+                                        <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span class="header-text"> TPS - 24h</span></div>
+                                    </div>
+                                    <div class="infobox" style="width: 40%;">
+                                        <div class="info-icon">
+                                            <i class="fa fa-tachometer" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="info-text" style="width: 70%;">
+                                            <div class="info-number">
+                                                %averagetpsday%
+                                            </div>
+                                            <div class="info-label">
+                                                Average 24h
+                                            </div>
+                                        </div>
+                                    </div>                                                
                                 </div>
+                                <canvas id="tps24h" width="1000" height="600" style="width: 95%;"></canvas>
                             </div>
-                        </div>-->
+                        </div>
                     </div>
                     <div class="tab">
                         <div class="row" style="width: 100%;">
@@ -724,7 +738,7 @@
                                         </div>
                                         <div class="info-text">
                                             <div class="info-number">
-                                                %totalcommands%
+                                                %uniquecommands%
                                             </div>
                                             <div class="info-label">
                                                 Unique
@@ -869,7 +883,6 @@
                 var ctxweek = document.getElementById("playerChartWeek");
                 var ctxmonth = document.getElementById("playerChartMonth");
                 var dataday = {
-                labels: %labelsday% ,
                         datasets: [
                         {
                         label: "Players Online",
@@ -891,11 +904,10 @@
                                 pointRadius: 1,
                                 pointHitRadius: 10,
                                 spanGaps: false,
-                                data: %dataday% ,
+                                data: %datascatterday% ,
                         }]
                 }
                 var dataweek = {
-                labels: %labelsweek% ,
                         datasets: [
                         {
                         label: "Players Online",
@@ -917,11 +929,10 @@
                                 pointRadius: 1,
                                 pointHitRadius: 10,
                                 spanGaps: false,
-                                data: %dataweek% ,
+                                data: %datascatterweek% ,
                         }]
                 }
                 var datamonth = {
-                labels: %labelsmonth% ,
                         datasets: [
                         {
                         label: "Players Online",
@@ -943,13 +954,23 @@
                                 pointRadius: 1,
                                 pointHitRadius: 10,
                                 spanGaps: false,
-                                data: %datamonth% ,
+                                data: %datascattermonth% ,
                         }]
                 }
                 var playersChartDay = new Chart(ctxday, {
-                type: 'line',
+                type: 'scatter',
                         data: dataday,
                         options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
+                                    }
+                                }
+                            },
                         scales: {
                         yAxes: [{
                         display: true,
@@ -958,15 +979,26 @@
                                 }
                         }],
                                 xAxes: [{
+                                        type: 'linear', 
                                 display: false
                                 }]
                         }
                         }
                 });
                 var playersChartDay2 = new Chart(ctxday2, {
-                type: 'line',
+                type: 'scatter',
                         data: dataday,
                         options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString+ ': '+ tooltipItems.yLabel+ ' Players';
+                                    }
+                                }
+                            },
                         scales: {
                         yAxes: [{
                         display: true,
@@ -975,32 +1007,54 @@
                                 }
                         }],
                                 xAxes: [{
+                                        type: 'linear', 
                                 display: false
                                 }]
                         }
                         }
                 });
                 var playersChartWeek = new Chart(ctxweek, {
-                type: 'line',
+                type: 'scatter',
                         data: dataweek,
                         options: {
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
+                                    }
                                 }
-                        }],
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%
+                                    }
+                                }],
                                 xAxes: [{
-                                display: false
+                                        type: 'linear', 
+                                    display: false
                                 }]
                         }
                         }
                 });
                 var playersChartMonth = new Chart(ctxmonth, {
-                type: 'line',
+                type: 'scatter',
                         data: datamonth,
                         options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
+                                    }
+                                }
+                            },
                         scales: {
                         yAxes: [{
                         display: true,
@@ -1009,17 +1063,17 @@
                                 }
                         }],
                                 xAxes: [{
-                                display: false
+                                        type: 'linear',                                
+                                        display: false
                                 }]
                         }
                         }
                 });
             </script>
             <script>
-                // TPS Graph
+                // TPS Graph 7d
                 var ctxtps = document.getElementById("tps7d");
                 var datatps = {
-                    labels: %tpsdatalabels% ,
                         datasets: [
                         {
                             label: "TPS",
@@ -1041,7 +1095,7 @@
                                 pointHitRadius: 10,
                                 spanGaps: false,
                                 yAxisID: 'A',
-                                data: %tpsdatatps%
+                                data: %tpsscatterweek%
                         }, {
                             label: "Players Online",
                                 fill: false,
@@ -1062,20 +1116,23 @@
                                 pointHitRadius: 10,
                                 spanGaps: false,
                                 yAxisID: 'B',
-                                data: %tpsdataplayersonline%
+                                data: %datascatterweek%
                         }]
                 };
                 var tpsChart = new Chart(ctxtps, {
-                type: 'line',
+                type: 'scatter',
                         data: datatps,
                         options: {
-//                            tooltips: {
-//                                callbacks: {
-//                                    label: function(tooltipItems, data) {
-//                                        return tooltipItems.yLabel + ': ' + tooltipItems.xLabel;
-//                                    }
-//                                }
-//                            },
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString +': '+ tooltipItems.yLabel;
+                                    }
+                                }
+                            },
                             scales: {
                                 yAxes: [{
                                     id: 'A',
@@ -1103,6 +1160,104 @@
                                     }
                                 }],
                                 xAxes: [{
+                                        type: 'linear',
+                                    display: false
+                                }]
+                            }
+                        }
+                });
+            </script>
+            <script>
+                // TPS Graph 24h
+                var ctxtps = document.getElementById("tps24h");
+                var datatps = {
+                        datasets: [
+                        {
+                            label: "TPS",
+                                fill: false,
+                                lineTension: 0.1,
+                                borderColor: "#b74343",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: "#b74343",
+                                pointBackgroundColor: "#fff",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "#b74343",
+                                pointHoverBorderColor: "#8fabc6",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                spanGaps: false,
+                                yAxisID: 'A',
+                                data: %tpsscatterday%
+                        }, {
+                            label: "Players Online",
+                                fill: false,
+                                lineTension: 0.1,
+                                borderColor: "#%playersgraphcolor%",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: "#%playersgraphcolor%",
+                                pointBackgroundColor: "#fff",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "#%playersgraphcolor%",
+                                pointHoverBorderColor: "#8fabc6",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                spanGaps: false,
+                                yAxisID: 'B',
+                                data: %datascatterday%
+                        }]
+                };
+                var tpsChart = new Chart(ctxtps, {
+                type: 'scatter',
+                        data: datatps,
+                        options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString+ ': '+ tooltipItems.yLabel;
+                                    }
+                                }
+                            },
+                            scales: {
+                                yAxes: [{
+                                    id: 'A',
+                                    type: 'linear',
+                                    position: 'left',
+                                    ticks: {
+                                        suggestedMax: 21,
+                                        suggestedMin: 0
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'TPS'
+                                    }
+                                  }, {
+                                    id: 'B',
+                                    type: 'linear',
+                                    position: 'right',
+                                    ticks: {
+                                        suggestedMax: %graphmaxplayers%,
+                                        suggestedMin: 0
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Players'
+                                    }
+                                }],
+                                xAxes: [{
+                                        type: 'linear',
                                     display: false
                                 }]
                             }

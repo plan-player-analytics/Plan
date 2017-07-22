@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  *
@@ -95,13 +96,8 @@ public abstract class Table {
      *
      * @param toClose
      */
-    protected void close(AutoCloseable toClose) {
-        if (toClose != null) {
-            try {
-                toClose.close();
-            } catch (Exception ex) {
-            }
-        }
+    protected void close(AutoCloseable... toClose) {
+        MiscUtils.close(toClose);
     }
 
     /**

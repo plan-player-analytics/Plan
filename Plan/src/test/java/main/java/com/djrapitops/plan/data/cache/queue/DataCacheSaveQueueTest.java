@@ -13,15 +13,14 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
 import static org.powermock.api.mockito.PowerMockito.when;
+import test.java.utils.TestInit;
 
 /**
  *
@@ -46,15 +45,14 @@ public class DataCacheSaveQueueTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
         plan = t.getPlanMock();
         calledSaveUserData = false;
         calledSaveUserData2 = false;
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
-            public void startConnectionPingTask(Plan plugin) {
+            public void startConnectionPingTask() {
 
             }
 

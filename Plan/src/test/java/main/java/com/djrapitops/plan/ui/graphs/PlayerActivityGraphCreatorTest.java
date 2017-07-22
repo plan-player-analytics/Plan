@@ -5,31 +5,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
-import org.bukkit.plugin.java.JavaPlugin;
+import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
 
 /**
  *
  * @author Rsl1122
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
 public class PlayerActivityGraphCreatorTest {
 
     /**
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue(t.setUp());
+    public void setUp() throws Exception {
     }
 
     /**
@@ -42,6 +34,7 @@ public class PlayerActivityGraphCreatorTest {
      *
      */
     @Test
+    @Ignore("Useless test")
     public void testGenerateDataArray() {
         List<SessionData> sessionData = createRandomSessionDataList();
         long scale = 2592000L * 1000L;

@@ -1,6 +1,13 @@
 package test.java.utils;
 
+import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.IPlayer;
+import java.net.InetAddress;
 import java.util.UUID;
+import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,10 +33,39 @@ public class MockUtils {
         return mockWorld;
     }
 
+    public static UserData mockUser() {
+        return NewPlayerCreator.createNewPlayer(mockIPlayer());
+    }
+
+    public static UserData mockUserWithmoreData() throws Exception {
+        UserData mock = mockUser();
+        mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
+        mock.addNickname("MoreNicks");
+        mock.addPlayerKill(new KillData(getPlayer2UUID(), 1, "WEP", 126873643232L));
+        mock.addSession(new SessionData(12345L, 23456L));
+        mock.setAllGMTimes(1234, 2345, 4356, 4767);
+        mock.setDeaths(5);
+        mock.setTimesKicked(5);
+        mock.setPlayTime(34438926);
+        mock.setGeolocation("Finland");
+        mock.setLastGamemode("ADVENTURE");
+        mock.setLoginTimes(5);
+        mock.setMobKills(5);
+        return mock;
+    }
+
+    public static UserData mockUser2() {
+        return NewPlayerCreator.createNewPlayer(mockIPlayer2());
+    }
+
     /**
      *
      * @return
      */
+    public static IPlayer mockIPlayer() {
+        return Fetch.wrapBukkit(mockPlayer());
+    }
+
     public static Player mockPlayer() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
@@ -57,6 +93,10 @@ public class MockUtils {
      *
      * @return
      */
+    public static IPlayer mockIPlayer2() {
+        return Fetch.wrapBukkit(mockPlayer2());
+    }
+
     public static Player mockPlayer2() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SPECTATOR);
@@ -84,7 +124,7 @@ public class MockUtils {
      *
      * @return
      */
-    public static Player mockBrokenPlayer() {
+    public static IPlayer mockBrokenPlayer() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
         when(p.getUniqueId()).thenReturn(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"));
@@ -95,7 +135,7 @@ public class MockUtils {
         when(p.isBanned()).thenThrow(Exception.class);
         when(p.isOnline()).thenReturn(true);
         when(p.getName()).thenReturn("TestName");
-        return p;
+        return Fetch.wrapBukkit(p);
     }
 
     /**

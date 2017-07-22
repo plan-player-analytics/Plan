@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.javaplugin.utilities.FormattingUtils;
+import com.djrapitops.plugin.utilities.Format;
+import com.djrapitops.plugin.utilities.FormattingUtils;
 import java.text.DecimalFormat;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Location;
@@ -64,7 +65,11 @@ public class FormatUtils {
      * @return
      */
     public static String removeLetters(String dataPoint) {
-        return FormattingUtils.removeLetters(dataPoint);
+        return Format.create(dataPoint)
+                .removeLetters()
+                .removeWhitespace()
+                .removeSymbolsButDot()
+                .toString();
     }
 
     /**
@@ -73,7 +78,11 @@ public class FormatUtils {
      * @return
      */
     public static String removeNumbers(String dataPoint) {
-        return FormattingUtils.removeNumbers(dataPoint);
+        return Format.create(dataPoint)
+                .removeNumbers()
+                .removeWhitespace()
+                .removeDot()
+                .toString();
     }
 
     // Formats long in milliseconds into d:h:m:s string

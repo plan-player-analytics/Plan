@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
@@ -21,7 +20,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -59,26 +57,24 @@ public class DataCacheGetQueueTest {
      */
     @Before
     public void setUp() throws IOException, Exception {
-        TestInit t = new TestInit();
+        TestInit t = TestInit.init();
         assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
-            public void startConnectionPingTask(Plan plugin) {
+            public void startConnectionPingTask() {
 
             }
 
             @Override
             public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) {
                 if (uuid.equals(MockUtils.getPlayerUUID())) {
-                    OfflinePlayer op = MockUtils.mockPlayer();
-                    UserData d = new UserData(op, new DemographicsData());
+                    UserData d = MockUtils.mockUser();
                     for (DBCallableProcessor processor : processors) {
                         processor.process(d);
                     }
                 } else if (uuid.equals(MockUtils.getPlayer2UUID())) {
-                    OfflinePlayer op = MockUtils.mockPlayer2();
-                    UserData d = new UserData(op, new DemographicsData());
+                    UserData d = MockUtils.mockUser2();
                     for (DBCallableProcessor processor : processors) {
                         processor.process(d);
                     }
@@ -114,8 +110,7 @@ public class DataCacheGetQueueTest {
     @Ignore("Scheduler")
     @Test
     public void testScheduleForGet() {
-        OfflinePlayer op = MockUtils.mockPlayer2();
-        UserData exp = new UserData(op, new DemographicsData());
+        UserData exp = MockUtils.mockUser2();
 
         DataCacheGetQueue instance = new DataCacheGetQueue(plan);
         instance.scheduleForGet(exp.getUuid(), new DBCallableProcessor() {

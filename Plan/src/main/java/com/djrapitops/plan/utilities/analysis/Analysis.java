@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.utilities.Verify;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,41 +15,36 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.RawAnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.analysis.ActivityPart;
+import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
+import main.java.com.djrapitops.plan.data.analysis.GeolocationPart;
+import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
+import main.java.com.djrapitops.plan.data.analysis.KillPart;
+import main.java.com.djrapitops.plan.data.analysis.PlayerCountPart;
+import main.java.com.djrapitops.plan.data.analysis.PlaytimePart;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.ui.Html;
-import main.java.com.djrapitops.plan.ui.RecentPlayersButtonsCreator;
-import main.java.com.djrapitops.plan.ui.graphs.PlayerActivityGraphCreator;
-import main.java.com.djrapitops.plan.ui.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.ui.graphs.SessionLengthDistributionGraphCreator;
-import main.java.com.djrapitops.plan.ui.graphs.TPSGraphCreator;
-import main.java.com.djrapitops.plan.ui.tables.SortableCommandUseTableCreator;
-import main.java.com.djrapitops.plan.ui.tables.SortablePlayersTableCreator;
+import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.GameMode;
-import com.djrapitops.javaplugin.task.ITask;
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
-import main.java.com.djrapitops.plan.data.RawData;
+import main.java.com.djrapitops.plan.utilities.comparators.UserDataLastPlayedComparator;
 
 /**
  *
  * @author Rsl1122
  */
 public class Analysis {
-    
+
     private final Plan plugin;
     private final InspectCacheHandler inspectCache;
     private int taskId = -1;
@@ -80,7 +75,7 @@ public class Analysis {
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START + "");
         // Async task for Analysis
-        ITask asyncAnalysisTask = plugin.getRunnableFactory().createNew(new RslRunnable("AnalysisTask") {
+        ITask asyncAnalysisTask = plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
             @Override
             public void run() {
                 taskId = this.getTaskId();
@@ -101,7 +96,7 @@ public class Analysis {
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
         log(Phrase.ANALYSIS_FETCH_DATA + "");
-        Benchmark.start("Analysis Fetch Phase");
+        Benchmark.start("Analysis: Fetch Phase");
         plugin.processStatus().setStatus("Analysis", "Analysis Fetch Phase");
         try {
             inspectCache.cacheAllUserData(db);
@@ -133,66 +128,44 @@ public class Analysis {
      */
     public boolean analyzeData(List<UserData> rawData, List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
         try {
-            plugin.processStatus().setStatus("Analysis", "Analysis Phase");
-            Benchmark.start("Analysis Phase");
-            Benchmark.start("Analysis UUID transform");
+            Collections.sort(rawData, new UserDataLastPlayedComparator());
             List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
-            Benchmark.stop("Analysis UUID transform");
-            Benchmark.start("Analysis Create Empty dataset");
+            Benchmark.start("Analysis: Create Empty dataset");
             DataCacheHandler handler = plugin.getHandler();
-            Map<UUID, SessionData> activeSessions = handler.getActiveSessions();
-            long now = MiscUtils.getTime();
-            rawData.stream().forEach((data) -> {
-                SessionData session = activeSessions.get(data.getUuid());
-                List<SessionData> sessions = data.getSessions();
-                if (session != null && !sessions.contains(session)) {
-                    sessions.add(session);
-                }
-            });
             Map<String, Integer> commandUse = handler.getCommandUse();
-            AnalysisData analysisData = new AnalysisData();
-            Benchmark.stop("Analysis Create Empty dataset");
-            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", Benchmark.stop("Analysis Fetch Phase") + ""));
-            String playersTable = SortablePlayersTableCreator.createSortablePlayersTable(rawData);
-            analysisData.setSortablePlayersTable(playersTable);
-            
-            analysisData.setTpsData(TPSGraphCreator.generateDataArray(tpsData, now));
-            analysisData.setAverageTPS(MathUtils.averageDouble(tpsData.stream().map(t -> t.getTps())));
-            
-            RawAnalysisData sorted = fillDataset(commandUse, rawData, now);
 
-            // Analyze & Save RawAnalysisData to AnalysisData
-            createCloroplethMap(analysisData, sorted.getGeolocations(), sorted.getGeocodes());
-            createPlayerActivityGraphs(analysisData, sorted.getSessiondata(), sorted.getRegistered(), sorted.getSortedSessionData());
-            analysisData.setRecentPlayers(RecentPlayersButtonsCreator.createRecentLoginsButtons(sorted.getLatestLogins(), 20));
-            long totalPlaytime = sorted.getLong(RawData.PLAYTIME);
-            analysisData.setTotalPlayTime(totalPlaytime);
-            analysisData.setAveragePlayTime(totalPlaytime / rawData.size());
-            analysisData.setSessionAverage(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(sorted.getSessiondata())));
-            analysisData.setTotalLoginTimes(sorted.getLong(RawData.LOGINTIMES));
-            createActivityVisalization(uuids.size(), sorted.getInt(RawData.AMOUNT_BANNED), sorted.getInt(RawData.AMOUNT_ACTIVE), sorted.getInt(RawData.AMOUNT_INACTIVE), sorted.getInt(RawData.AMOUNT_UNKNOWN), analysisData);
-            analysisData.setOps(sorted.getInt(RawData.AMOUNT_OPS));
-            analyzeAverageAge(sorted.getAges(), analysisData);
-            createGamemodeUsageVisualization(sorted.getLong(RawData.TIME_GM0), sorted.getLong(RawData.TIME_GM1), sorted.getLong(RawData.TIME_GM2), sorted.getLong(RawData.TIME_GM3), analysisData);
-            createCommandUseTable(sorted, analysisData);
-            analysisData.setTotaldeaths(sorted.getLong(RawData.DEATHS));
-            analysisData.setTotalkills(sorted.getLong(RawData.KILLS));
-            analysisData.setTotalmobkills(sorted.getLong(RawData.MOBKILLS));
-            analysisData.setRefreshDate(now);
-            analysisData.setPunchCardData(PunchCardGraphCreator.generateDataArray(sorted.getSessiondata()));
-            analysisData.setSessionDistributionData(SessionLengthDistributionGraphCreator.generateDataArraySessions(sorted.getSessiondata()));
-            analysisData.setPlaytimeDistributionData(SessionLengthDistributionGraphCreator.generateDataArray(sorted.getPlaytimes().values()));
+            AnalysisData analysisData = new AnalysisData(commandUse, tpsData);
+            analysisData.setPluginsTabLayout(plugin.getHookHandler().getPluginsTabLayoutForAnalysis());
+            analysisData.setPlanVersion(plugin.getVersion());
+            ActivityPart activityPart = analysisData.getActivityPart();
+            activityPart.setRecentPlayersUUIDs(uuids);
+            analysisData.getPlayerCountPart().addPlayers(uuids);
+            activityPart.setRecentPlayers(rawData.stream().map(data -> data.getName()).collect(Collectors.toList()));
+
+            Benchmark.stop("Analysis: Create Empty dataset");
+            long fetchPhaseLength = Benchmark.stop("Analysis: Fetch Phase");
+
+            Benchmark.start("Analysis Phase");
+            plugin.processStatus().setStatus("Analysis", "Analysis Phase");
+            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", fetchPhaseLength + ""));
+
+            String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
+            analysisData.setPlayersTable(playersTable);
+
+            fillDataset(analysisData, rawData);
+            // Analyze
+            analysisData.analyseData();
             Benchmark.stop("Analysis Phase");
+
             log(Phrase.ANALYSIS_THIRD_PARTY + "");
             plugin.processStatus().setStatus("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
-            
+
             analysisCache.cache(analysisData);
             long time = plugin.processStatus().finishExecution("Analysis");
             if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
                 Log.info(Phrase.ANALYSIS_COMPLETE.parse(time + "", HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
-//        LocationAnalysis.performAnalysis(analysisData, plugin.getDB());        
             ExportUtility.export(plugin, analysisData, rawData);
         } catch (Throwable e) {
             Log.toLog(this.getClass().getName(), e);
@@ -201,200 +174,15 @@ public class Analysis {
         }
         return true;
     }
-    
-    private RawAnalysisData fillDataset(Map<String, Integer> commandUse, List<UserData> rawData, long now) {
-        final RawAnalysisData sorted = new RawAnalysisData();
-        sorted.setCommandUse(commandUse);
-        sorted.fillGeolocations();
-        Benchmark.start("Analysis Fill Dataset");
-        rawData.stream().forEach((uData) -> {
-            Map<Gamemode, Long> gmTimes = uData.getGmTimes();
-            if (gmTimes != null) {
-                Long survival = gmTimes.get(Gamemode.SURVIVAL);
-                if (survival != null) {
-                    sorted.addTo(RawData.TIME_GM0, survival);
-                }
-                Long creative = gmTimes.get(Gamemode.CREATIVE);
-                if (creative != null) {
-                    sorted.addTo(RawData.TIME_GM1, creative);
-                }
-                Long adventure = gmTimes.get(Gamemode.ADVENTURE);
-                if (adventure != null) {
-                    sorted.addTo(RawData.TIME_GM2, adventure);
-                }
-                try {
-                    Long gm = gmTimes.get(Gamemode.SPECTATOR);
-                    if (gm != null) {
-                        sorted.addTo(RawData.TIME_GM3, gm);
-                    }
-                } catch (NoSuchFieldError e) {
-                }
-            }
-            long playTime = uData.getPlayTime();
-            sorted.addTo(RawData.PLAYTIME, playTime);
-            String playerName = uData.getName();
-            String url = HtmlUtils.getInspectUrl(playerName);
-            String html = Html.BUTTON.parse(url, playerName);
-            
-            sorted.getLatestLogins().put(html, uData.getLastPlayed());
-            sorted.addTo(RawData.LOGINTIMES, uData.getLoginTimes());
-            DemographicsData demData = uData.getDemData();
-            if (demData == null) {
-                demData = new DemographicsData();
-            }
-            int age = demData.getAge();
-            if (age != -1) {
-                sorted.getAges().add(age);
-            }
-            if (uData.isOp()) {
-                sorted.addTo(RawData.AMOUNT_OPS, 1);
-            }
-            if (uData.isBanned()) {
-                sorted.addTo(RawData.AMOUNT_BANNED, 1);
-            } else if (uData.getLoginTimes() == 1) {
-                sorted.addTo(RawData.AMOUNT_UNKNOWN, 1);
-            } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
-                sorted.addTo(RawData.AMOUNT_ACTIVE, 1);
-                sorted.getPlaytimes().put(html, playTime);
-            } else {
-                sorted.addTo(RawData.AMOUNT_INACTIVE, 1);
-            }
-            List<KillData> playerKills = uData.getPlayerKills();
-            if (playerKills != null) {
-                sorted.addTo(RawData.KILLS, playerKills.size());
-            }
-            sorted.addTo(RawData.MOBKILLS, uData.getMobKills());
-            sorted.addTo(RawData.DEATHS, uData.getDeaths());
-            List<SessionData> sessions = uData.getSessions();
-            if (!sessions.isEmpty()) {
-                sorted.addSessions(uData.getUuid(), sessions);
-            }
-            sorted.getRegistered().add(uData.getRegistered());
-            sorted.addGeoloc(demData.getGeoLocation());
-            uData.stopAccessing();
-        });
-        Benchmark.stop("Analysis Fill Dataset");
-        return sorted;
-    }
-    
-    private void createCommandUseTable(final RawAnalysisData raw, AnalysisData data) {
-        
-        Map<String, Integer> commandUse = raw.getCommandUse();
-        if (!commandUse.isEmpty()) {
-            String tableHtml = SortableCommandUseTableCreator.createSortedCommandUseTable(commandUse);
-            data.setCommandUseTableHtml(tableHtml);
-            data.setTotalCommands(commandUse.size());
-        } else {
-            data.setCommandUseTableHtml(Html.ERROR_TABLE_2.parse());
-            data.setTotalCommands(0);
-        }
-    }
-    
-    private void createActivityVisalization(int total, int totalBanned, int active, int inactive, int joinleaver, AnalysisData data) {
-        Benchmark.start("Analysis Activity Visualization");
-        data.setActive(active);
-        data.setInactive(inactive);
-        data.setBanned(totalBanned);
-        data.setJoinleaver(joinleaver);
-        data.setTotal(total);
-        Benchmark.stop("Analysis Activity Visualization");
-    }
-    
-    private void analyzeAverageAge(List<Integer> ages, AnalysisData data) {
-        double averageAge = MathUtils.averageInt(ages.stream());
-        if (averageAge == 0) {
-            averageAge = -1;
-        }
-        data.setAverageAge(averageAge);
-    }
-    
-    private void createGamemodeUsageVisualization(long gmZero, long gmOne, long gmTwo, long gmThree, AnalysisData data) {
-        Benchmark.start("Analysis GMVisualization");
-        long gmTotal = gmZero + gmOne + gmTwo + gmThree;
-        HashMap<GameMode, Long> totalGmTimes = new HashMap<>();
-        totalGmTimes.put(GameMode.SURVIVAL, gmZero);
-        totalGmTimes.put(GameMode.CREATIVE, gmOne);
-        totalGmTimes.put(GameMode.ADVENTURE, gmTwo);
-        try {
-            totalGmTimes.put(GameMode.SPECTATOR, gmThree);
-        } catch (NoSuchFieldError e) {
-        }
-        data.setGm0Perc((gmZero * 1.0 / gmTotal));
-        data.setGm1Perc((gmOne * 1.0 / gmTotal));
-        data.setGm2Perc((gmTwo * 1.0 / gmTotal));
-        data.setGm3Perc((gmThree * 1.0 / gmTotal));
-        Benchmark.stop("Analysis GMVisualization");
-    }
-    
-    private void createPlayerActivityGraphs(AnalysisData data, List<SessionData> sData, List<Long> registered, Map<UUID, List<SessionData>> sortedSData) {
-        long now = new Date().toInstant().getEpochSecond() * (long) 1000;
-        
-        long scaleDay = TimeAmount.DAY.ms();
-        long scaleWeek = TimeAmount.WEEK.ms();
-        long scaleMonth = TimeAmount.MONTH.ms();
-        
-        data.setNewPlayersDay(AnalysisUtils.getNewPlayers(registered, scaleDay, now));
-        data.setNewPlayersWeek(AnalysisUtils.getNewPlayers(registered, scaleWeek, now));
-        data.setNewPlayersMonth(AnalysisUtils.getNewPlayers(registered, scaleMonth, now));
-        
-        Benchmark.start("Analysis Unique/day");
-        data.setAvgUniqJoins(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, -1));
-        data.setAvgUniqJoinsDay(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleDay));
-        data.setAvgUniqJoinsWeek(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleWeek));
-        data.setAvgUniqJoinsMonth(AnalysisUtils.getUniqueJoinsPerDay(sortedSData, scaleMonth));
-        Benchmark.stop("Analysis Unique/day");
-        
-        Benchmark.start("Analysis Unique");
-        data.setUniqueJoinsDay(AnalysisUtils.getUniqueJoins(sortedSData, scaleDay));
-        data.setUniqueJoinsWeek(AnalysisUtils.getUniqueJoins(sortedSData, scaleWeek));
-        data.setUniqueJoinsMonth(AnalysisUtils.getUniqueJoins(sortedSData, scaleMonth));
-        Benchmark.stop("Analysis Unique");
-        
-        List<SessionData> sessions = sData.stream()
-                .filter(session -> (session != null))
-                .filter(session -> session.isValid())
-                .filter((session) -> (session.getSessionStart() >= now - scaleMonth || session.getSessionEnd() >= now - scaleMonth))
-                .collect(Collectors.toList());
-        
-        String[] dayArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleDay);
-        String[] weekArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleWeek);
-        String[] monthArray = PlayerActivityGraphCreator.generateDataArray(sessions, scaleMonth);
-        
-        data.setPlayersDataArray(new String[]{dayArray[0], dayArray[1], weekArray[0], weekArray[1], monthArray[0], monthArray[1]});
-    }
-    
+
     private void log(String msg) {
         if (Settings.ANALYSIS_LOG_TO_CONSOLE.isTrue()) {
             Log.info(msg);
         }
     }
-    
-    private void createCloroplethMap(AnalysisData aData, Map<String, Integer> geolocations, Map<String, String> geocodes) {
-        Benchmark.start("Analysis Chloropleth map");
-        String locations = "[";
-        String z = "[";
-        String text = "[";
-        for (String c : geolocations.keySet()) {
-            locations += "\"" + c + "\"" + ",";
-            z += geolocations.get(c) + ",";
-            String code = geocodes.get(c);
-            if (code != null) {
-                text += "\"" + code + "\"" + ",";
-            } else {
-                text += "\"UNK\",";
-            }
-        }
-        locations += "]";
-        z += "]";
-        text += "]";
-        aData.setGeomapCountries(locations.replace(",]", "]"));
-        aData.setGeomapZ(z.replace(",]", "]"));
-        aData.setGeomapCodes(text.replace(",]", "]"));
-        Benchmark.stop("Analysis Chloropleth map");
-    }
-    
+
     private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
-        Benchmark.start("Analysis 3rd party");
+        Benchmark.start("Analysis: 3rd party");
         final Map<String, String> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
         final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
@@ -438,13 +226,13 @@ public class Analysis {
                 }
             } catch (Throwable e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
-                
+
                 Log.toLog(this.getClass().getName(), e);
             } finally {
                 Benchmark.stop("Source " + source.getPlaceholder("").replace("%", ""));
             }
         });
-        Benchmark.stop("Analysis 3rd party");
+        Benchmark.stop("Analysis: 3rd party");
         return replaceMap;
     }
 
@@ -455,7 +243,7 @@ public class Analysis {
     public boolean isAnalysisBeingRun() {
         return taskId != -1;
     }
-    
+
     public void setTaskId(int id) {
         if (id == -2) {
             plugin.processStatus().setStatus("Analysis", "Temporarily Disabled");
@@ -463,5 +251,61 @@ public class Analysis {
             plugin.processStatus().setStatus("Analysis", "Enabled");
         }
         taskId = id;
+    }
+
+    private void fillDataset(AnalysisData analysisData, List<UserData> rawData) {
+        ActivityPart activity = analysisData.getActivityPart();
+        GamemodePart gmPart = analysisData.getGamemodePart();
+        GeolocationPart geolocPart = analysisData.getGeolocationPart();
+        JoinInfoPart joinInfo = analysisData.getJoinInfoPart();
+        KillPart killPart = analysisData.getKillPart();
+        PlayerCountPart playerCount = analysisData.getPlayerCountPart();
+        PlaytimePart playtime = analysisData.getPlaytimePart();
+
+        long now = MiscUtils.getTime();
+
+        Benchmark.start("Analysis: Fill Dataset");
+        rawData.stream().forEach((uData) -> {
+            uData.access();
+            Map<String, Long> gmTimes = uData.getGmTimes();
+            String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
+            if (gmTimes != null) {
+                for (String gm : gms) {
+                    Long time = gmTimes.get(gm);
+                    if (time != null) {
+                        gmPart.addTo(gm, time);
+                    }
+                }
+            }
+            final long playTime = uData.getPlayTime();
+            playtime.addToPlaytime(playTime);
+            joinInfo.addToLoginTimes(uData.getLoginTimes());
+            joinInfo.addRegistered(uData.getRegistered());
+
+            geolocPart.addGeoloc(uData.getGeolocation());
+
+            final UUID uuid = uData.getUuid();
+            if (uData.isOp()) {
+                playerCount.addOP(uuid);
+            }
+            if (uData.isBanned()) {
+                activity.addBan(uuid);
+            } else if (uData.getLoginTimes() == 1) {
+                activity.addJoinedOnce(uuid);
+            } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
+                activity.addActive(uuid);
+            } else {
+                activity.addInActive(uuid);
+            }
+            List<KillData> playerKills = uData.getPlayerKills();
+            killPart.addKills(uuid, playerKills);
+            killPart.addDeaths(uData.getDeaths());
+            killPart.addMobKills(uData.getMobKills());
+
+            List<SessionData> sessions = uData.getSessions();
+            joinInfo.addSessions(uuid, sessions);
+            uData.stopAccessing();
+        });
+        Benchmark.stop("Analysis: Fill Dataset");
     }
 }

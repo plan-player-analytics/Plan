@@ -30,7 +30,7 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     public Connection getNewConnection() {
-        FileConfiguration config = Plan.getInstance().getConfig();
+        FileConfiguration config = plugin.getConfig();
 
         try {
             Class.forName("com.mysql.jdbc.Driver");

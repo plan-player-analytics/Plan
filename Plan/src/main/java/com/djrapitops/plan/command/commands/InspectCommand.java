@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.javaplugin.api.TimeAmount;
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.CommandUtils;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.CommandUtils;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.Verify;
+import java.sql.SQLException;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -15,11 +16,13 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
-import main.java.com.djrapitops.plan.ui.TextUI;
+import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
 
 /**
@@ -47,7 +50,7 @@ public class InspectCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_INSPECT + "", sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_INSPECT + "", sender)) {
             return true;
         }
 
@@ -58,24 +61,31 @@ public class InspectCommand extends SubCommand {
     }
 
     private void runInspectTask(String playerName, ISender sender) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("InspectTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("InspectTask") {
             @Override
             public void run() {
                 try {
-                    UUID uuid = ConditionUtils.getUUID(playerName);
-                    if (!Check.ifTrue(Verify.notNull(uuid), Phrase.USERNAME_NOT_VALID.toString(), sender)) {
+                    UUID uuid = UUIDUtility.getUUIDOf(playerName);
+                    if (!Check.isTrue(Verify.notNull(uuid), Phrase.USERNAME_NOT_VALID.toString(), sender)) {
                         return;
                     }
-                    if (!Check.ifTrue(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString(), sender)) {
+                    if (!Check.isTrue(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString(), sender)) {
                         return;
                     }
-                    if (!Check.ifTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
+                    if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
                         return;
                     }
                     sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-
+                    if (CommandUtils.isPlayer(sender)) {
+                        boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
+                        if (!senderHasWebUser) {
+                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+                        }
+                    }
                     inspectCache.cache(uuid);
                     runMessageSenderTask(uuid, sender, playerName);
+                } catch (SQLException ex) {
+                    Log.toLog(this.getClass().getName(), ex);
                 } finally {
                     this.cancel();
                 }
@@ -84,7 +94,7 @@ public class InspectCommand extends SubCommand {
     }
 
     private void runMessageSenderTask(UUID uuid, ISender sender, String playerName) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("InspectMessageSenderTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("InspectMessageSenderTask") {
             private int timesrun = 0;
 
             @Override

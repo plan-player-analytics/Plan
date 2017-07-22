@@ -5,7 +5,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.uuid;
 
-import com.djrapitops.javaplugin.utilities.UUIDFetcher;
+import com.djrapitops.plugin.utilities.player.UUIDFetcher;
 import java.sql.SQLException;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;

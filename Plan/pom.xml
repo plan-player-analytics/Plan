@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.5.0</version>
+    <version>3.5.2</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -19,11 +19,11 @@
             <version>1.12-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--        Library for easier plugin development-->        
+        <!--        Framework for easier plugin development-->        
         <dependency>
             <groupId>com.djrapitops</groupId>
-            <artifactId>BukkitPluginDependency</artifactId>
-            <version>1.4.1</version>
+            <artifactId>AbstractPluginFramework</artifactId>
+            <version>2.0.0</version>
             <scope>compile</scope>
         </dependency>
         <!--        SoftDepended Plugins-->

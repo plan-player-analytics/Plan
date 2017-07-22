@@ -2,12 +2,13 @@ package main.java.com.djrapitops.plan.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
  *
@@ -22,18 +23,27 @@ public class HtmlUtils {
      * @throws FileNotFoundException
      */
     public static String getHtmlStringFromResource(String fileName) throws FileNotFoundException {
-        Plan plugin = Plan.getInstance();
-        File localFile = new File(plugin.getDataFolder(), fileName);
-        Scanner scanner = new Scanner(plugin.getResource(fileName));
-        if (localFile.exists()) {
-            scanner = new Scanner(localFile, "UTF-8");
+        InputStream resourceStream = null;
+        Scanner scanner = null;
+        try {
+            Plan plugin = Plan.getInstance();
+            File localFile = new File(plugin.getDataFolder(), fileName);
+
+            if (localFile.exists()) {
+                scanner = new Scanner(localFile, "UTF-8");
+            } else {
+                resourceStream = plugin.getResource(fileName);
+                scanner = new Scanner(resourceStream);
+            }
+            String html = "";
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                html += line + "\r\n";
+            }
+            return html;
+        } finally {
+            MiscUtils.close(resourceStream, scanner);
         }
-        String html = "";
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            html += line + "\r\n";
-        }
-        return html;
     }
 
     /**
@@ -64,12 +74,11 @@ public class HtmlUtils {
     public static String getServerAnalysisUrl() {
         int port = Settings.WEBSERVER_PORT.getNumber();
         String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
-        String securityCode = Settings.SECURITY_CODE.toString();
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/ "//" + ip + "/" + securityCode + "/server";
+        String url = /*"http:*/ "//" + ip + "/server";
         return url;
     }
 
@@ -90,13 +99,16 @@ public class HtmlUtils {
     public static String getInspectUrl(String playerName) {
         int port = Settings.WEBSERVER_PORT.getNumber();
         String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
-        String securityCode = Settings.SECURITY_CODE.toString();
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/ "//" + ip + "/" + securityCode + "/player/" + playerName;
+        String url = /*"http:*/ "//" + ip + "/player/" + playerName;
         return url;
+    }
+
+    public static String getRelativeInspectUrl(String playerName) {
+        return "../player/" + playerName;
     }
 
     /**
@@ -152,9 +164,9 @@ public class HtmlUtils {
         StringBuilder html = new StringBuilder();
         html.append(Html.HEADER.parse(name));
         html.append(Html.PLUGIN_CONTAINER_START.parse());
-        for (String placeholder : placeholders) {
+        placeholders.stream().forEach((placeholder) -> {
             html.append(placeholder);
-        }
+        });
         html.append("</div>");
         return html.toString();
     }
@@ -177,5 +189,18 @@ public class HtmlUtils {
             string = Html.SPAN.parse(string);
         }
         return string.replaceAll("§r", "");
+    }
+
+    public static String separateWithQuotes(String... strings) {
+        StringBuilder build = new StringBuilder();
+        for (int i = 0; i < strings.length; i++) {
+            build.append("\"");
+            build.append(strings[i]);
+            build.append("\"");
+            if (i < strings.length - 1) {
+                build.append(", ");
+            }
+        }
+        return build.toString();
     }
 }

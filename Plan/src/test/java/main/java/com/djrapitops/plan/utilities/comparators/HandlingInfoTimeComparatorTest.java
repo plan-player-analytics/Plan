@@ -5,7 +5,7 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
+import com.djrapitops.plugin.utilities.player.Gamemode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.handling.importing;
 
-import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
-import com.djrapitops.javaplugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
-import com.djrapitops.javaplugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.Fetch;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,9 +15,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.Gender;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -34,9 +30,11 @@ public class UsersTable extends Table {
 
     private final String columnID;
     private final String columnUUID;
+    @Deprecated // Removed in 3.5.2
     private final String columnDemAge;
+    @Deprecated // Removed in 3.5.2
     private final String columnDemGender;
-    private final String columnDemGeoLocation;
+    private final String columnGeolocation;
     private final String columnLastGM;
     private final String columnLastGMSwapTime;
     private final String columnPlayTime;
@@ -62,7 +60,7 @@ public class UsersTable extends Table {
         columnUUID = "uuid";
         columnDemAge = "age";
         columnDemGender = "gender";
-        columnDemGeoLocation = "geolocation";
+        columnGeolocation = "geolocation";
         columnLastGM = "last_gamemode";
         columnLastGMSwapTime = "last_gamemode_swap";
         columnPlayTime = "play_time";
@@ -89,9 +87,7 @@ public class UsersTable extends Table {
             execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                     + columnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
                     + columnUUID + " varchar(36) NOT NULL UNIQUE, "
-                    + columnDemAge + " integer NOT NULL, "
-                    + columnDemGender + " varchar(8) NOT NULL, "
-                    + columnDemGeoLocation + " varchar(50) NOT NULL, "
+                    + columnGeolocation + " varchar(50) NOT NULL, "
                     + columnLastGM + " varchar(15) NOT NULL, "
                     + columnLastGMSwapTime + " bigint NOT NULL, "
                     + columnPlayTime + " bigint NOT NULL, "
@@ -233,7 +229,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
-        Benchmark.start("Get Saved UUIDS");
+        Benchmark.start("Database: Get Saved UUIDS");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -251,7 +247,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Saved UUIDS");
+            Benchmark.stop("Database: Get Saved UUIDS");
         }
     }
 
@@ -290,17 +286,17 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public UserData getUserData(UUID uuid) throws SQLException {
-        Benchmark.start(uuid + " Get UserData");
+        Benchmark.start("Database: Get UserData");
         boolean containsBukkitData = getContainsBukkitData(uuid);
         UserData data = null;
         if (containsBukkitData) {
             data = getUserDataForKnown(uuid);
         }
         if (data == null) {
-            data = new UserData(Fetch.getOfflinePlayer(uuid, Plan.class), new DemographicsData());
+            data = new UserData(Fetch.getIOfflinePlayer(uuid));
             addUserInformationToUserData(data);
         }
-        Benchmark.stop(uuid + " Get UserData");
+        Benchmark.stop("Database: Get UserData");
         return data;
     }
 
@@ -329,7 +325,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public List<UserData> getUserData(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("Get UserData Multiple " + uuids.size());
+        Benchmark.start("Database: Get UserData Multiple");
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
         List<UserData> datas = new ArrayList<>();
         datas.addAll(getUserDataForKnown(containsBukkitData));
@@ -337,17 +333,17 @@ public class UsersTable extends Table {
         uuids.removeAll(containsBukkitData);
         if (!uuids.isEmpty()) {
             List<UserData> noBukkitData = new ArrayList<>();
-            Benchmark.start("Create UserData objects for No BukkitData players " + uuids.size());
+            Benchmark.start("Database: Create UserData objects for No BukkitData players");
             for (UUID uuid : uuids) {
-                UserData uData = new UserData(Fetch.getOfflinePlayer(uuid, Plan.class), new DemographicsData());
+                UserData uData = new UserData(Fetch.getIOfflinePlayer(uuid));
                 noBukkitData.add(uData);
             }
-            Benchmark.stop("Create UserData objects for No BukkitData players " + uuids.size());
+            Benchmark.stop("Database: Create UserData objects for No BukkitData players");
             addUserInformationToUserData(noBukkitData);
             datas.addAll(noBukkitData);
         }
 
-        Benchmark.stop("Get UserData Multiple " + uuids.size());
+        Benchmark.stop("Database: Get UserData Multiple");
         return datas;
     }
 
@@ -383,7 +379,7 @@ public class UsersTable extends Table {
     }
 
     private UserData getUserDataForKnown(UUID uuid) throws SQLException {
-        Benchmark.start("getUserDataForKnown UserData");
+        Benchmark.start("Database: getUserDataForKnown UserData");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -391,18 +387,16 @@ public class UsersTable extends Table {
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
-                DemographicsData demData = new DemographicsData();
-                demData.setAge(set.getInt(columnDemAge));
-                demData.setGender(Gender.parse(set.getString(columnDemGender)));
-                demData.setGeoLocation(set.getString(columnDemGeoLocation));
-                Gamemode gm = Gamemode.valueOf(set.getString(columnLastGM));
+
+                String gm = set.getString(columnLastGM);
                 boolean op = set.getBoolean(columnOP);
                 boolean banned = set.getBoolean(columnBanned);
                 String name = set.getString(columnName);
                 long registered = set.getLong(columnRegistered);
-                UserData data = new UserData(uuid, registered, null, op, gm, demData, name, false);
+                UserData data = new UserData(uuid, registered, op, gm, name, false);
                 data.setBanned(banned);
                 data.setLastGamemode(gm);
+                data.setGeolocation(set.getString(columnGeolocation));
                 data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
@@ -414,13 +408,13 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("getUserDataForKnown UserData");
+            Benchmark.stop("Database: getUserDataForKnown UserData");
         }
         return null;
     }
 
     private List<UserData> getUserDataForKnown(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("getUserDataForKnown Multiple " + uuids.size());
+        Benchmark.start("Database: getUserDataForKnown Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         List<UserData> datas = new ArrayList<>();
@@ -433,18 +427,15 @@ public class UsersTable extends Table {
                 if (!uuids.contains(uuid)) {
                     continue;
                 }
-                DemographicsData demData = new DemographicsData();
-                demData.setAge(set.getInt(columnDemAge));
-                demData.setGender(Gender.parse(set.getString(columnDemGender)));
-                demData.setGeoLocation(set.getString(columnDemGeoLocation));
-                Gamemode gm = Gamemode.valueOf(set.getString(columnLastGM));
+                String gm = set.getString(columnLastGM);
                 boolean op = set.getBoolean(columnOP);
                 boolean banned = set.getBoolean(columnBanned);
                 String name = set.getString(columnName);
                 long registered = set.getLong(columnRegistered);
-                UserData data = new UserData(uuid, registered, null, op, gm, demData, name, false);
+                UserData data = new UserData(uuid, registered, op, gm, name, false);
                 data.setBanned(banned);
                 data.setLastGamemode(gm);
+                data.setGeolocation(set.getString(columnGeolocation));
                 data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
@@ -456,7 +447,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("getUserDataForKnown Multiple " + uuids.size());
+            Benchmark.stop("Database: getUserDataForKnown Multiple");
         }
         return datas;
     }
@@ -467,7 +458,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void addUserInformationToUserData(UserData data) throws SQLException {
-        Benchmark.start("addUserInformationToUserData UserData");
+        Benchmark.start("Database: addUserInformationToUserData");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -475,10 +466,8 @@ public class UsersTable extends Table {
             statement.setString(1, data.getUuid().toString());
             set = statement.executeQuery();
             while (set.next()) {
-                data.getDemData().setAge(set.getInt(columnDemAge));
-                data.getDemData().setGender(Gender.parse(set.getString(columnDemGender)));
-                data.getDemData().setGeoLocation(set.getString(columnDemGeoLocation));
-                data.setLastGamemode(Gamemode.valueOf(set.getString(columnLastGM)));
+                data.setGeolocation(set.getString(columnGeolocation));
+                data.setLastGamemode(set.getString(columnLastGM));
                 data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
@@ -489,7 +478,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("addUserInformationToUserData UserData");
+            Benchmark.stop("Database: addUserInformationToUserData");
         }
     }
 
@@ -499,7 +488,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void addUserInformationToUserData(List<UserData> data) throws SQLException {
-        Benchmark.start("addUserInformationToUserData Multiple " + data.size());
+        Benchmark.start("Database: addUserInformationToUserData Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -513,10 +502,8 @@ public class UsersTable extends Table {
                     continue;
                 }
                 UserData uData = userDatas.get(uuid);
-                uData.getDemData().setAge(set.getInt(columnDemAge));
-                uData.getDemData().setGender(Gender.parse(set.getString(columnDemGender)));
-                uData.getDemData().setGeoLocation(set.getString(columnDemGeoLocation));
-                uData.setLastGamemode(Gamemode.valueOf(set.getString(columnLastGM)));
+                uData.setGeolocation(set.getString(columnGeolocation));
+                uData.setLastGamemode(set.getString(columnLastGM));
                 uData.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 uData.setPlayTime(set.getLong(columnPlayTime));
                 uData.setLoginTimes(set.getInt(columnLoginTimes));
@@ -527,7 +514,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("addUserInformationToUserData Multiple " + data.size());
+            Benchmark.stop("Database: addUserInformationToUserData Multiple");
         }
     }
 
@@ -537,7 +524,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void saveUserDataInformation(UserData data) throws SQLException {
-        Benchmark.start("Save UserInfo");
+        Benchmark.start("Database: Save UserInfo");
         PreparedStatement statement = null;
         try {
             UUID uuid = data.getUuid();
@@ -545,9 +532,7 @@ public class UsersTable extends Table {
             int update = 0;
             if (userId != -1) {
                 String sql = "UPDATE " + tableName + " SET "
-                        + columnDemAge + "=?, "
-                        + columnDemGender + "=?, "
-                        + columnDemGeoLocation + "=?, "
+                        + columnGeolocation + "=?, "
                         + columnLastGM + "=?, "
                         + columnLastGMSwapTime + "=?, "
                         + columnPlayTime + "=?, "
@@ -563,36 +548,32 @@ public class UsersTable extends Table {
                         + "WHERE UPPER(" + columnUUID + ") LIKE UPPER(?)";
 
                 statement = prepareStatement(sql);
-                statement.setInt(1, data.getDemData().getAge());
-                statement.setString(2, data.getDemData().getGender().toString().toLowerCase());
-                statement.setString(3, data.getDemData().getGeoLocation());
-                Gamemode gm = data.getLastGamemode();
+                statement.setString(1, data.getGeolocation());
+                String gm = data.getLastGamemode();
                 if (gm != null) {
-                    statement.setString(4, data.getLastGamemode().name());
+                    statement.setString(2, gm);
                 } else {
-                    statement.setString(4, Gamemode.SURVIVAL.name());
+                    statement.setString(2, "SURVIVAL");
                 }
-                statement.setLong(5, data.getLastGmSwapTime());
-                statement.setLong(6, data.getPlayTime());
-                statement.setInt(7, data.getLoginTimes());
-                statement.setLong(8, data.getLastPlayed());
-                statement.setInt(9, data.getDeaths());
-                statement.setInt(10, data.getMobKills());
-                statement.setBoolean(11, data.getName() != null);
-                statement.setBoolean(12, data.isOp());
-                statement.setBoolean(13, data.isBanned());
-                statement.setString(14, data.getName());
-                statement.setLong(15, data.getRegistered());
-                statement.setString(16, uuid.toString());
+                statement.setLong(3, data.getLastGmSwapTime());
+                statement.setLong(4, data.getPlayTime());
+                statement.setInt(5, data.getLoginTimes());
+                statement.setLong(6, data.getLastPlayed());
+                statement.setInt(7, data.getDeaths());
+                statement.setInt(8, data.getMobKills());
+                statement.setBoolean(9, data.getName() != null);
+                statement.setBoolean(10, data.isOp());
+                statement.setBoolean(11, data.isBanned());
+                statement.setString(12, data.getName());
+                statement.setLong(13, data.getRegistered());
+                statement.setString(14, uuid.toString());
                 update = statement.executeUpdate();
             }
             if (update == 0) {
                 close(statement);
                 statement = prepareStatement("INSERT INTO " + tableName + " ("
                         + columnUUID + ", "
-                        + columnDemAge + ", "
-                        + columnDemGender + ", "
-                        + columnDemGeoLocation + ", "
+                        + columnGeolocation + ", "
                         + columnLastGM + ", "
                         + columnLastGMSwapTime + ", "
                         + columnPlayTime + ", "
@@ -605,34 +586,32 @@ public class UsersTable extends Table {
                         + columnBanned + ", "
                         + columnName + ", "
                         + columnRegistered
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 statement.setString(1, uuid.toString());
-                statement.setInt(2, data.getDemData().getAge());
-                statement.setString(3, data.getDemData().getGender().toString().toLowerCase());
-                statement.setString(4, data.getDemData().getGeoLocation());
-                Gamemode gm = data.getLastGamemode();
+                statement.setString(2, data.getGeolocation());
+                String gm = data.getLastGamemode();
                 if (gm != null) {
-                    statement.setString(5, data.getLastGamemode().name());
+                    statement.setString(3, gm);
                 } else {
-                    statement.setString(5, Gamemode.SURVIVAL.name());
+                    statement.setString(3, "SURVIVAL");
                 }
-                statement.setLong(6, data.getLastGmSwapTime());
-                statement.setLong(7, data.getPlayTime());
-                statement.setInt(8, data.getLoginTimes());
-                statement.setLong(9, data.getLastPlayed());
-                statement.setInt(10, data.getDeaths());
-                statement.setInt(11, data.getMobKills());
-                statement.setBoolean(12, data.getName() != null);
-                statement.setBoolean(13, data.isOp());
-                statement.setBoolean(14, data.isBanned());
-                statement.setString(15, data.getName());
-                statement.setLong(16, data.getRegistered());
+                statement.setLong(4, data.getLastGmSwapTime());
+                statement.setLong(5, data.getPlayTime());
+                statement.setInt(6, data.getLoginTimes());
+                statement.setLong(7, data.getLastPlayed());
+                statement.setInt(8, data.getDeaths());
+                statement.setInt(9, data.getMobKills());
+                statement.setBoolean(10, data.getName() != null);
+                statement.setBoolean(11, data.isOp());
+                statement.setBoolean(12, data.isBanned());
+                statement.setString(13, data.getName());
+                statement.setLong(14, data.getRegistered());
                 statement.execute();
             }
         } finally {
             close(statement);
-            Benchmark.stop("Save UserInfo");
+            Benchmark.stop("Database: Save UserInfo");
         }
     }
 
@@ -642,19 +621,17 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
-        Benchmark.start("Save UserInfo multiple " + data.size());
+        Benchmark.start("Database: Save UserInfo multiple");
         try {
             List<UserData> newUserdata = updateExistingUserData(data);
-            Benchmark.start("Insert new UserInfo multiple " + newUserdata.size());
+            Benchmark.start("Database: Insert new UserInfo multiple");
             List<List<UserData>> batches = DBUtils.splitIntoBatches(newUserdata);
             for (List<UserData> batch : batches) {
-                Benchmark.start("Insert new UserInfo Batch " + batch.size());
                 insertNewUserData(batch);
-                Benchmark.stop("Insert new UserInfo Batch " + batch.size());
             }
-            Benchmark.stop("Insert new UserInfo multiple " + newUserdata.size());
+            Benchmark.stop("Database: Insert new UserInfo multiple");
         } finally {
-            Benchmark.stop("Save UserInfo multiple " + data.size());
+            Benchmark.stop("Database: Save UserInfo multiple");
         }
     }
 
@@ -663,9 +640,7 @@ public class UsersTable extends Table {
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUUID + ", "
-                    + columnDemAge + ", "
-                    + columnDemGender + ", "
-                    + columnDemGeoLocation + ", "
+                    + columnGeolocation + ", "
                     + columnLastGM + ", "
                     + columnLastGMSwapTime + ", "
                     + columnPlayTime + ", "
@@ -678,32 +653,30 @@ public class UsersTable extends Table {
                     + columnBanned + ", "
                     + columnName + ", "
                     + columnRegistered
-                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             boolean commitRequired = false;
             int i = 0;
             for (UserData uData : data) {
                 UUID uuid = uData.getUuid();
                 statement.setString(1, uuid.toString());
-                statement.setInt(2, uData.getDemData().getAge());
-                statement.setString(3, uData.getDemData().getGender().toString().toLowerCase());
-                statement.setString(4, uData.getDemData().getGeoLocation());
-                Gamemode gm = uData.getLastGamemode();
+                statement.setString(2, uData.getGeolocation());
+                String gm = uData.getLastGamemode();
                 if (gm != null) {
-                    statement.setString(5, uData.getLastGamemode().name());
+                    statement.setString(3, gm);
                 } else {
-                    statement.setString(5, GameMode.SURVIVAL.name());
+                    statement.setString(3, "SURVIVAL");
                 }
-                statement.setLong(6, uData.getLastGmSwapTime());
-                statement.setLong(7, uData.getPlayTime());
-                statement.setInt(8, uData.getLoginTimes());
-                statement.setLong(9, uData.getLastPlayed());
-                statement.setInt(10, uData.getDeaths());
-                statement.setInt(11, uData.getMobKills());
-                statement.setBoolean(12, uData.getName() != null);
-                statement.setBoolean(13, uData.isOp());
-                statement.setBoolean(14, uData.isBanned());
-                statement.setString(15, uData.getName());
-                statement.setLong(16, uData.getRegistered());
+                statement.setLong(4, uData.getLastGmSwapTime());
+                statement.setLong(5, uData.getPlayTime());
+                statement.setInt(6, uData.getLoginTimes());
+                statement.setLong(7, uData.getLastPlayed());
+                statement.setInt(8, uData.getDeaths());
+                statement.setInt(9, uData.getMobKills());
+                statement.setBoolean(10, uData.getName() != null);
+                statement.setBoolean(11, uData.isOp());
+                statement.setBoolean(12, uData.isBanned());
+                statement.setString(13, uData.getName());
+                statement.setLong(14, uData.getRegistered());
                 statement.addBatch();
                 commitRequired = true;
                 i++;
@@ -722,9 +695,7 @@ public class UsersTable extends Table {
         try {
             List<UserData> saveLast = new ArrayList<>();
             String uSQL = "UPDATE " + tableName + " SET "
-                    + columnDemAge + "=?, "
-                    + columnDemGender + "=?, "
-                    + columnDemGeoLocation + "=?, "
+                    + columnGeolocation + "=?, "
                     + columnLastGM + "=?, "
                     + columnLastGMSwapTime + "=?, "
                     + columnPlayTime + "=?, "
@@ -765,27 +736,25 @@ public class UsersTable extends Table {
                     continue;
                 }
                 uData.access();
-                statement.setInt(1, uData.getDemData().getAge());
-                statement.setString(2, uData.getDemData().getGender().toString().toLowerCase());
-                statement.setString(3, uData.getDemData().getGeoLocation());
-                Gamemode gm = uData.getLastGamemode();
+                statement.setString(1, uData.getGeolocation());
+                String gm = uData.getLastGamemode();
                 if (gm != null) {
-                    statement.setString(4, uData.getLastGamemode().name());
+                    statement.setString(2, gm);
                 } else {
-                    statement.setString(4, GameMode.SURVIVAL.name());
+                    statement.setString(2, GameMode.SURVIVAL.name());
                 }
-                statement.setLong(5, uData.getLastGmSwapTime());
-                statement.setLong(6, uData.getPlayTime());
-                statement.setInt(7, uData.getLoginTimes());
-                statement.setLong(8, uData.getLastPlayed());
-                statement.setInt(9, uData.getDeaths());
-                statement.setInt(10, uData.getMobKills());
-                statement.setBoolean(11, uData.getName() != null);
-                statement.setBoolean(12, uData.isOp());
-                statement.setBoolean(13, uData.isBanned());
-                statement.setString(14, uData.getName());
-                statement.setLong(15, uData.getRegistered());
-                statement.setString(16, uuid.toString());
+                statement.setLong(3, uData.getLastGmSwapTime());
+                statement.setLong(4, uData.getPlayTime());
+                statement.setInt(5, uData.getLoginTimes());
+                statement.setLong(6, uData.getLastPlayed());
+                statement.setInt(7, uData.getDeaths());
+                statement.setInt(8, uData.getMobKills());
+                statement.setBoolean(9, uData.getName() != null);
+                statement.setBoolean(10, uData.isOp());
+                statement.setBoolean(11, uData.isBanned());
+                statement.setString(12, uData.getName());
+                statement.setLong(13, uData.getRegistered());
+                statement.setString(14, uuid.toString());
                 statement.addBatch();
                 uData.stopAccessing();
                 commitRequired = true;
@@ -808,7 +777,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public Map<UUID, Integer> getUserIds(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("Get User IDS " + uuids.size());
+        Benchmark.start("Database: Get User IDS Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -827,7 +796,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get User IDS " + uuids.size());
+            Benchmark.stop("Database: Get User IDS Multiple");
         }
     }
 
@@ -836,7 +805,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
-        Benchmark.start("Get User IDS ALL");
+        Benchmark.start("Database: Get User IDS ALL");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -852,7 +821,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get User IDS ALL");
+            Benchmark.stop("Database: Get User IDS ALL");
         }
     }
 
@@ -861,7 +830,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Map<Integer, Integer> getLoginTimes() throws SQLException {
-        Benchmark.start("Get Logintimes");
+        Benchmark.start("Database: Get Logintimes");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -876,7 +845,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Get Logintimes");
+            Benchmark.stop("Database: Get Logintimes");
         }
     }
 
@@ -919,7 +888,6 @@ public class UsersTable extends Table {
      * @return
      */
     public Map<Integer, Long> getLoginTimes(Collection<UUID> uuids) {
-        //TODO
-        return new HashMap<>();
+        throw new UnsupportedOperationException("Not supported yet."); // TODO
     }
 }

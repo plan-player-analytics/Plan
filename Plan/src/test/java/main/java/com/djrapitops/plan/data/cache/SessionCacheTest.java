@@ -6,18 +6,17 @@
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
 import java.util.UUID;
-import main.java.com.djrapitops.plan.data.DemographicsData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.SessionCache;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import static org.junit.Assert.assertTrue;
 import test.java.utils.TestInit;
 
 /**
@@ -40,9 +39,8 @@ public class SessionCacheTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue(t.setUp());
+    public void setUp() throws Exception {
+        TestInit t = TestInit.init();
         test = new SessionCache();
     }
 
@@ -78,7 +76,7 @@ public class SessionCacheTest {
         UUID uuid = MockUtils.getPlayerUUID();
         test.getActiveSessions().put(uuid, new SessionData(0));
         test.endSession(uuid);
-        UserData data = new UserData(MockUtils.mockPlayer(), new DemographicsData());
+        UserData data = MockUtils.mockUser();
         test.addSession(data);
         assertTrue("Didn't add session to data", data.getSessions().size() == 1);
     }

@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.task.runnable.RslRunnable;
-import com.djrapitops.javaplugin.utilities.FormattingUtils;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.FormattingUtils;
 import java.util.Arrays;
 import java.util.List;
 import main.java.com.djrapitops.plan.Permissions;
@@ -35,7 +35,7 @@ public class SearchCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
+        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
         sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING + "");
@@ -45,7 +45,7 @@ public class SearchCommand extends SubCommand {
     }
 
     private void runSearchTask(String[] args, ISender sender) {
-        plugin.getRunnableFactory().createNew(new RslRunnable("SearchTask: " + Arrays.toString(args)) {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("SearchTask: " + Arrays.toString(args)) {
             @Override
             public void run() {
                 try {

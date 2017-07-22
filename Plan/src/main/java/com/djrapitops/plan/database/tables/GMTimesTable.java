@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,6 +36,10 @@ public class GMTimesTable extends Table {
         columnCreativeTime = "creative";
         columnAdventureTime = "adventure";
         columnSpectatorTime = "spectator";
+    }
+
+    public static String[] getGMKeyArray() {
+        return new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
     }
 
     /**
@@ -89,22 +92,19 @@ public class GMTimesTable extends Table {
      * @return
      * @throws SQLException
      */
-    public Map<Gamemode, Long> getGMTimes(int userId) throws SQLException {
+    public Map<String, Long> getGMTimes(int userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
             statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUserID + "=?)");
             statement.setInt(1, userId);
             set = statement.executeQuery();
-            HashMap<Gamemode, Long> times = new HashMap<>();
+            HashMap<String, Long> times = new HashMap<>();
             while (set.next()) {
-                times.put(Gamemode.SURVIVAL, set.getLong(columnSurvivalTime));
-                times.put(Gamemode.CREATIVE, set.getLong(columnCreativeTime));
-                times.put(Gamemode.ADVENTURE, set.getLong(columnAdventureTime));
-                try {
-                    times.put(Gamemode.SPECTATOR, set.getLong(columnSpectatorTime));
-                } catch (NoSuchFieldError e) {
-                }
+                times.put("SURVIVAL", set.getLong(columnSurvivalTime));
+                times.put("CREATIVE", set.getLong(columnCreativeTime));
+                times.put("ADVENTURE", set.getLong(columnAdventureTime));
+                times.put("SPECTATOR", set.getLong(columnSpectatorTime));
             }
             return times;
         } finally {
@@ -113,26 +113,23 @@ public class GMTimesTable extends Table {
         }
     }
 
-    public Map<Integer, Map<Gamemode, Long>> getGMTimes(Collection<Integer> userIds) throws SQLException {
+    public Map<Integer, Map<String, Long>> getGMTimes(Collection<Integer> userIds) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        Map<Integer, Map<Gamemode, Long>> times = new HashMap<>();
+        Map<Integer, Map<String, Long>> times = new HashMap<>();
         try {
             statement = prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             while (set.next()) {
-                Map<Gamemode, Long> gmTimes = new HashMap<>();
+                Map<String, Long> gmTimes = new HashMap<>();
                 int id = set.getInt(columnUserID);
                 if (!userIds.contains(id)) {
                     continue;
                 }
-                gmTimes.put(Gamemode.SURVIVAL, set.getLong(columnSurvivalTime));
-                gmTimes.put(Gamemode.CREATIVE, set.getLong(columnCreativeTime));
-                gmTimes.put(Gamemode.ADVENTURE, set.getLong(columnAdventureTime));
-                try {
-                    gmTimes.put(Gamemode.SPECTATOR, set.getLong(columnSpectatorTime));
-                } catch (NoSuchFieldError e) {
-                }
+                gmTimes.put("SURVIVAL", set.getLong(columnSurvivalTime));
+                gmTimes.put("CREATIVE", set.getLong(columnCreativeTime));
+                gmTimes.put("ADVENTURE", set.getLong(columnAdventureTime));
+                gmTimes.put("SPECTATOR", set.getLong(columnSpectatorTime));
                 times.put(id, gmTimes);
             }
             return times;
@@ -148,12 +145,12 @@ public class GMTimesTable extends Table {
      * @param gamemodeTimes
      * @throws SQLException
      */
-    public void saveGMTimes(int userId, Map<Gamemode, Long> gamemodeTimes) throws SQLException {
+    public void saveGMTimes(int userId, Map<String, Long> gamemodeTimes) throws SQLException {
         if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;
         }
         PreparedStatement statement = null;
-        Gamemode[] gms = Gamemode.values();
+        String[] gms = getGMKeyArray();
         int update = 0;
         try {
             statement = prepareStatement(
@@ -202,13 +199,14 @@ public class GMTimesTable extends Table {
         }
     }
 
-    public void saveGMTimes(Map<Integer, Map<Gamemode, Long>> gamemodeTimes) throws SQLException {
+    public void saveGMTimes(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
         if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;
         }
-        Benchmark.start("Save GMTimes");
+        Benchmark.start("Database: Save GMTimes");
         PreparedStatement statement = null;
-        Gamemode[] gms = Gamemode.values();
+        String[] gms = getGMKeyArray();
+
         Set<Integer> savedIDs = getSavedIDs();
         try {
             statement = prepareStatement(
@@ -226,7 +224,7 @@ public class GMTimesTable extends Table {
                 statement.setInt(5, id);
                 for (int i = 0; i < gms.length; i++) {
                     try {
-                        Map<Gamemode, Long> times = gamemodeTimes.get(id);
+                        Map<String, Long> times = gamemodeTimes.get(id);
                         Long time = times.get(gms[i]);
                         if (time != null) {
                             statement.setLong(i + 1, time);
@@ -248,15 +246,16 @@ public class GMTimesTable extends Table {
             close(statement);
         }
         addNewGMTimesRows(gamemodeTimes);
-        Benchmark.stop("Save GMTimes");
+        Benchmark.stop("Database: Save GMTimes");
     }
 
-    private void addNewGMTimesRows(Map<Integer, Map<Gamemode, Long>> gamemodeTimes) throws SQLException {
+    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
         if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
             return;
         }
         PreparedStatement statement = null;
-        Gamemode[] gms = Gamemode.values();
+        String[] gms = getGMKeyArray();
+
         try {
             statement = prepareStatement(
                     "INSERT INTO " + tableName + " ("
@@ -271,7 +270,7 @@ public class GMTimesTable extends Table {
                 statement.setInt(1, id);
                 for (int i = 0; i < gms.length; i++) {
                     try {
-                        Map<Gamemode, Long> times = gamemodeTimes.get(id);
+                        Map<String, Long> times = gamemodeTimes.get(id);
                         Long time = times.get(gms[i]);
                         if (time != null) {
                             statement.setLong(i + 2, time);
@@ -293,9 +292,10 @@ public class GMTimesTable extends Table {
         }
     }
 
-    private void addNewGMTimesRow(int userId, Map<Gamemode, Long> gamemodeTimes) throws SQLException {
+    private void addNewGMTimesRow(int userId, Map<String, Long> gamemodeTimes) throws SQLException {
         PreparedStatement statement = null;
-        Gamemode[] gms = Gamemode.values();
+        String[] gms = getGMKeyArray();
+
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "

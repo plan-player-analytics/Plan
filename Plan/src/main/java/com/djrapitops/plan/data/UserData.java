@@ -1,11 +1,8 @@
 package main.java.com.djrapitops.plan.data;
 
-import com.djrapitops.javaplugin.utilities.Verify;
-import com.djrapitops.javaplugin.utilities.player.BukkitOfflinePlayer;
-import com.djrapitops.javaplugin.utilities.player.BukkitPlayer;
-import com.djrapitops.javaplugin.utilities.player.Gamemode;
-import com.djrapitops.javaplugin.utilities.player.IOfflinePlayer;
-import com.djrapitops.javaplugin.utilities.player.IPlayer;
+import com.djrapitops.plugin.utilities.Verify;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.plugin.utilities.player.IPlayer;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 
 /**
  * This class is used for storing information about a player during runtime.
@@ -32,7 +27,6 @@ public class UserData {
     private boolean clearAfterSave;
 
     private UUID uuid;
-    private List<Location> locations;
     private Set<InetAddress> ips;
     private Set<String> nicknames;
     private String lastNick;
@@ -42,11 +36,11 @@ public class UserData {
     private int loginTimes;
     private int timesKicked;
     private long lastGmSwapTime;
-    private Gamemode lastGamemode;
-    private Map<Gamemode, Long> gmTimes;
+    private String lastGamemode;
+    private Map<String, Long> gmTimes;
     private boolean isOp;
     private boolean isBanned;
-    private DemographicsData demData;
+    private String geolocation;
 
     private int mobKills;
     private List<KillData> playerKills;
@@ -57,11 +51,6 @@ public class UserData {
 
     private SessionData currentSession;
     private List<SessionData> sessions;
-
-    @Deprecated
-    public UserData(UUID uuid, long reg, Location loc, boolean op, GameMode lastGM, DemographicsData demData, String name, boolean online) {
-        this(uuid, reg, loc, op, Gamemode.wrap(lastGM), demData, name, online);
-    }
 
     /**
      * Creates a new UserData object with given values and default values.
@@ -80,32 +69,25 @@ public class UserData {
      *
      * @param uuid UUID of the player
      * @param reg Epoch millisecond the player registered.
-     * @param loc Current Location in a world.
      * @param op Is the player op? (true/false)
      * @param lastGM last GameMode the player was seen in.
-     * @param demData Demographics data.
      * @param name Name of the player.
      * @param online Is the player online?
      */
-    public UserData(UUID uuid, long reg, Location loc, boolean op, Gamemode lastGM, DemographicsData demData, String name, boolean online) {
+    public UserData(UUID uuid, long reg, boolean op, String lastGM, String name, boolean online) {
         accessing = 0;
         this.uuid = uuid;
         registered = reg;
         isOp = op;
-        locations = new ArrayList<>();
         nicknames = new HashSet<>();
         ips = new HashSet<>();
         gmTimes = new HashMap<>();
-        long zero = 0;
-        gmTimes.put(Gamemode.SURVIVAL, zero);
-        gmTimes.put(Gamemode.CREATIVE, zero);
-        gmTimes.put(Gamemode.ADVENTURE, zero);
-        try {
-            gmTimes.put(Gamemode.SPECTATOR, zero);
-        } catch (NoSuchFieldError e) {
+        String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
+        for (String gm : gms) {
+            gmTimes.put(gm, 0L);
         }
         lastGamemode = lastGM;
-        this.demData = demData;
+        geolocation = "Not Known";
         this.name = name;
         isOnline = online;
         sessions = new ArrayList<>();
@@ -127,15 +109,10 @@ public class UserData {
      * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
-     * @param player Player object.
-     * @param demData Demographics data.
+     * @param player IPlayer object.
      */
-    public UserData(org.bukkit.entity.Player player, DemographicsData demData) {
-        this(BukkitPlayer.wrap(player), demData);
-    }
-
-    public UserData(IPlayer player, DemographicsData demData) {
-        this(player.getUuid(), player.getFirstPlayed(), null, player.isOp(), player.getGamemode(), demData, player.getName(), player.isOnline());
+    public UserData(IPlayer player) {
+        this(player.getUuid(), player.getFirstPlayed(), player.isOp(), player.getGamemode().name(), player.getName(), player.isOnline());
         try {
             isBanned = player.isBanned();
         } catch (Exception e) {
@@ -163,16 +140,10 @@ public class UserData {
      *
      * lastGM will be set as SURVIVAL
      *
-     * @param player OfflinePlayer object.
-     * @param demData Demographics data.
+     * @param player IOfflinePlayer object.
      */
-    @Deprecated
-    public UserData(org.bukkit.OfflinePlayer player, DemographicsData demData) {
-        this(BukkitOfflinePlayer.wrap(player), demData);
-    }
-
-    public UserData(IOfflinePlayer player, DemographicsData demData) {
-        this(player.getUniqueId(), player.getFirstPlayed(), null, player.isOp(), Gamemode.SURVIVAL, demData, player.getName(), player.isOnline());
+    public UserData(IOfflinePlayer player) {
+        this(player.getUniqueId(), player.getFirstPlayed(), player.isOp(), "SURVIVAL", player.getName(), player.isOnline());
         try {
             isBanned = player.isBanned();
         } catch (Exception e) {
@@ -190,8 +161,6 @@ public class UserData {
     public UserData(UserData data) {
         this.accessing = 0;
         this.uuid = data.getUuid();
-        this.locations = new ArrayList<>();
-        locations.addAll(data.getLocations());
         this.ips = new HashSet<>();
         ips.addAll(data.getIps());
         this.nicknames = new HashSet<>();
@@ -208,11 +177,7 @@ public class UserData {
         gmTimes.putAll(data.getGmTimes());
         this.isOp = data.isOp();
         this.isBanned = data.isBanned();
-        DemographicsData dem = data.getDemData();
-        if (dem == null) {
-            dem = new DemographicsData();
-        }
-        this.demData = new DemographicsData(dem.getAge(), dem.getGender(), dem.getGeoLocation());
+        this.geolocation = data.getGeolocation();
         this.mobKills = data.getMobKills();
         this.playerKills = data.getPlayerKills();
         this.deaths = data.getDeaths();
@@ -225,7 +190,7 @@ public class UserData {
     @Override
     public String toString() {
         try {
-            return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|locations:" + locations.size() + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|demData:" + demData + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
+            return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|geolocation:" + geolocation + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
         } catch (Throwable e) {
             return "UserData: Error on toString:" + e;
         }
@@ -253,33 +218,6 @@ public class UserData {
         }
         ips.addAll(addIps.stream().filter(ip -> Verify.notNull(ip)).collect(Collectors.toList()));
 
-    }
-
-    /**
-     * Adds a location to the locations list.
-     *
-     * null value filtered.
-     *
-     * @param loc Location of the player.
-     */
-    public void addLocation(Location loc) {
-        if (Verify.notNull(loc)) {
-            locations.add(loc);
-        }
-    }
-
-    /**
-     * Adds multiple locations to the locations list.
-     *
-     * null value filtered.
-     *
-     * @param addLocs Collection of Locations.
-     */
-    public void addLocations(Collection<Location> addLocs) {
-        if (!addLocs.isEmpty()) {
-            List<Location> locs = addLocs.stream().filter(l -> l != null).collect(Collectors.toList());
-            locations.addAll(locs);
-        }
     }
 
     /**
@@ -318,10 +256,10 @@ public class UserData {
     /**
      * Set a specific GameMode's millisecond value.
      *
-     * @param gm GameMode.
+     * @param gm Name of Gamemode.
      * @param time Milliseconds spent in the gamemode.
      */
-    public void setGMTime(Gamemode gm, long time) {
+    public void setGMTime(String gm, long time) {
         if (!Verify.notNull(gmTimes)) {
             gmTimes = new HashMap<>();
         }
@@ -340,13 +278,10 @@ public class UserData {
      */
     public void setAllGMTimes(long survivalTime, long creativeTime, long adventureTime, long spectatorTime) {
         gmTimes.clear();
-        gmTimes.put(Gamemode.SURVIVAL, survivalTime);
-        gmTimes.put(Gamemode.CREATIVE, creativeTime);
-        gmTimes.put(Gamemode.ADVENTURE, adventureTime);
-        try {
-            gmTimes.put(Gamemode.SPECTATOR, spectatorTime);
-        } catch (NoSuchFieldError e) {
-        }
+        gmTimes.put("SURVIVAL", survivalTime);
+        gmTimes.put("CREATIVE", creativeTime);
+        gmTimes.put("ADVENTURE", adventureTime);
+        gmTimes.put("SPECTATOR", spectatorTime);
     }
 
     /**
@@ -374,9 +309,6 @@ public class UserData {
                 .filter(session -> Verify.notNull(session))
                 .filter(session -> session.isValid())
                 .collect(Collectors.toList());
-        if (sessions.size() != filteredSessions.size()) {
-            Log.debug(getUuid() + ": Some sessions were filtered! Org:" + sessions.size() + " Fil:" + filteredSessions.size());
-        }
         this.sessions.addAll(filteredSessions);
     }
 
@@ -442,15 +374,6 @@ public class UserData {
      */
     public UUID getUuid() {
         return uuid;
-    }
-
-    /**
-     * Get the list of all locations inside the UserData object.
-     *
-     * @return a list of Locations.
-     */
-    public List<Location> getLocations() {
-        return locations;
     }
 
     /**
@@ -532,7 +455,7 @@ public class UserData {
      * @return a GameMode map with 4 keys: SURVIVAL, CREATIVE, ADVENTURE,
      * SPECTATOR.
      */
-    public Map<Gamemode, Long> getGmTimes() {
+    public Map<String, Long> getGmTimes() {
         if (gmTimes == null) {
             gmTimes = new HashMap<>();
         }
@@ -555,7 +478,7 @@ public class UserData {
      *
      * @return Gamemode.
      */
-    public Gamemode getLastGamemode() {
+    public String getLastGamemode() {
         return lastGamemode;
     }
 
@@ -578,15 +501,6 @@ public class UserData {
     }
 
     /**
-     * Get the DemographicsData of the user.
-     *
-     * @return Demographics data.
-     */
-    public DemographicsData getDemData() {
-        return demData;
-    }
-
-    /**
      * Get the username of the player.
      *
      * @return username.
@@ -602,19 +516,6 @@ public class UserData {
      */
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    /**
-     * Set the list of locations the user has been in.
-     *
-     * Not in use.
-     *
-     * @param locations a list of Locations.
-     */
-    public void setLocations(List<Location> locations) {
-        if (Verify.notNull(locations)) {
-            this.locations = locations;
-        }
     }
 
     /**
@@ -697,7 +598,7 @@ public class UserData {
      * @param gmTimes Map containing SURVIVAL, CREATIVE, ADVENTURE and SPECTATOR
      * (After 1.8) keys.
      */
-    public void setGmTimes(Map<Gamemode, Long> gmTimes) {
+    public void setGmTimes(Map<String, Long> gmTimes) {
         if (Verify.notNull(gmTimes)) {
             this.gmTimes = gmTimes;
         }
@@ -717,7 +618,7 @@ public class UserData {
      *
      * @param lastGamemode gamemode.
      */
-    public void setLastGamemode(Gamemode lastGamemode) {
+    public void setLastGamemode(String lastGamemode) {
         this.lastGamemode = lastGamemode;
     }
 
@@ -730,13 +631,8 @@ public class UserData {
         this.isOp = isOp;
     }
 
-    /**
-     * Set the DemographicsData of the user.
-     *
-     * @param demData demographics data.
-     */
-    public void setDemData(DemographicsData demData) {
-        this.demData = demData;
+    public void setGeolocation(String geolocation) {
+        this.geolocation = geolocation;
     }
 
     /**
@@ -904,7 +800,7 @@ public class UserData {
         if (!Objects.equals(this.nicknames, other.nicknames)) {
             return false;
         }
-        if (this.lastGamemode != other.lastGamemode) {
+        if (!Objects.equals(this.lastGamemode, other.lastGamemode)) {
             return false;
         }
         if (!Objects.equals(this.gmTimes, other.gmTimes)) {
@@ -955,5 +851,9 @@ public class UserData {
      */
     public void setOnline(boolean isOnline) {
         this.isOnline = isOnline;
+    }
+
+    public String getGeolocation() {
+        return geolocation;
     }
 }

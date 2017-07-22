@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.javaplugin.command.CommandType;
-import com.djrapitops.javaplugin.command.SubCommand;
-import com.djrapitops.javaplugin.command.sender.ISender;
-import com.djrapitops.javaplugin.utilities.Verify;
+import com.djrapitops.plugin.command.CommandType;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -36,24 +36,24 @@ public class ManageHotswapCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.ifTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
+        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
             return true;
         }
         String dbName = args[0].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
 
-        if (!Check.ifTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + dbName, sender)) {
+        if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + dbName, sender)) {
             return true;
         }
 
-        if (Check.ifTrue(dbName.equals(plugin.getDB().getConfigName()), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
+        if (Check.isTrue(dbName.equals(plugin.getDB().getConfigName()), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
             return true;
         }
 
         final Database database = ManageUtils.getDB(plugin, dbName);
 
         // If DB is null return
-        if (!Check.ifTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
             Log.error(dbName + " was null!");
             return true;
         }

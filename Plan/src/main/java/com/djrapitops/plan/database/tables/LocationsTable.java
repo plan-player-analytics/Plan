@@ -1,22 +1,15 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
-import org.bukkit.Location;
-import org.bukkit.World;
 
 /**
  *
  * @author Rsl1122
  */
+@Deprecated
 public class LocationsTable extends Table {
 
     private final String columnUserID;
@@ -25,11 +18,22 @@ public class LocationsTable extends Table {
     private final String columnCoordinatesZ;
     private final String columnWorld;
 
+    @Override
+    @Deprecated
+    public boolean removeAllData() {
+        try {
+            execute("DELETE FROM " + tableName);
+        } catch (Exception e) {
+        }
+        return true;
+    }
+
     /**
      *
      * @param db
      * @param usingMySQL
      */
+    @Deprecated
     public LocationsTable(SQLDB db, boolean usingMySQL) {
         super("plan_locations", db, usingMySQL);
         columnID = "id";
@@ -44,6 +48,7 @@ public class LocationsTable extends Table {
      * @return
      */
     @Override
+    @Deprecated
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
@@ -69,6 +74,7 @@ public class LocationsTable extends Table {
      * @param userId
      * @return
      */
+    @Deprecated
     public boolean removeUserLocations(int userId) {
         PreparedStatement statement = null;
         try {
@@ -77,164 +83,9 @@ public class LocationsTable extends Table {
             statement.execute();
             return true;
         } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+            return true;
         } finally {
             close(statement);
-        }
-    }
-
-    /**
-     *
-     * @param userId
-     * @param worlds
-     * @return
-     * @throws SQLException
-     */
-    public List<Location> getLocations(int userId, Map<String, World> worlds) throws SQLException {
-        Benchmark.start("Get Locations");
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            set = statement.executeQuery();
-            List<Location> locations = new ArrayList<>();
-            while (set.next()) {
-                locations.add(new Location(worlds.get(set.getString(columnWorld)), set.getInt(columnCoordinatesX), 0, set.getInt(columnCoordinatesZ)));
-            }
-            return locations;
-        } finally {
-            close(set);
-            close(statement);
-            Benchmark.stop("Get Locations");
-        }
-    }
-
-    /**
-     *
-     * @param worlds
-     * @return
-     * @throws SQLException
-     */
-    public Map<Integer, List<Location>> getAllLocations(Map<String, World> worlds) throws SQLException {
-        Benchmark.start("Get Locations Multiple");
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        Map<Integer, List<Location>> locations = new HashMap<>();
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            while (set.next()) {
-                int id = set.getInt(columnID);
-                if (!locations.containsKey(id)) {
-                    locations.put(id, new ArrayList<>());
-                }
-                locations.get(id).add(new Location(worlds.get(set.getString(columnWorld)), set.getInt(columnCoordinatesX), 0, set.getInt(columnCoordinatesZ)));
-            }
-            return locations;
-        } finally {
-            close(set);
-            close(statement);
-            Benchmark.stop("Get Locations Multiple");
-        }
-    }
-
-    /**
-     *
-     * @param userId
-     * @param locations
-     * @throws SQLException
-     */
-    public void saveAdditionalLocationsList(int userId, List<Location> locations) throws SQLException {
-        if (locations == null || locations.isEmpty()) {
-            return;
-        }
-        Benchmark.start("Save Locations " + locations.size());
-        List<Location> newLocations = new ArrayList<>();
-        newLocations.addAll(locations);
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnCoordinatesX + ", "
-                    + columnCoordinatesZ + ", "
-                    + columnWorld
-                    + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
-            int i = 0;
-            for (Location location : newLocations) {
-                if (location == null) {
-                    continue;
-                }
-                World world = location.getWorld();
-                if (world == null) {
-                    continue;
-                }
-                statement.setInt(1, userId);
-                statement.setInt(2, (int) location.getBlockX());
-                statement.setInt(3, (int) location.getBlockZ());
-                statement.setString(4, world.getName());
-                statement.addBatch();
-                commitRequired = true;
-                i++;
-            }
-            if (commitRequired) {
-                Log.debug("Executing locations batch: " + i);
-                statement.executeBatch();
-            }
-        } finally {
-            close(statement);
-            Benchmark.stop("Save Locations " + locations.size());
-        }
-    }
-
-    /**
-     *
-     * @param locations
-     * @throws SQLException
-     */
-    public void saveAdditionalLocationsLists(Map<Integer, List<Location>> locations) throws SQLException {
-        if (locations == null || locations.isEmpty()) {
-            return;
-        }
-        Benchmark.start("Save Locations Multiple " + locations.size());
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnCoordinatesX + ", "
-                    + columnCoordinatesZ + ", "
-                    + columnWorld
-                    + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
-            int i = 0;
-            for (Integer id : locations.keySet()) {
-                List<Location> newLocations = locations.get(id);
-                if (newLocations == null || newLocations.isEmpty()) {
-                    continue;
-                }
-                for (Location location : newLocations) {
-                    World world = location.getWorld();
-                    if (world == null) {
-                        continue;
-                    }
-                    statement.setInt(1, id);
-                    statement.setInt(2, (int) location.getBlockX());
-                    statement.setInt(3, (int) location.getBlockZ());
-                    statement.setString(4, world.getName());
-                    statement.addBatch();
-                    commitRequired = true;
-                    i++;
-                }
-            }
-            if (commitRequired) {
-                Log.debug("Executing locations batch: " + i);
-                statement.executeBatch();
-            }
-        } finally {
-            close(statement);
-            Benchmark.stop("Save Locations Multiple " + locations.size());
         }
     }
 }

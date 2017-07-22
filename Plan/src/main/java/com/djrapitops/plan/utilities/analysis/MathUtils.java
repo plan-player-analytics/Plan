@@ -72,6 +72,10 @@ public class MathUtils {
         return 1.0 * total / size;
     }
 
+    public static long averageLong(long total, long size) {
+        return total / size;
+    }
+
     /**
      *
      * @param values

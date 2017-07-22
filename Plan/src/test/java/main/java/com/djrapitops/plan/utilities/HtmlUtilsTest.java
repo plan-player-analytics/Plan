@@ -35,9 +35,7 @@ public class HtmlUtilsTest {
      *
      */
     @Before
-    public void setUp() {
-        TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+    public void setUp() throws Exception {
     }
 
     /**
@@ -46,6 +44,7 @@ public class HtmlUtilsTest {
      */
     @Test
     public void testGetHtmlStringFromResource() throws Exception {
+        TestInit t = TestInit.init();
         String fileName = "player.html";
         String result = HtmlUtils.getHtmlStringFromResource(fileName);
         assertTrue("Result null", result != null);
@@ -82,9 +81,10 @@ public class HtmlUtilsTest {
      * @throws FileNotFoundException
      */
     @Test
-    public void testGetServerAnalysisUrl() throws FileNotFoundException {
+    public void testGetServerAnalysisUrl() throws FileNotFoundException, Exception {
+        TestInit.init();
         String result = HtmlUtils.getServerAnalysisUrlWithProtocol();
-        String exp = "http://0.0.0.0:8804/bAkEd/server";
+        String exp = "http://0.0.0.0:8804/server";
         assertEquals(exp, result);
     }
 
@@ -92,9 +92,10 @@ public class HtmlUtilsTest {
      *
      */
     @Test
-    public void testGetInspectUrl() {
+    public void testGetInspectUrl() throws Exception {
+        TestInit.init();
         String playerName = "Test";
-        String expResult = "http://0.0.0.0:8804/bAkEd/player/Test";
+        String expResult = "http://0.0.0.0:8804/player/Test";
         String result = HtmlUtils.getInspectUrlWithProtocol(playerName);
         assertEquals(expResult, result);
     }
