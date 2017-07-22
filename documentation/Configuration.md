@@ -4,7 +4,8 @@
 - [Default Config](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/config.yml)
 - [Settings Enum](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/Settings.java)
 
-This page is an in depth documentation on what each Setting does in the config.
+This page is an in depth documentation on what each Setting does in the config.  
+Page Version: 3.5.2
 
 # Settings
 
@@ -15,7 +16,6 @@ Config.Point | Version introduced | Type | Default | Description
 Debug | 3.0.0 | boolean | false | Enables debug messages on console.
 Locale | 2.5.0 | String | default | Two letter Locale combination. Can be set to one of the Available locales. If a faulty combination is used, default locale will be used. [Available locales](https://github.com/Rsl1122/Plan-PlayerAnalytics/tree/master/Plan/localization)
 UseTextUI | 3.0.0 | boolean | false | Redirects */plan inspect* and */plan analyze* commands to display same messages as */plan qinspect* & */plan qanalyze*
-Data.GatherLocations | 2.2.0 | boolean | true | Enables [PlanPlayerMoveEventListener](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/java/com/djrapitops/plan/data/listeners/PlanPlayerMoveListener.java)
 Data.ChatListener | 3.4.2 | boolean | true | Enables Chat listener
 Data.GatherKillData | 3.4.2 | boolean | true | Enables Death listener
 Data.GamemodeChangeListener | 3.4.2 | boolean | true | Enables Gamemode Change listener
@@ -55,7 +55,6 @@ ShowAlternativeServerIP | 2.0.0 | boolean | false | Enables the use of the link 
 AlternativeIP | 2.0.0 | String | `your.ip.here:%port%` | Address to use as link in inspect and analyze commands if setting above is enabled. %port% will be replaced with the Port automatically. If you have port-forwarded an alternate address to the webserver port, %port% is not required.
 LinkProtocol | 3.4.3 | String | http | Changes the protocol in links given by the commands. SHOULD NOT BE CHANGED IF NOT USING EXTERNAL WEBSERVER.
 Security.DisplayIPsAndUUIDs | 2.5.0 | boolean | true | Toggles visibility of UUIDs and IPs on player Inspect page.
-Security.AddressSecurityCode | 2.5.0 | String | bAkEd | This string is added to the url so that outsiders can not access the `/server` and `/player/<playername>` pages just by knowing your IP and that your server uses Plan. Example: bAkEd -> `localhost:8804/bAkEd/server`
 
 ## Customization settings
 
