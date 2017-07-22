@@ -66,8 +66,6 @@ Formats.TimeAmount | 3.3.0 | String | '%days%d ' | Changes the format used when 
 Formats.DecimalPoints | 3.3.0 | String | #.## | Changes how many decimals are displayed after doubles. (For 3 use #.### etc.)
 Colors.Commands | 2.1.0 | String |  | Color codes used with the */plan* commands. 
 Colors.HTML | 2.1.0 | String |  | These HTML Color codes are used when generating the Html pages. Use without the # (hashtag)
-DemographicsTriggers.Trigger | 2.1.0 | String |  | An attempt to gather info is only made if message contains one of these words.
-DemographicsTriggers.IgnoreWhen | 2.1.0 | String |  | If an attempt is made and message contains one of these words, the info is disregarded.
 Plugins.Enabled | 3.3.0 | boolean | true | Settings for enabling hooks to plugins (For Plugins tab)
 Plugins.Factions.HideFactions | 3.1.0 | String list | - ExampleFaction | Add a list of Faction names you don't want to show up on the Analysis page.
 Plugins.Towny.HideTowns | 3.1.0 | String list | - ExampleTown | Add a list of Town names you don't want to show up on the Analysis page.
