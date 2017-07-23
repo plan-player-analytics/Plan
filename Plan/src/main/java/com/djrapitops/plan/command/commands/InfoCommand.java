@@ -33,14 +33,14 @@ public class InfoCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         ChatColor tColor = Phrase.COLOR_SEC.color();
-        String[] msgs = {
+        String[] messages = {
             Phrase.CMD_INFO_HEADER + "",
             Phrase.CMD_INFO_VERSION.parse(plugin.getDescription().getVersion()),
             Phrase.CMD_BALL.toString() + tColor + " " + Version.checkVersion(plugin),
             Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()),
             Phrase.CMD_FOOTER + ""
         };
-        sender.sendMessage(msgs);
+        sender.sendMessage(messages);
         return true;
     }
 
