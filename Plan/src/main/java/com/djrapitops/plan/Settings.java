@@ -86,7 +86,7 @@ public enum Settings {
     private final String configPath;
     private Boolean value;
 
-    private Settings(String path) {
+    Settings(String path) {
         this.configPath = path;
     }
 

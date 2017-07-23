@@ -300,10 +300,7 @@ public abstract class PluginData {
         if (!Objects.equals(this.placeholder, other.placeholder)) {
             return false;
         }
-        if (!Objects.equals(this.sourcePlugin, other.sourcePlugin)) {
-            return false;
-        }
-        return Objects.equals(this.analysisTypes, other.analysisTypes);
+        return Objects.equals(this.sourcePlugin, other.sourcePlugin) && Objects.equals(this.analysisTypes, other.analysisTypes);
     }
 
     @Override

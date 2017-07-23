@@ -81,10 +81,7 @@ public class TPS {
         if (this.date != other.date) {
             return false;
         }
-        if (Double.doubleToLongBits(this.tps) != Double.doubleToLongBits(other.tps)) {
-            return false;
-        }
-        return this.players == other.players;
+        return Double.doubleToLongBits(this.tps) == Double.doubleToLongBits(other.tps) && this.players == other.players;
     }
 
     @Override

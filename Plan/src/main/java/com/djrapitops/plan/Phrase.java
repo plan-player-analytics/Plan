@@ -177,12 +177,12 @@ public enum Phrase {
     private String text;
     private ChatColor color;
 
-    private Phrase(String text) {
+    Phrase(String text) {
         this.text = text;
         this.color = null;
     }
 
-    private Phrase(ChatColor color) {
+    Phrase(ChatColor color) {
         this.color = color;
         this.text = "";
     }

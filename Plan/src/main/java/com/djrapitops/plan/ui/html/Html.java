@@ -107,7 +107,7 @@ public enum Html {
 
     private String html;
 
-    private Html(String html) {
+    Html(String html) {
         this.html = html;
     }
 

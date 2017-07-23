@@ -362,7 +362,7 @@ public class DataCacheHandler extends SessionCache {
         if (unsavedTPSHistory.isEmpty()) {
             return new ArrayList<>();
         }
-        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);;
+        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
         for (List<TPS> history : copy) {
             final long lastdate = history.get(history.size() - 1).getDate();
             final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));

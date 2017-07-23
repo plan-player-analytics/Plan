@@ -806,10 +806,7 @@ public class UserData {
         if (!Objects.equals(this.gmTimes, other.gmTimes)) {
             return false;
         }
-        if (!Objects.equals(this.playerKills, other.playerKills)) {
-            return false;
-        }
-        return Objects.equals(this.sessions, other.sessions);
+        return Objects.equals(this.playerKills, other.playerKills) && Objects.equals(this.sessions, other.sessions);
     }
 
     /**
