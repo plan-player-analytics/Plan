@@ -379,9 +379,7 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveHandlerDataToCache() {
         final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
-        onlinePlayers.stream().forEach((p) -> {
-            saveHandlerDataToCache(p, false);
-        });
+        onlinePlayers.stream().forEach((p) -> saveHandlerDataToCache(p, false));
     }
 
     private void saveHandlerDataToCache(IPlayer player, boolean pool) {

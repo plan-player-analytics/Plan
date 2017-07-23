@@ -90,9 +90,7 @@ public class ManageImportCommand extends SubCommand {
 
     private void list(Map<String, Importer> importers, ISender sender) {
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
-        importers.entrySet().stream().forEach(e -> {
-            sender.sendMessage(Phrase.CMD_BALL + " " + e.getKey() + ": " + e.getValue().getInfo());
-        });
+        importers.entrySet().stream().forEach(e -> sender.sendMessage(Phrase.CMD_BALL + " " + e.getKey() + ": " + e.getValue().getInfo()));
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
     }
 }

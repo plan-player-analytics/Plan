@@ -5,16 +5,18 @@
  */
 package test.java.main.java.com.djrapitops.plan.database;
 
+import main.java.com.djrapitops.plan.database.Container;
+import main.java.com.djrapitops.plan.database.DBUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import main.java.com.djrapitops.plan.database.Container;
-import main.java.com.djrapitops.plan.database.DBUtils;
-import org.junit.After;
+
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  *
@@ -61,9 +63,7 @@ public class DBUtilsTest {
         Map<Integer, List<Integer>> map = new HashMap<>();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 300; j++) {
-                if (map.get(i) == null) {
-                    map.put(i, new ArrayList<>());
-                }
+                map.computeIfAbsent(i, k -> new ArrayList<>());
                 map.get(i).add(j);
             }
         }
