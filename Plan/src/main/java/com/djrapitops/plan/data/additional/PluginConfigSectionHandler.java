@@ -31,8 +31,7 @@ public class PluginConfigSectionHandler {
 
     private ConfigurationSection getPluginsSection() {
         FileConfiguration config = plan.getConfig();
-        ConfigurationSection section = config.getConfigurationSection("Customization.Plugins");
-        return section;
+        return config.getConfigurationSection("Customization.Plugins");
     }
 
     public void createSection(PluginData dataSource) {

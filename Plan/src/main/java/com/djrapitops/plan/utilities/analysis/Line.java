@@ -59,7 +59,6 @@ public class Line {
         double b = -1;
         double x = from.getX();
         double y = from.getY();
-        double distance = Math.abs(a * x - y + c) / Math.sqrt(Math.pow(a, 2) + 1);
-        return distance;
+        return Math.abs(a * x - y + c) / Math.sqrt(Math.pow(a, 2) + 1);
     }
 }

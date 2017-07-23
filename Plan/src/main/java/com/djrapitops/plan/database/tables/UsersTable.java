@@ -641,7 +641,7 @@ public class UsersTable extends Table {
     private String getUpdateStatement() {
         final boolean hasV4Columns = tableHasV4Columns();
         String v4rows = hasV4Columns ? columnDemAge + "=-1, " + columnDemGender + "='Deprecated', " : "";
-        String sql = "UPDATE " + tableName + " SET "
+        return "UPDATE " + tableName + " SET "
                 + v4rows
                 + columnGeolocation + "=?, "
                 + columnLastGM + "=?, "
@@ -657,7 +657,6 @@ public class UsersTable extends Table {
                 + columnName + "=?, "
                 + columnRegistered + "=? "
                 + "WHERE " + columnUUID + "=?";
-        return sql;
     }
 
     /**
@@ -888,8 +887,7 @@ public class UsersTable extends Table {
             set = statement.executeQuery();
             while (set.next()) {
                 String uuidS = set.getString(columnUUID);
-                UUID uuid = UUID.fromString(uuidS);
-                return uuid;
+                return UUID.fromString(uuidS);
             }
             return null;
         } finally {

@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -132,7 +131,7 @@ public class ExportUtility {
         String playersHtml = PlayersPageResponse.buildContent(rawData);
         playersfolder.mkdirs();
         File playersHtmlFile = new File(playersfolder, "index.html");
-        Files.write(playersHtmlFile.toPath(), Arrays.asList(playersHtml));
+        Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
     }
 
 }

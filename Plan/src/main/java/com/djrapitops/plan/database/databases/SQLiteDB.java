@@ -51,9 +51,8 @@ public class SQLiteDB extends SQLDB {
     public Connection getNewConnection(String dbName) {
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath());
 
-            return connection;
+            return DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath());
         } catch (ClassNotFoundException | SQLException e) {
             return null;
         }

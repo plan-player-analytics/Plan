@@ -7,12 +7,11 @@ package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.Collections;
+
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
 import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;

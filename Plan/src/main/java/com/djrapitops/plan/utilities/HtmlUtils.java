@@ -79,8 +79,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/ "//" + ip + "/server";
-        return url;
+        return "//" + ip + "/server";
     }
 
     /**
@@ -104,8 +103,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/ "//" + ip + "/player/" + playerName;
-        return url;
+        return "//" + ip + "/player/" + playerName;
     }
 
     public static String getRelativeInspectUrl(String playerName) {

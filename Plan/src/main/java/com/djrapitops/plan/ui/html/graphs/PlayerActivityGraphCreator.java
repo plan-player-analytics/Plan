@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +14,8 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 

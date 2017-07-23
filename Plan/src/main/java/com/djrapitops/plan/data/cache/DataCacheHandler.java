@@ -5,7 +5,6 @@ import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

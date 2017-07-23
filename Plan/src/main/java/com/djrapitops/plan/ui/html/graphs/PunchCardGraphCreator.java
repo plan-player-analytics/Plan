@@ -113,14 +113,13 @@ public class PunchCardGraphCreator {
 
     private static List<Long> getSessionStarts(Collection<SessionData> data) {
         long now = MiscUtils.getTime();
-        List<Long> sessionStarts = data.stream()
+        return data.stream()
                 .filter(Objects::nonNull)
                 .filter(SessionData::isValid)
                 .map(SessionData::getSessionStart)
                 .filter(start -> now - start < (long) 2592000 * (long) 1000)
                 .sorted()
                 .collect(Collectors.toList());
-        return sessionStarts;
     }
 
     private static int[][] createEmptyArray() {

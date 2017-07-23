@@ -143,7 +143,6 @@ public class MockUtils {
      * @return
      */
     public static CommandSender mockConsoleSender() {
-        CommandSender s = PowerMockito.mock(CommandSender.class);
-        return s;
+        return PowerMockito.mock(CommandSender.class);
     }
 }

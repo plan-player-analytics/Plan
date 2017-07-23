@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.List;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;

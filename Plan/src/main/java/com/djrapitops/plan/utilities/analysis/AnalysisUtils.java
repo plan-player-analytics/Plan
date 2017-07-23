@@ -67,12 +67,11 @@ public class AnalysisUtils {
      * @return
      */
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
-        List<Long> list = data.stream()
+        return data.stream()
                 .filter(Objects::nonNull)
                 .filter(SessionData::isValid)
                 .map(SessionData::getLength)
                 .collect(Collectors.toList());
-        return list;
     }
 
     /**
@@ -268,7 +267,7 @@ public class AnalysisUtils {
      * @return
      */
     public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
-        List<int[]> daysAndHours = sessionStarts.stream().map((Long start) -> {
+        return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
@@ -285,7 +284,6 @@ public class AnalysisUtils {
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
-        return daysAndHours;
     }
 
     private static int getDayOfYear(SessionData session) {
