@@ -58,7 +58,7 @@ public class PlanDeathEventListener implements Listener {
             handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, itemInHand.name()));
         }
         if (dead instanceof Player) {
-            handler.addToPool(new DeathInfo(((Player) dead).getUniqueId()));
+            handler.addToPool(new DeathInfo(dead.getUniqueId()));
         }
     }
 }

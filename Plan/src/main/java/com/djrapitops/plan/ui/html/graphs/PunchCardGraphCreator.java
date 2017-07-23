@@ -74,7 +74,7 @@ public class PunchCardGraphCreator {
                     for (int j = 0; j < 24; j++) {
                         int value = dataArray[i][j];
                         if (value - avg > 3 * standardDiviation) {
-                            dataArray[i][j] = (int) (avg);
+                            dataArray[i][j] = avg;
                         }
                     }
                 }

@@ -132,7 +132,7 @@ public class ExportUtility {
         String playersHtml = PlayersPageResponse.buildContent(rawData);
         playersfolder.mkdirs();
         File playersHtmlFile = new File(playersfolder, "index.html");
-        Files.write(playersHtmlFile.toPath(), Arrays.asList(new String[]{playersHtml}));
+        Files.write(playersHtmlFile.toPath(), Arrays.asList(playersHtml));
     }
 
 }

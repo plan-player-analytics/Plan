@@ -18,7 +18,7 @@ public class NewPlayerCreator {
      * @return a new UserData object
      */
     public static UserData createNewPlayer(IPlayer player) {
-        return createNewPlayer((IOfflinePlayer) player, player.getGamemode());
+        return createNewPlayer(player, player.getGamemode());
     }
 
     /**

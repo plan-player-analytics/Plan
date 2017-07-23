@@ -194,7 +194,7 @@ public class DatabaseTest {
         c.put("/roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
         db.saveCommandUse(c);
         assertTrue(db.removeAllData());
-        assertTrue("Contains the user", db.getUserDataForUUIDS(Arrays.asList(new UUID[]{MockUtils.getPlayerUUID(), MockUtils.getPlayer2UUID()})).isEmpty());
+        assertTrue("Contains the user", db.getUserDataForUUIDS(Arrays.asList(MockUtils.getPlayerUUID(), MockUtils.getPlayer2UUID())).isEmpty());
         assertTrue("Contains commandUse", db.getCommandUse().isEmpty());
     }
 
