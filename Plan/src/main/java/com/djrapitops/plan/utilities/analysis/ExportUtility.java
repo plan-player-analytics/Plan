@@ -100,9 +100,7 @@ public class ExportUtility {
         File playerFolder = new File(playersFolder, userData.getName());
         playerFolder.mkdir();
         File inspectHtmlFile = new File(playerFolder, "index.html");
-        if (inspectHtmlFile.exists()) {
-            inspectHtmlFile.delete();
-        }
+        inspectHtmlFile.delete();
         Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
     }
 
@@ -113,7 +111,7 @@ public class ExportUtility {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws FileNotFoundException, IOException {
+    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
@@ -121,9 +119,8 @@ public class ExportUtility {
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");
-        if (analysisHtmlFile.exists()) {
-            analysisHtmlFile.delete();
-        }
+        analysisHtmlFile.delete();
+
         Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 

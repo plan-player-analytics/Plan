@@ -1,15 +1,5 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -18,6 +8,11 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -112,7 +107,7 @@ public class PlayerActivityGraphCreator {
         Set<Long> keys = new HashSet<>(starts.keySet());
         keys.addAll(ends.keySet());
         Map<Long, Integer> change = new HashMap<>();
-        keys.stream().forEach((key) -> {
+        keys.forEach((key) -> {
             int value = 0;
             if (starts.containsKey(key)) {
                 value += starts.get(key);

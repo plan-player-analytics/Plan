@@ -753,47 +753,25 @@ public class UserData {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final UserData other = (UserData) obj;
-        if (this.registered != other.registered) {
-            return false;
-        }
 //        if (this.lastPlayed != other.lastPlayed) {
 //            return false;
 //        }
-        if (this.playTime != other.playTime) {
-            return false;
-        }
-        if (this.loginTimes != other.loginTimes) {
-            return false;
-        }
-        if (this.timesKicked != other.timesKicked) {
-            return false;
-        }
-        if (this.lastGmSwapTime != other.lastGmSwapTime) {
-            return false;
-        }
-        if (this.mobKills != other.mobKills) {
-            return false;
-        }
-        if (this.deaths != other.deaths) {
-            return false;
-        }
-        if (!Objects.equals(this.lastNick, other.lastNick)) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.uuid, other.uuid)) {
-            return false;
-        }
-        if (!Objects.equals(this.ips, other.ips)) {
-            return false;
-        }
-        if (!Objects.equals(this.nicknames, other.nicknames)) {
-            return false;
-        }
-        return Objects.equals(this.lastGamemode, other.lastGamemode)
+
+        return this.registered == other.registered
+                && this.playTime == other.playTime
+                && this.loginTimes == other.loginTimes
+                && this.timesKicked == other.timesKicked
+                && this.lastGmSwapTime == other.lastGmSwapTime
+                && this.mobKills == other.mobKills
+                && this.deaths == other.deaths
+                && Objects.equals(this.lastNick, other.lastNick)
+                && Objects.equals(this.name, other.name)
+                && Objects.equals(this.uuid, other.uuid)
+                && Objects.equals(this.ips, other.ips)
+                && Objects.equals(this.nicknames, other.nicknames)
+                && Objects.equals(this.lastGamemode, other.lastGamemode)
                 && Objects.equals(this.gmTimes, other.gmTimes)
                 && Objects.equals(this.playerKills, other.playerKills)
                 && Objects.equals(this.sessions, other.sessions);

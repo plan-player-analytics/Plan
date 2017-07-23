@@ -319,7 +319,7 @@ public abstract class SQLDB extends Database {
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
         data.setPlayerKills(killsTable.getPlayerKills(userId));
-        processors.stream().forEach((processor) -> processor.process(data));
+        processors.forEach((processor) -> processor.process(data));
         Benchmark.stop("Database: Give userdata to processors");
         setAvailable();
     }

@@ -163,7 +163,7 @@ public class HtmlUtils {
         StringBuilder html = new StringBuilder();
         html.append(Html.HEADER.parse(name));
         html.append(Html.PLUGIN_CONTAINER_START.parse());
-        placeholders.stream().forEach(html::append);
+        placeholders.forEach(html::append);
         html.append("</div>");
         return html.toString();
     }

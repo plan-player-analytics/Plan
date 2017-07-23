@@ -1,33 +1,16 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.data.analysis.ActivityPart;
-import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
-import main.java.com.djrapitops.plan.data.analysis.GeolocationPart;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
-import main.java.com.djrapitops.plan.data.analysis.KillPart;
-import main.java.com.djrapitops.plan.data.analysis.PlayerCountPart;
-import main.java.com.djrapitops.plan.data.analysis.PlaytimePart;
+import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
@@ -37,6 +20,9 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserDataLastPlayedComparator;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -74,7 +60,7 @@ public class Analysis {
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START + "");
         // Async task for Analysis
-        ITask asyncAnalysisTask = plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
             @Override
             public void run() {
                 taskId = this.getTaskId();
@@ -264,7 +250,7 @@ public class Analysis {
         long now = MiscUtils.getTime();
 
         Benchmark.start("Analysis: Fill Dataset");
-        rawData.stream().forEach((uData) -> {
+        rawData.forEach((uData) -> {
             uData.access();
             Map<String, Long> gmTimes = uData.getGmTimes();
             String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
