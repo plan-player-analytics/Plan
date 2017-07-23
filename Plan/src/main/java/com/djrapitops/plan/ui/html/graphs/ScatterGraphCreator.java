@@ -6,6 +6,7 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.utilities.Verify;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,29 +29,33 @@ public class ScatterGraphCreator {
         StringBuilder arrayBuilder = new StringBuilder();
         arrayBuilder.append("[");
 
+        points = DouglasPeckerAlgorithm.reducePoints(points, 0);
+
         if (reduceGapTriangles) {
-            long lastDate = MiscUtils.getTime();
-            double lastY = -1;
+            Point lastPoint = null;
+
             Set<Point> toAdd = new HashSet<>();
             Iterator<Point> iterator = points.iterator();
             while (iterator.hasNext()) {
                 Point point = iterator.next();
-                double y = point.getY();
-                long date = (long) point.getX();
-                if (lastY > 0 || y > 0) {
-                    if (lastDate < date - TimeAmount.MINUTE.ms() * 10L) {
-                        toAdd.add(new Point(lastDate + 1, 0));
-                        toAdd.add(new Point(date - 1, 0));
+                if (Verify.notNull(point, lastPoint)) {
+                    long date = (long) point.getX();
+                    long lastDate = (long) lastPoint.getX();
+                    double y = point.getY();
+                    double lastY = lastPoint.getY();
+                    if (y != lastY && Math.abs(lastY - y) > 0.5) {
+                        if (lastDate < date - TimeAmount.MINUTE.ms() * 10L) {
+                            toAdd.add(new Point(lastDate + 1, lastY));
+                            toAdd.add(new Point(date - 1, lastY));
+                        }
                     }
                 }
-                lastDate = date;
-                lastY = y;
+                lastPoint = point;
             }
             points.addAll(toAdd);
             Collections.sort(points, new PointComparator());
         }
 
-//        points = DouglasPeckerAlgorithm.reducePoints(points, -1);
         int size = points.size();
         for (int i = 0; i < size; i++) {
             Point point = points.get(i);

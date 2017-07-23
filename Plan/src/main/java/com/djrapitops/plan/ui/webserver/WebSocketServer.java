@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.UUID;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -41,6 +43,7 @@ public class WebSocketServer {
 
     private final int PORT;
     private boolean enabled = false;
+    private Socket sslServer;
     private ServerSocket server;
 
     private final Plan plugin;
@@ -73,18 +76,20 @@ public class WebSocketServer {
         Log.info(Phrase.WEBSERVER_INIT + "");
         try {
             InetAddress ip = InetAddress.getByName(Settings.WEBSERVER_IP.toString());
+//            SSLServerSocketFactory ssl = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+//            server = ssl.createServerSocket(PORT, 1, ip);
             server = new ServerSocket(PORT, 1, ip);
-            
+
             plugin.getRunnableFactory().createNew(new AbsRunnable("WebServerTask") {
                 @Override
                 public void run() {
                     while (!shutdown) {
-                        Socket socket = null;
+                        /*SSL*/Socket socket = null;
                         InputStream input = null;
                         OutputStream output = null;
                         Request request = null;
                         try {
-                            socket = server.accept();
+                            socket = /*(SSLSocket)*/ server.accept();
                             Log.debug("New Socket Connection: " + socket.getInetAddress());
                             input = socket.getInputStream();
                             output = socket.getOutputStream();
@@ -123,22 +128,22 @@ public class WebSocketServer {
                 return new RedirectResponse(output, "https://puu.sh/tK0KL/6aa2ba141b.ico");
             }
 
-            if (!request.hasAuthorization()) {
-                return new PromptAuthorizationResponse(output);
-            }
-            try {
-                if (!isAuthorized(request)) {
-                    ForbiddenResponse response403 = new ForbiddenResponse(output);
-                    String content = "<h1>403 Forbidden - Access Denied</h1>"
-                            + "<p>Unauthorized User.<br>"
-                            + "Make sure your user has the correct access level.<br>"
-                            + "You can use /plan web check <username> to check the permission level.</p>";
-                    response403.setContent(content);
-                    return response403;
-                }
-            } catch (IllegalArgumentException e) {
-                return new PromptAuthorizationResponse(output);
-            }
+//            if (!request.hasAuthorization()) {
+//                return new PromptAuthorizationResponse(output);
+//            }
+//            try {
+//                if (!isAuthorized(request)) {
+//                    ForbiddenResponse response403 = new ForbiddenResponse(output);
+//                    String content = "<h1>403 Forbidden - Access Denied</h1>"
+//                            + "<p>Unauthorized User.<br>"
+//                            + "Make sure your user has the correct access level.<br>"
+//                            + "You can use /plan web check <username> to check the permission level.</p>";
+//                    response403.setContent(content);
+//                    return response403;
+//                }
+//            } catch (IllegalArgumentException e) {
+//                return new PromptAuthorizationResponse(output);
+//            }
             String req = request.getRequest();
             String target = request.getTarget();
             if (!req.equals("GET") || target.equals("/")) {
