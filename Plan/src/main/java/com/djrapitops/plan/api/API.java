@@ -4,13 +4,6 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import com.djrapitops.plugin.utilities.player.UUIDFetcher;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -21,6 +14,14 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This class contains the API methods.
@@ -44,7 +45,7 @@ public class API {
     private final Plan plugin;
 
     /**
-     * Class Construcor.
+     * Class Constructor.
      *
      * @param plugin Current instance of Plan
      */
@@ -65,7 +66,7 @@ public class API {
      * Add a source of plugin data to the Plugins tab on Analysis and/or Inspect
      * page.
      *
-     * Refer to documentation on github or Javadoc of PluginData to set-up a
+     * Refer to documentation on GitHub or Javadoc of PluginData to set-up a
      * data source that extends PluginData correctly.
      *
      * @param dataSource an object that extends PluginData-object, thus allowing
@@ -102,7 +103,7 @@ public class API {
      *
      * @param uuid UUID of the player.
      * @param processor Object implementing DBCallableProcessor, which
-     * process(UserData data) method will be called.
+     * process (UserData data) method will be called.
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
         plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
@@ -200,7 +201,7 @@ public class API {
     }
 
     /**
-     * Used to get the full Html of the Analysis page as a string.
+     * Used to get the full HTML of the Analysis page as a string.
      *
      * Check if the data is cached to AnalysisCache before calling this.
      *
