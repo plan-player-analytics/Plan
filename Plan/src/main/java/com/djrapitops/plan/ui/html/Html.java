@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.ui.html;
 
+import com.djrapitops.plugin.utilities.Verify;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,8 +125,9 @@ public enum Html {
      * @return
      */
     public String parse(String... p) {
+        Verify.nullCheck(p);
         String returnValue = this.html;
-        for (int i = 0; i < p.length; i++) {
+        for (int i = 0; i < p.length; i++) {            
             returnValue = returnValue.replace("REPLACE" + i, p[i]);
         }
         return returnValue;

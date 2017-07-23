@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.djrapitops</groupId>
   <artifactId>Plan</artifactId>
-  <version>3.5.3</version>
+  <version>3.5.4</version>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
     <defaultGoal>clean package install</defaultGoal>

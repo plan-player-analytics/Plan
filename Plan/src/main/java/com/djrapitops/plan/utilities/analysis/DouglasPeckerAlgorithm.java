@@ -14,6 +14,9 @@ import java.util.List;
 public class DouglasPeckerAlgorithm {
 
     public static List<Point> reducePoints(List<Point> points, double epsilon) {
+        if (points.isEmpty()) {
+            return points;
+        }
         if (epsilon == -1) {
             epsilon = 0.002;
         }

@@ -110,10 +110,24 @@ public class UsersTable extends Table {
             if (version < 4) {
                 alterTablesV4();
             }
+            if (version < 5) {
+                alterTablesV5();
+            }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return false;
+        }
+    }
+
+    private void alterTablesV5() {
+        if (usingMySQL) {
+            try {
+                execute("ALTER TABLE " + tableName
+                        + " DROP COLUMN " + columnDemAge + ","
+                        + " DROP COLUMN " + columnDemGender);
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -531,21 +545,7 @@ public class UsersTable extends Table {
             int userId = getUserId(uuid);
             int update = 0;
             if (userId != -1) {
-                String sql = "UPDATE " + tableName + " SET "
-                        + columnGeolocation + "=?, "
-                        + columnLastGM + "=?, "
-                        + columnLastGMSwapTime + "=?, "
-                        + columnPlayTime + "=?, "
-                        + columnLoginTimes + "=?, "
-                        + columnLastPlayed + "=?, "
-                        + columnDeaths + "=?, "
-                        + columnMobKills + "=?, "
-                        + columnContainsBukkitData + "=?, "
-                        + columnOP + "=?, "
-                        + columnBanned + "=?, "
-                        + columnName + "=?, "
-                        + columnRegistered + "=? "
-                        + "WHERE UPPER(" + columnUUID + ") LIKE UPPER(?)";
+                String sql = getUpdateStatement();
 
                 statement = prepareStatement(sql);
                 statement.setString(1, data.getGeolocation());
@@ -571,22 +571,7 @@ public class UsersTable extends Table {
             }
             if (update == 0) {
                 close(statement);
-                statement = prepareStatement("INSERT INTO " + tableName + " ("
-                        + columnUUID + ", "
-                        + columnGeolocation + ", "
-                        + columnLastGM + ", "
-                        + columnLastGMSwapTime + ", "
-                        + columnPlayTime + ", "
-                        + columnLoginTimes + ", "
-                        + columnLastPlayed + ", "
-                        + columnDeaths + ", "
-                        + columnMobKills + ", "
-                        + columnContainsBukkitData + ", "
-                        + columnOP + ", "
-                        + columnBanned + ", "
-                        + columnName + ", "
-                        + columnRegistered
-                        + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                statement = prepareStatement(getInsertStatement());
 
                 statement.setString(1, uuid.toString());
                 statement.setString(2, data.getGeolocation());
@@ -615,6 +600,72 @@ public class UsersTable extends Table {
         }
     }
 
+    private boolean tableHasV4Columns() {
+        if (usingMySQL) {
+            return false;
+        } else {
+            PreparedStatement statement = null;
+            ResultSet set = null;
+            try {
+                try {
+                    statement = prepareStatement("SELECT " + columnDemAge + " FROM " + tableName + " LIMIT 1");
+                    set = statement.executeQuery();
+                    Log.debug("UsersTable has V4 columns.");
+                    return true;
+                } catch (SQLException e) {
+                    return false;
+                }
+            } finally {
+                close(set, statement);
+            }
+        }
+    }
+
+    private String getInsertStatement() {
+        final boolean hasV4Columns = tableHasV4Columns();
+        String v4rows = hasV4Columns ? columnDemAge + ", " + columnDemGender + ", " : "";
+        String v4values = hasV4Columns ? "-1, Deprecated, " : "";
+        return "INSERT INTO " + tableName + " ("
+                + v4rows
+                + columnUUID + ", "
+                + columnGeolocation + ", "
+                + columnLastGM + ", "
+                + columnLastGMSwapTime + ", "
+                + columnPlayTime + ", "
+                + columnLoginTimes + ", "
+                + columnLastPlayed + ", "
+                + columnDeaths + ", "
+                + columnMobKills + ", "
+                + columnContainsBukkitData + ", "
+                + columnOP + ", "
+                + columnBanned + ", "
+                + columnName + ", "
+                + columnRegistered
+                + ") VALUES (" + v4values + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    }
+
+    private String getUpdateStatement() {
+        final boolean hasV4Columns = tableHasV4Columns();
+        String v4rows = hasV4Columns ? columnDemAge + "=-1, " + columnDemGender + "='Deprecated', " : "";
+        String sql = "UPDATE " + tableName + " SET "
+                + v4rows
+                + columnGeolocation + "=?, "
+                + columnLastGM + "=?, "
+                + columnLastGMSwapTime + "=?, "
+                + columnPlayTime + "=?, "
+                + columnLoginTimes + "=?, "
+                + columnLastPlayed + "=?, "
+                + columnDeaths + "=?, "
+                + columnMobKills + "=?, "
+                + columnContainsBukkitData + "=?, "
+                + columnOP + "=?, "
+                + columnBanned + "=?, "
+                + columnName + "=?, "
+                + columnRegistered + "=? "
+                + "WHERE " + columnUUID + "=?";
+        return sql;
+    }
+
     /**
      *
      * @param data
@@ -638,22 +689,7 @@ public class UsersTable extends Table {
     private void insertNewUserData(Collection<UserData> data) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUUID + ", "
-                    + columnGeolocation + ", "
-                    + columnLastGM + ", "
-                    + columnLastGMSwapTime + ", "
-                    + columnPlayTime + ", "
-                    + columnLoginTimes + ", "
-                    + columnLastPlayed + ", "
-                    + columnDeaths + ", "
-                    + columnMobKills + ", "
-                    + columnContainsBukkitData + ", "
-                    + columnOP + ", "
-                    + columnBanned + ", "
-                    + columnName + ", "
-                    + columnRegistered
-                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            statement = prepareStatement(getInsertStatement());
             boolean commitRequired = false;
             int i = 0;
             for (UserData uData : data) {
@@ -694,22 +730,8 @@ public class UsersTable extends Table {
         PreparedStatement statement = null;
         try {
             List<UserData> saveLast = new ArrayList<>();
-            String uSQL = "UPDATE " + tableName + " SET "
-                    + columnGeolocation + "=?, "
-                    + columnLastGM + "=?, "
-                    + columnLastGMSwapTime + "=?, "
-                    + columnPlayTime + "=?, "
-                    + columnLoginTimes + "=?, "
-                    + columnLastPlayed + "=?, "
-                    + columnDeaths + "=?, "
-                    + columnMobKills + "=?, "
-                    + columnContainsBukkitData + "=?, "
-                    + columnOP + "=?, "
-                    + columnBanned + "=?, "
-                    + columnName + "=?, "
-                    + columnRegistered + "=? "
-                    + "WHERE " + columnUUID + "=?";
-            statement = prepareStatement(uSQL);
+            String sql = getUpdateStatement();
+            statement = prepareStatement(sql);
             boolean commitRequired = false;
             Set<UUID> savedUUIDs = getSavedUUIDs();
             int i = 0;
