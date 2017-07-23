@@ -3,18 +3,11 @@ package main.java.com.djrapitops.plan.data;
 import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
+
+import java.net.InetAddress;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class is used for storing information about a player during runtime.
@@ -800,13 +793,10 @@ public class UserData {
         if (!Objects.equals(this.nicknames, other.nicknames)) {
             return false;
         }
-        if (!Objects.equals(this.lastGamemode, other.lastGamemode)) {
-            return false;
-        }
-        if (!Objects.equals(this.gmTimes, other.gmTimes)) {
-            return false;
-        }
-        return Objects.equals(this.playerKills, other.playerKills) && Objects.equals(this.sessions, other.sessions);
+        return Objects.equals(this.lastGamemode, other.lastGamemode)
+                && Objects.equals(this.gmTimes, other.gmTimes)
+                && Objects.equals(this.playerKills, other.playerKills)
+                && Objects.equals(this.sessions, other.sessions);
     }
 
     /**

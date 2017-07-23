@@ -294,13 +294,10 @@ public abstract class PluginData {
             return false;
         }
         final PluginData other = (PluginData) obj;
-        if (this.analysisOnly != other.analysisOnly) {
-            return false;
-        }
-        if (!Objects.equals(this.placeholder, other.placeholder)) {
-            return false;
-        }
-        return Objects.equals(this.sourcePlugin, other.sourcePlugin) && Objects.equals(this.analysisTypes, other.analysisTypes);
+        return this.analysisOnly == other.analysisOnly
+                && Objects.equals(this.placeholder, other.placeholder)
+                && Objects.equals(this.sourcePlugin, other.sourcePlugin)
+                && Objects.equals(this.analysisTypes, other.analysisTypes);
     }
 
     @Override

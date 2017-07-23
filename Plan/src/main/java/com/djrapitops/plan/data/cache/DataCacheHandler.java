@@ -1,20 +1,17 @@
 package main.java.com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.cache.queue.*;
+import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
@@ -24,6 +21,9 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * This Class contains the Cache.
@@ -131,7 +131,7 @@ public class DataCacheHandler extends SessionCache {
             clearAfterXsaves = configValue;
         }
         DataCacheHandler handler = this;
-        ITask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
 
             @Override
@@ -492,7 +492,7 @@ public class DataCacheHandler extends SessionCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new AbsRunnable("ReloadCacheUpdateTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
                 final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
