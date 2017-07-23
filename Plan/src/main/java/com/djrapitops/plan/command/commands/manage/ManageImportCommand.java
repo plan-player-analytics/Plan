@@ -6,16 +6,18 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import com.djrapitops.plugin.utilities.player.Fetch;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.handling.importing.ImportUtils;
 import main.java.com.djrapitops.plan.data.handling.importing.Importer;
 import main.java.com.djrapitops.plan.utilities.Check;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
@@ -73,7 +75,7 @@ public class ManageImportCommand extends SubCommand {
             public void run() {
                 try {
                     sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
-                    List<UUID> uuids = Fetch.getIOfflinePlayers().stream().map(p -> p.getUniqueId()).collect(Collectors.toList());
+                    List<UUID> uuids = Fetch.getIOfflinePlayers().stream().map(IOfflinePlayer::getUniqueId).collect(Collectors.toList());
                     if (importer.importData(uuids, importArguments)) {
                         sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
                     } else {

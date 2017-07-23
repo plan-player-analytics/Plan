@@ -41,8 +41,8 @@ public class TPSPart extends RawData<TPSPart> {
         addValue("tpsscatterday", tpsScatterDay);
         addValue("tpsscatterweek", tpsScatterWeek);
 
-        double averageTPSweek = MathUtils.averageDouble(week.stream().map(t -> t.getTps()));
-        double averageTPSday = MathUtils.averageDouble(day.stream().map(t -> t.getTps()));
+        double averageTPSweek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
+        double averageTPSday = MathUtils.averageDouble(day.stream().map(TPS::getTps));
 
         addValue("averagetps", FormatUtils.cutDecimals(averageTPSweek));
         addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSday));

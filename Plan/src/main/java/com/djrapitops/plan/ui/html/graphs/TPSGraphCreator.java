@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.TPS;
@@ -23,9 +24,9 @@ public class TPSGraphCreator {
         List<TPS> filtered = filterTPS(tpsData, now - scale);
         Log.debug("TPSGraph, filtered: " + filtered.size());
         filtered.sort(new TPSComparator());
-        List<Long> dates = filtered.stream().map(t -> t.getDate()).collect(Collectors.toList());
-        List<Double> tps = filtered.stream().map(t -> t.getTps()).collect(Collectors.toList());
-        List<Integer> players = filtered.stream().map(t -> t.getPlayers()).collect(Collectors.toList());
+        List<Long> dates = filtered.stream().map(TPS::getDate).collect(Collectors.toList());
+        List<Double> tps = filtered.stream().map(TPS::getTps).collect(Collectors.toList());
+        List<Integer> players = filtered.stream().map(TPS::getPlayers).collect(Collectors.toList());
         Benchmark.stop("TPSGraph: generate array");
         return new String[]{dates.toString(), tps.toString(), players.toString()};
     }
@@ -38,7 +39,7 @@ public class TPSGraphCreator {
     
     public static List<TPS> filterTPS(List<TPS> tpsData, long nowMinusScale) {
         return tpsData.stream()
-                .filter(t -> t != null)
+                .filter(Objects::nonNull)
                 .filter(t -> t.getDate() >= nowMinusScale)
                 .collect(Collectors.toList());
     }

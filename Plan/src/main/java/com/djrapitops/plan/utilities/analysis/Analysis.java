@@ -129,7 +129,7 @@ public class Analysis {
     public boolean analyzeData(List<UserData> rawData, List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
         try {
             rawData.sort(new UserDataLastPlayedComparator());
-            List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
+            List<UUID> uuids = rawData.stream().map(UserData::getUuid).collect(Collectors.toList());
             Benchmark.start("Analysis: Create Empty dataset");
             DataCacheHandler handler = plugin.getHandler();
             Map<String, Integer> commandUse = handler.getCommandUse();
@@ -140,7 +140,7 @@ public class Analysis {
             ActivityPart activityPart = analysisData.getActivityPart();
             activityPart.setRecentPlayersUUIDs(uuids);
             analysisData.getPlayerCountPart().addPlayers(uuids);
-            activityPart.setRecentPlayers(rawData.stream().map(data -> data.getName()).collect(Collectors.toList()));
+            activityPart.setRecentPlayers(rawData.stream().map(UserData::getName).collect(Collectors.toList()));
 
             Benchmark.stop("Analysis: Create Empty dataset");
             long fetchPhaseLength = Benchmark.stop("Analysis: Fetch Phase");
@@ -197,7 +197,7 @@ public class Analysis {
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
         Log.debug("Analyzing additional sources: " + sources.size());
-        sources.parallelStream().filter(s -> Verify.notNull(s)).forEach(source -> {
+        sources.parallelStream().filter(Verify::notNull).forEach(source -> {
             try {
                 Benchmark.start("Source " + source.getPlaceholder("").replace("%", ""));
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();

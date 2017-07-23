@@ -240,7 +240,7 @@ public class KillsTable extends Table {
                     if (victimUserID == -1) {
                         List<Integer> matchingIds = uuids.entrySet()
                                 .stream().filter(e -> e.getValue().equals(kill.getVictim()))
-                                .map(e -> e.getKey())
+                                .map(Map.Entry::getKey)
                                 .collect(Collectors.toList());
                         if (matchingIds.isEmpty()) {
                             continue;

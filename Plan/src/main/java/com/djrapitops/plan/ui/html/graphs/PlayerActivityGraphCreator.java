@@ -32,8 +32,8 @@ public class PlayerActivityGraphCreator {
     public static String[] generateArray(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<TPS> filtered = tpsData.stream().filter(tps -> tps.getDate() >= now - scale).collect(Collectors.toList());
-        String players = filtered.stream().map(tps -> tps.getPlayers()).collect(Collectors.toList()).toString();
-        String dates = filtered.stream().map(tps -> tps.getDate()).collect(Collectors.toList()).toString();
+        String players = filtered.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString();
+        String dates = filtered.stream().map(TPS::getDate).collect(Collectors.toList()).toString();
         return new String[]{players, dates};
     }
 

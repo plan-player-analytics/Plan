@@ -103,7 +103,7 @@ public class HookHandler {
     private List<String> getPluginNamesAnalysis() {
         List<String> pluginNames = additionalDataSources.stream()
                 .filter(source -> !source.getAnalysisTypes().isEmpty())
-                .map(source -> source.getSourcePlugin())
+                .map(PluginData::getSourcePlugin)
                 .distinct()
                 .collect(Collectors.toList());
         Collections.sort(pluginNames);
@@ -113,7 +113,7 @@ public class HookHandler {
     private List<String> getPluginNamesInspect() {
         List<String> pluginNames = additionalDataSources.stream()
                 .filter(source -> !source.analysisOnly())
-                .map(source -> source.getSourcePlugin())
+                .map(PluginData::getSourcePlugin)
                 .distinct()
                 .collect(Collectors.toList());
         Collections.sort(pluginNames);

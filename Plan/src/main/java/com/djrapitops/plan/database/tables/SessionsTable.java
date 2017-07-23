@@ -262,7 +262,7 @@ public class SessionsTable extends Table {
         Map<Integer, Integer> loginTimes = db.getUsersTable().getLoginTimes();
         Map<Integer, List<SessionData>> allSessions = getSessionData(loginTimes.keySet());
         Benchmark.start("Database: Combine Sessions");
-        int before = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
+        int before = MathUtils.sumInt(allSessions.values().stream().map(List::size));
         Log.debug("Sessions before: " + before);
         Map<Integer, Integer> beforeM = new HashMap<>();
         Map<Integer, Integer> afterM = new HashMap<>();
@@ -282,7 +282,7 @@ public class SessionsTable extends Table {
             afterM.put(id, combined.size());
             allSessions.put(id, combined);
         }
-        int after = MathUtils.sumInt(allSessions.values().stream().map(l -> l.size()));
+        int after = MathUtils.sumInt(allSessions.values().stream().map(List::size));
         Log.debug("Sessions after: " + after);
         if (before - after > 50) {
             Benchmark.start("Database: Save combined sessions");

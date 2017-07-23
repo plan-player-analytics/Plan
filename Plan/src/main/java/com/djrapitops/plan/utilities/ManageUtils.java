@@ -94,7 +94,7 @@ public class ManageUtils {
         return sessions.stream()
                 .anyMatch(s -> sessions.stream()
                         .filter(ses -> !ses.equals(s))
-                        .map(ses -> ses.getSessionStart())
+                        .map(SessionData::getSessionStart)
                         .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
     }
 
@@ -120,7 +120,7 @@ public class ManageUtils {
             }
             List<SessionData> close = sessions.stream().filter(ses -> Math.abs(session.getSessionEnd() - ses.getSessionStart()) < threshold).collect(Collectors.toList());
             if (!close.isEmpty()) {
-                long big = MathUtils.getBiggestLong(close.stream().map((SessionData ses) -> ses.getSessionEnd()).collect(Collectors.toList()));
+                long big = MathUtils.getBiggestLong(close.stream().map(SessionData::getSessionEnd).collect(Collectors.toList()));
                 session.endSession(big);
                 removed.addAll(close);
             }
