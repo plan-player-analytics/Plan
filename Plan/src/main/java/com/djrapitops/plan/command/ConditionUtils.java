@@ -1,9 +1,10 @@
 package main.java.com.djrapitops.plan.command;
 
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+
+import java.util.UUID;
 
 /**
  * This class contains methods used by commands
@@ -32,9 +33,6 @@ public class ConditionUtils {
      * @return has the player played before, false if uuid is null.
      */
     public static boolean playerHasPlayed(UUID uuid) {
-        if (!Verify.notNull(uuid)) {
-            return false;
-        }
-        return Plan.getInstance().fetch().hasPlayedBefore(uuid);
+        return Verify.notNull(uuid) && Plan.getInstance().fetch().hasPlayedBefore(uuid);
     }
 }

@@ -272,16 +272,7 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             int userId = usersTable.getUserId(uuid);
-            if (userId == -1) {
-                return false;
-            }
-            return locationsTable.removeUserLocations(userId)
-                    && ipsTable.removeUserIps(userId)
-                    && nicknamesTable.removeUserNicknames(userId)
-                    && gmTimesTable.removeUserGMTimes(userId)
-                    && sessionsTable.removeUserSessions(userId)
-                    && killsTable.removeUserKillsAndVictims(userId)
-                    && usersTable.removeUser(uuid);
+            return userId != -1 && locationsTable.removeUserLocations(userId) && ipsTable.removeUserIps(userId) && nicknamesTable.removeUserNicknames(userId) && gmTimesTable.removeUserGMTimes(userId) && sessionsTable.removeUserSessions(userId) && killsTable.removeUserKillsAndVictims(userId) && usersTable.removeUser(uuid);
         } finally {
             Benchmark.stop("Database: Remove Account");
             setAvailable();

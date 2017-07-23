@@ -84,10 +84,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        return new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
     }
 }
 

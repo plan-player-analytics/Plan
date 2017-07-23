@@ -65,10 +65,7 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        return new ArrayList<>(queue).stream().anyMatch(info -> info.getUuid().equals(uuid));
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch(info -> info.getUuid().equals(uuid));
     }
 }
 
