@@ -5,17 +5,20 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
+
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -81,7 +84,7 @@ public class HtmlUtilsTest {
      * @throws FileNotFoundException
      */
     @Test
-    public void testGetServerAnalysisUrl() throws FileNotFoundException, Exception {
+    public void testGetServerAnalysisUrl() throws Exception {
         TestInit.init();
         String result = HtmlUtils.getServerAnalysisUrlWithProtocol();
         String exp = "http://0.0.0.0:8804/server";

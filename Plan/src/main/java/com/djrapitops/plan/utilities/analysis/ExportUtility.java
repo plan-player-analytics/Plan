@@ -91,7 +91,7 @@ public class ExportUtility {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void writeInspectHtml(UserData userData, File playersFolder) throws FileNotFoundException, IOException {
+    public static void writeInspectHtml(UserData userData, File playersFolder) throws IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
