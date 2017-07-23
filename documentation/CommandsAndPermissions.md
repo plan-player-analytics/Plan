@@ -4,7 +4,8 @@
 - [Plugin.yml](/Plan/src/main/resources/plugin.yml)
 - [Permissions Enum](/Plan/src/main/java/com/djrapitops/plan/Permissions.java)
 
-This page is an in depth documentation of all permissions & commands.
+This page is an in depth documentation of all permissions & commands.  
+Page version: **3.5.2**
 
 # Commands
 
@@ -21,6 +22,8 @@ Command | Permission | Default | Description
 /plan reload | plan.reload | OP | Reloads the plugin. (All active play-sessions will be ended & started.)
 /plan info | plan.info | OP | View version, update availability & active database
 /plan manage | plan.manage | OP | Manage the database of the plugin.
+/plan register | none / plan.webmanage | true | Register the sender / another user (requires the perm)  
+/plan webuser | plan.webmanage | OP | Manage web users.
 none | plan.ignore.commanduse | false | Commands issued by players with this permission will be ignored.
   
 ## Permission Groups:
@@ -42,6 +45,7 @@ none | plan.ignore.commanduse | false | Commands issued by players with this per
 - plan.inspect.other
 - plan.qinspect.other
 - plan.reload
+- plan.webmanage
 
 ### plan.*
 - plan.staff
