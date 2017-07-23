@@ -51,7 +51,7 @@ public class ScatterGraphCreator {
                 lastPoint = point;
             }
             points.addAll(toAdd);
-            Collections.sort(points, new PointComparator());
+            points.sort(new PointComparator());
         }
 
         int size = points.size();

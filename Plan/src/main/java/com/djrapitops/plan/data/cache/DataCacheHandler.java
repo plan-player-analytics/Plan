@@ -272,7 +272,7 @@ public class DataCacheHandler extends SessionCache {
             toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
-        Collections.sort(toProcess, new HandlingInfoTimeComparator());
+        toProcess.sort(new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
         Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
         List<UserData> data = new ArrayList<>();

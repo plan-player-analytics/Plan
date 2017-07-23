@@ -41,7 +41,7 @@ public class HandlingInfoTimeComparatorTest {
         i.add(three);
         GamemodeInfo four = new GamemodeInfo(null, 700L, Gamemode.CREATIVE);
         i.add(four);
-        Collections.sort(i, new HandlingInfoTimeComparator());
+        i.sort(new HandlingInfoTimeComparator());
         assertEquals(three, i.get(0));
         assertEquals(two, i.get(1));
         assertEquals(one, i.get(2));

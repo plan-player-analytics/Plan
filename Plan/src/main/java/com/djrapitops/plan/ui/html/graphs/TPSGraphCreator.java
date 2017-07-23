@@ -22,7 +22,7 @@ public class TPSGraphCreator {
         long now = MiscUtils.getTime();
         List<TPS> filtered = filterTPS(tpsData, now - scale);
         Log.debug("TPSGraph, filtered: " + filtered.size());
-        Collections.sort(filtered, new TPSComparator());
+        filtered.sort(new TPSComparator());
         List<Long> dates = filtered.stream().map(t -> t.getDate()).collect(Collectors.toList());
         List<Double> tps = filtered.stream().map(t -> t.getTps()).collect(Collectors.toList());
         List<Integer> players = filtered.stream().map(t -> t.getPlayers()).collect(Collectors.toList());

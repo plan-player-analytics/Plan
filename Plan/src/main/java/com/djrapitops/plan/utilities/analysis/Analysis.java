@@ -128,7 +128,7 @@ public class Analysis {
      */
     public boolean analyzeData(List<UserData> rawData, List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
         try {
-            Collections.sort(rawData, new UserDataLastPlayedComparator());
+            rawData.sort(new UserDataLastPlayedComparator());
             List<UUID> uuids = rawData.stream().map(d -> d.getUuid()).collect(Collectors.toList());
             Benchmark.start("Analysis: Create Empty dataset");
             DataCacheHandler handler = plugin.getHandler();

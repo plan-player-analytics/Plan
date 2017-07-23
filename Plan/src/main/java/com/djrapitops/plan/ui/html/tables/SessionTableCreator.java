@@ -23,7 +23,7 @@ public class SessionTableCreator {
         if (sessionData.isEmpty()) {
             html += Html.TABLELINE_3.parse(Html.SESSIONDATA_NONE.parse(), "", "");
         } else {
-            Collections.sort(sessionData, new SessionDataComparator());
+            sessionData.sort(new SessionDataComparator());
             Collections.reverse(sessionData);
             int i = 0;
             for (SessionData session : sessionData) {
