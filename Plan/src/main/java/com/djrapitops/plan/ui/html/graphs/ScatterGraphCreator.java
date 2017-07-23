@@ -35,9 +35,7 @@ public class ScatterGraphCreator {
             Point lastPoint = null;
 
             Set<Point> toAdd = new HashSet<>();
-            Iterator<Point> iterator = points.iterator();
-            while (iterator.hasNext()) {
-                Point point = iterator.next();
+            for (Point point : points) {
                 if (Verify.notNull(point, lastPoint)) {
                     long date = (long) point.getX();
                     long lastDate = (long) lastPoint.getX();

@@ -1,15 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.database.Container;
@@ -17,6 +7,11 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  *
@@ -291,9 +286,7 @@ public class SessionsTable extends Table {
         Log.debug("Sessions after: " + after);
         if (before - after > 50) {
             Benchmark.start("Database: Save combined sessions");
-            Iterator<Integer> iterator = new HashSet<>(allSessions.keySet()).iterator();
-            while (iterator.hasNext()) {
-                int id = iterator.next();
+            for (Integer id : new HashSet<>(allSessions.keySet())) {
                 if (afterM.get(id) < beforeM.get(id)) {
                     removeUserSessions(id);
                 } else {
