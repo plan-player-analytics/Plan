@@ -1,11 +1,5 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -14,6 +8,14 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -102,7 +104,7 @@ public class ExportUtility {
         if (inspectHtmlFile.exists()) {
             inspectHtmlFile.delete();
         }
-        Files.write(inspectHtmlFile.toPath(), Arrays.asList(inspectHtml));
+        Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
     }
 
     /**
@@ -123,7 +125,7 @@ public class ExportUtility {
         if (analysisHtmlFile.exists()) {
             analysisHtmlFile.delete();
         }
-        Files.write(analysisHtmlFile.toPath(), Arrays.asList(analysisHtml));
+        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
     private static void writePlayersPageHtml(List<UserData> rawData, File playersfolder) throws IOException {
