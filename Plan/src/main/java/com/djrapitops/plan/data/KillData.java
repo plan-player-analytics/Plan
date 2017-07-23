@@ -90,10 +90,7 @@ public class KillData {
         if (!Objects.equals(this.weapon, other.weapon)) {
             return false;
         }
-        if (!Objects.equals(this.victim, other.victim)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.victim, other.victim);
     }
 
     @Override

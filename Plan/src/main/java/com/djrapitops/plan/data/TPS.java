@@ -84,10 +84,7 @@ public class TPS {
         if (Double.doubleToLongBits(this.tps) != Double.doubleToLongBits(other.tps)) {
             return false;
         }
-        if (this.players != other.players) {
-            return false;
-        }
-        return true;
+        return this.players == other.players;
     }
 
     @Override

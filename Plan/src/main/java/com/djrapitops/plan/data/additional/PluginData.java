@@ -1,12 +1,9 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.ui.html.Html;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * This is an abstract class that can be used to add data from a plugin to the
@@ -306,10 +303,7 @@ public abstract class PluginData {
         if (!Objects.equals(this.sourcePlugin, other.sourcePlugin)) {
             return false;
         }
-        if (!Objects.equals(this.analysisTypes, other.analysisTypes)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.analysisTypes, other.analysisTypes);
     }
 
     @Override

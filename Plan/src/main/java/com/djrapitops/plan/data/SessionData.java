@@ -109,10 +109,7 @@ public class SessionData {
         if (this.sessionStart != other.sessionStart) {
             return false;
         }
-        if (this.sessionEnd != other.sessionEnd) {
-            return false;
-        }
-        return true;
+        return this.sessionEnd == other.sessionEnd;
     }
 
     @Override
