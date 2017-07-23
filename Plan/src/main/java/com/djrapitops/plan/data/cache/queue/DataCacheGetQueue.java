@@ -54,10 +54,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
     }
 
     public boolean containsUUIDtoBeCached(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        return new ArrayList<>(queue).stream().anyMatch((map) -> (map.get(uuid) != null && map.get(uuid).size() >= 2)); // Map has 2 processors if being cached
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch((map) -> (map.get(uuid) != null && map.get(uuid).size() >= 2));
     }
 }
 

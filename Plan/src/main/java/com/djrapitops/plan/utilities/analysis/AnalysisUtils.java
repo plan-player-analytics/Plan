@@ -1,14 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import main.java.com.djrapitops.plan.Log;
@@ -74,12 +67,11 @@ public class AnalysisUtils {
      * @return
      */
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
-        List<Long> list = data.stream()
-                .filter(session -> session != null)
-                .filter(session -> session.isValid())
-                .map(session -> session.getLength())
+        return data.stream()
+                .filter(Objects::nonNull)
+                .filter(SessionData::isValid)
+                .map(SessionData::getLength)
                 .collect(Collectors.toList());
-        return list;
     }
 
     /**
@@ -119,7 +111,7 @@ public class AnalysisUtils {
 
     private static Stream<Serializable> getCorrectValues(List<UUID> uuids, PluginData source) {
         return uuids.stream()
-                .map(uuid -> source.getValue(uuid))
+                .map(source::getValue)
                 .filter(value -> !value.equals(-1))
                 .filter(value -> !value.equals(-1L));
     }
@@ -261,7 +253,7 @@ public class AnalysisUtils {
                 uniqueJoins.get(day).add(uuid);
             }
         });
-        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(s -> s.size()));
+        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
         int size = uniqueJoins.keySet().size();
         if (size == 0) {
             return 0;
@@ -275,7 +267,7 @@ public class AnalysisUtils {
      * @return
      */
     public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
-        List<int[]> daysAndHours = sessionStarts.stream().map((Long start) -> {
+        return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
@@ -292,7 +284,6 @@ public class AnalysisUtils {
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
-        return daysAndHours;
     }
 
     private static int getDayOfYear(SessionData session) {

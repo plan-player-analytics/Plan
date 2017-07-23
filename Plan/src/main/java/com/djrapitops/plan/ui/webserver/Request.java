@@ -1,13 +1,10 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import main.java.com.djrapitops.plan.Log;
+
+import java.io.*;
 import java.util.Arrays;
 import java.util.Optional;
-import main.java.com.djrapitops.plan.Log;
 
 /**
  * Represents a HTTP Request.
@@ -57,7 +54,7 @@ public class Request implements Closeable {
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         close = in;
         String line;
-        while (!(line = in.readLine()).isEmpty()) {
+        while ((line = in.readLine()) != null) {
             headerB.append(line);
             headerB.append(":::");
         }

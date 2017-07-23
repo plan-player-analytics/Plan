@@ -61,7 +61,6 @@ public class TPSCountTimer extends AbsRunnable {
         }
         double tpsN = twentySeconds / diff;
 
-        TPS tps = new TPS(now, tpsN, playersOnline);
-        return tps;
+        return new TPS(now, tpsN, playersOnline);
     }
 }

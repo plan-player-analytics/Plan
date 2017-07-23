@@ -216,7 +216,7 @@ public class UserData {
         if (addIps.isEmpty()) {
             return;
         }
-        ips.addAll(addIps.stream().filter(ip -> Verify.notNull(ip)).collect(Collectors.toList()));
+        ips.addAll(addIps.stream().filter(Verify::notNull).collect(Collectors.toList()));
 
     }
 
@@ -306,8 +306,8 @@ public class UserData {
      */
     public void addSessions(Collection<SessionData> sessions) {
         Collection<SessionData> filteredSessions = sessions.stream()
-                .filter(session -> Verify.notNull(session))
-                .filter(session -> session.isValid())
+                .filter(Verify::notNull)
+                .filter(SessionData::isValid)
                 .collect(Collectors.toList());
         this.sessions.addAll(filteredSessions);
     }
@@ -806,13 +806,7 @@ public class UserData {
         if (!Objects.equals(this.gmTimes, other.gmTimes)) {
             return false;
         }
-        if (!Objects.equals(this.playerKills, other.playerKills)) {
-            return false;
-        }
-        if (!Objects.equals(this.sessions, other.sessions)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.playerKills, other.playerKills) && Objects.equals(this.sessions, other.sessions);
     }
 
     /**

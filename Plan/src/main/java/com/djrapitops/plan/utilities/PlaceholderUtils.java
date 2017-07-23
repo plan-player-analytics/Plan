@@ -1,9 +1,5 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
@@ -17,6 +13,11 @@ import main.java.com.djrapitops.plan.ui.html.tables.KillsTableCreator;
 import main.java.com.djrapitops.plan.ui.html.tables.SessionTableCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -78,10 +79,10 @@ public class PlaceholderUtils {
         GamemodePart gmPart = new GamemodePart(null);
         Map<String, Long> gmTimes = data.getGmTimes();
         String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
-        for (int i = 0; i < gms.length; i++) {
-            Long time = gmTimes.get(gms[i]);
+        for (String gm : gms) {
+            Long time = gmTimes.get(gm);
             if (time != null) {
-                gmPart.addTo(gms[i], time);
+                gmPart.addTo(gm, time);
             }
         }
         gmPart.analyse();

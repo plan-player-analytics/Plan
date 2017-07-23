@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -48,7 +49,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
         if (uuids.isEmpty()) {
             return;
         }
-        uuids = uuids.stream().filter(u -> u != null).collect(Collectors.toList());
+        uuids = uuids.stream().filter(Objects::nonNull).collect(Collectors.toList());
         Log.debug("Scheduling for clear: " + uuids);
         try {
             queue.addAll(uuids);

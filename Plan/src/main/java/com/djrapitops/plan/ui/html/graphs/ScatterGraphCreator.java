@@ -7,12 +7,11 @@ package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.Collections;
+
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
 import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
@@ -35,9 +34,7 @@ public class ScatterGraphCreator {
             Point lastPoint = null;
 
             Set<Point> toAdd = new HashSet<>();
-            Iterator<Point> iterator = points.iterator();
-            while (iterator.hasNext()) {
-                Point point = iterator.next();
+            for (Point point : points) {
                 if (Verify.notNull(point, lastPoint)) {
                     long date = (long) point.getX();
                     long lastDate = (long) lastPoint.getX();
@@ -53,7 +50,7 @@ public class ScatterGraphCreator {
                 lastPoint = point;
             }
             points.addAll(toAdd);
-            Collections.sort(points, new PointComparator());
+            points.sort(new PointComparator());
         }
 
         int size = points.size();

@@ -5,7 +5,6 @@ import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -272,7 +271,7 @@ public class DataCacheHandler extends SessionCache {
             toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
-        Collections.sort(toProcess, new HandlingInfoTimeComparator());
+        toProcess.sort(new HandlingInfoTimeComparator());
         processUnprocessedHandlingInfo(toProcess);
         Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
         List<UserData> data = new ArrayList<>();
@@ -363,11 +362,11 @@ public class DataCacheHandler extends SessionCache {
         if (unsavedTPSHistory.isEmpty()) {
             return new ArrayList<>();
         }
-        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);;
+        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
         for (List<TPS> history : copy) {
             final long lastdate = history.get(history.size() - 1).getDate();
-            final double averageTPS = MathUtils.averageDouble(history.stream().map(t -> t.getTps()));
-            final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(t -> t.getPlayers()));
+            final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
+            final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
             averages.add(new TPS(lastdate, averageTPS, averagePlayersOnline));
         }
         unsavedTPSHistory.removeAll(copy);
@@ -379,9 +378,7 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveHandlerDataToCache() {
         final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
-        onlinePlayers.stream().forEach((p) -> {
-            saveHandlerDataToCache(p, false);
-        });
+        onlinePlayers.stream().forEach((p) -> saveHandlerDataToCache(p, false));
     }
 
     private void saveHandlerDataToCache(IPlayer player, boolean pool) {

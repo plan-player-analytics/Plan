@@ -5,15 +5,17 @@
  */
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -72,7 +74,7 @@ public class PunchCardGraphCreator {
                     for (int j = 0; j < 24; j++) {
                         int value = dataArray[i][j];
                         if (value - avg > 3 * standardDiviation) {
-                            dataArray[i][j] = (int) (avg);
+                            dataArray[i][j] = avg;
                         }
                     }
                 }
@@ -111,14 +113,13 @@ public class PunchCardGraphCreator {
 
     private static List<Long> getSessionStarts(Collection<SessionData> data) {
         long now = MiscUtils.getTime();
-        List<Long> sessionStarts = data.stream()
-                .filter(s -> s != null)
-                .filter(s -> s.isValid())
-                .map(s -> s.getSessionStart())
+        return data.stream()
+                .filter(Objects::nonNull)
+                .filter(SessionData::isValid)
+                .map(SessionData::getSessionStart)
                 .filter(start -> now - start < (long) 2592000 * (long) 1000)
                 .sorted()
                 .collect(Collectors.toList());
-        return sessionStarts;
     }
 
     private static int[][] createEmptyArray() {

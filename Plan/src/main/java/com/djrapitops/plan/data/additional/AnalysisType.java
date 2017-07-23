@@ -104,17 +104,17 @@ public enum AnalysisType {
     private final String modifier;
     private final String placeholderModifier;
 
-    private AnalysisType(String placeholderModifier, String modifier) {
+    AnalysisType(String placeholderModifier, String modifier) {
         this.placeholderModifier = placeholderModifier;
         this.modifier = modifier;
     }
 
-    private AnalysisType(String placeholderModifier) {
+    AnalysisType(String placeholderModifier) {
         this.placeholderModifier = placeholderModifier;
         this.modifier = "";
     }
 
-    private AnalysisType() {
+    AnalysisType() {
         this.placeholderModifier = "";
         this.modifier = "";
     }

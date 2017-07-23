@@ -1,11 +1,12 @@
 package main.java.com.djrapitops.plan.data.handling;
 
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.data.UserData;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.data.UserData;
 
 /**
  * Class containing static methods for processing information contained in a
@@ -46,17 +47,17 @@ public class LoginHandling {
      */
     public static void updateGeolocation(InetAddress ip, UserData data) {
         try {
-            String result = "";
+            StringBuilder result = new StringBuilder();
             URL url = new URL("http://freegeoip.net/csv/" + ip.getHostAddress());
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
             String resultline;
             while ((resultline = in.readLine()) != null) {
-                result += resultline + ",";
+                result.append(resultline).append(",");
             }
             in.close();
 
-            String[] results = result.split(",");
+            String[] results = result.toString().split(",");
             if (!results[2].isEmpty()) {
                 data.setGeolocation(results[2]);
             }

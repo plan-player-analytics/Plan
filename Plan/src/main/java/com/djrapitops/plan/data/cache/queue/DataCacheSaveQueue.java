@@ -55,7 +55,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @param data Collection of UserData objects.
      */
     public void scheduleForSave(Collection<UserData> data) {
-        Log.debug("Scheduling for save: " + data.stream().map(u -> u.getUuid()).collect(Collectors.toList()));
+        Log.debug("Scheduling for save: " + data.stream().map(UserData::getUuid).collect(Collectors.toList()));
         try {
             queue.addAll(data);
         } catch (IllegalStateException e) {
@@ -84,10 +84,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        return new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
     }
 }
 

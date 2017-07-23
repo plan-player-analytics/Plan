@@ -1,14 +1,15 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.ui.html.Html;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
  *
@@ -35,12 +36,12 @@ public class HtmlUtils {
                 resourceStream = plugin.getResource(fileName);
                 scanner = new Scanner(resourceStream);
             }
-            String html = "";
+            StringBuilder html = new StringBuilder();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                html += line + "\r\n";
+                html.append(line).append("\r\n");
             }
-            return html;
+            return html.toString();
         } finally {
             MiscUtils.close(resourceStream, scanner);
         }
@@ -78,8 +79,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/ "//" + ip + "/server";
-        return url;
+        return "//" + ip + "/server";
     }
 
     /**
@@ -103,8 +103,7 @@ public class HtmlUtils {
         if (useAlternativeIP) {
             ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
         }
-        String url = /*"http:*/ "//" + ip + "/player/" + playerName;
-        return url;
+        return "//" + ip + "/player/" + playerName;
     }
 
     public static String getRelativeInspectUrl(String playerName) {
@@ -164,9 +163,7 @@ public class HtmlUtils {
         StringBuilder html = new StringBuilder();
         html.append(Html.HEADER.parse(name));
         html.append(Html.PLUGIN_CONTAINER_START.parse());
-        placeholders.stream().forEach((placeholder) -> {
-            html.append(placeholder);
-        });
+        placeholders.stream().forEach(html::append);
         html.append("</div>");
         return html.toString();
     }

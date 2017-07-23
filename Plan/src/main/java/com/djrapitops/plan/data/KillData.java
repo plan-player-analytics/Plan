@@ -87,13 +87,7 @@ public class KillData {
         if (this.date != other.date) {
             return false;
         }
-        if (!Objects.equals(this.weapon, other.weapon)) {
-            return false;
-        }
-        if (!Objects.equals(this.victim, other.victim)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.weapon, other.weapon) && Objects.equals(this.victim, other.victim);
     }
 
     @Override

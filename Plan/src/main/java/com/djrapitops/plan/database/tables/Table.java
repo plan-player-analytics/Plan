@@ -78,8 +78,7 @@ public abstract class Table {
      */
     protected boolean execute(String sql) throws SQLException {
         Connection connection = getConnection();
-        boolean success = connection.createStatement().execute(sql);
-        return success;
+        return connection.createStatement().execute(sql);
     }
 
     /**

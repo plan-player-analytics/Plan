@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,10 +14,8 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 
@@ -32,8 +29,8 @@ public class PlayerActivityGraphCreator {
     public static String[] generateArray(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<TPS> filtered = tpsData.stream().filter(tps -> tps.getDate() >= now - scale).collect(Collectors.toList());
-        String players = filtered.stream().map(tps -> tps.getPlayers()).collect(Collectors.toList()).toString();
-        String dates = filtered.stream().map(tps -> tps.getDate()).collect(Collectors.toList()).toString();
+        String players = filtered.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString();
+        String dates = filtered.stream().map(TPS::getDate).collect(Collectors.toList()).toString();
         return new String[]{players, dates};
     }
 

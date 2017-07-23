@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.List;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -28,7 +27,7 @@ public class PlayersPageResponse extends Response {
         html.append("<h1>Cached Players</h1><p>")
                 .append(size)
                 .append(" players. Use browser's Search to find players by name. (Chrome Ctrl+F)</p><table><tr>");
-        Collections.sort(cached, new UserDataNameComparator());
+        cached.sort(new UserDataNameComparator());
         int i = 1;
         for (UserData userData : cached) {
             String name = userData.getName();
