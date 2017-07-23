@@ -1,331 +1,331 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Plan | Inspect %name%</title>
-<meta name="description" content="Player Analysis window">
-<meta name="author" content="Rsl1122">
-<link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />        
-<script src="https://use.fontawesome.com/df48eb908b.js"></script>
-<style>
-header {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 88px;
-	padding: 0px;
-	background-color: #348e0f;
-	z-index: 1;
-}
-.header-content {
-	padding: 5px 20px;
-}
-body {
-    font-family: Verdana, sans-serif;
-    background-color: #ddd;
-    color: #fff;
-}
-.sidenav {
-    height: 100%;
-    width: 15%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #5cb239;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 88px;
-	text-align: left;
-}
-.sidenav p {
-	width: 100%;
-	padding: 8px 8px 8px 16px;
-    text-decoration: none;
-	background-color: #89c471;
-	color: #fff;
-	margin: 10px 0px;
-}
+	<title>Plan | Inspect %name%</title>
+	<meta name="description" content="Player Analysis window">
+	<meta name="author" content="Rsl1122">
+	<link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />
+	<script src="https://use.fontawesome.com/df48eb908b.js"></script>
+	<style>
+		header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 88px;
+			padding: 0px;
+			background-color: #348e0f;
+			z-index: 1;
+		}
+		.header-content {
+			padding: 5px 20px;
+		}
+		body {
+			font-family: Verdana, sans-serif;
+			background-color: #ddd;
+			color: #fff;
+		}
+		.sidenav {
+			height: 100%;
+			width: 15%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			background-color: #5cb239;
+			overflow-x: hidden;
+			transition: 0.5s;
+			padding-top: 88px;
+			text-align: left;
+		}
+		.sidenav p {
+			width: 100%;
+			padding: 8px 8px 8px 16px;
+			text-decoration: none;
+			background-color: #89c471;
+			color: #fff;
+			margin: 10px 0px;
+		}
 
-.sidenav a {
-	margin: 10px 0px;
-	width: 100%;
-    padding: 8px 8px 8px 16px;
-    text-decoration: none;
-	background-color: #89c471;
-    font-size: 22px;
-    color: #fff;
-    display: block;
-    transition: 0.3s;
-	z-index: 1;
-}
+		.sidenav a {
+			margin: 10px 0px;
+			width: 100%;
+			padding: 8px 8px 8px 16px;
+			text-decoration: none;
+			background-color: #89c471;
+			font-size: 22px;
+			color: #fff;
+			display: block;
+			transition: 0.3s;
+			z-index: 1;
+		}
 
-.sidenav a.active {
-	background-color: #5da341
-}
+		.sidenav a.active {
+			background-color: #5da341
+		}
 
-.sidenav a:hover, .offcanvas a:focus{
-	background-color: #5da341;
-}
+		.sidenav a:hover, .offcanvas a:focus{
+			background-color: #5da341;
+		}
 
-.main-limiter {
-	margin-left: 15%;
-	width: 85%;
-	height: 100%;
-	overflow: hidden;
-}
+		.main-limiter {
+			margin-left: 15%;
+			width: 85%;
+			height: 100%;
+			overflow: hidden;
+		}
 
-.main-wrapper {
-	padding-top: 88px;
-	transform: translate3d(0, 0, 0);
-	opacity: 0;
-	transition: 1.5s;
-}
+		.main-wrapper {
+			padding-top: 88px;
+			transform: translate3d(0, 0, 0);
+			opacity: 0;
+			transition: 1.5s;
+		}
 
-.box {
-	background-color: #fff;
-	padding: 5px;
-	text-decoration: none;
-	color: #000;
-	text-align: left;
-	margin: 5px;
-	padding: 5px;
-}
+		.box {
+			background-color: #fff;
+			padding: 5px;
+			text-decoration: none;
+			color: #000;
+			text-align: left;
+			margin: 5px;
+			padding: 5px;
+		}
 
-.box p {
-	color: #000;
-}
+		.box p {
+			color: #000;
+		}
 
-.tab {
-	width: 20%;
-	height: 100%;
-	float: left;
-	display: flex;
-	text-align: left;
-	align-content: flex-start;
-}
-.row {
-	width: 50%;
-	display: flex;
-	flex-direction: column;
-}
-.content {
-  text-align: center;
-  padding: 5px;
-  margin: 0px;
-}
-.columns {
-	display: flex;
-}
-.column {
-    flex: 1;
-}
-.box-area {
-	width: 100%;
-}
-.infobox {
-	margin-left: 3px;
-	color: white;
-	background-color: #348e0f;
-	padding: 8px 14px;
-	border-radius: 10px;
-	float: right;
-}
-.info-text {
-	float: right;
-	width: 50%;
-	text-align: right;
-}
-.info-number {
-	font-size: x-large;
-	float: right;
-}
-.info-label {
-	float: right;
-	font-size: medium;
-}
-.info-icon {
-	font-size: xx-large;
-	float: left;
-}
-.headerbox {
-	color: #348e0f; 
-	display: inline-block;
-	border-style: solid;
-	border-color: #348e0f;
-	padding: 8px 14px;
-	border-radius: 10px;
-	width: 95%;
-}
-.header-icon {
-	font-size: xx-large;
-	float: left;             
-}
-.header-text {
-	font-size: x-large;
-}
-.header-label {
-	padding: 0px;
-	margin: 0px;
-	border: 0px;
-}
-.button {
-	padding: 8px 14px;
-	background-color: #348e0f;
-	border: none;
-	color: white;
-	outline: 0;
-	text-decoration:none!important;
-}
-.button:hover {
-	background-color: #267F00;
-}
-.table {
-	border-collapse: collapse;
-	table-layout: fixed; 
-	border-style: solid; 
-	border-width: 1px; 
-	padding: 8px 14px;
-	width: 100%;
-}
-.buttons {
-	line-height: 270%;
-}
-.link {
-	color: #348e0f;
-	text-decoration:none!important;
-}
-.link:hover {
-	color: #267F00;
-}
-table.sortable thead {
-	background-color: #348e0f;
-	color:#fff;
-	font-weight: bold;
-	cursor: default;
-	width: 100%;
-	overflow: hidden;
-}
-table.sortable tbody {
-	color: #000;
-}
-table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-	content: " \25B4\25BE" 
-}
-.plugin-container {
-    color: #000;
-    height: 100%;
-    max-height: 400px;
-    overflow: auto;
-}
-.plugin-data {
-    color: #000;
-}
-.black {
-	color: #000000;
-}
-.darkblue {
-	color: #0000AA;
-}
-.darkgreen {
-	color: #00AA00;
-}
-.darkaqua {
-	color: #00AAAA;
-}
-.darkred {
-	color: #AA0000;
-}
-.darkpurple {
-	color: #AA00AA;
-}
-.gold {
-	color: #FFAA00;
-}
-.gray {
-	color: #AAAAAA;
-}
-.darkgray {
-	color: #555555;
-}
-.blue {
-	color: #5555FF;
-}
-.green {
-	color: #55FF55;
-}
-.aqua {
-	color: #55FFFF;
-}
-.red {
-	color: #FF5555;
-}
-.pink {
-	color: #FF55FF;
-}
-.yellow {
-	color: #FFFF55;
-}
-.white {
-	color: #FFFFFF;
-}
-#navbutton {
-	display: none;
-	font-size: 40px;
-	cursor:pointer;
-}
-@media only screen and (max-width: 850px) {
-	#navbutton {
-		display: inline;
-	}	
-	.sidenav p {
-		display: none;
-	}
-	header {
-		margin: 0px;
-		padding 0px;
-	}
-	header h1 {
-		margin: 0px;
-	}
-	header img {
-		margin: 0px;
-		padding: 0px;
-		margin-right: 0px;
-	}
-	header p {
-		margin: 0px;
-		margin-top: 5px;
-	}
-	.tab {
-		flex-direction: column;
-	}
-        .columns {
-                flex-direction: column;
-        }
-	.row {
-		width: 100%;
-	}
-	.sidenav {
-		width: 0%;
-		transition: 0s;
-	}
-	.main-limiter {
-		margin-left: 0%;
-		width: 100%;
-	}
-}
-</style>
+		.tab {
+			width: 20%;
+			height: 100%;
+			float: left;
+			display: flex;
+			text-align: left;
+			align-content: flex-start;
+		}
+		.row {
+			width: 50%;
+			display: flex;
+			flex-direction: column;
+		}
+		.content {
+			text-align: center;
+			padding: 5px;
+			margin: 0px;
+		}
+		.columns {
+			display: flex;
+		}
+		.column {
+			flex: 1;
+		}
+		.box-area {
+			width: 100%;
+		}
+		.infobox {
+			margin-left: 3px;
+			color: white;
+			background-color: #348e0f;
+			padding: 8px 14px;
+			border-radius: 10px;
+			float: right;
+		}
+		.info-text {
+			float: right;
+			width: 50%;
+			text-align: right;
+		}
+		.info-number {
+			font-size: x-large;
+			float: right;
+		}
+		.info-label {
+			float: right;
+			font-size: medium;
+		}
+		.info-icon {
+			font-size: xx-large;
+			float: left;
+		}
+		.headerbox {
+			color: #348e0f;
+			display: inline-block;
+			border-style: solid;
+			border-color: #348e0f;
+			padding: 8px 14px;
+			border-radius: 10px;
+			width: 95%;
+		}
+		.header-icon {
+			font-size: xx-large;
+			float: left;
+		}
+		.header-text {
+			font-size: x-large;
+		}
+		.header-label {
+			padding: 0px;
+			margin: 0px;
+			border: 0px;
+		}
+		.button {
+			padding: 8px 14px;
+			background-color: #348e0f;
+			border: none;
+			color: white;
+			outline: 0;
+			text-decoration:none!important;
+		}
+		.button:hover {
+			background-color: #267F00;
+		}
+		.table {
+			border-collapse: collapse;
+			table-layout: fixed;
+			border-style: solid;
+			border-width: 1px;
+			padding: 8px 14px;
+			width: 100%;
+		}
+		.buttons {
+			line-height: 270%;
+		}
+		.link {
+			color: #348e0f;
+			text-decoration:none!important;
+		}
+		.link:hover {
+			color: #267F00;
+		}
+		table.sortable thead {
+			background-color: #348e0f;
+			color:#fff;
+			font-weight: bold;
+			cursor: default;
+			width: 100%;
+			overflow: hidden;
+		}
+		table.sortable tbody {
+			color: #000;
+		}
+		table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+			content: " \25B4\25BE"
+		}
+		.plugin-container {
+			color: #000;
+			height: 100%;
+			max-height: 400px;
+			overflow: auto;
+		}
+		.plugin-data {
+			color: #000;
+		}
+		.black {
+			color: #000000;
+		}
+		.darkblue {
+			color: #0000AA;
+		}
+		.darkgreen {
+			color: #00AA00;
+		}
+		.darkaqua {
+			color: #00AAAA;
+		}
+		.darkred {
+			color: #AA0000;
+		}
+		.darkpurple {
+			color: #AA00AA;
+		}
+		.gold {
+			color: #FFAA00;
+		}
+		.gray {
+			color: #AAAAAA;
+		}
+		.darkgray {
+			color: #555555;
+		}
+		.blue {
+			color: #5555FF;
+		}
+		.green {
+			color: #55FF55;
+		}
+		.aqua {
+			color: #55FFFF;
+		}
+		.red {
+			color: #FF5555;
+		}
+		.pink {
+			color: #FF55FF;
+		}
+		.yellow {
+			color: #FFFF55;
+		}
+		.white {
+			color: #FFFFFF;
+		}
+		#navbutton {
+			display: none;
+			font-size: 40px;
+			cursor:pointer;
+		}
+		@media only screen and (max-width: 850px) {
+			#navbutton {
+				display: inline;
+			}
+			.sidenav p {
+				display: none;
+			}
+			header {
+				margin: 0px;
+				padding 0px;
+			}
+			header h1 {
+				margin: 0px;
+			}
+			header img {
+				margin: 0px;
+				padding: 0px;
+				margin-right: 0px;
+			}
+			header p {
+				margin: 0px;
+				margin-top: 5px;
+			}
+			.tab {
+				flex-direction: column;
+			}
+			.columns {
+				flex-direction: column;
+			}
+			.row {
+				width: 100%;
+			}
+			.sidenav {
+				width: 0%;
+				transition: 0s;
+			}
+			.main-limiter {
+				margin-left: 0%;
+				width: 100%;
+			}
+		}
+	</style>
 </head>
 <body>
-	<header>
-		<div class="header-content">
-			<img style="float: right; padding: 5px" src="https://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
-			<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-			<h1><span id="navbutton" onclick="openNav()">&#9776; </span>%servername% | Inspect Player %name%%op%</h1>
-		</div>
-	</header>
+<header>
+	<div class="header-content">
+		<img style="float: right; padding: 5px" src="https://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
+		<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
+		<h1><span id="navbutton" onclick="openNav()">&#9776; </span>%servername% | Inspect Player %name%%op%</h1>
+	</div>
+</header>
 <div id="content" class="content">
-	<div id="sidenav" class="sidenav">		
+	<div id="sidenav" class="sidenav">
 		<p>Last Refresh: <br><span id="divTime">%refresh%</span> ago</p>
 		<a href="javascript:void(0)" class="nav-button">
 			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
@@ -362,7 +362,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 						</div>
 						<img style="float: right; padding: 5px" alt="%name%" src="https://cravatar.eu/head/%name%/128.png">
 						<p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline%%banned%<br/>
-							<i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>                    
+							<i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>
 							<i class="fa fa-clock-o" aria-hidden="true"></i> Playtime: %playtime%<br/>
 							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times: %logintimes%<br/>
 							<i class="fa fa-gavel" aria-hidden="true"></i> Times kicked: %timeskicked%<br/>
@@ -391,7 +391,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 								</div>
 							</div>
 						</div>
-						<div class="box-area">                                
+						<div class="box-area">
 							<div class="infobox" style="float: left; background-color: #%gm0col%; width: 45%;">
 								<div class="info-icon">
 									<i class="fa fa-fire" aria-hidden="true"></i>
@@ -417,7 +417,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 										Creative
 									</div>
 								</div>
-							</div>                                
+							</div>
 							<div class="infobox" style="float: left; background-color: #%gm2col%; width: 45%;">
 								<div class="info-icon">
 									<i class="fa fa-chevron-right" aria-hidden="true"></i>
@@ -538,8 +538,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 							</div>
 						</div>
 						<canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
-                                                <p>If the graph contains more sessions than login times, likely cause is use of /reload (Restarts sessions).</p>
-                                        </div>
+						<p>If the graph contains more sessions than login times, likely cause is use of /reload (Restarts sessions).</p>
+					</div>
 				</div>
 			</div>
 			<div class="tab" style="display: block;">
@@ -547,46 +547,46 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			</div>
 		</div>
 	</div>
-<script>
-var serverTime = new Date(%currenttime%);
-var now = new Date();
-var timediff = serverTime.getTime()-now.getTime();
-function openNav() {
-    document.getElementById("sidenav").style.width = "100%";
-    document.getElementById("limiter").style.display = "none";
-	document.getElementById("navbutton").onclick = function () { closeNav(); };
-}
-function closeNav() {
-    document.getElementById("sidenav").style.width = "0%";
-    document.getElementById("limiter").style.display = "block";
-    document.getElementById("navbutton").onclick = function () { openNav(); };
-}
-var navButtons = document.getElementsByClassName("nav-button");
-var tabs = document.getElementsByClassName("tab");
-var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
-if (slideIndex == null) {
-    slideIndex = 0;
-}
-var x = document.getElementById("main");
+	<script>
+        var serverTime = new Date(%currenttime%);
+        var now = new Date();
+        var timediff = serverTime.getTime()-now.getTime();
+        function openNav() {
+            document.getElementById("sidenav").style.width = "100%";
+            document.getElementById("limiter").style.display = "none";
+            document.getElementById("navbutton").onclick = function () { closeNav(); };
+        }
+        function closeNav() {
+            document.getElementById("sidenav").style.width = "0%";
+            document.getElementById("limiter").style.display = "block";
+            document.getElementById("navbutton").onclick = function () { openNav(); };
+        }
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
+        if (slideIndex == null) {
+            slideIndex = 0;
+        }
+        var x = document.getElementById("main");
 
-x.style.transform = "translate3d(0px,0px,0)";
-x.style.width = ""+navButtons.length*100+"%";
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = ""+navButtons.length*100+"%";
 
-for (i=0; i < navButtons.length; i++) {
-	navButtons[i].onclick = openFunc(i)
-	tabs[i].style.width = ""+100/navButtons.length+"%";
-}
-x.style.opacity = "1";
-openFunc(slideIndex)();
-countUpTimer();
+        for (i=0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i)
+            tabs[i].style.width = ""+100/navButtons.length+"%";
+        }
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+        countUpTimer();
 
-function openFunc(i) {
-	return function() {
-		if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
-			closeNav();
-		}
-		var max = navButtons.length;
-                for (var j = 0; j < max; j++) {                    
+        function openFunc(i) {
+            return function() {
+                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+                    closeNav();
+                }
+                var max = navButtons.length;
+                for (var j = 0; j < max; j++) {
                     if (j == i) {
                         navButtons[j].classList.add('active');
                         continue;
@@ -595,288 +595,288 @@ function openFunc(i) {
                         navButtons[j].classList.remove('active');
                     }
                 }
-		var perc = -100 / navButtons.length;
-		slideIndex = i;                
-		if (slideIndex>max) {slideIndex=0};
-		if (slideIndex<0) {slideIndex=max};
+                var perc = -100 / navButtons.length;
+                slideIndex = i;
+                if (slideIndex>max) {slideIndex=0};
+                if (slideIndex<0) {slideIndex=max};
                 window.sessionStorage.setItem("InspectSlideIndex", slideIndex);
-		var value = slideIndex*perc;
-		x.style.transition = "0.5s";
-		x.style.transform = "translate3d("+value+"%,0px,0)";
-	};
-}
+                var value = slideIndex*perc;
+                x.style.transition = "0.5s";
+                x.style.transform = "translate3d("+value+"%,0px,0)";
+            };
+        }
 
-function countUpTimer() {
-		var now = new Date();
-		var begin = new Date(%refreshlong%-timediff);
-		var out = "";
-		
-		var seconds = now.getTime() - begin.getTime();
-		seconds = Math.floor(seconds / 1000);
-						
-		var dd = Math.floor(seconds / 86400);
-		seconds -= (dd * 86400);
-		
-		var dh = Math.floor(seconds / 3600);
-		seconds -= (dh * 3600);
-		
-		var dm = Math.floor(seconds / 60);
-		seconds -= (dm * 60);
-		
-		seconds = Math.floor(seconds);
-		
-		if (dd != 0) {
-			out += dd.toString() + "d ";
-		}
-		if (dh != 0) {
-			out += dh.toString() + "h ";
-		}
-		if (dm != 0) {
-			out += dm.toString() + "m ";
-		}		
-		out += seconds.toString() + "s ";
-						
-		document.getElementById('divTime').innerHTML = out;
-		setTimeout('countUpTimer()', 1000);
-	}
-</script>
-<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-<script>
-	function hour(i) {
-		switch (i) {
-			case 25:
-			case -1:
-			case -2:
-			case -3:
-			case -4:
-			case -5:
-				return '';
-			default:
-				return i+':00';
-		}	
-	}
-	function day(i) {
-		switch (i) {
-			case 0:
-				return 'Monday';
-			case 1:
-				return 'Tuesday';
-			case 2:
-				return 'Wednesday';
-			case 3:
-				return 'Thursday';
-			case 4:
-				return 'Friday';
-			case 5:
-				return 'Saturday';
-			case 6:
-				return 'Sunday';
-			default:
-				break;
-			return '';
-		}
-	}
-	// Script for All charts using Chart.js
-	var ctxgmpie = document.getElementById("gmPie");
-	var dataGmPie = {
-	labels: %gmlabels% ,
-		datasets: [{
-			data: %gmdata% ,
-			backgroundColor: [ %gmcolors% ],
-			[ %gmcolors% ]
-		}]
-	}
-	var GMPie = new Chart(ctxgmpie, {
-	type: 'doughnut',
-		data: dataGmPie,
-		options: {
-			legend: {
-				position: 'right',
-				labels: {
-					padding: 7
-				}
-			}
-		}
-	});
-	var ctxweek = document.getElementById("playerChartWeek");            
-	var dataweek = {
-	labels: %labelsweek% ,
-			datasets: [{
-				label: "Online",
-				fill: true,
-				lineTension: 0.1,
-				backgroundColor: "#%playersgraphfill%",
-				borderColor: "#%playersgraphcolor%",
-				borderCapStyle: 'butt',
-				borderDash: [],
-				borderDashOffset: 0.0,
-				borderJoinStyle: 'miter',
-				pointBorderColor: "#%playersgraphcolor%",
-				pointBackgroundColor: "#fff",
-				pointBorderWidth: 1,
-				pointHoverRadius: 5,
-				pointHoverBackgroundColor: "#%playersgraphcolor%",
-				pointHoverBorderColor: "#8fabc6",
-				pointHoverBorderWidth: 2,
-				pointRadius: 1,
-				pointHitRadius: 10,
-				spanGaps: false,
-				data: %dataweek% ,
-			}]};
-	var playersChartWeek = new Chart(ctxweek, {
-		type: 'line',
-		data: dataweek,
-		options: {
-			scales: {
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        callback: function(value, index, values) {
-							switch (value) {
-                                                            case 0:
-                                                                return '0';
-                                                            case 1:
-                                                                return '1';
-                                                            default:
-                                                                return '';
-                                                        };
-						},
-                                        suggestedMax: 2,
-                                        suggestedMin: 0
-                                    }
-                                }],
-				xAxes: [{
-					display: false
-				}]
-			}
-		}
-	});
-	var ctxpunch = document.getElementById("punchcard");
-	var datapunch = {
-		datasets: [
-		{
-			label: 'Player Join Punchcard',
-			data: %datapunchcard%,
-			backgroundColor: "#222",
-			hoverBackgroundColor: "#333",
-		}]
-	};
-	var punchcardChart = new Chart(ctxpunch, {
-		type: 'bubble',
-		data: datapunch,
-		options: {
-			tooltips: {
-				callbacks: {
-					label: function(tooltipItems, data) {					
-						function day(i) {
-							switch (i) {
-								case 0:
-									return 'Monday';
-								case 1:
-									return 'Tuesday';
-								case 2:
-									return 'Wednesday';
-								case 3:
-									return 'Thursday';
-								case 4:
-									return 'Friday';
-								case 5:
-									return 'Saturday';
-								case 6:
-									return 'Sunday';
-								default:
-									return '';
-							}
-						}
-						function hour(i) {
-							switch (i) {
-								case 25:
-								case -1:
-								case -2:
-								case -3:
-								case -4:
-								case -5:
-									return '';
-								default:
-									return i+':00';
-							}
-						}
-						return day(tooltipItems.yLabel)+': '+hour(tooltipItems.xLabel);
-					}
-				}
-			},
-			scales: {
-				xAxes: [{
-					ticks: {
-						callback: function(value, index, values) {
-							return hour(value);
-						},
-                                            suggestedMax: 25,
-                                            suggestedMin: -1
-					}
-				}],
-				yAxes: [{
-					ticks: {
-						callback: function(value, index, values) {
-							return day(value);						
-						},
-                                            suggestedMax: 7,
-                                            suggestedMin: -1
-					}
-				}]
-			}
-		}
-	});
-	var ctxDistribution = document.getElementById("sessiondistribution");
-	var dataDistr = {
+        function countUpTimer() {
+            var now = new Date();
+            var begin = new Date(%refreshlong%-timediff);
+            var out = "";
+
+            var seconds = now.getTime() - begin.getTime();
+            seconds = Math.floor(seconds / 1000);
+
+            var dd = Math.floor(seconds / 86400);
+            seconds -= (dd * 86400);
+
+            var dh = Math.floor(seconds / 3600);
+            seconds -= (dh * 3600);
+
+            var dm = Math.floor(seconds / 60);
+            seconds -= (dm * 60);
+
+            seconds = Math.floor(seconds);
+
+            if (dd != 0) {
+                out += dd.toString() + "d ";
+            }
+            if (dh != 0) {
+                out += dh.toString() + "h ";
+            }
+            if (dm != 0) {
+                out += dm.toString() + "m ";
+            }
+            out += seconds.toString() + "s ";
+
+            document.getElementById('divTime').innerHTML = out;
+            setTimeout('countUpTimer()', 1000);
+        }
+	</script>
+	<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+	<script>
+        function hour(i) {
+            switch (i) {
+                case 25:
+                case -1:
+                case -2:
+                case -3:
+                case -4:
+                case -5:
+                    return '';
+                default:
+                    return i+':00';
+            }
+        }
+        function day(i) {
+            switch (i) {
+                case 0:
+                    return 'Monday';
+                case 1:
+                    return 'Tuesday';
+                case 2:
+                    return 'Wednesday';
+                case 3:
+                    return 'Thursday';
+                case 4:
+                    return 'Friday';
+                case 5:
+                    return 'Saturday';
+                case 6:
+                    return 'Sunday';
+                default:
+                    break;
+                    return '';
+            }
+        }
+        // Script for All charts using Chart.js
+        var ctxgmpie = document.getElementById("gmPie");
+        var dataGmPie = {
+                labels: %gmlabels% ,
+            datasets: [{
+            data: %gmdata% ,
+            backgroundColor: [ %gmcolors% ],
+        hoverBackgroundColor: [ %gmcolors% ]
+        }]
+        }
+        var GMPie = new Chart(ctxgmpie, {
+            type: 'doughnut',
+            data: dataGmPie,
+            options: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 7
+                    }
+                }
+            }
+        });
+        var ctxweek = document.getElementById("playerChartWeek");
+        var dataweek = {
+                labels: %labelsweek% ,
+            datasets: [{
+            label: "Online",
+            fill: true,
+            lineTension: 0.1,
+            backgroundColor: "#%playersgraphfill%",
+            borderColor: "#%playersgraphcolor%",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#%playersgraphcolor%",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#%playersgraphcolor%",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %dataweek% ,
+        }]};
+        var playersChartWeek = new Chart(ctxweek, {
+            type: 'line',
+            data: dataweek,
+            options: {
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                switch (value) {
+                                    case 0:
+                                        return '0';
+                                    case 1:
+                                        return '1';
+                                    default:
+                                        return '';
+                                };
+                            },
+                            suggestedMax: 2,
+                            suggestedMin: 0
+                        }
+                    }],
+                    xAxes: [{
+                        display: false
+                    }]
+                }
+            }
+        });
+        var ctxpunch = document.getElementById("punchcard");
+        var datapunch = {
+            datasets: [
+                {
+                    label: 'Player Join Punchcard',
+                    data: %datapunchcard%,
+                backgroundColor: "#222",
+            hoverBackgroundColor: "#333",
+        }]
+        };
+        var punchcardChart = new Chart(ctxpunch, {
+            type: 'bubble',
+            data: datapunch,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            function day(i) {
+                                switch (i) {
+                                    case 0:
+                                        return 'Monday';
+                                    case 1:
+                                        return 'Tuesday';
+                                    case 2:
+                                        return 'Wednesday';
+                                    case 3:
+                                        return 'Thursday';
+                                    case 4:
+                                        return 'Friday';
+                                    case 5:
+                                        return 'Saturday';
+                                    case 6:
+                                        return 'Sunday';
+                                    default:
+                                        return '';
+                                }
+                            }
+                            function hour(i) {
+                                switch (i) {
+                                    case 25:
+                                    case -1:
+                                    case -2:
+                                    case -3:
+                                    case -4:
+                                    case -5:
+                                        return '';
+                                    default:
+                                        return i+':00';
+                                }
+                            }
+                            return day(tooltipItems.yLabel)+': '+hour(tooltipItems.xLabel);
+                        }
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return hour(value);
+                            },
+                            suggestedMax: 25,
+                            suggestedMin: -1
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return day(value);
+                            },
+                            suggestedMax: 7,
+                            suggestedMin: -1
+                        }
+                    }]
+                }
+            }
+        });
+        var ctxDistribution = document.getElementById("sessiondistribution");
+        var dataDistr = {
                 labels: %labelssessiondistribution%,
-		datasets: [
-		{
-			label: 'Session Length Distribution',
-			data: %datasessiondistribution%,
-			backgroundColor: "#89c471",
-			fill: true,
-                        borderColor: "#348e0f",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBorderColor: "#348e0f",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "#348e0f",
-                        pointHoverBorderColor: "#348e0f",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        spanGaps: false,
-		}]
-	};
-	var sessionDistributions = new Chart(ctxDistribution, {
-	type: 'bar',
-			data: dataDistr,
-			options: {
-                        tooltips: {
-				callbacks: {
-					label: function(tooltipItems, data) {
-						return tooltipItems.xLabel+'utes: '+tooltipItems.yLabel+' sessions';
-					}
-				}
-			},
-			scales: {
-                                yAxes: [{
-					ticks: {
-						callback: function(value, index, values) {
-							return value+'';						
-						}
-					}
-				}]
-				}
-			}
-	}); 
-</script>
+            datasets: [
+            {
+                label: 'Session Length Distribution',
+                data: %datasessiondistribution%,
+            backgroundColor: "#89c471",
+            fill: true,
+            borderColor: "#348e0f",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#348e0f",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#348e0f",
+            pointHoverBorderColor: "#348e0f",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+        }]
+        };
+        var sessionDistributions = new Chart(ctxDistribution, {
+            type: 'bar',
+            data: dataDistr,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            return tooltipItems.xLabel+'utes: '+tooltipItems.yLabel+' sessions';
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return value+'';
+                            }
+                        }
+                    }]
+                }
+            }
+        });
+	</script>
 </body>
 </html> 
