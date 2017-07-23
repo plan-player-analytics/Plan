@@ -19,9 +19,9 @@ public class SessionTableCreator {
      * @return
      */
     public static String createSortedSessionDataTable10(List<SessionData> sessionData) {
-        String html = Html.TABLE_SESSIONS_START.parse();
+        StringBuilder html = new StringBuilder(Html.TABLE_SESSIONS_START.parse());
         if (sessionData.isEmpty()) {
-            html += Html.TABLELINE_3.parse(Html.SESSIONDATA_NONE.parse(), "", "");
+            html.append(Html.TABLELINE_3.parse(Html.SESSIONDATA_NONE.parse(), "", ""));
         } else {
             sessionData.sort(new SessionDataComparator());
             Collections.reverse(sessionData);
@@ -36,15 +36,15 @@ public class SessionTableCreator {
                 if (length < 0) {
                     continue;
                 }
-                html += Html.TABLELINE_3_CUSTOMKEY.parse(
+                html.append(Html.TABLELINE_3_CUSTOMKEY.parse(
                         start + "", FormatUtils.formatTimeStamp(start),
                         end + "", FormatUtils.formatTimeStamp(end),
                         length + "", FormatUtils.formatTimeAmount(length)
-                );
+                ));
                 i++;
             }
         }
-        html += Html.TABLE_END.parse();
-        return html;
+        html.append(Html.TABLE_END.parse());
+        return html.toString();
     }
 }
