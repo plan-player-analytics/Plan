@@ -29,7 +29,7 @@ public class ManageUtils {
      */
     public static boolean backup(String dbName, Database copyFromDB) throws SQLException {
         Plan plugin = Plan.getInstance();
-        String timeStamp = new Date().toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-");
+        String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
         SQLiteDB backupDB = new SQLiteDB(plugin, fileName);
         Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
@@ -95,7 +95,7 @@ public class ManageUtils {
                 .anyMatch(s -> sessions.stream()
                         .filter(ses -> !ses.equals(s))
                         .map(SessionData::getSessionStart)
-                        .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
+                        .anyMatch(start -> Math.abs(s.getSessionEnd() - start) < threshold));
     }
 
     /**

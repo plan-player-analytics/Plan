@@ -25,7 +25,8 @@ public class ExportUtility {
 
     /**
      *
-     * @return @throws IOException
+     * @return
+     * @throws IOException
      */
     public static File getFolder() throws IOException {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
@@ -124,10 +125,10 @@ public class ExportUtility {
         Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
-    private static void writePlayersPageHtml(List<UserData> rawData, File playersfolder) throws IOException {
+    private static void writePlayersPageHtml(List<UserData> rawData, File playersFolder) throws IOException {
         String playersHtml = PlayersPageResponse.buildContent(rawData);
-        playersfolder.mkdirs();
-        File playersHtmlFile = new File(playersfolder, "index.html");
+        playersFolder.mkdirs();
+        File playersHtmlFile = new File(playersFolder, "index.html");
         Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
     }
 

@@ -175,5 +175,4 @@ public class ManageUtilsTest {
         SessionData exp3 = new SessionData(threshold * 8, threshold * 10);
         assertEquals(exp3, result.get(2));
     }
-
 }
