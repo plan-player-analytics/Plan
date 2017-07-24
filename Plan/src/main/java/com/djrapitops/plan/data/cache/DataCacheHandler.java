@@ -223,7 +223,7 @@ public class DataCacheHandler extends SessionCache {
      * Should only be called from Async thread
      */
     public void saveCachedUserData() {
-        List<UserData> data = new ArrayList<>();
+        Set<UserData> data = new HashSet<>();
         data.addAll(dataCache.values());
         try {
             db.saveMultipleUserData(data);
