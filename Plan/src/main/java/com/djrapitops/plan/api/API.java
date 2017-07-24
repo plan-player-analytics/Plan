@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 /**
  * This class contains the API methods.
  *
- * Methods can be called from Asyncronous task and are thread safe unless
+ * Methods can be called from Asynchronous task and are thread safe unless
  * otherwise stated.
  *
  * Use Plan.getPlanAPI() to get the API.
  *
- * More information about API methods can be found on Github.
+ * More information about API methods can be found on GitHub.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -136,7 +136,7 @@ public class API {
     /**
      * Used to save the cached data to the database.
      *
-     * Should be only called from an Asyncronous thread.
+     * Should be only called from an Asynchronous thread.
      */
     public void saveCachedData() {
         plugin.getHandler().saveCachedUserData();
@@ -155,7 +155,7 @@ public class API {
     /**
      * Cache the UserData to InspectCache.
      *
-     * Uses cache if data is cached or database if not. Call from an Asyncronous
+     * Uses cache if data is cached or database if not. Call from an Asynchronous
      * thread.
      *
      * @param uuid UUID of the player.
@@ -194,7 +194,7 @@ public class API {
      * Run's the analysis with the current data in the cache and fetches rest
      * from the database.
      *
-     * Starts a new Asyncronous task to run the analysis.
+     * Starts a new Asynchronous task to run the analysis.
      */
     public void updateAnalysisCache() {
         plugin.getAnalysisCache().updateCache();

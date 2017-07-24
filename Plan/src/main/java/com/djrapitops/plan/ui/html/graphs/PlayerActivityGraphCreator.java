@@ -79,11 +79,11 @@ public class PlayerActivityGraphCreator {
         }
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             long average = MathUtils.averageLong(playersOnline.stream());
-            double standardDiviation = getStandardDiviation(playersOnline, average);
-            if (standardDiviation > 3.5) {
+            double standardDeviation = getStandardDeviation(playersOnline, average);
+            if (standardDeviation > 3.5) {
                 for (int i = 0; i < playersOnline.size(); i++) {
                     long value = playersOnline.get(i);
-                    if (value - average > 3 * standardDiviation) {
+                    if (value - average > 3 * standardDeviation) {
                         playersOnline.set(i, (long) Plan.getInstance().getVariable().getMaxPlayers() + 10);
                     }
                 }
@@ -92,7 +92,7 @@ public class PlayerActivityGraphCreator {
         return new String[]{playersOnline.toString(), labels.toString()};
     }
 
-    private static double getStandardDiviation(List<Long> players, long avg) {
+    private static double getStandardDeviation(List<Long> players, long avg) {
         List<Double> valueMinusAvg = players.stream()
                 .map(p -> Math.pow(Math.abs(p - avg), 2))
                 .collect(Collectors.toList());

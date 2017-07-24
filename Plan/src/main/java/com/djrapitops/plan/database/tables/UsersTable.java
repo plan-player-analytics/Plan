@@ -246,9 +246,6 @@ public class UsersTable extends Table {
             set = statement.executeQuery();
             while (set.next()) {
                 UUID uuid = UUID.fromString(set.getString(columnUUID));
-                if (uuid == null) {
-                    continue;
-                }
                 uuids.add(uuid);
             }
             return uuids;

@@ -67,13 +67,13 @@ public class PunchCardGraphCreator {
         }
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             int avg = findAverage(dataArray);
-            double standardDiviation = getStandardDiviation(dataArray, avg);
-            Log.debug("Diviation: " + standardDiviation);
-            if (standardDiviation > 3.5) {
+            double standardDeviation = getStandardDeviation(dataArray, avg);
+            Log.debug("Deviation: " + standardDeviation);
+            if (standardDeviation > 3.5) {
                 for (int i = 0; i < 7; i++) {
                     for (int j = 0; j < 24; j++) {
                         int value = dataArray[i][j];
-                        if (value - avg > 3 * standardDiviation) {
+                        if (value - avg > 3 * standardDeviation) {
                             dataArray[i][j] = avg;
                         }
                     }
@@ -83,7 +83,7 @@ public class PunchCardGraphCreator {
         return dataArray;
     }
 
-    private static double getStandardDiviation(int[][] array, int avg) {
+    private static double getStandardDeviation(int[][] array, int avg) {
         int[][] valueMinusAvg = new int[7][24];
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {

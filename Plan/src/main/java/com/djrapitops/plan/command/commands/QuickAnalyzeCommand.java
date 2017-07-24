@@ -66,18 +66,18 @@ public class QuickAnalyzeCommand extends SubCommand {
 
     private void runMessageSenderTask(ISender sender) {
         plugin.getRunnableFactory().createNew(new AbsRunnable("QanalysisMessageSenderTask") {
-            private int timesrun = 0;
+            private int timesRun = 0;
 
             @Override
             public void run() {
-                timesrun++;
+                timesRun++;
                 if (analysisCache.isCached() && (!analysisCache.isAnalysisBeingRun() || !analysisCache.isAnalysisEnabled())) {
                     sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
                     sender.sendMessage(TextUI.getAnalysisMessages());
                     sender.sendMessage(Phrase.CMD_FOOTER + "");
                     this.cancel();
                 }
-                if (timesrun > 10) {
+                if (timesRun > 10) {
                     Log.debug("Command Timeout Message, QuickAnalyze.");
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                     this.cancel();

@@ -1,10 +1,8 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.player.Gamemode;
 import com.djrapitops.plugin.utilities.player.bukkit.BukkitPlayer;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -21,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.UUID;
 
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
@@ -59,7 +59,7 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
         Log.debug(uuid + ": PlayerJoinEvent");
-        ITask asyncNewPlayerCheckTask = plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
             @Override
             public void run() {
                 LoginInfo loginInfo = new LoginInfo(uuid, MiscUtils.getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), Gamemode.wrap(player.getGameMode()), 1);
@@ -112,8 +112,10 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
+        Log.debug(uuid + ": PlayerKickEvent");
         handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), Gamemode.wrap(player.getGameMode()), handler.getSession(uuid)));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
+        Log.debug(uuid + ": PlayerKickEvent_END");
     }
 }

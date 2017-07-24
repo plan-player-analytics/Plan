@@ -45,10 +45,10 @@ public class Analysis {
     }
 
     /**
-     * Analyzes the data of all offlineplayers on the server.
+     * Analyzes the data of all offline players on the server.
      *
-     * First retrieves all Offlineplayers and checks those that are in the
-     * database. Then Runs a new Analysis Task Asyncronously. Saves AnalysisData
+     * First retrieves all offline players and checks those that are in the
+     * database. Then Runs a new Analysis Task Asynchronously. Saves AnalysisData
      * to the provided Cache. Saves all UserData to InspectCache for 15 minutes.
      *
      * @param analysisCache Cache that the data is saved to.

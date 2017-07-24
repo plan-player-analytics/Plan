@@ -1,16 +1,13 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  *
@@ -151,7 +148,7 @@ public class GMTimesTable extends Table {
         }
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
-        int update = 0;
+        int update;
         try {
             statement = prepareStatement(
                     "UPDATE " + tableName + " SET "

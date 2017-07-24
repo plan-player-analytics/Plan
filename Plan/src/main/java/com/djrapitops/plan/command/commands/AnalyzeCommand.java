@@ -89,17 +89,17 @@ public class AnalyzeCommand extends SubCommand {
 
     private void runMessageSenderTask(ISender sender) {
         plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new AbsRunnable() {
-            private int timesrun = 0;
+            private int timesRun = 0;
 
             @Override
             public void run() {
-                timesrun++;
+                timesRun++;
                 if (analysisCache.isCached() && (!analysisCache.isAnalysisBeingRun() || !analysisCache.isAnalysisEnabled())) {
                     sendAnalysisMessage(sender);
                     this.cancel();
                     return;
                 }
-                if (timesrun > 10) {
+                if (timesRun > 10) {
                     Log.debug("Command Timeout Message, Analysis.");
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                     this.cancel();

@@ -1,15 +1,16 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * This Class is starts the Process Queue Thread, that processes HandlingInfo
@@ -23,7 +24,7 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
     /**
      * Class constructor, starts the new Thread for processing.
      *
-     * @param handler current instance of DataCachehandler.
+     * @param handler current instance of DataCacheHandler.
      */
     public DataCacheProcessQueue(DataCacheHandler handler) {
         super(new ArrayBlockingQueue(20000));

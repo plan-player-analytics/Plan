@@ -57,7 +57,7 @@ public class UserData {
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
      *
-     * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
      * @param uuid UUID of the player
@@ -99,7 +99,7 @@ public class UserData {
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
      *
-     * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
      * @param player IPlayer object.
@@ -128,7 +128,7 @@ public class UserData {
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
      *
-     * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
      * lastGM will be set as SURVIVAL
@@ -778,7 +778,7 @@ public class UserData {
     }
 
     /**
-     * Check wether or not the object should be cleared from cache after it has
+     * Check whether or not the object should be cleared from cache after it has
      * been saved.
      *
      * @return true/false
@@ -788,7 +788,7 @@ public class UserData {
     }
 
     /**
-     * Set wether or not the object should be cleared from cache after it has
+     * Set whether or not the object should be cleared from cache after it has
      * been saved.
      *
      * @param clearAfterSave true/false

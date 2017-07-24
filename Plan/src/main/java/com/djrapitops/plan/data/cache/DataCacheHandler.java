@@ -29,12 +29,12 @@ import java.util.*;
  * This Class contains the Cache.
  *
  * This class is the main processing class that initialises Save, Clear, Process
- * and Get queue and Starts the asyncronous save task.
+ * and Get queue and Starts the asynchronous save task.
  *
  * It is used to store command use, locations, active sessions and UserData
  * objects in memory.
  *
- * It's methods can be used to access all the data it stores and to clear them.
+ * Its methods can be used to access all the data it stores and to clear them.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -63,7 +63,7 @@ public class DataCacheHandler extends SessionCache {
      * Class Constructor.
      *
      * Gets the Database from the plugin. Starts the queues. Registers
-     * Asyncronous Periodic Save Task
+     * Asynchronous Periodic Save Task
      *
      * @param plugin Current instance of Plan
      */
@@ -112,7 +112,7 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     * Used to start the Asyncronous Save Task.
+     * Used to start the Asynchronous Save Task.
      *
      * @throws IllegalArgumentException BukkitRunnable was given wrong
      * parameters.
@@ -335,7 +335,7 @@ public class DataCacheHandler extends SessionCache {
     /**
      * Saves the cached CommandUse.
      *
-     * Should be only called from an Asyncronous Thread.
+     * Should be only called from an Asynchronous Thread.
      */
     public void saveCommandUse() {
         try {
@@ -364,10 +364,10 @@ public class DataCacheHandler extends SessionCache {
         }
         List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
         for (List<TPS> history : copy) {
-            final long lastdate = history.get(history.size() - 1).getDate();
+            final long lastDate = history.get(history.size() - 1).getDate();
             final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
-            averages.add(new TPS(lastdate, averageTPS, averagePlayersOnline));
+            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline));
         }
         unsavedTPSHistory.removeAll(copy);
         return averages;
@@ -426,7 +426,7 @@ public class DataCacheHandler extends SessionCache {
      *
      * @param uuid Player's UUID.
      */
-    public void scheludeForClear(UUID uuid) {
+    public void scheduldeForClear(UUID uuid) {
         clearTask.scheduleForClear(uuid);
     }
 
