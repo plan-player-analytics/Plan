@@ -41,6 +41,8 @@ Settings:
 Customization:
   ServerName: 'Plan'
   SmallHeadImagesOnAnalysisPlayerlist: true
+  Data:
+    DoNotLogUnknownCommands: false
   Graphs:
     PlayersOnlineGraph:
       UseMaxPlayersAsScale: true
