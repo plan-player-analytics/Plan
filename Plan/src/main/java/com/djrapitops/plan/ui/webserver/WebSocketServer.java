@@ -205,7 +205,7 @@ public class WebSocketServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        Log.info(Phrase.WEBSERVER_CLOSE + "");
+        Log.info(Phrase.WEBSERVER_CLOSE.toString());
         shutdown = true;
         try {
             if (server != null) {
