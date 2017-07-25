@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Plan | Inspect %name%</title>
-	<meta name="description" content="Player Analysis window">
-	<meta name="author" content="Rsl1122">
-	<link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon" />
-	<script src="https://use.fontawesome.com/df48eb908b.js"></script>
-	<style>
+    <title>Plan | Inspect %name%</title>
+    <meta name="description" content="Player Analysis window">
+    <meta name="author" content="Rsl1122">
+    <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon"/>
+    <script src="https://use.fontawesome.com/df48eb908b.js"></script>
+    <style>
 		header {
 			position: fixed;
 			top: 0;
@@ -314,240 +314,252 @@
 				width: 100%;
 			}
 		}
-	</style>
+
+    </style>
 </head>
 <body>
 <header>
-	<div class="header-content">
-		<img style="float: right; padding: 5px" src="https://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
-		<p style="float: right; text-align: right;">Player Analytics v.%version%</p>
-		<h1><span id="navbutton" onclick="openNav()">&#9776; </span>%servername% | Inspect Player %name%%op%</h1>
-	</div>
+    <div class="header-content">
+        <img style="float: right; padding: 5px" src="https://puu.sh/tJZUb/c2e0ab220f.png"
+             alt="Player Analytics | Analysis">
+        <p style="float: right; text-align: right;">Player Analytics v.%version%</p>
+        <h1><span id="navbutton" onclick="openNav()">&#9776; </span>%servername% | Inspect Player %name%%op%</h1>
+    </div>
 </header>
 <div id="content" class="content">
-	<div id="sidenav" class="sidenav">
-		<p>Last Refresh: <br><span id="divTime">%refresh%</span> ago</p>
-		<a href="javascript:void(0)" class="nav-button">
-			<i class="fa fa-info-circle" aria-hidden="true"></i> Information
-		</a>
-		<a href="javascript:void(0)" class="nav-button">
-			<i class="fa fa-calendar" aria-hidden="true"></i> Sessions
-		</a>
-		<a href="javascript:void(0)" class="nav-button">
-			<i class="fa fa-cubes" aria-hidden="true"></i> Plugins
-		</a>
-	</div>
-	<div id="limiter" class="main-limiter">
-		<div id="main" class="main-wrapper">
-			<div class="tab">
-				<div class="row">
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-info-circle" aria-hidden="true"></i><span class="header-text"> Information</span></div>
-							</div>
-							<div class="infobox" style="float: right;">
-								<div class="info-icon">
-									<i class="fa fa-user-plus" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%registered%
-									</div>
-									<div class="info-label">
-										Registered
-									</div>
-								</div>
-							</div>
-						</div>
-						<img style="float: right; padding: 5px" alt="%name%" src="https://cravatar.eu/head/%name%/128.png">
-						<p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline%%banned%<br/>
-							<i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>
-							<i class="fa fa-clock-o" aria-hidden="true"></i> Playtime: %playtime%<br/>
-							<i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times: %logintimes%<br/>
-							<i class="fa fa-gavel" aria-hidden="true"></i> Times kicked: %timeskicked%<br/>
-							<i class="fa fa-crosshairs" aria-hidden="true"></i> Player kills: %playerkills% | <i class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%<br/>
-							<br/>
-							<i class="fa fa-globe" aria-hidden="true"></i> Geolocation: %geoloc%<br/>
-							<i class="fa fa-tag" aria-hidden="true"></i> UUID: %uuid%<br/>
-							<i class="fa fa-globe" aria-hidden="true"></i> Has Connected from ips: %ips%</p>
-					</div>
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon" style="width: 50%">
-								<div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span class="header-text"> Gamemode Usage</span></div>
-							</div>
-							<div class="infobox" >
-								<div class="info-icon">
-									<i class="fa fa-clock-o" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%gmtotal%
-									</div>
-									<div class="info-label">
-										Total
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="box-area">
-							<div class="infobox" style="float: left; background-color: #%gm0col%; width: 45%;">
-								<div class="info-icon">
-									<i class="fa fa-fire" aria-hidden="true"></i>
-								</div>
-								<div class="info-text">
-									<div class="info-number">
-										%gm0%
-									</div>
-									<div class="info-label">
-										Survival
-									</div>
-								</div>
-							</div>
-							<div class="infobox" style="float: left; background-color: #%gm1col%; width: 45%;">
-								<div class="info-icon">
-									<i class="fa fa-cube" aria-hidden="true"></i>
-								</div>
-								<div class="info-text">
-									<div class="info-number">
-										%gm1%
-									</div>
-									<div class="info-label">
-										Creative
-									</div>
-								</div>
-							</div>
-							<div class="infobox" style="float: left; background-color: #%gm2col%; width: 45%;">
-								<div class="info-icon">
-									<i class="fa fa-chevron-right" aria-hidden="true"></i>
-								</div>
-								<div class="info-text">
-									<div class="info-number">
-										%gm2%
-									</div>
-									<div class="info-label">
-										Adventure
-									</div>
-								</div>
-							</div>
-							<div class="infobox" style="float: left; background-color: #%gm3col%; width: 45%;">
-								<div class="info-icon">
-									<i class="fa fa-binoculars" aria-hidden="true"></i>
-								</div>
-								<div class="info-text">
-									<div class="info-number">
-										%gm3%
-									</div>
-									<div class="info-label">
-										Spectator
-									</div>
-								</div>
-							</div>
-						</div>
-						<canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
-					</div>
-				</div>
-				<div class="row">
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Player Activity: 7d</span></div>
-							</div>
-							<div class="infobox" style="float: right;">
-								<div class="info-icon">
-									<i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%lastseen%
-									</div>
-									<div class="info-label">
-										Last seen
-									</div>
-								</div>
-							</div>
-						</div>
-						<canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
-					</div>
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span class="header-text"> Last 10 Kills</span></div>
-							</div>
-							<div class="infobox" style="float: right;">
-								<div class="info-icon">
-									<i class="fa fa-crosshairs" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%playerkills%
-									</div>
-									<div class="info-label">
-										Player Kills
-									</div>
-								</div>
-							</div>
-						</div>
-						%killstable%
-					</div>
-				</div>
-			</div>
-			<div class="tab">
-				<div class="row">
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon" style="width: 50%">
-								<div class="header-label"><i class="fa fa-braille" aria-hidden="true"></i><span class="header-text"> PunchCard</span></div>
-							</div>
-							<div class="infobox" >
-								<div class="info-icon">
-									<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%logintimes%
-									</div>
-									<div class="info-label">
-										Login Times
-									</div>
-								</div>
-							</div>
-						</div>
-						<canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
-					</div>
-				</div>
-				<div class="row">
-					<div class="about box column">
-						<div class="headerbox">
-							<div class="header-icon">
-								<div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="header-text"> Length Distribution</span></div>
-							</div>
-							<div class="infobox">
-								<div class="info-icon">
-									<i class="fa fa-clock-o" aria-hidden="true"></i>
-								</div>
-								<div class="info-text" style="width: 70%;">
-									<div class="info-number">
-										%sessionaverage%
-									</div>
-									<div class="info-label">
-										Average Length
-									</div>
-								</div>
-							</div>
-						</div>
-						<canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
-						<p>If the graph contains more sessions than login times, likely cause is use of /reload (Restarts sessions).</p>
-					</div>
-				</div>
-			</div>
-			<div class="tab" style="display: block;">
-				%plugins%
-			</div>
-		</div>
-	</div>
-	<script>
+    <div id="sidenav" class="sidenav">
+        <p>Last Refresh: <br><span id="divTime">%refresh%</span> ago</p>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-info-circle" aria-hidden="true"></i> Information
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-calendar" aria-hidden="true"></i> Sessions
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-cubes" aria-hidden="true"></i> Plugins
+        </a>
+    </div>
+    <div id="limiter" class="main-limiter">
+        <div id="main" class="main-wrapper">
+            <div class="tab">
+                <div class="row">
+                    <div class="about box column">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-info-circle" aria-hidden="true"></i><span
+                                        class="header-text"> Information</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text" style="width: 70%;">
+                                    <div class="info-number">
+                                        %registered%
+                                    </div>
+                                    <div class="info-label">
+                                        Registered
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <img style="float: right; padding: 5px" alt="%name%"
+                             src="https://cravatar.eu/head/%name%/128.png">
+                        <p><i class="fa fa-user" aria-hidden="true"></i> %active% %isonline%%banned%<br/>
+                            <i class="fa fa-address-card-o" aria-hidden="true"></i> Nicknames: %nicknames%<br/>
+                            <i class="fa fa-clock-o" aria-hidden="true"></i> Playtime: %playtime%<br/>
+                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times: %logintimes%<br/>
+                            <i class="fa fa-gavel" aria-hidden="true"></i> Times kicked: %timeskicked%<br/>
+                            <i class="fa fa-crosshairs" aria-hidden="true"></i> Player kills: %playerkills% | <i
+                                    class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i
+                                    class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%<br/>
+                            <br/>
+                            <i class="fa fa-globe" aria-hidden="true"></i> Geolocation: %geoloc%<br/>
+                            <i class="fa fa-tag" aria-hidden="true"></i> UUID: %uuid%<br/>
+                            <i class="fa fa-globe" aria-hidden="true"></i> Has Connected from ips: %ips%</p>
+                    </div>
+                    <div class="about box column">
+                        <div class="headerbox">
+                            <div class="header-icon" style="width: 50%">
+                                <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span
+                                        class="header-text"> Gamemode Usage</span></div>
+                            </div>
+                            <div class="infobox">
+                                <div class="info-icon">
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text" style="width: 70%;">
+                                    <div class="info-number">
+                                        %gmtotal%
+                                    </div>
+                                    <div class="info-label">
+                                        Total
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-area">
+                            <div class="infobox" style="float: left; background-color: #%gm0col%; width: 45%;">
+                                <div class="info-icon">
+                                    <i class="fa fa-fire" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %gm0%
+                                    </div>
+                                    <div class="info-label">
+                                        Survival
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="infobox" style="float: left; background-color: #%gm1col%; width: 45%;">
+                                <div class="info-icon">
+                                    <i class="fa fa-cube" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %gm1%
+                                    </div>
+                                    <div class="info-label">
+                                        Creative
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="infobox" style="float: left; background-color: #%gm2col%; width: 45%;">
+                                <div class="info-icon">
+                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %gm2%
+                                    </div>
+                                    <div class="info-label">
+                                        Adventure
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="infobox" style="float: left; background-color: #%gm3col%; width: 45%;">
+                                <div class="info-icon">
+                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-number">
+                                        %gm3%
+                                    </div>
+                                    <div class="info-label">
+                                        Spectator
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="about box column">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
+                                        class="header-text"> Player Activity: 7d</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text" style="width: 70%;">
+                                    <div class="info-number">
+                                        %lastseen%
+                                    </div>
+                                    <div class="info-label">
+                                        Last seen
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
+                    </div>
+                    <div class="about box column">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span
+                                        class="header-text"> Last 10 Kills</span></div>
+                            </div>
+                            <div class="infobox" style="float: right;">
+                                <div class="info-icon">
+                                    <i class="fa fa-crosshairs" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text" style="width: 70%;">
+                                    <div class="info-number">
+                                        %playerkills%
+                                    </div>
+                                    <div class="info-label">
+                                        Player Kills
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        %killstable%
+                    </div>
+                </div>
+            </div>
+            <div class="tab">
+                <div class="row">
+                    <div class="about box column">
+                        <div class="headerbox">
+                            <div class="header-icon" style="width: 50%">
+                                <div class="header-label"><i class="fa fa-braille" aria-hidden="true"></i><span
+                                        class="header-text"> PunchCard</span></div>
+                            </div>
+                            <div class="infobox">
+                                <div class="info-icon">
+                                    <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text" style="width: 70%;">
+                                    <div class="info-number">
+                                        %logintimes%
+                                    </div>
+                                    <div class="info-label">
+                                        Login Times
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="about box column">
+                        <div class="headerbox">
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
+                                        class="header-text"> Length Distribution</span></div>
+                            </div>
+                            <div class="infobox">
+                                <div class="info-icon">
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="info-text" style="width: 70%;">
+                                    <div class="info-number">
+                                        %sessionaverage%
+                                    </div>
+                                    <div class="info-label">
+                                        Average Length
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
+                        <p>If the graph contains more sessions than login times, likely cause is use of /reload
+                            (Restarts sessions).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab" style="display: block;">
+                %plugins%
+            </div>
+        </div>
+    </div>
+    <script>
         var serverTime = new Date(%currenttime%);
         var now = new Date();
         var timediff = serverTime.getTime()-now.getTime();
@@ -639,11 +651,12 @@
             document.getElementById('divTime').innerHTML = out;
             setTimeout('countUpTimer()', 1000);
         }
-	</script>
-	<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-	<script>
+
+    </script>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+    <script>
         function hour(i) {
             switch (i) {
                 case 25:
@@ -702,7 +715,6 @@
         });
         var ctxweek = document.getElementById("playerChartWeek");
         var dataweek = {
-                labels: %labelsweek% ,
             datasets: [{
             label: "Online",
             fill: true,
@@ -726,14 +738,24 @@
             data: %dataweek% ,
         }]};
         var playersChartWeek = new Chart(ctxweek, {
-            type: 'line',
-            data: dataweek,
-            options: {
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            callback: function(value, index, values) {
+                type: 'scatter',
+                        data: dataweek,
+                        options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItems, data) {
+                                        var newDate = new Date();
+                                        newDate.setTime(tooltipItems.xLabel);
+                                        dateString = newDate.toUTCString();
+                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
+                                    }
+                                }
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        callback: function(value, index, values) {
                                 switch (value) {
                                     case 0:
                                         return '0';
@@ -743,16 +765,16 @@
                                         return '';
                                 };
                             },
-                            suggestedMax: 2,
-                            suggestedMin: 0
+                                        suggestedMax: %graphmaxplayers%
+                                    }
+                                }],
+                                xAxes: [{
+                                        type: 'linear',
+                                    display: false
+                                }]
                         }
-                    }],
-                    xAxes: [{
-                        display: false
-                    }]
-                }
-            }
-        });
+                        }
+                });
         var ctxpunch = document.getElementById("punchcard");
         var datapunch = {
             datasets: [
@@ -877,6 +899,8 @@
                 }
             }
         });
-	</script>
+
+    </script>
+</div>
 </body>
 </html> 

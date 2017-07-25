@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
@@ -106,10 +107,9 @@ public class PlaceholderUtils {
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
-        String[] playersDataArray = PlayerActivityGraphCreator.generateDataArray(data.getSessions(), (long) 604800 * 1000);
         replaceMap.put("%graphmaxplayers%", 2 + "");
-        replaceMap.put("%dataweek%", playersDataArray[0]);
-        replaceMap.put("%labelsweek%", playersDataArray[1]);
+        String scatterGraphData = PlayerActivityGraphCreator.buildScatterDataStringSessions(data.getSessions(), TimeAmount.WEEK.ms());
+        replaceMap.put("%dataweek%", scatterGraphData);
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
         replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
         replaceMap.put("%datapunchcard%", PunchCardGraphCreator.generateDataArray(data.getSessions()));

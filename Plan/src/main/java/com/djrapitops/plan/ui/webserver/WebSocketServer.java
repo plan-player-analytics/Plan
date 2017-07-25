@@ -92,8 +92,8 @@ public class WebSocketServer {
                             response.sendStaticResource();
                         } catch (IOException | IllegalArgumentException e) {
                         } finally {
-                            Benchmark.stop("Webserver Response");
                             MiscUtils.close(input, request, output, socket);
+                            Benchmark.stop("Webserver Response");
                         }
                     }
                     this.cancel();

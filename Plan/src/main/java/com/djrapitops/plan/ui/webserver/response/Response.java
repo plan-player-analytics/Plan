@@ -37,6 +37,7 @@ public abstract class Response {
                 + content;
 //        Log.debug("Response: " + response); // Responses should not be logged, html content large.
         output.write(response.getBytes());
+        output.flush();
     }
 
     public void setHeader(String header) {

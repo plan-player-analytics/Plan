@@ -1,47 +1,29 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public class PlayerActivityGraphCreator {
 
-    @Deprecated
-    public static String[] generateArray(List<TPS> tpsData, long scale) {
-        long now = MiscUtils.getTime();
-        List<TPS> filtered = tpsData.stream().filter(tps -> tps.getDate() >= now - scale).collect(Collectors.toList());
-        String players = filtered.stream().map(TPS::getPlayers).collect(Collectors.toList()).toString();
-        String dates = filtered.stream().map(TPS::getDate).collect(Collectors.toList()).toString();
-        return new String[]{players, dates};
-    }
-
     public static String buildScatterDataString(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
-        List<Point> points = tpsData.stream().filter(tps -> tps.getDate() >= now - scale).map(tps -> new Point(tps.getDate(), tps.getPlayers())).collect(Collectors.toList());
+        List<Point> points = tpsData.stream()
+                .filter(tps -> tps.getDate() >= now - scale)
+                .map(tps -> new Point(tps.getDate(), tps.getPlayers()))
+                .collect(Collectors.toList());
         return ScatterGraphCreator.scatterGraph(points, true);
     }
 
-    /**
-     *
-     * @param sessionData
-     * @param scale
-     * @return
-     */
-    public static String[] generateDataArray(List<SessionData> sessionData, long scale) {
+    public static String buildScatterDataStringSessions(List<SessionData> sessionData, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         List<List<Long>> s = filterAndTransformSessions(sessionData, nowMinusScale);
@@ -53,52 +35,26 @@ public class PlayerActivityGraphCreator {
             sessionStarts.add(nowMinusScale);
         }
 
-        Map<Long, Integer> change = transformIntoChangeMap(sessionStarts, sessionEnds);
-
-        long lastPValue = 0;
-        long lastSavedPValue = -1;
-        long lastSaveIndex = 0;
-        List<Long> playersOnline = new ArrayList<>();
-        List<String> labels = new ArrayList<>();
-        for (long i = nowMinusScale / 1000; i <= now / 1000; i += 1) {
-            long index = i * 1000;
-            boolean contains = change.containsKey(index);
-            boolean isBelowMinimumScaleThreshold = index - lastSaveIndex > (scale / (long) 75);
-            if (!(contains || isBelowMinimumScaleThreshold)) {
-                continue;
-            }
-            if (contains) {
-                lastPValue += change.get(index);
-            }
-            if (isBelowMinimumScaleThreshold || lastSavedPValue != lastPValue) {
-                lastSaveIndex = index;
-                labels.add("\"" + FormatUtils.formatTimeStamp(index) + "\"");
-                lastSavedPValue = lastPValue;
-                playersOnline.add(lastPValue);
-            }
-        }
-        if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
-            long average = MathUtils.averageLong(playersOnline.stream());
-            double standardDeviation = getStandardDeviation(playersOnline, average);
-            if (standardDeviation > 3.5) {
-                for (int i = 0; i < playersOnline.size(); i++) {
-                    long value = playersOnline.get(i);
-                    if (value - average > 3 * standardDeviation) {
-                        playersOnline.set(i, (long) Plan.getInstance().getVariable().getMaxPlayers() + 10);
-                    }
-                }
-            }
-        }
-        return new String[]{playersOnline.toString(), labels.toString()};
+        Map<Long, Integer> changeMap = transformIntoChangeMap(sessionStarts, sessionEnds);
+        List<Point> points = getPointsFromChangeMap(changeMap);
+        return ScatterGraphCreator.scatterGraph(points, false);
     }
 
-    private static double getStandardDeviation(List<Long> players, long avg) {
-        List<Double> valueMinusAvg = players.stream()
-                .map(p -> Math.pow(Math.abs(p - avg), 2))
-                .collect(Collectors.toList());
-        int size = valueMinusAvg.size();
-        double sum = MathUtils.sumDouble(valueMinusAvg.stream().map(p -> (Serializable) p));
-        return Math.sqrt(sum / size);
+    private static List<Point> getPointsFromChangeMap(Map<Long, Integer> changeMap) {
+        List<Point> points = new ArrayList<>();
+        int lastIndex = -1;
+        for (Long key : changeMap.keySet()) {
+            long date = key;
+            int change = changeMap.get(key);
+            if (change != 0) {
+                int previousValue = 0;
+                if (lastIndex >= 0) {
+                    previousValue = (int) points.get(lastIndex).getY();
+                }
+                points.add(new Point(date, previousValue+change));
+            }
+        }
+        return points;
     }
 
     private static Map<Long, Integer> transformIntoChangeMap(List<Long> sessionStarts, List<Long> sessionEnds) {
@@ -121,20 +77,15 @@ public class PlayerActivityGraphCreator {
     }
 
     /**
-     *
      * @param values
      * @param lookFor
      * @return
      */
     public static long getCount(List<Long> values, long lookFor) {
         return Collections.frequency(values, lookFor);
-//        values.stream()
-//                .filter((start) -> (start == lookFor))
-//                .count();
     }
 
     /**
-     *
      * @param sessionData
      * @param nowMinusScale
      * @return
@@ -162,7 +113,6 @@ public class PlayerActivityGraphCreator {
     }
 
     /**
-     *
      * @param ms
      * @return
      */

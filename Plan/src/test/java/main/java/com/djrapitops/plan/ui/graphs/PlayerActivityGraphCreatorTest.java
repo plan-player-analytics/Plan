@@ -1,15 +1,17 @@
 package test.java.main.java.com.djrapitops.plan.ui.graphs;
 
+import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -28,18 +30,6 @@ public class PlayerActivityGraphCreatorTest {
      *
      */
     public PlayerActivityGraphCreatorTest() {
-    }
-
-    /**
-     *
-     */
-    @Test
-    @Ignore("Useless test")
-    public void testGenerateDataArray() {
-        List<SessionData> sessionData = createRandomSessionDataList();
-        long scale = 2592000L * 1000L;
-        String result = PlayerActivityGraphCreator.generateDataArray(sessionData, scale)[1];
-        assertTrue("0", 0 < result.length());
     }
 
     /**
