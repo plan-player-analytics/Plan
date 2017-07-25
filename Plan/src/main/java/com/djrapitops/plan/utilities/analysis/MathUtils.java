@@ -170,7 +170,7 @@ public class MathUtils {
         return biggest.isPresent() ? biggest.getAsLong() : 1;
     }
 
-    private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat df = new DecimalFormat("#'.'##");
 
     /**
      * Rounds the double to a double with two digits at the end.
