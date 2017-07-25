@@ -11,10 +11,6 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        <repository>
-            <id>bstats-repo</id>
-            <url>http://repo.bstats.org/content/repositories/releases/</url>
-        </repository>
     </repositories>
     <dependencies>
         <!--        Spigot 1.12 built with Buildtools for Database classes.-->
@@ -30,12 +26,6 @@
             <artifactId>AbstractPluginFramework</artifactId>
             <version>2.0.0</version>
             <scope>compile</scope>
-        </dependency>
-        <!--        bStats Metrics-->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>1.2</version>
         </dependency>
         <!--        SoftDepended Plugins-->
         <dependency>

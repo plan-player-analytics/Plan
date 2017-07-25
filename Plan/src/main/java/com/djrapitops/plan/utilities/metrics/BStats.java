@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.metrics;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import org.bstats.bukkit.Metrics;
 
 import java.util.concurrent.Callable;
 
@@ -15,6 +15,7 @@ public class BStats {
     }
 
     public void registerMetrics() {
+        Log.debug("Enabling bStats Metrics.");
         if (bStats == null) {
             bStats = new Metrics(plugin);
         }
