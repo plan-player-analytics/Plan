@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 /**
- *
  * @author Rsl1122
  * @since 3.5.2
  */
@@ -20,5 +19,10 @@ public class Point {
 
     public double getY() {
         return y;
+    }
+
+    @Override
+    public String toString() {
+        return "{x:" + x + " y:" + y + '}';
     }
 }
