@@ -2,10 +2,8 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
+import java.text.DecimalFormatSymbols;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -170,7 +168,8 @@ public class MathUtils {
         return biggest.isPresent() ? biggest.getAsLong() : 1;
     }
 
-    private static final DecimalFormat df = new DecimalFormat("#'.'##");
+    private static final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#.##", decimalFormatSymbols);
 
     /**
      * Rounds the double to a double with two digits at the end.
@@ -180,6 +179,6 @@ public class MathUtils {
      * @return The rounded number
      */
     public static double round(double number) {
-        return Double.valueOf(df.format(number));
+        return Double.valueOf(decimalFormat.format(number));
     }
 }
