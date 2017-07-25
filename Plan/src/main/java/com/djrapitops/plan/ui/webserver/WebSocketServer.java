@@ -64,7 +64,7 @@ public class WebSocketServer {
         if (enabled) {
             return;
         }
-        Log.info(Phrase.WEBSERVER_INIT + "");
+        Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             InetAddress ip = InetAddress.getByName(Settings.WEBSERVER_IP.toString());
 //            SSLServerSocketFactory ssl = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();

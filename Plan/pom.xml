@@ -8,6 +8,10 @@
     <packaging>jar</packaging>
     <repositories>
         <repository>
+            <id>plan-repo</id>
+            <url>http://repo.fuzzlemann.de/artifactory/libs-release/</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
