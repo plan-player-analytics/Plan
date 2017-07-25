@@ -26,14 +26,14 @@
         </dependency>
         <!--        Framework for easier plugin development-->
         <dependency>
-            <groupId>com.djrapitops.abstract-plugin-framework</groupId>
+            <groupId>com.djrapitops</groupId>
             <artifactId>abstract-plugin-framework</artifactId>
             <version>2.0.0</version>
             <scope>compile</scope>
         </dependency>
         <!--        SoftDepended Plugins-->
         <dependency>
-            <groupId>com.djrapitops.PlanPluginBridge</groupId>
+            <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
             <version>3.5.0</version>
             <scope>compile</scope>
