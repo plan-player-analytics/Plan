@@ -61,7 +61,7 @@ public class TPSCountTimer extends AbsRunnable {
      *
      * @param diff The time difference between the last run and the new run
      * @param now The time right now
-     * @return
+     * @return the TPS
      */
     private TPS calculateTPS(long diff, long now) {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
@@ -78,6 +78,14 @@ public class TPSCountTimer extends AbsRunnable {
         }
     }
 
+    /**
+     * Gets the TPS for Paper
+     *
+     * @param now The time right now
+     * @param cpuUsage The usage of the CPU
+     * @param playersOnline The amount of players that are online
+     * @return the TPS
+     */
     private TPS getTPSPaper(long now, double cpuUsage, int playersOnline) {
         double tps = plugin.getServer().getTPS()[0];
 
@@ -90,6 +98,15 @@ public class TPSCountTimer extends AbsRunnable {
         return new TPS(now, tps, playersOnline, cpuUsage);
     }
 
+    /**
+     * Gets the TPS for a Spigot / Bukkit
+     *
+     * @param diff The difference between the last run and this run
+     * @param now The time right now
+     * @param cpuUsage The usage of the CPU
+     * @param playersOnline The amount of players that are online
+     * @return the TPS
+     */
     private TPS getTPS(long diff, long now, double cpuUsage, int playersOnline) {
         if (diff < TimeAmount.SECOND.ns()) { // No tick count above 20
             diff = TimeAmount.SECOND.ns();
