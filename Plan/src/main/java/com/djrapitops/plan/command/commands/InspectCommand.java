@@ -7,13 +7,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import java.sql.SQLException;
-import java.util.UUID;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
@@ -24,6 +18,9 @@ import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
+
+import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * This command is used to cache UserData to InspectCache and display the link.
@@ -42,7 +39,7 @@ public class InspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InspectCommand(Plan plugin) {
-        super("inspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.INSPECT.getPermission(), Phrase.CMD_USG_INSPECT + "", Phrase.ARG_PLAYER + "");
+        super("inspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.INSPECT.getPermission(), Phrase.CMD_USG_INSPECT.toString(), Phrase.ARG_PLAYER.toString());
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -50,7 +47,7 @@ public class InspectCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_INSPECT + "", sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_INSPECT.toString(), sender)) {
             return true;
         }
 

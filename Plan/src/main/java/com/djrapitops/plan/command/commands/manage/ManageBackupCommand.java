@@ -29,7 +29,7 @@ public class ManageBackupCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageBackupCommand(Plan plugin) {
-        super("backup", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_BACKUP + "", "<DB>");
+        super("backup", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_BACKUP.toString(), "<DB>");
 
         this.plugin = plugin;
     }
@@ -37,7 +37,7 @@ public class ManageBackupCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         try {
-            if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_BACKUP + ""), sender)) {
+            if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_BACKUP.toString()), sender)) {
                 return true;
             }
             String dbName = args[0].toLowerCase();
@@ -49,14 +49,14 @@ public class ManageBackupCommand extends SubCommand {
             final Database database = ManageUtils.getDB(plugin, dbName);
 
             // If DB is null return
-            if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+            if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
                 Log.error(dbName + " was null!");
                 return true;
             }
 
             runBackupTask(sender, args, database);
         } catch (NullPointerException e) {
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE.toString());
         }
         return true;
     }

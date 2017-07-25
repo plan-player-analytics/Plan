@@ -55,6 +55,7 @@ public class InspectCacheHandler {
                 }
             }
         };
+
         handler.getUserDataForProcessing(cacher, uuid, false);
     }
 
@@ -103,10 +104,7 @@ public class InspectCacheHandler {
      * @return -1 when not cached or Epoch millisecond.
      */
     public long getCacheTime(UUID uuid) {
-        if (cacheTimes.containsKey(uuid)) {
-            return cacheTimes.get(uuid);
-        }
-        return -1;
+        return cacheTimes.getOrDefault(uuid, -1L);
     }
 
     /**

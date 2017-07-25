@@ -37,7 +37,7 @@ public class ManageImportCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageImportCommand(Plan plugin) {
-        super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT + "", Phrase.ARG_IMPORT + "");
+        super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT.toString(), Phrase.ARG_IMPORT.toString());
         this.plugin = plugin;
     }
 
@@ -74,12 +74,12 @@ public class ManageImportCommand extends SubCommand {
             @Override
             public void run() {
                 try {
-                    sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
+                    sender.sendMessage(Phrase.MANAGE_IMPORTING.toString());
                     List<UUID> uuids = Fetch.getIOfflinePlayers().stream().map(IOfflinePlayer::getUniqueId).collect(Collectors.toList());
                     if (importer.importData(uuids, importArguments)) {
-                        sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
+                        sender.sendMessage(Phrase.MANAGE_SUCCESS.toString());
                     } else {
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
                     }
                 } finally {
                     this.cancel();

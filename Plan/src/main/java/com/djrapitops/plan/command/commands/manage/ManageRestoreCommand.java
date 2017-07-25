@@ -5,9 +5,6 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import java.io.File;
-import java.util.Collection;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -16,6 +13,10 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  * This manage subcommand is used to restore a backup.db file in the
@@ -33,14 +34,14 @@ public class ManageRestoreCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRestoreCommand(Plan plugin) {
-        super("restore", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_RESTORE + "", Phrase.ARG_RESTORE + "");
+        super("restore", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_RESTORE.toString(), Phrase.ARG_RESTORE.toString());
 
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE + ""), sender)) {
+        if (!Check.isTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE.toString()), sender)) {
             return true;
         }
         String db = args[1].toLowerCase();
@@ -55,7 +56,7 @@ public class ManageRestoreCommand extends SubCommand {
 
         final Database database = ManageUtils.getDB(plugin, db);
 
-        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
             Log.error(db + " was null!");
             return true;
         }
@@ -82,7 +83,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
                     if (!backupDB.init()) {
-                        sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+                        sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE.toString());
                         return;
                     }
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());

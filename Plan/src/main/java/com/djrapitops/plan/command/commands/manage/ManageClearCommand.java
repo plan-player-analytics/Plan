@@ -71,9 +71,9 @@ public class ManageClearCommand extends SubCommand {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
 
                     if (database.removeAllData()) {
-                        sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS + "");
+                        sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS.toString());
                     } else {
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
                     }
                 } finally {
                     this.cancel();

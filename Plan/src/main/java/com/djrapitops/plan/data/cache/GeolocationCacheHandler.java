@@ -18,6 +18,7 @@ import java.util.Map;
  * This cache uses the Google Guava {@link Cache} and has a capacity of 10.000 entries.
  *
  * @author Fuzzlemann
+ * @since 3.5.5
  */
 public class GeolocationCacheHandler {
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
@@ -33,7 +34,7 @@ public class GeolocationCacheHandler {
      * @return The name of the country in full length.
      * <p>
      * An exception from that rule is when the country is unknown or the retrieval of the country failed in any way,
-     * if that happens, the phrase for unknown country set in the config will be returned.
+     * if that happens, "Not Known" will be returned.
      * @see #getUncachedCountry(String)
      */
     public static String getCountry(String ipAddress) {
@@ -64,7 +65,7 @@ public class GeolocationCacheHandler {
      * @return The name of the country in full length.
      * <p>
      * An exception from that rule is when the country is unknown or the retrieval of the country failed in any way,
-     * if that happens, the phrase for unknown country set in the config will be returned.
+     * if that happens, "Not Known" will be returned.
      * @see <a href="http://freegeoip.net">http://freegeoip.net</a>
      * @see #getCountry(String)
      */

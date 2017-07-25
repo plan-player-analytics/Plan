@@ -363,11 +363,14 @@ public class DataCacheHandler extends SessionCache {
             return new ArrayList<>();
         }
         List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
+
         for (List<TPS> history : copy) {
             final long lastDate = history.get(history.size() - 1).getDate();
             final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
-            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline));
+            final double averageCPUUsage = MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage));
+
+            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage));
         }
         unsavedTPSHistory.removeAll(copy);
         return averages;
@@ -516,10 +519,9 @@ public class DataCacheHandler extends SessionCache {
      * @param command "/command"
      */
     public void handleCommand(String command) {
-        if (!commandUse.containsKey(command)) {
-            commandUse.put(command, 0);
-        }
-        commandUse.put(command, commandUse.get(command) + 1);
+        int amount = commandUse.getOrDefault(command, 0);
+
+        commandUse.put(command, amount + 1);
     }
 
     /**
