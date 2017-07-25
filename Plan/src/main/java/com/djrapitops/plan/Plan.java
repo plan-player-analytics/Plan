@@ -41,6 +41,7 @@ import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.Bukkit;
 
 import java.io.*;
@@ -145,7 +146,7 @@ public class Plan extends BukkitPlugin<Plan> {
         }
         Benchmark.stop("Enable: Analysis refresh task registration");
 
-        Benchmark.start("Enable: Webserver Initialization");
+        Benchmark.start("Enable: WebServer Initialization");
         // Data view settings
         boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
         boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
@@ -163,7 +164,7 @@ public class Plan extends BukkitPlugin<Plan> {
         if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
         }
-        Benchmark.stop("Enable: Webserver Initialization");
+        Benchmark.stop("Enable: WebServer Initialization");
 
         registerCommand(new PlanCommand(this));
 
@@ -171,7 +172,10 @@ public class Plan extends BukkitPlugin<Plan> {
         hookHandler = new HookHandler(this);
         Benchmark.stop("Enable: Hook to 3rd party plugins");
 
-        Log.debug("Verboose debug messages are enabled.");
+        BStats bStats = new BStats(this);
+        bStats.registerMetrics();
+
+        Log.debug("Verbose debug messages are enabled.");
         Log.info(Phrase.ENABLED + "");
         processStatus().finishExecution("Enable");
     }
