@@ -28,7 +28,6 @@ public class TPSTable extends Table {
     private final String columnCPUUsage;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -50,6 +49,10 @@ public class TPSTable extends Table {
                     + columnCPUUsage + " double NOT NULL"
                     + ")"
             );
+            int version = getVersion();
+            if (version < 6) {
+                alterTablesV6();
+            }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -57,8 +60,19 @@ public class TPSTable extends Table {
         }
     }
 
+    private void alterTablesV6() {
+        try {
+            if (usingMySQL) {
+                execute("ALTER TABLE " + tableName + " ADD " + columnCPUUsage + " double NOT NULL");
+            } else {
+                execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL");
+            }
+        } catch (SQLException e) {
+
+        }
+    }
+
     /**
-     *
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
@@ -85,7 +99,6 @@ public class TPSTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -127,7 +140,6 @@ public class TPSTable extends Table {
     }
 
     /**
-     *
      * @throws SQLException
      */
     public void clean() throws SQLException {
