@@ -17,11 +17,11 @@
         </repository>
     </repositories>
     <dependencies>
-        <!--        Spigot 1.12 built with Buildtools for Database classes.-->
+        <!--        PaperSpigot 1.12 built with Buildtools for Database classes.-->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-spigot</artifactId>
+            <version>1.12</version>
             <scope>provided</scope>
         </dependency>
         <!--        PaperSpigot 1.12 built for TPS Getter Support.-->

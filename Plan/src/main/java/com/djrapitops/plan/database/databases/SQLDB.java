@@ -122,7 +122,7 @@ public abstract class SQLDB extends Database {
             }
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(5);
+                setVersion(6);
             }
             Benchmark.start("Database: Create tables");
             for (Table table : getAllTables()) {
@@ -136,8 +136,8 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             Benchmark.stop("Database: Create tables");
-            if (!newDatabase && getVersion() < 5) {
-                setVersion(5);
+            if (!newDatabase && getVersion() < 6) {
+                setVersion(6);
             }
         }
         return true;
