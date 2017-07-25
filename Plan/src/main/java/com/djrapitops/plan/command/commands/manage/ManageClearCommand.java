@@ -5,7 +5,6 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -76,9 +75,6 @@ public class ManageClearCommand extends SubCommand {
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                     }
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
                 } finally {
                     this.cancel();
                 }

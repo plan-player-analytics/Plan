@@ -7,14 +7,13 @@ package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
+import main.java.com.djrapitops.plan.utilities.analysis.Point;
+import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
-import main.java.com.djrapitops.plan.utilities.analysis.Point;
-import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
 
 /**
  * Abstract scatter graph creator used by other graph creators.
@@ -25,10 +24,16 @@ import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
 public class ScatterGraphCreator {
 
     public static String scatterGraph(List<Point> points, boolean reduceGapTriangles) {
+        return scatterGraph(points, reduceGapTriangles, true);
+    }
+
+    public static String scatterGraph(List<Point> points, boolean reduceGapTriangles, boolean reducePoints) {
         StringBuilder arrayBuilder = new StringBuilder();
         arrayBuilder.append("[");
 
-        points = DouglasPeckerAlgorithm.reducePoints(points, 0);
+        if (reducePoints) {
+            points = DouglasPeckerAlgorithm.reducePoints(points, 0);
+        }
 
         if (reduceGapTriangles) {
             Point lastPoint = null;
