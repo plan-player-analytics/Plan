@@ -1,9 +1,5 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -11,6 +7,11 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -216,7 +217,7 @@ public class AnalysisUtils {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         Set<UUID> uniqueJoins = new HashSet<>();
-        sessions.keySet().stream().forEach((uuid) -> {
+        sessions.keySet().forEach((uuid) -> {
             List<SessionData> s = sessions.get(uuid);
             for (SessionData session : s) {
                 if (session.getSessionStart() < nowMinusScale) {
@@ -238,7 +239,7 @@ public class AnalysisUtils {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
-        sessions.keySet().stream().forEach((uuid) -> {
+        sessions.keySet().forEach((uuid) -> {
             List<SessionData> s = sessions.get(uuid);
             for (SessionData session : s) {
                 if (scale != -1) {

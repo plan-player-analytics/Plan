@@ -1,12 +1,9 @@
 package main.java.com.djrapitops.plan.data.handling;
 
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.GeolocationCacheHandler;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.URL;
 
 /**
  * Class containing static methods for processing information contained in a
@@ -40,29 +37,15 @@ public class LoginHandling {
     /**
      * Updates the geolocation of the player.
      *
-     * Uses free service of freegeoip.net. 10000 requests can be sent per hour.
+     * Uses free service of freegeoip.net. 15000 requests can be sent per hour.
      *
      * @param ip InetAddress used for location.
      * @param data UserData of the player.
+     * @see GeolocationCacheHandler
      */
     public static void updateGeolocation(InetAddress ip, UserData data) {
-        try {
-            StringBuilder result = new StringBuilder();
-            URL url = new URL("http://freegeoip.net/csv/" + ip.getHostAddress());
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        String geoLocation = GeolocationCacheHandler.getCountry(ip.getHostAddress());
 
-            String resultline;
-            while ((resultline = in.readLine()) != null) {
-                result.append(resultline).append(",");
-            }
-            in.close();
-
-            String[] results = result.toString().split(",");
-            if (!results[2].isEmpty()) {
-                data.setGeolocation(results[2]);
-            }
-        } catch (Exception e) {
-            data.setGeolocation(Phrase.DEM_UNKNOWN + "");
-        }
+        data.setGeolocation(geoLocation);
     }
 }

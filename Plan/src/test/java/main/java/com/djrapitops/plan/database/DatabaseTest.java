@@ -5,22 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.database;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -35,7 +19,8 @@ import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.*;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -44,9 +29,20 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import test.java.utils.TestInit;
 
 /**
  *
@@ -73,7 +69,7 @@ public class DatabaseTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws IOException, Exception {
+    public void setUp() throws Exception {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {

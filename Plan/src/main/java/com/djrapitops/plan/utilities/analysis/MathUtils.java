@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.stream.Stream;
 
 /**
@@ -124,13 +126,13 @@ public class MathUtils {
      * @return
      */
     public static int getBiggest(Collection<Integer> values) {
-        int biggest = 1;
-        for (Integer value : values) {
-            if (value > biggest) {
-                biggest = value;
-            }
+        OptionalInt biggest = values.stream().mapToInt(i -> i).max();
+
+        if (biggest.isPresent()) {
+            return biggest.getAsInt();
+        } else {
+            return 1;
         }
-        return biggest;
     }
 
     /**
@@ -139,12 +141,12 @@ public class MathUtils {
      * @return
      */
     public static long getBiggestLong(Collection<Long> values) {
-        long biggest = 1;
-        for (Long value : values) {
-            if (value > biggest) {
-                biggest = value;
-            }
+        OptionalLong biggest = values.stream().mapToLong(i -> i).max();
+
+        if (biggest.isPresent()) {
+            return biggest.getAsLong();
+        } else {
+            return 1;
         }
-        return biggest;
     }
 }

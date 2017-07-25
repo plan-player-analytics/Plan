@@ -5,11 +5,6 @@ import com.djrapitops.plugin.utilities.BenchUtil;
 import com.djrapitops.plugin.utilities.log.BukkitLog;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.status.ProcessStatus;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
@@ -18,6 +13,13 @@ import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.logging.Logger;
+
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -50,7 +52,7 @@ public class TestInit {
         YamlConfiguration config = mockConfig();
         when(planMock.getConfig()).thenReturn(config);
 
-        File testFolder = getEmptyTestfolder();
+        File testFolder = getEmptyTestFolder();
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
         // Html Files
@@ -91,7 +93,7 @@ public class TestInit {
         return mockServer;
     }
 
-    private File getEmptyTestfolder() throws IOException {
+    private File getEmptyTestFolder() throws IOException {
         File testFolder = new File("temporaryTestFolder");
         if (testFolder.exists()) {
             for (File f : testFolder.listFiles()) {

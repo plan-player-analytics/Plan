@@ -127,7 +127,7 @@ public class Request implements Closeable {
     /**
      * Closes the Request.
      *
-     * Closes the inputstream.
+     * Closes the InputStream.
      *
      * @throws IOException if the stream can not be closed.
      */

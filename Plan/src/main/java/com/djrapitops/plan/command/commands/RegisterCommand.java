@@ -43,7 +43,7 @@ public class RegisterCommand extends SubCommand {
         String permLvlErrorMsg = ChatColor.RED + "Incorrect perm level, not a number: ";
         try {
             if (CommandUtils.isPlayer(sender)) {
-                Log.info(sender.getName()+" issued WebUser register command.");
+                Log.info(sender.getName() + " issued WebUser register command.");
                 playerRegister(args, sender);
             } else {
                 consoleRegister(args, sender, notEnoughArgsMsg);
@@ -74,11 +74,6 @@ public class RegisterCommand extends SubCommand {
         if (registerSenderAsUser) {
             String user = sender.getName();
             String pass = PassEncryptUtil.createHash(args[0]);
-
-            if (!Check.isTrue(pass != null, ChatColor.RED + "Password hash error.", sender)) {
-                return;
-            }
-
             int permLvl = getPermissionLevel(sender);
             registerUser(new WebUser(user, pass, permLvl), sender);
         } else if (sender.hasPermission(Permissions.MANAGE_WEB.getPermission())) {
@@ -119,7 +114,7 @@ public class RegisterCommand extends SubCommand {
                     }
                     securityTable.addNewUser(webUser);
                     sender.sendMessage(successMsg);
-                    Log.info("Registered new user: "+userName+" Perm level: "+webUser.getPermLevel());
+                    Log.info("Registered new user: " + userName + " Perm level: " + webUser.getPermLevel());
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName(), e);
                 } finally {

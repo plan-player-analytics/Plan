@@ -16,7 +16,7 @@ public abstract class Queue<T> {
     Setup<T> setup;
 
     /**
-     * Consturctor, defines queue.
+     * Constructor, defines queue.
      *
      * @param queue BlockingQueue to use for this queue.
      */

@@ -36,6 +36,7 @@ public class HtmlUtils {
                 resourceStream = plugin.getResource(fileName);
                 scanner = new Scanner(resourceStream);
             }
+
             StringBuilder html = new StringBuilder();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -77,7 +78,7 @@ public class HtmlUtils {
         String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", "" + port);
         }
         return "//" + ip + "/server";
     }
@@ -101,7 +102,7 @@ public class HtmlUtils {
         String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replaceAll("%port%", "" + port);
+            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", "" + port);
         }
         return "//" + ip + "/player/" + playerName;
     }
@@ -163,7 +164,7 @@ public class HtmlUtils {
         StringBuilder html = new StringBuilder();
         html.append(Html.HEADER.parse(name));
         html.append(Html.PLUGIN_CONTAINER_START.parse());
-        placeholders.stream().forEach(html::append);
+        placeholders.forEach(html::append);
         html.append("</div>");
         return html.toString();
     }
@@ -179,13 +180,13 @@ public class HtmlUtils {
             Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
 
         for (Html html : replacer) {
-            string = string.replaceAll("§" + html.name().charAt(6), html.parse());
+            string = string.replace("§" + html.name().charAt(6), html.parse());
         }
         int spans = string.split("<span").length - 1;
         for (int i = 0; i < spans; i++) {
             string = Html.SPAN.parse(string);
         }
-        return string.replaceAll("§r", "");
+        return string.replace("§r", "");
     }
 
     public static String separateWithQuotes(String... strings) {

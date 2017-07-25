@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * This class manages the messages going to the Console Logger.
  *
- * Methods of Abtract Plugin Framework log utility are used.
+ * Methods of Abstract Plugin Framework log utility are used.
  *
  * @author Rsl1122
  * @since 3.0.0
@@ -22,7 +22,7 @@ public class Log {
     }
 
     /**
-     * Sends a message to the console with the chatcolors.
+     * Sends a message to the console with the ChatColors.
      *
      * @param message Message to send.
      */

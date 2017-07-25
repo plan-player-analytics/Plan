@@ -1,14 +1,6 @@
 package test.java.main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -19,9 +11,15 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import test.java.utils.TestInit;
 
 /**
  *
@@ -348,7 +346,7 @@ public class UserDataTest {
      * @throws IOException
      */
     @Test
-    public void testPlayerConstructorBrokenBanned() throws IOException, Exception {
+    public void testPlayerConstructorBrokenBanned() throws Exception {
         TestInit.init();
         test = new UserData(MockUtils.mockBrokenPlayer());
         UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, true, "SURVIVAL", "TestName", true);
@@ -372,7 +370,7 @@ public class UserDataTest {
      * @throws IOException
      */
     @Test
-    public void testOfflinePlayerConstructorBrokenBanned() throws IOException, Exception {
+    public void testOfflinePlayerConstructorBrokenBanned() throws Exception {
         TestInit.init();
         test = new UserData((IOfflinePlayer) MockUtils.mockBrokenPlayer());
         UserData expected = new UserData(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"), 1234567L, true, "SURVIVAL", "TestName", true);

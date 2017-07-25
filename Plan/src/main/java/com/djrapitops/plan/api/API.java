@@ -4,13 +4,6 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import com.djrapitops.plugin.utilities.player.UUIDFetcher;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -22,15 +15,23 @@ import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * This class contains the API methods.
  *
- * Methods can be called from Asyncronous task and are thread safe unless
+ * Methods can be called from Asynchronous task and are thread safe unless
  * otherwise stated.
  *
  * Use Plan.getPlanAPI() to get the API.
  *
- * More information about API methods can be found on Github.
+ * More information about API methods can be found on GitHub.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -44,7 +45,7 @@ public class API {
     private final Plan plugin;
 
     /**
-     * Class Construcor.
+     * Class Constructor.
      *
      * @param plugin Current instance of Plan
      */
@@ -65,7 +66,7 @@ public class API {
      * Add a source of plugin data to the Plugins tab on Analysis and/or Inspect
      * page.
      *
-     * Refer to documentation on github or Javadoc of PluginData to set-up a
+     * Refer to documentation on GitHub or Javadoc of PluginData to set-up a
      * data source that extends PluginData correctly.
      *
      * @param dataSource an object that extends PluginData-object, thus allowing
@@ -102,7 +103,7 @@ public class API {
      *
      * @param uuid UUID of the player.
      * @param processor Object implementing DBCallableProcessor, which
-     * process(UserData data) method will be called.
+     * process (UserData data) method will be called.
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
         plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
@@ -135,7 +136,7 @@ public class API {
     /**
      * Used to save the cached data to the database.
      *
-     * Should be only called from an Asyncronous thread.
+     * Should be only called from an Asynchronous thread.
      */
     public void saveCachedData() {
         plugin.getHandler().saveCachedUserData();
@@ -154,7 +155,7 @@ public class API {
     /**
      * Cache the UserData to InspectCache.
      *
-     * Uses cache if data is cached or database if not. Call from an Asyncronous
+     * Uses cache if data is cached or database if not. Call from an Asynchronous
      * thread.
      *
      * @param uuid UUID of the player.
@@ -193,14 +194,14 @@ public class API {
      * Run's the analysis with the current data in the cache and fetches rest
      * from the database.
      *
-     * Starts a new Asyncronous task to run the analysis.
+     * Starts a new Asynchronous task to run the analysis.
      */
     public void updateAnalysisCache() {
         plugin.getAnalysisCache().updateCache();
     }
 
     /**
-     * Used to get the full Html of the Analysis page as a string.
+     * Used to get the full HTML of the Analysis page as a string.
      *
      * Check if the data is cached to AnalysisCache before calling this.
      *

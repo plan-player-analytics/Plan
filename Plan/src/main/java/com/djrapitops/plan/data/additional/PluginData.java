@@ -31,7 +31,7 @@ public abstract class PluginData {
     /**
      * Name of the plugin the data is coming from.
      *
-     * All datasources with the same sourcePlugin will be placed in the same
+     * All sources of data with the same sourcePlugin will be placed in the same
      * "box" in the "Plugins" tab.
      *
      * A box has a max height of 600px, and higher than that will add a
@@ -277,7 +277,7 @@ public abstract class PluginData {
 
     /**
      * If a PluginData object has same placeholder, sourcePlugin and
-     * analysisTypes, it is considired equal.
+     * analysisTypes, it is considered equal.
      *
      * @param obj Another Object.
      * @return Is current object equal to given object.
@@ -294,13 +294,10 @@ public abstract class PluginData {
             return false;
         }
         final PluginData other = (PluginData) obj;
-        if (this.analysisOnly != other.analysisOnly) {
-            return false;
-        }
-        if (!Objects.equals(this.placeholder, other.placeholder)) {
-            return false;
-        }
-        return Objects.equals(this.sourcePlugin, other.sourcePlugin) && Objects.equals(this.analysisTypes, other.analysisTypes);
+        return this.analysisOnly == other.analysisOnly
+                && Objects.equals(this.placeholder, other.placeholder)
+                && Objects.equals(this.sourcePlugin, other.sourcePlugin)
+                && Objects.equals(this.analysisTypes, other.analysisTypes);
     }
 
     @Override

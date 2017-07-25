@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.data.additional;
  * The enum determines what should be done to the return value of
  * PluginData.getValue() method when the analysis is run.
  *
- * Refer to the documentation on github for additional information.
+ * Refer to the documentation on GitHub for additional information.
  *
  * @author Rsl1122
  * @since 3.1.0

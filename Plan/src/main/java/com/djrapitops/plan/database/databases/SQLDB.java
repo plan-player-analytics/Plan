@@ -1,20 +1,23 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.plugin.task.AbsRunnable;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.tables.*;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
+
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.tables.*;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 /**
  *
@@ -52,8 +55,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
-     * @param plugin
      * @throws IllegalArgumentException
      * @throws IllegalStateException
      */
@@ -318,7 +319,7 @@ public abstract class SQLDB extends Database {
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
         data.setPlayerKills(killsTable.getPlayerKills(userId));
-        processors.stream().forEach((processor) -> processor.process(data));
+        processors.forEach((processor) -> processor.process(data));
         Benchmark.stop("Database: Give userdata to processors");
         setAvailable();
     }

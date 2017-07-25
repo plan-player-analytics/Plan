@@ -1,20 +1,17 @@
 package main.java.com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.*;
-import main.java.com.djrapitops.plan.data.cache.queue.*;
+import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheClearQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheProcessQueue;
+import main.java.com.djrapitops.plan.data.cache.queue.DataCacheSaveQueue;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
@@ -25,16 +22,19 @@ import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 
+import java.sql.SQLException;
+import java.util.*;
+
 /**
  * This Class contains the Cache.
  *
  * This class is the main processing class that initialises Save, Clear, Process
- * and Get queue and Starts the asyncronous save task.
+ * and Get queue and Starts the asynchronous save task.
  *
  * It is used to store command use, locations, active sessions and UserData
  * objects in memory.
  *
- * It's methods can be used to access all the data it stores and to clear them.
+ * Its methods can be used to access all the data it stores and to clear them.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -63,7 +63,7 @@ public class DataCacheHandler extends SessionCache {
      * Class Constructor.
      *
      * Gets the Database from the plugin. Starts the queues. Registers
-     * Asyncronous Periodic Save Task
+     * Asynchronous Periodic Save Task
      *
      * @param plugin Current instance of Plan
      */
@@ -112,7 +112,7 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     * Used to start the Asyncronous Save Task.
+     * Used to start the Asynchronous Save Task.
      *
      * @throws IllegalArgumentException BukkitRunnable was given wrong
      * parameters.
@@ -131,7 +131,7 @@ public class DataCacheHandler extends SessionCache {
             clearAfterXsaves = configValue;
         }
         DataCacheHandler handler = this;
-        ITask asyncPeriodicCacheSaveTask = plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
 
             @Override
@@ -223,7 +223,7 @@ public class DataCacheHandler extends SessionCache {
      * Should only be called from Async thread
      */
     public void saveCachedUserData() {
-        List<UserData> data = new ArrayList<>();
+        Set<UserData> data = new HashSet<>();
         data.addAll(dataCache.values());
         try {
             db.saveMultipleUserData(data);
@@ -335,7 +335,7 @@ public class DataCacheHandler extends SessionCache {
     /**
      * Saves the cached CommandUse.
      *
-     * Should be only called from an Asyncronous Thread.
+     * Should be only called from an Asynchronous Thread.
      */
     public void saveCommandUse() {
         try {
@@ -364,10 +364,10 @@ public class DataCacheHandler extends SessionCache {
         }
         List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
         for (List<TPS> history : copy) {
-            final long lastdate = history.get(history.size() - 1).getDate();
+            final long lastDate = history.get(history.size() - 1).getDate();
             final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
-            averages.add(new TPS(lastdate, averageTPS, averagePlayersOnline));
+            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline));
         }
         unsavedTPSHistory.removeAll(copy);
         return averages;
@@ -378,7 +378,7 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveHandlerDataToCache() {
         final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
-        onlinePlayers.stream().forEach((p) -> saveHandlerDataToCache(p, false));
+        onlinePlayers.forEach((p) -> saveHandlerDataToCache(p, false));
     }
 
     private void saveHandlerDataToCache(IPlayer player, boolean pool) {
@@ -426,7 +426,7 @@ public class DataCacheHandler extends SessionCache {
      *
      * @param uuid Player's UUID.
      */
-    public void scheludeForClear(UUID uuid) {
+    public void scheduldeForClear(UUID uuid) {
         clearTask.scheduleForClear(uuid);
     }
 
@@ -492,7 +492,7 @@ public class DataCacheHandler extends SessionCache {
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
-        ITask asyncReloadCacheUpdateTask = plugin.getRunnableFactory().createNew(new AbsRunnable("ReloadCacheUpdateTask") {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("ReloadCacheUpdateTask") {
             @Override
             public void run() {
                 final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();

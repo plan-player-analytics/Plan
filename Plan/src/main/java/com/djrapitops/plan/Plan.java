@@ -25,32 +25,29 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.utilities.Verify;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.cache.*;
+import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.database.databases.*;
+import main.java.com.djrapitops.plan.database.databases.MySQLDB;
+import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
+
+import java.io.*;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -335,7 +332,7 @@ public class Plan extends BukkitPlugin<Plan> {
                     URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt");
                     InputStream inputStream = localeURL.openStream();
                     OutputStream outputStream = new FileOutputStream(localeFile);
-                    int read = 0;
+                    int read;
                     byte[] bytes = new byte[1024];
                     while ((read = inputStream.read(bytes)) != -1) {
                         outputStream.write(bytes, 0, read);
