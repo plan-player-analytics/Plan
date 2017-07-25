@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.data.cache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.io.BufferedReader;
@@ -70,24 +69,26 @@ public class GeolocationCacheHandler {
      * @see #getCountry(String)
      */
     private static String getUncachedCountry(String ipAddress) {
+        Benchmark.start("getUncachedCountry");
         try {
-            Benchmark.start("getUncachedCountry");
             URL url = new URL("http://freegeoip.net/csv/" + ipAddress);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String resultLine = in.readLine();
+            Log.debug(resultLine);
             in.close();
 
             String[] results = resultLine.split(",");
             String result = results[2];
 
-            String country = result.isEmpty() ? Phrase.DEM_UNKNOWN.toString() : result;
-
-            Benchmark.stop("getUncachedCountry");
+            String country = result.isEmpty() ? "Not Known" : result;
 
             return country;
         } catch (Exception exc) {
-            return Phrase.DEM_UNKNOWN.toString();
+            return "Not Known";
+        } finally {
+            Benchmark.stop("getUncachedCountry");
         }
+
     }
 
 }
