@@ -1,16 +1,10 @@
 package main.java.com.djrapitops.plan.ui.text;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.analysis.ActivityPart;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
-import main.java.com.djrapitops.plan.data.analysis.KillPart;
-import main.java.com.djrapitops.plan.data.analysis.PlayerCountPart;
-import main.java.com.djrapitops.plan.data.analysis.PlaytimePart;
-import main.java.com.djrapitops.plan.data.analysis.TPSPart;
+import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -18,6 +12,8 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.ChatColor;
+
+import java.util.UUID;
 
 /**
  *
@@ -68,7 +64,6 @@ public class TextUI {
         AnalysisData d = analysisCache.getData();
         ChatColor main = Phrase.COLOR_MAIN.color();
         ChatColor sec = Phrase.COLOR_SEC.color();
-        ChatColor ter = Phrase.COLOR_TER.color();
         String ball = sec + " " + Phrase.BALL + main;
         final ActivityPart activity = d.getActivityPart();
         final JoinInfoPart join = d.getJoinInfoPart();

@@ -5,12 +5,12 @@ import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.help.HelpMap;
 
 /**
  * Event Listener for PlayerCommandPreprocessEvents.
@@ -43,13 +43,20 @@ public class PlanCommandPreprocessListener implements Listener {
             return;
         }
 
-        String cmd = event.getMessage().split(" ")[0].toLowerCase();
+        String commandName = event.getMessage().split(" ")[0].toLowerCase();
 
-        if (Settings.DO_NOT_LOG_UNKNOWN_COMMANDS.isTrue()) {
-            HelpMap helpMap = plugin.getServer().getHelpMap();
-            if (helpMap.getHelpTopic(cmd) == null) {
-                Log.debug("Ignored command, command is unknown");
-                return;
+        boolean doNotLogUnknownCommands = Settings.DO_NOT_LOG_UNKNOWN_COMMANDS.isTrue();
+        boolean combineCommandAliasesToMainCommand = Settings.COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND.isTrue();
+
+        if (doNotLogUnknownCommands || combineCommandAliasesToMainCommand) {
+            Command command = plugin.getServer().getPluginCommand(commandName);
+            if (command == null) {
+                if (doNotLogUnknownCommands) {
+                    Log.debug("Ignored command, command is unknown");
+                    return;
+                }
+            } else if (combineCommandAliasesToMainCommand) {
+                commandName = command.getName();
             }
         }
 
@@ -59,6 +66,6 @@ public class PlanCommandPreprocessListener implements Listener {
             Log.debug("Ignored command, player had ignore permission.");
             return;
         }
-        handler.handleCommand(cmd);
+        handler.handleCommand(commandName);
     }
 }

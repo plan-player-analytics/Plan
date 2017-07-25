@@ -43,6 +43,7 @@ Customization:
   SmallHeadImagesOnAnalysisPlayerlist: true
   Data:
     DoNotLogUnknownCommands: false
+    CombineCommandAliasesToMainCommand: false
   Graphs:
     PlayersOnlineGraph:
       UseMaxPlayersAsScale: true
