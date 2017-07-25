@@ -31,7 +31,7 @@ public class MockUtils {
      */
     public static World mockWorld() {
         World mockWorld = Mockito.mock(World.class);
-        Mockito.doReturn("World").when(mockWorld).toString();
+        when(mockWorld.toString()).thenReturn("World");
         return mockWorld;
     }
 

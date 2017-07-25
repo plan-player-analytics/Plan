@@ -43,6 +43,7 @@ public class PlayerActivityGraphCreator {
     private static List<Point> getPointsFromChangeMap(Map<Long, Integer> changeMap) {
         List<Point> points = new ArrayList<>();
         int lastIndex = -1;
+        int i = 0;
         for (Long key : changeMap.keySet()) {
             long date = key;
             int change = changeMap.get(key);
@@ -52,6 +53,8 @@ public class PlayerActivityGraphCreator {
                     previousValue = (int) points.get(lastIndex).getY();
                 }
                 points.add(new Point(date, previousValue+change));
+                lastIndex = i;
+                i++;
             }
         }
         return points;

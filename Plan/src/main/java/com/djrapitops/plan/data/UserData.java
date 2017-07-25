@@ -43,7 +43,7 @@ public class UserData {
     private boolean isOnline;
 
     private SessionData currentSession;
-    private List<SessionData> sessions;
+    private final List<SessionData> sessions;
 
     /**
      * Creates a new UserData object with given values and default values.

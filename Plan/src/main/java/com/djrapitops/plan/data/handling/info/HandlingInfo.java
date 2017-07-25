@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
+
+import java.util.UUID;
 
 /**
  * An abstract class for processing information about events and modifying
@@ -12,9 +13,9 @@ import main.java.com.djrapitops.plan.data.UserData;
  */
 public abstract class HandlingInfo {
 
-    UUID uuid;
-    InfoType type;
-    long time;
+    final UUID uuid;
+    final InfoType type;
+    final long time;
 
     /**
      * Super Constructor.

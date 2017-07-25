@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -39,12 +38,12 @@ public class TestInit {
 
     public static TestInit init() throws Exception {
         TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+        t.setUp();
         return t;
     }
 
     @Deprecated // Use Test.init instead.
-    public boolean setUp() throws Exception {
+    public void setUp() throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -70,10 +69,10 @@ public class TestInit {
         Settings.DEBUG.setValue(true);
 
         // Abstract Plugin Framework Mocks.
-        BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
+        BukkitLog<Plan> log = new BukkitLog<>(planMock, "console", "");
         BenchUtil bench = new BenchUtil();
         ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
-        ProcessStatus<Plan> process = new ProcessStatus(planMock);
+        ProcessStatus<Plan> process = new ProcessStatus<>(planMock);
         Fetch fetch = new Fetch(planMock);
 
         when(planMock.getPluginLogger()).thenReturn(log);
@@ -81,7 +80,6 @@ public class TestInit {
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.processStatus()).thenReturn(process);
         when(planMock.fetch()).thenReturn(fetch);
-        return true;
     }
 
     private Server mockServer() {

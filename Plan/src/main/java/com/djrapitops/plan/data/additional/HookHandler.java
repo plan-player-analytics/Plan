@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class HookHandler {
 
-    private List<PluginData> additionalDataSources;
+    private final List<PluginData> additionalDataSources;
     private final PluginConfigSectionHandler configHandler;
 
     /**

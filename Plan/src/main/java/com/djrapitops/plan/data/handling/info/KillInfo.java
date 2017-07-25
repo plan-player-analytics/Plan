@@ -1,9 +1,10 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.KillHandling;
 import org.bukkit.entity.LivingEntity;
+
+import java.util.UUID;
 
 /**
  * HandlingInfo Class for DeathEvent information when the dead entity is a
@@ -14,8 +15,8 @@ import org.bukkit.entity.LivingEntity;
  */
 public class KillInfo extends HandlingInfo {
 
-    private LivingEntity dead;
-    private String weaponName;
+    private final LivingEntity dead;
+    private final String weaponName;
 
     /**
      * Constructor.

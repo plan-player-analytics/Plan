@@ -20,14 +20,14 @@ public class KillsTableCreator {
      * @param killData
      * @return
      */
-    public static String createSortedSessionDataTable10(List<KillData> killData) {
+    public static String createKillsTable(List<KillData> killData) {
         StringBuilder html = new StringBuilder(Html.TABLE_KILLS_START.parse());
         if (killData.isEmpty()) {
             html.append(Html.TABLELINE_3.parse(Html.KILLDATA_NONE.parse(), "", ""));
         } else {
             int i = 0;
             for (KillData kill : killData) {
-                if (i >= 10) {
+                if (i >= 20) {
                     break;
                 }
                 long date = kill.getDate();

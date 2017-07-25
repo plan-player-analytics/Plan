@@ -5,7 +5,6 @@
  */
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -29,7 +28,6 @@ public class PunchCardGraphCreator {
      * @return
      */
     public static String generateDataArray(Collection<SessionData> data) {
-        // Initialize dataset
         List<Long> sessionStarts = getSessionStarts(data);
         List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
         int[][] dataArray = createDataArray(daysAndHours);
@@ -68,7 +66,6 @@ public class PunchCardGraphCreator {
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             int avg = findAverage(dataArray);
             double standardDeviation = getStandardDeviation(dataArray, avg);
-            Log.debug("Deviation: " + standardDeviation);
             if (standardDeviation > 3.5) {
                 for (int i = 0; i < 7; i++) {
                     for (int j = 0; j < 24; j++) {
@@ -157,7 +154,6 @@ public class PunchCardGraphCreator {
                 scaled[i][j] = value;
             }
         }
-        Log.debug("Punchcard Biggest value: " + big);
         return scaled;
     }
 }

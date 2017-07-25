@@ -11,11 +11,9 @@ import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.tables.KillsTableCreator;
-import main.java.com.djrapitops.plan.ui.html.tables.SessionTableCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -62,9 +60,8 @@ public class PlaceholderUtils {
      *
      * @param data UserData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
-     * @throws java.io.FileNotFoundException if planliteplayer.html is not found
      */
-    public static Map<String, String> getInspectReplaceRules(UserData data) throws FileNotFoundException {
+    public static Map<String, String> getInspectReplaceRules(UserData data) {
         Benchmark.start("Replace Placeholders Inspect");
 
         HashMap<String, String> replaceMap = new HashMap<>();
@@ -77,7 +74,7 @@ public class PlaceholderUtils {
         long now = MiscUtils.getTime();
         boolean isActive = AnalysisUtils.isActive(now, data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
         replaceMap.put("%active%", isActive ? Html.ACTIVE.parse() : Html.INACTIVE.parse());
-        GamemodePart gmPart = new GamemodePart(null);
+        GamemodePart gmPart = new GamemodePart();
         Map<String, Long> gmTimes = data.getGmTimes();
         String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
         for (String gm : gms) {
@@ -101,9 +98,8 @@ public class PlaceholderUtils {
         replaceMap.put("%deaths%", data.getDeaths() + "");
         replaceMap.put("%playerkills%", data.getPlayerKills().size() + "");
         replaceMap.put("%mobkills%", data.getMobKills() + "");
-        replaceMap.put("%sessionstable%", SessionTableCreator.createSortedSessionDataTable10(data.getSessions()));
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(data.getSessions()))));
-        replaceMap.put("%killstable%", KillsTableCreator.createSortedSessionDataTable10(data.getPlayerKills()));
+        replaceMap.put("%killstable%", KillsTableCreator.createKillsTable(data.getPlayerKills()));
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");

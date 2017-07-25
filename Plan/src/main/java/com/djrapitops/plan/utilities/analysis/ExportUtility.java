@@ -26,9 +26,8 @@ public class ExportUtility {
     /**
      *
      * @return
-     * @throws IOException
      */
-    public static File getFolder() throws IOException {
+    public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
         if (path.contains(":")) {
             File folder = new File(path);

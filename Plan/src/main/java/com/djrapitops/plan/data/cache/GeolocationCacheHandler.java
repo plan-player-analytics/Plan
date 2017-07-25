@@ -80,9 +80,7 @@ public class GeolocationCacheHandler {
             String[] results = resultLine.split(",");
             String result = results[2];
 
-            String country = result.isEmpty() ? "Not Known" : result;
-
-            return country;
+            return result.isEmpty() ? "Not Known" : result;
         } catch (Exception exc) {
             return "Not Known";
         } finally {

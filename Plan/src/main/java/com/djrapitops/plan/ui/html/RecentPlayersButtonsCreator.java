@@ -15,7 +15,7 @@ public class RecentPlayersButtonsCreator {
      *
      * @param names The name of players sorted by last playtime.
      * @param limit How many players will be shown
-     * @return html p-tag list of recent logins.
+     * @return html p-tag list of recent log-ins.
      */
     public static String createRecentLoginsButtons(List<String> names, int limit) {
         StringBuilder html = new StringBuilder();

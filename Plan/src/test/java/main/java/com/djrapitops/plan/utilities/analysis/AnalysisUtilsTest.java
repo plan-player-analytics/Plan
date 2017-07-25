@@ -5,20 +5,22 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities.analysis;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -50,9 +52,8 @@ public class AnalysisUtilsTest {
         long lastPlayed = MiscUtils.getTime();
         long playTime = 12638934876L;
         int loginTimes = 4;
-        boolean expResult = true;
         boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
-        assertEquals(expResult, result);
+        assertEquals(true, result);
     }
 
     /**
@@ -63,9 +64,8 @@ public class AnalysisUtilsTest {
         long lastPlayed = MiscUtils.getTime();
         long playTime = 0L;
         int loginTimes = 4;
-        boolean expResult = false;
         boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 
     /**
@@ -76,9 +76,8 @@ public class AnalysisUtilsTest {
         long lastPlayed = MiscUtils.getTime();
         long playTime = 12638934876L;
         int loginTimes = 0;
-        boolean expResult = false;
         boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 
     /**
@@ -89,9 +88,8 @@ public class AnalysisUtilsTest {
         long lastPlayed = 0L;
         long playTime = 12638934876L;
         int loginTimes = 4;
-        boolean expResult = false;
         boolean result = AnalysisUtils.isActive(System.currentTimeMillis(), lastPlayed, playTime, loginTimes);
-        assertEquals(expResult, result);
+        assertEquals(false, result);
     }
 
     /**

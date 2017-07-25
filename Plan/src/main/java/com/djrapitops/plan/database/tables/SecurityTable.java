@@ -94,7 +94,7 @@ public class SecurityTable extends Table {
             statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUser + "=?)");
             statement.setString(1, user);
             set = statement.executeQuery();
-            while (set.next()) {
+            if (set.next()) {
                 String saltedPassHash = set.getString(columnSaltedHash);
                 int permissionLevel = set.getInt(columnPermLevel);
                 return new WebUser(user, saltedPassHash, permissionLevel);

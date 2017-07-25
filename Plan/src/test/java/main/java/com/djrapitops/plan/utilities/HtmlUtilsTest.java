@@ -50,7 +50,6 @@ public class HtmlUtilsTest {
         TestInit t = TestInit.init();
         String fileName = "player.html";
         String result = HtmlUtils.getHtmlStringFromResource(fileName);
-        assertTrue("Result null", result != null);
         assertTrue("Result empty", !result.isEmpty());
     }
 

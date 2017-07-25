@@ -21,7 +21,7 @@ public class CommandUseTableCreator {
      * @return
      */
     public static String createSortedCommandUseTable(Map<String, Integer> commandUse) {
-        Benchmark.start("Create commanduse table");
+        Benchmark.start("Create CommandUse table");
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
         StringBuilder html = new StringBuilder();
         if (sorted.isEmpty()) {
@@ -42,7 +42,7 @@ public class CommandUseTableCreator {
                 i++;
             }
         }
-        Benchmark.stop("Create commanduse table");
+        Benchmark.stop("Create CommandUse table");
         return html.toString();
     }
 }

@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.Arrays;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.util.Arrays;
 
 /**
  * Part responsible for all Gamemode usage related analysis.
@@ -21,14 +22,12 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class GamemodePart extends RawData<GamemodePart> {
 
-    private final PlayerCountPart playerCount;
     private long survivalTime;
     private long creativeTime;
     private long adventureTime;
     private long spectatorTime;
 
-    public GamemodePart(PlayerCountPart playerCount) {
-        this.playerCount = playerCount;
+    public GamemodePart() {
         survivalTime = 0;
         creativeTime = 0;
         adventureTime = 0;

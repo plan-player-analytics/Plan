@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
  */
 public class AnalysisCacheHandler {
 
-    private final Plan plugin;
     private AnalysisData cache;
     private final Analysis analysis;
     private boolean analysisEnabled;
@@ -26,7 +25,6 @@ public class AnalysisCacheHandler {
      * @param plugin Current instance of Plan
      */
     public AnalysisCacheHandler(Plan plugin) {
-        this.plugin = plugin;
         analysis = new Analysis(plugin);
         analysisEnabled = true;
     }

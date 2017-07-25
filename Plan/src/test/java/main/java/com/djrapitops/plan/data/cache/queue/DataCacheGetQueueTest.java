@@ -61,7 +61,6 @@ public class DataCacheGetQueueTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override

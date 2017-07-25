@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 @PrepareForTest({JavaPlugin.class})
 public class ManageUtilsTest {
 
-    private int threshold = 5000;
+    private final int threshold = 5000;
 
     /**
      *
@@ -46,7 +46,6 @@ public class ManageUtilsTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        assertTrue("Not set up", t.setUp());
     }
 
     /**

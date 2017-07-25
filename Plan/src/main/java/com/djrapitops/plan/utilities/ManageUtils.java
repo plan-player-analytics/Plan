@@ -64,9 +64,8 @@ public class ManageUtils {
      * @param copyFromDB Database where data will be copied from
      * @param fromDBsavedUUIDs UUID collection of saved uuids in the copyFromDB
      * @return success?
-     * @throws java.sql.SQLException
      */
-    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) throws SQLException {
+    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
         try {
             clearAndCopyToDB.removeAllData();
             List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());

@@ -4,8 +4,6 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 
-import java.util.concurrent.Callable;
-
 public class BStats {
     private final Plan plugin;
     private Metrics bStats;
@@ -46,20 +44,10 @@ public class BStats {
     }
 
     private void addEnabledDisabledPie(String id, boolean setting) {
-        bStats.addCustomChart(new Metrics.SimplePie(id, new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return setting ? "Enabled" : "Disabled";
-            }
-        }));
+        bStats.addCustomChart(new Metrics.SimplePie(id, () -> setting ? "Enabled" : "Disabled"));
     }
 
     private void addStringSettingPie(String id, String setting) {
-        bStats.addCustomChart(new Metrics.SimplePie(id, new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return setting;
-            }
-        }));
+        bStats.addCustomChart(new Metrics.SimplePie(id, () -> setting));
     }
 }

@@ -194,7 +194,7 @@ public class Plan extends BukkitPlugin<Plan> {
         getServer().getScheduler().cancelTasks(this);
         if (Verify.notNull(handler, db)) {
             Benchmark.start("Disable: DataCache Save");
-            // Saves the datacache to the database without Bukkit's Schedulers.
+            // Saves the DataCache to the database without Bukkit's Schedulers.
             Log.info(Phrase.CACHE_SAVE + "");
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.execute(() -> {

@@ -391,8 +391,7 @@ public class UsersTable extends Table {
             statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUUID + "=?)");
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
-            while (set.next()) {
-
+            if (set.next()) {
                 String gm = set.getString(columnLastGM);
                 boolean op = set.getBoolean(columnOP);
                 boolean banned = set.getBoolean(columnBanned);
@@ -882,7 +881,7 @@ public class UsersTable extends Table {
             statement = prepareStatement("SELECT " + columnUUID + " FROM " + tableName + " WHERE (UPPER(" + columnName + ")=UPPER(?))");
             statement.setString(1, playername);
             set = statement.executeQuery();
-            while (set.next()) {
+            if (set.next()) {
                 String uuidS = set.getString(columnUUID);
                 return UUID.fromString(uuidS);
             }

@@ -1,20 +1,15 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.ExportUtility;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * This class stores UserData objects used for displaying the Html pages.
@@ -24,10 +19,9 @@ import main.java.com.djrapitops.plan.utilities.analysis.ExportUtility;
  */
 public class InspectCacheHandler {
 
-    private DataCacheHandler handler;
-    private Plan plugin;
-    private Map<UUID, UserData> cache;
-    private Map<UUID, Long> cacheTimes;
+    private final DataCacheHandler handler;
+    private final Map<UUID, UserData> cache;
+    private final Map<UUID, Long> cacheTimes;
 
     /**
      * Class constructor.
@@ -36,7 +30,6 @@ public class InspectCacheHandler {
      */
     public InspectCacheHandler(Plan plugin) {
         this.handler = plugin.getHandler();
-        this.plugin = plugin;
         this.cache = new HashMap<>();
         cacheTimes = new HashMap<>();
     }

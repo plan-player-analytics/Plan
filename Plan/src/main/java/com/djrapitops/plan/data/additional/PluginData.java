@@ -69,7 +69,7 @@ public abstract class PluginData {
      * A list containing the AnalysisType enums that determine what should be
      * done with the data on the analysis page.
      */
-    protected List<AnalysisType> analysisTypes;
+    protected final List<AnalysisType> analysisTypes;
 
     /**
      * Main constructor.

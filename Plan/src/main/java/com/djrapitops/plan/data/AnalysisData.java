@@ -52,7 +52,7 @@ public class AnalysisData extends RawData<AnalysisData> {
         playerCountPart = new PlayerCountPart();
         playtimePart = new PlaytimePart(playerCountPart);
         killPart = new KillPart(playerCountPart);
-        gamemodePart = new GamemodePart(playerCountPart);
+        gamemodePart = new GamemodePart();
         tpsPart = new TPSPart(tpsData);
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
     }
@@ -135,9 +135,9 @@ public class AnalysisData extends RawData<AnalysisData> {
 
     @Override
     protected void analyse() {
-        Verify.notNull(playersTable);
-        Verify.notNull(pluginsTabLayout);
-        Verify.notNull(planVersion);
+        Verify.nullCheck(playersTable);
+        Verify.nullCheck(pluginsTabLayout);
+        Verify.nullCheck(planVersion);
 
         addValue("sortabletable", playersTable);
         addValue("version", planVersion);

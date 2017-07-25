@@ -226,9 +226,8 @@ public abstract class Database {
      * Uses DELETE * FROM table.
      *
      * @return Success of removal.
-     * @throws SQLException If a database error occurs.
      */
-    public abstract boolean removeAllData() throws SQLException;
+    public abstract boolean removeAllData();
 
     /**
      * Used to save CommandUse map.
