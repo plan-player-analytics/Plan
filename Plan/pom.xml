@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.12-R0.1-20170725.202533-1</version>
             <scope>provided</scope>
         </dependency>
         <!--        Framework for easier plugin development-->
