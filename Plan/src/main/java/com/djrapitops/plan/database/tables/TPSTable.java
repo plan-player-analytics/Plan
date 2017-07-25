@@ -63,9 +63,9 @@ public class TPSTable extends Table {
     private void alterTablesV6() {
         try {
             if (usingMySQL) {
-                execute("ALTER TABLE " + tableName + " ADD " + columnCPUUsage + " double NOT NULL");
+                execute("ALTER TABLE " + tableName + " ADD " + columnCPUUsage + " double NOT NULL DEFAULT 0");
             } else {
-                execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL");
+                execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL DEFAULT 0");
             }
         } catch (SQLException e) {
 
