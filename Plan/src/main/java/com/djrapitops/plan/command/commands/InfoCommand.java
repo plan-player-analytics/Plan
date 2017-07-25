@@ -25,7 +25,7 @@ public class InfoCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InfoCommand(Plan plugin) {
-        super("info", CommandType.CONSOLE, Permissions.INFO.getPermission(), Phrase.CMD_USG_INFO + "");
+        super("info", CommandType.CONSOLE, Permissions.INFO.getPermission(), Phrase.CMD_USG_INFO.toString());
 
         this.plugin = plugin;
     }
@@ -34,11 +34,11 @@ public class InfoCommand extends SubCommand {
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         ChatColor tColor = Phrase.COLOR_SEC.color();
         String[] messages = {
-            Phrase.CMD_INFO_HEADER + "",
+            Phrase.CMD_INFO_HEADER.toString(),
             Phrase.CMD_INFO_VERSION.parse(plugin.getDescription().getVersion()),
             Phrase.CMD_BALL.toString() + tColor + " " + Version.checkVersion(plugin),
             Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()),
-            Phrase.CMD_FOOTER + ""
+            Phrase.CMD_FOOTER.toString()
         };
         sender.sendMessage(messages);
         return true;

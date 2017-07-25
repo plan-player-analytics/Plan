@@ -168,4 +168,15 @@ public class MathUtils {
 
         return biggest.isPresent() ? biggest.getAsLong() : 1;
     }
+
+    /**
+     * Rounds the double to a double with two digits at the end.
+     * Output: #.##
+     *
+     * @param number The number that's rounded
+     * @return The rounded number
+     */
+    public static double round(double number) {
+        return Math.round(number * 100.0) / 100.0;
+    }
 }

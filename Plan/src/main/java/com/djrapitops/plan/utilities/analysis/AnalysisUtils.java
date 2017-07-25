@@ -247,10 +247,10 @@ public class AnalysisUtils {
                         continue;
                     }
                 }
+
                 int day = getDayOfYear(session);
-                if (!uniqueJoins.containsKey(day)) {
-                    uniqueJoins.put(day, new HashSet<>());
-                }
+
+                uniqueJoins.computeIfAbsent(day, computedDay -> new HashSet<>());
                 uniqueJoins.get(day).add(uuid);
             }
         });
