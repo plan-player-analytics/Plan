@@ -31,11 +31,11 @@ public class AdvancedAchievementsAchievements extends PluginData {
      * @param aaAPI AdvancedAchievementsAPI given by AdvancedAchievementsHook
      */
     public AdvancedAchievementsAchievements(AdvancedAchievementsAPI aaAPI) {
-        super("AdvancedAchievements", "achievements", new AnalysisType[]{AnalysisType.INT_TOTAL, AnalysisType.INT_AVG});
+        super("AdvancedAchievements", "achievements", AnalysisType.INT_TOTAL, AnalysisType.INT_AVG);
         this.aaAPI = aaAPI;
         super.setAnalysisOnly(false);
         super.setIcon("check-circle-o");
-        super.setPrefix("Achivements: ");
+        super.setPrefix("Achievements: ");
         totalAchievements = aaAPI.getPlayersTotalAchievements();
         lastRefresh = MiscUtils.getTime();
     }

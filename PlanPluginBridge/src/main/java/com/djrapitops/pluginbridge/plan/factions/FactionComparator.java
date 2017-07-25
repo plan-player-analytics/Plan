@@ -18,9 +18,6 @@ public class FactionComparator implements Comparator<Faction> {
 
     @Override
     public int compare(Faction fac1, Faction fac2) {
-        if (fac1.getPower() > fac2.getPower()) {
-            return 1;
-        }
-        return -1;
+        return -Double.compare(fac1.getPower(), fac2.getPower());
     }
 }

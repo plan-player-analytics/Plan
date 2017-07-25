@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
  * PluginData class for Jobs-plugin.
@@ -26,7 +26,7 @@ public class JobsInspectJobTable extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public JobsInspectJobTable() {
-        super("Jobs", "inspecttable");
+        super("Jobs", "inspect_table");
         super.setAnalysisOnly(false);
         final String job = Html.FONT_AWESOME_ICON.parse("suitcase") + " Job";
         final String level = Html.FONT_AWESOME_ICON.parse("plus") + " Level";

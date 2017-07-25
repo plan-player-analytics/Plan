@@ -1,10 +1,11 @@
 package com.djrapitops.pluginbridge.plan.griefprevention;
 
-import com.djrapitops.javaplugin.utilities.FormattingUtils;
 import java.io.Serializable;
 import java.util.UUID;
+
+import com.djrapitops.plugin.utilities.FormattingUtils;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import me.ryanhamshire.GriefPrevention.DataStore;
 
 /**
@@ -23,7 +24,7 @@ public class GriefPreventionClaimTable extends PluginData {
      * @param dataStore DataStore of GriefPrevention
      */
     public GriefPreventionClaimTable(DataStore dataStore) {
-        super("GriefPrevention", "inspectclaimtable");
+        super("GriefPrevention", "inspect_claim_table");
         this.dataStore = dataStore;
         String location = Html.FONT_AWESOME_ICON.parse("map-marker") + " Location";
         String size = Html.FONT_AWESOME_ICON.parse("map-o") + " Area";

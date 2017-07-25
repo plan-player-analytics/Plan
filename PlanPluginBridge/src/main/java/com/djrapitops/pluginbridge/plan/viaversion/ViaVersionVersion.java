@@ -1,21 +1,13 @@
 package com.djrapitops.pluginbridge.plan.viaversion;
 
 import com.djrapitops.pluginbridge.plan.vault.*;
-import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import net.milkbowl.vault.economy.Economy;
-import static org.bukkit.Bukkit.getOfflinePlayer;
-import org.bukkit.OfflinePlayer;
 
 /**
  * PluginData class for Vault-plugin.

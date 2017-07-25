@@ -24,7 +24,7 @@ public class PermGroup extends PluginData {
     private final Permission permSys;
 
     public PermGroup(Permission permSystem) {
-        super("Vault", "permgroup");
+        super("Vault", "permission_group");
         permSys = permSystem;
         super.setIcon("balance-scale");
         super.setPrefix("Permission Group: ");

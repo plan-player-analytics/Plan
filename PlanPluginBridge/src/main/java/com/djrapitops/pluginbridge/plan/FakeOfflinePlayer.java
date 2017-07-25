@@ -50,6 +50,7 @@ public class FakeOfflinePlayer implements OfflinePlayer {
     }
 
     @Override
+    @Deprecated
     public void setBanned(boolean bln) {
     }
 

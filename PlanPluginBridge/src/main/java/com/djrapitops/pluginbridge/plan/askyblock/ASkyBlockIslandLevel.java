@@ -22,7 +22,7 @@ public class ASkyBlockIslandLevel extends PluginData {
      * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslandLevel(ASkyBlockAPI aaAPI) {
-        super("ASkyBlock", "island_level", new AnalysisType[]{AnalysisType.INT_AVG});
+        super("ASkyBlock", "island_level", AnalysisType.INT_AVG);
         this.api = aaAPI;
         super.setAnalysisOnly(false);
         super.setIcon("street-view");
@@ -41,8 +41,7 @@ public class ASkyBlockIslandLevel extends PluginData {
     @Override
     public Serializable getValue(UUID uuid) {
         if (api.hasIsland(uuid)) {
-            int level = api.getIslandLevel(uuid);
-            return level;
+            return api.getIslandLevel(uuid);
         }
         return -1;
     }

@@ -1,17 +1,15 @@
 package com.djrapitops.pluginbridge.plan.mcmmo;
 
+import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +30,7 @@ public class McmmoAnalysisSkillTable extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public McmmoAnalysisSkillTable() {
-        super("McMMO", "analysistable", AnalysisType.HTML);
+        super("McMMO", "analysis_table", AnalysisType.HTML);
         final String skill = Html.FONT_AWESOME_ICON.parse("star") + " Skill";
         final String tLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Total Level";
         final String aLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Average Level";
@@ -44,10 +42,10 @@ public class McmmoAnalysisSkillTable extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         List<PlayerProfile> profiles = getOnlinePlayers().stream()
-                .filter(p -> p != null)
-                .map(p -> UserManager.getOfflinePlayer(p))
-                .filter(u -> u != null)
-                .map(u -> u.getProfile())
+                .filter(Objects::nonNull)
+                .map(UserManager::getOfflinePlayer)
+                .filter(Objects::nonNull)
+                .map(McMMOPlayer::getProfile)
                 .collect(Collectors.toList());
         if (profiles.isEmpty()) {
             return parseContainer("", Html.TABLELINE_3.parse("No players online", "", ""));

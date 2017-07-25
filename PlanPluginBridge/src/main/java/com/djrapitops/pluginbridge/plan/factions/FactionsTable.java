@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
@@ -38,14 +38,14 @@ public class FactionsTable extends PluginData {
      * @see Html
      */
     public FactionsTable() {
-        super("Factions", "factionstable", AnalysisType.HTML);
+        super("Factions", "faction_stable", AnalysisType.HTML);
         this.factions = getTopFactions();
         super.setPrefix(Html.TABLE_FACTIONS_START.parse());
         super.setSuffix(Html.TABLE_END.parse());
     }
 
     /**
-     * Used to get the list of Factions and filter out unnessecary ones.
+     * Used to get the list of Factions and filter out unnecessary ones.
      *
      * @return List of Factions sorted by power
      */
@@ -56,11 +56,10 @@ public class FactionsTable extends PluginData {
         topFactions.remove(FactionColl.get().getSafezone());
         topFactions.remove(FactionColl.get().getNone());
         List<String> hide = Settings.HIDE_FACTIONS.getStringList();
-        Collections.sort(topFactions, new FactionComparator());
-        List<Faction> factionNames = topFactions.stream()
+        topFactions.sort(new FactionComparator());
+        return topFactions.stream()
                 .filter(faction -> !hide.contains(faction.getName()))
                 .collect(Collectors.toList());
-        return factionNames;
     }
 
     @Override

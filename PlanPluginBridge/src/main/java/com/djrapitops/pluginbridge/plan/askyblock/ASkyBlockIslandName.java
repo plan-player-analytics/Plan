@@ -21,7 +21,7 @@ public class ASkyBlockIslandName extends PluginData {
      * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslandName(ASkyBlockAPI aaAPI) {
-        super("ASkyBlock", "islandname");
+        super("ASkyBlock", "island_name");
         this.api = aaAPI;        
         super.setIcon("street-view");
         super.setPrefix("Island name: ");

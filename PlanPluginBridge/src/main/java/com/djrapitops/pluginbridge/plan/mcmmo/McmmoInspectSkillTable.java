@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import org.apache.commons.lang.StringUtils;
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
@@ -36,7 +36,7 @@ public class McmmoInspectSkillTable extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public McmmoInspectSkillTable() {
-        super("McMMO", "inspectskilltable");
+        super("McMMO", "inspect_skill_table");
         super.setAnalysisOnly(false);
         final String skill = Html.FONT_AWESOME_ICON.parse("star") + " Skill";
         final String level = Html.FONT_AWESOME_ICON.parse("plus") + " Level";

@@ -30,7 +30,7 @@ public class OnTimeImporter extends Importer {
     /**
      * Imports playtime from Ontime.
      *
-     * Resets Gamemode times to survival because it is playtime dependent.
+     * Resets GameMode times to survival because it is playtime dependent.
      *
      * @param uuid UUID of the player
      * @return HandlingInfo object
@@ -47,7 +47,7 @@ public class OnTimeImporter extends Importer {
                 }
                 if (playTime > uData.getPlayTime()) {
                     uData.setPlayTime(playTime);
-                    uData.setLastGamemode(GameMode.SURVIVAL);
+                    uData.setLastGamemode("SURVIVAL");
                     uData.setAllGMTimes(playTime, 0, 0, 0);
                     uData.setLastGmSwapTime(playTime);
                 }

@@ -21,7 +21,7 @@ public class ASkyBlockIslandResets extends PluginData {
      * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslandResets(ASkyBlockAPI aaAPI) {
-        super("ASkyBlock", "islandresetsleft");
+        super("ASkyBlock", "island_resets_left");
         this.api = aaAPI;        
         super.setIcon("refresh");
         super.setPrefix("Island Resets Left: ");

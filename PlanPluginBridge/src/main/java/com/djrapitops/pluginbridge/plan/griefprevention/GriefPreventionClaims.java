@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import me.ryanhamshire.GriefPrevention.Claim;
@@ -25,7 +27,7 @@ public class GriefPreventionClaims extends PluginData {
      * @param dataStore DataStore of GriefPrevention
      */
     public GriefPreventionClaims(DataStore dataStore) {
-        super("GriefPrevention", "claim_count", new AnalysisType[]{AnalysisType.INT_TOTAL});
+        super("GriefPrevention", "claim_count", AnalysisType.INT_TOTAL);
         this.dataStore = dataStore;
         super.setAnalysisOnly(false);
         super.setIcon("flag-o");
@@ -34,12 +36,18 @@ public class GriefPreventionClaims extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        List<Claim> claims = dataStore.getClaims().stream().filter(claim -> claim.ownerID.equals(uuid)).collect(Collectors.toList());
+        Verify.nullCheck(uuid);
+        List<Claim> claims = dataStore.getClaims().stream()
+                .filter(claim -> uuid.equals(claim.ownerID))
+                .collect(Collectors.toList());
         return parseContainer(modifierPrefix, claims.size()+"");
     }
 
     @Override
     public Serializable getValue(UUID uuid) {
-        return dataStore.getClaims().stream().filter(claim -> claim.ownerID.equals(uuid)).collect(Collectors.toList()).size();
+        Verify.nullCheck(uuid);
+        return dataStore.getClaims().stream()
+                .filter(claim -> uuid.equals(claim.ownerID))
+                .collect(Collectors.toList()).size();
     }
 }

@@ -34,7 +34,7 @@ public class PermGroupTable extends PluginData {
     private final Permission permSys;
 
     PermGroupTable(Permission permSystem) {
-        super("Vault", "permgrouptable", AnalysisType.HTML);
+        super("Vault", "permission_group_table", AnalysisType.HTML);
         permSys = permSystem;
         String group = Html.FONT_AWESOME_ICON.parse("balance-scale") + " Perm. Group";
         String members = Html.FONT_AWESOME_ICON.parse("users") + " Members";

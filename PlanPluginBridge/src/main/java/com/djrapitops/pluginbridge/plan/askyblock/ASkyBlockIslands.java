@@ -22,7 +22,7 @@ public class ASkyBlockIslands extends PluginData {
      * @param aaAPI ASkyBlockAPI
      */
     public ASkyBlockIslands(ASkyBlockAPI aaAPI) {
-        super("ASkyBlock", "island_count", new AnalysisType[]{AnalysisType.HTML});
+        super("ASkyBlock", "island_count", AnalysisType.HTML);
         this.api = aaAPI;
         super.setIcon("street-view");
         super.setPrefix("Islands: ");

@@ -11,7 +11,7 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import net.milkbowl.vault.economy.Economy;
@@ -27,7 +27,7 @@ public class EconomyBalanceTable extends PluginData {
     private final Economy econ;
 
     public EconomyBalanceTable(Economy econ) {
-        super("Vault", "ecobalancetable", AnalysisType.HTML);
+        super("Vault", "eco_balance_table", AnalysisType.HTML);
         this.econ = econ;
         String user = Html.FONT_AWESOME_ICON.parse("user") + " Player";
         String balance = Html.FONT_AWESOME_ICON.parse("money") + " Balance";
@@ -48,7 +48,7 @@ public class EconomyBalanceTable extends PluginData {
 
     private String getTableLines() {
         StringBuilder html = new StringBuilder();
-        Plan.getPlanAPI().getInspectCachedUserData().stream()
+        Plan.getPlanAPI().getInspectCachedUserData()
                 .forEach(data -> {
                     String link = Html.LINK.parse(HtmlUtils.getInspectUrl(data.getName()), data.getName());
                     String bal = FormatUtils.cutDecimals(econ.getBalance(new FakeOfflinePlayer(data)));
