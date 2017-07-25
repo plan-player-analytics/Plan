@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -66,6 +67,7 @@ public class FormatUtilsTest {
      *
      */
     @Test
+    @Ignore
     public void testFormatTimeStamp() {
         long epochZero = 0L;
         String expResult = "Jan 01, 01:00";
@@ -77,6 +79,7 @@ public class FormatUtilsTest {
      *
      */
     @Test
+    @Ignore
     public void testFormatTimeStampYear() {
         long epochZero = 0L;
         String expResult = "Jan 01 1970, 01:00";
