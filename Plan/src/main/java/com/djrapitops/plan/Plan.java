@@ -73,7 +73,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
     private WebSocketServer uiServer;
 
-    public ServerVariableHolder serverVariableHolder;
+    private ServerVariableHolder serverVariableHolder;
     private int bootAnalysisTaskID = -1;
 
     /**

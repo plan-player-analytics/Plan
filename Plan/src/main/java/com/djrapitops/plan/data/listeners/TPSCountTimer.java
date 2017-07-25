@@ -39,7 +39,7 @@ public class TPSCountTimer extends AbsRunnable {
         long nanoTime = System.nanoTime();
         long now = MiscUtils.getTime();
         long diff = nanoTime - lastCheckNano;
-on
+
         lastCheckNano = nanoTime;
 
         if (diff > nanoTime) { // First run's diff = nanoTime + 1, no calc possible.
@@ -70,7 +70,7 @@ on
 
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
 
-        if (plugin.serverVariableHolder.isUsingPaper()) {
+        if (plugin.getVariable().isUsingPaper()) {
             return getTPSPaper(now, averageCPUUsage, playersOnline);
         } else {
             diff -= TimeAmount.MILLISECOND.ns() * 40L; // 40ms removed because the run appears to take 40-50ms, screwing the tps.
