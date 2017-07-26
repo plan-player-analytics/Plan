@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan;
 
+import org.bukkit.ChatColor;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import org.bukkit.ChatColor;
 
 /**
  * Phrase contains every message that is used in placeholders or commands. The
@@ -134,7 +135,7 @@ public enum Phrase {
     CMD_USG_INFO("View Version of Plan"),
     CMD_USG_INSPECT("Inspect Player's Data"),
     CMD_USG_QINSPECT("QuickInspect Player's Data"),
-    CMD_USG_MANAGE("Database managment command"),
+    CMD_USG_MANAGE("Database management command"),
     CMD_USG_MANAGE_BACKUP("Backup a database to .db file"),
     CMD_USG_MANAGE_RESTORE("Restore a database from a backup file"),
     CMD_USG_MANAGE_MOVE("Copy data from one database to another & overwrite values"),
@@ -144,7 +145,7 @@ public enum Phrase {
     CMD_USG_MANAGE_CLEAN("Clear incorrect data from the database"),
     CMD_USG_MANAGE_REMOVE("Remove players's data from the Active Database."),
     CMD_USG_MANAGE_STATUS("Check the status of the Active Database."),
-    CMD_USG_MANAGE_HELP("Show managment help."),
+    CMD_USG_MANAGE_HELP("Show management help."),
     CMD_USG_MANAGE_HOTSWAP("Hotswap to another database & restart the plugin"),
     CMD_USG_RELOAD("Reload plugin config & save cached data"),
     CMD_USG_SEARCH("Search for player"),
@@ -171,7 +172,7 @@ public enum Phrase {
     COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "" + PREFIX + "Command requires arguments. REPLACE0"),
     COMMAND_ADD_CONFIRMATION_ARGUMENT(ChatColor.RED + "" + PREFIX + "Add -a to confirm execution! REPLACE0"),
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "" + PREFIX + "Command requires one argument."),
-    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission."),
+    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permission."),
     ERROR_TOO_SMALL_QUEUE("Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)");
 
     private String text;
