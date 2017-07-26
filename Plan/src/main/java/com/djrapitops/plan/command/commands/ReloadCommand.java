@@ -23,7 +23,7 @@ public class ReloadCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ReloadCommand(Plan plugin) {
-        super("reload", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_RELOAD + "");
+        super("reload", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_RELOAD.toString());
 
         this.plugin = plugin;
     }
@@ -33,7 +33,7 @@ public class ReloadCommand extends SubCommand {
         plugin.onDisable();
         plugin.reloadConfig();
         plugin.onEnable();
-        sender.sendMessage(Phrase.RELOAD_COMPLETE + "");
+        sender.sendMessage(Phrase.RELOAD_COMPLETE.toString());
         return true;
     }
 

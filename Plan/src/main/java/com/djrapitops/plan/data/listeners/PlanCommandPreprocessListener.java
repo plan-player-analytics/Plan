@@ -49,14 +49,14 @@ public class PlanCommandPreprocessListener implements Listener {
         boolean combineCommandAliasesToMainCommand = Settings.COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND.isTrue();
 
         if (doNotLogUnknownCommands || combineCommandAliasesToMainCommand) {
-            Command command = plugin.getServer().getPluginCommand(commandName);
+            Command command = plugin.getServer().getPluginCommand(commandName.substring(1, commandName.length()));
             if (command == null) {
                 if (doNotLogUnknownCommands) {
                     Log.debug("Ignored command, command is unknown");
                     return;
                 }
             } else if (combineCommandAliasesToMainCommand) {
-                commandName = command.getName();
+                commandName = "/" + command.getName();
             }
         }
 
@@ -66,6 +66,7 @@ public class PlanCommandPreprocessListener implements Listener {
             Log.debug("Ignored command, player had ignore permission.");
             return;
         }
+
         handler.handleCommand(commandName);
     }
 }

@@ -132,7 +132,7 @@ public class AnalyzeCommand extends SubCommand {
                 sendLink(sender, url);
             }
         }
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
+        sender.sendMessage(Phrase.CMD_FOOTER.toString());
     }
 
     @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
