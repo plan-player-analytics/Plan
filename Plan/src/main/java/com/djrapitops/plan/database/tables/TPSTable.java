@@ -37,6 +37,7 @@ public class TPSTable extends Table {
         columnTPS = "tps";
         columnPlayers = "players_online";
         columnCPUUsage = "cpu_usage";
+        //TODO add new columns
     }
 
     @Override
@@ -48,6 +49,7 @@ public class TPSTable extends Table {
                     + columnPlayers + " integer NOT NULL, "
                     + columnCPUUsage + " double NOT NULL"
                     + ")"
+                    //TODO add new columns
             );
             int version = getVersion();
             if (version < 6) {
@@ -72,6 +74,8 @@ public class TPSTable extends Table {
         }
     }
 
+    //TODO alterTablesV7
+
     /**
      * @return @throws SQLException
      */
@@ -88,6 +92,7 @@ public class TPSTable extends Table {
                 double tps = set.getDouble(columnTPS);
                 int players = set.getInt(columnPlayers);
                 double cpuUsage = set.getDouble(columnCPUUsage);
+                //TODO add new data
                 data.add(new TPS(date, tps, players, cpuUsage));
             }
             return data;

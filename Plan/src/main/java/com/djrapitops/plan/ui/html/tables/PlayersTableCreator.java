@@ -23,10 +23,11 @@ public class PlayersTableCreator {
     public static String createSortablePlayersTable(List<UserData> data) {
         Benchmark.start("Create Players table");
         StringBuilder html = new StringBuilder();
+
         long now = MiscUtils.getTime();
         boolean showImages = Settings.PLAYERLIST_SHOW_IMAGES.isTrue();
+
         int i = 0;
-//        Collections.sort(data, new UserDataLastPlayedComparator()); // Already sorted.
         for (UserData uData : data) {
             if (i >= 750) {
                 break;
@@ -54,8 +55,10 @@ public class PlayersTableCreator {
                 ));
             } catch (NullPointerException e) {
             }
+
             i++;
         }
+
         Benchmark.stop("Create Players table");
         return html.toString();
     }

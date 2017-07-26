@@ -68,6 +68,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
         if (db == null) {
             return;
         }
+
         try {
             for (UUID uuid : processors.keySet()) {
                 if (uuid == null) {

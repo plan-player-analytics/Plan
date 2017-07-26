@@ -26,17 +26,20 @@ public class CommandUseTableCreator {
             html.append(Html.ERROR_TABLE_2.parse());
         } else {
             Collections.reverse(sorted);
+
             int i = 0;
             for (String[] values : sorted) {
                 if (i >= 500) {
                     break;
                 }
+
                 try {
                     html.append(Html.TABLELINE_2.parse(values[1], values[0]));
                 } catch (IllegalArgumentException e) {
                     Log.toLog("SortableCommandUseTableCreator", e);
                     Log.toLog("Cause: " + values[0] + " " + values[1], Log.getErrorsFilename());
                 }
+
                 i++;
             }
         }

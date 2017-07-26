@@ -55,7 +55,7 @@ public class SessionCache {
     /**
      * Used to get the SessionData of the player in the sessionCache.
      *
-     * @param uuid UUId of the player.
+     * @param uuid UUID of the player.
      * @return SessionData or null if not cached.
      */
     public SessionData getSession(UUID uuid) {

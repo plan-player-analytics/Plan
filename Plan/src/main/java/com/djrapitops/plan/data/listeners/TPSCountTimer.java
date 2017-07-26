@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import org.bukkit.World;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
@@ -67,18 +68,55 @@ public class TPSCountTimer extends AbsRunnable {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
         double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
-        if (averageCPUUsage < 0) { // If Unavailable, getSystemLoadAverage() returns -1
+
+        if (averageCPUUsage < 0) { // If unavailable, getSystemLoadAverage() returns -1
             averageCPUUsage = -1;
         }
 
+        Runtime runtime = Runtime.getRuntime();
+
+        long totalMemory = runtime.totalMemory() / 1024L;
+        long usedMemory = totalMemory - runtime.freeMemory() / 1024L;
+
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
+        int loadedChunks = getLoadedChunks();
+        int entityCount;
 
         if (plugin.getVariable().isUsingPaper()) {
-            return getTPSPaper(now, averageCPUUsage, playersOnline);
+            entityCount = getEntityCountPaper();
+
+            return getTPSPaper(now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
         } else {
+            entityCount = getEntityCount();
+
             diff -= TimeAmount.MILLISECOND.ns() * 40L; // 40ms removed because the run appears to take 40-50ms, screwing the tps.
-            return getTPS(diff, now, averageCPUUsage, playersOnline);
+            return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
         }
+    }
+
+    /**
+     * Gets the TPS for Spigot / Bukkit
+     *
+     * @param diff          The difference between the last run and this run
+     * @param now           The time right now
+     * @param cpuUsage      The usage of the CPU
+     * @param playersOnline The amount of players that are online
+     * @return the TPS
+     */
+    private TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
+        if (diff < TimeAmount.SECOND.ns()) { // No tick count above 20
+            diff = TimeAmount.SECOND.ns();
+        }
+
+        long twentySeconds = 20L * TimeAmount.SECOND.ns();
+        while (diff > twentySeconds) {
+            history.add(new TPS(now, 0, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded));
+            diff -= twentySeconds;
+        }
+
+        double tpsN = twentySeconds / diff;
+
+        return new TPS(now, tpsN, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }
 
     /**
@@ -89,7 +127,7 @@ public class TPSCountTimer extends AbsRunnable {
      * @param playersOnline The amount of players that are online
      * @return the TPS
      */
-    private TPS getTPSPaper(long now, double cpuUsage, int playersOnline) {
+    private TPS getTPSPaper(long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
         double tps = plugin.getServer().getTPS()[0];
 
         if (tps > 20) {
@@ -98,31 +136,33 @@ public class TPSCountTimer extends AbsRunnable {
 
         tps = MathUtils.round(tps);
 
-        return new TPS(now, tps, playersOnline, cpuUsage);
+        return new TPS(now, tps, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }
 
     /**
-     * Gets the TPS for a Spigot / Bukkit
+     * Gets the amount of loaded chunks
      *
-     * @param diff          The difference between the last run and this run
-     * @param now           The time right now
-     * @param cpuUsage      The usage of the CPU
-     * @param playersOnline The amount of players that are online
-     * @return the TPS
+     * @return amount of loaded chunks
      */
-    private TPS getTPS(long diff, long now, double cpuUsage, int playersOnline) {
-        if (diff < TimeAmount.SECOND.ns()) { // No tick count above 20
-            diff = TimeAmount.SECOND.ns();
-        }
+    private int getLoadedChunks() {
+        return plugin.getServer().getWorlds().stream().mapToInt(world -> world.getLoadedChunks().length).sum();
+    }
 
-        long twentySeconds = 20L * TimeAmount.SECOND.ns();
-        while (diff > twentySeconds) {
-            history.add(new TPS(now, 0, playersOnline, cpuUsage));
-            diff -= twentySeconds;
-        }
+    /**
+     * Gets the amount of entities on the server for Bukkit / Spigot
+     *
+     * @return amount of entities
+     */
+    private int getEntityCount() {
+        return plugin.getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
+    }
 
-        double tpsN = twentySeconds / diff;
-
-        return new TPS(now, tpsN, playersOnline, cpuUsage);
+    /**
+     * Gets the amount of entities on the server for Paper
+     *
+     * @return amount of entities
+     */
+    private int getEntityCountPaper() {
+        return plugin.getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
     }
 }

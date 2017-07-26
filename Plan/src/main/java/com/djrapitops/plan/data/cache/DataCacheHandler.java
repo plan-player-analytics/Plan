@@ -371,8 +371,11 @@ public class DataCacheHandler extends SessionCache {
             final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
             final double averageCPUUsage = MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage));
+            final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));
+            final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
+            final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
 
-            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage));
+            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded));
         }
         unsavedTPSHistory.removeAll(copy);
         return averages;
