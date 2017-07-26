@@ -65,8 +65,11 @@ public class TPSCountTimer extends AbsRunnable {
      */
     private TPS calculateTPS(long diff, long now) {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
-        int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-        final double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
+        double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        if (averageCPUUsage < 0) { // If Unavailable, getSystemLoadAverage() returns -1
+            averageCPUUsage = -1;
+        }
 
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
 
