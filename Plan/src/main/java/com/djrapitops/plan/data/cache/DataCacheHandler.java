@@ -43,11 +43,15 @@ public class DataCacheHandler extends SessionCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
+
     // Plan
     private final Plan plugin;
     private final Database db;
+
+    //Cache
     private Map<String, Integer> commandUse;
     private List<List<TPS>> unsavedTPSHistory;
+
     // Queues
     private DataCacheSaveQueue saveTask;
     private DataCacheClearQueue clearTask;
