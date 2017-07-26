@@ -23,7 +23,9 @@ public class ServerVariableHolder {
     public ServerVariableHolder(Server server) {
         maxPlayers = server.getMaxPlayers();
         ip = server.getIp();
-        usingPaper = server.getName().equals("Paper");
+
+        String serverName = server.getName();
+        usingPaper = serverName.equals("Paper") || serverName.equals("TacoSpigot");
     }
 
     /**
