@@ -18,7 +18,7 @@ import java.util.List;
  * Placeholder values can be retrieved using the get method.
  * <p>
  * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps,
- * averagetpsday
+ * averagetpsday, averagecpuday, averagecpuweek
  *
  * @author Rsl1122
  * @since 3.5.2
