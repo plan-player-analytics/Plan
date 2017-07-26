@@ -93,7 +93,7 @@ public class TPSTable extends Table {
                 int players = set.getInt(columnPlayers);
                 double cpuUsage = set.getDouble(columnCPUUsage);
                 //TODO add new data
-                data.add(new TPS(date, tps, players, cpuUsage));
+                data.add(new TPS(date, tps, players, cpuUsage, 0, 0, 0));
             }
             return data;
         } finally {
