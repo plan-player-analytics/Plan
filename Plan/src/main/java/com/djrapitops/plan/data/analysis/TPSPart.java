@@ -51,8 +51,14 @@ public class TPSPart extends RawData<TPSPart> {
         double averageTPSweek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
         double averageTPSday = MathUtils.averageDouble(day.stream().map(TPS::getTps));
 
+        double averageCPUweek = MathUtils.averageDouble(week.stream().map(TPS::getCPUUsage));
+        double averageCPUday = MathUtils.averageDouble(day.stream().map(TPS::getCPUUsage));
+
         addValue("averagetps", FormatUtils.cutDecimals(averageTPSweek));
         addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSday));
+
+        addValue("averagecpuweek", FormatUtils.cutDecimals(averageCPUweek));
+        addValue("averagecpuday", FormatUtils.cutDecimals(averageCPUday));
     }
 
     public List<TPS> getTpsData() {
