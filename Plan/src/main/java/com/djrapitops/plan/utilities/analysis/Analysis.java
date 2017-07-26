@@ -58,7 +58,7 @@ public class Analysis {
             return;
         }
         plugin.processStatus().startExecution("Analysis");
-        log(Phrase.ANALYSIS_START + "");
+        log(Phrase.ANALYSIS_START.toString());
         // Async task for Analysis
         plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
             @Override
@@ -87,11 +87,11 @@ public class Analysis {
             inspectCache.cacheAllUserData(db);
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
-            Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL + "");
+            Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL.toString());
         }
         List<UserData> rawData = inspectCache.getCachedUserData();
         if (rawData.isEmpty()) {
-            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA + "");
+            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA.toString());
             return false;
         }
         List<TPS> tpsData = new ArrayList<>();
@@ -142,7 +142,7 @@ public class Analysis {
             analysisData.analyseData();
             Benchmark.stop("Analysis Phase");
 
-            log(Phrase.ANALYSIS_THIRD_PARTY + "");
+            log(Phrase.ANALYSIS_THIRD_PARTY.toString());
             plugin.processStatus().setStatus("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 

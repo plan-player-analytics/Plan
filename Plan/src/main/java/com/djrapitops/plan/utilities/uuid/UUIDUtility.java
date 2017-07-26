@@ -6,11 +6,12 @@
 package main.java.com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plugin.utilities.player.UUIDFetcher;
-import java.sql.SQLException;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+
+import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  *
@@ -36,7 +37,6 @@ public class UUIDUtility {
      * @param playername
      * @param db
      * @return
-     * @throws Exception
      */
     public static UUID getUUIDOf(String playername, Database db) {
         UUID uuid = null;

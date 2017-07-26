@@ -8,33 +8,26 @@
     <packaging>jar</packaging>
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>plan-repo</id>
+            <url>http://repo.fuzzlemann.de/artifactory/libs-release/</url>
         </repository>
         <repository>
-            <id>destroystokyo-repo</id>
-            <url>https://repo.destroystokyo.com/repository/maven-public//</url>
+            <id>plan-snapshot-repo</id>
+            <url>http://repo.fuzzlemann.de/artifactory/libs-snapshot/</url>
         </repository>
     </repositories>
     <dependencies>
         <!--        PaperSpigot 1.12 built with Buildtools for Database classes.-->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-spigot</artifactId>
-            <version>1.12</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--        PaperSpigot 1.12 built for TPS Getter Support.-->
-        <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <artifactId>paper</artifactId>
+            <version>1.12-R0.1-20170725.202533-1</version>
             <scope>provided</scope>
         </dependency>
         <!--        Framework for easier plugin development-->
         <dependency>
             <groupId>com.djrapitops</groupId>
-            <artifactId>AbstractPluginFramework</artifactId>
+            <artifactId>abstract-plugin-framework</artifactId>
             <version>2.0.0</version>
             <scope>compile</scope>
         </dependency>

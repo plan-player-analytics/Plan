@@ -64,7 +64,7 @@ public class WebSocketServer {
         if (enabled) {
             return;
         }
-        Log.info(Phrase.WEBSERVER_INIT + "");
+        Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             InetAddress ip = InetAddress.getByName(Settings.WEBSERVER_IP.toString());
 //            SSLServerSocketFactory ssl = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
@@ -205,7 +205,7 @@ public class WebSocketServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        Log.info(Phrase.WEBSERVER_CLOSE + "");
+        Log.info(Phrase.WEBSERVER_CLOSE.toString());
         shutdown = true;
         try {
             if (server != null) {
