@@ -39,7 +39,20 @@ public class BStats {
         addEnabledDisabledPie("gather_gmtimes", gatherGMTimes);
         addEnabledDisabledPie("gather_commands", gatherCommands);
 
-        String databaseType = Settings.DB_TYPE.toString();
+        String databaseType = Settings.DB_TYPE.toString().toLowerCase();
+
+        switch (databaseType) {
+            case "mysql":
+                databaseType = "MySQL";
+                break;
+            case "sqlite":
+                databaseType = "SQLite";
+                break;
+            default:
+                databaseType = "No Database";
+                break;
+        }
+
         addStringSettingPie("database_type", databaseType);
     }
 
