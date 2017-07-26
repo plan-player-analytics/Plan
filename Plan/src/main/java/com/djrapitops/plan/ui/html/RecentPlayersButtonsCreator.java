@@ -23,7 +23,7 @@ public class RecentPlayersButtonsCreator {
         for (int i = 0; i < names.size(); i++) {
             if (i < limit) {
                 String name = names.get(i);
-                html.append(Html.BUTTON.parse(HtmlUtils.getInspectUrl(name), name));
+                html.append(Html.BUTTON.parse(HtmlUtils.getRelativeInspectUrl(name), name));
                 html.append(" ");
             }
         }
