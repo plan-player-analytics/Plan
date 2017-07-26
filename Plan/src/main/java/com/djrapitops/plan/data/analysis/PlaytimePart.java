@@ -5,9 +5,9 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 /**
  * Part responsible for all Playtime related analysis.
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: totalplaytime, avgplaytime
  *
  * @author Rsl1122
@@ -15,8 +15,8 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
  */
 public class PlaytimePart extends RawData<PlaytimePart> {
 
-    private long totalPlaytime;
     private final PlayerCountPart playerCount;
+    private long totalPlaytime;
 
     public PlaytimePart(PlayerCountPart part) {
         playerCount = part;

@@ -9,9 +9,9 @@ import main.java.com.djrapitops.plan.command.commands.*;
 
 /**
  * TreeCommand for the /plan command, and all subcommands.
- *
+ * <p>
  * Uses the Abstract Plugin Framework for easier command management.
- * 
+ *
  * @author Rsl1122
  * @since 1.0.0
  */
@@ -19,7 +19,7 @@ public class PlanCommand extends TreeCommand<Plan> {
 
     /**
      * CommandExecutor class Constructor.
-     *
+     * <p>
      * Initializes Subcommands
      *
      * @param plugin Current instance of Plan

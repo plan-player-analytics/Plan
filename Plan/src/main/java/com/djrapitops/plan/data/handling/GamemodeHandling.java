@@ -18,8 +18,8 @@ public class GamemodeHandling {
      * Processes the information of the Event and changes UserData object
      * accordingly.
      *
-     * @param data UserData of the player.
-     * @param time Epoch ms the event occurred.
+     * @param data  UserData of the player.
+     * @param time  Epoch ms the event occurred.
      * @param newGM The Gamemode the player changed to.
      */
     public static void processGamemodeInfo(UserData data, long time, Gamemode newGM) {

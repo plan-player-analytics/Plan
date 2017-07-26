@@ -188,6 +188,32 @@ public enum Phrase {
         this.text = "";
     }
 
+    static void loadLocale(File localeFile) {
+        try {
+            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
+            List<String> localeRows = new ArrayList<>();
+            while (localeScanner.hasNextLine()) {
+                String line = localeScanner.nextLine();
+                if (!line.isEmpty()) {
+                    if ("<<<<<<HTML>>>>>>".equals(line)) {
+                        break;
+                    }
+                    localeRows.add(line);
+                }
+            }
+            for (String localeRow : localeRows) {
+                try {
+                    String[] split = localeRow.split(" <> ");
+                    Phrase.valueOf(split[0]).setText(split[1]);
+                } catch (IllegalArgumentException e) {
+                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
+                }
+            }
+        } catch (IOException e) {
+
+        }
+    }
+
     @Override
     public String toString() {
         return text;
@@ -241,31 +267,5 @@ public enum Phrase {
      */
     public void setColor(char colorCode) {
         this.color = ChatColor.getByChar(colorCode);
-    }
-
-    static void loadLocale(File localeFile) {
-        try {
-            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
-            List<String> localeRows = new ArrayList<>();
-            while (localeScanner.hasNextLine()) {
-                String line = localeScanner.nextLine();
-                if (!line.isEmpty()) {
-                    if ("<<<<<<HTML>>>>>>".equals(line)) {
-                        break;
-                    }
-                    localeRows.add(line);
-                }
-            }
-            for (String localeRow : localeRows) {
-                try {
-                    String[] split = localeRow.split(" <> ");
-                    Phrase.valueOf(split[0]).setText(split[1]);
-                } catch (IllegalArgumentException e) {
-                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
-                }
-            }
-        } catch (IOException e) {
-
-        }
     }
 }

@@ -7,11 +7,9 @@ package test.java.main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
-import java.util.List;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +18,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)

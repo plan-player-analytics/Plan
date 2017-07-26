@@ -20,7 +20,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public abstract class SQLDB extends Database {
@@ -30,7 +29,6 @@ public abstract class SQLDB extends Database {
     private Connection connection;
 
     /**
-     *
      * @param plugin
      * @param supportsModification
      */
@@ -75,7 +73,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -99,7 +96,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public boolean checkConnection() throws SQLException {
@@ -178,7 +174,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public Table[] getAllTables() {
@@ -186,7 +181,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public Table[] getAllTablesInRemoveOrder() {
@@ -194,13 +188,11 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public abstract Connection getNewConnection();
 
     /**
-     *
      * @throws SQLException
      */
     @Override
@@ -212,7 +204,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     @Override
@@ -221,7 +212,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param version
      * @throws SQLException
      */
@@ -231,7 +221,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuid
      * @return
      */
@@ -252,7 +241,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuid
      * @return
      * @throws SQLException
@@ -281,7 +269,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuid
      * @param processors
      * @throws SQLException
@@ -325,7 +312,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuidsCol
      * @return
      * @throws SQLException
@@ -374,7 +360,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -430,7 +415,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -476,7 +460,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -492,7 +475,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public boolean supportsModification() {
@@ -500,7 +482,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public Connection getConnection() {

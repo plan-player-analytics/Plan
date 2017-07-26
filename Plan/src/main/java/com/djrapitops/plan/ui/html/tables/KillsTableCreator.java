@@ -10,13 +10,11 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import java.util.List;
 
 /**
- *
  * @author Rsl1122
  */
 public class KillsTableCreator {
 
     /**
-     *
      * @param killData
      * @return
      */

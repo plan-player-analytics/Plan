@@ -12,11 +12,11 @@ import java.util.List;
 
 /**
  * Part responsible for all TPS related analysis.
- *
+ * <p>
  * Ticks Per Second Graphs
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps,
  * averagetpsday
  *

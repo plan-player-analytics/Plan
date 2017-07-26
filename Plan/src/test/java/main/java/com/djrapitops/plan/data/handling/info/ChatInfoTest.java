@@ -7,13 +7,13 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.ChatInfo;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.MockUtils;
 
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 public class ChatInfoTest {

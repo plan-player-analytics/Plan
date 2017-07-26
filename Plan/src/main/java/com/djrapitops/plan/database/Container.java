@@ -3,9 +3,9 @@ package main.java.com.djrapitops.plan.database;
 /**
  * Class to contain objects in the batches.
  *
+ * @param <T> Object stored.
  * @author Rsl1122
  * @since 3.4.3
- * @param <T> Object stored.
  */
 public class Container<T> {
 
@@ -16,7 +16,7 @@ public class Container<T> {
      * Constructor for the object.
      *
      * @param object Object to place inside the container.
-     * @param id UserID related to the object.
+     * @param id     UserID related to the object.
      */
     public Container(T object, int id) {
         this.object = object;

@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import java.util.Comparator;
 import main.java.com.djrapitops.plan.data.TPS;
 
+import java.util.Comparator;
+
 /**
- *
  * @author Rsl1122
  * @since 3.5.0
  */

@@ -15,9 +15,9 @@ public class ChatHandling {
      * Processes the information of the Event and changes UserData object
      * accordingly.
      *
-     * @param data UserData of the player.
+     * @param data     UserData of the player.
      * @param nickname Nickname of the player during the event.
-     * @param msg Message sent by the player.
+     * @param msg      Message sent by the player.
      */
     public static void processChatInfo(UserData data, String nickname, String msg) {
         data.addNickname(nickname);

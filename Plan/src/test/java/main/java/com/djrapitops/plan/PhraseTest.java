@@ -3,7 +3,6 @@ package test.java.main.java.com.djrapitops.plan;
 import main.java.com.djrapitops.plan.Phrase;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +10,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)

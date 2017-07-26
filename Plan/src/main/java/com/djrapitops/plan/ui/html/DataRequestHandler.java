@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class DataRequestHandler {
@@ -43,7 +42,7 @@ public class DataRequestHandler {
      * Returns the player.html as string with replaced placeholders.
      *
      * @param uuid UUID of player, whose UserData is used to replace
-     * placeholders with
+     *             placeholders with
      * @return The html
      */
     public String getInspectHtml(UUID uuid) {

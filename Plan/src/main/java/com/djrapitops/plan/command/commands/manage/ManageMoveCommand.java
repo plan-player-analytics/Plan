@@ -18,7 +18,7 @@ import java.util.UUID;
 
 /**
  * This manage subcommand is used to move all data from one database to another.
- *
+ * <p>
  * Destination database will be cleared.
  *
  * @author Rsl1122

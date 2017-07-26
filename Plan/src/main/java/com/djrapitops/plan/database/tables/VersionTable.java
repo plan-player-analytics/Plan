@@ -1,19 +1,18 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
- *
  * @author Rsl1122
  */
 public class VersionTable extends Table {
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -22,7 +21,6 @@ public class VersionTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -40,7 +38,6 @@ public class VersionTable extends Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     @Override
@@ -62,7 +59,6 @@ public class VersionTable extends Table {
     }
 
     /**
-     *
      * @param version
      * @throws SQLException
      */

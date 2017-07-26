@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Rsl1122
  */
 public abstract class Table {
@@ -34,7 +33,6 @@ public abstract class Table {
     protected final boolean usingMySQL;
 
     /**
-     *
      * @param name
      * @param db
      * @param usingMySQL
@@ -46,13 +44,11 @@ public abstract class Table {
     }
 
     /**
-     *
      * @return
      */
     public abstract boolean createTable();
 
     /**
-     *
      * @return @throws SQLException
      */
     protected Connection getConnection() throws SQLException {
@@ -64,7 +60,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public int getVersion() throws SQLException {
@@ -72,7 +67,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @param sql
      * @return
      * @throws SQLException
@@ -83,7 +77,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @param sql
      * @return
      * @throws SQLException
@@ -93,7 +86,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @param toClose
      */
     protected void close(AutoCloseable... toClose) {
@@ -101,7 +93,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @return
      */
     public String getTableName() {
@@ -109,7 +100,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @return
      */
     public boolean removeAllData() {
@@ -123,7 +113,6 @@ public abstract class Table {
     }
 
     /**
-     *
      * @param <T>
      * @param objects
      * @return

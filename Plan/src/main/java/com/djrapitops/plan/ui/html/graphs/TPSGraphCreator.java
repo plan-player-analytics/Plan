@@ -10,12 +10,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  * @since 3.5.0
  */
 public class TPSGraphCreator {
-    
+
     public static String buildScatterDataStringTPS(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()
@@ -24,7 +23,7 @@ public class TPSGraphCreator {
                 .collect(Collectors.toList());
         return ScatterGraphCreator.scatterGraph(points, true);
     }
-    
+
     public static List<TPS> filterTPS(List<TPS> tpsData, long nowMinusScale) {
         return tpsData.stream()
                 .filter(Objects::nonNull)

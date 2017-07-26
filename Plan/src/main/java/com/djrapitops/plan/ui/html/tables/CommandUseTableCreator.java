@@ -10,13 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Rsl1122
  */
 public class CommandUseTableCreator {
 
     /**
-     *
      * @param commandUse
      * @return
      */

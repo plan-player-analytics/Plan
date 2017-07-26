@@ -5,16 +5,17 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities.analysis;
 
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import org.junit.Test;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
- *
  * @author Rsl1122
  */
 public class MathUtilsTest {

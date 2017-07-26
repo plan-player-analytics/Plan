@@ -8,13 +8,11 @@ import org.bukkit.Location;
 import java.text.DecimalFormat;
 
 /**
- *
  * @author Rsl1122
  */
 public class FormatUtils {
 
     /**
-     *
      * @param ms
      * @return
      */
@@ -23,7 +21,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param before
      * @param after
      * @return
@@ -33,7 +30,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param epochMs
      * @return
      */
@@ -42,7 +38,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param epochMs
      * @return
      */
@@ -51,7 +46,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param epochMs
      * @return
      */
@@ -74,7 +68,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param dataPoint
      * @return
      */
@@ -173,7 +166,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param d
      * @return
      */

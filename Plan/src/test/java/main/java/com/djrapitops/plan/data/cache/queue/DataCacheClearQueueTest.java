@@ -18,7 +18,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)

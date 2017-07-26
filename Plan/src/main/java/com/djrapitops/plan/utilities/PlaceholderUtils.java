@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class PlaceholderUtils {

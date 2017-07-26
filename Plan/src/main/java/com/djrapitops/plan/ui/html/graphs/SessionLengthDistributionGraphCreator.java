@@ -5,25 +5,20 @@
  */
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
- *
  * @author Rsl1122
  */
 public class SessionLengthDistributionGraphCreator {
 
     /**
-     *
      * @param data
      * @return
      */
@@ -33,7 +28,6 @@ public class SessionLengthDistributionGraphCreator {
     }
 
     /**
-     *
      * @param lengths
      * @return
      */

@@ -1,22 +1,17 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
- *
  * @author Rsl1122
  */
 public class KillsTable extends Table {
@@ -27,7 +22,6 @@ public class KillsTable extends Table {
     private final String columnDate;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -40,7 +34,6 @@ public class KillsTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -64,7 +57,6 @@ public class KillsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -85,7 +77,6 @@ public class KillsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -114,7 +105,6 @@ public class KillsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param kills
      * @throws SQLException
@@ -165,7 +155,6 @@ public class KillsTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @param uuids
      * @return
@@ -203,7 +192,6 @@ public class KillsTable extends Table {
     }
 
     /**
-     *
      * @param kills
      * @param uuids
      * @throws SQLException

@@ -52,7 +52,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main class for Bukkit that manages the plugin.
- *
+ * <p>
  * Everything can be accessed through this class. Use Plan.getInstance() to get
  * the initialised instance of Plan.
  *
@@ -77,8 +77,32 @@ public class Plan extends BukkitPlugin<Plan> {
     private int bootAnalysisTaskID = -1;
 
     /**
-     * OnEnable method.
+     * Used to get the PlanAPI. @see API
      *
+     * @return API of the current instance of Plan.
+     * @throws IllegalStateException If onEnable method has not been called on
+     *                               Plan and the instance is null.
+     */
+    public static API getPlanAPI() throws IllegalStateException {
+        Plan instance = getInstance();
+        if (instance == null) {
+            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
+        }
+        return instance.api;
+    }
+
+    /**
+     * Used to get the plugin-instance singleton.
+     *
+     * @return this object.
+     */
+    public static Plan getInstance() {
+        return (Plan) getPluginInstance(Plan.class);
+    }
+
+    /**
+     * OnEnable method.
+     * <p>
      * - Enables the plugin's subsystems.
      */
     @Override
@@ -182,7 +206,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
     /**
      * Disables the plugin.
-     *
+     * <p>
      * Stops the webserver, cancels all tasks and saves cache to the database.
      */
     @Override
@@ -233,7 +257,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
     /**
      * Initializes the database according to settings in the config.
-     *
+     * <p>
      * If database connection can not be established plugin is disabled.
      *
      * @return true if init was successful, false if not.
@@ -414,7 +438,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
     /**
      * Used to get all possible database objects.
-     *
+     * <p>
      * #init() might need to be called in order for the object to function.
      *
      * @return Set containing the SqLite and MySQL objects.
@@ -446,35 +470,11 @@ public class Plan extends BukkitPlugin<Plan> {
     /**
      * Old method for getting the API.
      *
-     * @deprecated Use Plan.getPlanAPI() (static method) instead.
      * @return the Plan API.
+     * @deprecated Use Plan.getPlanAPI() (static method) instead.
      */
     @Deprecated
     public API getAPI() {
         return api;
-    }
-
-    /**
-     * Used to get the PlanAPI. @see API
-     *
-     * @return API of the current instance of Plan.
-     * @throws IllegalStateException If onEnable method has not been called on
-     * Plan and the instance is null.
-     */
-    public static API getPlanAPI() throws IllegalStateException {
-        Plan instance = getInstance();
-        if (instance == null) {
-            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
-        }
-        return instance.api;
-    }
-
-    /**
-     * Used to get the plugin-instance singleton.
-     *
-     * @return this object.
-     */
-    public static Plan getInstance() {
-        return (Plan) getPluginInstance(Plan.class);
     }
 }

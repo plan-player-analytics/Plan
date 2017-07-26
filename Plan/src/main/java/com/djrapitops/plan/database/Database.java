@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Abstract class representing a Database.
- *
+ * <p>
  * All methods should be only called from an asynchronous thread, unless stated
  * otherwise.
  *
@@ -91,7 +91,7 @@ public abstract class Database {
 
     /**
      * Initiates the database.
-     *
+     * <p>
      * Default method returns false.
      *
      * @return Was the initiation successful?
@@ -103,12 +103,12 @@ public abstract class Database {
     /**
      * Used to give Database processors to call with UserData after they have
      * been fetched from the database.
-     *
+     * <p>
      * This method is a shortcut method for multiple parameters.
      *
-     * @param uuid UUID of the player.
+     * @param uuid       UUID of the player.
      * @param processors Processors to call with the UserData after the fetch is
-     * complete.
+     *                   complete.
      * @throws SQLException If a database error occurs.
      */
     public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException {
@@ -119,16 +119,16 @@ public abstract class Database {
      * Used to give Database processors to call with UserData after they have
      * been fetched from the database.
      *
-     * @param uuid UUID of the player.
+     * @param uuid       UUID of the player.
      * @param processors Processors to call with the UserData after the fetch is
-     * complete.
+     *                   complete.
      * @throws SQLException If a database error occurs.
      */
     public abstract void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException;
 
     /**
      * Used to get all UserData for multiple UUIDs.
-     *
+     * <p>
      * Should only be called from async thread.
      *
      * @param uuids UUIDs to fetch data for.
@@ -168,7 +168,7 @@ public abstract class Database {
 
     /**
      * Used to get the name of the database type.
-     *
+     * <p>
      * Thread safe.
      *
      * @return SQLite/MySQL
@@ -177,7 +177,7 @@ public abstract class Database {
 
     /**
      * Used to get the config name of the database type.
-     *
+     * <p>
      * Thread safe.
      *
      * @return sqlite/mysql
@@ -199,7 +199,7 @@ public abstract class Database {
      * Used to set the database schema version.
      *
      * @param version Integer starting from 0, incremented by one when schema is
-     * updated.
+     *                updated.
      * @throws SQLException If a database error occurs.
      */
     public abstract void setVersion(int version) throws SQLException;
@@ -222,7 +222,7 @@ public abstract class Database {
 
     /**
      * Used to clear all data from the database.
-     *
+     * <p>
      * Uses DELETE * FROM table.
      *
      * @return Success of removal.
@@ -233,7 +233,7 @@ public abstract class Database {
      * Used to save CommandUse map.
      *
      * @param data String command (key), Integer times used
-     * @throws SQLException If a database error occurs.
+     * @throws SQLException         If a database error occurs.
      * @throws NullPointerException If the database has not initialized tables.
      */
     public void saveCommandUse(Map<String, Integer> data) throws SQLException, NullPointerException {

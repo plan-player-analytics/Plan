@@ -34,7 +34,7 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * Class Constructor.
-     *
+     * <p>
      * Copies the references to multiple handlers from Current instance of
      * handler.
      *
@@ -47,7 +47,7 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * PlayerJoinEvent Listener.
-     *
+     * <p>
      * If player is a new player, creates a new data in the database for the
      * player. Retrieves the UserData, updates and then saves it to the Cache.
      *
@@ -80,7 +80,7 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * PlayerQuitEvent Listener.
-     *
+     * <p>
      * Retrieves the current UserData for the Player, updates it, saves the data
      * to Database and clears it from cache.
      *
@@ -99,7 +99,7 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * PlayerKickEvent Listener.
-     *
+     * <p>
      * Updates current playerdata and saves it to the Database.
      *
      * @param event Fired event

@@ -19,9 +19,9 @@ public class ChatInfo extends HandlingInfo {
     /**
      * Constructor.
      *
-     * @param uuid UUID of the player.
+     * @param uuid     UUID of the player.
      * @param nickname Nickname of the player.
-     * @param message Message the player sent.
+     * @param message  Message the player sent.
      */
     public ChatInfo(UUID uuid, String nickname, String message) {
         super(uuid, InfoType.CHAT, 0L);

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Rsl1122
  */
 public class MapComparator {
@@ -26,7 +25,6 @@ public class MapComparator {
     }
 
     /**
-     *
      * @param hashMap
      * @return
      */

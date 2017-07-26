@@ -6,7 +6,6 @@
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -17,18 +16,21 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
-import static org.powermock.api.mockito.PowerMockito.when;
 import test.java.utils.TestInit;
 
+import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -65,7 +67,6 @@ public class KillInfoTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @After
@@ -74,7 +75,6 @@ public class KillInfoTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -95,7 +95,6 @@ public class KillInfoTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -108,7 +107,6 @@ public class KillInfoTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test

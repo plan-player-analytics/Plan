@@ -12,13 +12,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- *
  * @author Rsl1122
  */
 public class HtmlUtils {
 
     /**
-     *
      * @param fileName
      * @return
      * @throws FileNotFoundException
@@ -49,7 +47,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param html
      * @param replaceMap
      * @return
@@ -62,7 +59,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @return
      */
     public static String getServerAnalysisUrlWithProtocol() {
@@ -70,7 +66,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @return
      */
     public static String getServerAnalysisUrl() {
@@ -84,7 +79,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param playerName
      * @return
      */
@@ -93,7 +87,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param playerName
      * @return
      */
@@ -112,7 +105,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param string
      * @return
      */
@@ -124,7 +116,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param pluginNames
      * @param placeholders
      * @return
@@ -170,14 +161,13 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param string
      * @return
      */
     public static String swapColorsToSpan(String string) {
         Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
-            Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,
-            Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
+                Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,
+                Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
 
         for (Html html : replacer) {
             string = string.replace("§" + html.name().charAt(6), html.parse());

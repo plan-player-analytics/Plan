@@ -5,17 +5,18 @@
  */
 package main.java.com.djrapitops.plan.data.analysis;
 
-import java.util.Map;
 import main.java.com.djrapitops.plan.ui.html.tables.CommandUseTableCreator;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
+import java.util.Map;
+
 /**
  * Part responsible for all CommandUsage related analysis.
- *
+ * <p>
  * Command Usage Table.
- * 
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: uniquecommands, totalcommands, commanduse
  *
  * @author Rsl1122

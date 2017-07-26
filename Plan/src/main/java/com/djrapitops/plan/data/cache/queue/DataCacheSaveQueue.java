@@ -27,7 +27,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
     /**
      * Class constructor, starts the new Thread for saving.
      *
-     * @param plugin current instance of Plan
+     * @param plugin  current instance of Plan
      * @param handler DataCacheHandler
      */
     public DataCacheSaveQueue(Plan plugin, DataCacheHandler handler) {

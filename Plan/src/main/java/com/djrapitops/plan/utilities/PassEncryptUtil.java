@@ -9,7 +9,7 @@ import java.security.spec.InvalidKeySpecException;
 
 /**
  * Password Encryption utility.
- *
+ * <p>
  * https://github.com/defuse/password-hashing/blob/master/PasswordStorage.java
  *
  * @author Defuse
@@ -17,37 +17,11 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class PassEncryptUtil {
 
-    @SuppressWarnings("serial")
-    static public class InvalidHashException extends Exception {
-
-        public InvalidHashException(String message) {
-            super(message);
-        }
-
-        public InvalidHashException(String message, Throwable source) {
-            super(message, source);
-        }
-    }
-
-    @SuppressWarnings("serial")
-    static public class CannotPerformOperationException extends Exception {
-
-        public CannotPerformOperationException(String message) {
-            super(message);
-        }
-
-        public CannotPerformOperationException(String message, Throwable source) {
-            super(message, source);
-        }
-    }
-
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
-
     // These constants may be changed without breaking existing hashes.
     public static final int SALT_BYTE_SIZE = 24;
     public static final int HASH_BYTE_SIZE = 18;
     public static final int PBKDF2_ITERATIONS = 64000;
-
     // These constants define the encoding and may not be changed.
     public static final int HASH_SECTIONS = 5;
     public static final int HASH_ALGORITHM_INDEX = 0;
@@ -146,7 +120,7 @@ public class PassEncryptUtil {
             );
         }
 
-        // Compute the hash of the provided password, using the same salt, 
+        // Compute the hash of the provided password, using the same salt,
         // iteration count, and hash length
         byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
         // Compare the hashes in constant time. The password is correct if
@@ -184,6 +158,30 @@ public class PassEncryptUtil {
 
     private static String toBase64(byte[] array) {
         return DatatypeConverter.printBase64Binary(array);
+    }
+
+    @SuppressWarnings("serial")
+    static public class InvalidHashException extends Exception {
+
+        public InvalidHashException(String message) {
+            super(message);
+        }
+
+        public InvalidHashException(String message, Throwable source) {
+            super(message, source);
+        }
+    }
+
+    @SuppressWarnings("serial")
+    static public class CannotPerformOperationException extends Exception {
+
+        public CannotPerformOperationException(String message) {
+            super(message);
+        }
+
+        public CannotPerformOperationException(String message, Throwable source) {
+            super(message, source);
+        }
     }
 
 }

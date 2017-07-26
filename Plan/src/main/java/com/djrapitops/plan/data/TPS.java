@@ -21,9 +21,9 @@ public class TPS {
     /**
      * Constructor.
      *
-     * @param date time of the average calculation.
-     * @param tps average tps for the last minute.
-     * @param players average players for the last minute.
+     * @param date     time of the average calculation.
+     * @param tps      average tps for the last minute.
+     * @param players  average players for the last minute.
      * @param cpuUsage average CPU usage for the last minute.
      */
     public TPS(long date, double tps, int players, double cpuUsage) {

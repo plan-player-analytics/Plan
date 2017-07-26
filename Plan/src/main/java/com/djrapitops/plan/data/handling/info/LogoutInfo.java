@@ -22,12 +22,12 @@ public class LogoutInfo extends HandlingInfo {
     /**
      * Constructor.
      *
-     * @param uuid UUID of the player.
-     * @param time Epoch ms of the event.
+     * @param uuid   UUID of the player.
+     * @param time   Epoch ms of the event.
      * @param banned Is the player banned
-     * @param gm current gamemode of the player
-     * @param sData session that has been ended at the moment of the logout
-     * event.
+     * @param gm     current gamemode of the player
+     * @param sData  session that has been ended at the moment of the logout
+     *               event.
      */
     public LogoutInfo(UUID uuid, long time, boolean banned, Gamemode gm, SessionData sData) {
         super(uuid, InfoType.LOGOUT, time);

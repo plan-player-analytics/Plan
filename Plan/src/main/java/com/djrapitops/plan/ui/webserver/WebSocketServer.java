@@ -27,24 +27,21 @@ import java.util.Base64;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class WebSocketServer {
 
     private final int PORT;
+    private final Plan plugin;
+    private final DataRequestHandler dataReqHandler;
     private boolean enabled = false;
     private Socket sslServer;
     private ServerSocket server;
-
-    private final Plan plugin;
-    private final DataRequestHandler dataReqHandler;
-
     private boolean shutdown;
 
     /**
      * Class Constructor.
-     *
+     * <p>
      * Initializes DataRequestHandler
      *
      * @param plugin Current instance of Plan
@@ -75,7 +72,8 @@ public class WebSocketServer {
                 @Override
                 public void run() {
                     while (!shutdown) {
-                        /*SSL*/Socket socket = null;
+                        /*SSL*/
+                        Socket socket = null;
                         InputStream input = null;
                         OutputStream output = null;
                         Request request = null;
@@ -194,7 +192,6 @@ public class WebSocketServer {
     }
 
     /**
-     *
      * @return
      */
     public boolean isEnabled() {

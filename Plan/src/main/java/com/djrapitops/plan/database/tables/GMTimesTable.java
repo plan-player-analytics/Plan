@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- *
  * @author Rsl1122
  */
 public class GMTimesTable extends Table {
@@ -22,7 +21,6 @@ public class GMTimesTable extends Table {
     private final String columnSpectatorTime;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -40,7 +38,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -64,7 +61,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -84,7 +80,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -137,7 +132,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param gamemodeTimes
      * @throws SQLException
@@ -152,11 +146,11 @@ public class GMTimesTable extends Table {
         try {
             statement = prepareStatement(
                     "UPDATE " + tableName + " SET "
-                    + columnSurvivalTime + "=?, "
-                    + columnCreativeTime + "=?, "
-                    + columnAdventureTime + "=?, "
-                    + columnSpectatorTime + "=? "
-                    + " WHERE (" + columnUserID + "=?)");
+                            + columnSurvivalTime + "=?, "
+                            + columnCreativeTime + "=?, "
+                            + columnAdventureTime + "=?, "
+                            + columnSpectatorTime + "=? "
+                            + " WHERE (" + columnUserID + "=?)");
             statement.setInt(5, userId);
             for (int i = 0; i < gms.length; i++) {
                 try {
@@ -208,11 +202,11 @@ public class GMTimesTable extends Table {
         try {
             statement = prepareStatement(
                     "UPDATE " + tableName + " SET "
-                    + columnSurvivalTime + "=?, "
-                    + columnCreativeTime + "=?, "
-                    + columnAdventureTime + "=?, "
-                    + columnSpectatorTime + "=? "
-                    + " WHERE (" + columnUserID + "=?)");
+                            + columnSurvivalTime + "=?, "
+                            + columnCreativeTime + "=?, "
+                            + columnAdventureTime + "=?, "
+                            + columnSpectatorTime + "=? "
+                            + " WHERE (" + columnUserID + "=?)");
             boolean commitRequired = false;
             for (Integer id : gamemodeTimes.keySet()) {
                 if (!savedIDs.contains(id)) {
@@ -256,12 +250,12 @@ public class GMTimesTable extends Table {
         try {
             statement = prepareStatement(
                     "INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnSurvivalTime + ", "
-                    + columnCreativeTime + ", "
-                    + columnAdventureTime + ", "
-                    + columnSpectatorTime
-                    + ") VALUES (?, ?, ?, ?, ?)");
+                            + columnUserID + ", "
+                            + columnSurvivalTime + ", "
+                            + columnCreativeTime + ", "
+                            + columnAdventureTime + ", "
+                            + columnSpectatorTime
+                            + ") VALUES (?, ?, ?, ?, ?)");
             boolean commitRequired = false;
             for (Integer id : gamemodeTimes.keySet()) {
                 statement.setInt(1, id);

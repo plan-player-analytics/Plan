@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 /**
  * Part responsible for all Player login related analysis.
- *
+ * <p>
  * Unique per Day, Unique, New Players, Logins
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: totallogins, uniquejoinsday,
  * uniquejoinsweek, uniquejoinsmonth, avguniquejoins, avguniquejoinsday,
  * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth

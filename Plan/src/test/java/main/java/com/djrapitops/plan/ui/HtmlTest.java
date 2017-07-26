@@ -6,11 +6,12 @@
 package test.java.main.java.com.djrapitops.plan.ui;
 
 import main.java.com.djrapitops.plan.ui.html.Html;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 public class HtmlTest {

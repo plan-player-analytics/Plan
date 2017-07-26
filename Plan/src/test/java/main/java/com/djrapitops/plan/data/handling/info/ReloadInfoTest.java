@@ -23,7 +23,6 @@ import java.net.UnknownHostException;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -45,7 +44,6 @@ public class ReloadInfoTest {
     }
 
     /**
-     *
      * @throws UnknownHostException
      */
     @Test
@@ -68,7 +66,6 @@ public class ReloadInfoTest {
     }
 
     /**
-     *
      * @throws UnknownHostException
      */
     @Test

@@ -15,9 +15,9 @@ import org.bukkit.command.CommandException;
 
 /**
  * Command used to display link to the player list webpage.
- * 
+ * <p>
  * Subcommand is not registered if Webserver is not enabled.
- * 
+ *
  * @author Rsl1122
  * @since 3.5.2
  */
@@ -66,6 +66,6 @@ public class ListCommand extends SubCommand {
         plugin.getServer().dispatchCommand(
                 Bukkit.getConsoleSender(),
                 "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
     }
 }

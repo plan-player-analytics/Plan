@@ -48,7 +48,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -67,7 +66,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws IOException
      * @throws Exception
      */
@@ -94,7 +92,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws IOException
      * @throws SQLException
      */
@@ -177,7 +174,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -198,7 +194,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -224,7 +219,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -244,7 +238,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -259,7 +252,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      * @throws java.net.UnknownHostException
      */
@@ -308,7 +300,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -321,7 +312,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -352,7 +342,6 @@ public class DatabaseTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     // Big test because

@@ -6,7 +6,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 /**
- *
  * @author ristolah
  */
 public class Line {

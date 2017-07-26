@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.data.handling.importing;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+
+import java.util.UUID;
 
 /**
  * Imports all players who have not joined since Plan was installed.

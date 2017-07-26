@@ -18,7 +18,6 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -28,14 +27,14 @@ public class FormatUtilsTest {
     /**
      *
      */
-    @Before
-    public void setUp() {
+    public FormatUtilsTest() {
     }
 
     /**
      *
      */
-    public FormatUtilsTest() {
+    @Before
+    public void setUp() {
     }
 
     /**

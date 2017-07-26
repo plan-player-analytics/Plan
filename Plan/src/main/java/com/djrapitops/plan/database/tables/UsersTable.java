@@ -17,7 +17,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public class UsersTable extends Table {
@@ -44,7 +43,6 @@ public class UsersTable extends Table {
     private final String columnContainsBukkitData;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -72,7 +70,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -129,19 +126,19 @@ public class UsersTable extends Table {
         String[] queries;
         if (usingMySQL) {
             queries = new String[]{
-                "ALTER TABLE " + tableName + " ADD " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD " + columnOP + " boolean NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD " + columnBanned + " boolean NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
-                "ALTER TABLE " + tableName + " ADD " + columnRegistered + " bigint NOT NULL DEFAULT 0"
+                    "ALTER TABLE " + tableName + " ADD " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD " + columnOP + " boolean NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD " + columnBanned + " boolean NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
+                    "ALTER TABLE " + tableName + " ADD " + columnRegistered + " bigint NOT NULL DEFAULT 0"
             };
         } else {
             queries = new String[]{
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnOP + " boolean NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnBanned + " boolean NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnRegistered + " bigint NOT NULL DEFAULT 0"
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnOP + " boolean NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnBanned + " boolean NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnRegistered + " bigint NOT NULL DEFAULT 0"
             };
         }
         for (String query : queries) {
@@ -156,14 +153,14 @@ public class UsersTable extends Table {
         String[] queries;
         if (usingMySQL) {
             queries = new String[]{
-                "ALTER TABLE " + tableName + " ADD " + columnDeaths + " integer NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD " + columnMobKills + " integer NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " DROP INDEX " + columnPlayerKills
+                    "ALTER TABLE " + tableName + " ADD " + columnDeaths + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD " + columnMobKills + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " DROP INDEX " + columnPlayerKills
             };
         } else {
             queries = new String[]{
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnDeaths + " integer NOT NULL DEFAULT 0",
-                "ALTER TABLE " + tableName + " ADD COLUMN " + columnMobKills + " integer NOT NULL DEFAULT 0"
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnDeaths + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnMobKills + " integer NOT NULL DEFAULT 0"
             };
         }
         for (String query : queries) {
@@ -175,7 +172,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuid
      * @return
      * @throws SQLException
@@ -185,7 +181,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuid
      * @return
      * @throws SQLException
@@ -209,7 +204,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param userID
      * @return
      * @throws SQLException
@@ -233,7 +227,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
@@ -257,7 +250,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuid
      * @return
      */
@@ -266,7 +258,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuid
      * @return
      */
@@ -285,7 +276,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuid
      * @return
      * @throws SQLException
@@ -324,7 +314,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuids
      * @return
      * @throws SQLException
@@ -353,7 +342,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuids
      * @return
      * @throws SQLException
@@ -457,7 +445,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -487,7 +474,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -523,7 +509,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -656,7 +641,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -782,7 +766,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuids
      * @return
      * @throws SQLException
@@ -812,7 +795,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
@@ -837,7 +819,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public Map<Integer, Integer> getLoginTimes() throws SQLException {
@@ -861,7 +842,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     public String getColumnID() {
@@ -869,7 +849,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param playername
      * @return
      * @throws SQLException
@@ -893,7 +872,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     *
      * @param uuids
      * @return
      */

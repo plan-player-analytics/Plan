@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.command.commands.manage.*;
 
 /**
  * This command is used to manage the database of the plugin.
- *
+ * <p>
  * No arguments will run ManageHelpCommand. Contains subcommands.
  *
  * @author Rsl1122

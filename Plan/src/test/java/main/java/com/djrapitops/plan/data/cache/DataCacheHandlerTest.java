@@ -5,11 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
@@ -26,13 +21,19 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
+
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
-import test.java.utils.TestInit;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -116,7 +117,6 @@ public class DataCacheHandlerTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @After
@@ -125,7 +125,6 @@ public class DataCacheHandlerTest {
     }
 
     /**
-     *
      * @throws SQLException
      * @throws InterruptedException
      */
@@ -147,7 +146,6 @@ public class DataCacheHandlerTest {
     }
 
     /**
-     *
      * @throws SQLException
      * @throws InterruptedException
      */

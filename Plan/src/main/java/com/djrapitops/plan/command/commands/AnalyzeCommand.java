@@ -6,11 +6,7 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
@@ -110,7 +106,7 @@ public class AnalyzeCommand extends SubCommand {
 
     /**
      * Used to send the message after /plan analysis.
-     *
+     * <p>
      * Final because
      *
      * @param sender Command sender.
@@ -140,6 +136,6 @@ public class AnalyzeCommand extends SubCommand {
         plugin.getServer().dispatchCommand(
                 Bukkit.getConsoleSender(),
                 "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
     }
 }

@@ -44,7 +44,7 @@ public enum Permissions {
 
     /**
      * Returns the permission node in plugin.yml.
-     *
+     * <p>
      * Same as getPermission.
      *
      * @return permission node eg. plan.inspect

@@ -1,9 +1,11 @@
 package main.java.com.djrapitops.plan.data.handling.importing;
 
 import com.djrapitops.pluginbridge.plan.importing.OnTimeImporter;
+import main.java.com.djrapitops.plan.Log;
+
 import java.util.HashMap;
 import java.util.Map;
-import main.java.com.djrapitops.plan.Log;
+
 import static org.bukkit.Bukkit.getPluginManager;
 
 /**

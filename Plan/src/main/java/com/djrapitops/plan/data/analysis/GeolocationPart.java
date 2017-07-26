@@ -5,11 +5,11 @@ import java.util.Map;
 
 /**
  * Part responsible for all Geolocation related analysis.
- *
+ * <p>
  * Player location World Chloropleth map.
- * 
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: geomapz, geomapcountries, geomapcodes
  *
  * @author Rsl1122

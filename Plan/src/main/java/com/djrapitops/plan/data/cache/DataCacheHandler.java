@@ -27,13 +27,13 @@ import java.util.*;
 
 /**
  * This Class contains the Cache.
- *
+ * <p>
  * This class is the main processing class that initialises Save, Clear, Process
  * and Get queue and Starts the asynchronous save task.
- *
+ * <p>
  * It is used to store command use, locations, active sessions and UserData
  * objects in memory.
- *
+ * <p>
  * Its methods can be used to access all the data it stores and to clear them.
  *
  * @author Rsl1122
@@ -43,13 +43,11 @@ public class DataCacheHandler extends SessionCache {
 
     // Cache
     private final HashMap<UUID, UserData> dataCache;
-    private Map<String, Integer> commandUse;
-    private List<List<TPS>> unsavedTPSHistory;
-
     // Plan
     private final Plan plugin;
     private final Database db;
-
+    private Map<String, Integer> commandUse;
+    private List<List<TPS>> unsavedTPSHistory;
     // Queues
     private DataCacheSaveQueue saveTask;
     private DataCacheClearQueue clearTask;
@@ -61,7 +59,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Class Constructor.
-     *
+     * <p>
      * Gets the Database from the plugin. Starts the queues. Registers
      * Asynchronous Periodic Save Task
      *
@@ -115,8 +113,8 @@ public class DataCacheHandler extends SessionCache {
      * Used to start the Asynchronous Save Task.
      *
      * @throws IllegalArgumentException BukkitRunnable was given wrong
-     * parameters.
-     * @throws IllegalStateException BukkitScheduler is in a wrong state.
+     *                                  parameters.
+     * @throws IllegalStateException    BukkitScheduler is in a wrong state.
      */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
@@ -160,14 +158,14 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Uses Database or Cache to retrieve the UserData of a matching player.
-     *
+     * <p>
      * Caches the data to the Cache if cache-parameter is true.
      *
      * @param processor DBCallableProcessor Object used to process the data
-     * after it was retrieved
-     * @param uuid Player's UUID
-     * @param cache Whether or not the UserData will be Cached in this instance
-     * of DataCacheHandler after it has been fetched (if not already fetched)
+     *                  after it was retrieved
+     * @param uuid      Player's UUID
+     * @param cache     Whether or not the UserData will be Cached in this instance
+     *                  of DataCacheHandler after it has been fetched (if not already fetched)
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid, boolean cache) {
         Log.debug(uuid + ": HANDLER getForProcess," + " Cache:" + cache);
@@ -191,7 +189,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Used to Cache a UserData object to the Cache.
-     *
+     * <p>
      * If a object already exists it will be replaced.
      *
      * @param data UserData object with the UUID inside used as key.
@@ -204,12 +202,12 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Uses Database or Cache to retrieve the UserData of a matching player.
-     *
+     * <p>
      * Always Caches the data after retrieval (unless already cached)
      *
      * @param processor DBCallableProcessor Object used to process the data
-     * after it was retrieved
-     * @param uuid Player's UUID
+     *                  after it was retrieved
+     * @param uuid      Player's UUID
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid) {
         getUserDataForProcessing(processor, uuid, true);
@@ -217,9 +215,9 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Saves all UserData in the cache to Database.
-     *
+     * <p>
      * ATTENTION: TODO - Doesn't save the Locations in the locationCache.
-     *
+     * <p>
      * Should only be called from Async thread
      */
     public void saveCachedUserData() {
@@ -234,7 +232,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Used to add event HandlingInfo to the processTask's pool.
-     *
+     * <p>
      * Given HandlingInfo object's process method will be called.
      *
      * @param i Object that extends HandlingInfo.
@@ -249,9 +247,9 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Saves all data in the cache to Database and closes the database down.
-     *
+     * <p>
      * Stops all tasks.
-     *
+     * <p>
      * If processTask has unprocessed information, it will be processed.
      */
     public void saveCacheOnDisable() {
@@ -334,7 +332,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Saves the cached CommandUse.
-     *
+     * <p>
      * Should be only called from an Asynchronous Thread.
      */
     public void saveCommandUse() {
@@ -491,7 +489,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * If /reload is run this treats every online player as a new login.
-     *
+     * <p>
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
@@ -525,7 +523,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheSaveQueue getSaveTask() {
@@ -533,7 +530,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheClearQueue getClearTask() {
@@ -541,7 +537,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheProcessQueue getProcessTask() {
@@ -549,7 +544,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheGetQueue getGetTask() {

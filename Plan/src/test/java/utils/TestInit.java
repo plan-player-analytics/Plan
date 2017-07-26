@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
- *
  * @author Rsl1122
  */
 public class TestInit {
@@ -113,7 +112,6 @@ public class TestInit {
     }
 
     /**
-     *
      * @return
      */
     public Plan getPlanMock() {

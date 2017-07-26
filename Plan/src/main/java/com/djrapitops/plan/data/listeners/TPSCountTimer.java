@@ -21,10 +21,10 @@ import java.util.List;
  */
 public class TPSCountTimer extends AbsRunnable {
 
-    private long lastCheckNano;
     private final Plan plugin;
     private final DataCacheHandler handler;
     private final List<TPS> history;
+    private long lastCheckNano;
 
     public TPSCountTimer(Plan plugin) {
         super("TPSCountTimer");
@@ -60,7 +60,7 @@ public class TPSCountTimer extends AbsRunnable {
      * Calculates the TPS
      *
      * @param diff The time difference between the last run and the new run
-     * @param now The time right now
+     * @param now  The time right now
      * @return the TPS
      */
     private TPS calculateTPS(long diff, long now) {
@@ -84,8 +84,8 @@ public class TPSCountTimer extends AbsRunnable {
     /**
      * Gets the TPS for Paper
      *
-     * @param now The time right now
-     * @param cpuUsage The usage of the CPU
+     * @param now           The time right now
+     * @param cpuUsage      The usage of the CPU
      * @param playersOnline The amount of players that are online
      * @return the TPS
      */
@@ -104,9 +104,9 @@ public class TPSCountTimer extends AbsRunnable {
     /**
      * Gets the TPS for a Spigot / Bukkit
      *
-     * @param diff The difference between the last run and this run
-     * @param now The time right now
-     * @param cpuUsage The usage of the CPU
+     * @param diff          The difference between the last run and this run
+     * @param now           The time right now
+     * @param cpuUsage      The usage of the CPU
      * @param playersOnline The amount of players that are online
      * @return the TPS
      */
