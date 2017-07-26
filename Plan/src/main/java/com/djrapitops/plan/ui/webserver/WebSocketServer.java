@@ -2,6 +2,20 @@ package main.java.com.djrapitops.plan.ui.webserver;
 
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.database.tables.SecurityTable;
+import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
+import main.java.com.djrapitops.plan.ui.webserver.response.*;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,29 +25,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.UUID;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.database.tables.SecurityTable;
-import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
-import main.java.com.djrapitops.plan.ui.webserver.response.AnalysisPageResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.ForbiddenResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.InspectPageResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.InternalErrorResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.NotFoundResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.PromptAuthorizationResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.RedirectResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.Response;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 /**
  *
@@ -66,14 +57,14 @@ public class WebSocketServer {
     }
 
     /**
-     * Starts up the Webserver in a Asyncronous thread.
+     * Starts up the Webserver in a Asynchronous thread.
      */
     public void initServer() {
         //Server is already enabled stop code
         if (enabled) {
             return;
         }
-        Log.info(Phrase.WEBSERVER_INIT + "");
+        Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             InetAddress ip = InetAddress.getByName(Settings.WEBSERVER_IP.toString());
 //            SSLServerSocketFactory ssl = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
@@ -101,8 +92,8 @@ public class WebSocketServer {
                             response.sendStaticResource();
                         } catch (IOException | IllegalArgumentException e) {
                         } finally {
-                            Benchmark.stop("Webserver Response");
                             MiscUtils.close(input, request, output, socket);
+                            Benchmark.stop("Webserver Response");
                         }
                     }
                     this.cancel();
@@ -214,7 +205,7 @@ public class WebSocketServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        Log.info(Phrase.WEBSERVER_CLOSE + "");
+        Log.info(Phrase.WEBSERVER_CLOSE.toString());
         shutdown = true;
         try {
             if (server != null) {

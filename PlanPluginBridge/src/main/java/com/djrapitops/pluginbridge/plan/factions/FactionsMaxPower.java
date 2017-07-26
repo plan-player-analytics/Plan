@@ -23,7 +23,7 @@ public class FactionsMaxPower extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public FactionsMaxPower() {
-        super("Factions", "maxpower");
+        super("Factions", "max_power");
         super.setPrefix("Max Power: ");
         super.setIcon("bolt");
     }

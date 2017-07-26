@@ -1,12 +1,5 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -15,8 +8,16 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.stream.Collectors;
+
 /**
- * This Class is starts the Save Queue Thread, that saves data to the Databse.
+ * This Class is starts the Save Queue Thread, that saves data to the Database.
  *
  * @author Rsl1122
  * @since 3.0.0
@@ -55,7 +56,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @param data Collection of UserData objects.
      */
     public void scheduleForSave(Collection<UserData> data) {
-        Log.debug("Scheduling for save: " + data.stream().map(u -> u.getUuid()).collect(Collectors.toList()));
+        Log.debug("Scheduling for save: " + data.stream().map(UserData::getUuid).collect(Collectors.toList()));
         try {
             queue.addAll(data);
         } catch (IllegalStateException e) {
@@ -84,10 +85,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        return new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
     }
 }
 

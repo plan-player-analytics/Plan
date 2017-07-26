@@ -49,5 +49,5 @@ public enum InfoType {
      *
      * @since 3.1.1
      */
-    OTHER;
+    OTHER
 }

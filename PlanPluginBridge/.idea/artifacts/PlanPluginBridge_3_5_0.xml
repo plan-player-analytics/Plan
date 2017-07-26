@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PlanPluginBridge-3.5.0">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="PlanPluginBridge-3.5.0.jar">
+      <element id="module-output" name="PlanPluginBridge" />
+    </root>
+  </artifact>
+</component>

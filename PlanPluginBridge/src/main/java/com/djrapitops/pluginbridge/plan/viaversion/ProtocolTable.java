@@ -51,7 +51,7 @@ public class ProtocolTable extends Table {
         if (exists(uuid)) {
             updateProtocolVersion(uuid, version);
         } else {
-            insertProtocolVerison(uuid, version);
+            insertProtocolVersion(uuid, version);
         }
     }
 
@@ -110,7 +110,7 @@ public class ProtocolTable extends Table {
         }
     }
 
-    private void insertProtocolVerison(UUID uuid, int version) throws SQLException {
+    private void insertProtocolVersion(UUID uuid, int version) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement(

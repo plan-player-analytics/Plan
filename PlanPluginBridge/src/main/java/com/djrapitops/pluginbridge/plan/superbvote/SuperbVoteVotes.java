@@ -22,7 +22,7 @@ public class SuperbVoteVotes extends PluginData {
      * @param store VoteStorage of SuperbVote
      */
     public SuperbVoteVotes(VoteStorage store) {
-        super("SuperbVote", "votes", new AnalysisType[]{AnalysisType.INT_TOTAL, AnalysisType.INT_AVG});
+        super("SuperbVote", "votes", AnalysisType.INT_TOTAL, AnalysisType.INT_AVG);
         this.store = store;
         super.setAnalysisOnly(false);
         super.setIcon("check");

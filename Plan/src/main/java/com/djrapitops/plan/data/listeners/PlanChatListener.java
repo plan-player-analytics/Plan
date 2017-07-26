@@ -16,7 +16,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class PlanChatListener implements Listener {
 
-    private final Plan plugin;
     private final DataCacheHandler handler;
 
     /**
@@ -25,7 +24,6 @@ public class PlanChatListener implements Listener {
      * @param plugin Current instance of Plan
      */
     public PlanChatListener(Plan plugin) {
-        this.plugin = plugin;
         handler = plugin.getHandler();
     }
 

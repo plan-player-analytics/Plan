@@ -1,26 +1,17 @@
 package main.java.com.djrapitops.plan.database;
 
-import java.sql.SQLException;
-import java.util.*;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.database.tables.CommandUseTable;
-import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
-import main.java.com.djrapitops.plan.database.tables.IPsTable;
-import main.java.com.djrapitops.plan.database.tables.KillsTable;
-import main.java.com.djrapitops.plan.database.tables.LocationsTable;
-import main.java.com.djrapitops.plan.database.tables.NicknamesTable;
-import main.java.com.djrapitops.plan.database.tables.SecurityTable;
-import main.java.com.djrapitops.plan.database.tables.SessionsTable;
-import main.java.com.djrapitops.plan.database.tables.TPSTable;
-import main.java.com.djrapitops.plan.database.tables.UsersTable;
-import main.java.com.djrapitops.plan.database.tables.VersionTable;
+import main.java.com.djrapitops.plan.database.tables.*;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Abstract class representing a Database.
  *
- * All methods should be only called from an asyncronous thread, unless stated
+ * All methods should be only called from an asynchronous thread, unless stated
  * otherwise.
  *
  * @author Rsl1122
@@ -235,9 +226,8 @@ public abstract class Database {
      * Uses DELETE * FROM table.
      *
      * @return Success of removal.
-     * @throws SQLException If a database error occurs.
      */
-    public abstract boolean removeAllData() throws SQLException;
+    public abstract boolean removeAllData();
 
     /**
      * Used to save CommandUse map.

@@ -1,11 +1,5 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -14,6 +8,13 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -24,9 +25,9 @@ public class ExportUtility {
 
     /**
      *
-     * @return @throws IOException
+     * @return
      */
-    public static File getFolder() throws IOException {
+    public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
         if (path.contains(":")) {
             File folder = new File(path);
@@ -90,7 +91,7 @@ public class ExportUtility {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void writeInspectHtml(UserData userData, File playersFolder) throws FileNotFoundException, IOException {
+    public static void writeInspectHtml(UserData userData, File playersFolder) throws IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
@@ -99,10 +100,8 @@ public class ExportUtility {
         File playerFolder = new File(playersFolder, userData.getName());
         playerFolder.mkdir();
         File inspectHtmlFile = new File(playerFolder, "index.html");
-        if (inspectHtmlFile.exists()) {
-            inspectHtmlFile.delete();
-        }
-        Files.write(inspectHtmlFile.toPath(), Arrays.asList(inspectHtml));
+        inspectHtmlFile.delete();
+        Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
     }
 
     /**
@@ -112,7 +111,7 @@ public class ExportUtility {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws FileNotFoundException, IOException {
+    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
@@ -120,17 +119,16 @@ public class ExportUtility {
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");
-        if (analysisHtmlFile.exists()) {
-            analysisHtmlFile.delete();
-        }
-        Files.write(analysisHtmlFile.toPath(), Arrays.asList(analysisHtml));
+        analysisHtmlFile.delete();
+
+        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
-    private static void writePlayersPageHtml(List<UserData> rawData, File playersfolder) throws IOException {
+    private static void writePlayersPageHtml(List<UserData> rawData, File playersFolder) throws IOException {
         String playersHtml = PlayersPageResponse.buildContent(rawData);
-        playersfolder.mkdirs();
-        File playersHtmlFile = new File(playersfolder, "index.html");
-        Files.write(playersHtmlFile.toPath(), Arrays.asList(new String[]{playersHtml}));
+        playersFolder.mkdirs();
+        File playersHtmlFile = new File(playersFolder, "index.html");
+        Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
     }
 
 }

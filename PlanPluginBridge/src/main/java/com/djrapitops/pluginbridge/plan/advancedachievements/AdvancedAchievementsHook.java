@@ -17,8 +17,6 @@ import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
  */
 public class AdvancedAchievementsHook extends Hook {
 
-    private AdvancedAchievements aa;
-
     /**
      * Hooks the plugin and registers it's PluginData objects.
      *
@@ -31,7 +29,7 @@ public class AdvancedAchievementsHook extends Hook {
     public AdvancedAchievementsHook(HookHandler hookH) throws NoClassDefFoundError {
         super("com.hm.achievement.AdvancedAchievements");
         if (enabled) {
-            aa = getPlugin(AdvancedAchievements.class);
+            AdvancedAchievements aa = getPlugin(AdvancedAchievements.class);
             if (Integer.parseInt(Character.toString(aa.getDescription().getVersion().charAt(0))) >= 5) {
                 AdvancedAchievementsAPI aaAPI = AdvancedAchievementsBukkitAPI.linkAdvancedAchievements();
                 hookH.addPluginDataSource(new AdvancedAchievementsAchievements(aaAPI));

@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import com.djrapitops.plugin.utilities.player.Gamemode;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
+
+import java.util.UUID;
 
 /**
  * HandlingInfo Class for QuitEvent information.
@@ -14,9 +15,9 @@ import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
  */
 public class LogoutInfo extends HandlingInfo {
 
-    private boolean banned;
-    private SessionData sData;
-    private GamemodeInfo gmInfo;
+    private final boolean banned;
+    private final SessionData sData;
+    private final GamemodeInfo gmInfo;
 
     /**
      * Constructor.

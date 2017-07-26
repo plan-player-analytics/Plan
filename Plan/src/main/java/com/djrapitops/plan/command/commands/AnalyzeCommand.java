@@ -45,10 +45,10 @@ public class AnalyzeCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS + "", sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString(), sender)) {
             return true;
         }
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY + "", sender)) {
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)) {
             if (!analysisCache.isCached()) {
                 return true;
             }
@@ -89,17 +89,17 @@ public class AnalyzeCommand extends SubCommand {
 
     private void runMessageSenderTask(ISender sender) {
         plugin.getRunnableFactory().createNew("AnalysisMessageSenderTask", new AbsRunnable() {
-            private int timesrun = 0;
+            private int timesRun = 0;
 
             @Override
             public void run() {
-                timesrun++;
+                timesRun++;
                 if (analysisCache.isCached() && (!analysisCache.isAnalysisBeingRun() || !analysisCache.isAnalysisEnabled())) {
                     sendAnalysisMessage(sender);
                     this.cancel();
                     return;
                 }
-                if (timesrun > 10) {
+                if (timesRun > 10) {
                     Log.debug("Command Timeout Message, Analysis.");
                     sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
                     this.cancel();
@@ -117,13 +117,13 @@ public class AnalyzeCommand extends SubCommand {
      */
     private void sendAnalysisMessage(ISender sender) {
         boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
+        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER.toString());
         if (textUI) {
             sender.sendMessage(TextUI.getAnalysisMessages());
         } else {
             // Link
             String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
-            String message = Phrase.CMD_LINK + "";
+            String message = Phrase.CMD_LINK.toString();
             boolean console = !CommandUtils.isPlayer(sender);
             if (console) {
                 sender.sendMessage(message + url);

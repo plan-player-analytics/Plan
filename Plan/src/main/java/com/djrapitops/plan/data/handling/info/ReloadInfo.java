@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import com.djrapitops.plugin.utilities.player.Gamemode;
-import java.net.InetAddress;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LoginHandling;
+
+import java.net.InetAddress;
+import java.util.UUID;
 
 /**
  * HandlingInfo Class for refreshing data in the cache for online players.
@@ -14,10 +15,10 @@ import main.java.com.djrapitops.plan.data.handling.LoginHandling;
  */
 public class ReloadInfo extends HandlingInfo {
 
-    private InetAddress ip;
-    private boolean banned;
-    private String nickname;
-    private GamemodeInfo gmInfo;
+    private final InetAddress ip;
+    private final boolean banned;
+    private final String nickname;
+    private final GamemodeInfo gmInfo;
 
     /**
      * Constructor.

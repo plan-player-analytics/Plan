@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.ui.html.tables;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,7 +21,7 @@ public class CommandUseTableCreator {
      * @return
      */
     public static String createSortedCommandUseTable(Map<String, Integer> commandUse) {
-        Benchmark.start("Create commanduse table");
+        Benchmark.start("Create CommandUse table");
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
         StringBuilder html = new StringBuilder();
         if (sorted.isEmpty()) {
@@ -38,9 +39,10 @@ public class CommandUseTableCreator {
                     Log.toLog("SortableCommandUseTableCreator", e);
                     Log.toLog("Cause: " + values[0] + " " + values[1], Log.getErrorsFilename());
                 }
+                i++;
             }
         }
-        Benchmark.stop("Create commanduse table");
+        Benchmark.stop("Create CommandUse table");
         return html.toString();
     }
 }

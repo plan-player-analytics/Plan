@@ -5,22 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.database;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -33,9 +17,11 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.*;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -44,9 +30,22 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import test.java.utils.TestInit;
 
 /**
  *
@@ -73,7 +72,7 @@ public class DatabaseTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws IOException, Exception {
+    public void setUp() throws Exception {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
@@ -194,7 +193,7 @@ public class DatabaseTest {
         c.put("/roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
         db.saveCommandUse(c);
         assertTrue(db.removeAllData());
-        assertTrue("Contains the user", db.getUserDataForUUIDS(Arrays.asList(new UUID[]{MockUtils.getPlayerUUID(), MockUtils.getPlayer2UUID()})).isEmpty());
+        assertTrue("Contains the user", db.getUserDataForUUIDS(Arrays.asList(MockUtils.getPlayerUUID(), MockUtils.getPlayer2UUID())).isEmpty());
         assertTrue("Contains commandUse", db.getCommandUse().isEmpty());
     }
 
@@ -402,10 +401,13 @@ public class DatabaseTest {
         TPSTable tpsTable = db.getTpsTable();
         List<TPS> expected = new ArrayList<>();
         Random r = new Random();
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000)));
+        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
+        int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
+        final double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
         tpsTable.saveTPSData(expected);
         assertEquals(expected, tpsTable.getTPSData());
     }
@@ -418,11 +420,14 @@ public class DatabaseTest {
         List<TPS> expected = new ArrayList<>();
         Random r = new Random();
         long now = System.currentTimeMillis();
-        expected.add(new TPS(now, r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(now - 1000L, r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(now - 3000L, r.nextDouble(), r.nextInt(100000000)));
-        expected.add(new TPS(now - (690000L * 1000L), r.nextDouble(), r.nextInt(100000000)));
-        TPS tooOldTPS = new TPS(now - (691400L * 1000L), r.nextDouble(), r.nextInt(100000000));
+        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
+        int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
+        final double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        expected.add(new TPS(now, r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        expected.add(new TPS(now - 1000L, r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        expected.add(new TPS(now - 3000L, r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        expected.add(new TPS(now - (690000L * 1000L), r.nextDouble(), r.nextInt(100000000), averageCPUUsage));
+        TPS tooOldTPS = new TPS(now - (691400L * 1000L), r.nextDouble(), r.nextInt(100000000), averageCPUUsage);
         expected.add(tooOldTPS);
         tpsTable.saveTPSData(expected);
         tpsTable.clean();

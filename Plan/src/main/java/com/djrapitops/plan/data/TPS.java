@@ -16,6 +16,7 @@ public class TPS {
     private final long date;
     private final double tps;
     private final int players;
+    private final double cpuUsage;
 
     /**
      * Constructor.
@@ -23,11 +24,13 @@ public class TPS {
      * @param date time of the average calculation.
      * @param tps average tps for the last minute.
      * @param players average players for the last minute.
+     * @param cpuUsage average CPU usage for the last minute.
      */
-    public TPS(long date, double tps, int players) {
+    public TPS(long date, double tps, int players, double cpuUsage) {
         this.date = date;
         this.tps = tps;
         this.players = players;
+        this.cpuUsage = cpuUsage;
     }
 
     /**
@@ -57,6 +60,15 @@ public class TPS {
         return players;
     }
 
+    /**
+     * Get the average CPU Usage for the minute.
+     *
+     * @return 0-20 double
+     */
+    public double getCPUUsage() {
+        return cpuUsage;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -78,20 +90,14 @@ public class TPS {
             return false;
         }
         final TPS other = (TPS) obj;
-        if (this.date != other.date) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.tps) != Double.doubleToLongBits(other.tps)) {
-            return false;
-        }
-        if (this.players != other.players) {
-            return false;
-        }
-        return true;
+        return this.date == other.date
+                && Double.doubleToLongBits(this.tps) == Double.doubleToLongBits(other.tps)
+                && this.players == other.players
+                && this.cpuUsage == other.cpuUsage;
     }
 
     @Override
     public String toString() {
-        return "TPS{" + date + "|" + tps + "|" + players + '}';
+        return "TPS{" + date + "|" + tps + "|" + players + "|" + cpuUsage + "}";
     }
 }

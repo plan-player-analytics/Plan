@@ -1,17 +1,19 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.util.Collection;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 
+import java.util.Collection;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.stream.Collectors;
+
 /**
- * This Class strats the Clear Queue Thread, that clears data from DataCache.
+ * This Class contains the Clear Queue Thread, which is clearing data from the DataCache.
  *
  * @author Rsl1122
  * @since 3.0.0
@@ -21,7 +23,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
     /**
      * Class constructor, starts the new Thread for clearing.
      *
-     * @param handler current instance of DataCachehandler.
+     * @param handler current instance of DataCacheHandler.
      */
     public DataCacheClearQueue(DataCacheHandler handler) {
         super(new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
@@ -48,7 +50,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
         if (uuids.isEmpty()) {
             return;
         }
-        uuids = uuids.stream().filter(u -> u != null).collect(Collectors.toList());
+        uuids = uuids.stream().filter(Objects::nonNull).collect(Collectors.toList());
         Log.debug("Scheduling for clear: " + uuids);
         try {
             queue.addAll(uuids);

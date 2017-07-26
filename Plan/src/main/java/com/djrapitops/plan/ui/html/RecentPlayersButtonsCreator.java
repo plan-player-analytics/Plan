@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.ui.html;
 
-import java.util.List;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.util.List;
 
 /**
  *
@@ -12,9 +13,9 @@ public class RecentPlayersButtonsCreator {
     /**
      * Creates recent players buttons inside a p-tag.
      *
-     * @param names Playernames sorted by last playtime.
-     * @param limit How many playes will be shown
-     * @return html p-tag list of recent logins.
+     * @param names The name of players sorted by last playtime.
+     * @param limit How many players will be shown
+     * @return html p-tag list of recent log-ins.
      */
     public static String createRecentLoginsButtons(List<String> names, int limit) {
         StringBuilder html = new StringBuilder();
@@ -22,7 +23,7 @@ public class RecentPlayersButtonsCreator {
         for (int i = 0; i < names.size(); i++) {
             if (i < limit) {
                 String name = names.get(i);
-                html.append(Html.BUTTON.parse(HtmlUtils.getInspectUrl(name), name));
+                html.append(Html.BUTTON.parse(HtmlUtils.getRelativeInspectUrl(name), name));
                 html.append(" ");
             }
         }

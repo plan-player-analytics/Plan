@@ -7,7 +7,6 @@ package test.java.main.java.com.djrapitops.plan.utilities.comparators;
 
 import com.djrapitops.plugin.utilities.player.Gamemode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
@@ -41,7 +40,7 @@ public class HandlingInfoTimeComparatorTest {
         i.add(three);
         GamemodeInfo four = new GamemodeInfo(null, 700L, Gamemode.CREATIVE);
         i.add(four);
-        Collections.sort(i, new HandlingInfoTimeComparator());
+        i.sort(new HandlingInfoTimeComparator());
         assertEquals(three, i.get(0));
         assertEquals(two, i.get(1));
         assertEquals(one, i.get(2));

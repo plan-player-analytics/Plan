@@ -18,14 +18,14 @@ public abstract class Response {
     /**
      * Class Constructor.
      *
-     * @param output Website outputstream to write the response to.
+     * @param output Website OutputStream to write the response to.
      */
     public Response(OutputStream output) {
         this.output = output;
     }
 
     /**
-     * Wrties the HTML to the Outputstream according to the requested page.
+     * Writes the HTML to the OutputStream according to the requested page.
      *
      * @throws IOException
      */
@@ -37,6 +37,7 @@ public abstract class Response {
                 + content;
 //        Log.debug("Response: " + response); // Responses should not be logged, html content large.
         output.write(response.getBytes());
+        output.flush();
     }
 
     public void setHeader(String header) {

@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
@@ -29,7 +29,7 @@ public class LiteBansBansTable extends PluginData {
      * @param database Database class for queries
      */
     public LiteBansBansTable(LiteBansDatabaseQueries database) {
-        super("LiteBans", "bantable", AnalysisType.HTML);
+        super("LiteBans", "ban_table", AnalysisType.HTML);
         db = database;
         String banned = Html.FONT_AWESOME_ICON.parse("ban") + " Banned";
         String by = Html.FONT_AWESOME_ICON.parse("gavel") + " Banned By";

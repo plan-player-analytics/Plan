@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
  * PluginData class for Vault-plugin.
@@ -25,7 +25,7 @@ public class ViaVersionVersionTable extends PluginData {
     private final ProtocolTable table;
 
     public ViaVersionVersionTable(ProtocolTable table) {
-        super("ViaVersion", "versiontable", AnalysisType.HTML);
+        super("ViaVersion", "version_table", AnalysisType.HTML);
         this.table = table;
         String version = Html.FONT_AWESOME_ICON.parse("signal") + " Version";
         String members = Html.FONT_AWESOME_ICON.parse("users") + " Users";
@@ -51,9 +51,7 @@ public class ViaVersionVersionTable extends PluginData {
         if (usersPerVersion.isEmpty()) {
             html.append(Html.TABLELINE_2.parse("No joins after 3.5.0 install", ""));
         } else {
-            usersPerVersion.entrySet().stream().map(e -> Html.TABLELINE_2.parse(e.getKey(), e.getValue() + "")).forEach(string -> {
-                html.append(string);
-            });
+            usersPerVersion.entrySet().stream().map(e -> Html.TABLELINE_2.parse(e.getKey(), e.getValue() + "")).forEach(html::append);
         }
         return html.toString();
     }

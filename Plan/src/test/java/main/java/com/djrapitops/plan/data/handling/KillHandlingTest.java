@@ -6,8 +6,6 @@
 package test.java.main.java.com.djrapitops.plan.data.handling;
 
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import java.io.IOException;
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -24,10 +22,14 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
-import test.java.utils.TestInit;
 
 /**
  *
@@ -38,7 +40,6 @@ import test.java.utils.TestInit;
 public class KillHandlingTest {
 
     private Database db;
-    private Plan plan;
 
     /**
      *
@@ -52,7 +53,7 @@ public class KillHandlingTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+        Plan plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask() {

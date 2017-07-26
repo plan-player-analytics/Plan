@@ -5,13 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
@@ -22,7 +15,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,6 +23,17 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -56,9 +59,8 @@ public class DataCacheGetQueueTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws IOException, Exception {
+    public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        assertTrue("Not set up", t.setUp());
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override

@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 
@@ -75,7 +77,7 @@ public class MiscUtils {
     public static List<String> getMatchingPlayerNames(String search) {
         final String searchFor = search.toLowerCase();
         List<String> matches = Fetch.getIOfflinePlayers().stream()
-                .map(p -> p.getName())
+                .map(IOfflinePlayer::getName)
                 .filter(name -> name.toLowerCase().contains(searchFor))
                 .collect(Collectors.toList());
         Collections.sort(matches);
@@ -83,7 +85,7 @@ public class MiscUtils {
     }
 
     public static <T> List<T> flatMap(Collection<List<T>> coll) {
-        return coll.stream().flatMap(list -> list.stream()).collect(Collectors.toList());
+        return coll.stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public static void close(Closeable... close) {

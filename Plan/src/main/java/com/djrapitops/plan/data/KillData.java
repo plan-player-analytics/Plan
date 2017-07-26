@@ -22,7 +22,7 @@ public class KillData {
      * @param victim UUID of the victim.
      * @param victimID ID of the victim, get from the database.
      * @param weapon Weapon used.
-     * @param date Epoch millisecond at which the kill occurrred.
+     * @param date Epoch millisecond at which the kill occurred.
      */
     public KillData(UUID victim, int victimID, String weapon, long date) {
         this.victim = victim;
@@ -84,16 +84,9 @@ public class KillData {
             return false;
         }
         final KillData other = (KillData) obj;
-        if (this.date != other.date) {
-            return false;
-        }
-        if (!Objects.equals(this.weapon, other.weapon)) {
-            return false;
-        }
-        if (!Objects.equals(this.victim, other.victim)) {
-            return false;
-        }
-        return true;
+        return this.date == other.date
+                && Objects.equals(this.weapon, other.weapon)
+                && Objects.equals(this.victim, other.victim);
     }
 
     @Override

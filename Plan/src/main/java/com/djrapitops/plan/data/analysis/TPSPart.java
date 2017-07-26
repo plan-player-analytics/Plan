@@ -1,12 +1,14 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
-import java.util.List;
 import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.ui.html.graphs.CPUGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.TPSGraphCreator;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
+import java.util.List;
 
 /**
  * Part responsible for all TPS related analysis.
@@ -15,7 +17,7 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
  *
  * Placeholder values can be retrieved using the get method.
  *
- * Contains following place-holders: tpsscatterday, tpsscatterweek, averagetps,
+ * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps,
  * averagetpsday
  *
  * @author Rsl1122
@@ -37,12 +39,17 @@ public class TPSPart extends RawData<TPSPart> {
 
         String tpsScatterDay = TPSGraphCreator.buildScatterDataStringTPS(day, TimeAmount.DAY.ms());
         String tpsScatterWeek = TPSGraphCreator.buildScatterDataStringTPS(week, TimeAmount.WEEK.ms());
+        String cpuScatterDay = CPUGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
+        String cpuScatterWeek = CPUGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
 
         addValue("tpsscatterday", tpsScatterDay);
         addValue("tpsscatterweek", tpsScatterWeek);
 
-        double averageTPSweek = MathUtils.averageDouble(week.stream().map(t -> t.getTps()));
-        double averageTPSday = MathUtils.averageDouble(day.stream().map(t -> t.getTps()));
+        addValue("cpuscatterday", cpuScatterDay);
+        addValue("cpuscatterweek", cpuScatterWeek);
+
+        double averageTPSweek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
+        double averageTPSday = MathUtils.averageDouble(day.stream().map(TPS::getTps));
 
         addValue("averagetps", FormatUtils.cutDecimals(averageTPSweek));
         addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSday));

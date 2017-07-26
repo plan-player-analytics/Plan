@@ -21,10 +21,7 @@ public class ImportUtils {
      * @return true/false
      */
     public static boolean isPluginEnabled(String pluginName) {
-        if ("offline".equals(pluginName)) {
-            return true;
-        }
-        return getPluginManager().isPluginEnabled(pluginName);
+        return "offline".equals(pluginName) || getPluginManager().isPluginEnabled(pluginName);
     }
 
     /**

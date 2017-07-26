@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.data.handling;
 
 import com.djrapitops.plugin.utilities.player.Gamemode;
-import java.util.Map;
 import main.java.com.djrapitops.plan.data.UserData;
+
+import java.util.Map;
 
 /**
  * Class containing static methods for processing information contained in a
@@ -33,10 +34,7 @@ public class GamemodeHandling {
         }
         lastGamemode = data.getLastGamemode();
         Map<String, Long> times = data.getGmTimes();
-        Long currentGMTime = times.get(lastGamemode);
-        if (currentGMTime == null) {
-            currentGMTime = 0L;
-        }
+        long currentGMTime = times.getOrDefault(lastGamemode, 0L);
         data.setPlayTime(data.getPlayTime() + (time - data.getLastPlayed()));
         data.setLastPlayed(time);
         long lastSwap = data.getLastGmSwapTime();

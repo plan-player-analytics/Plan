@@ -23,6 +23,7 @@ public class LiteBansHook extends Hook {
      * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public LiteBansHook(HookHandler hookH) throws NoClassDefFoundError {
         super();
         try {

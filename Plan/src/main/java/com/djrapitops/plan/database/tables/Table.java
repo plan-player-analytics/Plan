@@ -1,15 +1,16 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,17 +21,17 @@ public abstract class Table {
     /**
      *
      */
-    protected String tableName;
+    protected final String tableName;
 
     /**
      *
      */
-    protected SQLDB db;
+    protected final SQLDB db;
 
     /**
      *
      */
-    protected boolean usingMySQL;
+    protected final boolean usingMySQL;
 
     /**
      *
@@ -78,8 +79,7 @@ public abstract class Table {
      */
     protected boolean execute(String sql) throws SQLException {
         Connection connection = getConnection();
-        boolean success = connection.createStatement().execute(sql);
-        return success;
+        return connection.createStatement().execute(sql);
     }
 
     /**

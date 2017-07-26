@@ -19,6 +19,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
  *
  * @author Rsl1122
  */
+@SuppressWarnings("WeakerAccess")
 public class Bridge {
 
     public static void hook(HookHandler handler) {

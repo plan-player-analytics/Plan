@@ -2,9 +2,10 @@ package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.utilities.Format;
 import com.djrapitops.plugin.utilities.FormattingUtils;
-import java.text.DecimalFormat;
 import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.Location;
+
+import java.text.DecimalFormat;
 
 /**
  *

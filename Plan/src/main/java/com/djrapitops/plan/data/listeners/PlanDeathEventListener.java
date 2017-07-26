@@ -20,7 +20,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
  */
 public class PlanDeathEventListener implements Listener {
 
-    private final Plan plugin;
     private final DataCacheHandler handler;
 
     /**
@@ -29,7 +28,6 @@ public class PlanDeathEventListener implements Listener {
      * @param plugin Current instance of Plan
      */
     public PlanDeathEventListener(Plan plugin) {
-        this.plugin = plugin;
         this.handler = plugin.getHandler();
     }
 
@@ -38,6 +36,7 @@ public class PlanDeathEventListener implements Listener {
      *
      * @param event Fired event.
      */
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(EntityDeathEvent event) {
         long time = MiscUtils.getTime();
@@ -50,7 +49,7 @@ public class PlanDeathEventListener implements Listener {
                 itemInHand = killer.getInventory().getItemInMainHand().getType();
             } catch (Throwable e) {
                 try {
-                    itemInHand = killer.getInventory().getItemInHand().getType();
+                    itemInHand = killer.getInventory().getItemInHand().getType(); // Support for non dual wielding versions.
                 } catch (Throwable e2) {
                     itemInHand = Material.AIR;
                 }
@@ -58,7 +57,7 @@ public class PlanDeathEventListener implements Listener {
             handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, itemInHand.name()));
         }
         if (dead instanceof Player) {
-            handler.addToPool(new DeathInfo(((Player) dead).getUniqueId()));
+            handler.addToPool(new DeathInfo(dead.getUniqueId()));
         }
     }
 }

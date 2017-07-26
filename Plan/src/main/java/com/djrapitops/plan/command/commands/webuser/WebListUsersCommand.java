@@ -5,14 +5,14 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
-import java.util.Collections;
-import java.util.List;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.utilities.comparators.WebUserComparator;
+
+import java.util.List;
 
 /**
  * Subcommand for checking WebUser list.
@@ -39,7 +39,7 @@ public class WebListUsersCommand extends SubCommand {
                     String mCol = cs.getMainColor();
                     String sCol = cs.getSecondaryColor();
                     List<WebUser> users = plugin.getDB().getSecurityTable().getUsers();
-                    Collections.sort(users, new WebUserComparator());
+                    users.sort(new WebUserComparator());
                     sender.sendMessage(Phrase.CMD_FOOTER.parse() + mCol + " WebUsers (" + users.size() + ")");
                     for (WebUser user : users) {
                         sender.sendMessage("  " + user.getPermLevel() + " : " + user.getName());

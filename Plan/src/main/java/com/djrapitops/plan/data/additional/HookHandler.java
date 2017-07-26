@@ -1,16 +1,12 @@
 package main.java.com.djrapitops.plan.data.additional;
 
 import com.djrapitops.pluginbridge.plan.Bridge;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class responsible for hooking to other plugins and managing the %plugins%
@@ -21,7 +17,7 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class HookHandler {
 
-    private List<PluginData> additionalDataSources;
+    private final List<PluginData> additionalDataSources;
     private final PluginConfigSectionHandler configHandler;
 
     /**
@@ -46,7 +42,7 @@ public class HookHandler {
      * The plugin data will appear on Analysis and/or Inspect pages depending on
      * how the extending object is set up.
      *
-     * Refer to documentation on github for more information.
+     * Refer to documentation on GitHub for more information.
      *
      * @param dataSource an object extending the PluginData class.
      */
@@ -76,7 +72,7 @@ public class HookHandler {
 
     /**
      * Used to get the Layout with PluginData placeholders to replace %plugins%
-     * placeholder on analysis.hmtl.
+     * placeholder on analysis.html.
      *
      * @return html, getPluginsTabLayout-method
      * @see HtmlUtils
@@ -89,7 +85,7 @@ public class HookHandler {
 
     /**
      * Used to get the Layout with PluginData placeholders to replace %plugins%
-     * placeholder on player.hmtl.
+     * placeholder on player.html.
      *
      * @return html, getPluginsTabLayout-method
      * @see HtmlUtils
@@ -103,7 +99,7 @@ public class HookHandler {
     private List<String> getPluginNamesAnalysis() {
         List<String> pluginNames = additionalDataSources.stream()
                 .filter(source -> !source.getAnalysisTypes().isEmpty())
-                .map(source -> source.getSourcePlugin())
+                .map(PluginData::getSourcePlugin)
                 .distinct()
                 .collect(Collectors.toList());
         Collections.sort(pluginNames);
@@ -113,7 +109,7 @@ public class HookHandler {
     private List<String> getPluginNamesInspect() {
         List<String> pluginNames = additionalDataSources.stream()
                 .filter(source -> !source.analysisOnly())
-                .map(source -> source.getSourcePlugin())
+                .map(PluginData::getSourcePlugin)
                 .distinct()
                 .collect(Collectors.toList());
         Collections.sort(pluginNames);

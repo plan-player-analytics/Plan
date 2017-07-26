@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.data.additional;
  * The enum determines what should be done to the return value of
  * PluginData.getValue() method when the analysis is run.
  *
- * Refer to the documentation on github for additional information.
+ * Refer to the documentation on GitHub for additional information.
  *
  * @author Rsl1122
  * @since 3.1.0
@@ -104,17 +104,17 @@ public enum AnalysisType {
     private final String modifier;
     private final String placeholderModifier;
 
-    private AnalysisType(String placeholderModifier, String modifier) {
+    AnalysisType(String placeholderModifier, String modifier) {
         this.placeholderModifier = placeholderModifier;
         this.modifier = modifier;
     }
 
-    private AnalysisType(String placeholderModifier) {
+    AnalysisType(String placeholderModifier) {
         this.placeholderModifier = placeholderModifier;
         this.modifier = "";
     }
 
-    private AnalysisType() {
+    AnalysisType() {
         this.placeholderModifier = "";
         this.modifier = "";
     }

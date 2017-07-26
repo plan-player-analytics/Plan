@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import com.djrapitops.plugin.utilities.player.Gamemode;
-import java.net.InetAddress;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LoginHandling;
+
+import java.net.InetAddress;
+import java.util.UUID;
 
 /**
  * HandlingInfo Class for JoinEvent information.
@@ -14,11 +15,11 @@ import main.java.com.djrapitops.plan.data.handling.LoginHandling;
  */
 public class LoginInfo extends HandlingInfo {
 
-    private InetAddress ip;
-    private boolean banned;
-    private String nickname;
-    private GamemodeInfo gmInfo;
-    private int loginTimes;
+    private final InetAddress ip;
+    private final boolean banned;
+    private final String nickname;
+    private final GamemodeInfo gmInfo;
+    private final int loginTimes;
 
     /**
      * Constructor.

@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan.ui.html;
 
-import java.io.FileNotFoundException;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
@@ -9,13 +7,15 @@ import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
+import java.io.FileNotFoundException;
+import java.util.UUID;
+
 /**
  *
  * @author Rsl1122
  */
 public class DataRequestHandler {
 
-    private final Plan plugin;
     private final InspectCacheHandler inspectCache;
     private final AnalysisCacheHandler analysisCache;
 
@@ -25,7 +25,6 @@ public class DataRequestHandler {
      * @param plugin Current instance of Plan
      */
     public DataRequestHandler(Plan plugin) {
-        this.plugin = plugin;
         this.inspectCache = plugin.getInspectCache();
         this.analysisCache = plugin.getAnalysisCache();
     }

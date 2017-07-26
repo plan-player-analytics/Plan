@@ -5,20 +5,23 @@
  */
 package com.djrapitops.pluginbridge.plan.vault;
 
+import com.djrapitops.plugin.utilities.Format;
+import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.additional.AnalysisType;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.ui.html.Html;
+import net.milkbowl.vault.permission.Permission;
+import org.apache.commons.lang3.StringUtils;
+import org.bukkit.OfflinePlayer;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.additional.AnalysisType;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
-import net.milkbowl.vault.permission.Permission;
-import org.apache.commons.lang3.StringUtils;
-import org.bukkit.OfflinePlayer;
 
 /**
  * PluginData class for Vault-plugin.
@@ -30,8 +33,8 @@ public class PermGroupTable extends PluginData {
 
     private final Permission permSys;
 
-    public PermGroupTable(Permission permSystem) {
-        super("Vault", "permgrouptable", AnalysisType.HTML);
+    PermGroupTable(Permission permSystem) {
+        super("Vault", "permission_group_table", AnalysisType.HTML);
         permSys = permSystem;
         String group = Html.FONT_AWESOME_ICON.parse("balance-scale") + " Perm. Group";
         String members = Html.FONT_AWESOME_ICON.parse("users") + " Members";
@@ -52,7 +55,8 @@ public class PermGroupTable extends PluginData {
 
     private String getTableLines() {
         Map<String, Integer> groups = new HashMap<>();
-        List<FakeOfflinePlayer> userData = Plan.getPlanAPI().getInspectCachedUserData().stream().map(u -> new FakeOfflinePlayer(u)).collect(Collectors.toList());
+        List<FakeOfflinePlayer> userData = Plan.getPlanAPI().getInspectCachedUserData().stream()
+                .map(FakeOfflinePlayer::new).collect(Collectors.toList());
         for (OfflinePlayer p : userData) {
             String group = permSys.getPrimaryGroup(null, p);
             if (!groups.containsKey(group)) {
@@ -62,7 +66,11 @@ public class PermGroupTable extends PluginData {
         }
         StringBuilder html = new StringBuilder();
         for (String group : groups.keySet()) {
-            html.append(Html.TABLELINE_2.parse(StringUtils.capitalize(group), groups.get(group) + ""));
+            if (Verify.notNull(group, groups.get(group))) {
+                String groupName = Format.create(group).capitalize().toString();
+                String groupMembers = groups.get(group) + "";
+                html.append(Html.TABLELINE_2.parse(StringUtils.capitalize(group), groups.get(group) + ""));
+            }
         }
         return html.toString();
     }

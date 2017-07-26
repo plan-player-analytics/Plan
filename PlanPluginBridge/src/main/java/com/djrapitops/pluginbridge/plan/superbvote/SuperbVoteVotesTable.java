@@ -11,7 +11,7 @@ import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
@@ -26,7 +26,7 @@ public class SuperbVoteVotesTable extends PluginData {
     private final VoteStorage store;
 
     public SuperbVoteVotesTable(VoteStorage store) {
-        super("SuperbVote", "votetable", AnalysisType.HTML);
+        super("SuperbVote", "vote_table", AnalysisType.HTML);
         this.store = store;
         String user = Html.FONT_AWESOME_ICON.parse("user") + " Player";
         String votes = Html.FONT_AWESOME_ICON.parse("check") + " Votes";
@@ -47,7 +47,7 @@ public class SuperbVoteVotesTable extends PluginData {
 
     private String getTableLines() {
         StringBuilder html = new StringBuilder();
-        Plan.getPlanAPI().getInspectCachedUserData().stream()
+        Plan.getPlanAPI().getInspectCachedUserData()
                 .forEach(data -> {
                     String link = Html.LINK.parse(HtmlUtils.getInspectUrl(data.getName()), data.getName());
                     String bal = FormatUtils.cutDecimals(store.getVotes(data.getUuid()));

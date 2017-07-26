@@ -1,12 +1,9 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.ui.html.Html;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * This is an abstract class that can be used to add data from a plugin to the
@@ -34,7 +31,7 @@ public abstract class PluginData {
     /**
      * Name of the plugin the data is coming from.
      *
-     * All datasources with the same sourcePlugin will be placed in the same
+     * All sources of data with the same sourcePlugin will be placed in the same
      * "box" in the "Plugins" tab.
      *
      * A box has a max height of 600px, and higher than that will add a
@@ -72,7 +69,7 @@ public abstract class PluginData {
      * A list containing the AnalysisType enums that determine what should be
      * done with the data on the analysis page.
      */
-    protected List<AnalysisType> analysisTypes;
+    protected final List<AnalysisType> analysisTypes;
 
     /**
      * Main constructor.
@@ -280,7 +277,7 @@ public abstract class PluginData {
 
     /**
      * If a PluginData object has same placeholder, sourcePlugin and
-     * analysisTypes, it is considired equal.
+     * analysisTypes, it is considered equal.
      *
      * @param obj Another Object.
      * @return Is current object equal to given object.
@@ -297,19 +294,10 @@ public abstract class PluginData {
             return false;
         }
         final PluginData other = (PluginData) obj;
-        if (this.analysisOnly != other.analysisOnly) {
-            return false;
-        }
-        if (!Objects.equals(this.placeholder, other.placeholder)) {
-            return false;
-        }
-        if (!Objects.equals(this.sourcePlugin, other.sourcePlugin)) {
-            return false;
-        }
-        if (!Objects.equals(this.analysisTypes, other.analysisTypes)) {
-            return false;
-        }
-        return true;
+        return this.analysisOnly == other.analysisOnly
+                && Objects.equals(this.placeholder, other.placeholder)
+                && Objects.equals(this.sourcePlugin, other.sourcePlugin)
+                && Objects.equals(this.analysisTypes, other.analysisTypes);
     }
 
     @Override

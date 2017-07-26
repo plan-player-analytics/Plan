@@ -23,6 +23,8 @@ public enum Settings {
     GATHERKILLS("Settings.Data.GatherKillData"),
     GATHERGMTIMES("Settings.Data.GamemodeChangeListener"),
     GATHERCOMMANDS("Settings.Data.GatherCommandUsage"),
+    DO_NOT_LOG_UNKNOWN_COMMANDS("Customization.Data.DoNotLogUnknownCommands"),
+    COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND("Customization.Data.CombineCommandAliasesToMainCommand"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
     PLAYERLIST_SHOW_IMAGES("Customization.SmallHeadImagesOnAnalysisPlayerlist"),
@@ -86,7 +88,7 @@ public enum Settings {
     private final String configPath;
     private Boolean value;
 
-    private Settings(String path) {
+    Settings(String path) {
         this.configPath = path;
     }
 

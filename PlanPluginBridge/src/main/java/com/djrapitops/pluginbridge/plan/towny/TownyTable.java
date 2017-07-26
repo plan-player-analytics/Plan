@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
@@ -26,8 +26,6 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class TownyTable extends PluginData {
 
-    private List<Town> towns;
-
     /**
      * Class Constructor, sets the parameters of the PluginData object.
      *
@@ -37,7 +35,7 @@ public class TownyTable extends PluginData {
      * @see Html
      */
     public TownyTable() {
-        super("Towny", "townstable", AnalysisType.HTML);
+        super("Towny", "towns_table", AnalysisType.HTML);
         super.setPrefix(Html.TABLE_TOWNS_START.parse());
         super.setSuffix(Html.TABLE_END.parse());
     }
@@ -45,7 +43,7 @@ public class TownyTable extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         StringBuilder html = new StringBuilder();
-        this.towns = getTopTowns();
+        List<Town> towns = getTopTowns();
         if (towns.isEmpty()) {
             html.append(Html.TABLELINE_4.parse(Html.TOWN_NO_TOWNS.parse(), "", "", ""));
         } else {
@@ -71,18 +69,17 @@ public class TownyTable extends PluginData {
     }
 
     /**
-     * Used to get the list of Towns and filter out unnessecary ones.
+     * Used to get the list of Towns and filter out unnecessary ones.
      *
      * @return List of Towns sorted by amount of residents.
      */
     public List<Town> getTopTowns() {
         List<Town> topTowns = TownyUniverse.getDataSource().getTowns();
-        Collections.sort(topTowns, new TownComparator());
+        topTowns.sort(new TownComparator());
         List<String> hide = Settings.HIDE_TOWNS.getStringList();
-        List<Town> townNames = topTowns.stream()
+        return topTowns.stream()
                 .filter(town -> !hide.contains(town.getName()))
                 .collect(Collectors.toList());
-        return townNames;
     }
 
     @Override

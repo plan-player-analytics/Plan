@@ -25,27 +25,19 @@ public abstract class Hook {
      */
     public Hook(String plugin) {
         try {
-            Class<? extends JavaPlugin> pluginClass = (Class<? extends JavaPlugin>) Class.forName(plugin);
+            Class<?> givenClass = Class.forName(plugin);
+            Class<? extends JavaPlugin> pluginClass = (Class<? extends JavaPlugin>) givenClass;
             JavaPlugin hookedPlugin = getPlugin(pluginClass);
             enabled = hookedPlugin.isEnabled();
-        } catch (Exception | NoClassDefFoundError e) {
+        } catch (Throwable e) {
             enabled = false;
         }
     }
 
     /**
-     * Consturctor to set enabled to false.
+     * Constructor to set enabled to false.
      */
     public Hook() {
         enabled = false;
-    }
-
-    /**
-     * Check if the hooked plugin is enabled.
-     *
-     * @return true/false
-     */
-    public boolean isEnabled() {
-        return enabled;
     }
 }

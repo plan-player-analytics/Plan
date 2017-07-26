@@ -29,14 +29,14 @@ public class ManageCleanCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageCleanCommand(Plan plugin) {
-        super("clean", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAN + "", "<DB>");
+        super("clean", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAN.toString(), "<DB>");
 
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length != 0, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
+        if (!Check.isTrue(args.length != 0, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
         String dbName = args[0].toLowerCase();
@@ -49,7 +49,7 @@ public class ManageCleanCommand extends SubCommand {
         final Database database = ManageUtils.getDB(plugin, dbName);
 
         // If DB is null return
-        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
             Log.error(dbName + " was null!");
             return true;
         }
@@ -64,7 +64,7 @@ public class ManageCleanCommand extends SubCommand {
             public void run() {
                 sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
                 database.clean();
-                sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
+                sender.sendMessage(Phrase.MANAGE_SUCCESS.toString());
                 this.cancel();
             }
         }).runTaskAsynchronously();

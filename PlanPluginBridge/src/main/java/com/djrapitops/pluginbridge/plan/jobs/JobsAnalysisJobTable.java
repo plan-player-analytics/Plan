@@ -4,15 +4,14 @@ import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.PlayerManager;
 import com.gamingmesh.jobs.container.JobProgression;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import com.gamingmesh.jobs.container.JobsPlayer;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
@@ -31,7 +30,7 @@ public class JobsAnalysisJobTable extends PluginData {
      * Class Constructor, sets the parameters of the PluginData object.
      */
     public JobsAnalysisJobTable() {
-        super("Jobs", "analysistable", AnalysisType.HTML);
+        super("Jobs", "analysis_table", AnalysisType.HTML);
         final String job = Html.FONT_AWESOME_ICON.parse("suitcase") + " Job";
         final String workers = Html.FONT_AWESOME_ICON.parse("users") + " Workers";
         final String tLevel = Html.FONT_AWESOME_ICON.parse("plus") + " Total Level";
@@ -45,9 +44,9 @@ public class JobsAnalysisJobTable extends PluginData {
         PlayerManager pm = Jobs.getPlayerManager();
         List<List<JobProgression>> players = Plan.getPlanAPI().getInspectCachedUserData().stream()
                 .map(p -> pm.getPlayerInfo(p.getUuid()))
-                .filter(i -> i != null)
-                .map(i -> pm.getJobsPlayerOffline(i))
-                .map(p -> p.getJobProgression())
+                .filter(Objects::nonNull)
+                .map(pm::getJobsPlayerOffline)
+                .map(JobsPlayer::getJobProgression)
                 .filter(list -> !list.isEmpty())
                 .collect(Collectors.toList());
         if (players.isEmpty()) {

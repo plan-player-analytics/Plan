@@ -80,8 +80,7 @@ public abstract class Importer {
             plan.processStatus().setStatus(processName, createUserObjects);
             Map<UUID, IOfflinePlayer> offlinePlayers = Fetch.getIOfflinePlayers().stream().collect(Collectors.toMap(IOfflinePlayer::getUuid, Function.identity()));
             Benchmark.start(createUserObjects);
-            List<IOfflinePlayer> offlineP = unSaved.stream().map(uuid
-                    -> offlinePlayers.get(uuid)).collect(Collectors.toList());
+            List<IOfflinePlayer> offlineP = unSaved.stream().map(offlinePlayers::get).collect(Collectors.toList());
             List<UserData> newUsers = new ArrayList<>();
             for (IOfflinePlayer p : offlineP) {
                 UserData newPlayer = NewPlayerCreator.createNewOfflinePlayer(p);

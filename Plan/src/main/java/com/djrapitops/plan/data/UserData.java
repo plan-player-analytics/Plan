@@ -3,18 +3,11 @@ package main.java.com.djrapitops.plan.data;
 import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
+
+import java.net.InetAddress;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class is used for storing information about a player during runtime.
@@ -50,7 +43,7 @@ public class UserData {
     private boolean isOnline;
 
     private SessionData currentSession;
-    private List<SessionData> sessions;
+    private final List<SessionData> sessions;
 
     /**
      * Creates a new UserData object with given values and default values.
@@ -64,7 +57,7 @@ public class UserData {
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
      *
-     * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
      * @param uuid UUID of the player
@@ -106,7 +99,7 @@ public class UserData {
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
      *
-     * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
      * @param player IPlayer object.
@@ -135,7 +128,7 @@ public class UserData {
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
      *
-     * gmTimes Hashmap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
      * lastGM will be set as SURVIVAL
@@ -216,7 +209,7 @@ public class UserData {
         if (addIps.isEmpty()) {
             return;
         }
-        ips.addAll(addIps.stream().filter(ip -> Verify.notNull(ip)).collect(Collectors.toList()));
+        ips.addAll(addIps.stream().filter(Verify::notNull).collect(Collectors.toList()));
 
     }
 
@@ -306,8 +299,8 @@ public class UserData {
      */
     public void addSessions(Collection<SessionData> sessions) {
         Collection<SessionData> filteredSessions = sessions.stream()
-                .filter(session -> Verify.notNull(session))
-                .filter(session -> session.isValid())
+                .filter(Verify::notNull)
+                .filter(SessionData::isValid)
                 .collect(Collectors.toList());
         this.sessions.addAll(filteredSessions);
     }
@@ -760,63 +753,32 @@ public class UserData {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final UserData other = (UserData) obj;
-        if (this.registered != other.registered) {
-            return false;
-        }
 //        if (this.lastPlayed != other.lastPlayed) {
 //            return false;
 //        }
-        if (this.playTime != other.playTime) {
-            return false;
-        }
-        if (this.loginTimes != other.loginTimes) {
-            return false;
-        }
-        if (this.timesKicked != other.timesKicked) {
-            return false;
-        }
-        if (this.lastGmSwapTime != other.lastGmSwapTime) {
-            return false;
-        }
-        if (this.mobKills != other.mobKills) {
-            return false;
-        }
-        if (this.deaths != other.deaths) {
-            return false;
-        }
-        if (!Objects.equals(this.lastNick, other.lastNick)) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.uuid, other.uuid)) {
-            return false;
-        }
-        if (!Objects.equals(this.ips, other.ips)) {
-            return false;
-        }
-        if (!Objects.equals(this.nicknames, other.nicknames)) {
-            return false;
-        }
-        if (!Objects.equals(this.lastGamemode, other.lastGamemode)) {
-            return false;
-        }
-        if (!Objects.equals(this.gmTimes, other.gmTimes)) {
-            return false;
-        }
-        if (!Objects.equals(this.playerKills, other.playerKills)) {
-            return false;
-        }
-        if (!Objects.equals(this.sessions, other.sessions)) {
-            return false;
-        }
-        return true;
+
+        return this.registered == other.registered
+                && this.playTime == other.playTime
+                && this.loginTimes == other.loginTimes
+                && this.timesKicked == other.timesKicked
+                && this.lastGmSwapTime == other.lastGmSwapTime
+                && this.mobKills == other.mobKills
+                && this.deaths == other.deaths
+                && Objects.equals(this.lastNick, other.lastNick)
+                && Objects.equals(this.name, other.name)
+                && Objects.equals(this.uuid, other.uuid)
+                && Objects.equals(this.ips, other.ips)
+                && Objects.equals(this.nicknames, other.nicknames)
+                && Objects.equals(this.lastGamemode, other.lastGamemode)
+                && Objects.equals(this.gmTimes, other.gmTimes)
+                && Objects.equals(this.playerKills, other.playerKills)
+                && Objects.equals(this.sessions, other.sessions);
     }
 
     /**
-     * Check wether or not the object should be cleared from cache after it has
+     * Check whether or not the object should be cleared from cache after it has
      * been saved.
      *
      * @return true/false
@@ -826,7 +788,7 @@ public class UserData {
     }
 
     /**
-     * Set wether or not the object should be cleared from cache after it has
+     * Set whether or not the object should be cleared from cache after it has
      * been saved.
      *
      * @param clearAfterSave true/false

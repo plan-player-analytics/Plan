@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
  */
 public class PlanGamemodeChangeListener implements Listener {
 
-    private final Plan plugin;
     private final DataCacheHandler handler;
 
     /**
@@ -27,7 +26,6 @@ public class PlanGamemodeChangeListener implements Listener {
      * @param plugin Current instance of Plan
      */
     public PlanGamemodeChangeListener(Plan plugin) {
-        this.plugin = plugin;
         handler = plugin.getHandler();
 
     }

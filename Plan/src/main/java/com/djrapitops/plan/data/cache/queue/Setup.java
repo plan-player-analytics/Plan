@@ -17,6 +17,7 @@ public abstract class Setup<T> {
      *
      * @param consumers Consumers for the new threads.
      */
+    @SafeVarargs
     public Setup(Consumer<T>... consumers) {
         this.consumers = consumers;
     }

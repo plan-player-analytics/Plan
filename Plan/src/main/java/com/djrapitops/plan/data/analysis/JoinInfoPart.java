@@ -2,14 +2,12 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Part responsible for all Player login related analysis.
@@ -109,6 +107,6 @@ public class JoinInfoPart extends RawData<JoinInfoPart> {
     public void addSessions(UUID uuid, List<SessionData> sessions) {
         Verify.nullCheck(uuid);
         Verify.nullCheck(sessions);
-        this.sessions.put(uuid, sessions);
+        this.sessions.put(uuid, sessions.stream().distinct().collect(Collectors.toList()));
     }
 }

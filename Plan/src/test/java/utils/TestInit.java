@@ -5,11 +5,6 @@ import com.djrapitops.plugin.utilities.BenchUtil;
 import com.djrapitops.plugin.utilities.log.BukkitLog;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.status.ProcessStatus;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.logging.Logger;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
@@ -18,7 +13,13 @@ import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.powermock.api.mockito.PowerMockito;
-import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.logging.Logger;
+
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -37,12 +38,12 @@ public class TestInit {
 
     public static TestInit init() throws Exception {
         TestInit t = new TestInit();
-        assertTrue("Not set up", t.setUp());
+        t.setUp();
         return t;
     }
 
     @Deprecated // Use Test.init instead.
-    public boolean setUp() throws Exception {
+    public void setUp() throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -50,7 +51,7 @@ public class TestInit {
         YamlConfiguration config = mockConfig();
         when(planMock.getConfig()).thenReturn(config);
 
-        File testFolder = getEmptyTestfolder();
+        File testFolder = getEmptyTestFolder();
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
         // Html Files
@@ -68,10 +69,10 @@ public class TestInit {
         Settings.DEBUG.setValue(true);
 
         // Abstract Plugin Framework Mocks.
-        BukkitLog<Plan> log = new BukkitLog(planMock, "console", "");
+        BukkitLog<Plan> log = new BukkitLog<>(planMock, "console", "");
         BenchUtil bench = new BenchUtil();
         ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
-        ProcessStatus<Plan> process = new ProcessStatus(planMock);
+        ProcessStatus<Plan> process = new ProcessStatus<>(planMock);
         Fetch fetch = new Fetch(planMock);
 
         when(planMock.getPluginLogger()).thenReturn(log);
@@ -79,19 +80,19 @@ public class TestInit {
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.processStatus()).thenReturn(process);
         when(planMock.fetch()).thenReturn(fetch);
-        return true;
     }
 
     private Server mockServer() {
         Server mockServer = PowerMockito.mock(Server.class);
         when(mockServer.getIp()).thenReturn("0.0.0.0");
         when(mockServer.getMaxPlayers()).thenReturn(20);
+        when(mockServer.getName()).thenReturn("Bukkit");
         OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
         when(mockServer.getOfflinePlayers()).thenReturn(ops);
         return mockServer;
     }
 
-    private File getEmptyTestfolder() throws IOException {
+    private File getEmptyTestFolder() throws IOException {
         File testFolder = new File("temporaryTestFolder");
         if (testFolder.exists()) {
             for (File f : testFolder.listFiles()) {

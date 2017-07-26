@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.Html;
+import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
  * PluginData class for Essentials-plugin.
@@ -45,9 +45,9 @@ public class EssentialsWarps extends PluginData {
     public String getHtmlReplaceValue(String modifier, UUID uuid) {
         Warps warps = essentials.getWarps();
         if (!warps.isEmpty()) {
-            Collection<String> warplist = warps.getList();
+            Collection<String> warpList = warps.getList();
 
-            return parseContainer("", getTableContents(new ArrayList<>(warplist)));
+            return parseContainer("", getTableContents(new ArrayList<>(warpList)));
         }
         return parseContainer("", Html.TABLELINE_2.parse("No Warps.", ""));
     }

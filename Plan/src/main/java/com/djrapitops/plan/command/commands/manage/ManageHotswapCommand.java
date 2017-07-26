@@ -29,14 +29,14 @@ public class ManageHotswapCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageHotswapCommand(Plan plugin) {
-        super("hotswap", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_HOTSWAP + "", "<DB>");
+        super("hotswap", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_HOTSWAP.toString(), "<DB>");
 
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
+        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
         String dbName = args[0].toLowerCase();
@@ -53,7 +53,7 @@ public class ManageHotswapCommand extends SubCommand {
         final Database database = ManageUtils.getDB(plugin, dbName);
 
         // If DB is null return
-        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
             Log.error(dbName + " was null!");
             return true;
         }
@@ -62,7 +62,7 @@ public class ManageHotswapCommand extends SubCommand {
             database.getVersion(); //Test db connection
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
-            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE + "");
+            sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE.toString());
             return true;
         }
 

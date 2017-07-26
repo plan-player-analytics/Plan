@@ -13,6 +13,7 @@ public class ServerVariableHolder {
 
     private final int maxPlayers;
     private final String ip;
+    private final boolean usingPaper;
 
     /**
      * Constructor, grabs the variables.
@@ -22,6 +23,7 @@ public class ServerVariableHolder {
     public ServerVariableHolder(Server server) {
         maxPlayers = server.getMaxPlayers();
         ip = server.getIp();
+        usingPaper = server.getName().equals("Paper");
     }
 
     /**
@@ -40,5 +42,14 @@ public class ServerVariableHolder {
      */
     public String getIp() {
         return ip;
+    }
+
+    /**
+     * Returns if the server is using PaperSpigot.
+     *
+     * @return if the server is using PaperSpigot.
+     */
+    public boolean isUsingPaper() {
+        return usingPaper;
     }
 }

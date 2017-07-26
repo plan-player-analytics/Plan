@@ -1,16 +1,5 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -18,6 +7,11 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -74,12 +68,11 @@ public class AnalysisUtils {
      * @return
      */
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
-        List<Long> list = data.stream()
-                .filter(session -> session != null)
-                .filter(session -> session.isValid())
-                .map(session -> session.getLength())
+        return data.stream()
+                .filter(Objects::nonNull)
+                .filter(SessionData::isValid)
+                .map(SessionData::getLength)
                 .collect(Collectors.toList());
-        return list;
     }
 
     /**
@@ -119,7 +112,7 @@ public class AnalysisUtils {
 
     private static Stream<Serializable> getCorrectValues(List<UUID> uuids, PluginData source) {
         return uuids.stream()
-                .map(uuid -> source.getValue(uuid))
+                .map(source::getValue)
                 .filter(value -> !value.equals(-1))
                 .filter(value -> !value.equals(-1L));
     }
@@ -224,7 +217,7 @@ public class AnalysisUtils {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         Set<UUID> uniqueJoins = new HashSet<>();
-        sessions.keySet().stream().forEach((uuid) -> {
+        sessions.keySet().forEach((uuid) -> {
             List<SessionData> s = sessions.get(uuid);
             for (SessionData session : s) {
                 if (session.getSessionStart() < nowMinusScale) {
@@ -246,7 +239,7 @@ public class AnalysisUtils {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
-        sessions.keySet().stream().forEach((uuid) -> {
+        sessions.keySet().forEach((uuid) -> {
             List<SessionData> s = sessions.get(uuid);
             for (SessionData session : s) {
                 if (scale != -1) {
@@ -254,14 +247,14 @@ public class AnalysisUtils {
                         continue;
                     }
                 }
+
                 int day = getDayOfYear(session);
-                if (!uniqueJoins.containsKey(day)) {
-                    uniqueJoins.put(day, new HashSet<>());
-                }
+
+                uniqueJoins.computeIfAbsent(day, computedDay -> new HashSet<>());
                 uniqueJoins.get(day).add(uuid);
             }
         });
-        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(s -> s.size()));
+        int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
         int size = uniqueJoins.keySet().size();
         if (size == 0) {
             return 0;
@@ -275,7 +268,7 @@ public class AnalysisUtils {
      * @return
      */
     public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
-        List<int[]> daysAndHours = sessionStarts.stream().map((Long start) -> {
+        return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
@@ -292,7 +285,6 @@ public class AnalysisUtils {
             }
             return new int[]{dayOfWeek, hourOfDay};
         }).collect(Collectors.toList());
-        return daysAndHours;
     }
 
     private static int getDayOfYear(SessionData session) {

@@ -28,7 +28,7 @@ public class WebLevelCommand extends SubCommand {
         ColorScheme cs = plugin.getColorScheme();
         String sCol = cs.getSecondaryColor();
         String cmdBall = Phrase.CMD_BALL.parse();
-        String[] msgs = new String[]{
+        String[] messages = new String[]{
             Phrase.CMD_FOOTER.parse(),
             cmdBall + sCol + "0: Access all pages",
             cmdBall + sCol + "1: Access '/players' and all inspect pages",
@@ -36,7 +36,7 @@ public class WebLevelCommand extends SubCommand {
             cmdBall + sCol + "3+: No permissions",
             Phrase.CMD_FOOTER.parse()
         };
-        sender.sendMessage(msgs);
+        sender.sendMessage(messages);
         return true;
     }
 

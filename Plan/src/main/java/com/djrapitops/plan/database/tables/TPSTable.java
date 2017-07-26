@@ -1,17 +1,18 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.api.TimeAmount;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing database table plan_tps
@@ -24,9 +25,9 @@ public class TPSTable extends Table {
     private final String columnDate;
     private final String columnTPS;
     private final String columnPlayers;
+    private final String columnCPUUsage;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -35,6 +36,7 @@ public class TPSTable extends Table {
         columnDate = "date";
         columnTPS = "tps";
         columnPlayers = "players_online";
+        columnCPUUsage = "cpu_usage";
     }
 
     @Override
@@ -43,9 +45,14 @@ public class TPSTable extends Table {
             execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                     + columnDate + " bigint NOT NULL, "
                     + columnTPS + " double NOT NULL, "
-                    + columnPlayers + " integer NOT NULL"
+                    + columnPlayers + " integer NOT NULL, "
+                    + columnCPUUsage + " double NOT NULL"
                     + ")"
             );
+            int version = getVersion();
+            if (version < 6) {
+                alterTablesV6();
+            }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -53,8 +60,19 @@ public class TPSTable extends Table {
         }
     }
 
+    private void alterTablesV6() {
+        try {
+            if (usingMySQL) {
+                execute("ALTER TABLE " + tableName + " ADD " + columnCPUUsage + " double NOT NULL DEFAULT 0");
+            } else {
+                execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL DEFAULT 0");
+            }
+        } catch (SQLException e) {
+
+        }
+    }
+
     /**
-     *
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
@@ -69,7 +87,8 @@ public class TPSTable extends Table {
                 long date = set.getLong(columnDate);
                 double tps = set.getDouble(columnTPS);
                 int players = set.getInt(columnPlayers);
-                data.add(new TPS(date, tps, players));
+                double cpuUsage = set.getDouble(columnCPUUsage);
+                data.add(new TPS(date, tps, players, cpuUsage));
             }
             return data;
         } finally {
@@ -80,7 +99,6 @@ public class TPSTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -97,8 +115,9 @@ public class TPSTable extends Table {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnDate + ", "
                     + columnTPS + ", "
-                    + columnPlayers
-                    + ") VALUES (?, ?, ?)");
+                    + columnPlayers + ", "
+                    + columnCPUUsage
+                    + ") VALUES (?, ?, ?, ?)");
 
             boolean commitRequired = false;
             int i = 0;
@@ -106,6 +125,7 @@ public class TPSTable extends Table {
                 statement.setLong(1, tps.getDate());
                 statement.setDouble(2, tps.getTps());
                 statement.setInt(3, tps.getPlayers());
+                statement.setDouble(4, tps.getCPUUsage());
                 statement.addBatch();
                 commitRequired = true;
                 i++;
@@ -120,7 +140,6 @@ public class TPSTable extends Table {
     }
 
     /**
-     *
      * @throws SQLException
      */
     public void clean() throws SQLException {

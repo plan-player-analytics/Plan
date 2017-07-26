@@ -3,7 +3,9 @@ package main.java.com.djrapitops.plan.data.listeners;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,12 +42,30 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+
+        String commandName = event.getMessage().split(" ")[0].toLowerCase();
+
+        boolean doNotLogUnknownCommands = Settings.DO_NOT_LOG_UNKNOWN_COMMANDS.isTrue();
+        boolean combineCommandAliasesToMainCommand = Settings.COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND.isTrue();
+
+        if (doNotLogUnknownCommands || combineCommandAliasesToMainCommand) {
+            Command command = plugin.getServer().getPluginCommand(commandName);
+            if (command == null) {
+                if (doNotLogUnknownCommands) {
+                    Log.debug("Ignored command, command is unknown");
+                    return;
+                }
+            } else if (combineCommandAliasesToMainCommand) {
+                commandName = command.getName();
+            }
+        }
+
         Player player = event.getPlayer();
 
         if (player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission())) {
             Log.debug("Ignored command, player had ignore permission.");
             return;
         }
-        handler.handleCommand(event.getMessage().split(" ")[0].toLowerCase());
+        handler.handleCommand(commandName);
     }
 }

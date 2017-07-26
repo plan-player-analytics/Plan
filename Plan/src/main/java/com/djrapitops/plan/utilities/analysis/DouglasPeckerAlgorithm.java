@@ -45,7 +45,7 @@ public class DouglasPeckerAlgorithm {
             results.addAll(results1.subList(0, results1.size() - 1));
             results.addAll(results2);
         } else {
-            return Arrays.asList(new Point[]{points.get(0), points.get(lastIndex)});
+            return Arrays.asList(points.get(0), points.get(lastIndex));
         }
         return results;
     }

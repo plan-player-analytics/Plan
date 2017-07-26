@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Password Encryption utility.
@@ -71,12 +71,11 @@ public class PassEncryptUtil {
         int hashSize = hash.length;
 
         // format: algorithm:iterations:hashSize:salt:hash
-        String parts = "sha1:"
+        return "sha1:"
                 + PBKDF2_ITERATIONS
                 + ":" + hashSize
                 + ":" + toBase64(salt)
                 + ":" + toBase64(hash);
-        return parts;
     }
 
     public static boolean verifyPassword(String password, String correctHash) throws CannotPerformOperationException, InvalidHashException {
@@ -99,7 +98,7 @@ public class PassEncryptUtil {
             );
         }
 
-        int iterations = 0;
+        int iterations;
         try {
             iterations = Integer.parseInt(params[ITERATION_INDEX]);
         } catch (NumberFormatException ex) {
@@ -114,7 +113,7 @@ public class PassEncryptUtil {
             );
         }
 
-        byte[] salt = null;
+        byte[] salt;
         try {
             salt = fromBase64(params[SALT_INDEX]);
         } catch (IllegalArgumentException ex) {
@@ -123,7 +122,7 @@ public class PassEncryptUtil {
             );
         }
 
-        byte[] hash = null;
+        byte[] hash;
         try {
             hash = fromBase64(params[PBKDF2_INDEX]);
         } catch (IllegalArgumentException ex) {
@@ -132,7 +131,7 @@ public class PassEncryptUtil {
             );
         }
 
-        int storedHashSize = 0;
+        int storedHashSize;
         try {
             storedHashSize = Integer.parseInt(params[HASH_SIZE_INDEX]);
         } catch (NumberFormatException ex) {

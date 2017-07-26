@@ -1,27 +1,23 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import java.net.InetAddress;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+
+import java.net.InetAddress;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -59,8 +55,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
-     * @param plugin
      * @throws IllegalArgumentException
      * @throws IllegalStateException
      */
@@ -128,7 +122,7 @@ public abstract class SQLDB extends Database {
             }
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(5);
+                setVersion(6);
             }
             Benchmark.start("Database: Create tables");
             for (Table table : getAllTables()) {
@@ -142,8 +136,8 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             Benchmark.stop("Database: Create tables");
-            if (!newDatabase && getVersion() < 5) {
-                setVersion(5);
+            if (!newDatabase && getVersion() < 6) {
+                setVersion(6);
             }
         }
         return true;
@@ -279,16 +273,7 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             int userId = usersTable.getUserId(uuid);
-            if (userId == -1) {
-                return false;
-            }
-            return locationsTable.removeUserLocations(userId)
-                    && ipsTable.removeUserIps(userId)
-                    && nicknamesTable.removeUserNicknames(userId)
-                    && gmTimesTable.removeUserGMTimes(userId)
-                    && sessionsTable.removeUserSessions(userId)
-                    && killsTable.removeUserKillsAndVictims(userId)
-                    && usersTable.removeUser(uuid);
+            return userId != -1 && locationsTable.removeUserLocations(userId) && ipsTable.removeUserIps(userId) && nicknamesTable.removeUserNicknames(userId) && gmTimesTable.removeUserGMTimes(userId) && sessionsTable.removeUserSessions(userId) && killsTable.removeUserKillsAndVictims(userId) && usersTable.removeUser(uuid);
         } finally {
             Benchmark.stop("Database: Remove Account");
             setAvailable();
@@ -334,9 +319,7 @@ public abstract class SQLDB extends Database {
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
         data.setPlayerKills(killsTable.getPlayerKills(userId));
-        processors.stream().forEach((processor) -> {
-            processor.process(data);
-        });
+        processors.forEach((processor) -> processor.process(data));
         Benchmark.stop("Database: Give userdata to processors");
         setAvailable();
     }
@@ -368,7 +351,7 @@ public abstract class SQLDB extends Database {
             return data;
         }
         Map<Integer, UUID> idUuidRel = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-        List<Integer> ids = userIds.entrySet().stream().filter(e -> uuids.contains(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList());
+        List<Integer> ids = userIds.entrySet().stream().filter(e -> uuids.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
         Log.debug("Ids: " + ids.size());
         Map<Integer, List<String>> nicknames = nicknamesTable.getNicknames(ids);
         Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
@@ -439,11 +422,9 @@ public abstract class SQLDB extends Database {
         sessionsTable.saveSessionData(sessions);
         gmTimesTable.saveGMTimes(gmTimes);
         userDatas.values().stream()
-                .filter(u -> u != null)
-                .filter(uData -> uData.isAccessed())
-                .forEach(uData -> {
-                    uData.stopAccessing();
-                });
+                .filter(Objects::nonNull)
+                .filter(UserData::isAccessed)
+                .forEach(UserData::stopAccessing);
         Benchmark.stop("Database: Save multiple Userdata");
         setAvailable();
     }

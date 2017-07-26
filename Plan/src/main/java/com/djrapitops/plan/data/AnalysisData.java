@@ -1,23 +1,15 @@
 package main.java.com.djrapitops.plan.data;
 
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.analysis.ActivityPart;
-import main.java.com.djrapitops.plan.data.analysis.CommandUsagePart;
-import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
-import main.java.com.djrapitops.plan.data.analysis.GeolocationPart;
-import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
-import main.java.com.djrapitops.plan.data.analysis.KillPart;
-import main.java.com.djrapitops.plan.data.analysis.PlayerCountPart;
-import main.java.com.djrapitops.plan.data.analysis.PlaytimePart;
-import main.java.com.djrapitops.plan.data.analysis.RawData;
-import main.java.com.djrapitops.plan.data.analysis.TPSPart;
+import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Big container object for Data.
@@ -60,7 +52,7 @@ public class AnalysisData extends RawData<AnalysisData> {
         playerCountPart = new PlayerCountPart();
         playtimePart = new PlaytimePart(playerCountPart);
         killPart = new KillPart(playerCountPart);
-        gamemodePart = new GamemodePart(playerCountPart);
+        gamemodePart = new GamemodePart();
         tpsPart = new TPSPart(tpsData);
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
     }
@@ -143,15 +135,15 @@ public class AnalysisData extends RawData<AnalysisData> {
 
     @Override
     protected void analyse() {
-        Verify.notNull(playersTable);
-        Verify.notNull(pluginsTabLayout);
-        Verify.notNull(planVersion);
+        Verify.nullCheck(playersTable);
+        Verify.nullCheck(pluginsTabLayout);
+        Verify.nullCheck(planVersion);
 
         addValue("sortabletable", playersTable);
         addValue("version", planVersion);
 
         final List<RawData> parts = getAllParts();
-        parts.stream().forEach((part) -> {
+        parts.forEach((part) -> {
             try {
                 Benchmark.start("Analysis Phase: " + part.getClass().getSimpleName());
                 part.analyseData();

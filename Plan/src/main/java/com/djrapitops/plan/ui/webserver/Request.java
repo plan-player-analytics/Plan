@@ -1,22 +1,19 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import main.java.com.djrapitops.plan.Log;
+
+import java.io.*;
 import java.util.Arrays;
 import java.util.Optional;
-import main.java.com.djrapitops.plan.Log;
 
 /**
  * Represents a HTTP Request.
- *
+ * <p>
  * Request is read from the given InputStream.
- *
+ * <p>
  * Closing the Request closes the InputStream. (Closing Socket InputStream
  * closes the socket.)
- *
+ * <p>
  * Request Strings should not be logged because they may contain base64 encoded
  * user:password Authorization combinations.
  *
@@ -43,11 +40,11 @@ public class Request implements Closeable {
 
     /**
      * Reads the information in the Request and parses required information.
-     *
+     * <p>
      * Parses Request (GET, POST etc.)
-     *
+     * <p>
      * Parses Target (/home/etc)
-     *
+     * <p>
      * Parses Authorization (Authorization header).
      *
      * @throws java.io.IOException if InputStream can not be read.
@@ -56,8 +53,11 @@ public class Request implements Closeable {
         StringBuilder headerB = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         close = in;
-        String line;
-        while (!(line = in.readLine()).isEmpty()) {
+        while (true) {
+            String line = in.readLine();
+            if (line == null || line.isEmpty()) {
+                break;
+            }
             headerB.append(line);
             headerB.append(":::");
         }
@@ -129,8 +129,8 @@ public class Request implements Closeable {
 
     /**
      * Closes the Request.
-     *
-     * Closes the inputstream.
+     * <p>
+     * Closes the InputStream.
      *
      * @throws IOException if the stream can not be closed.
      */

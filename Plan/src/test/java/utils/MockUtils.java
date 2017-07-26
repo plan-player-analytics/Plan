@@ -2,8 +2,6 @@ package test.java.utils;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import java.net.InetAddress;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -15,6 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+
+import java.net.InetAddress;
+import java.util.UUID;
+
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -29,7 +31,7 @@ public class MockUtils {
      */
     public static World mockWorld() {
         World mockWorld = Mockito.mock(World.class);
-        Mockito.doReturn("World").when(mockWorld).toString();
+        when(mockWorld.toString()).thenReturn("World");
         return mockWorld;
     }
 
@@ -37,7 +39,7 @@ public class MockUtils {
         return NewPlayerCreator.createNewPlayer(mockIPlayer());
     }
 
-    public static UserData mockUserWithmoreData() throws Exception {
+    public static UserData mockUserWithMoreData() throws Exception {
         UserData mock = mockUser();
         mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
         mock.addNickname("MoreNicks");
@@ -143,7 +145,6 @@ public class MockUtils {
      * @return
      */
     public static CommandSender mockConsoleSender() {
-        CommandSender s = PowerMockito.mock(CommandSender.class);
-        return s;
+        return PowerMockito.mock(CommandSender.class);
     }
 }

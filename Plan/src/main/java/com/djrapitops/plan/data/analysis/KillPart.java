@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 /**
  * Part responsible for all Death related analysis.
@@ -22,7 +23,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
  */
 public class KillPart extends RawData<KillPart> {
 
-    private final PlayerCountPart playerCount;
+    private final PlayerCountPart playerCount; // TODO Averages
     private final Map<UUID, List<KillData>> playerKills;
     private long mobKills;
     private long deaths;

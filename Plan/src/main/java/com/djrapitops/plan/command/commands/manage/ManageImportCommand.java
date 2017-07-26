@@ -6,16 +6,18 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import com.djrapitops.plugin.utilities.player.Fetch;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.handling.importing.ImportUtils;
 import main.java.com.djrapitops.plan.data.handling.importing.Importer;
 import main.java.com.djrapitops.plan.utilities.Check;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
@@ -35,7 +37,7 @@ public class ManageImportCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageImportCommand(Plan plugin) {
-        super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT + "", Phrase.ARG_IMPORT + "");
+        super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT.toString(), Phrase.ARG_IMPORT.toString());
         this.plugin = plugin;
     }
 
@@ -72,12 +74,12 @@ public class ManageImportCommand extends SubCommand {
             @Override
             public void run() {
                 try {
-                    sender.sendMessage(Phrase.MANAGE_IMPORTING + "");
-                    List<UUID> uuids = Fetch.getIOfflinePlayers().stream().map(p -> p.getUniqueId()).collect(Collectors.toList());
+                    sender.sendMessage(Phrase.MANAGE_IMPORTING.toString());
+                    List<UUID> uuids = Fetch.getIOfflinePlayers().stream().map(IOfflinePlayer::getUniqueId).collect(Collectors.toList());
                     if (importer.importData(uuids, importArguments)) {
-                        sender.sendMessage(Phrase.MANAGE_SUCCESS + "");
+                        sender.sendMessage(Phrase.MANAGE_SUCCESS.toString());
                     } else {
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL + "");
+                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
                     }
                 } finally {
                     this.cancel();
@@ -88,9 +90,7 @@ public class ManageImportCommand extends SubCommand {
 
     private void list(Map<String, Importer> importers, ISender sender) {
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
-        importers.entrySet().stream().forEach(e -> {
-            sender.sendMessage(Phrase.CMD_BALL + " " + e.getKey() + ": " + e.getValue().getInfo());
-        });
+        importers.forEach((string, importer) -> sender.sendMessage(Phrase.CMD_BALL + " " + string + ": " + importer.getInfo()));
         sender.sendMessage(Phrase.CMD_FOOTER.parse());
     }
 }

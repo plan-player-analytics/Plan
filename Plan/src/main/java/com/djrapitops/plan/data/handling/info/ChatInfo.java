@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.ChatHandling;
+
+import java.util.UUID;
 
 /**
  * HandlingInfo Class for ChatEvent information.
@@ -12,8 +13,8 @@ import main.java.com.djrapitops.plan.data.handling.ChatHandling;
  */
 public class ChatInfo extends HandlingInfo {
 
-    private String nickname;
-    private String message;
+    private final String nickname;
+    private final String message;
 
     /**
      * Constructor.

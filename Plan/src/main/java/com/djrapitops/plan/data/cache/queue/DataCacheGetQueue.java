@@ -1,20 +1,16 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
+
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * This Class is starts the Get Queue Thread, that fetches data from DataCache.
@@ -36,7 +32,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
     }
 
     /**
-     * Schedules UserData objects to be get for the given proecssors.
+     * Schedules UserData objects to be get for the given processors.
      *
      * @param uuid UUID of the player whose UserData object is fetched.
      * @param processors Processors which process-method will be called after
@@ -54,10 +50,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
     }
 
     public boolean containsUUIDtoBeCached(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        return new ArrayList<>(queue).stream().anyMatch((map) -> (map.get(uuid) != null && map.get(uuid).size() >= 2)); // Map has 2 processors if being cached
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch((map) -> (map.get(uuid) != null && map.get(uuid).size() >= 2));
     }
 }
 

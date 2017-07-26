@@ -2,9 +2,12 @@ package com.djrapitops.pluginbridge.plan.griefprevention;
 
 import java.io.Serializable;
 import java.util.UUID;
+
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
 
 /**
@@ -23,7 +26,7 @@ public class GriefPreventionClaimArea extends PluginData {
      * @param dataStore DataStore of GriefPrevention
      */
     public GriefPreventionClaimArea(DataStore dataStore) {
-        super("GriefPrevention", "claim_area", new AnalysisType[]{AnalysisType.INT_TOTAL});
+        super("GriefPrevention", "claim_area", AnalysisType.INT_TOTAL);
         this.dataStore = dataStore;
         super.setAnalysisOnly(false);
         super.setIcon("map-o");
@@ -32,12 +35,18 @@ public class GriefPreventionClaimArea extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        int area = MathUtils.sumInt(dataStore.getClaims().stream().filter(claim -> claim.ownerID.equals(uuid)).map(c -> c.getArea()));
+        Verify.nullCheck(uuid);
+        int area = dataStore.getClaims().stream()
+                .filter(claim -> uuid.equals(claim.ownerID))
+                .map(Claim::getArea).mapToInt(i -> i).sum();
         return parseContainer(modifierPrefix, area + "");
     }
 
     @Override
     public Serializable getValue(UUID uuid) {
-        return MathUtils.sumInt(dataStore.getClaims().stream().filter(claim -> claim.ownerID.equals(uuid)).map(c -> c.getArea()));
+        Verify.nullCheck(uuid);
+        return dataStore.getClaims().stream()
+                .filter(claim -> uuid.equals(claim.ownerID))
+                .map(Claim::getArea).mapToInt(i -> i).sum();
     }
 }

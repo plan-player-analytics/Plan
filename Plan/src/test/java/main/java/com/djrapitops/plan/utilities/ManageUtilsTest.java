@@ -5,9 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,9 +13,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import test.java.utils.TestInit;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import test.java.utils.TestInit;
 
 /**
  *
@@ -28,7 +30,7 @@ import test.java.utils.TestInit;
 @PrepareForTest({JavaPlugin.class})
 public class ManageUtilsTest {
 
-    private int threshold = 5000;
+    private final int threshold = 5000;
 
     /**
      *
@@ -42,9 +44,8 @@ public class ManageUtilsTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws IOException, Exception {
+    public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        assertTrue("Not set up", t.setUp());
     }
 
     /**
@@ -173,5 +174,4 @@ public class ManageUtilsTest {
         SessionData exp3 = new SessionData(threshold * 8, threshold * 10);
         assertEquals(exp3, result.get(2));
     }
-
 }

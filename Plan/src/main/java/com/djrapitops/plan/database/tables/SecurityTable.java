@@ -5,14 +5,15 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
 /**
  *
@@ -93,11 +94,10 @@ public class SecurityTable extends Table {
             statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUser + "=?)");
             statement.setString(1, user);
             set = statement.executeQuery();
-            while (set.next()) {
+            if (set.next()) {
                 String saltedPassHash = set.getString(columnSaltedHash);
                 int permissionLevel = set.getInt(columnPermLevel);
-                WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
-                return info;
+                return new WebUser(user, saltedPassHash, permissionLevel);
             }
             return null;
         } finally {

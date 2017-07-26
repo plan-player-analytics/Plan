@@ -5,8 +5,9 @@
  */
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import java.util.Comparator;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+
+import java.util.Comparator;
 
 /**
  *
@@ -16,7 +17,7 @@ public class HandlingInfoTimeComparator implements Comparator<HandlingInfo> {
 
     @Override
     public int compare(HandlingInfo o1, HandlingInfo o2) {
-        return ((Long) o1.getTime()).compareTo((Long) o2.getTime());
+        return Long.compare(o1.getTime(), o2.getTime());
     }
 
 }

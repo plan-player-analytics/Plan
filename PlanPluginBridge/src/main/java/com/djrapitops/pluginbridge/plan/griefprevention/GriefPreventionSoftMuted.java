@@ -22,7 +22,7 @@ public class GriefPreventionSoftMuted extends PluginData {
      * @param dataStore DataStore of GriefPrevention
      */
     public GriefPreventionSoftMuted(DataStore dataStore) {
-        super("GriefPrevention", "softmuted", new AnalysisType[]{AnalysisType.BOOLEAN_TOTAL, AnalysisType.BOOLEAN_PERCENTAGE});
+        super("GriefPrevention", "soft_muted", AnalysisType.BOOLEAN_TOTAL, AnalysisType.BOOLEAN_PERCENTAGE);
         this.dataStore = dataStore;
         super.setAnalysisOnly(false);
         super.setIcon("bell-slash-o");

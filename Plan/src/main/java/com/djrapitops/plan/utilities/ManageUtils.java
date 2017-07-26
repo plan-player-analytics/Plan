@@ -1,16 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.utilities.Verify;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.SessionData;
@@ -18,6 +8,10 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -35,7 +29,7 @@ public class ManageUtils {
      */
     public static boolean backup(String dbName, Database copyFromDB) throws SQLException {
         Plan plugin = Plan.getInstance();
-        String timeStamp = new Date().toString().substring(4, 10).replaceAll(" ", "-").replaceAll(":", "-");
+        String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
         SQLiteDB backupDB = new SQLiteDB(plugin, fileName);
         Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
@@ -70,9 +64,8 @@ public class ManageUtils {
      * @param copyFromDB Database where data will be copied from
      * @param fromDBsavedUUIDs UUID collection of saved uuids in the copyFromDB
      * @return success?
-     * @throws java.sql.SQLException
      */
-    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) throws SQLException {
+    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
         try {
             clearAndCopyToDB.removeAllData();
             List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
@@ -100,8 +93,8 @@ public class ManageUtils {
         return sessions.stream()
                 .anyMatch(s -> sessions.stream()
                         .filter(ses -> !ses.equals(s))
-                        .map(ses -> ses.getSessionStart())
-                        .anyMatch((Long start) -> (Math.abs(s.getSessionEnd() - start) < threshold)));
+                        .map(SessionData::getSessionStart)
+                        .anyMatch(start -> Math.abs(s.getSessionEnd() - start) < threshold));
     }
 
     /**
@@ -120,15 +113,13 @@ public class ManageUtils {
         }
         List<SessionData> newSessions = new ArrayList<>();
         List<SessionData> removed = new ArrayList<>();
-        Iterator<SessionData> iterator = sessions.iterator();
-        while (iterator.hasNext()) {
-            SessionData session = iterator.next();
+        for (SessionData session : sessions) {
             if (removed.contains(session)) {
                 continue;
             }
             List<SessionData> close = sessions.stream().filter(ses -> Math.abs(session.getSessionEnd() - ses.getSessionStart()) < threshold).collect(Collectors.toList());
             if (!close.isEmpty()) {
-                long big = MathUtils.getBiggestLong(close.stream().map((SessionData ses) -> ses.getSessionEnd()).collect(Collectors.toList()));
+                long big = MathUtils.getBiggestLong(close.stream().map(SessionData::getSessionEnd).collect(Collectors.toList()));
                 session.endSession(big);
                 removed.addAll(close);
             }
