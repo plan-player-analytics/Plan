@@ -25,7 +25,8 @@ public class ServerVariableHolder {
         ip = server.getIp();
 
         String serverName = server.getName();
-        usingPaper = serverName.equals("Paper") || serverName.equals("TacoSpigot");
+        usingPaper = serverName.equals("Paper")
+                || serverName.equals("TacoSpigot"); //Fork of Paper
     }
 
     /**
