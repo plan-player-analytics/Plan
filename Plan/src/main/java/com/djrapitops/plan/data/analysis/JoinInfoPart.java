@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * Contains following place-holders: totallogins, uniquejoinsday,
  * uniquejoinsweek, uniquejoinsmonth, avguniquejoins, avguniquejoinsday,
  * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth,
- * npdataday, npdataweek, npdatamonth, newperday, newperdayday, newperdayweek, newpermonth
+ * npdataday, npdataweek, npdatamonth, newperday, newperdayday, newperdayweek, newperdaymonth
  *
  * @author Rsl1122
  * @since 3.5.2

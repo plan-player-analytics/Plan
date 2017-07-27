@@ -278,6 +278,7 @@
                 }
             }
 
+
     </style>
 </head>
 <body onload="countUpTimer()">
@@ -382,7 +383,8 @@
                             <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times:
                             %totallogins%<br/>
                             <i class="fa fa-user-circle-o" aria-hidden="true"></i> Average Unique Players/Day:
-                            %avguniquejoins% | <i class="fa fa-user-plus" aria-hidden="true"></i> Average New/Day: %newperday%<br>
+                            %avguniquejoins% | <i class="fa fa-user-plus" aria-hidden="true"></i> Average New/Day:
+                            %newperday%<br>
                             <b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i
                                     class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i
                                     class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
@@ -499,8 +501,9 @@
                         </div>
                         <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsweek% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek% | <i
-                                class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdayweek%
+                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek% |
+                            <i
+                                    class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdayweek%
                         </p>
                     </div>
                     <div class=" box column">
@@ -525,8 +528,9 @@
                         </div>
                         <canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsmonth% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth% | <i
-                                class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdaymonth%
+                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth% |
+                            <i
+                                    class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdaymonth%
                         </p>
                     </div>
                 </div>
@@ -919,6 +923,7 @@
                 setTimeout('countUpTimer()', 1000);
                 }
 
+
     </script>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
@@ -1183,6 +1188,7 @@
                         }
                 });
 
+
     </script>
     <script>
                 // TPS Graph 7d
@@ -1280,6 +1286,7 @@
                             }
                         }
                 });
+
 
     </script>
     <script>
@@ -1379,6 +1386,7 @@
                         }
                 });
 
+
     </script>
     <script>
                 // CPU Graph 24h
@@ -1442,6 +1450,7 @@
                         }
                 });
 
+
     </script>
     <script>
                 // CPU Graph 7d
@@ -1504,6 +1513,7 @@
                             }
                         }
                 });
+
     </script>
     <script>
                 //    ActivityPie Graph
@@ -1531,6 +1541,7 @@
                         }
                 });
 
+
     </script>
     <script>
                 //    GMPie Graph
@@ -1557,6 +1568,7 @@
                         }
                         }
                 });
+
 
     </script>
     <script>
@@ -1639,6 +1651,7 @@
                         }
                 });
 
+
     </script>
     <script>
                 //    Session length distribution barchart
@@ -1691,6 +1704,7 @@
                         }
                 });
 
+
     </script>
     <script>
                 //        Geolocation map
@@ -1722,7 +1736,9 @@
                 }];
                 var layout = {
                 title: '',
-                        autosize: true,
+                        autosize: false,
+                        width: window.innerWidth*0.7,
+                        height: window.innerHeight*0.7,
                         geo:{
                         showframe: false,
                                 showcoastlines: false,
@@ -1732,7 +1748,6 @@
                         }
                 };
                 Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
-
     </script>
 </div>
 </body>
