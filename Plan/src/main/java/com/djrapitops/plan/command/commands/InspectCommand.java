@@ -5,6 +5,8 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.*;
@@ -15,9 +17,7 @@ import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -43,6 +43,24 @@ public class InspectCommand extends SubCommand {
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String ball = DefaultMessages.BALL.toString();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol +"Inspect command",
+                tCol+"  Used to get a link to User's inspect page.",
+                sCol+"  Own inspect page can be accessed with /plan inspect",
+                sCol+"  Alias: /plan <name>"
+        };
     }
 
     @Override
@@ -134,13 +152,5 @@ public class InspectCommand extends SubCommand {
         }
 
         sender.sendMessage(Phrase.CMD_FOOTER + "");
-    }
-
-    @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
-    private void sendLink(ISender sender, String url) throws CommandException {
-        plugin.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(),
-                "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
     }
 }

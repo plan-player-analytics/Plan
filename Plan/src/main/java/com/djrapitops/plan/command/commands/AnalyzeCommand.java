@@ -5,6 +5,8 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
@@ -34,9 +36,27 @@ public class AnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Phrase.CMD_USG_ANALYZE.parse());
+        super("analyze, analyse, analysis, a", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Phrase.CMD_USG_ANALYZE.parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String ball = DefaultMessages.BALL.toString();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol +"Analysis Command",
+                tCol+"  Used to Refresh analysis cache & Access the result page",
+                sCol+"  /plan status can be used to check status of analysis while it is running.",
+                sCol+"  Aliases: analyze, analyse, analysis, a"
+        };
     }
 
     @Override
