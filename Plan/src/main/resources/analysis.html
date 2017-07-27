@@ -9,274 +9,274 @@
     <script src="https://use.fontawesome.com/df48eb908b.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-            header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 88px;
-                padding: 0px;
-                background-color: #348e0f;
-                z-index: 1;
-            }
-            .header-content {
-                padding: 5px 20px;
-            }
-            body {
-                font-family: Verdana, sans-serif;
-                background-color: #ddd;
-                color: #fff;
-            }
-            .sidenav {
-                height: 100%;
-                width: 15%;
-                position: fixed;
-                top: 0;
-                left: 0;
-                background-color: #5cb239;
-                overflow-x: hidden;
-                transition: 0.5s;
-                padding-top: 88px;
-                text-align: left;
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 88px;
+            padding: 0px;
+            background-color: #348e0f;
+            z-index: 1;
+        }
+        .header-content {
+            padding: 5px 20px;
+        }
+        body {
+            font-family: Verdana, sans-serif;
+            background-color: #ddd;
+            color: #fff;
+        }
+        .sidenav {
+            height: 100%;
+            width: 15%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5cb239;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 88px;
+            text-align: left;
+        }
+        .sidenav p {
+            width: 100%;
+            padding: 8px 8px 8px 16px;
+            text-decoration: none;
+            background-color: #89c471;
+            color: #fff;
+            margin: 10px 0px;
+        }
+
+        .sidenav a {
+            margin: 10px 0px;
+            width: 100%;
+            padding: 8px 8px 8px 16px;
+            text-decoration: none;
+            background-color: #89c471;
+            font-size: 22px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+            z-index: 1;
+        }
+
+        .sidenav a.active {
+            background-color: #5da341;
+        }
+
+        .sidenav a:hover, .offcanvas a:focus{
+            background-color: #5da341;
+        }
+
+        .main-limiter {
+            margin-left: 15%;
+            width: 85%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .main-wrapper {
+            margin-top: 88px;
+            transform: translate3d(0, 0, 0);
+            opacity: 0;
+            transition: 1.5s;
+        }
+
+        .box {
+            background-color: #fff;
+            padding: 5px;
+            text-decoration: none;!important;
+            color: #000
+            text-align: left;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .box p {
+            color: #000;
+        }
+        .tab {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            text-align: left;
+            align-content: flex-start;
+        }
+        .content {
+            text-align: center;
+            padding: 5px;
+            margin: 0px;
+        }
+        .row {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        .columns {
+            display: flex;
+        }
+        .column {
+            flex: 1;
+        }
+        .box-area {
+            width: 100%;
+            display: flex;
+        }
+        .infobox {
+            margin-left: 3px;
+            color: white;
+            background-color: #348e0f;
+            padding: 8px 14px;
+            border-radius: 10px;
+            float: right;
+        }
+        .info-text {
+            float: right;
+            width: 50%;
+            text-align: right;
+        }
+        .info-number {
+            font-size: x-large;
+            float: right;
+        }
+        .info-label {
+            float: right;
+            font-size: medium;
+        }
+        .info-icon {
+            font-size: xx-large;
+            float: left;
+        }
+        .headerbox {
+            color: #348e0f;
+            display: inline-block;
+            border-style: solid;
+            border-color: #348e0f;
+            padding: 8px 14px;
+            border-radius: 10px;
+            width: 95%;
+        }
+        .header-icon {
+            font-size: xx-large;
+            float: left;
+        }
+        .header-text {
+            font-size: x-large;
+        }
+        .header-label {
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+        }
+        .button {
+            padding: 8px 14px;
+            background-color: #348e0f;
+            border: none;
+            color: white;
+            outline: 0;
+            text-decoration:none!important;
+        }
+        .button:hover {
+            background-color: #267F00;
+        }
+        .table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            border-style: solid;
+            border-width: 1px;
+            padding: 8px 14px;
+            width: 100%;
+        }
+        .buttons {
+            line-height: 270%;
+        }
+        .link {
+            color: #348e0f;
+            text-decoration:none!important;
+        }
+        .link:hover {
+            color: #267F00;
+        }
+        table.sortable thead {
+            background-color: #348e0f;
+            color:#fff;
+            font-weight: bold;
+            cursor: default;
+            width: 100%;
+            overflow: hidden;
+        }
+        table.sortable tbody {
+            color: #000;
+        }
+        table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+            content: " \25B4\25BE"
+        }
+        .plugin-container {
+            color: #000;
+            height: 100%;
+            max-height: 400px;
+            overflow: auto;
+        }
+        .plugin-data {
+            color: #000;
+        }
+        header img {
+            float: right;
+            padding: 5px;
+            display: inline;
+        }
+        header p {
+            float: right;
+            text-align: right;
+        }
+        #navbutton {
+            display: none;
+            font-size: 40px;
+            cursor:pointer;
+        }
+        @media only screen and (max-width: 850px) {
+            #navbutton {
+                display: inline;
             }
             .sidenav p {
-                width: 100%;
-                padding: 8px 8px 8px 16px;
-                text-decoration: none;
-                background-color: #89c471;
-                color: #fff;
-                margin: 10px 0px;
+                display: none;
             }
-
-            .sidenav a {
-                margin: 10px 0px;
-                width: 100%;
-                padding: 8px 8px 8px 16px;
-                text-decoration: none;
-                background-color: #89c471;
-                font-size: 22px;
-                color: #fff;
-                display: block;
-                transition: 0.3s;
-                z-index: 1;
+            header {
+                margin: 0px;
+                padding 0px;
             }
-
-            .sidenav a.active {
-                background-color: #5da341;
-            }
-
-            .sidenav a:hover, .offcanvas a:focus{
-                background-color: #5da341;
-            }
-
-            .main-limiter {
-                margin-left: 15%;
-                width: 85%;
-                height: 100%;
-                overflow: hidden;
-            }
-
-            .main-wrapper {
-                margin-top: 88px;
-                transform: translate3d(0, 0, 0);
-                opacity: 0;
-                transition: 1.5s;
-            }
-
-            .box {
-                background-color: #fff;
-                padding: 5px;
-                text-decoration: none;!important;
-                color: #000
-                    text-align: left;
-                margin: 5px;
-                padding: 5px;
-            }
-
-            .box p {
-                color: #000;
-            }
-            .tab {
-                width: 20%;
-                height: 100%;
-                float: left;
-                display: flex;
-                text-align: left;
-                align-content: flex-start;
-            }
-            .content {
-                text-align: center;
-                padding: 5px;
+            header h1 {
                 margin: 0px;
             }
-            .row {
-                width: 50%;
-                display: flex;
+            header img {
+                margin: 0px;
+                padding: 0px;
+                margin-right: 0px;
+            }
+            header p {
+                margin: 0px;
+                margin-top: 5px;
+            }
+            .tab {
                 flex-direction: column;
             }
             .columns {
-                display: flex;
+                flex-direction: column;
             }
-            .column {
-                flex: 1;
-            }
-            .box-area {
-                width: 100%;
-                display: flex;
-            }
-            .infobox {
-                margin-left: 3px;
-                color: white;
-                background-color: #348e0f;
-                padding: 8px 14px;
-                border-radius: 10px;
-                float: right;
-            }
-            .info-text {
-                float: right;
-                width: 50%;
-                text-align: right;
-            }
-            .info-number {
-                font-size: x-large;
-                float: right;
-            }
-            .info-label {
-                float: right;
-                font-size: medium;
-            }
-            .info-icon {
-                font-size: xx-large;
-                float: left;
-            }
-            .headerbox {
-                color: #348e0f;
-                display: inline-block;
-                border-style: solid;
-                border-color: #348e0f;
-                padding: 8px 14px;
-                border-radius: 10px;
-                width: 95%;
-            }
-            .header-icon {
-                font-size: xx-large;
-                float: left;
-            }
-            .header-text {
-                font-size: x-large;
-            }
-            .header-label {
-                padding: 0px;
-                margin: 0px;
-                border: 0px;
-            }
-            .button {
-                padding: 8px 14px;
-                background-color: #348e0f;
-                border: none;
-                color: white;
-                outline: 0;
-                text-decoration:none!important;
-            }
-            .button:hover {
-                background-color: #267F00;
-            }
-            .table {
-                border-collapse: collapse;
-                table-layout: fixed;
-                border-style: solid;
-                border-width: 1px;
-                padding: 8px 14px;
+            .row {
                 width: 100%;
             }
-            .buttons {
-                line-height: 270%;
+            .sidenav {
+                width: 0%;
+                transition: 0s;
             }
-            .link {
-                color: #348e0f;
-                text-decoration:none!important;
-            }
-            .link:hover {
-                color: #267F00;
-            }
-            table.sortable thead {
-                background-color: #348e0f;
-                color:#fff;
-                font-weight: bold;
-                cursor: default;
+            .main-limiter {
+                margin-left: 0%;
                 width: 100%;
-                overflow: hidden;
             }
-            table.sortable tbody {
-                color: #000;
-            }
-            table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
-                content: " \25B4\25BE"
-            }
-            .plugin-container {
-                color: #000;
-                height: 100%;
-                max-height: 400px;
-                overflow: auto;
-            }
-            .plugin-data {
-                color: #000;
-            }
-            header img {
-                float: right;
-                padding: 5px;
-                display: inline;
-            }
-            header p {
-                float: right;
-                text-align: right;
-            }
-            #navbutton {
-                display: none;
-                font-size: 40px;
-                cursor:pointer;
-            }
-            @media only screen and (max-width: 850px) {
-                #navbutton {
-                    display: inline;
-                }
-                .sidenav p {
-                    display: none;
-                }
-                header {
-                    margin: 0px;
-                    padding 0px;
-                }
-                header h1 {
-                    margin: 0px;
-                }
-                header img {
-                    margin: 0px;
-                    padding: 0px;
-                    margin-right: 0px;
-                }
-                header p {
-                    margin: 0px;
-                    margin-top: 5px;
-                }
-                .tab {
-                    flex-direction: column;
-                }
-                .columns {
-                    flex-direction: column;
-                }
-                .row {
-                    width: 100%;
-                }
-                .sidenav {
-                    width: 0%;
-                    transition: 0s;
-                }
-                .main-limiter {
-                    margin-left: 0%;
-                    width: 100%;
-                }
-            }
+        }
 
     </style>
 </head>
@@ -688,9 +688,6 @@
                         </div>
                         <canvas id="tps7d" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
-                    <div class="box column">
-                        <canvas id="cpu7d" width="1000" height="600" style="width: 95%;"></canvas>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="box column">
@@ -714,10 +711,6 @@
                             </div>
                         </div>
                         <canvas id="tps24h" width="1000" height="600" style="width: 95%;"></canvas>
-                    </div>
-                    <div class="box column">
-                        <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
-                        <p>If CPU Graph displays '-1' CPU usage is not available for this platform.</p>
                     </div>
                 </div>
             </div>
@@ -832,50 +825,50 @@
         </div>
     </div>
     <script>
-                // Navigation & Refresh time clock
-                var serverTime = new Date(%currenttime%);
-                var now = new Date();
-                var timediff = serverTime.getTime() - now.getTime();
-                function openNav() {
-                document.getElementById("sidenav").style.width = "100%";
-                document.getElementById("limiter").style.display = "none";
-                document.getElementById("navbutton").onclick = function () { closeNav(); };
-                }
-                function closeNav() {
-                document.getElementById("sidenav").style.width = "0%";
-                document.getElementById("limiter").style.display = "block";
-                document.getElementById("navbutton").onclick = function () { openNav(); };
-                }
-                var navButtons = document.getElementsByClassName("nav-button");
-                var tabs = document.getElementsByClassName("tab");
-                var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
-                if (slideIndex == null) {
-                slideIndex = 0;
-                }
-                var x = document.getElementById("main");
-                x.style.transform = "translate3d(0px,0px,0)";
-                x.style.width = "" + navButtons.length * 100 + "%";
-                for (i = 0; i < navButtons.length; i++) {
-                navButtons[i].onclick = openFunc(i)
-                        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-                }
-                x.style.opacity = "1";
-                openFunc(slideIndex)();
-                countUpTimer();
-                function openFunc(i) {
-                return function() {
+        // Navigation & Refresh time clock
+        var serverTime = new Date(%currenttime%);
+        var now = new Date();
+        var timediff = serverTime.getTime() - now.getTime();
+        function openNav() {
+            document.getElementById("sidenav").style.width = "100%";
+            document.getElementById("limiter").style.display = "none";
+            document.getElementById("navbutton").onclick = function () { closeNav(); };
+        }
+        function closeNav() {
+            document.getElementById("sidenav").style.width = "0%";
+            document.getElementById("limiter").style.display = "block";
+            document.getElementById("navbutton").onclick = function () { openNav(); };
+        }
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
+        if (slideIndex == null) {
+            slideIndex = 0;
+        }
+        var x = document.getElementById("main");
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = "" + navButtons.length * 100 + "%";
+        for (i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i)
+            tabs[i].style.width = "" + 100 / navButtons.length + "%";
+        }
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+        countUpTimer();
+        function openFunc(i) {
+            return function() {
                 if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
-                closeNav();
+                    closeNav();
                 }
                 var max = navButtons.length;
                 for (var j = 0; j < max; j++) {
-                if (j == i) {
-                navButtons[j].classList.add('active');
-                continue;
-                }
-                if (navButtons[j].classList.contains('active')) {
-                navButtons[j].classList.remove('active');
-                }
+                    if (j == i) {
+                        navButtons[j].classList.add('active');
+                        continue;
+                    }
+                    if (navButtons[j].classList.contains('active')) {
+                        navButtons[j].classList.remove('active');
+                    }
                 }
                 var perc = - 100 / navButtons.length;
                 slideIndex = i;
@@ -885,784 +878,661 @@
                 var value = slideIndex * perc;
                 x.style.transition = "0.5s";
                 x.style.transform = "translate3d(" + value + "%,0px,0)";
-                };
-                }
-                function countUpTimer() {
-                var now = new Date();
-                var begin = new Date( %refreshlong% - timediff);
-                var out = "";
-                var seconds = now.getTime() - begin.getTime();
-                seconds = Math.floor(seconds / 1000);
-                var dd = Math.floor(seconds / 86400);
-                seconds -= (dd * 86400);
-                var dh = Math.floor(seconds / 3600);
-                seconds -= (dh * 3600);
-                var dm = Math.floor(seconds / 60);
-                seconds -= (dm * 60);
-                seconds = Math.floor(seconds);
-                if (dd != 0) {
+            };
+        }
+        function countUpTimer() {
+            var now = new Date();
+            var begin = new Date( %refreshlong% - timediff);
+            var out = "";
+            var seconds = now.getTime() - begin.getTime();
+            seconds = Math.floor(seconds / 1000);
+            var dd = Math.floor(seconds / 86400);
+            seconds -= (dd * 86400);
+            var dh = Math.floor(seconds / 3600);
+            seconds -= (dh * 3600);
+            var dm = Math.floor(seconds / 60);
+            seconds -= (dm * 60);
+            seconds = Math.floor(seconds);
+            if (dd != 0) {
                 out += dd.toString() + "d ";
-                }
-                if (dh != 0) {
+            }
+            if (dh != 0) {
                 out += dh.toString() + "h ";
-                }
-                if (dm != 0) {
+            }
+            if (dm != 0) {
                 out += dm.toString() + "m ";
-                }
-                out += seconds.toString() + "s ";
-                document.getElementById('divTime').innerHTML = out;
-                setTimeout('countUpTimer()', 1000);
-                }
+            }
+            out += seconds.toString() + "s ";
+            document.getElementById('divTime').innerHTML = out;
+            setTimeout('countUpTimer()', 1000);
+        }
 
     </script>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
     <script>
-                // Script for Players Online charts using Chart.js
-                var ctxday = document.getElementById("playerChartDay");
-                var ctxday2 = document.getElementById("playerChartDay2");
-                var ctxweek = document.getElementById("playerChartWeek");
-                var ctxmonth = document.getElementById("playerChartMonth");
-                var dataday = {
-                        datasets: [
-                        {
-                        label: "Players Online",
-                                fill: true,
-                                lineTension: 0.1,
-                                backgroundColor: "#%playersgraphfill%",
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %datascatterday% ,
-                        }]
-                }
-                var dataweek = {
-                        datasets: [
-                        {
-                        label: "Players Online",
-                                fill: true,
-                                lineTension: 0.1,
-                                backgroundColor: "#%playersgraphfill%",
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %datascatterweek% ,
-                        }]
-                }
-                var datamonth = {
-                        datasets: [
-                        {
-                        label: "Players Online",
-                                fill: true,
-                                lineTension: 0.1,
-                                backgroundColor: "#%playersgraphfill%",
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %datascattermonth% ,
-                        }]
-                }
-                var playersChartDay = new Chart(ctxday, {
-                type: 'scatter',
-                        data: dataday,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
-                                }
-                        }],
-                                xAxes: [{
-                                        type: 'linear',
-                                display: false
-                                }]
-                        }
-                        }
-                });
-                var playersChartDay2 = new Chart(ctxday2, {
-                type: 'scatter',
-                        data: dataday,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
-                                }
-                        }],
-                                xAxes: [{
-                                        type: 'linear',
-                                display: false
-                                }]
-                        }
-                        }
-                });
-                var playersChartWeek = new Chart(ctxweek, {
-                type: 'scatter',
-                        data: dataweek,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        suggestedMax: %graphmaxplayers%
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                        }
-                        }
-                });
-                var playersChartMonth = new Chart(ctxmonth, {
-                type: 'scatter',
-                        data: datamonth,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
-                                }
-                        }],
-                                xAxes: [{
-                                        type: 'linear',
-                                        display: false
-                                }]
-                        }
-                        }
-                });
-
-    </script>
-    <script>
-                // TPS Graph 7d
-                var ctxtps = document.getElementById("tps7d");
-                var datatps = {
-                        datasets: [
-                        {
-                            label: "TPS",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#b74343",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#b74343",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#b74343",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'A',
-                                data: %tpsscatterweek%
-                        }, {
-                            label: "Players Online",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'B',
-                                data: %datascatterweek%
-                        }]
-                };
-                var tpsChart = new Chart(ctxtps, {
-                type: 'scatter',
-                        data: datatps,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel;
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    id: 'A',
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 21,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'TPS'
-                                    }
-                                  }, {
-                                    id: 'B',
-                                    type: 'linear',
-                                    position: 'right',
-                                    ticks: {
-                                        suggestedMax: %graphmaxplayers%,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'Players'
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-
-    </script>
-    <script>
-                // TPS Graph 24h
-                var ctxtps = document.getElementById("tps24h");
-                var datatps = {
-                        datasets: [
-                        {
-                            label: "TPS",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#b74343",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#b74343",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#b74343",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'A',
-                                data: %tpsscatterday%
-                        }, {
-                            label: "Players Online",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'B',
-                                data: %datascatterday%
-                        }]
-                };
-                var tpsChart = new Chart(ctxtps, {
-                type: 'scatter',
-                        data: datatps,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel;
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    id: 'A',
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 21,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'TPS'
-                                    }
-                                  }, {
-                                    id: 'B',
-                                    type: 'linear',
-                                    position: 'right',
-                                    ticks: {
-                                        suggestedMax: %graphmaxplayers%,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'Players'
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-
-    </script>
-    <script>
-                // CPU Graph 24h
-                var ctxcpu = document.getElementById("cpu24h");
-                var datacpu = {
-                        datasets: [
-                        {
-                            label: "CPU Usage",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#e0d264",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#e0d264",
-                                pointBackgroundColor: "#ede5aa",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#e0d264",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %cpuscatterday%
-                        }]
-                };
-                var cpuChart = new Chart(ctxcpu, {
-                type: 'scatter',
-                        data: datacpu,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel + '%';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 100,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'CPU Usage'
-                                    }
-                                  }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-
-    </script>
-    <script>
-                // CPU Graph 7d
-                var ctxcpu = document.getElementById("cpu7d");
-                var datacpu = {
-                        datasets: [
-                        {
-                            label: "CPU Usage",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#e0d264",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#e0d264",
-                                pointBackgroundColor: "#ede5aa",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#e0d264",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %cpuscatterweek%
-                        }]
-                };
-                var cpuChart = new Chart(ctxcpu, {
-                type: 'scatter',
-                        data: datacpu,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel + '%';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 100,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'CPU Usage'
-                                    }
-                                  }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-    </script>
-    <script>
-                //    ActivityPie Graph
-                var ctxactivitypie = document.getElementById("activityPie");
-                var dataActivityPie = {
-                labels: %labelsactivity% ,
-                        datasets: [
-                        {
-                        data: %activitydata% ,
-                                backgroundColor: [ %activitycolors% ],
-                                hoverBackgroundColor: [ %activitycolors% ]
-                        }
-                        ]
-                }
-                var ActivityPie = new Chart(ctxactivitypie, {
-                type: 'doughnut',
-                        data: dataActivityPie,
-                        options: {
-                        legend: {
-                        position: 'right',
-                                labels: {
-                                padding: 7
-                                }
-                        }
-                        }
-                });
-
-    </script>
-    <script>
-                //    GMPie Graph
-                var ctxgmpie = document.getElementById("gmPie");
-                var dataGmPie = {
-                labels: %gmlabels% ,
-                        datasets: [
-                        {
-                        data: %gmdata% ,
-                                backgroundColor: [ %gmcolors% ],
-                                hoverBackgroundColor: [ %gmcolors% ]
-                        }
-                        ]
-                }
-                var GMPie = new Chart(ctxgmpie, {
-                type: 'doughnut',
-                        data: dataGmPie,
-                        options: {
-                        legend: {
-                        position: 'right',
-                                labels: {
-                                padding: 7
-                                }
-                        }
-                        }
-                });
-
-    </script>
-    <script>
-                //    Session start puchcard bubblechart
-                function day(i) {
-                switch (i) {
-                case 0:
-                        return 'Monday';
-                case 1:
-                        return 'Tuesday';
-                case 2:
-                        return 'Wednesday';
-                case 3:
-                        return 'Thursday';
-                case 4:
-                        return 'Friday';
-                case 5:
-                        return 'Saturday';
-                case 6:
-                        return 'Sunday';
-                default:
-                        return '';
-                }
-                }
-                function hour(i) {
-                switch (i) {
-                case 25:
-                        case - 1:
-                        case - 2:
-                        case - 3:
-                        case - 4:
-                        case - 5:
-                        return '';
-                default:
-                        return i + ':00';
-                }
-                }
-                var ctxpunch = document.getElementById("punchcard");
-                var datapunch = {
-                datasets: [
+        // Script for Players Online charts using Chart.js
+        var ctxday = document.getElementById("playerChartDay");
+        var ctxday2 = document.getElementById("playerChartDay2");
+        var ctxweek = document.getElementById("playerChartWeek");
+        var ctxmonth = document.getElementById("playerChartMonth");
+        var dataday = {
+            datasets: [
                 {
-                label: 'Player Join Punchcard',
-                        data: %datapunchcard% ,
-                        backgroundColor: "#222",
-                        hoverBackgroundColor: "#333",
-                }]
-                };
-                var punchcardChart = new Chart(ctxpunch, {
-                type: 'bubble',
-                        data: datapunch,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        return day(tooltipItems.yLabel) + ': ' + hour(tooltipItems.xLabel);
-                                    }
-                                }
-                            },
-                                scales: {
-                                xAxes: [{
-                                showXLabels: 1,
-                                        ticks: {
-                                        callback: function(value, index, values) {
-                                        return hour(value);
-                                        },
-                                                suggestedMax: 25,
-                                                suggestedMin: - 1
-                                        }
-                                }],
-                                        yAxes: [{
-                                        ticks: {
-                                        callback: function(value, index, values) {
-                                        return day(value);
-                                        },
-                                                suggestedMax: 7,
-                                                suggestedMin: - 1
-                                        }
-                                        }]
-                                }
-                        }
-                });
-
-    </script>
-    <script>
-                //    Session length distribution barchart
-                var ctxDistribution = document.getElementById("sessiondistribution");
-                var dataDistr = {
-                labels: %labelssessiondistribution%,
-                        datasets: [
-                        {
-                        label: 'Session Length Distribution',
-                                data: %datasessiondistribution% ,
-                                backgroundColor: "#89c471",
-                                fill: true,
-                                borderColor: "#348e0f",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#348e0f",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#348e0f",
-                                pointHoverBorderColor: "#348e0f",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                        }]
-                };
-                var sessionDistributions = new Chart(ctxDistribution, {
-                type: 'bar',
-                        data: dataDistr,
-                        options: {
-                        tooltips: {
-                        callbacks: {
+                    label: "Players Online",
+                    fill: true,
+                    lineTension: 0.1,
+                    backgroundColor: "#%playersgraphfill%",
+                    borderColor: "#%playersgraphcolor%",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#%playersgraphcolor%",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#%playersgraphcolor%",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %datascatterday% ,
+        }]
+        }
+        var dataweek = {
+            datasets: [
+                {
+                    label: "Players Online",
+                    fill: true,
+                    lineTension: 0.1,
+                    backgroundColor: "#%playersgraphfill%",
+                    borderColor: "#%playersgraphcolor%",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#%playersgraphcolor%",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#%playersgraphcolor%",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %datascatterweek% ,
+        }]
+        }
+        var datamonth = {
+            datasets: [
+                {
+                    label: "Players Online",
+                    fill: true,
+                    lineTension: 0.1,
+                    backgroundColor: "#%playersgraphfill%",
+                    borderColor: "#%playersgraphcolor%",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#%playersgraphcolor%",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#%playersgraphcolor%",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %datascattermonth% ,
+        }]
+        }
+        var playersChartDay = new Chart(ctxday, {
+            type: 'scatter',
+            data: dataday,
+            options: {
+                tooltips: {
+                    callbacks: {
                         label: function(tooltipItems, data) {
-                        return tooltipItems.xLabel + 'utes: ' + tooltipItems.yLabel + ' sessions';
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString +': '+ tooltipItems.yLabel+ ' Players';
                         }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMax: %graphmaxplayers%
+                    }
+                }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+        var playersChartDay2 = new Chart(ctxday2, {
+            type: 'scatter',
+            data: dataday,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel+ ' Players';
                         }
-                        },
-                                scales: {
-                                yAxes: [{
-                                ticks: {
-                                callback: function(value, index, values) {
-                                return value + '';
-                                }
-                                }
-                                }]
-                                }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMax: %graphmaxplayers%
+                    }
+                }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+        var playersChartWeek = new Chart(ctxweek, {
+            type: 'scatter',
+            data: dataweek,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString +': '+ tooltipItems.yLabel+ ' Players';
                         }
-                });
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMax: %graphmaxplayers%
+                    }
+                }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+        var playersChartMonth = new Chart(ctxmonth, {
+            type: 'scatter',
+            data: datamonth,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString +': '+ tooltipItems.yLabel+ ' Players';
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            suggestedMax: %graphmaxplayers%
+                    }
+                }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
 
     </script>
     <script>
-                //        Geolocation map
-                CLOROPLETH = document.getElementById('cloropleth');
-                var data = [{
-                type: 'choropleth',
-                        locationmode: "country names",
-                        locations: %geomapcountries% ,
-                        z: %geomapz% ,
-                        text: %geomapcodes% ,
-                        colorscale: [
-                        [0, 'rgb(38, 127, 0)'], [1, 'rgb(220, 220, 220)']],
-                        autocolorscale: false,
-                        reversescale: true,
-                        marker: {
-                        line: {
-                        color: 'rgb(100,100,100)',
-                                width: 0.5
+        // TPS Graph 7d
+        var ctxtps = document.getElementById("tps7d");
+        var datatps = {
+            datasets: [
+                {
+                    label: "TPS",
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#b74343",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#b74343",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#b74343",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    yAxisID: 'A',
+                    data: %tpsscatterweek%
+        }, {
+            label: "Players Online",
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#%playersgraphcolor%",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#%playersgraphcolor%",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#%playersgraphcolor%",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            yAxisID: 'B',
+            data: %datascatterweek%
+        }]
+        };
+        var tpsChart = new Chart(ctxtps, {
+            type: 'scatter',
+            data: datatps,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString +': '+ tooltipItems.yLabel;
                         }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        id: 'A',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMax: 21,
+                            suggestedMin: 0
                         },
-                        tick0: 0,
-                        zmin: 0,
-                        dtick: 1000,
-                        colorbar: {
-                        autotic: false,
-                                tickprefix: '',
-                                title: 'Players'
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'TPS'
                         }
-                }];
-                var layout = {
-                title: '',
-                        autosize: true,
-                        geo:{
-                        showframe: false,
-                                showcoastlines: false,
-                                projection:{
-                                type: 'mercator'
-                                }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            suggestedMax: %graphmaxplayers%,
+                        suggestedMin: 0
+                    },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Players'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+
+    </script>
+    <script>
+        // TPS Graph 24h
+        var ctxtps = document.getElementById("tps24h");
+        var datatps = {
+            datasets: [
+                {
+                    label: "TPS",
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#b74343",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#b74343",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#b74343",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    yAxisID: 'A',
+                    data: %tpsscatterday%
+        }, {
+            label: "Players Online",
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#%playersgraphcolor%",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#%playersgraphcolor%",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#%playersgraphcolor%",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            yAxisID: 'B',
+            data: %datascatterday%
+        }]
+        };
+        var tpsChart = new Chart(ctxtps, {
+            type: 'scatter',
+            data: datatps,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel;
                         }
-                };
-                Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        id: 'A',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMax: 21,
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'TPS'
+                        }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            suggestedMax: %graphmaxplayers%,
+                        suggestedMin: 0
+                    },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Players'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+
+    </script>
+    <script>
+        //    ActivityPie Graph
+        var ctxactivitypie = document.getElementById("activityPie");
+        var dataActivityPie = {
+                labels: %labelsactivity% ,
+            datasets: [
+            {
+                data: %activitydata% ,
+            backgroundColor: [ %activitycolors% ],
+        hoverBackgroundColor: [ %activitycolors% ]
+        }
+        ]
+        }
+        var ActivityPie = new Chart(ctxactivitypie, {
+            type: 'doughnut',
+            data: dataActivityPie,
+            options: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 7
+                    }
+                }
+            }
+        });
+
+    </script>
+    <script>
+        //    GMPie Graph
+        var ctxgmpie = document.getElementById("gmPie");
+        var dataGmPie = {
+                labels: %gmlabels% ,
+            datasets: [
+            {
+                data: %gmdata% ,
+            backgroundColor: [ %gmcolors% ],
+        hoverBackgroundColor: [ %gmcolors% ]
+        }
+        ]
+        }
+        var GMPie = new Chart(ctxgmpie, {
+            type: 'doughnut',
+            data: dataGmPie,
+            options: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 7
+                    }
+                }
+            }
+        });
+
+    </script>
+    <script>
+        //    Session start puchcard bubblechart
+        function day(i) {
+            switch (i) {
+                case 0:
+                    return 'Monday';
+                case 1:
+                    return 'Tuesday';
+                case 2:
+                    return 'Wednesday';
+                case 3:
+                    return 'Thursday';
+                case 4:
+                    return 'Friday';
+                case 5:
+                    return 'Saturday';
+                case 6:
+                    return 'Sunday';
+                default:
+                    return '';
+            }
+        }
+        function hour(i) {
+            switch (i) {
+                case 25:
+                case - 1:
+                case - 2:
+                case - 3:
+                case - 4:
+                case - 5:
+                    return '';
+                default:
+                    return i + ':00';
+            }
+        }
+        var ctxpunch = document.getElementById("punchcard");
+        var datapunch = {
+            datasets: [
+                {
+                    label: 'Player Join Punchcard',
+                    data: %datapunchcard% ,
+                backgroundColor: "#222",
+            hoverBackgroundColor: "#333",
+        }]
+        };
+        var punchcardChart = new Chart(ctxpunch, {
+            type: 'bubble',
+            data: datapunch,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            return day(tooltipItems.yLabel) + ': ' + hour(tooltipItems.xLabel);
+                        }
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        showXLabels: 1,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return hour(value);
+                            },
+                            suggestedMax: 25,
+                            suggestedMin: - 1
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return day(value);
+                            },
+                            suggestedMax: 7,
+                            suggestedMin: - 1
+                        }
+                    }]
+                }
+            }
+        });
+
+    </script>
+    <script>
+        //    Session length distribution barchart
+        var ctxDistribution = document.getElementById("sessiondistribution");
+        var dataDistr = {
+                labels: %labelssessiondistribution%,
+            datasets: [
+            {
+                label: 'Session Length Distribution',
+                data: %datasessiondistribution% ,
+            backgroundColor: "#89c471",
+            fill: true,
+            borderColor: "#348e0f",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#348e0f",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#348e0f",
+            pointHoverBorderColor: "#348e0f",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+        }]
+        };
+        var sessionDistributions = new Chart(ctxDistribution, {
+            type: 'bar',
+            data: dataDistr,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            return tooltipItems.xLabel + 'utes: ' + tooltipItems.yLabel + ' sessions';
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return value + '';
+                            }
+                        }
+                    }]
+                }
+            }
+        });
+
+    </script>
+    <script>
+        //        Geolocation map
+        CLOROPLETH = document.getElementById('cloropleth');
+        var data = [{
+            type: 'choropleth',
+            locationmode: "country names",
+            locations: %geomapcountries% ,
+            z: %geomapz% ,
+            text: %geomapcodes% ,
+            colorscale: [
+            [0, 'rgb(38, 127, 0)'], [1, 'rgb(220, 220, 220)']],
+            autocolorscale: false,
+            reversescale: true,
+            marker: {
+            line: {
+                color: 'rgb(100,100,100)',
+                    width: 0.5
+            }
+        },
+        tick0: 0,
+            zmin: 0,
+            dtick: 1000,
+            colorbar: {
+            autotic: false,
+                tickprefix: '',
+                title: 'Players',
+        }
+        }];
+        var layout = {
+            title: '',
+            autosize: false,
+            height: 1000,
+            width: 1500,
+            geo:{
+                showframe: false,
+                showcoastlines: false,
+                projection:{
+                    type: 'mercator'
+                }
+            }
+        };
+        Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
 
     </script>
 </div>
 </body>
-</html> 
+</html>

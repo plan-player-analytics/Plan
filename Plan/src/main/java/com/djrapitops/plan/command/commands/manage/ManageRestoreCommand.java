@@ -44,12 +44,14 @@ public class ManageRestoreCommand extends SubCommand {
         if (!Check.isTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE.toString()), sender)) {
             return true;
         }
+
         String db = args[1].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(db) || "mysql".equals(db);
 
         if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + db, sender)) {
             return true;
         }
+
         if (!Check.isTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])), sender)) {
             return true;
         }
@@ -81,20 +83,25 @@ public class ManageRestoreCommand extends SubCommand {
                     if (containsDBFileExtension) {
                         backupDBName = backupDBName.replace(".db", "");
                     }
+
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
                     if (!backupDB.init()) {
                         sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE.toString());
                         return;
                     }
+
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+
                     final Collection<UUID> uuids = ManageUtils.getUUIDS(backupDB);
                     if (!Check.isTrue(!Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")", sender)) {
                         return;
                     }
+
                     if (ManageUtils.clearAndCopy(database, backupDB, uuids)) {
                         if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
                             plugin.getHandler().getCommandUseFromDb();
                         }
+
                         sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
