@@ -220,8 +220,6 @@ public class DataCacheHandler extends SessionCache {
     /**
      * Saves all UserData in the cache to Database.
      * <p>
-     * ATTENTION: TODO - Doesn't save the Locations in the locationCache.
-     * <p>
      * Should only be called from Async thread
      */
     public void saveCachedUserData() {

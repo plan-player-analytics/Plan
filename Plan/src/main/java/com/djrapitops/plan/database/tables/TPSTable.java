@@ -26,6 +26,9 @@ public class TPSTable extends Table {
     private final String columnTPS;
     private final String columnPlayers;
     private final String columnCPUUsage;
+    private final String columnRAMUsage;
+    private final String columnEntities;
+    private final String columnChunksLoaded;
 
     /**
      * @param db
@@ -37,7 +40,9 @@ public class TPSTable extends Table {
         columnTPS = "tps";
         columnPlayers = "players_online";
         columnCPUUsage = "cpu_usage";
-        //TODO add new columns
+        columnRAMUsage = "ram_usage";
+        columnEntities = "entities";
+        columnChunksLoaded = "chunks_loaded";
     }
 
     @Override
@@ -47,13 +52,17 @@ public class TPSTable extends Table {
                     + columnDate + " bigint NOT NULL, "
                     + columnTPS + " double NOT NULL, "
                     + columnPlayers + " integer NOT NULL, "
-                    + columnCPUUsage + " double NOT NULL"
+                    + columnCPUUsage + " double NOT NULL, "
+                    + columnEntities + " integer NOT NULL, "
+                    + columnChunksLoaded + " integer NOT NULL"
                     + ")"
-                    //TODO add new columns
             );
             int version = getVersion();
             if (version < 6) {
                 alterTablesV6();
+            }
+            if (version < 7) {
+                alterTablesV7();
             }
             return true;
         } catch (SQLException ex) {
@@ -70,11 +79,26 @@ public class TPSTable extends Table {
                 execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL DEFAULT 0");
             }
         } catch (SQLException e) {
-
         }
     }
 
-    //TODO alterTablesV7
+    private void alterTablesV7() {
+        String[] sql;
+        if (usingMySQL) {
+            sql = new String[]{
+                    "ALTER TABLE " + tableName + " ADD " + columnRAMUsage + " bigint NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD " + columnEntities + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD " + columnChunksLoaded + " integer NOT NULL DEFAULT 0"
+            };
+        } else {
+            sql = new String[]{
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnRAMUsage + " bigint NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnEntities + " integer NOT NULL DEFAULT 0",
+                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnChunksLoaded + " integer NOT NULL DEFAULT 0"
+            };
+        }
+        executeUnsafe(sql);
+    }
 
     /**
      * @return @throws SQLException
@@ -92,8 +116,10 @@ public class TPSTable extends Table {
                 double tps = set.getDouble(columnTPS);
                 int players = set.getInt(columnPlayers);
                 double cpuUsage = set.getDouble(columnCPUUsage);
-                //TODO add new data
-                data.add(new TPS(date, tps, players, cpuUsage, 0, 0, 0));
+                long ramUsage = set.getLong(columnRAMUsage);
+                int entities = set.getInt(columnEntities);
+                int chunksLoaded = set.getInt(columnChunksLoaded);
+                data.add(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
             }
             return data;
         } finally {
@@ -121,8 +147,11 @@ public class TPSTable extends Table {
                     + columnDate + ", "
                     + columnTPS + ", "
                     + columnPlayers + ", "
-                    + columnCPUUsage
-                    + ") VALUES (?, ?, ?, ?)");
+                    + columnCPUUsage + ", "
+                    + columnRAMUsage + ", "
+                    + columnEntities + ", "
+                    + columnChunksLoaded
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?)");
 
             boolean commitRequired = false;
             int i = 0;
@@ -131,6 +160,9 @@ public class TPSTable extends Table {
                 statement.setDouble(2, tps.getTps());
                 statement.setInt(3, tps.getPlayers());
                 statement.setDouble(4, tps.getCPUUsage());
+                statement.setLong(5, tps.getUsedMemory());
+                statement.setDouble(6, tps.getEntityCount());
+                statement.setDouble(7, tps.getChunksLoaded());
                 statement.addBatch();
                 commitRequired = true;
                 i++;

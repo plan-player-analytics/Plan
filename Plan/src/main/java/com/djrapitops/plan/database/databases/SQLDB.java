@@ -48,6 +48,8 @@ public abstract class SQLDB extends Database {
         versionTable = new VersionTable(this, usingMySQL);
         tpsTable = new TPSTable(this, usingMySQL);
         securityTable = new SecurityTable(this, usingMySQL);
+        worldTable = new WorldTable(this, usingMySQL);
+        worldTimesTable = new WorldTimesTable(this, usingMySQL);
 
         startConnectionPingTask();
     }
@@ -118,7 +120,7 @@ public abstract class SQLDB extends Database {
             }
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(6);
+                setVersion(7);
             }
             Benchmark.start("Database: Create tables");
             for (Table table : getAllTables()) {
@@ -132,8 +134,8 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             Benchmark.stop("Database: Create tables");
-            if (!newDatabase && getVersion() < 6) {
-                setVersion(6);
+            if (!newDatabase && getVersion() < 7) {
+                setVersion(7);
             }
         }
         return true;
@@ -177,14 +179,22 @@ public abstract class SQLDB extends Database {
      * @return
      */
     public Table[] getAllTables() {
-        return new Table[]{usersTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, commandUseTable, tpsTable};
+        return new Table[]{
+                usersTable, gmTimesTable, ipsTable,
+                nicknamesTable, sessionsTable, killsTable,
+                commandUseTable, tpsTable, worldTable,
+                worldTimesTable};
     }
 
     /**
      * @return
      */
     public Table[] getAllTablesInRemoveOrder() {
-        return new Table[]{locationsTable, gmTimesTable, ipsTable, nicknamesTable, sessionsTable, killsTable, usersTable, commandUseTable, tpsTable};
+        return new Table[]{
+                locationsTable, gmTimesTable, ipsTable,
+                nicknamesTable, sessionsTable, killsTable,
+                worldTimesTable, worldTable, usersTable,
+                commandUseTable, tpsTable};
     }
 
     /**
