@@ -47,10 +47,10 @@ public class ListCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"List command",
-                tCol+"  Used to get a link to players page.",
-                sCol+"  Players page contains links to all cached inspect pages.",
-                sCol+"  Alias: /plan pl"
+                mCol + "List command",
+                tCol + "  Used to get a link to players page.",
+                sCol + "  Players page contains links to all cached inspect pages.",
+                sCol + "  Alias: /plan pl"
         };
     }
 

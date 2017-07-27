@@ -47,9 +47,9 @@ public class SearchCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"Search command",
-                tCol+"  Used to get a list of Player names that match the given argument.",
-                sCol+"  Example: /plan search 123 - Finds all users with 123 in their name."
+                mCol + "Search command",
+                tCol + "  Used to get a list of Player names that match the given argument.",
+                sCol + "  Example: /plan search 123 - Finds all users with 123 in their name."
         };
     }
 

@@ -47,9 +47,9 @@ public class ManageHotswapCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"Manage Hotswap command",
-                tCol+"  Used to change database in use on the fly.",
-                sCol+"  Does not change database if connection fails"
+                mCol + "Manage Hotswap command",
+                tCol + "  Used to change database in use on the fly.",
+                sCol + "  Does not change database if connection fails"
         };
     }
 

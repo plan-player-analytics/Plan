@@ -35,13 +35,13 @@ public class WebUserCommand extends TreeCommand<Plan> {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"Web User Manage command",
-                tCol+"  Used to manage web users of the plugin",
-                sCol+"  Users have a permission level:",
-                tCol+"   0 - Access to all pages",
-                tCol+"   1 - Access to /players & all inspect pages",
-                tCol+"   2 - Access to own inspect page",
-                sCol+"  Alias: /plan web"
+                mCol + "Web User Manage command",
+                tCol + "  Used to manage web users of the plugin",
+                sCol + "  Users have a permission level:",
+                tCol + "   0 - Access to all pages",
+                tCol + "   1 - Access to /players & all inspect pages",
+                tCol + "   2 - Access to own inspect page",
+                sCol + "  Alias: /plan web"
         };
     }
 
