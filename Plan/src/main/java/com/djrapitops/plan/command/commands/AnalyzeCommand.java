@@ -125,7 +125,7 @@ public class AnalyzeCommand extends SubCommand {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sendLink(sender, url);
+                sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
             }
         }
         sender.sendMessage(Phrase.CMD_FOOTER.toString());

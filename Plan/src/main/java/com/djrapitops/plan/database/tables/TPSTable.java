@@ -53,6 +53,7 @@ public class TPSTable extends Table {
                     + columnTPS + " double NOT NULL, "
                     + columnPlayers + " integer NOT NULL, "
                     + columnCPUUsage + " double NOT NULL, "
+                    + columnRAMUsage + " bigint NOT NULL, "
                     + columnEntities + " integer NOT NULL, "
                     + columnChunksLoaded + " integer NOT NULL"
                     + ")"
