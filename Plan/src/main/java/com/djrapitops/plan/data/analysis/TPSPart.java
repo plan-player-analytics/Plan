@@ -56,7 +56,7 @@ public class TPSPart extends RawData<TPSPart> {
         addValue("ramscatterweek", ramScatterWeek);
 
         Runtime runtime = Runtime.getRuntime();
-        addValue("maxram", (runtime.maxMemory() / (1024L * 1024L)));
+        addValue("maxram", (runtime.maxMemory() / 1000000));
 
         double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
         double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
