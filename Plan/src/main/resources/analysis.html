@@ -688,6 +688,9 @@
                         </div>
                         <canvas id="tps7d" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
+                    <div class="box column">
+                        <canvas id="cpu7d" width="1000" height="600" style="width: 95%;"></canvas>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="box column">
@@ -712,6 +715,10 @@
                         </div>
                         <canvas id="tps24h" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
+                    <div class="box column">
+                        <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
+                    </div>
+                    <p>If CPU Graph displays '-1' CPU usage is not available for this platform.</p>
                 </div>
             </div>
             <div class="tab">
@@ -1303,6 +1310,131 @@
 
     </script>
     <script>
+        // CPU Graph 24h
+        var ctxcpu = document.getElementById("cpu24h");
+        var datacpu = {
+            datasets: [
+                {
+                    label: "CPU Usage",
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#e0d264",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#e0d264",
+                    pointBackgroundColor: "#ede5aa",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#e0d264",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %cpuscatterday%
+        }]
+        };
+        var cpuChart = new Chart(ctxcpu, {
+            type: 'scatter',
+            data: datacpu,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel + '%';
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMax: 100,
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'CPU Usage'
+                        }
+                    }],
+                    xAxes: [{
+                        type: 'linear',
+                        display: false
+                    }]
+                }
+            }
+        });
+
+    </script>
+    <script>
+        // CPU Graph 7d
+        var ctxcpu = document.getElementById("cpu7d");
+        var datacpu = {
+            datasets: [
+                {
+                    label: "CPU Usage",
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#e0d264",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#e0d264",
+                    pointBackgroundColor: "#ede5aa",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#e0d264",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %cpuscatterweek%
+        }]
+        };
+        var cpuChart = new Chart(ctxcpu, {
+            type: 'scatter',
+            data: datacpu,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel + '%';
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMax: 100,
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'CPU Usage'
+                        }
+                    }],
+                    xAxes: [{
+                        type: 'linear',
+                        display: false
+                    }]
+                }
+            }
+        });
+    </script>
+    <script>
         //    ActivityPie Graph
         var ctxactivitypie = document.getElementById("activityPie");
         var dataActivityPie = {
@@ -1514,7 +1646,7 @@
             colorbar: {
             autotic: false,
                 tickprefix: '',
-                title: 'Players',
+                title: 'Players'
         }
         }];
         var layout = {
