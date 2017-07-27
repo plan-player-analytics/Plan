@@ -53,10 +53,10 @@ public class GamemodePart extends RawData<GamemodePart> {
         long[] times = new long[]{
                 survivalTime, creativeTime, adventureTime, spectatorTime
         };
-        String col0 = Settings.HCOLOR_GMP_0 + "";
-        String col1 = Settings.HCOLOR_GMP_1 + "";
-        String col2 = Settings.HCOLOR_GMP_2 + "";
-        String col3 = Settings.HCOLOR_GMP_3 + "";
+        String col0 = Settings.HCOLOR_GMP_0.toString();
+        String col1 = Settings.HCOLOR_GMP_1.toString();
+        String col2 = Settings.HCOLOR_GMP_2.toString();
+        String col3 = Settings.HCOLOR_GMP_3.toString();
 
         addValue("%gm0col%", col0);
         addValue("%gm1col%", col1);

@@ -58,9 +58,11 @@ public class ManageMoveCommand extends SubCommand {
         if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + toDB, sender)) {
             return true;
         }
+
         if (!Check.isTrue(!Verify.equalsIgnoreCase(fromDB, toDB), Phrase.MANAGE_ERROR_SAME_DB.toString(), sender)) {
             return true;
         }
+
         if (!Check.isTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[1])), sender)) {
             return true;
         }
@@ -92,7 +94,9 @@ public class ManageMoveCommand extends SubCommand {
                     if (Check.isTrue(Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + fromDatabase.getName() + ")", sender)) {
                         return;
                     }
+
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+
                     if (ManageUtils.clearAndCopy(toDatabase, fromDatabase, uuids)) {
                         sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
                         boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());

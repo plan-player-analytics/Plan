@@ -78,6 +78,7 @@ public class ManageImportCommand extends SubCommand {
         if (!Check.isTrue(importPlugins.keySet().contains(importFromPlugin), Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin, sender)) {
             return true;
         }
+
         if (!Check.isTrue(ImportUtils.isPluginEnabled(importFromPlugin), Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin, sender)) {
             return true;
         }

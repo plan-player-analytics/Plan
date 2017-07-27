@@ -75,8 +75,8 @@ public class TPSCountTimer extends AbsRunnable {
 
         Runtime runtime = Runtime.getRuntime();
 
-        long totalMemory = runtime.totalMemory() / 1024L;
-        long usedMemory = totalMemory - runtime.freeMemory() / 1024L;
+        long totalMemory = runtime.totalMemory();
+        long usedMemory = (totalMemory - runtime.freeMemory()) / (1024L * 1024L);
 
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
         int loadedChunks = getLoadedChunks();
