@@ -107,3 +107,4 @@ permissions:
     children:
       plan.manage: true
       plan.staff: true
+      apf.notify: true
