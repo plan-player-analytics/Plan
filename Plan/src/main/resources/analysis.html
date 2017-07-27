@@ -726,7 +726,7 @@
                     </div>
                     <div class="box column">
                         <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
-                        <p>If CPU Graph displays '-1' CPU usage is not available for this platform.</p>
+                        <p>If Graph displays '-1' usage is not available for this platform.</p>
                     </div>
                 </div>
             </div>
@@ -1395,6 +1395,7 @@
                         datasets: [
                         {
                             label: "CPU Usage",
+                                yAxisID: 'A',
                                 fill: false,
                                 lineTension: 0.1,
                                 borderColor: "#e0d264",
@@ -1413,6 +1414,27 @@
                                 pointHitRadius: 10,
                                 spanGaps: false,
                                 data: %cpuscatterday%
+                        }, {
+                            label: "Memory Usage",
+                                yAxisID: 'B',
+                                fill: false,
+                                lineTension: 0.1,
+                                borderColor: "#7dcc24",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: "#7dcc24",
+                                pointBackgroundColor: "#7dcc24",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "#7dcc24",
+                                pointHoverBorderColor: "#8fabc6",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                spanGaps: false,
+                                data: %ramscatterday%
                         }]
                 };
                 var cpuChart = new Chart(ctxcpu, {
@@ -1431,6 +1453,7 @@
                             },
                             scales: {
                                 yAxes: [{
+                                    id: 'A',
                                     type: 'linear',
                                     position: 'left',
                                     ticks: {
@@ -1439,9 +1462,21 @@
                                     },
                                     scaleLabel: {
                                         display: true,
-                                        labelString: 'CPU Usage'
+                                        labelString: 'CPU Usage (%)'
                                     }
-                                  }],
+                                }, {
+                                    id: 'B',
+                                    type: 'linear',
+                                    position: 'right',
+                                    ticks: {
+                                        suggestedMax: %maxram%,
+                                        suggestedMin: 0
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Memory Usage (Mt)'
+                                    }
+                                }],
                                 xAxes: [{
                                         type: 'linear',
                                     display: false
@@ -1459,6 +1494,7 @@
                         datasets: [
                         {
                             label: "CPU Usage",
+                                yAxisID: 'A',
                                 fill: false,
                                 lineTension: 0.1,
                                 borderColor: "#e0d264",
@@ -1477,6 +1513,27 @@
                                 pointHitRadius: 10,
                                 spanGaps: false,
                                 data: %cpuscatterweek%
+                        }, {
+                            label: "Memory Usage",
+                                yAxisID: 'B',
+                                fill: false,
+                                lineTension: 0.1,
+                                borderColor: "#7dcc24",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: "#7dcc24",
+                                pointBackgroundColor: "#7dcc24",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "#7dcc24",
+                                pointHoverBorderColor: "#8fabc6",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                spanGaps: false,
+                                data: %ramscatterday%
                         }]
                 };
                 var cpuChart = new Chart(ctxcpu, {
@@ -1495,6 +1552,7 @@
                             },
                             scales: {
                                 yAxes: [{
+                                    id: 'A',
                                     type: 'linear',
                                     position: 'left',
                                     ticks: {
@@ -1503,7 +1561,19 @@
                                     },
                                     scaleLabel: {
                                         display: true,
-                                        labelString: 'CPU Usage'
+                                        labelString: 'CPU Usage (%)'
+                                    }
+                                }, {
+                                    id: 'B',
+                                    type: 'linear',
+                                    position: 'right',
+                                    ticks: {
+                                        suggestedMax: %maxram%,
+                                        suggestedMin: 0
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Memory Usage (Mt)'
                                     }
                                   }],
                                 xAxes: [{

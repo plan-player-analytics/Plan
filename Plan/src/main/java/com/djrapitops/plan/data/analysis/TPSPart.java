@@ -19,7 +19,7 @@ import java.util.List;
  * <p>
  * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps(-week),
  * averagetpsday, averagecpuday, averagecpuweek, averagememoryday, averagememoryweek, averageentitiesday, averageentitiesweek,
- * averagechunksday, averagechunkweek
+ * averagechunksday, averagechunkweek, ramscatterday, ramscatterweek
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -42,12 +42,20 @@ public class TPSPart extends RawData<TPSPart> {
         String tpsScatterWeek = TPSGraphCreator.buildScatterDataStringTPS(week, TimeAmount.WEEK.ms());
         String cpuScatterDay = CPUGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
         String cpuScatterWeek = CPUGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
+        String ramScatterDay = CPUGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
+        String ramScatterWeek = CPUGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
 
         addValue("tpsscatterday", tpsScatterDay);
         addValue("tpsscatterweek", tpsScatterWeek);
 
         addValue("cpuscatterday", cpuScatterDay);
         addValue("cpuscatterweek", cpuScatterWeek);
+
+        addValue("ramscatterday", ramScatterDay);
+        addValue("ramscatterweek", ramScatterWeek);
+
+        Runtime runtime = Runtime.getRuntime();
+        addValue("maxram", (runtime.maxMemory() / (1024L * 1024L)));
 
         double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
         double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
