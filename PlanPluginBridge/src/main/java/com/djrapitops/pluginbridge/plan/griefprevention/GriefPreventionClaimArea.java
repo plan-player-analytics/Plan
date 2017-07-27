@@ -1,14 +1,14 @@
 package com.djrapitops.pluginbridge.plan.griefprevention;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * PluginData class for GriefPrevention-plugin.
@@ -37,6 +37,7 @@ public class GriefPreventionClaimArea extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         Verify.nullCheck(uuid);
         int area = dataStore.getClaims().stream()
+                .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .map(Claim::getArea).mapToInt(i -> i).sum();
         return parseContainer(modifierPrefix, area + "");
@@ -46,6 +47,7 @@ public class GriefPreventionClaimArea extends PluginData {
     public Serializable getValue(UUID uuid) {
         Verify.nullCheck(uuid);
         return dataStore.getClaims().stream()
+                .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .map(Claim::getArea).mapToInt(i -> i).sum();
     }
