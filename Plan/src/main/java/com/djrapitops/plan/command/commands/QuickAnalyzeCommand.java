@@ -4,6 +4,8 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -33,9 +35,27 @@ public class QuickAnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QuickAnalyzeCommand(Plan plugin) {
-        super("qanalyze, qanalyse, qanalysis", CommandType.CONSOLE, Permissions.QUICK_ANALYZE.getPermission(), Phrase.CMD_USG_QANALYZE.parse());
+        super("qanalyze, qanalyse, qanalysis, qa", CommandType.CONSOLE, Permissions.QUICK_ANALYZE.getPermission(), Phrase.CMD_USG_QANALYZE.parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String ball = DefaultMessages.BALL.toString();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol +"Quick Analysis command",
+                tCol+"  Used to get in game info about analysis.",
+                sCol+"  Has less info than full Analysis web page.",
+                sCol+"  Aliases: qanalyze, ganalyse, qanalysis, qa"
+        };
     }
 
     @Override
