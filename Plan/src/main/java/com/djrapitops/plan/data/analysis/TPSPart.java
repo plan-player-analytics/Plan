@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.ui.html.graphs.CPUGraphCreator;
+import main.java.com.djrapitops.plan.ui.html.graphs.RamGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.TPSGraphCreator;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -42,8 +43,8 @@ public class TPSPart extends RawData<TPSPart> {
         String tpsScatterWeek = TPSGraphCreator.buildScatterDataStringTPS(week, TimeAmount.WEEK.ms());
         String cpuScatterDay = CPUGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
         String cpuScatterWeek = CPUGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
-        String ramScatterDay = CPUGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
-        String ramScatterWeek = CPUGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
+        String ramScatterDay = RamGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
+        String ramScatterWeek = RamGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
 
         addValue("tpsscatterday", tpsScatterDay);
         addValue("tpsscatterweek", tpsScatterWeek);
