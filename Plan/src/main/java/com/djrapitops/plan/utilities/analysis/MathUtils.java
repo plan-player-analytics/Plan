@@ -180,7 +180,10 @@ public class MathUtils {
      */
     public static double round(double number) {
         String formattedNumber = decimalFormat.format(number);
-        formattedNumber = formattedNumber.substring(0, 3); //Fix for unknown reasons for not-rounding
+        if (formattedNumber.length() > 4) {
+            formattedNumber = formattedNumber.substring(0, 3); //Fix for unknown reasons for not-rounding
+        }
+
         return Double.valueOf(formattedNumber);
     }
 }
