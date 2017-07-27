@@ -278,6 +278,7 @@
             }
         }
 
+
     </style>
 </head>
 <body onload="countUpTimer()">
@@ -382,7 +383,8 @@
                             <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times:
                             %totallogins%<br/>
                             <i class="fa fa-user-circle-o" aria-hidden="true"></i> Average Unique Players/Day:
-                            %avguniquejoins%<br>
+                            %avguniquejoins% | <i class="fa fa-user-plus" aria-hidden="true"></i> Average New/Day:
+                            %newperday%<br>
                             <b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i
                                     class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i
                                     class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
@@ -473,7 +475,9 @@
                         </div>
                         <canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
+                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday% | <i
+                                class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdayday%
+                        </p>
                     </div>
                     <div class=" box column">
                         <div class="headerbox">
@@ -497,7 +501,10 @@
                         </div>
                         <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsweek% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek%</p>
+                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek% |
+                            <i
+                                    class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdayweek%
+                        </p>
                     </div>
                     <div class=" box column">
                         <div class="headerbox">
@@ -521,7 +528,9 @@
                         </div>
                         <canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsmonth% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth%
+                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth% |
+                            <i
+                                    class="fa fa-user-plus" aria-hidden="true"></i> New/Day: %newperdaymonth%
                         </p>
                     </div>
                 </div>
@@ -717,8 +726,8 @@
                     </div>
                     <div class="box column">
                         <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
+                        <p>If Graph displays '-1' usage is not available for this platform.</p>
                     </div>
-                    <p>If CPU Graph displays '-1' CPU usage is not available for this platform.</p>
                 </div>
             </div>
             <div class="tab">
@@ -855,8 +864,8 @@
         var x = document.getElementById("main");
         x.style.transform = "translate3d(0px,0px,0)";
         x.style.width = "" + navButtons.length * 100 + "%";
-        for (var i = 0; i < navButtons.length; i++) {
-            navButtons[i].onclick = openFunc(i);
+        for (i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i)
             tabs[i].style.width = "" + 100 / navButtons.length + "%";
         }
         x.style.opacity = "1";
@@ -914,6 +923,7 @@
             setTimeout('countUpTimer()', 1000);
         }
 
+
     </script>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
@@ -925,78 +935,144 @@
         var ctxweek = document.getElementById("playerChartWeek");
         var ctxmonth = document.getElementById("playerChartMonth");
         var dataday = {
-            datasets: [
-                {
-                    label: "Players Online",
-                    fill: true,
-                    lineTension: 0.1,
-                    backgroundColor: "#%playersgraphfill%",
-                    borderColor: "#%playersgraphcolor%",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "#%playersgraphcolor%",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#%playersgraphcolor%",
-                    pointHoverBorderColor: "#8fabc6",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    spanGaps: false,
-                    data: %datascatterday% ,
+                datasets: [
+                    {
+                        label: "Players Online",
+                        fill: true,
+                        lineTension: 0.1,
+                        backgroundColor: "#%playersgraphfill%",
+                        borderColor: "#%playersgraphcolor%",
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: "#%playersgraphcolor%",
+                        pointBackgroundColor: "#fff",
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "#%playersgraphcolor%",
+                        pointHoverBorderColor: "#8fabc6",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        spanGaps: false,
+                        data: %datascatterday%
+            },
+            {
+                label: "New Players",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#fff",
+                borderColor: "#7dcc24",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#7dcc24",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#7dcc24",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %npdataday%
         }]
         }
         var dataweek = {
-            datasets: [
-                {
-                    label: "Players Online",
-                    fill: true,
-                    lineTension: 0.1,
-                    backgroundColor: "#%playersgraphfill%",
-                    borderColor: "#%playersgraphcolor%",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "#%playersgraphcolor%",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#%playersgraphcolor%",
-                    pointHoverBorderColor: "#8fabc6",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    spanGaps: false,
-                    data: %datascatterweek% ,
+                datasets: [
+                    {
+                        label: "Players Online",
+                        fill: true,
+                        lineTension: 0.1,
+                        backgroundColor: "#%playersgraphfill%",
+                        borderColor: "#%playersgraphcolor%",
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: "#%playersgraphcolor%",
+                        pointBackgroundColor: "#fff",
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "#%playersgraphcolor%",
+                        pointHoverBorderColor: "#8fabc6",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        spanGaps: false,
+                        data: %datascatterweek% ,
+            },
+            {
+                label: "New Players",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#fff",
+                borderColor: "#7dcc24",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#7dcc24",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#7dcc24",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %npdataweek%
         }]
         }
         var datamonth = {
-            datasets: [
-                {
-                    label: "Players Online",
-                    fill: true,
-                    lineTension: 0.1,
-                    backgroundColor: "#%playersgraphfill%",
-                    borderColor: "#%playersgraphcolor%",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "#%playersgraphcolor%",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#%playersgraphcolor%",
-                    pointHoverBorderColor: "#8fabc6",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    spanGaps: false,
-                    data: %datascattermonth% ,
+                datasets: [
+                    {
+                        label: "Players Online",
+                        fill: true,
+                        lineTension: 0.1,
+                        backgroundColor: "#%playersgraphfill%",
+                        borderColor: "#%playersgraphcolor%",
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: "#%playersgraphcolor%",
+                        pointBackgroundColor: "#fff",
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "#%playersgraphcolor%",
+                        pointHoverBorderColor: "#8fabc6",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        spanGaps: false,
+                        data: %datascattermonth% ,
+            },
+            {
+                label: "New Players",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#fff",
+                borderColor: "#7dcc24",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#7dcc24",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#7dcc24",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %npdatamonth%
         }]
         }
         var playersChartDay = new Chart(ctxday, {
@@ -1112,6 +1188,7 @@
         }
         });
 
+
     </script>
     <script>
         // TPS Graph 7d
@@ -1209,6 +1286,7 @@
         }
         }
         });
+
 
     </script>
     <script>
@@ -1308,6 +1386,7 @@
         }
         });
 
+
     </script>
     <script>
         // CPU Graph 24h
@@ -1316,6 +1395,7 @@
             datasets: [
                 {
                     label: "CPU Usage",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     borderColor: "#e0d264",
@@ -1334,6 +1414,27 @@
                     pointHitRadius: 10,
                     spanGaps: false,
                     data: %cpuscatterday%
+        }, {
+            label: "Memory Usage",
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#7dcc24",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#7dcc24",
+            pointBackgroundColor: "#7dcc24",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#7dcc24",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %ramscatterday%
         }]
         };
         var cpuChart = new Chart(ctxcpu, {
@@ -1352,6 +1453,7 @@
                 },
                 scales: {
                     yAxes: [{
+                        id: 'A',
                         type: 'linear',
                         position: 'left',
                         ticks: {
@@ -1360,16 +1462,29 @@
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: 'CPU Usage'
+                            labelString: 'CPU Usage (%)'
                         }
-                    }],
-                    xAxes: [{
+                    }, {
+                        id: 'B',
                         type: 'linear',
-                        display: false
-                    }]
-                }
-            }
+                        position: 'right',
+                        ticks: {
+                            suggestedMax: %maxram%,
+                        suggestedMin: 0
+                    },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Memory Usage (Mt)'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
         });
+
 
     </script>
     <script>
@@ -1379,6 +1494,7 @@
             datasets: [
                 {
                     label: "CPU Usage",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     borderColor: "#e0d264",
@@ -1397,6 +1513,27 @@
                     pointHitRadius: 10,
                     spanGaps: false,
                     data: %cpuscatterweek%
+        }, {
+            label: "Memory Usage",
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#7dcc24",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#7dcc24",
+            pointBackgroundColor: "#7dcc24",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#7dcc24",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %ramscatterday%
         }]
         };
         var cpuChart = new Chart(ctxcpu, {
@@ -1415,6 +1552,7 @@
                 },
                 scales: {
                     yAxes: [{
+                        id: 'A',
                         type: 'linear',
                         position: 'left',
                         ticks: {
@@ -1423,16 +1561,29 @@
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: 'CPU Usage'
+                            labelString: 'CPU Usage (%)'
                         }
-                    }],
-                    xAxes: [{
+                    }, {
+                        id: 'B',
                         type: 'linear',
-                        display: false
-                    }]
-                }
-            }
+                        position: 'right',
+                        ticks: {
+                            suggestedMax: %maxram%,
+                        suggestedMin: 0
+                    },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Memory Usage (Mt)'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
         });
+
     </script>
     <script>
         //    ActivityPie Graph
@@ -1460,6 +1611,7 @@
             }
         });
 
+
     </script>
     <script>
         //    GMPie Graph
@@ -1486,6 +1638,7 @@
                 }
             }
         });
+
 
     </script>
     <script>
@@ -1568,6 +1721,7 @@
             }
         });
 
+
     </script>
     <script>
         //    Session length distribution barchart
@@ -1620,6 +1774,7 @@
             }
         });
 
+
     </script>
     <script>
         //        Geolocation map
@@ -1652,8 +1807,8 @@
         var layout = {
             title: '',
             autosize: false,
-            height: 1000,
-            width: 1500,
+            width: window.innerWidth*0.7,
+            height: window.innerHeight*0.7,
             geo:{
                 showframe: false,
                 showcoastlines: false,
@@ -1663,7 +1818,6 @@
             }
         };
         Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
-
     </script>
 </div>
 </body>
