@@ -19,10 +19,10 @@ public class KillData {
     /**
      * Creates a KillData object with given parameters.
      *
-     * @param victim UUID of the victim.
+     * @param victim   UUID of the victim.
      * @param victimID ID of the victim, get from the database.
-     * @param weapon Weapon used.
-     * @param date Epoch millisecond at which the kill occurred.
+     * @param weapon   Weapon used.
+     * @param date     Epoch millisecond at which the kill occurred.
      */
     public KillData(UUID victim, int victimID, String weapon, long date) {
         this.victim = victim;

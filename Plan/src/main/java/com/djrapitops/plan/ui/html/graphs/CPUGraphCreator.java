@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 
@@ -13,7 +12,7 @@ public class CPUGraphCreator {
         long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()
                 .filter(tps -> tps.getDate() >= now - scale)
-                .map(tps -> new Point(tps.getDate(), Double.parseDouble(FormatUtils.cutDecimals(tps.getCPUUsage()).replace(",", "."))))
+                .map(tps -> new Point(tps.getDate(), tps.getCPUUsage()))
                 .collect(Collectors.toList());
         return ScatterGraphCreator.scatterGraph(points, true);
     }

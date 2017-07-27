@@ -5,13 +5,14 @@
  */
 package test.java.main.java.com.djrapitops.plan.data;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.KillData;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Rsl1122
  */
 public class KillDataTest {

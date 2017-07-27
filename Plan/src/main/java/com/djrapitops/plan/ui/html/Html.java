@@ -1,15 +1,15 @@
 package main.java.com.djrapitops.plan.ui.html;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import main.java.com.djrapitops.plan.Log;
 
 /**
- *
  * @author Rsl1122
  */
 public enum Html {
@@ -112,37 +112,6 @@ public enum Html {
     }
 
     /**
-     *
-     * @return
-     */
-    public String parse() {
-        return html;
-    }
-
-    /**
-     *
-     * @param p
-     * @return
-     */
-    public String parse(String... p) {
-        Verify.nullCheck(p);
-        String returnValue = this.html;
-        for (int i = 0; i < p.length; i++) {            
-            returnValue = returnValue.replace("REPLACE" + i, p[i]);
-        }
-        return returnValue;
-    }
-
-    /**
-     *
-     * @param html
-     */
-    public void setHtml(String html) {
-        this.html = html;
-    }
-
-    /**
-     *
      * @param localeFile
      */
     public static void loadLocale(File localeFile) {
@@ -172,5 +141,32 @@ public enum Html {
         } catch (IOException e) {
 
         }
+    }
+
+    /**
+     * @return
+     */
+    public String parse() {
+        return html;
+    }
+
+    /**
+     * @param p
+     * @return
+     */
+    public String parse(String... p) {
+        Verify.nullCheck(p);
+        String returnValue = this.html;
+        for (int i = 0; i < p.length; i++) {
+            returnValue = returnValue.replace("REPLACE" + i, p[i]);
+        }
+        return returnValue;
+    }
+
+    /**
+     * @param html
+     */
+    public void setHtml(String html) {
+        this.html = html;
     }
 }

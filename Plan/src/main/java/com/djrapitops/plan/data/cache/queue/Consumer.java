@@ -1,24 +1,25 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
 import com.djrapitops.plugin.task.AbsRunnable;
+
 import java.util.concurrent.BlockingQueue;
 
 /**
  * Abstract class representing a queue consumer.
  *
- * @author Rsl1122
  * @param <T>
+ * @author Rsl1122
  */
 public abstract class Consumer<T> extends AbsRunnable {
 
-    boolean run;
     final BlockingQueue<T> queue;
+    boolean run;
 
     /**
      * Constructor, defines queue.
      *
      * @param queue Queue to consume from.
-     * @param name Name of the queue.
+     * @param name  Name of the queue.
      */
     public Consumer(BlockingQueue<T> queue, String name) {
         super(name);

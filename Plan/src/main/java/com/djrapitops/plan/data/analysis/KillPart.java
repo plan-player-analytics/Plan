@@ -11,11 +11,11 @@ import java.util.UUID;
 
 /**
  * Part responsible for all Death related analysis.
- *
+ * <p>
  * Totals
- * 
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: deaths, mobkills, playerkilss
  *
  * @author Rsl1122

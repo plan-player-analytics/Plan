@@ -11,6 +11,9 @@ import java.util.stream.Stream;
  */
 public class MathUtils {
 
+    private static final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#.##", decimalFormatSymbols);
+
     /**
      * Gets the average of a Stream of Integers.
      * If there are no components in the Stream, it will return 0.
@@ -167,9 +170,6 @@ public class MathUtils {
 
         return biggest.isPresent() ? biggest.getAsLong() : 1;
     }
-
-    private static final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
-    private static final DecimalFormat decimalFormat = new DecimalFormat("#.##", decimalFormatSymbols);
 
     /**
      * Rounds the double to a double with two digits at the end.

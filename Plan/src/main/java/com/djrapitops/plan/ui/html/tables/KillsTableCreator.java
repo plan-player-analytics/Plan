@@ -10,18 +10,17 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import java.util.List;
 
 /**
- *
  * @author Rsl1122
  */
 public class KillsTableCreator {
 
     /**
-     *
      * @param killData
      * @return
      */
     public static String createKillsTable(List<KillData> killData) {
         StringBuilder html = new StringBuilder(Html.TABLE_KILLS_START.parse());
+
         if (killData.isEmpty()) {
             html.append(Html.TABLELINE_3.parse(Html.KILLDATA_NONE.parse(), "", ""));
         } else {
@@ -42,6 +41,7 @@ public class KillsTableCreator {
             }
         }
         html.append(Html.TABLE_END.parse());
+
         return html.toString();
     }
 }

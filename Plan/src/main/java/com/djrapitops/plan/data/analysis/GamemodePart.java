@@ -9,11 +9,11 @@ import java.util.Arrays;
 
 /**
  * Part responsible for all Gamemode usage related analysis.
- *
+ * <p>
  * Gamemode Piechart, Percentages and Totals.
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: gmtotal, gm0col-gm3col, gmcolors, gmlabels,
  * gm0-gm3, gmdata, gm0total-gm3total
  *
@@ -45,13 +45,13 @@ public class GamemodePart extends RawData<GamemodePart> {
         addValue("gmtotal", FormatUtils.formatTimeAmount(totalTime));
 
         double[] percentages = new double[]{
-            (survivalTime * 100.0) / totalTime,
-            (creativeTime * 100.0) / totalTime,
-            (adventureTime * 100.0) / totalTime,
-            (spectatorTime * 100.0) / totalTime
+                (survivalTime * 100.0) / totalTime,
+                (creativeTime * 100.0) / totalTime,
+                (adventureTime * 100.0) / totalTime,
+                (spectatorTime * 100.0) / totalTime
         };
         long[] times = new long[]{
-            survivalTime, creativeTime, adventureTime, spectatorTime
+                survivalTime, creativeTime, adventureTime, spectatorTime
         };
         String col0 = Settings.HCOLOR_GMP_0 + "";
         String col1 = Settings.HCOLOR_GMP_1 + "";

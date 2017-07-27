@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import java.util.Comparator;
 import main.java.com.djrapitops.plan.data.WebUser;
+
+import java.util.Comparator;
 
 /**
  * Orders WebUsers in descending order by permission level.

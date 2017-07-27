@@ -23,7 +23,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)

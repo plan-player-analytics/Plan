@@ -34,9 +34,9 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
     /**
      * Schedules UserData objects to be get for the given processors.
      *
-     * @param uuid UUID of the player whose UserData object is fetched.
+     * @param uuid       UUID of the player whose UserData object is fetched.
      * @param processors Processors which process-method will be called after
-     * fetch is complete, with the UserData object.
+     *                   fetch is complete, with the UserData object.
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
         Log.debug(uuid + ": Scheduling for get");
@@ -68,6 +68,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
         if (db == null) {
             return;
         }
+
         try {
             for (UUID uuid : processors.keySet()) {
                 if (uuid == null) {

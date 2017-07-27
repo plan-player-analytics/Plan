@@ -22,7 +22,7 @@ public abstract class HandlingInfo {
      *
      * @param uuid UUID of the player
      * @param type InfoType enum of the event. Only used for debugging different
-     * types.
+     *             types.
      * @param time Epoch ms of the event.
      */
     public HandlingInfo(UUID uuid, InfoType type, long time) {
@@ -60,7 +60,7 @@ public abstract class HandlingInfo {
 
     /**
      * Process the info and modify the UserData object accordingly.
-     *
+     * <p>
      * If the UUIDs don't match no change should occur.
      *
      * @param uData UserData object to modify.

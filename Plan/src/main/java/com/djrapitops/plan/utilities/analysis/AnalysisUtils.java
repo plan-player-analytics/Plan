@@ -14,13 +14,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- *
  * @author Rsl1122
  */
 public class AnalysisUtils {
 
     /**
-     *
      * @param now
      * @param lastPlayed
      * @param playTime
@@ -44,7 +42,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param registered
      * @param scale
      * @param now
@@ -63,7 +60,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param data
      * @return
      */
@@ -76,7 +72,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -118,7 +113,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -157,7 +151,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -179,7 +172,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -208,7 +200,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param sessions
      * @param scale
      * @return
@@ -230,7 +221,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param sessions
      * @param scale
      * @return
@@ -263,7 +253,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param sessionStarts
      * @return
      */

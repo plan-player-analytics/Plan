@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- *
  * @author Rsl1122
  * @since 3.5.2
  */

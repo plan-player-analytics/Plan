@@ -17,13 +17,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public class PunchCardGraphCreator {
 
     /**
-     *
      * @param data
      * @return
      */

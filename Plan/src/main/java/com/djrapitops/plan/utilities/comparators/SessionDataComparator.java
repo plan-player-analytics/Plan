@@ -5,7 +5,6 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import java.util.Comparator;
 
 /**
- *
  * @author Rsl1122
  */
 public class SessionDataComparator implements Comparator<SessionData> {

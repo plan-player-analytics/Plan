@@ -36,7 +36,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -54,7 +53,6 @@ public class DataCacheGetQueueTest {
     }
 
     /**
-     *
      * @throws IOException
      * @throws Exception
      */
@@ -91,7 +89,6 @@ public class DataCacheGetQueueTest {
     }
 
     /**
-     *
      * @throws IOException
      * @throws SQLException
      */

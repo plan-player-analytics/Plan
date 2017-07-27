@@ -6,7 +6,6 @@ import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.data.UserData;
 
 /**
- *
  * @author Rsl1122
  */
 public class NewPlayerCreator {
@@ -35,7 +34,7 @@ public class NewPlayerCreator {
      * Creates a new instance of UserData with default values.
      *
      * @param player Player the UserData is created for.
-     * @param gm Gamemode set as the starting Gamemode
+     * @param gm     Gamemode set as the starting Gamemode
      * @return a new UserData object
      */
     public static UserData createNewPlayer(IOfflinePlayer player, Gamemode gm) {

@@ -1,23 +1,17 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
+import java.util.*;
 
 /**
- *
  * @author Rsl1122
  */
 public class IPsTable extends Table {
@@ -26,7 +20,6 @@ public class IPsTable extends Table {
     private final String columnIP;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -37,7 +30,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -58,7 +50,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -78,7 +69,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -107,7 +97,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param ips
      * @throws SQLException
@@ -147,7 +136,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws SQLException
@@ -185,7 +173,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param ips
      * @throws SQLException
      */

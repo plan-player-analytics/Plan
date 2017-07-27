@@ -3,16 +3,16 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import main.java.com.djrapitops.plan.Permissions;
+import main.java.com.djrapitops.plan.Phrase;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 
 /**
  * Utility method class containing various static methods.
@@ -32,7 +32,6 @@ public class MiscUtils {
     }
 
     /**
-     *
      * @param args
      * @param sender
      * @return
@@ -44,7 +43,7 @@ public class MiscUtils {
     /**
      * Used by the inspect command.
      *
-     * @param args Arguments of a command, must not be empty if console sender.
+     * @param args   Arguments of a command, must not be empty if console sender.
      * @param sender Command sender
      * @param perm
      * @return The name of the player (first argument or sender)

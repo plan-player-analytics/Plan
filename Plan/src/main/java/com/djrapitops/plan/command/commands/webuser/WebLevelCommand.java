@@ -29,12 +29,12 @@ public class WebLevelCommand extends SubCommand {
         String sCol = cs.getSecondaryColor();
         String cmdBall = Phrase.CMD_BALL.parse();
         String[] messages = new String[]{
-            Phrase.CMD_FOOTER.parse(),
-            cmdBall + sCol + "0: Access all pages",
-            cmdBall + sCol + "1: Access '/players' and all inspect pages",
-            cmdBall + sCol + "2: Access inspect page with the same username as the webuser",
-            cmdBall + sCol + "3+: No permissions",
-            Phrase.CMD_FOOTER.parse()
+                Phrase.CMD_FOOTER.parse(),
+                cmdBall + sCol + "0: Access all pages",
+                cmdBall + sCol + "1: Access '/players' and all inspect pages",
+                cmdBall + sCol + "2: Access inspect page with the same username as the webuser",
+                cmdBall + sCol + "3+: No permissions",
+                Phrase.CMD_FOOTER.parse()
         };
         sender.sendMessage(messages);
         return true;

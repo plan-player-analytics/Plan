@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public class Analysis {
@@ -46,7 +45,7 @@ public class Analysis {
 
     /**
      * Analyzes the data of all offline players on the server.
-     *
+     * <p>
      * First retrieves all offline players and checks those that are in the
      * database. Then Runs a new Analysis Task Asynchronously. Saves AnalysisData
      * to the provided Cache. Saves all UserData to InspectCache for 15 minutes.
@@ -75,8 +74,8 @@ public class Analysis {
      * Caches analyzed data of db to the provided cache analysisCache.
      *
      * @param analysisCache Cache that will contain AnalysisData result of this
-     * method.
-     * @param db Database which data will be analyzed.
+     *                      method.
+     * @param db            Database which data will be analyzed.
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
@@ -105,7 +104,6 @@ public class Analysis {
     }
 
     /**
-     *
      * @param rawData
      * @param tpsData
      * @param analysisCache
@@ -174,10 +172,10 @@ public class Analysis {
                 .filter(p -> !p.getAnalysisTypes().isEmpty())
                 .collect(Collectors.toList());
         final AnalysisType[] totalTypes = new AnalysisType[]{
-            AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
+                AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
         };
         final AnalysisType[] avgTypes = new AnalysisType[]{
-            AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
+                AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
         };
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
@@ -222,7 +220,6 @@ public class Analysis {
     }
 
     /**
-     *
      * @return
      */
     public boolean isAnalysisBeingRun() {

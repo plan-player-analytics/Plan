@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public class ManageUtils {
@@ -22,7 +21,7 @@ public class ManageUtils {
     /**
      * Creates a new backup sqlite file with the data of copyFromDB.
      *
-     * @param dbName Name of database (mysql/sqlite)
+     * @param dbName     Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
      * @return success?
      * @throws java.sql.SQLException
@@ -60,8 +59,8 @@ public class ManageUtils {
      * Clears a database and copies data from other database to that database.
      *
      * @param clearAndCopyToDB Database that will be cleared data will be copied
-     * to.
-     * @param copyFromDB Database where data will be copied from
+     *                         to.
+     * @param copyFromDB       Database where data will be copied from
      * @param fromDBsavedUUIDs UUID collection of saved uuids in the copyFromDB
      * @return success?
      */
@@ -80,7 +79,6 @@ public class ManageUtils {
     }
 
     /**
-     *
      * @param sessions
      * @return
      */
@@ -98,7 +96,6 @@ public class ManageUtils {
     }
 
     /**
-     *
      * @param sessions
      * @param loginTimes
      * @return

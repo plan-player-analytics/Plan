@@ -12,13 +12,14 @@ import java.util.List;
 
 /**
  * Part responsible for all TPS related analysis.
- *
+ * <p>
  * Ticks Per Second Graphs
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
- * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps,
- * averagetpsday
+ * <p>
+ * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps(-week),
+ * averagetpsday, averagecpuday, averagecpuweek, averagememoryday, averagememoryweek, averageentitiesday, averageentitiesweek,
+ * averagechunksday, averagechunkweek
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -48,11 +49,36 @@ public class TPSPart extends RawData<TPSPart> {
         addValue("cpuscatterday", cpuScatterDay);
         addValue("cpuscatterweek", cpuScatterWeek);
 
-        double averageTPSweek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
-        double averageTPSday = MathUtils.averageDouble(day.stream().map(TPS::getTps));
+        double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
+        double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
 
-        addValue("averagetps", FormatUtils.cutDecimals(averageTPSweek));
-        addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSday));
+        double averageCPUWeek = MathUtils.averageDouble(week.stream().map(TPS::getCPUUsage));
+        double averageCPUDay = MathUtils.averageDouble(day.stream().map(TPS::getCPUUsage));
+
+        long averageUsedMemoryWeek = MathUtils.averageLong(week.stream().map(TPS::getUsedMemory));
+        long averageUsedMemoryDay = MathUtils.averageLong(day.stream().map(TPS::getUsedMemory));
+
+        double averageEntityCountWeek = MathUtils.averageInt(week.stream().map(TPS::getEntityCount));
+        double averageEntityCountDay = MathUtils.averageInt(day.stream().map(TPS::getEntityCount));
+
+        double averageChunksLoadedWeek = MathUtils.averageInt(week.stream().map(TPS::getChunksLoaded));
+        double averageChunksLoadedDay = MathUtils.averageInt(day.stream().map(TPS::getChunksLoaded));
+
+        addValue("averagetps", FormatUtils.cutDecimals(averageTPSWeek)); //Staying for backwards compatibility
+        addValue("averagetpsweek", FormatUtils.cutDecimals(averageTPSWeek));
+        addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSDay));
+
+        addValue("averagecpuweek", FormatUtils.cutDecimals(averageCPUWeek));
+        addValue("averagecpuday", FormatUtils.cutDecimals(averageCPUDay));
+
+        addValue("averagememoryweek", FormatUtils.cutDecimals(averageUsedMemoryWeek));
+        addValue("averagememoryday", FormatUtils.cutDecimals(averageUsedMemoryDay));
+
+        addValue("averageentitiesweek", FormatUtils.cutDecimals(averageEntityCountWeek));
+        addValue("averageentitiesday", FormatUtils.cutDecimals(averageEntityCountDay));
+
+        addValue("averagechunksweek", FormatUtils.cutDecimals(averageChunksLoadedWeek));
+        addValue("averagechunksday", FormatUtils.cutDecimals(averageChunksLoadedDay));
     }
 
     public List<TPS> getTpsData() {

@@ -4,13 +4,11 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 
 /**
- *
  * @author Rsl1122
  */
 public class Benchmark {
 
     /**
-     *
      * @param source
      */
     public static void start(String source) {
@@ -19,7 +17,6 @@ public class Benchmark {
     }
 
     /**
-     *
      * @param source
      * @return
      */

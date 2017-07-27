@@ -5,15 +5,16 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Rsl1122
  */
 public class HandlingInfoTest {

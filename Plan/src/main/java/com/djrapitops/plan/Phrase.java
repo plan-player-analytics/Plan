@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan;
 
+import org.bukkit.ChatColor;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import org.bukkit.ChatColor;
 
 /**
  * Phrase contains every message that is used in placeholders or commands. The
@@ -44,7 +45,7 @@ public enum Phrase {
     CACHE_GETTASK_DISABLED("Attempted to schedule data grab after task was shut down."),
     CACHE_CLEARTASK_DISABLED("Attempted to schedule data for clear after task was shut down."),
     //
-    VERSION_NEW_AVAILABLE("New Version (" + REPLACE0 + ") is availible at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
+    VERSION_NEW_AVAILABLE("New Version (" + REPLACE0 + ") is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/"),
     VERSION_LATEST("You're running the latest version"),
     VERSION_CHECK_ERROR("Failed to compare versions."),
     VERSION_FAIL("Failed to get newest version number."),
@@ -82,7 +83,7 @@ public enum Phrase {
     ERROR_CONSOLE_PLAYER("This point of code should not be accessable on console. Inform author: " + REPLACE0 + " Console: REPLACE1"),
     ERROR_NO_DATA_VIEW(ChatColor.YELLOW + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!"),
     ERROR_WEBSERVER_OFF_ANALYSIS(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if the webserver is running on this server."),
-    ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver/planlite is enabled on this server."),
+    ERROR_WEBSERVER_OFF_INSPECT(ChatColor.YELLOW + "" + PREFIX + "This command can be only used if webserver is enabled on this server."),
     ERROR_LOGGED("Caught " + REPLACE0 + ". It has been logged to the Errors.txt"),
     ERROR_SESSIONDATA_INITIALIZATION("Player's session was initialized in a wrong way! (" + REPLACE0 + ")"),
     ERROR_ANALYSIS_FETCH_FAIL("Failed to fetch data for Analysis, Exception occurred."),
@@ -134,7 +135,7 @@ public enum Phrase {
     CMD_USG_INFO("View Version of Plan"),
     CMD_USG_INSPECT("Inspect Player's Data"),
     CMD_USG_QINSPECT("QuickInspect Player's Data"),
-    CMD_USG_MANAGE("Database managment command"),
+    CMD_USG_MANAGE("Database management command"),
     CMD_USG_MANAGE_BACKUP("Backup a database to .db file"),
     CMD_USG_MANAGE_RESTORE("Restore a database from a backup file"),
     CMD_USG_MANAGE_MOVE("Copy data from one database to another & overwrite values"),
@@ -144,7 +145,7 @@ public enum Phrase {
     CMD_USG_MANAGE_CLEAN("Clear incorrect data from the database"),
     CMD_USG_MANAGE_REMOVE("Remove players's data from the Active Database."),
     CMD_USG_MANAGE_STATUS("Check the status of the Active Database."),
-    CMD_USG_MANAGE_HELP("Show managment help."),
+    CMD_USG_MANAGE_HELP("Show management help."),
     CMD_USG_MANAGE_HOTSWAP("Hotswap to another database & restart the plugin"),
     CMD_USG_RELOAD("Reload plugin config & save cached data"),
     CMD_USG_SEARCH("Search for player"),
@@ -171,7 +172,7 @@ public enum Phrase {
     COMMAND_REQUIRES_ARGUMENTS(ChatColor.RED + "" + PREFIX + "Command requires arguments. REPLACE0"),
     COMMAND_ADD_CONFIRMATION_ARGUMENT(ChatColor.RED + "" + PREFIX + "Add -a to confirm execution! REPLACE0"),
     COMMAND_REQUIRES_ARGUMENTS_ONE(ChatColor.RED + "" + PREFIX + "Command requires one argument."),
-    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permmission."),
+    COMMAND_NO_PERMISSION(ChatColor.RED + "" + PREFIX + "You do not have the required permission."),
     ERROR_TOO_SMALL_QUEUE("Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)");
 
     private String text;
@@ -185,6 +186,32 @@ public enum Phrase {
     Phrase(ChatColor color) {
         this.color = color;
         this.text = "";
+    }
+
+    static void loadLocale(File localeFile) {
+        try {
+            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
+            List<String> localeRows = new ArrayList<>();
+            while (localeScanner.hasNextLine()) {
+                String line = localeScanner.nextLine();
+                if (!line.isEmpty()) {
+                    if ("<<<<<<HTML>>>>>>".equals(line)) {
+                        break;
+                    }
+                    localeRows.add(line);
+                }
+            }
+            for (String localeRow : localeRows) {
+                try {
+                    String[] split = localeRow.split(" <> ");
+                    Phrase.valueOf(split[0]).setText(split[1]);
+                } catch (IllegalArgumentException e) {
+                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
+                }
+            }
+        } catch (IOException e) {
+
+        }
     }
 
     @Override
@@ -240,31 +267,5 @@ public enum Phrase {
      */
     public void setColor(char colorCode) {
         this.color = ChatColor.getByChar(colorCode);
-    }
-
-    static void loadLocale(File localeFile) {
-        try {
-            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
-            List<String> localeRows = new ArrayList<>();
-            while (localeScanner.hasNextLine()) {
-                String line = localeScanner.nextLine();
-                if (!line.isEmpty()) {
-                    if ("<<<<<<HTML>>>>>>".equals(line)) {
-                        break;
-                    }
-                    localeRows.add(line);
-                }
-            }
-            for (String localeRow : localeRows) {
-                try {
-                    String[] split = localeRow.split(" <> ");
-                    Phrase.valueOf(split[0]).setText(split[1]);
-                } catch (IllegalArgumentException e) {
-                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
-                }
-            }
-        } catch (IOException e) {
-
-        }
     }
 }

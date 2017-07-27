@@ -32,7 +32,6 @@ import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -69,7 +68,6 @@ public class KillHandlingTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @After
@@ -78,7 +76,6 @@ public class KillHandlingTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
@@ -98,7 +95,6 @@ public class KillHandlingTest {
     }
 
     /**
-     *
      * @throws SQLException
      * @throws IOException
      */
@@ -112,7 +108,6 @@ public class KillHandlingTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test

@@ -141,6 +141,6 @@ public class InspectCommand extends SubCommand {
         plugin.getServer().dispatchCommand(
                 Bukkit.getConsoleSender(),
                 "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
     }
 }

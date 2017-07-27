@@ -17,11 +17,11 @@ import org.bukkit.ChatColor;
 
 /**
  * Command for registering web users.
- *
+ * <p>
  * Registers a new webuser to the database.
- *
+ * <p>
  * No permission required for self registration. (Constructor string is empty)
- *
+ * <p>
  * plan.webmanage required for registering other users.
  *
  * @author Rsl1122

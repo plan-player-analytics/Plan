@@ -5,13 +5,14 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
-import java.util.Arrays;
-import java.util.List;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This subcommand is used to search for a user, and to view all matches' data.
@@ -57,7 +58,7 @@ public class SearchCommand extends SubCommand {
                     } else {
                         sender.sendMessage(Phrase.CMD_MATCH + "" + FormattingUtils.collectionToStringNoBrackets(names));
                     }
-                    sender.sendMessage(Phrase.CMD_FOOTER + "");
+                    sender.sendMessage(Phrase.CMD_FOOTER.toString());
                 } finally {
                     this.cancel();
                 }

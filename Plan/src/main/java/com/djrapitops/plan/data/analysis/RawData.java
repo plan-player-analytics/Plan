@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +9,8 @@ import java.util.Map;
 /**
  * Extending objects should represent, add together and analyse data.
  *
- * @author Rsl1122
  * @param <T> The extending class, return value for get method.
+ * @author Rsl1122
  * @since 3.5.2
  */
 public abstract class RawData<T extends RawData> {
@@ -40,7 +41,7 @@ public abstract class RawData<T extends RawData> {
 
     /**
      * Analyses the data added together.
-     *
+     * <p>
      * Places place-holders to the replace map.
      */
     public void analyseData() {
@@ -50,7 +51,7 @@ public abstract class RawData<T extends RawData> {
 
     /**
      * Subclasses should analyse the data added together.
-     *
+     * <p>
      * Place-holders should be added to the replace map.
      */
     protected abstract void analyse();
@@ -69,7 +70,7 @@ public abstract class RawData<T extends RawData> {
      * Adds a placeholder to the replaceMap.
      *
      * @param placeholder placeholder, with or without % signs.
-     * @param value Any value the placeholder should be replaced with.
+     * @param value       Any value the placeholder should be replaced with.
      */
     public void addValue(String placeholder, Serializable value) {
         placeholder = addPlaceholderSigns(placeholder);

@@ -14,13 +14,11 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class UUIDUtility {
 
     /**
-     *
      * @param playername
      * @return
      */
@@ -33,7 +31,6 @@ public class UUIDUtility {
     }
 
     /**
-     *
      * @param playername
      * @param db
      * @return

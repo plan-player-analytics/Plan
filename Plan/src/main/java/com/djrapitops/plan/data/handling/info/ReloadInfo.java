@@ -23,12 +23,12 @@ public class ReloadInfo extends HandlingInfo {
     /**
      * Constructor.
      *
-     * @param uuid UUID of the player.
-     * @param time Epoch ms of the event.
-     * @param ip IP of the player
-     * @param banned Is the player banned?
+     * @param uuid     UUID of the player.
+     * @param time     Epoch ms of the event.
+     * @param ip       IP of the player
+     * @param banned   Is the player banned?
      * @param nickname Nickname of the player
-     * @param gm current gamemode of the player
+     * @param gm       current gamemode of the player
      */
     public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm) {
         super(uuid, InfoType.RELOAD, time);

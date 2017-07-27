@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
+
+import java.util.UUID;
 
 /**
  * HandlingInfo Class for KickEvent information.

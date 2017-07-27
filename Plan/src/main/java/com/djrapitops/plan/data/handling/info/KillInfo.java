@@ -21,9 +21,9 @@ public class KillInfo extends HandlingInfo {
     /**
      * Constructor.
      *
-     * @param uuid UUID of the killer.
-     * @param time Epoch ms the event occurred.
-     * @param dead Dead entity (Mob or Player)
+     * @param uuid       UUID of the killer.
+     * @param time       Epoch ms the event occurred.
+     * @param dead       Dead entity (Mob or Player)
      * @param weaponName Weapon used.
      */
     public KillInfo(UUID uuid, long time, LivingEntity dead, String weaponName) {

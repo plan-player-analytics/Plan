@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- *
  * @author Rsl1122
  */
 public class SessionsTable extends Table {
@@ -24,7 +23,6 @@ public class SessionsTable extends Table {
     private final String columnSessionEnd;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -36,7 +34,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -58,7 +55,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -86,7 +82,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -106,7 +101,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param sessions
      * @throws SQLException
@@ -152,7 +146,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws SQLException
@@ -190,7 +183,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param sessions
      * @throws SQLException
      */
@@ -255,7 +247,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @throws SQLException
      */
     public void clean() throws SQLException {

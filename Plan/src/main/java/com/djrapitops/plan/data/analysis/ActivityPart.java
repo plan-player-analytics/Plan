@@ -2,13 +2,6 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
@@ -22,14 +15,17 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Part responsible for all Player Activity related analysis.
- *
+ * <p>
  * Online Graphs, Player-base pie-chart, Recent Players and Session
  * visualisation.
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: recentlogins, sessionaverage,
  * datapunchcard, datasessiondistribution, labelssessiondistribution,
  * datascatterday, datascatterweek, datascattermonth, playersonlinecolor,
@@ -44,14 +40,12 @@ public class ActivityPart extends RawData<ActivityPart> {
 
     private final JoinInfoPart joins;
     private final TPSPart tpsPart;
-
-    private List<String> recentPlayers;
-    private List<UUID> recentPlayersUUIDs;
-
     private final Set<UUID> bans;
     private final Set<UUID> active;
     private final Set<UUID> inactive;
     private final Set<UUID> joinedOnce;
+    private List<String> recentPlayers;
+    private List<UUID> recentPlayersUUIDs;
 
     public ActivityPart(JoinInfoPart joins, TPSPart tps) {
         this.joins = joins;
@@ -149,14 +143,6 @@ public class ActivityPart extends RawData<ActivityPart> {
         joinedOnce.add(uuid);
     }
 
-    public void setRecentPlayers(List<String> recentPlayers) {
-        this.recentPlayers = recentPlayers;
-    }
-
-    public void setRecentPlayersUUIDs(List<UUID> recentPlayersUUIDs) {
-        this.recentPlayersUUIDs = recentPlayersUUIDs;
-    }
-
     public Map<Long, Integer> getPlayersOnline() {
         return tpsPart.getTpsData().stream().collect(Collectors.toMap(TPS::getDate, TPS::getPlayers));
     }
@@ -165,8 +151,16 @@ public class ActivityPart extends RawData<ActivityPart> {
         return recentPlayers;
     }
 
+    public void setRecentPlayers(List<String> recentPlayers) {
+        this.recentPlayers = recentPlayers;
+    }
+
     public List<UUID> getRecentPlayersUUIDs() {
         return recentPlayersUUIDs;
+    }
+
+    public void setRecentPlayersUUIDs(List<UUID> recentPlayersUUIDs) {
+        this.recentPlayersUUIDs = recentPlayersUUIDs;
     }
 
     public Set<UUID> getBans() {

@@ -1,16 +1,16 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 /**
- *
  * @author Rsl1122
  */
 public class CommandUseTable extends Table {
@@ -19,7 +19,6 @@ public class CommandUseTable extends Table {
     private final String columnTimesUsed;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -30,7 +29,6 @@ public class CommandUseTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -49,7 +47,6 @@ public class CommandUseTable extends Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public Map<String, Integer> getCommandUse() throws SQLException {
@@ -78,7 +75,6 @@ public class CommandUseTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      * @throws NullPointerException

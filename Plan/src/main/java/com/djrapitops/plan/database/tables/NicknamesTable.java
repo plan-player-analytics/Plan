@@ -1,20 +1,15 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 /**
- *
  * @author Rsl1122
  */
 public class NicknamesTable extends Table {
@@ -24,7 +19,6 @@ public class NicknamesTable extends Table {
     private final String columnCurrent;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -36,7 +30,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -75,7 +68,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -95,7 +87,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -133,7 +124,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param names
      * @param lastNick
@@ -177,7 +167,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws SQLException
@@ -228,7 +217,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param nicknames
      * @param lastNicks
      * @throws SQLException

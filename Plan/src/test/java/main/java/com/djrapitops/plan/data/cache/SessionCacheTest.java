@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.SessionCache;
@@ -16,11 +15,13 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
-import static org.junit.Assert.assertTrue;
 import test.java.utils.TestInit;
 
+import java.util.UUID;
+
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)

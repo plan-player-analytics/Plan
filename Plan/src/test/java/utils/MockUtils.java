@@ -20,13 +20,11 @@ import java.util.UUID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
- *
  * @author Rsl1122
  */
 public class MockUtils {
 
     /**
-     *
      * @return
      */
     public static World mockWorld() {
@@ -61,7 +59,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static IPlayer mockIPlayer() {
@@ -84,7 +81,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static UUID getPlayerUUID() {
@@ -92,7 +88,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static IPlayer mockIPlayer2() {
@@ -115,7 +110,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static UUID getPlayer2UUID() {
@@ -123,7 +117,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static IPlayer mockBrokenPlayer() {
@@ -141,7 +134,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static CommandSender mockConsoleSender() {

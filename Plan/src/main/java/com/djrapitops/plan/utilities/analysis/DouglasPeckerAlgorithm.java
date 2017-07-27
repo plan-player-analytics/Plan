@@ -22,7 +22,7 @@ public class DouglasPeckerAlgorithm {
         }
         int size = points.size();
         final int lastIndex = size - 1;
-        final Point start = points.get(0);        
+        final Point start = points.get(0);
         final Point end = points.get(lastIndex);
 
         // Max distance and it's index.
@@ -52,5 +52,5 @@ public class DouglasPeckerAlgorithm {
 
     private static double perpendicularDistance(Point point, Line line) {
         return line.getPerpendicularDistance(point);
-    }    
+    }
 }

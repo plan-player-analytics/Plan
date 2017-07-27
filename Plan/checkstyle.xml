@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name='Checker'>
 
     <!-- asetetaan kieliasetukset englanniksi. -->
@@ -8,15 +9,15 @@
 
     <module name='TreeWalker'>
 
-        <property name='tabWidth' value='4' />
-        
+        <property name='tabWidth' value='4'/>
+
         <!-- Block Checks -->
 
-        <module name='EmptyBlock' />
-        <module name='LeftCurly' />
-        <module name='NeedBraces' />
-        <module name='RightCurly' />
-        <module name='AvoidNestedBlocks' />
+        <module name='EmptyBlock'/>
+        <module name='LeftCurly'/>
+        <module name='NeedBraces'/>
+        <module name='RightCurly'/>
+        <module name='AvoidNestedBlocks'/>
         <module name="NestedIfDepth">
             <property name="max" value="2"/>
         </module>
@@ -26,50 +27,50 @@
         <module name="NestedTryDepth"/>
 
         <!-- Miscellaneous -->
-        <module name='Indentation' />
+        <module name='Indentation'/>
         <module name="OneStatementPerLine"/>
 
         <!--- Naming Conventions -->
 
-        <module name='ClassTypeParameterName' />
-        <module name='ConstantName' />
-        <module name='LocalFinalVariableName' />
-        <module name='LocalVariableName' />
-        <module name='MemberName' />
-        <module name='MethodName' />
-        <module name='MethodTypeParameterName' />
+        <module name='ClassTypeParameterName'/>
+        <module name='ConstantName'/>
+        <module name='LocalFinalVariableName'/>
+        <module name='LocalVariableName'/>
+        <module name='MemberName'/>
+        <module name='MethodName'/>
+        <module name='MethodTypeParameterName'/>
 
         <module name='PackageName'>
-            <property name='format' value='^[a-z]+(\.[a-z][a-z0-9]*)*$' />
+            <property name='format' value='^[a-z]+(\.[a-z][a-z0-9]*)*$'/>
         </module>
 
-        <module name='ParameterName' />
-        <module name='StaticVariableName' />
-        <module name='TypeName' />
+        <module name='ParameterName'/>
+        <module name='StaticVariableName'/>
+        <module name='TypeName'/>
 
         <!-- Whitespace -->
 
-        <module name='GenericWhitespace' />
-        <module name='EmptyForInitializerPad' />
-        <module name='EmptyForIteratorPad' />
-        <module name='MethodParamPad' />
+        <module name='GenericWhitespace'/>
+        <module name='EmptyForInitializerPad'/>
+        <module name='EmptyForIteratorPad'/>
+        <module name='MethodParamPad'/>
 
         <module name='NoWhitespaceAfter'>
-            <property name='tokens' value='BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS' />
+            <property name='tokens' value='BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS'/>
         </module>
 
         <module name='NoWhitespaceBefore'>
-            <property name='tokens' value='SEMI, DOT, POST_DEC, POST_INC' />
-            <property name='allowLineBreaks' value='true' />
+            <property name='tokens' value='SEMI, DOT, POST_DEC, POST_INC'/>
+            <property name='allowLineBreaks' value='true'/>
         </module>
 
-        <module name='ParenPad' />
-        <module name='TypecastParenPad' />
-        <module name='WhitespaceAfter' />
+        <module name='ParenPad'/>
+        <module name='TypecastParenPad'/>
+        <module name='WhitespaceAfter'/>
 
         <module name='WhitespaceAround'>
-            <property name='allowEmptyConstructors' value='true' />
-            <property name='allowEmptyMethods' value='true' />
+            <property name='allowEmptyConstructors' value='true'/>
+            <property name='allowEmptyMethods' value='true'/>
         </module>
 
         <!-- Javadoc -->
@@ -81,7 +82,7 @@
             <property name="allowMissingReturnTag" value="false"/>
             <property name="allowThrowsTagsForSubclasses" value="true"/>
         </module>
-        
+
         <module name="JavadocStyle">
             <property name="scope" value="public"/>
             <property name="checkEmptyJavadoc" value="true"/>
@@ -91,7 +92,7 @@
     <!-- File Length -->
 
     <module name='FileLength'>
-        <property name='max' value='2000' />
+        <property name='max' value='2000'/>
     </module>
 
 </module>

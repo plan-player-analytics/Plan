@@ -18,13 +18,6 @@ public class PlayerActivityGraphCreatorTest {
     /**
      *
      */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     *
-     */
     public PlayerActivityGraphCreatorTest() {
     }
 
@@ -42,6 +35,13 @@ public class PlayerActivityGraphCreatorTest {
             list.add(new SessionData((start * (long) 1000), (end * (long) 1000)));
         }
         return list;
+    }
+
+    /**
+     *
+     */
+    @Before
+    public void setUp() throws Exception {
     }
 
     /**

@@ -25,9 +25,9 @@ public class DBUtils {
      * Splits a collection of objects into lists with the size defined by
      * BATCH_SIZE.
      *
-     * @param <T> Object type
+     * @param <T>     Object type
      * @param objects Collection of the objects. // * @return Lists with max
-     * size of BATCH_SIZE.
+     *                size of BATCH_SIZE.
      * @return
      */
     public static <T> List<List<T>> splitIntoBatches(Collection<T> objects) {
@@ -50,7 +50,6 @@ public class DBUtils {
     }
 
     /**
-     *
      * @param <T>
      * @param objects
      * @return

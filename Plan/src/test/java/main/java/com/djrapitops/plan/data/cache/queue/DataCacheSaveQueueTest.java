@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
@@ -19,11 +18,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import static org.powermock.api.mockito.PowerMockito.when;
 import test.java.utils.TestInit;
 
+import java.sql.SQLException;
+
+import static org.powermock.api.mockito.PowerMockito.when;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -76,7 +77,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore
@@ -90,7 +90,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore("Inconsistant")
@@ -109,7 +108,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore
@@ -136,7 +134,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore

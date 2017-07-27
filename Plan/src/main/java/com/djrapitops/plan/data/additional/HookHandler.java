@@ -38,10 +38,10 @@ public class HookHandler {
 
     /**
      * Adds a new PluginData source to the list.
-     *
+     * <p>
      * The plugin data will appear on Analysis and/or Inspect pages depending on
      * how the extending object is set up.
-     *
+     * <p>
      * Refer to documentation on GitHub for more information.
      *
      * @param dataSource an object extending the PluginData class.

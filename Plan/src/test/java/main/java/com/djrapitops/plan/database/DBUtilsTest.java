@@ -19,7 +19,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author ristolah
  */
 public class DBUtilsTest {

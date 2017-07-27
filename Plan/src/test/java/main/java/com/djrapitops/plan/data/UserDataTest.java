@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -48,7 +47,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws UnknownHostException
      */
     @Test
@@ -66,7 +64,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws UnknownHostException
      */
     @Test
@@ -342,7 +339,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws IOException
      */
     @Test
@@ -366,7 +362,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws IOException
      */
     @Test

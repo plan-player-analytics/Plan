@@ -2,15 +2,6 @@ package main.java.com.djrapitops.plan.data.handling.importing;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -20,6 +11,11 @@ import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
+
+import java.sql.SQLException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class used for importing data from other plugins.
@@ -52,11 +48,11 @@ public abstract class Importer {
 
     /**
      * Method used for the import.
-     *
+     * <p>
      * Creates UserData for players that have not been saved to the database.
      *
      * @param uuids UUIDs to be imported
-     * @param args arguments for the import
+     * @param args  arguments for the import
      * @return success
      */
     public boolean importData(Collection<UUID> uuids, String... args) {

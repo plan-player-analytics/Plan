@@ -20,7 +20,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public abstract class SQLDB extends Database {
@@ -30,7 +29,6 @@ public abstract class SQLDB extends Database {
     private Connection connection;
 
     /**
-     *
      * @param plugin
      * @param supportsModification
      */
@@ -75,7 +73,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -99,7 +96,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public boolean checkConnection() throws SQLException {
@@ -178,7 +174,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public Table[] getAllTables() {
@@ -186,7 +181,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public Table[] getAllTablesInRemoveOrder() {
@@ -194,13 +188,11 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public abstract Connection getNewConnection();
 
     /**
-     *
      * @throws SQLException
      */
     @Override
@@ -212,7 +204,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     @Override
@@ -221,7 +212,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param version
      * @throws SQLException
      */
@@ -231,7 +221,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuid
      * @return
      */
@@ -252,7 +241,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuid
      * @return
      * @throws SQLException
@@ -281,7 +269,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param uuid
      * @param processors
      * @throws SQLException
@@ -319,13 +306,12 @@ public abstract class SQLDB extends Database {
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
         data.setPlayerKills(killsTable.getPlayerKills(userId));
-        processors.forEach((processor) -> processor.process(data));
+        processors.forEach(processor -> processor.process(data));
         Benchmark.stop("Database: Give userdata to processors");
         setAvailable();
     }
 
     /**
-     *
      * @param uuidsCol
      * @return
      * @throws SQLException
@@ -339,7 +325,7 @@ public abstract class SQLDB extends Database {
         Benchmark.start("Database: Get UserData for " + uuidsCol.size());
         Map<UUID, Integer> userIds = usersTable.getAllUserIds();
         Set<UUID> remove = uuidsCol.stream()
-                .filter((uuid) -> (!userIds.containsKey(uuid)))
+                .filter(uuid -> !userIds.containsKey(uuid))
                 .collect(Collectors.toSet());
         List<UUID> uuids = new ArrayList<>(uuidsCol);
         Log.debug("Data not found for: " + remove.size());
@@ -359,6 +345,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
         Map<Integer, Map<String, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Log.debug("Sizes: UUID:" + uuids.size() + " DATA:" + data.size() + " ID:" + userIds.size() + " N:" + nicknames.size() + " I:" + ipList.size() + " K:" + playerKills.size() + " S:" + sessionData.size());
+
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();
             Integer id = userIds.get(uuid);
@@ -368,13 +355,13 @@ public abstract class SQLDB extends Database {
             uData.setPlayerKills(playerKills.get(id));
             uData.setGmTimes(gmTimes.get(id));
         }
+
         Benchmark.stop("Database: Get UserData for " + uuidsCol.size());
         setAvailable();
         return data;
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -430,7 +417,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      */
@@ -476,7 +462,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -492,7 +477,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public boolean supportsModification() {
@@ -500,7 +484,6 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     *
      * @return
      */
     public Connection getConnection() {

@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class PlaceholderUtils {
@@ -31,7 +30,7 @@ public class PlaceholderUtils {
      * @return HashMap that contains string for each placeholder.
      */
     public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
-        Benchmark.start("Replace Placeholders Anaysis");
+        Benchmark.start("Replace Placeholders Analysis");
         HashMap<String, String> replaceMap = new HashMap<>();
         replaceMap.putAll(data.getReplaceMap());
         replaceMap.put("%plugins%", data.replacePluginsTabLayout());
@@ -51,7 +50,7 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        Benchmark.stop("Replace Placeholders Anaysis");
+        Benchmark.stop("Replace Placeholders Analysis");
         return replaceMap;
     }
 

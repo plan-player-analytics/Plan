@@ -7,8 +7,8 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Abstract implementation of a Queue.
  *
- * @author Rsl1122
  * @param <T> Object this queue consumes
+ * @author Rsl1122
  */
 public abstract class Queue<T> {
 

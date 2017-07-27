@@ -17,14 +17,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * @author Rsl1122
  * @since 3.4.0
  */
 public class ExportUtility {
 
     /**
-     *
      * @return
      */
     public static File getFolder() {
@@ -46,7 +44,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param plugin
      * @param analysisData
      * @param rawData
@@ -74,7 +71,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param folder
      * @return
      */
@@ -85,7 +81,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param userData
      * @param playersFolder
      * @throws FileNotFoundException
@@ -105,7 +100,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param analysisData
      * @param serverFolder
      * @throws FileNotFoundException

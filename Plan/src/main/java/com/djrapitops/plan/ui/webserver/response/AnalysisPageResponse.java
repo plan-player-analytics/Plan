@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
-import java.io.OutputStream;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 
+import java.io.OutputStream;
+
 /**
- *
  * @author Rsl1122
  * @since 3.5.2
  */

@@ -5,7 +5,7 @@ import main.java.com.djrapitops.plan.data.UserData;
 /**
  * This abstract class can be extended with anything as the process method and
  * given to the Database.
- *
+ * <p>
  * The process method will be called with the UserData object fetched from the
  * database.
  *
@@ -19,7 +19,7 @@ public abstract class DBCallableProcessor {
      * changing properties etc.
      *
      * @param data UserData object given to the DBCallableProcessor by the
-     * method it was given as parameter to.
+     *             method it was given as parameter to.
      */
     public abstract void process(UserData data);
 }

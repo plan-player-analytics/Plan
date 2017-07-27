@@ -6,11 +6,11 @@
 package test.java.main.java.com.djrapitops.plan.data.additional;
 
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Rsl1122
  */
 public class AnalysisTypeTest {
