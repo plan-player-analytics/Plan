@@ -13,9 +13,7 @@ import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.
@@ -129,13 +127,5 @@ public class AnalyzeCommand extends SubCommand {
             }
         }
         sender.sendMessage(Phrase.CMD_FOOTER.toString());
-    }
-
-    @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
-    private void sendLink(ISender sender, String url) throws CommandException {
-        plugin.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(),
-                "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                        + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
     }
 }
