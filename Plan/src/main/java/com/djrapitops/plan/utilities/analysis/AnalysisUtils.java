@@ -47,13 +47,13 @@ public class AnalysisUtils {
      * @param now
      * @return
      */
-    public static int getNewPlayers(List<Long> registered, long scale, long now) {
-        int newPlayers = 0;
+    public static long getNewPlayers(List<Long> registered, long scale, long now) {
+        long newPlayers = 0;
         if (!registered.isEmpty()) {
             newPlayers = registered.stream()
-                    .filter((reg) -> (reg != null))
-                    .filter((reg) -> (reg > now - scale))
-                    .map((_item) -> 1).reduce(newPlayers, Integer::sum);
+                    .filter(Objects::nonNull)
+                    .filter(reg -> reg > now - scale)
+                    .count();
         }
         // Filters out register dates before scale
         return newPlayers;
@@ -200,9 +200,11 @@ public class AnalysisUtils {
     }
 
     /**
-     * @param sessions
-     * @param scale
-     * @return
+     * Used to calculate unique players that have played within the time frame determined by scale.
+     *
+     * @param sessions All sessions sorted in a map by User's UUID
+     * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
+     * @return Amount of Unique joins within the time span.
      */
     public static int getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
         long now = MiscUtils.getTime();
@@ -245,11 +247,33 @@ public class AnalysisUtils {
             }
         });
         int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
-        int size = uniqueJoins.keySet().size();
-        if (size == 0) {
+        int numberOfDays = uniqueJoins.keySet().size();
+        if (numberOfDays == 0) {
             return 0;
         }
-        return total / size;
+        return total / numberOfDays;
+    }
+
+    public static long getNewUsersPerDay(List<Long> registers, long scale) {
+        long now = MiscUtils.getTime();
+        long nowMinusScale = now - scale;
+
+        Set<Integer> days = new HashSet<>();
+        for (Long date : registers) {
+            if (scale != -1) {
+                if (date < nowMinusScale) {
+                    continue;
+                }
+                int day = getDayOfYear(date);
+                days.add(day);
+            }
+        }
+        long total = registers.stream().filter(date -> date >= nowMinusScale).count();
+        int numberOfDays = days.size();
+        if (numberOfDays == 0) {
+            return 0;
+        }
+        return total / numberOfDays;
     }
 
     /**
@@ -277,8 +301,13 @@ public class AnalysisUtils {
     }
 
     private static int getDayOfYear(SessionData session) {
+        return getDayOfYear(session.getSessionStart());
+
+    }
+
+    private static int getDayOfYear(long date) {
         Calendar day = Calendar.getInstance();
-        day.setTimeInMillis(session.getSessionStart());
+        day.setTimeInMillis(date);
         return day.get(Calendar.DAY_OF_YEAR);
     }
 }

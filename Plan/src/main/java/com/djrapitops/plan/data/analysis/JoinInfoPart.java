@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.ui.html.graphs.NewPlayersGraphCreator;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
@@ -18,7 +19,8 @@ import java.util.stream.Collectors;
  * <p>
  * Contains following place-holders: totallogins, uniquejoinsday,
  * uniquejoinsweek, uniquejoinsmonth, avguniquejoins, avguniquejoinsday,
- * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth
+ * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth,
+ * npdataday, npdataweek, npdatamonth, newperday, newperdayday, newperdayweek, newperdaymonth
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -67,13 +69,32 @@ public class JoinInfoPart extends RawData<JoinInfoPart> {
     }
 
     private void newPlayers() {
-        int newDay = AnalysisUtils.getNewPlayers(registered, TimeAmount.DAY.ms(), MiscUtils.getTime());
-        int newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), MiscUtils.getTime());
-        int newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), MiscUtils.getTime());
+        long now = MiscUtils.getTime();
+        long newDay = AnalysisUtils.getNewPlayers(registered, TimeAmount.DAY.ms(), now);
+        long newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), now);
+        long newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), now);
 
         addValue("npday", newDay);
         addValue("npweek", newWeek);
         addValue("npmonth", newMonth);
+
+        long newPerDay = AnalysisUtils.getNewUsersPerDay(registered, -1);
+        long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.DAY.ms());
+        long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.WEEK.ms());
+        long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.MONTH.ms());
+
+        addValue("newperday", newPerDay);
+        addValue("newperdayday", newPerDayDay);
+        addValue("newperdayweek", newPerDayWeek);
+        addValue("newperdaymonth", newPerDayMonth);
+
+        String scatterDay = NewPlayersGraphCreator.buildScatterDataString(registered, TimeAmount.DAY.ms(), now);
+        String scatterWeek = NewPlayersGraphCreator.buildScatterDataString(registered, TimeAmount.WEEK.ms(), now);
+        String scatterMonth = NewPlayersGraphCreator.buildScatterDataString(registered, TimeAmount.MONTH.ms(), now);
+
+        addValue("npdataday", scatterDay);
+        addValue("npdataweek", scatterWeek);
+        addValue("npdatamonth", scatterMonth);
     }
 
     public void addToLoginTimes() {
