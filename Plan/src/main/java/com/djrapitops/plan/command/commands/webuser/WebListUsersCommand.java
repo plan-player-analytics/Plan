@@ -37,7 +37,6 @@ public class WebListUsersCommand extends SubCommand {
                 try {
                     ColorScheme cs = plugin.getColorScheme();
                     String mCol = cs.getMainColor();
-                    String sCol = cs.getSecondaryColor();
                     List<WebUser> users = plugin.getDB().getSecurityTable().getUsers();
                     users.sort(new WebUserComparator());
                     sender.sendMessage(Phrase.CMD_FOOTER.parse() + mCol + " WebUsers (" + users.size() + ")");

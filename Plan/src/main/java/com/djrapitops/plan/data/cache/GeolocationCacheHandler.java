@@ -87,7 +87,5 @@ public class GeolocationCacheHandler {
         } finally {
             Benchmark.stop("getUncachedCountry");
         }
-
     }
-
 }

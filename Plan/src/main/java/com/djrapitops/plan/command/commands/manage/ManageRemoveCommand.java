@@ -74,13 +74,16 @@ public class ManageRemoveCommand extends SubCommand {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     String message = Phrase.USERNAME_NOT_VALID.toString();
+
                     if (!Check.isTrue(Verify.notNull(uuid), message, sender)) {
                         return;
                     }
+
                     message = Phrase.USERNAME_NOT_KNOWN.toString();
                     if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
                         return;
                     }
+
                     message = Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName()));
                     if (!Check.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;
