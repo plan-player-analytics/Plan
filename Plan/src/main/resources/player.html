@@ -582,8 +582,8 @@
         x.style.transform = "translate3d(0px,0px,0)";
         x.style.width = ""+navButtons.length*100+"%";
 
-        for (i=0; i < navButtons.length; i++) {
-            navButtons[i].onclick = openFunc(i)
+        for (var i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i);
             tabs[i].style.width = ""+100/navButtons.length+"%";
         }
         x.style.opacity = "1";

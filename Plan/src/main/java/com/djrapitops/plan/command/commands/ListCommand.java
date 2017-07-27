@@ -68,7 +68,7 @@ public class ListCommand extends SubCommand {
 
         // Link
         String url = HtmlUtils.getServerAnalysisUrlWithProtocol().replace("server", "players");
-        String message = Phrase.CMD_LINK + "";
+        String message = Phrase.CMD_LINK.toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
             sender.sendMessage(message + url);
@@ -76,6 +76,6 @@ public class ListCommand extends SubCommand {
             sender.sendMessage(message);
             sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
         }
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
+        sender.sendMessage(Phrase.CMD_FOOTER.toString());
     }
 }
