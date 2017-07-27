@@ -78,7 +78,26 @@ public abstract class Database {
      */
     protected VersionTable versionTable;
 
+    /**
+     * Table representing plan_security in the database.
+     *
+     * @since 3.5.2
+     */
     protected SecurityTable securityTable;
+
+    /**
+     * Table representing plan_worlds in the database.
+     *
+     * @since 3.6.0
+     */
+    protected WorldTable worldTable;
+
+    /**
+     * Table representing plan_world_times in the database.
+     *
+     * @since 3.6.0
+     */
+    protected WorldTimesTable worldTimesTable;
 
     /**
      * Super constructor.
@@ -343,7 +362,30 @@ public abstract class Database {
         return tpsTable;
     }
 
+    /**
+     * Used to get the security table.
+     *
+     * @return Table representing plan_security
+     */
     public SecurityTable getSecurityTable() {
         return securityTable;
+    }
+
+    /**
+     * Used to get the worlds table.
+     *
+     * @return Table representing plan_worlds
+     */
+    public WorldTable getWorldTable() {
+        return worldTable;
+    }
+
+    /**
+     * Used to get the world times table.
+     *
+     * @return Table representing plan_world_times
+     */
+    public WorldTimesTable getWorldTimesTable() {
+        return worldTimesTable;
     }
 }

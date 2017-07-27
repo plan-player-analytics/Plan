@@ -123,9 +123,9 @@ public class UsersTable extends Table {
     }
 
     private void alterTablesV4() {
-        String[] queries;
+        String[] statements;
         if (usingMySQL) {
-            queries = new String[]{
+            statements = new String[]{
                     "ALTER TABLE " + tableName + " ADD " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " ADD " + columnOP + " boolean NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " ADD " + columnBanned + " boolean NOT NULL DEFAULT 0",
@@ -133,7 +133,7 @@ public class UsersTable extends Table {
                     "ALTER TABLE " + tableName + " ADD " + columnRegistered + " bigint NOT NULL DEFAULT 0"
             };
         } else {
-            queries = new String[]{
+            statements = new String[]{
                     "ALTER TABLE " + tableName + " ADD COLUMN " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " ADD COLUMN " + columnOP + " boolean NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " ADD COLUMN " + columnBanned + " boolean NOT NULL DEFAULT 0",
@@ -141,34 +141,24 @@ public class UsersTable extends Table {
                     "ALTER TABLE " + tableName + " ADD COLUMN " + columnRegistered + " bigint NOT NULL DEFAULT 0"
             };
         }
-        for (String query : queries) {
-            try {
-                execute(query);
-            } catch (Exception e) {
-            }
-        }
+        executeUnsafe(statements);
     }
 
     private void alterTablesV3() {
-        String[] queries;
+        String[] statements;
         if (usingMySQL) {
-            queries = new String[]{
+            statements = new String[]{
                     "ALTER TABLE " + tableName + " ADD " + columnDeaths + " integer NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " ADD " + columnMobKills + " integer NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " DROP INDEX " + columnPlayerKills
             };
         } else {
-            queries = new String[]{
+            statements = new String[]{
                     "ALTER TABLE " + tableName + " ADD COLUMN " + columnDeaths + " integer NOT NULL DEFAULT 0",
                     "ALTER TABLE " + tableName + " ADD COLUMN " + columnMobKills + " integer NOT NULL DEFAULT 0"
             };
         }
-        for (String query : queries) {
-            try {
-                execute(query);
-            } catch (Exception e) {
-            }
-        }
+        executeUnsafe(statements);
     }
 
     /**
@@ -869,13 +859,5 @@ public class UsersTable extends Table {
             close(set);
             close(statement);
         }
-    }
-
-    /**
-     * @param uuids
-     * @return
-     */
-    public Map<Integer, Long> getLoginTimes(Collection<UUID> uuids) {
-        throw new UnsupportedOperationException("Not supported yet."); // TODO
     }
 }
