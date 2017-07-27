@@ -154,5 +154,4 @@ public class MathUtilsTest {
         double result = MathUtils.sumDouble(l.stream());
         assertTrue(result + "/" + exp, exp == result);
     }
-
 }
