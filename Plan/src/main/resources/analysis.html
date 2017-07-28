@@ -129,7 +129,7 @@
             color: white;
             background-color: #348e0f;
             padding: 8px 14px;
-            border-radius: 10px;
+            border-radius: 6px;
             float: right;
         }
         .info-text {
@@ -155,7 +155,7 @@
             border-style: solid;
             border-color: #348e0f;
             padding: 8px 14px;
-            border-radius: 10px;
+			border-radius: 3px;
             width: 95%;
         }
         .header-icon {
@@ -389,65 +389,8 @@
                                     class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i
                                     class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
                     </div>
-                    <div class=" box column">
-                        <p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart"
-                                                                            aria-hidden="true"></i><span
-                                class="header-text"> Gamemode Usage</span></p><br/>
-                        <div class="box-area">
-                            <div class="infobox" style="background-color: #%gm0col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-fire" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm0%
-                                    </div>
-                                    <div class="info-label">
-                                        Survival
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm1col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-cube" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm1%
-                                    </div>
-                                    <div class="info-label">
-                                        Creative
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm2col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm2%
-                                    </div>
-                                    <div class="info-label">
-                                        Adventure
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm3col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm3%
-                                    </div>
-                                    <div class="info-label">
-                                        Spectator
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
+                    <div class=" box column">                        
+                        <div id="gmPie" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
             </div>
@@ -536,10 +479,10 @@
                 </div>
                 <div class="row">
                     <div class="box column">
-                        <div class="headerbox">
+						<div class="headerbox" style="width: 95%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Playerbase Composition</span></div>
+                                        class="header-text"> Playerbase</span></div>
                             </div>
                             <div class="infobox" style="float: right; width: 40%;">
                                 <div class="info-icon">
@@ -555,63 +498,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-area">
-                            <div class="infobox" style="background-color: #%activecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %active%
-                                    </div>
-                                    <div class="info-label">
-                                        <span style="color: #%activecol%;">__</span>Active
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%inactivecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-o" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %inactive%
-                                    </div>
-                                    <div class="info-label">
-                                        Inactive
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%joinleavecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-secret" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %joinleaver%
-                                    </div>
-                                    <div class="info-label">
-                                        Single<span style="color: #%joinleavecol%;">_</span>join
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%bancol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-ban" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %banned%
-                                    </div>
-                                    <div class="info-label">
-                                        Banned
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br><br>
-                        <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas>
-                        <br>
+                        <div id="activityPie" style="width: 100%; height: 400px;"></div>
                     </div>
                     <div class=" box column">
                         <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o"
@@ -866,6 +753,7 @@
         x.style.opacity = "1";
         openFunc(slideIndex)();
         countUpTimer();
+		
         function openFunc(i) {
             return function() {
                 if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
@@ -921,6 +809,7 @@
 
     </script>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
     <script>
@@ -1705,60 +1594,95 @@
 
     </script>
     <script>
-        //    ActivityPie Graph
-        var ctxactivitypie = document.getElementById("activityPie");
-        var dataActivityPie = {
-                labels: %labelsactivity% ,
-            datasets: [
-            {
-                data: %activitydata% ,
-            backgroundColor: [ %activitycolors% ],
-        hoverBackgroundColor: [ %activitycolors% ]
-        }
-        ]
-        }
-        var ActivityPie = new Chart(ctxactivitypie, {
-            type: 'doughnut',
-            data: dataActivityPie,
-            options: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 7
+        function activityPie() {
+            var myChart = Highcharts.chart('activityPie', {
+                chart: {
+                    plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Playerbase Composition'},
+				subtitle: {text: 'Total Players: %activitytotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%activitycolors%],
+                        showInLegend: true
                     }
-                }
-            }
-        });
-
-
+                },
+                series: [{
+                    name: 'Players',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Active',
+                        y: %active%,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Inactive',
+                        y: %inactive%
+                    }, {
+                        name: 'Single Join',
+                        y: %joinleaver%
+                    }, {
+                        name: 'Banned',
+                        y: %banned%
+                    }]
+                }]
+            });
+        };
     </script>
-    <script>
-        //    GMPie Graph
-        var ctxgmpie = document.getElementById("gmPie");
-        var dataGmPie = {
-                labels: %gmlabels% ,
-            datasets: [
-            {
-                data: %gmdata% ,
-            backgroundColor: [ %gmcolors% ],
-        hoverBackgroundColor: [ %gmcolors% ]
-        }
-        ]
-        }
-        var GMPie = new Chart(ctxgmpie, {
-            type: 'doughnut',
-            data: dataGmPie,
-            options: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 7
+	<script>
+        function gmPie() {
+			var gmData = %gmdata%;
+            var myChart = Highcharts.chart('gmPie', {
+                chart: {
+                    plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Gamemode Usage'},
+				subtitle: {text: '%gmtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%gmcolors%],
+                        showInLegend: true
                     }
-                }
-            }
-        });
-
-
+                },
+                series: [{
+                    name: 'GM Usage',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Survival',
+                        y: gmData[0],
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Creative',
+                        y: gmData[1]
+                    }, {
+                        name: 'Adventure',
+                        y: gmData[2]
+                    }, {
+                        name: 'Spectator',
+                        y: gmData[3]
+                    }]
+                }]
+            });
+        };
     </script>
     <script>
         //    Session start puchcard bubblechart
@@ -1895,7 +1819,7 @@
 
 
     </script>
-    <script>
+    <script>	
         //        Geolocation map
         CLOROPLETH = document.getElementById('cloropleth');
         var data = [{
@@ -1938,6 +1862,12 @@
         };
         Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
     </script>
+	<script>
+		window.onload = function() {
+			gmPie();
+			activityPie();
+		}
+	</script>
 </div>
 </body>
 </html>

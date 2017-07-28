@@ -105,6 +105,7 @@
                 <targetPath>.</targetPath>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
+                    <include>*.js</include>
                     <include>*.yml</include>
                     <include>*.html</include>
                 </includes>
