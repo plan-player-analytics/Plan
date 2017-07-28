@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.ui.webserver.response;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import main.java.com.djrapitops.plan.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -57,11 +58,16 @@ public abstract class Response implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(getCode(), content.length());
+        try {
+            exchange.sendResponseHeaders(getCode(), content.length());
 
-        OutputStream os = exchange.getResponseBody();
-        os.write(content.getBytes());
-        os.close();
+            OutputStream os = exchange.getResponseBody();
+            os.write(content.getBytes());
+            os.close();
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
+            throw e;
+        }
     }
 
     private int getCode() {

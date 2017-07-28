@@ -28,6 +28,7 @@ import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 /**
  * @author Rsl1122
@@ -88,7 +89,7 @@ public class WebSocketServer {
                 keystore.load(fIn, storepass);
                 Certificate cert = keystore.getCertificate(alias);
 
-                Log.info("Found Certificate: " + cert);
+                Log.info("Found Certificate: " + cert.getType());
 
                 keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
                 keyManagerFactory.init(keystore, keypass);
@@ -96,7 +97,7 @@ public class WebSocketServer {
                 trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
                 trustManagerFactory.init(keystore);
 
-                server = HttpsServer.create(new InetSocketAddress(PORT), 0);
+                server = HttpsServer.create(new InetSocketAddress(PORT), 10);
                 SSLContext sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
 
@@ -136,6 +137,7 @@ public class WebSocketServer {
                 return; // TODO Http Server
             }
 
+            server.createContext("/", serverResponse(null));
             HttpContext analysisPage = server.createContext("/server", serverResponse(null));
             HttpContext playersPage = server.createContext("/players", new PlayersPageResponse(null, plugin));
             HttpContext inspectPage = server.createContext("/player", new InspectPageResponse(null, dataReqHandler, UUID.randomUUID())); // TODO
@@ -145,6 +147,8 @@ public class WebSocketServer {
                     c.setAuthenticator(new Authenticator(plugin, c.getPath()));
                 }
             }
+
+            server.setExecutor(Executors.newSingleThreadExecutor());
 
             server.start();
 
