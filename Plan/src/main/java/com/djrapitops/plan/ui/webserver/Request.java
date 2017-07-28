@@ -138,4 +138,13 @@ public class Request implements Closeable {
     public void close() throws IOException {
         close.close();
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "request='" + request + '\'' +
+                ", target='" + target + '\'' +
+                ", authorization='" + authorization + '\'' +
+                '}';
+    }
 }
