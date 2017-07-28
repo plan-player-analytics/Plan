@@ -44,7 +44,7 @@ public class PunchCardGraphCreator {
                 if (value == 0) {
                     continue;
                 }
-                arrayBuilder.append("{").append("x:").append(j).append(", y:").append(i).append(", r:").append(value).append("}");
+                arrayBuilder.append("{x:").append(j).append(", y:").append(i).append(", r:").append(value).append("}");
                 if (i != 6 || j != 23) {
                     arrayBuilder.append(",");
                 }

@@ -32,8 +32,8 @@ public class CommandUsagePart extends RawData<CommandUsagePart> {
 
     @Override
     public void analyse() {
-        addValue("uniquecommands", getUniqueCommands() + "");
-        addValue("totalcommands", getCommandTotal() + "");
+        addValue("uniquecommands", String.valueOf(getUniqueCommands()));
+        addValue("totalcommands", String.valueOf(getCommandTotal()));
         String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
         addValue("commanduse", HtmlUtils.removeXSS(commandUsageTable));
     }

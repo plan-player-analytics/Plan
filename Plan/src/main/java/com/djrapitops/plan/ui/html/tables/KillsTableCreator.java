@@ -33,7 +33,7 @@ public class KillsTableCreator {
                 IOfflinePlayer victim = Fetch.getIOfflinePlayer(kill.getVictim());
                 String name = victim.getName();
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
-                        date + "", FormatUtils.formatTimeStamp(date),
+                        String.valueOf(date), FormatUtils.formatTimeStamp(date),
                         Html.LINK.parse(HtmlUtils.getInspectUrl(name), name),
                         kill.getWeapon()
                 ));
