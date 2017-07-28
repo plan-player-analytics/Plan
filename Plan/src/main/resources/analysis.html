@@ -722,92 +722,6 @@
             </div>
         </div>
     </div>
-    <script>
-        // Navigation & Refresh time clock
-        var serverTime = new Date(%currenttime%);
-        var now = new Date();
-        var timediff = serverTime.getTime() - now.getTime();
-        function openNav() {
-            document.getElementById("sidenav").style.width = "100%";
-            document.getElementById("limiter").style.display = "none";
-            document.getElementById("navbutton").onclick = function () { closeNav(); };
-        }
-        function closeNav() {
-            document.getElementById("sidenav").style.width = "0%";
-            document.getElementById("limiter").style.display = "block";
-            document.getElementById("navbutton").onclick = function () { openNav(); };
-        }
-        var navButtons = document.getElementsByClassName("nav-button");
-        var tabs = document.getElementsByClassName("tab");
-        var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
-        if (slideIndex == null) {
-            slideIndex = 0;
-        }
-        var x = document.getElementById("main");
-        x.style.transform = "translate3d(0px,0px,0)";
-        x.style.width = "" + navButtons.length * 100 + "%";
-        for (i = 0; i < navButtons.length; i++) {
-            navButtons[i].onclick = openFunc(i)
-            tabs[i].style.width = "" + 100 / navButtons.length + "%";
-        }
-        x.style.opacity = "1";
-        openFunc(slideIndex)();
-        countUpTimer();
-		
-        function openFunc(i) {
-            return function() {
-                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
-                    closeNav();
-                }
-                var max = navButtons.length;
-                for (var j = 0; j < max; j++) {
-                    if (j == i) {
-                        navButtons[j].classList.add('active');
-                        continue;
-                    }
-                    if (navButtons[j].classList.contains('active')) {
-                        navButtons[j].classList.remove('active');
-                    }
-                }
-                var perc = - 100 / navButtons.length;
-                slideIndex = i;
-                if (slideIndex > max) {slideIndex = 0};
-                if (slideIndex < 0) {slideIndex = max};
-                window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
-                var value = slideIndex * perc;
-                x.style.transition = "0.5s";
-                x.style.transform = "translate3d(" + value + "%,0px,0)";
-            };
-        }
-        function countUpTimer() {
-            var now = new Date();
-            var begin = new Date( %refreshlong% - timediff);
-            var out = "";
-            var seconds = now.getTime() - begin.getTime();
-            seconds = Math.floor(seconds / 1000);
-            var dd = Math.floor(seconds / 86400);
-            seconds -= (dd * 86400);
-            var dh = Math.floor(seconds / 3600);
-            seconds -= (dh * 3600);
-            var dm = Math.floor(seconds / 60);
-            seconds -= (dm * 60);
-            seconds = Math.floor(seconds);
-            if (dd != 0) {
-                out += dd.toString() + "d ";
-            }
-            if (dh != 0) {
-                out += dh.toString() + "h ";
-            }
-            if (dm != 0) {
-                out += dm.toString() + "m ";
-            }
-            out += seconds.toString() + "s ";
-            document.getElementById('divTime').innerHTML = out;
-            setTimeout('countUpTimer()', 1000);
-        }
-
-
-    </script>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
@@ -1863,11 +1777,95 @@
         Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
     </script>
 	<script>
-		window.onload = function() {
-			gmPie();
-			activityPie();
-		}
 	</script>
+    <script>
+        // Navigation & Refresh time clock
+        var serverTime = new Date(%currenttime%);
+        var now = new Date();
+        var timediff = serverTime.getTime() - now.getTime();
+        function openNav() {
+            document.getElementById("sidenav").style.width = "100%";
+            document.getElementById("limiter").style.display = "none";
+            document.getElementById("navbutton").onclick = function () { closeNav(); };
+        }
+        function closeNav() {
+            document.getElementById("sidenav").style.width = "0%";
+            document.getElementById("limiter").style.display = "block";
+            document.getElementById("navbutton").onclick = function () { openNav(); };
+        }
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
+        if (slideIndex == null) {
+            slideIndex = 0;
+        }
+        var x = document.getElementById("main");
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = "" + navButtons.length * 100 + "%";
+        for (i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i)
+            tabs[i].style.width = "" + 100 / navButtons.length + "%";
+        }
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+        gmPie();
+		activityPie();
+        countUpTimer();
+
+        function openFunc(i) {
+            return function() {
+                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+                    closeNav();
+                }
+                var max = navButtons.length;
+                for (var j = 0; j < max; j++) {
+                    if (j == i) {
+                        navButtons[j].classList.add('active');
+                        continue;
+                    }
+                    if (navButtons[j].classList.contains('active')) {
+                        navButtons[j].classList.remove('active');
+                    }
+                }
+                var perc = - 100 / navButtons.length;
+                slideIndex = i;
+                if (slideIndex > max) {slideIndex = 0};
+                if (slideIndex < 0) {slideIndex = max};
+                window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
+                var value = slideIndex * perc;
+                x.style.transition = "0.5s";
+                x.style.transform = "translate3d(" + value + "%,0px,0)";
+            };
+        }
+        function countUpTimer() {
+            var now = new Date();
+            var begin = new Date( %refreshlong% - timediff);
+            var out = "";
+            var seconds = now.getTime() - begin.getTime();
+            seconds = Math.floor(seconds / 1000);
+            var dd = Math.floor(seconds / 86400);
+            seconds -= (dd * 86400);
+            var dh = Math.floor(seconds / 3600);
+            seconds -= (dh * 3600);
+            var dm = Math.floor(seconds / 60);
+            seconds -= (dm * 60);
+            seconds = Math.floor(seconds);
+            if (dd != 0) {
+                out += dd.toString() + "d ";
+            }
+            if (dh != 0) {
+                out += dh.toString() + "h ";
+            }
+            if (dm != 0) {
+                out += dm.toString() + "m ";
+            }
+            out += seconds.toString() + "s ";
+            document.getElementById('divTime').innerHTML = out;
+            setTimeout('countUpTimer()', 1000);
+        }
+
+
+    </script>
 </div>
 </body>
 </html>
