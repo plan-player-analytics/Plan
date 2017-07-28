@@ -677,56 +677,51 @@
                 <div class="row">
                     <div class="box column">
                         <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span
-                                        class="header-text"> TPS - 7d</span></div>
-                            </div>
-                            <div class="infobox" style="width: 40%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %averagetps%
-                                    </div>
-                                    <div class="info-label">
-                                        Average 7d
-                                    </div>
-                                </div>
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-cogs" aria-hidden="true"></i><span
+                                        class="header-text"> Performance 7d</span></div>
                             </div>
                         </div>
+                        <p>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i> Average TPS: %averagetpsweek%<br>
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Average CPU: %averagecpuweek%%<br>
+                            <i class="fa fa-microchip" aria-hidden="true"></i> Average RAM: %averagememoryweek%Mb<br>
+                            <i class="fa fa-umbrella" aria-hidden="true"></i> Avg. Entities: %averageentitiesweek%<br>
+                            <i class="fa fa-tree" aria-hidden="true"></i> Average Chunks: %averagechunksweek%
+                        </p>
+                    </div>
+                    <div class="box column">
                         <canvas id="tps7d" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                     <div class="box column">
                         <canvas id="cpu7d" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
+                    <div class="box column">
+                        <canvas id="world7d" width="1000" height="600" style="width: 95%;"></canvas>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="box column">
                         <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span
-                                        class="header-text"> TPS - 24h</span></div>
-                            </div>
-                            <div class="infobox" style="width: 40%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %averagetpsday%
-                                    </div>
-                                    <div class="info-label">
-                                        Average 24h
-                                    </div>
-                                </div>
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-cogs" aria-hidden="true"></i><span
+                                        class="header-text"> Performance 24h</span></div>
                             </div>
                         </div>
+                        <p><i class="fa fa-tachometer" aria-hidden="true"></i> Average TPS: %averagetpsday%<br>
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Average CPU: %averagecpuday%%<br>
+                            <i class="fa fa-microchip" aria-hidden="true"></i> Average RAM: %averagememoryday%Mb<br>
+                            <i class="fa fa-umbrella" aria-hidden="true"></i> Avg. Entities: %averageentitiesday%<br>
+                            <i class="fa fa-tree" aria-hidden="true"></i> Average Chunks: %averagechunksday%</p>
+                    </div>
+                    <div class="box column">
                         <canvas id="tps24h" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                     <div class="box column">
                         <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
-                        <p>If Graph displays '-1' usage is not available for this platform.</p>
+                    </div>
+                    <div class="box column">
+                        <canvas id="world24h" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                 </div>
             </div>
@@ -957,29 +952,7 @@
                         pointHitRadius: 10,
                         spanGaps: false,
                         data: %datascatterday%
-            },
-            {
-                label: "New Players",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#fff",
-                borderColor: "#7dcc24",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#7dcc24",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#7dcc24",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %npdataday%
-        }]
+            }]
         }
         var dataweek = {
                 datasets: [
@@ -1004,29 +977,7 @@
                         pointHitRadius: 10,
                         spanGaps: false,
                         data: %datascatterweek% ,
-            },
-            {
-                label: "New Players",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#fff",
-                borderColor: "#7dcc24",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#7dcc24",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#7dcc24",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %npdataweek%
-        }]
+            }]
         }
         var datamonth = {
                 datasets: [
@@ -1051,29 +1002,7 @@
                         pointHitRadius: 10,
                         spanGaps: false,
                         data: %datascattermonth% ,
-            },
-            {
-                label: "New Players",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#fff",
-                borderColor: "#7dcc24",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#7dcc24",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#7dcc24",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %npdatamonth%
-        }]
+            }]
         }
         var playersChartDay = new Chart(ctxday, {
             type: 'scatter',
@@ -1187,8 +1116,6 @@
         }
         }
         });
-
-
     </script>
     <script>
         // TPS Graph 7d
@@ -1389,7 +1316,7 @@
 
     </script>
     <script>
-        // CPU Graph 24h
+        // CPU & RAM Graph 24h
         var ctxcpu = document.getElementById("cpu24h");
         var datacpu = {
             datasets: [
@@ -1447,7 +1374,7 @@
                             var newDate = new Date();
                             newDate.setTime(tooltipItems.xLabel);
                             dateString = newDate.toUTCString();
-                            return dateString+ ': '+ tooltipItems.yLabel + '%';
+                            return dateString+ ': '+ tooltipItems.yLabel;
                         }
                     }
                 },
@@ -1488,7 +1415,7 @@
 
     </script>
     <script>
-        // CPU Graph 7d
+        // CPU & RAM Graph 7d
         var ctxcpu = document.getElementById("cpu7d");
         var datacpu = {
             datasets: [
@@ -1533,7 +1460,7 @@
             pointRadius: 1,
             pointHitRadius: 10,
             spanGaps: false,
-            data: %ramscatterday%
+            data: %ramscatterweek%
         }]
         };
         var cpuChart = new Chart(ctxcpu, {
@@ -1546,7 +1473,7 @@
                             var newDate = new Date();
                             newDate.setTime(tooltipItems.xLabel);
                             dateString = newDate.toUTCString();
-                            return dateString+ ': '+ tooltipItems.yLabel + '%';
+                            return dateString+ ': '+ tooltipItems.yLabel;
                         }
                     }
                 },
@@ -1574,6 +1501,198 @@
                         scaleLabel: {
             display: true,
                 labelString: 'Memory Usage (MB)'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+
+    </script>
+    <script>
+        // Entity & Chunk Graph 24h
+        var ctxworld = document.getElementById("world24h");
+        var dataworld = {
+            datasets: [
+                {
+                    label: "Entity Count",
+                    yAxisID: 'A',
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#ac69ef",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#ac69ef",
+                    pointBackgroundColor: "#ac69ef",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#ac69ef",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %entityscatterday%
+        }, {
+            label: "Chunks Loaded",
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#b58310",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#b58310",
+            pointBackgroundColor: "#b58310",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#b58310",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %chunkscatterday%
+        }]
+        };
+        var worldChart = new Chart(ctxworld, {
+            type: 'scatter',
+            data: dataworld,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel;
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        id: 'A',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Entity Count'
+                        }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Chunks Loaded'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
+
+    </script>
+    <script>
+        // Entity & Chunk Graph 7d
+        var ctxworld = document.getElementById("world7d");
+        var dataworld = {
+            datasets: [
+                {
+                    label: "Entity Count",
+                    yAxisID: 'A',
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#ac69ef",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#ac69ef",
+                    pointBackgroundColor: "#ac69ef",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#ac69ef",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %entityscatterweek%
+        }, {
+            label: "Chunks Loaded",
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#b58310",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#b58310",
+            pointBackgroundColor: "#b58310",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#b58310",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %chunkscatterweek%
+        }]
+        };
+        var worldChart = new Chart(ctxworld, {
+            type: 'scatter',
+            data: dataworld,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel;
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        id: 'A',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Entity Count'
+                        }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Chunks Loaded'
         }
         }],
         xAxes: [{
