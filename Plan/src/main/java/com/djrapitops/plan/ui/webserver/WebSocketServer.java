@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
+import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -10,18 +10,21 @@ import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
+import javax.net.ssl.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.UUID;
@@ -32,12 +35,16 @@ import java.util.UUID;
 public class WebSocketServer {
 
     private final int PORT;
+
     private final Plan plugin;
     private final DataRequestHandler dataReqHandler;
     private boolean enabled = false;
     private Socket sslServer;
-    private ServerSocket server;
+    private HttpServer server;
     private boolean shutdown;
+
+    private KeyManagerFactory keyManagerFactory;
+    private TrustManagerFactory trustManagerFactory;
 
     /**
      * Class Constructor.
@@ -64,43 +71,118 @@ public class WebSocketServer {
         Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             InetAddress ip = InetAddress.getByName(Settings.WEBSERVER_IP.toString());
-//            SSLServerSocketFactory ssl = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-//            server = ssl.createServerSocket(PORT, 1, ip);
-            server = new ServerSocket(PORT, 1, ip);
 
-            plugin.getRunnableFactory().createNew(new AbsRunnable("WebServerTask") {
-                @Override
-                public void run() {
-                    while (!shutdown) {
-                        /*SSL*/
-                        Socket socket = null;
-                        InputStream input = null;
-                        OutputStream output = null;
-                        Request request = null;
+            String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
+            if (!keyStorePath.contains(":")) {
+                keyStorePath = plugin.getDataFolder() + keyStorePath;
+            }
+            char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();
+            char[] keypass = Settings.WEBSERVER_CERTIFICATE_KEYPASS.toString().toCharArray();
+            String alias = Settings.WEBSERVER_CERTIFICATE_ALIAS.toString();
+
+            boolean startSuccessful = false;
+            try {
+                FileInputStream fIn = new FileInputStream(keyStorePath);
+                KeyStore keystore = KeyStore.getInstance("JKS");
+
+                keystore.load(fIn, storepass);
+                Certificate cert = keystore.getCertificate(alias);
+
+                Log.info("Found Certificate: " + cert);
+
+                keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+                keyManagerFactory.init(keystore, keypass);
+
+                trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+                trustManagerFactory.init(keystore);
+
+                server = HttpsServer.create(new InetSocketAddress(PORT), 0);
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+
+                ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+                    public void configure(HttpsParameters params) {
                         try {
-                            socket = /*(SSLSocket)*/ server.accept();
-                            Log.debug("New Socket Connection: " + socket.getInetAddress());
-                            input = socket.getInputStream();
-                            output = socket.getOutputStream();
-                            request = new Request(input);
-                            Benchmark.start("Webserver Response");
-                            request.parse();
-                            Response response = getResponse(request, output);
-                            Log.debug("Parsed response: " + response.getClass().getSimpleName());
-                            response.sendStaticResource();
-                        } catch (IOException | IllegalArgumentException e) {
-                        } finally {
-                            MiscUtils.close(input, request, output, socket);
-                            Benchmark.stop("Webserver Response");
+                            SSLContext c = SSLContext.getDefault();
+                            SSLEngine engine = c.createSSLEngine();
+
+                            params.setNeedClientAuth(false);
+                            params.setCipherSuites(engine.getEnabledCipherSuites());
+                            params.setProtocols(engine.getEnabledProtocols());
+
+                            SSLParameters defaultSSLParameters = c.getDefaultSSLParameters();
+                            params.setSSLParameters(defaultSSLParameters);
+                        } catch (NoSuchAlgorithmException e) {
+                            Log.error("WebServer: SSL Engine loading Failed.");
+                            Log.toLog(this.getClass().getName(), e);
                         }
                     }
-                    this.cancel();
+                });
+                startSuccessful = true;
+            } catch (KeyManagementException e) {
+                Log.error("WebServer: SSL Context Initialization Failed.");
+                Log.toLog(this.getClass().getName(), e);
+            } catch (NoSuchAlgorithmException e) {
+                Log.error("WebServer: SSL Context Initialization Failed.");
+                Log.toLog(this.getClass().getName(), e);
+            } catch (FileNotFoundException e) {
+                Log.error("WebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
+            } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
+                Log.error("WebServer: SSL Certificate loading Failed.");
+                Log.toLog(this.getClass().getName(), e);
+            }
+
+            if (!startSuccessful) {
+                return; // TODO Http Server
+            }
+
+            HttpContext analysisPage = server.createContext("/server", serverResponse(null));
+            HttpContext playersPage = server.createContext("/players", new PlayersPageResponse(null, plugin));
+            HttpContext inspectPage = server.createContext("/player", new InspectPageResponse(null, dataReqHandler, UUID.randomUUID())); // TODO
+
+            if (startSuccessful) {
+                for (HttpContext c : new HttpContext[]{analysisPage, playersPage, inspectPage}) {
+                    c.setAuthenticator(new Authenticator(plugin, c.getPath()));
                 }
-            }).runTaskAsynchronously();
+            }
+
+            server.start();
+
+//            server = new ServerSocket(PORT, 1, ip);
+//
+//            plugin.getRunnableFactory().createNew(new AbsRunnable("WebServerTask") {
+//                @Override
+//                public void run() {
+//                    while (!shutdown) {
+//                        /*SSL*/
+//                        Socket socket = null;
+//                        InputStream input = null;
+//                        OutputStream output = null;
+//                        Request request = null;
+//                        try {
+//                            socket = /*(SSLSocket)*/ server.accept();
+//                            Log.debug("New Socket Connection: " + socket.getInetAddress());
+//                            input = socket.getInputStream();
+//                            output = socket.getOutputStream();
+//                            request = new Request(input);
+//                            Benchmark.start("Webserver Response");
+//                            request.parse();
+//                            Response response = getResponse(request, output);
+//                            Log.debug("Parsed response: " + response.getClass().getSimpleName());
+//                            response.sendStaticResource();
+//                        } catch (IOException | IllegalArgumentException e) {
+//                        } finally {
+//                            MiscUtils.close(input, request, output, socket);
+//                            Benchmark.stop("Webserver Response");
+//                        }
+//                    }
+//                    this.cancel();
+//                }
+//            }).runTaskAsynchronously();
 
             enabled = true;
 
-            Log.info(Phrase.WEBSERVER_RUNNING.parse(server.getLocalPort() + ""));
+            Log.info(Phrase.WEBSERVER_RUNNING.parse(server.getAddress().getPort() + ""));
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             enabled = false;
@@ -117,22 +199,22 @@ public class WebSocketServer {
                 return new RedirectResponse(output, "https://puu.sh/tK0KL/6aa2ba141b.ico");
             }
 
-//            if (!request.hasAuthorization()) {
-//                return new PromptAuthorizationResponse(output);
-//            }
-//            try {
-//                if (!isAuthorized(request)) {
-//                    ForbiddenResponse response403 = new ForbiddenResponse(output);
-//                    String content = "<h1>403 Forbidden - Access Denied</h1>"
-//                            + "<p>Unauthorized User.<br>"
-//                            + "Make sure your user has the correct access level.<br>"
-//                            + "You can use /plan web check <username> to check the permission level.</p>";
-//                    response403.setContent(content);
-//                    return response403;
-//                }
-//            } catch (IllegalArgumentException e) {
-//                return new PromptAuthorizationResponse(output);
-//            }
+            if (!request.hasAuthorization()) {
+                return new PromptAuthorizationResponse(output);
+            }
+            try {
+                if (!isAuthorized(request)) {
+                    ForbiddenResponse response403 = new ForbiddenResponse(output);
+                    String content = "<h1>403 Forbidden - Access Denied</h1>"
+                            + "<p>Unauthorized User.<br>"
+                            + "Make sure your user has the correct access level.<br>"
+                            + "You can use /plan web check <username> to check the permission level.</p>";
+                    response403.setContent(content);
+                    return response403;
+                }
+            } catch (IllegalArgumentException e) {
+                return new PromptAuthorizationResponse(output);
+            }
             String req = request.getRequest();
             String target = request.getTarget();
             if (!req.equals("GET") || target.equals("/")) {
@@ -204,12 +286,8 @@ public class WebSocketServer {
     public void stop() {
         Log.info(Phrase.WEBSERVER_CLOSE.toString());
         shutdown = true;
-        try {
-            if (server != null) {
-                server.close();
-            }
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+        if (server != null) {
+            server.stop(0);
         }
     }
 
@@ -229,23 +307,28 @@ public class WebSocketServer {
             throw new IllegalArgumentException("User and Password not specified");
         }
         String user = userInfo[0];
+        String passwordRaw = userInfo[1];
+        return isAuthorized(user, passwordRaw, request.getTarget());
+    }
+
+    private boolean isAuthorized(String user, String passwordRaw, String target) throws IllegalArgumentException, PassEncryptUtil.CannotPerformOperationException, PassEncryptUtil.InvalidHashException, SQLException {
+
         SecurityTable securityTable = plugin.getDB().getSecurityTable();
         if (!securityTable.userExists(user)) {
             throw new IllegalArgumentException("User Doesn't exist");
         }
         WebUser securityInfo = securityTable.getSecurityInfo(user);
-        String passwordRaw = userInfo[1];
+
         boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, securityInfo.getSaltedPassHash());
         if (!correctPass) {
             throw new IllegalArgumentException("User and Password do not match");
         }
         int permLevel = securityInfo.getPermLevel(); // Lower number has higher clearance.
-        int required = getRequiredPermLevel(request, securityInfo.getName());
+        int required = getRequiredPermLevel(target, securityInfo.getName());
         return permLevel <= required;
     }
 
-    private int getRequiredPermLevel(Request request, String user) {
-        String target = request.getTarget();
+    private int getRequiredPermLevel(String target, String user) {
         String[] t = target.split("/");
         if (t.length < 3) {
             return 0;

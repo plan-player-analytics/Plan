@@ -180,6 +180,9 @@ public class Plan extends BukkitPlugin<Plan> {
         if (webserverIsEnabled) {
             uiServer = new WebSocketServer(this);
             uiServer.initServer();
+            if (!uiServer.isEnabled()) {
+                Log.error("WebServer was not Initialized.");
+            }
             // Prevent passwords showing up on console.
             Bukkit.getLogger().setFilter(new RegisterCommandFilter());
         } else if (!hasDataViewCapability) {
