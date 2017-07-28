@@ -75,5 +75,4 @@ public class GeolocationPart extends RawData<GeolocationPart> {
     public void addGeoloc(String country) {
         geoLocations.computeIfPresent(country, (computedCountry, amount) -> amount + 1);
     }
-
 }

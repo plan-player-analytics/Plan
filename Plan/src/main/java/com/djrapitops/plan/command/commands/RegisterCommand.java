@@ -49,10 +49,10 @@ public class RegisterCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"Web Register command",
-                tCol+"  Used to register a new user for the webserver.",
-                sCol+"  Registering a user for another player requires "+Permissions.MANAGE_WEB.getPerm()+" permission.",
-                sCol+"  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."
+                mCol + "Web Register command",
+                tCol + "  Used to register a new user for the webserver.",
+                sCol + "  Registering a user for another player requires " + Permissions.MANAGE_WEB.getPerm() + " permission.",
+                sCol + "  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."
         };
     }
 

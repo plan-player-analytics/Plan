@@ -179,6 +179,11 @@ public class MathUtils {
      * @return The rounded number
      */
     public static double round(double number) {
-        return Double.valueOf(decimalFormat.format(number));
+        String formattedNumber = decimalFormat.format(number);
+        if (formattedNumber.length() > 4) {
+            formattedNumber = formattedNumber.substring(0, 3); //Fix for unknown reasons for not-rounding
+        }
+
+        return Double.valueOf(formattedNumber);
     }
 }

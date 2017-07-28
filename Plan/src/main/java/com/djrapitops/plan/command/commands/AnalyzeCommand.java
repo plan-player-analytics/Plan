@@ -50,10 +50,10 @@ public class AnalyzeCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"Analysis Command",
-                tCol+"  Used to Refresh analysis cache & Access the result page",
-                sCol+"  /plan status can be used to check status of analysis while it is running.",
-                sCol+"  Aliases: analyze, analyse, analysis, a"
+                mCol + "Analysis Command",
+                tCol + "  Used to Refresh analysis cache & Access the result page",
+                sCol + "  /plan status can be used to check status of analysis while it is running.",
+                sCol + "  Aliases: analyze, analyse, analysis, a"
         };
     }
 

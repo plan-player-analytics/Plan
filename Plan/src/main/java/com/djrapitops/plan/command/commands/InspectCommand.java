@@ -56,10 +56,10 @@ public class InspectCommand extends SubCommand {
         String tCol = colorScheme.getTertiaryColor();
 
         String[] help = new String[]{
-                mCol +"Inspect command",
-                tCol+"  Used to get a link to User's inspect page.",
-                sCol+"  Own inspect page can be accessed with /plan inspect",
-                sCol+"  Alias: /plan <name>"
+                mCol + "Inspect command",
+                tCol + "  Used to get a link to User's inspect page.",
+                sCol + "  Own inspect page can be accessed with /plan inspect",
+                sCol + "  Alias: /plan <name>"
         };
     }
 

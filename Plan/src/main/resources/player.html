@@ -7,313 +7,313 @@
     <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon"/>
     <script src="https://use.fontawesome.com/df48eb908b.js"></script>
     <style>
-		header {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 88px;
-			padding: 0px;
-			background-color: #348e0f;
-			z-index: 1;
-		}
-		.header-content {
-			padding: 5px 20px;
-		}
-		body {
-			font-family: Verdana, sans-serif;
-			background-color: #ddd;
-			color: #fff;
-		}
-		.sidenav {
-			height: 100%;
-			width: 15%;
-			position: fixed;
-			top: 0;
-			left: 0;
-			background-color: #5cb239;
-			overflow-x: hidden;
-			transition: 0.5s;
-			padding-top: 88px;
-			text-align: left;
-		}
-		.sidenav p {
-			width: 100%;
-			padding: 8px 8px 8px 16px;
-			text-decoration: none;
-			background-color: #89c471;
-			color: #fff;
-			margin: 10px 0px;
-		}
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 88px;
+            padding: 0px;
+            background-color: #348e0f;
+            z-index: 1;
+        }
+        .header-content {
+            padding: 5px 20px;
+        }
+        body {
+            font-family: Verdana, sans-serif;
+            background-color: #ddd;
+            color: #fff;
+        }
+        .sidenav {
+            height: 100%;
+            width: 15%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5cb239;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 88px;
+            text-align: left;
+        }
+        .sidenav p {
+            width: 100%;
+            padding: 8px 8px 8px 16px;
+            text-decoration: none;
+            background-color: #89c471;
+            color: #fff;
+            margin: 10px 0px;
+        }
 
-		.sidenav a {
-			margin: 10px 0px;
-			width: 100%;
-			padding: 8px 8px 8px 16px;
-			text-decoration: none;
-			background-color: #89c471;
-			font-size: 22px;
-			color: #fff;
-			display: block;
-			transition: 0.3s;
-			z-index: 1;
-		}
+        .sidenav a {
+            margin: 10px 0px;
+            width: 100%;
+            padding: 8px 8px 8px 16px;
+            text-decoration: none;
+            background-color: #89c471;
+            font-size: 22px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+            z-index: 1;
+        }
 
-		.sidenav a.active {
-			background-color: #5da341
-		}
+        .sidenav a.active {
+            background-color: #5da341
+        }
 
-		.sidenav a:hover, .offcanvas a:focus{
-			background-color: #5da341;
-		}
+        .sidenav a:hover, .offcanvas a:focus{
+            background-color: #5da341;
+        }
 
-		.main-limiter {
-			margin-left: 15%;
-			width: 85%;
-			height: 100%;
-			overflow: hidden;
-		}
+        .main-limiter {
+            margin-left: 15%;
+            width: 85%;
+            height: 100%;
+            overflow: hidden;
+        }
 
-		.main-wrapper {
-			padding-top: 88px;
-			transform: translate3d(0, 0, 0);
-			opacity: 0;
-			transition: 1.5s;
-		}
+        .main-wrapper {
+            padding-top: 88px;
+            transform: translate3d(0, 0, 0);
+            opacity: 0;
+            transition: 1.5s;
+        }
 
-		.box {
-			background-color: #fff;
-			padding: 5px;
-			text-decoration: none;
-			color: #000;
-			text-align: left;
-			margin: 5px;
-			padding: 5px;
-		}
+        .box {
+            background-color: #fff;
+            padding: 5px;
+            text-decoration: none;
+            color: #000;
+            text-align: left;
+            margin: 5px;
+            padding: 5px;
+        }
 
-		.box p {
-			color: #000;
-		}
+        .box p {
+            color: #000;
+        }
 
-		.tab {
-			width: 20%;
-			height: 100%;
-			float: left;
-			display: flex;
-			text-align: left;
-			align-content: flex-start;
-		}
-		.row {
-			width: 50%;
-			display: flex;
-			flex-direction: column;
-		}
-		.content {
-			text-align: center;
-			padding: 5px;
-			margin: 0px;
-		}
-		.columns {
-			display: flex;
-		}
-		.column {
-			flex: 1;
-		}
-		.box-area {
-			width: 100%;
-		}
-		.infobox {
-			margin-left: 3px;
-			color: white;
-			background-color: #348e0f;
-			padding: 8px 14px;
-			border-radius: 10px;
-			float: right;
-		}
-		.info-text {
-			float: right;
-			width: 50%;
-			text-align: right;
-		}
-		.info-number {
-			font-size: x-large;
-			float: right;
-		}
-		.info-label {
-			float: right;
-			font-size: medium;
-		}
-		.info-icon {
-			font-size: xx-large;
-			float: left;
-		}
-		.headerbox {
-			color: #348e0f;
-			display: inline-block;
-			border-style: solid;
-			border-color: #348e0f;
-			padding: 8px 14px;
-			border-radius: 10px;
-			width: 95%;
-		}
-		.header-icon {
-			font-size: xx-large;
-			float: left;
-		}
-		.header-text {
-			font-size: x-large;
-		}
-		.header-label {
-			padding: 0px;
-			margin: 0px;
-			border: 0px;
-		}
-		.button {
-			padding: 8px 14px;
-			background-color: #348e0f;
-			border: none;
-			color: white;
-			outline: 0;
-			text-decoration:none!important;
-		}
-		.button:hover {
-			background-color: #267F00;
-		}
-		.table {
-			border-collapse: collapse;
-			table-layout: fixed;
-			border-style: solid;
-			border-width: 1px;
-			padding: 8px 14px;
-			width: 100%;
-		}
-		.buttons {
-			line-height: 270%;
-		}
-		.link {
-			color: #348e0f;
-			text-decoration:none!important;
-		}
-		.link:hover {
-			color: #267F00;
-		}
-		table.sortable thead {
-			background-color: #348e0f;
-			color:#fff;
-			font-weight: bold;
-			cursor: default;
-			width: 100%;
-			overflow: hidden;
-		}
-		table.sortable tbody {
-			color: #000;
-		}
-		table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
-			content: " \25B4\25BE"
-		}
-		.plugin-container {
-			color: #000;
-			height: 100%;
-			max-height: 400px;
-			overflow: auto;
-		}
-		.plugin-data {
-			color: #000;
-		}
-		.black {
-			color: #000000;
-		}
-		.darkblue {
-			color: #0000AA;
-		}
-		.darkgreen {
-			color: #00AA00;
-		}
-		.darkaqua {
-			color: #00AAAA;
-		}
-		.darkred {
-			color: #AA0000;
-		}
-		.darkpurple {
-			color: #AA00AA;
-		}
-		.gold {
-			color: #FFAA00;
-		}
-		.gray {
-			color: #AAAAAA;
-		}
-		.darkgray {
-			color: #555555;
-		}
-		.blue {
-			color: #5555FF;
-		}
-		.green {
-			color: #55FF55;
-		}
-		.aqua {
-			color: #55FFFF;
-		}
-		.red {
-			color: #FF5555;
-		}
-		.pink {
-			color: #FF55FF;
-		}
-		.yellow {
-			color: #FFFF55;
-		}
-		.white {
-			color: #FFFFFF;
-		}
-		#navbutton {
-			display: none;
-			font-size: 40px;
-			cursor:pointer;
-		}
-		@media only screen and (max-width: 850px) {
-			#navbutton {
-				display: inline;
-			}
-			.sidenav p {
-				display: none;
-			}
-			header {
-				margin: 0px;
-				padding 0px;
-			}
-			header h1 {
-				margin: 0px;
-			}
-			header img {
-				margin: 0px;
-				padding: 0px;
-				margin-right: 0px;
-			}
-			header p {
-				margin: 0px;
-				margin-top: 5px;
-			}
-			.tab {
-				flex-direction: column;
-			}
-			.columns {
-				flex-direction: column;
-			}
-			.row {
-				width: 100%;
-			}
-			.sidenav {
-				width: 0%;
-				transition: 0s;
-			}
-			.main-limiter {
-				margin-left: 0%;
-				width: 100%;
-			}
-		}
+        .tab {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            text-align: left;
+            align-content: flex-start;
+        }
+        .row {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            text-align: center;
+            padding: 5px;
+            margin: 0px;
+        }
+        .columns {
+            display: flex;
+        }
+        .column {
+            flex: 1;
+        }
+        .box-area {
+            width: 100%;
+        }
+        .infobox {
+            margin-left: 3px;
+            color: white;
+            background-color: #348e0f;
+            padding: 8px 14px;
+            border-radius: 10px;
+            float: right;
+        }
+        .info-text {
+            float: right;
+            width: 50%;
+            text-align: right;
+        }
+        .info-number {
+            font-size: x-large;
+            float: right;
+        }
+        .info-label {
+            float: right;
+            font-size: medium;
+        }
+        .info-icon {
+            font-size: xx-large;
+            float: left;
+        }
+        .headerbox {
+            color: #348e0f;
+            display: inline-block;
+            border-style: solid;
+            border-color: #348e0f;
+            padding: 8px 14px;
+            border-radius: 10px;
+            width: 95%;
+        }
+        .header-icon {
+            font-size: xx-large;
+            float: left;
+        }
+        .header-text {
+            font-size: x-large;
+        }
+        .header-label {
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+        }
+        .button {
+            padding: 8px 14px;
+            background-color: #348e0f;
+            border: none;
+            color: white;
+            outline: 0;
+            text-decoration:none!important;
+        }
+        .button:hover {
+            background-color: #267F00;
+        }
+        .table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            border-style: solid;
+            border-width: 1px;
+            padding: 8px 14px;
+            width: 100%;
+        }
+        .buttons {
+            line-height: 270%;
+        }
+        .link {
+            color: #348e0f;
+            text-decoration:none!important;
+        }
+        .link:hover {
+            color: #267F00;
+        }
+        table.sortable thead {
+            background-color: #348e0f;
+            color:#fff;
+            font-weight: bold;
+            cursor: default;
+            width: 100%;
+            overflow: hidden;
+        }
+        table.sortable tbody {
+            color: #000;
+        }
+        table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+            content: " \25B4\25BE"
+        }
+        .plugin-container {
+            color: #000;
+            height: 100%;
+            max-height: 400px;
+            overflow: auto;
+        }
+        .plugin-data {
+            color: #000;
+        }
+        .black {
+            color: #000000;
+        }
+        .darkblue {
+            color: #0000AA;
+        }
+        .darkgreen {
+            color: #00AA00;
+        }
+        .darkaqua {
+            color: #00AAAA;
+        }
+        .darkred {
+            color: #AA0000;
+        }
+        .darkpurple {
+            color: #AA00AA;
+        }
+        .gold {
+            color: #FFAA00;
+        }
+        .gray {
+            color: #AAAAAA;
+        }
+        .darkgray {
+            color: #555555;
+        }
+        .blue {
+            color: #5555FF;
+        }
+        .green {
+            color: #55FF55;
+        }
+        .aqua {
+            color: #55FFFF;
+        }
+        .red {
+            color: #FF5555;
+        }
+        .pink {
+            color: #FF55FF;
+        }
+        .yellow {
+            color: #FFFF55;
+        }
+        .white {
+            color: #FFFFFF;
+        }
+        #navbutton {
+            display: none;
+            font-size: 40px;
+            cursor:pointer;
+        }
+        @media only screen and (max-width: 850px) {
+            #navbutton {
+                display: inline;
+            }
+            .sidenav p {
+                display: none;
+            }
+            header {
+                margin: 0px;
+                padding 0px;
+            }
+            header h1 {
+                margin: 0px;
+            }
+            header img {
+                margin: 0px;
+                padding: 0px;
+                margin-right: 0px;
+            }
+            header p {
+                margin: 0px;
+                margin-top: 5px;
+            }
+            .tab {
+                flex-direction: column;
+            }
+            .columns {
+                flex-direction: column;
+            }
+            .row {
+                width: 100%;
+            }
+            .sidenav {
+                width: 0%;
+                transition: 0s;
+            }
+            .main-limiter {
+                margin-left: 0%;
+                width: 100%;
+            }
+        }
 
     </style>
 </head>
@@ -714,46 +714,46 @@
         var ctxweek = document.getElementById("playerChartWeek");
         var dataweek = {
             datasets: [{
-            label: "Online",
-            fill: true,
-            lineTension: 0.1,
-            backgroundColor: "#%playersgraphfill%",
-            borderColor: "#%playersgraphcolor%",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "#%playersgraphcolor%",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "#%playersgraphcolor%",
-            pointHoverBorderColor: "#8fabc6",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            spanGaps: false,
-            data: %dataweek% ,
+                label: "Online",
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#%playersgraphfill%",
+                borderColor: "#%playersgraphcolor%",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#%playersgraphcolor%",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#%playersgraphcolor%",
+                pointHoverBorderColor: "#8fabc6",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                spanGaps: false,
+                data: %dataweek% ,
         }]};
         var playersChartWeek = new Chart(ctxweek, {
-                type: 'scatter',
-                        data: dataweek,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        callback: function(value, index, values) {
+            type: 'scatter',
+            data: dataweek,
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString +': '+ tooltipItems.yLabel+ ' Players';
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            callback: function(value, index, values) {
                                 switch (value) {
                                     case 0:
                                         return '0';
@@ -763,17 +763,17 @@
                                         return '';
                                 };
                             },
-                                        suggestedMax: %graphmaxplayers%,
-                                        suggestedMin: 0
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                        }
-                        }
-                });
+                            suggestedMax: %graphmaxplayers%,
+                        suggestedMin: 0
+                    }
+                }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
+        });
         var ctxpunch = document.getElementById("punchcard");
         var datapunch = {
             datasets: [
