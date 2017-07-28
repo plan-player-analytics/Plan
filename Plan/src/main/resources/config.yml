@@ -74,10 +74,10 @@ Customization:
         OnlinePlayersFill: '75BBFF'
         NewPlayers: '228B22'
       GamemodePie:
-        Survival: '951800'
-        Creative: '01A1DB'
-        Adventure: '769316'
-        Spectator: '228B22'
+        Survival: '438c99'
+        Creative: '639A67'
+        Adventure: 'D8EBB5'
+        Spectator: 'D9BF77'
       ActivityPie:
         Active: '228B22'
         Banned: '951800'
