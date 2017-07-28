@@ -49,6 +49,10 @@ public enum Settings {
     LOCALE("Settings.Locale"),
     WEBSERVER_IP("Settings.WebServer.InternalIP"),
     ANALYSIS_EXPORT_PATH("Settings.Analysis.Export.DestinationFolder"),
+    WEBSERVER_CERTIFICATE_PATH("Settings.WebServer.Security.Certificate.KeyStorePath"),
+    WEBSERVER_CERTIFICATE_KEYPASS("Settings.WebServer.Security.Certificate.KeyPass"),
+    WEBSERVER_CERTIFICATE_STOREPASS("Settings.WebServer.Security.Certificate.KeyPass"),
+    WEBSERVER_CERTIFICATE_ALIAS("Settings.WebServer.Security.Certificate.Alias"),
     LINK_PROTOCOL("Settings.WebServer.LinkProtocol"),
     //
     SERVER_NAME("Customization.ServerName"),

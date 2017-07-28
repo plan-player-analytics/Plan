@@ -37,6 +37,11 @@ Settings:
     LinkProtocol: http
     Security:
       DisplayIPsAndUUIDs: true
+      Certificate:
+        KeyStorePath: '\SSLCertificate.keystore'
+        KeyPass: 'default'
+        StorePass: 'default'
+        Alias: 'alias'
 
 Customization:
   ServerName: 'Plan'

@@ -1,5 +1,9 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import main.java.com.djrapitops.plan.Log;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -7,7 +11,8 @@ import java.io.OutputStream;
  * @author Rsl1122
  * @since 3.5.2
  */
-public abstract class Response {
+public abstract class Response implements HttpHandler {
+
 
     private final OutputStream output;
 
@@ -29,14 +34,18 @@ public abstract class Response {
      * @throws IOException
      */
     public void sendStaticResource() throws IOException {
-        String response = header + "\r\n"
+        String response = getResponse();
+//        Log.debug("Response: " + response); // Responses should not be logged, html content large.
+        output.write(response.getBytes());
+        output.flush();
+    }
+
+    public String getResponse() {
+        return header + "\r\n"
                 + "Content-Type: text/html;\r\n"
                 + "Content-Length: " + content.length() + "\r\n"
                 + "\r\n"
                 + content;
-//        Log.debug("Response: " + response); // Responses should not be logged, html content large.
-        output.write(response.getBytes());
-        output.flush();
     }
 
     public void setHeader(String header) {
@@ -45,5 +54,27 @@ public abstract class Response {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        try {
+            exchange.sendResponseHeaders(getCode(), content.length());
+
+            OutputStream os = exchange.getResponseBody();
+            os.write(content.getBytes());
+            os.close();
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
+            throw e;
+        }
+    }
+
+    private int getCode() {
+        if (header == null) {
+            return 500;
+        } else {
+            return Integer.parseInt(header.split(" ")[1]);
+        }
     }
 }
