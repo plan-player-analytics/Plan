@@ -129,7 +129,7 @@
             color: white;
             background-color: #348e0f;
             padding: 8px 14px;
-            border-radius: 10px;
+            border-radius: 6px;
             float: right;
         }
         .info-text {
@@ -155,7 +155,7 @@
             border-style: solid;
             border-color: #348e0f;
             padding: 8px 14px;
-            border-radius: 10px;
+			border-radius: 3px;
             width: 95%;
         }
         .header-icon {
@@ -389,65 +389,8 @@
                                     class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i
                                     class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
                     </div>
-                    <div class=" box column">
-                        <p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart"
-                                                                            aria-hidden="true"></i><span
-                                class="header-text"> Gamemode Usage</span></p><br/>
-                        <div class="box-area">
-                            <div class="infobox" style="background-color: #%gm0col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-fire" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm0%
-                                    </div>
-                                    <div class="info-label">
-                                        Survival
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm1col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-cube" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm1%
-                                    </div>
-                                    <div class="info-label">
-                                        Creative
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm2col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm2%
-                                    </div>
-                                    <div class="info-label">
-                                        Adventure
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm3col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm3%
-                                    </div>
-                                    <div class="info-label">
-                                        Spectator
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
+                    <div class=" box column">                        
+                        <div id="gmPie" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
             </div>
@@ -536,10 +479,10 @@
                 </div>
                 <div class="row">
                     <div class="box column">
-                        <div class="headerbox">
+						<div class="headerbox" style="width: 95%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Playerbase Composition</span></div>
+                                        class="header-text"> Playerbase</span></div>
                             </div>
                             <div class="infobox" style="float: right; width: 40%;">
                                 <div class="info-icon">
@@ -555,63 +498,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-area">
-                            <div class="infobox" style="background-color: #%activecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %active%
-                                    </div>
-                                    <div class="info-label">
-                                        <span style="color: #%activecol%;">__</span>Active
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%inactivecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-o" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %inactive%
-                                    </div>
-                                    <div class="info-label">
-                                        Inactive
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%joinleavecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-secret" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %joinleaver%
-                                    </div>
-                                    <div class="info-label">
-                                        Single<span style="color: #%joinleavecol%;">_</span>join
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%bancol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-ban" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %banned%
-                                    </div>
-                                    <div class="info-label">
-                                        Banned
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br><br>
-                        <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas>
-                        <br>
+                        <div id="activityPie" style="width: 100%; height: 400px;"></div>
                     </div>
                     <div class=" box column">
                         <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o"
@@ -677,56 +564,51 @@
                 <div class="row">
                     <div class="box column">
                         <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span
-                                        class="header-text"> TPS - 7d</span></div>
-                            </div>
-                            <div class="infobox" style="width: 40%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %averagetps%
-                                    </div>
-                                    <div class="info-label">
-                                        Average 7d
-                                    </div>
-                                </div>
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-cogs" aria-hidden="true"></i><span
+                                        class="header-text"> Performance 7d</span></div>
                             </div>
                         </div>
+                        <p>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i> Average TPS: %averagetpsweek%<br>
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Average CPU: %averagecpuweek%%<br>
+                            <i class="fa fa-microchip" aria-hidden="true"></i> Average RAM: %averagememoryweek%Mb<br>
+                            <i class="fa fa-umbrella" aria-hidden="true"></i> Avg. Entities: %averageentitiesweek%<br>
+                            <i class="fa fa-tree" aria-hidden="true"></i> Average Chunks: %averagechunksweek%
+                        </p>
+                    </div>
+                    <div class="box column">
                         <canvas id="tps7d" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                     <div class="box column">
                         <canvas id="cpu7d" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
+                    <div class="box column">
+                        <canvas id="world7d" width="1000" height="600" style="width: 95%;"></canvas>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="box column">
                         <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span
-                                        class="header-text"> TPS - 24h</span></div>
-                            </div>
-                            <div class="infobox" style="width: 40%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %averagetpsday%
-                                    </div>
-                                    <div class="info-label">
-                                        Average 24h
-                                    </div>
-                                </div>
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-cogs" aria-hidden="true"></i><span
+                                        class="header-text"> Performance 24h</span></div>
                             </div>
                         </div>
+                        <p><i class="fa fa-tachometer" aria-hidden="true"></i> Average TPS: %averagetpsday%<br>
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Average CPU: %averagecpuday%%<br>
+                            <i class="fa fa-microchip" aria-hidden="true"></i> Average RAM: %averagememoryday%Mb<br>
+                            <i class="fa fa-umbrella" aria-hidden="true"></i> Avg. Entities: %averageentitiesday%<br>
+                            <i class="fa fa-tree" aria-hidden="true"></i> Average Chunks: %averagechunksday%</p>
+                    </div>
+                    <div class="box column">
                         <canvas id="tps24h" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                     <div class="box column">
                         <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
-                        <p>If Graph displays '-1' usage is not available for this platform.</p>
+                    </div>
+                    <div class="box column">
+                        <canvas id="world24h" width="1000" height="600" style="width: 95%;"></canvas>
                     </div>
                 </div>
             </div>
@@ -871,6 +753,7 @@
         x.style.opacity = "1";
         openFunc(slideIndex)();
         countUpTimer();
+		
         function openFunc(i) {
             return function() {
                 if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
@@ -926,6 +809,7 @@
 
     </script>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
     <script>
@@ -957,29 +841,7 @@
                         pointHitRadius: 10,
                         spanGaps: false,
                         data: %datascatterday%
-            },
-            {
-                label: "New Players",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#fff",
-                borderColor: "#7dcc24",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#7dcc24",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#7dcc24",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %npdataday%
-        }]
+            }]
         }
         var dataweek = {
                 datasets: [
@@ -1004,29 +866,7 @@
                         pointHitRadius: 10,
                         spanGaps: false,
                         data: %datascatterweek% ,
-            },
-            {
-                label: "New Players",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#fff",
-                borderColor: "#7dcc24",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#7dcc24",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#7dcc24",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %npdataweek%
-        }]
+            }]
         }
         var datamonth = {
                 datasets: [
@@ -1051,29 +891,7 @@
                         pointHitRadius: 10,
                         spanGaps: false,
                         data: %datascattermonth% ,
-            },
-            {
-                label: "New Players",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#fff",
-                borderColor: "#7dcc24",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#7dcc24",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#7dcc24",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %npdatamonth%
-        }]
+            }]
         }
         var playersChartDay = new Chart(ctxday, {
             type: 'scatter',
@@ -1187,8 +1005,6 @@
         }
         }
         });
-
-
     </script>
     <script>
         // TPS Graph 7d
@@ -1389,7 +1205,7 @@
 
     </script>
     <script>
-        // CPU Graph 24h
+        // CPU & RAM Graph 24h
         var ctxcpu = document.getElementById("cpu24h");
         var datacpu = {
             datasets: [
@@ -1447,7 +1263,7 @@
                             var newDate = new Date();
                             newDate.setTime(tooltipItems.xLabel);
                             dateString = newDate.toUTCString();
-                            return dateString+ ': '+ tooltipItems.yLabel + '%';
+                            return dateString+ ': '+ tooltipItems.yLabel;
                         }
                     }
                 },
@@ -1488,7 +1304,7 @@
 
     </script>
     <script>
-        // CPU Graph 7d
+        // CPU & RAM Graph 7d
         var ctxcpu = document.getElementById("cpu7d");
         var datacpu = {
             datasets: [
@@ -1533,7 +1349,7 @@
             pointRadius: 1,
             pointHitRadius: 10,
             spanGaps: false,
-            data: %ramscatterday%
+            data: %ramscatterweek%
         }]
         };
         var cpuChart = new Chart(ctxcpu, {
@@ -1546,7 +1362,7 @@
                             var newDate = new Date();
                             newDate.setTime(tooltipItems.xLabel);
                             dateString = newDate.toUTCString();
-                            return dateString+ ': '+ tooltipItems.yLabel + '%';
+                            return dateString+ ': '+ tooltipItems.yLabel;
                         }
                     }
                 },
@@ -1586,60 +1402,287 @@
 
     </script>
     <script>
-        //    ActivityPie Graph
-        var ctxactivitypie = document.getElementById("activityPie");
-        var dataActivityPie = {
-                labels: %labelsactivity% ,
+        // Entity & Chunk Graph 24h
+        var ctxworld = document.getElementById("world24h");
+        var dataworld = {
             datasets: [
-            {
-                data: %activitydata% ,
-            backgroundColor: [ %activitycolors% ],
-        hoverBackgroundColor: [ %activitycolors% ]
-        }
-        ]
-        }
-        var ActivityPie = new Chart(ctxactivitypie, {
-            type: 'doughnut',
-            data: dataActivityPie,
+                {
+                    label: "Entity Count",
+                    yAxisID: 'A',
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#ac69ef",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#ac69ef",
+                    pointBackgroundColor: "#ac69ef",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#ac69ef",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %entityscatterday%
+        }, {
+            label: "Chunks Loaded",
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#b58310",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#b58310",
+            pointBackgroundColor: "#b58310",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#b58310",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %chunkscatterday%
+        }]
+        };
+        var worldChart = new Chart(ctxworld, {
+            type: 'scatter',
+            data: dataworld,
             options: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 7
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel;
+                        }
                     }
-                }
-            }
+                },
+                scales: {
+                    yAxes: [{
+                        id: 'A',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Entity Count'
+                        }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Chunks Loaded'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
         });
-
 
     </script>
     <script>
-        //    GMPie Graph
-        var ctxgmpie = document.getElementById("gmPie");
-        var dataGmPie = {
-                labels: %gmlabels% ,
+        // Entity & Chunk Graph 7d
+        var ctxworld = document.getElementById("world7d");
+        var dataworld = {
             datasets: [
-            {
-                data: %gmdata% ,
-            backgroundColor: [ %gmcolors% ],
-        hoverBackgroundColor: [ %gmcolors% ]
-        }
-        ]
-        }
-        var GMPie = new Chart(ctxgmpie, {
-            type: 'doughnut',
-            data: dataGmPie,
+                {
+                    label: "Entity Count",
+                    yAxisID: 'A',
+                    fill: false,
+                    lineTension: 0.1,
+                    borderColor: "#ac69ef",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "#ac69ef",
+                    pointBackgroundColor: "#ac69ef",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "#ac69ef",
+                    pointHoverBorderColor: "#8fabc6",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    spanGaps: false,
+                    data: %entityscatterweek%
+        }, {
+            label: "Chunks Loaded",
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0.1,
+            borderColor: "#b58310",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#b58310",
+            pointBackgroundColor: "#b58310",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "#b58310",
+            pointHoverBorderColor: "#8fabc6",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            spanGaps: false,
+            data: %chunkscatterweek%
+        }]
+        };
+        var worldChart = new Chart(ctxworld, {
+            type: 'scatter',
+            data: dataworld,
             options: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 7
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            var newDate = new Date();
+                            newDate.setTime(tooltipItems.xLabel);
+                            dateString = newDate.toUTCString();
+                            return dateString+ ': '+ tooltipItems.yLabel;
+                        }
                     }
-                }
-            }
+                },
+                scales: {
+                    yAxes: [{
+                        id: 'A',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Entity Count'
+                        }
+                    }, {
+                        id: 'B',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            suggestedMin: 0
+                        },
+                        scaleLabel: {
+            display: true,
+                labelString: 'Chunks Loaded'
+        }
+        }],
+        xAxes: [{
+            type: 'linear',
+            display: false
+        }]
+        }
+        }
         });
 
-
+    </script>
+    <script>
+        function activityPie() {
+            var myChart = Highcharts.chart('activityPie', {
+                chart: {
+                    plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Playerbase Composition'},
+				subtitle: {text: 'Total Players: %activitytotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%activitycolors%],
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Players',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Active',
+                        y: %active%,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Inactive',
+                        y: %inactive%
+                    }, {
+                        name: 'Single Join',
+                        y: %joinleaver%
+                    }, {
+                        name: 'Banned',
+                        y: %banned%
+                    }]
+                }]
+            });
+        };
+    </script>
+	<script>
+        function gmPie() {
+			var gmData = %gmdata%;
+            var myChart = Highcharts.chart('gmPie', {
+                chart: {
+                    plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Gamemode Usage'},
+				subtitle: {text: '%gmtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%gmcolors%],
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'GM Usage',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Survival',
+                        y: gmData[0],
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Creative',
+                        y: gmData[1]
+                    }, {
+                        name: 'Adventure',
+                        y: gmData[2]
+                    }, {
+                        name: 'Spectator',
+                        y: gmData[3]
+                    }]
+                }]
+            });
+        };
     </script>
     <script>
         //    Session start puchcard bubblechart
@@ -1776,7 +1819,7 @@
 
 
     </script>
-    <script>
+    <script>	
         //        Geolocation map
         CLOROPLETH = document.getElementById('cloropleth');
         var data = [{
@@ -1819,6 +1862,12 @@
         };
         Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
     </script>
+	<script>
+		window.onload = function() {
+			gmPie();
+			activityPie();
+		}
+	</script>
 </div>
 </body>
 </html>

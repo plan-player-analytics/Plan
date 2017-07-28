@@ -90,7 +90,7 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
-        String inspectHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getHtmlStringFromResource("player.html"),
+        String inspectHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("player.html"),
                 PlaceholderUtils.getInspectReplaceRules(userData));
         File playerFolder = new File(playersFolder, userData.getName());
         playerFolder.mkdir();
@@ -109,7 +109,7 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
-        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getHtmlStringFromResource("analysis.html"),
+        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("analysis.html"),
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");

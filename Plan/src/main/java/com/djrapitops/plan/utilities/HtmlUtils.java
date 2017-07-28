@@ -21,7 +21,7 @@ public class HtmlUtils {
      * @return
      * @throws FileNotFoundException
      */
-    public static String getHtmlStringFromResource(String fileName) throws FileNotFoundException {
+    public static String getStringFromResource(String fileName) throws FileNotFoundException {
         InputStream resourceStream = null;
         Scanner scanner = null;
         try {
