@@ -98,25 +98,25 @@ public class WebSocketServer {
                 trustManagerFactory.init(keystore);
 
                 server = HttpsServer.create(new InetSocketAddress(PORT), 10);
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+                SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 
                 ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(sslContext) {
                     public void configure(HttpsParameters params) {
-                        try {
-                            SSLContext c = SSLContext.getDefault();
-                            SSLEngine engine = c.createSSLEngine();
+//                        try {
+//                            SSLContext c = SSLContext.getDefault();
+                            SSLEngine engine = sslContext.createSSLEngine();
 
                             params.setNeedClientAuth(false);
                             params.setCipherSuites(engine.getEnabledCipherSuites());
                             params.setProtocols(engine.getEnabledProtocols());
 
-                            SSLParameters defaultSSLParameters = c.getDefaultSSLParameters();
+                            SSLParameters defaultSSLParameters = sslContext.getDefaultSSLParameters();
                             params.setSSLParameters(defaultSSLParameters);
-                        } catch (NoSuchAlgorithmException e) {
-                            Log.error("WebServer: SSL Engine loading Failed.");
-                            Log.toLog(this.getClass().getName(), e);
-                        }
+//                        } catch (NoSuchAlgorithmException e) {
+//                            Log.error("WebServer: SSL Engine loading Failed.");
+//                            Log.toLog(this.getClass().getName(), e);
+//                        }
                     }
                 });
                 startSuccessful = true;
@@ -127,16 +127,21 @@ public class WebSocketServer {
                 Log.error("WebServer: SSL Context Initialization Failed.");
                 Log.toLog(this.getClass().getName(), e);
             } catch (FileNotFoundException e) {
+                Log.error("!--------!---------!---------!");
                 Log.error("WebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
+                Log.error("!--------!---------!---------!");
             } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
                 Log.error("WebServer: SSL Certificate loading Failed.");
                 Log.toLog(this.getClass().getName(), e);
             }
 
+            Log.debug("Start Successful: "+startSuccessful);
+
             if (!startSuccessful) {
                 return; // TODO Http Server
             }
 
+            Log.debug("Create server context");
             server.createContext("/", serverResponse(null));
             HttpContext analysisPage = server.createContext("/server", serverResponse(null));
             HttpContext playersPage = server.createContext("/players", new PlayersPageResponse(null, plugin));
