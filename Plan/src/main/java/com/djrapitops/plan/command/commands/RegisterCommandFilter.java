@@ -19,5 +19,4 @@ public class RegisterCommandFilter implements Filter {
                 || message.contains("command: /plan webuser register");
         return !block;
     }
-
 }

@@ -4,7 +4,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import com.djrapitops.plugin.utilities.player.Fetch;
@@ -47,8 +46,6 @@ public class ManageImportCommand extends SubCommand {
     private void setHelp(Plan plugin) {
         ColorScheme colorScheme = plugin.getColorScheme();
 
-        String ball = DefaultMessages.BALL.toString();
-
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -59,6 +56,8 @@ public class ManageImportCommand extends SubCommand {
                 sCol + "  Analysis will be disabled during import.",
                 sCol + "  If a lot of users are not in the database, saving may take a long time."
         };
+
+        setInDepthHelp(help);
     }
 
     @Override

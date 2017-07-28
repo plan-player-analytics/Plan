@@ -4,7 +4,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import main.java.com.djrapitops.plan.Permissions;
@@ -40,8 +39,6 @@ public class SearchCommand extends SubCommand {
     private void setHelp(Plan plugin) {
         ColorScheme colorScheme = plugin.getColorScheme();
 
-        String ball = DefaultMessages.BALL.toString();
-
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -51,6 +48,8 @@ public class SearchCommand extends SubCommand {
                 tCol + "  Used to get a list of Player names that match the given argument.",
                 sCol + "  Example: /plan search 123 - Finds all users with 123 in their name."
         };
+
+        setInDepthHelp(help);
     }
 
     @Override

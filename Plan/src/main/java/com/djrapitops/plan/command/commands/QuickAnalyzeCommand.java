@@ -5,7 +5,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -44,8 +43,6 @@ public class QuickAnalyzeCommand extends SubCommand {
     private void setHelp(Plan plugin) {
         ColorScheme colorScheme = plugin.getColorScheme();
 
-        String ball = DefaultMessages.BALL.toString();
-
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -56,6 +53,8 @@ public class QuickAnalyzeCommand extends SubCommand {
                 sCol + "  Has less info than full Analysis web page.",
                 sCol + "  Aliases: qanalyze, ganalyse, qanalysis, qa"
         };
+
+        setInDepthHelp(help);
     }
 
     @Override

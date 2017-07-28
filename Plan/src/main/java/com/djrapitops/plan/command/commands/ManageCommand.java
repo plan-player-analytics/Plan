@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.command.commands;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
@@ -32,8 +31,6 @@ public class ManageCommand extends TreeCommand<Plan> {
     private void setHelp(Plan plugin) {
         ColorScheme colorScheme = plugin.getColorScheme();
 
-        String ball = DefaultMessages.BALL.toString();
-
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -45,6 +42,8 @@ public class ManageCommand extends TreeCommand<Plan> {
                 sCol + "  /plan m - List subcommands",
                 sCol + "  /plan m <subcommand> ? - in depth help"
         };
+
+        setInDepthHelp(help);
     }
 
     @Override

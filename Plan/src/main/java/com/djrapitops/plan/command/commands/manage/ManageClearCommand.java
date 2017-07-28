@@ -4,7 +4,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
@@ -40,8 +39,6 @@ public class ManageClearCommand extends SubCommand {
     private void setHelp(Plan plugin) {
         ColorScheme colorScheme = plugin.getColorScheme();
 
-        String ball = DefaultMessages.BALL.toString();
-
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -52,6 +49,8 @@ public class ManageClearCommand extends SubCommand {
                 sCol + "  Plugin should be reloaded after successful clear.",
                 sCol + "  Alias: /plan pl"
         };
+
+        setInDepthHelp(help);
     }
 
     @Override

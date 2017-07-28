@@ -183,10 +183,10 @@ public class Plan extends BukkitPlugin<Plan> {
             // Prevent passwords showing up on console.
             Bukkit.getLogger().setFilter(new RegisterCommandFilter());
         } else if (!hasDataViewCapability) {
-            Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
+            Log.infoColor(Phrase.ERROR_NO_DATA_VIEW.toString());
         }
         if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
-            Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
+            Log.infoColor(Phrase.NOTIFY_EMPTY_IP.toString());
         }
         Benchmark.stop("Enable: WebServer Initialization");
 
@@ -200,7 +200,7 @@ public class Plan extends BukkitPlugin<Plan> {
         bStats.registerMetrics();
 
         Log.debug("Verbose debug messages are enabled.");
-        Log.info(Phrase.ENABLED + "");
+        Log.info(Phrase.ENABLED.toString());
         processStatus().finishExecution("Enable");
     }
 
@@ -235,23 +235,27 @@ public class Plan extends BukkitPlugin<Plan> {
     private void registerListeners() {
         Benchmark.start("Enable: Register Listeners");
         registerListener(new PlanPlayerListener(this));
-        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
-        boolean gamemodeChangeListenerIsEnabled = Check.isTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER + "");
-        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
-        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
+        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER.toString());
+        boolean gamemodeChangeListenerIsEnabled = Check.isTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER.toString());
+        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER.toString());
+        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER.toString());
 
         if (chatListenerIsEnabled) {
             registerListener(new PlanChatListener(this));
         }
+
         if (gamemodeChangeListenerIsEnabled) {
             registerListener(new PlanGamemodeChangeListener(this));
         }
+
         if (commandListenerIsEnabled) {
             registerListener(new PlanCommandPreprocessListener(this));
         }
+
         if (deathListenerIsEnabled) {
             registerListener(new PlanDeathEventListener(this));
         }
+
         Benchmark.stop("Enable: Register Listeners");
     }
 
