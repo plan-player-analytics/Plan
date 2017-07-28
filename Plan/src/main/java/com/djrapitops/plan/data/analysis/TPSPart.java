@@ -72,17 +72,17 @@ public class TPSPart extends RawData<TPSPart> {
         double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
         double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
 
-        double averageCPUWeek = MathUtils.averageDouble(week.stream().map(TPS::getCPUUsage).filter(i -> i == 0));
-        double averageCPUDay = MathUtils.averageDouble(day.stream().map(TPS::getCPUUsage).filter(i -> i == 0));
+        double averageCPUWeek = MathUtils.averageDouble(week.stream().map(TPS::getCPUUsage).filter(i -> i != 0));
+        double averageCPUDay = MathUtils.averageDouble(day.stream().map(TPS::getCPUUsage).filter(i -> i != 0));
 
-        long averageUsedMemoryWeek = MathUtils.averageLong(week.stream().map(TPS::getUsedMemory).filter(i -> i == 0));
-        long averageUsedMemoryDay = MathUtils.averageLong(day.stream().map(TPS::getUsedMemory).filter(i -> i == 0));
+        long averageUsedMemoryWeek = MathUtils.averageLong(week.stream().map(TPS::getUsedMemory).filter(i -> i != 0));
+        long averageUsedMemoryDay = MathUtils.averageLong(day.stream().map(TPS::getUsedMemory).filter(i -> i != 0));
 
-        double averageEntityCountWeek = MathUtils.averageInt(week.stream().map(TPS::getEntityCount).filter(i -> i == 0));
-        double averageEntityCountDay = MathUtils.averageInt(day.stream().map(TPS::getEntityCount).filter(i -> i == 0));
+        double averageEntityCountWeek = MathUtils.averageInt(week.stream().map(TPS::getEntityCount).filter(i -> i != 0));
+        double averageEntityCountDay = MathUtils.averageInt(day.stream().map(TPS::getEntityCount).filter(i -> i != 0));
 
-        double averageChunksLoadedWeek = MathUtils.averageInt(week.stream().map(TPS::getChunksLoaded).filter(i -> i == 0));
-        double averageChunksLoadedDay = MathUtils.averageInt(day.stream().map(TPS::getChunksLoaded).filter(i -> i == 0));
+        double averageChunksLoadedWeek = MathUtils.averageInt(week.stream().map(TPS::getChunksLoaded).filter(i -> i != 0));
+        double averageChunksLoadedDay = MathUtils.averageInt(day.stream().map(TPS::getChunksLoaded).filter(i -> i != 0));
 
         addValue("averagetps", FormatUtils.cutDecimals(averageTPSWeek)); //Staying for backwards compatibility
         addValue("averagetpsweek", FormatUtils.cutDecimals(averageTPSWeek));
