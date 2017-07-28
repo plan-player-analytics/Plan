@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
+import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeuckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
 
@@ -32,7 +32,7 @@ public class ScatterGraphCreator {
         arrayBuilder.append("[");
 
         if (reducePoints) {
-            points = DouglasPeckerAlgorithm.reducePoints(points, 0);
+            points = DouglasPeuckerAlgorithm.reducePoints(points, 0);
         }
 
         if (reduceGapTriangles) {
