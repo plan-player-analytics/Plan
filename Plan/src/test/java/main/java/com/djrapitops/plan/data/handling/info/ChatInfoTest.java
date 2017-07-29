@@ -32,7 +32,7 @@ public class ChatInfoTest {
     public void testProcessNick() {
         UserData data = MockUtils.mockUser();
         String expected = "TestNicknameChatInfo";
-        ChatInfo i = new ChatInfo(data.getUuid(), expected, "im 18 male");
+        ChatInfo i = new ChatInfo(data.getUuid(), expected);
         assertTrue("Didn't succeed", i.process(data));
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
     }
@@ -44,7 +44,7 @@ public class ChatInfoTest {
     public void testProcessWrongUUID() {
         UserData data = MockUtils.mockUser();
         String expected = "TestNicknameChatInfo";
-        ChatInfo i = new ChatInfo(null, expected, "im 18 male");
+        ChatInfo i = new ChatInfo(null, expected);
         assertTrue("Succeeded.", !i.process(data));
     }
 }

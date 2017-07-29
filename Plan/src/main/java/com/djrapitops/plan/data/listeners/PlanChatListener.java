@@ -37,7 +37,8 @@ public class PlanChatListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+
         Player p = event.getPlayer();
-        handler.addToPool(new ChatInfo(p.getUniqueId(), p.getDisplayName(), event.getMessage()));
+        handler.addToPool(new ChatInfo(p.getUniqueId(), p.getDisplayName()));
     }
 }
