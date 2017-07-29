@@ -75,7 +75,7 @@ public class WebServer {
                 server = HttpServer.create();
             }
 
-            HttpContext context = server.createContext("/", new HttpHandler() {
+            server.createContext("/", new HttpHandler() {
                 @Override
                 public void handle(HttpExchange xchange) throws IOException {
                     OutputStream os = null;
@@ -126,10 +126,8 @@ public class WebServer {
         try {
             List<String> authorization = requestHeaders.get("Authorization");
             if (Verify.isEmpty(authorization)) {
-                Log.debug("WebServer: Authorization not Found");
                 return null;
             }
-            Log.debug("WebServer: Found Authorization");
             String auth = authorization.get(0);
             if (auth.contains("Basic ")) {
                 auth = auth.split(" ")[1];
@@ -225,13 +223,18 @@ public class WebServer {
     }
 
     private Response getResponse(String target, WebUser user) {
+        if ("/favicon.ico".equals(target)) {
+            return new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico");
+        }
         if (usingHttps) {
             if (user == null) {
                 return new PromptAuthorizationResponse();
             }
 
-            if (!isAuthorized(target, user)) {
-                return forbiddenResponse();
+            int permLevel = user.getPermLevel(); // Lower number has higher clearance.
+            int required = getRequiredPermLevel(target, user.getName());
+            if (permLevel > required) {
+                return forbiddenResponse(permLevel, required);
             }
         }
         String[] args = target.split("/");
@@ -241,8 +244,6 @@ public class WebServer {
 
         String page = args[1];
         switch (page) {
-            case "favicon.ico":
-                return new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico");
             case "players":
                 return new PlayersPageResponse(plugin);
             case "player":
@@ -254,12 +255,13 @@ public class WebServer {
         }
     }
 
-    private ForbiddenResponse forbiddenResponse() {
+    private ForbiddenResponse forbiddenResponse(int permLevel, int required) {
         ForbiddenResponse response403 = new ForbiddenResponse();
         String content = "<h1>403 Forbidden - Access Denied</h1>"
                 + "<p>Unauthorized User.<br>"
                 + "Make sure your user has the correct access level.<br>"
-                + "You can use /plan web check <username> to check the permission level.</p>";
+                + "This page requires permission level of " + String.valueOf(required) + ",<br>"
+                + "This user has permission level of " + String.valueOf(permLevel) + "</p>";
         response403.setContent(content);
         return response403;
     }
@@ -276,7 +278,7 @@ public class WebServer {
             case 2:
                 return playerResponse(new String[]{"", user.getName()});
             default:
-                return forbiddenResponse();
+                return forbiddenResponse(user.getPermLevel(), 0);
         }
     }
 
@@ -338,30 +340,33 @@ public class WebServer {
         return dataReqHandler;
     }
 
-    private boolean isAuthorized(String target, WebUser user) {
-        int permLevel = user.getPermLevel(); // Lower number has higher clearance.
-        int required = getRequiredPermLevel(target, user.getName());
-        return permLevel <= required;
-    }
-
     private int getRequiredPermLevel(String target, String user) {
         String[] t = target.split("/");
-        if (t.length < 3) {
+        if (t.length < 2) {
+            return 100;
+        }
+        if (t.length > 3) {
             return 0;
         }
-        final String wantedUser = t[2].toLowerCase().trim();
-        final String theUser = user.trim().toLowerCase();
-        if (t[1].equals("players")) {
-            return 1;
-        }
-        if (t[1].equals("player")) {
-            if (wantedUser.equals(theUser)) {
-                return 2;
-            } else {
+        String page = t[1];
+        switch (page) {
+            case "players":
                 return 1;
-            }
+            case "player":
+                // /player/ - 404 for perm lvl 1
+                if (t.length < 3) {
+                    return 1;
+                }
+                final String wantedUser = t[2].toLowerCase().trim();
+                final String theUser = user.trim().toLowerCase();
+                if (wantedUser.equals(theUser)) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            default:
+                return 0;
         }
-        return 0;
     }
 
     public String getProtocol() {

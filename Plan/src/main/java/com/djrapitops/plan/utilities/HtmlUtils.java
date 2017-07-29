@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -101,7 +102,8 @@ public class HtmlUtils {
     }
 
     private static String getProtocol() {
-        return Settings.EXTERNAL_WEBSERVER.isTrue() ? Settings.LINK_PROTOCOL.toString() : Plan.getInstance().getUiServer().getProtocol();
+        WebServer uiServer = Plan.getInstance().getUiServer();
+        return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.LINK_PROTOCOL.toString();
     }
 
     /**
