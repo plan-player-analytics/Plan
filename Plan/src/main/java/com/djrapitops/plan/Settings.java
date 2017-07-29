@@ -53,7 +53,7 @@ public enum Settings {
     WEBSERVER_CERTIFICATE_KEYPASS("Settings.WebServer.Security.Certificate.KeyPass"),
     WEBSERVER_CERTIFICATE_STOREPASS("Settings.WebServer.Security.Certificate.KeyPass"),
     WEBSERVER_CERTIFICATE_ALIAS("Settings.WebServer.Security.Certificate.Alias"),
-    LINK_PROTOCOL("Settings.WebServer.LinkProtocol"),
+    LINK_PROTOCOL("Settings.WebServer.ExternalWebServerLinkProtocol"),
     //
     SERVER_NAME("Customization.ServerName"),
     //

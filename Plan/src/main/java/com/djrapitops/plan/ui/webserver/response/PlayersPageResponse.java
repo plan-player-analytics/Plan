@@ -6,7 +6,6 @@ import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserDataNameComparator;
 
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -15,14 +14,13 @@ import java.util.List;
  */
 public class PlayersPageResponse extends Response {
 
-    public PlayersPageResponse(OutputStream output, Plan plugin) {
-        super(output);
+    public PlayersPageResponse(Plan plugin) {
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(buildContent(plugin.getInspectCache().getCachedUserData()));
     }
 
     public static String buildContent(List<UserData> cached) {
-        StringBuilder html = new StringBuilder("<h1>Cached Players</h1><p>");
+        StringBuilder html = new StringBuilder("<!DOCTYPE html><html><body><h1>Cached Players</h1><p>");
 
         int size = cached.size();
         html.append(size)
@@ -39,7 +37,7 @@ public class PlayersPageResponse extends Response {
             }
             i++;
         }
-        html.append("</tr></table>");
+        html.append("</tr></table></body></html>");
         return html.toString();
     }
 }

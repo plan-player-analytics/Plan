@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,20 +74,36 @@ public class HtmlUtils {
      * @return
      */
     public static String getServerAnalysisUrlWithProtocol() {
-        return Settings.LINK_PROTOCOL.toString() + ":" + getServerAnalysisUrl();
+        return getProtocol() + ":" + getServerAnalysisUrl();
     }
 
     /**
      * @return
      */
     public static String getServerAnalysisUrl() {
-        int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
-        boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
-        }
+        String ip = getIP();
         return "//" + ip + "/server";
+    }
+
+    /**
+     * Used to get the WebServer's IP with Port.
+     *
+     * @return For example 127.0.0.1:8804
+     */
+    public static String getIP() {
+        int port = Settings.WEBSERVER_PORT.getNumber();
+        String ip;
+        if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
+            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
+        } else {
+            ip = Plan.getInstance().getVariable().getIp() + ":" + port;
+        }
+        return ip;
+    }
+
+    private static String getProtocol() {
+        WebServer uiServer = Plan.getInstance().getUiServer();
+        return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.LINK_PROTOCOL.toString();
     }
 
     /**
@@ -94,7 +111,7 @@ public class HtmlUtils {
      * @return
      */
     public static String getInspectUrlWithProtocol(String playerName) {
-        return Settings.LINK_PROTOCOL.toString() + ":" + getInspectUrl(playerName);
+        return getProtocol() + ":" + getInspectUrl(playerName);
     }
 
     /**
@@ -102,12 +119,7 @@ public class HtmlUtils {
      * @return
      */
     public static String getInspectUrl(String playerName) {
-        int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
-        boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
-        }
+        String ip = getIP();
         return "//" + ip + "/player/" + playerName;
     }
 

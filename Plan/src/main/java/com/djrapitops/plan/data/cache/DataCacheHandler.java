@@ -42,7 +42,7 @@ import java.util.*;
 public class DataCacheHandler extends SessionCache {
 
     // Cache
-    private final HashMap<UUID, UserData> dataCache;
+    private final Map<UUID, UserData> dataCache;
 
     // Plan
     private final Plan plugin;

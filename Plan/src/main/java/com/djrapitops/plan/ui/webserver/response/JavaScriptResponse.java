@@ -4,7 +4,6 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
 
 /**
  * @author Rsl1122
@@ -12,8 +11,7 @@ import java.io.OutputStream;
  */
 public class JavaScriptResponse extends Response {
 
-    public JavaScriptResponse(OutputStream output, String resource) {
-        super(output);
+    public JavaScriptResponse(String resource) {
         super.setHeader("HTTP/1.1 200 OK");
         try {
             super.setContent(HtmlUtils.getStringFromResource(resource));

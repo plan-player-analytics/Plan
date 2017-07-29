@@ -805,7 +805,6 @@ public class UserData {
         result = 31 * result + deaths;
         result = 31 * result + name.hashCode();
         result = 31 * result + (isOnline ? 1 : 0);
-        result = 31 * result + currentSession.hashCode();
         return result;
     }
 
