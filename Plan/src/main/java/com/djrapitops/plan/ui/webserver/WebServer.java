@@ -21,7 +21,9 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.UUID;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Rsl1122
@@ -57,6 +59,7 @@ public class WebServer {
         if (enabled) {
             return;
         }
+
         Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
@@ -139,10 +142,12 @@ public class WebServer {
                     }
                 }
             });
+
             if (startSuccessful) {
                 context.setAuthenticator(new Authenticator(plugin, "/"));
             }
-            server.setExecutor(Executors.newSingleThreadExecutor());
+
+            server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
 
             server.start();
             enabled = true;
