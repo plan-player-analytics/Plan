@@ -51,6 +51,7 @@ public class SeriesCreator {
                 arrayBuilder.append(",");
             }
         }
+
         arrayBuilder.append("]");
         return arrayBuilder.toString();
     }
