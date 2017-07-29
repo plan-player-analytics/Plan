@@ -90,7 +90,7 @@ public class InspectCommand extends SubCommand {
                         return;
                     }
                     sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-                    if (CommandUtils.isPlayer(sender)) {
+                    if (CommandUtils.isPlayer(sender) && plugin.getUiServer().isAuthRequired()) {
                         boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
                         if (!senderHasWebUser) {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");

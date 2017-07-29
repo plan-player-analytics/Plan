@@ -199,15 +199,17 @@ public class NicknamesTable extends Table {
                     lastNicks.put(id, nickname);
                 }
             }
-
-            //TODO figure out what the heck that method does @Rsl1122
-            for (Map.Entry<Integer, String> entrySet : lastNicks.entrySet()) {
-                Integer id = entrySet.getKey();
-                String lastNick = entrySet.getValue();
+            for (Map.Entry<Integer, String> entry : lastNicks.entrySet()) {
+                Integer id = entry.getKey();
+                String lastNick = entry.getValue();
 
                 List<String> list = nicks.get(id);
-                list.remove(lastNick); //NOTE: Remove here?
-                list.add(lastNick); //NOTE: And add here again?
+
+                // Moves the last known nickname to the end of the List.
+                // This is due to the way nicknames are added to UserData,
+                // Nicknames are stored as a Set and last Nickname is a separate String.
+                list.remove(lastNick);
+                list.add(lastNick);
             }
 
             return nicks;

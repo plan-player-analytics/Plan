@@ -34,7 +34,8 @@ Settings:
     InternalIP: 0.0.0.0
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
-    LinkProtocol: http
+    UsingExternalWebServer: false
+    ExternalWebServerLinkProtocol: http
     Security:
       DisplayIPsAndUUIDs: true
       Certificate:

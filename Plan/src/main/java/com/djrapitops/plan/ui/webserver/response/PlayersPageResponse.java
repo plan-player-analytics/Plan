@@ -6,7 +6,6 @@ import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserDataNameComparator;
 
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -15,8 +14,7 @@ import java.util.List;
  */
 public class PlayersPageResponse extends Response {
 
-    public PlayersPageResponse(OutputStream output, Plan plugin) {
-        super(output);
+    public PlayersPageResponse(Plan plugin) {
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(buildContent(plugin.getInspectCache().getCachedUserData()));
     }

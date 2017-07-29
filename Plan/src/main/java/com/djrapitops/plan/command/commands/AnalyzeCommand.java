@@ -68,23 +68,25 @@ public class AnalyzeCommand extends SubCommand {
         }
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-        plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
-            @Override
-            public void run() {
-                try {
-                    if (CommandUtils.isPlayer(sender)) {
-                        boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
-                        if (!senderHasWebUser) {
-                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+        if (plugin.getUiServer().isAuthRequired()) {
+            plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
+                @Override
+                public void run() {
+                    try {
+                        if (CommandUtils.isPlayer(sender)) {
+                            boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
+                            if (!senderHasWebUser) {
+                                sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+                            }
                         }
+                    } catch (Exception e) {
+                        Log.toLog(this.getClass().getName() + getName(), e);
+                    } finally {
+                        this.cancel();
                     }
-                } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + getName(), e);
-                } finally {
-                    this.cancel();
                 }
-            }
-        }).runTaskAsynchronously();
+            }).runTaskAsynchronously();
+        }
         updateCache();
         runMessageSenderTask(sender);
         return true;

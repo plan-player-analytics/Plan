@@ -28,6 +28,7 @@ public enum Settings {
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
     PLAYERLIST_SHOW_IMAGES("Customization.SmallHeadImagesOnAnalysisPlayerlist"),
+    EXTERNAL_WEBSERVER("Settings.WebServer.UsingExternalWebServer"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),
@@ -53,7 +54,7 @@ public enum Settings {
     WEBSERVER_CERTIFICATE_KEYPASS("Settings.WebServer.Security.Certificate.KeyPass"),
     WEBSERVER_CERTIFICATE_STOREPASS("Settings.WebServer.Security.Certificate.KeyPass"),
     WEBSERVER_CERTIFICATE_ALIAS("Settings.WebServer.Security.Certificate.Alias"),
-    LINK_PROTOCOL("Settings.WebServer.LinkProtocol"),
+    LINK_PROTOCOL("Settings.WebServer.ExternalWebServerLinkProtocol"),
     //
     SERVER_NAME("Customization.ServerName"),
     //
