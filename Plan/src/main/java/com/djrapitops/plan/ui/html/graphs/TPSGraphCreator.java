@@ -22,13 +22,14 @@ public class TPSGraphCreator {
     }
 
     public static String buildSeriesDataString(List<TPS> tpsData) {
-        long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getTps()))
                 .collect(Collectors.toList());
         return ScatterGraphCreator.scatterGraph(points, true);
 
-    }public static String buildScatterDataStringTPS(List<TPS> tpsData, long scale) {
+    }
+
+    public static String buildScatterDataStringTPS(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()
                 .filter(tps -> tps.getDate() >= now - scale)

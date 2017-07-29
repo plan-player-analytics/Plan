@@ -3,7 +3,9 @@ package main.java.com.djrapitops.plan.data.cache;
 import main.java.com.djrapitops.plan.ui.webserver.response.Response;
 
 /**
- * Created by Fuzzlemann on 29.07.2017.
+ * This interface is used for providing the method to load the page.
+ *
+ * @author Fuzzlemann
  */
 public interface PageLoader {
 
