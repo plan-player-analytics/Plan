@@ -8,12 +8,20 @@ import main.java.com.djrapitops.plan.utilities.analysis.Point;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
  */
 public class PlayerActivityGraphCreator {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private PlayerActivityGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String buildScatterDataString(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
@@ -40,9 +48,9 @@ public class PlayerActivityGraphCreator {
 
     private static List<SessionData> filterSessions(List<SessionData> sessions, long nowMinusScale) {
         return sessions.parallelStream()
-                .filter(session -> (session != null))
+                .filter(Objects::nonNull)
                 .filter(session -> session.isValid() || session.getSessionEnd() == -1)
-                .filter((session) -> (session.getSessionStart() >= nowMinusScale || session.getSessionEnd() >= nowMinusScale))
+                .filter(session -> session.getSessionStart() >= nowMinusScale || session.getSessionEnd() >= nowMinusScale)
                 .distinct()
                 .collect(Collectors.toList());
     }

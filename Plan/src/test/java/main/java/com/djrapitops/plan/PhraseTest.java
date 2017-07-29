@@ -30,7 +30,7 @@ public class PhraseTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**
@@ -49,7 +49,7 @@ public class PhraseTest {
      *
      */
     @Test
-    public void testParse_0args() {
+    public void testParseWithZeroArgs() {
         Phrase instance = Phrase.DEM_UNKNOWN;
         String expResult = "Not Known";
         String result = instance.parse();
@@ -60,7 +60,7 @@ public class PhraseTest {
      *
      */
     @Test
-    public void testParse_StringArr() {
+    public void testParseStringArr() {
         Phrase instance = Phrase.REPLACE0;
         String expResult = "Test";
         String result = instance.parse(expResult);

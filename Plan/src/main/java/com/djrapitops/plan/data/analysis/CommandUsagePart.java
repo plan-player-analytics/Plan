@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class CommandUsagePart extends RawData<CommandUsagePart> {
+public class CommandUsagePart extends RawData {
 
     private final Map<String, Integer> commandUsage;
 
@@ -32,8 +32,8 @@ public class CommandUsagePart extends RawData<CommandUsagePart> {
 
     @Override
     public void analyse() {
-        addValue("uniquecommands", getUniqueCommands() + "");
-        addValue("totalcommands", getCommandTotal() + "");
+        addValue("uniquecommands", String.valueOf(getUniqueCommands()));
+        addValue("totalcommands", String.valueOf(getCommandTotal()));
         String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
         addValue("commanduse", HtmlUtils.removeXSS(commandUsageTable));
     }

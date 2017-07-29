@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
 public class NewPlayersGraphCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private NewPlayersGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Creates a scatter data string from given data.
      *
      * @param registered Registration dates of players

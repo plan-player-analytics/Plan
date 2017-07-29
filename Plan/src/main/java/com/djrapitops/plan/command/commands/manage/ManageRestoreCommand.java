@@ -73,7 +73,7 @@ public class ManageRestoreCommand extends SubCommand {
             public void run() {
                 try {
                     String backupDBName = args[0];
-                    boolean containsDBFileExtension = backupDBName.contains(".db");
+                    boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
                     File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
                     if (!Check.isTrue(Verify.exists(backupDBFile), Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0], sender)) {
@@ -81,7 +81,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
 
                     if (containsDBFileExtension) {
-                        backupDBName = backupDBName.replace(".db", "");
+                        backupDBName = backupDBName.substring(0, backupDBName.length() - 3);
                     }
 
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);

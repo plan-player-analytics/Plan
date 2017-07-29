@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class AnalysisData extends RawData<AnalysisData> {
+public class AnalysisData extends RawData {
 
     private final ActivityPart activityPart;
     private final CommandUsagePart commandUsagePart;
@@ -136,7 +136,7 @@ public class AnalysisData extends RawData<AnalysisData> {
         addValue("version", planVersion);
 
         final List<RawData> parts = getAllParts();
-        parts.forEach((part) -> {
+        parts.forEach(part -> {
             try {
                 Benchmark.start("Analysis Phase: " + part.getClass().getSimpleName());
                 part.analyseData();

@@ -23,16 +23,22 @@ import java.util.List;
 public class ExportUtility {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private ExportUtility() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @return
      */
     public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
         if (path.contains(":")) {
             File folder = new File(path);
-            if (folder.exists()) {
-                if (folder.isDirectory()) {
-                    return folder;
-                }
+            if (folder.exists()
+                    && folder.isDirectory()) {
+                return folder;
             }
             folder.mkdirs();
             return folder;

@@ -6,7 +6,6 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
@@ -43,8 +42,6 @@ public class AnalyzeCommand extends SubCommand {
     private void setHelp(Plan plugin) {
         ColorScheme colorScheme = plugin.getColorScheme();
 
-        String ball = DefaultMessages.BALL.toString();
-
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -55,6 +52,8 @@ public class AnalyzeCommand extends SubCommand {
                 sCol + "  /plan status can be used to check status of analysis while it is running.",
                 sCol + "  Aliases: analyze, analyse, analysis, a"
         };
+
+        setInDepthHelp(help);
     }
 
     @Override
@@ -62,10 +61,10 @@ public class AnalyzeCommand extends SubCommand {
         if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString(), sender)) {
             return true;
         }
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)) {
-            if (!analysisCache.isCached()) {
-                return true;
-            }
+
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)
+                && !analysisCache.isCached()) {
+            return true;
         }
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");

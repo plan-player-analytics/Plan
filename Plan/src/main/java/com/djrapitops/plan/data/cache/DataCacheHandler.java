@@ -366,9 +366,9 @@ public class DataCacheHandler extends SessionCache {
 
         for (List<TPS> history : copy) {
             final long lastDate = history.get(history.size() - 1).getDate();
-            final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
+            final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTps)));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
-            final double averageCPUUsage = MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage));
+            final double averageCPUUsage = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage)));
             final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));
             final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
             final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
@@ -384,7 +384,7 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveHandlerDataToCache() {
         final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
-        onlinePlayers.forEach((p) -> saveHandlerDataToCache(p, false));
+        onlinePlayers.forEach(p -> saveHandlerDataToCache(p, false));
     }
 
     private void saveHandlerDataToCache(IPlayer player, boolean pool) {
@@ -477,9 +477,9 @@ public class DataCacheHandler extends SessionCache {
     /**
      * Used to get the contents of the cache.
      *
-     * @return The HashMap containing all Cached UserData
+     * @return The Map containing all Cached UserData
      */
-    public HashMap<UUID, UserData> getDataCache() {
+    public Map<UUID, UserData> getDataCache() {
         return dataCache;
     }
 

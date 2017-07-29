@@ -34,7 +34,7 @@ public class ChatInfo extends HandlingInfo {
         if (!uData.getUuid().equals(uuid)) {
             return false;
         }
-        ChatHandling.processChatInfo(uData, nickname, message);
+        ChatHandling.processChatInfo(uData, nickname);
         return true;
     }
 }

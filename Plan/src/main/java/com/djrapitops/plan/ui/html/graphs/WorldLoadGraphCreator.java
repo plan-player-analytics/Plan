@@ -17,6 +17,13 @@ import java.util.stream.Collectors;
 public class WorldLoadGraphCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private WorldLoadGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Creates scatter graph data of entity load.
      *
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.

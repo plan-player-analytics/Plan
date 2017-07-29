@@ -19,7 +19,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class PlayerCountPart extends RawData<PlayerCountPart> {
+public class PlayerCountPart extends RawData {
 
     private final Set<UUID> uuids;
     private final Set<UUID> ops;

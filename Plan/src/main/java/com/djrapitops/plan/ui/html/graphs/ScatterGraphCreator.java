@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeckerAlgorithm;
+import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeuckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
 
@@ -23,16 +23,22 @@ import java.util.Set;
  */
 public class ScatterGraphCreator {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private ScatterGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String scatterGraph(List<Point> points, boolean reduceGapTriangles) {
         return scatterGraph(points, reduceGapTriangles, true);
     }
 
     public static String scatterGraph(List<Point> points, boolean reduceGapTriangles, boolean reducePoints) {
-        StringBuilder arrayBuilder = new StringBuilder();
-        arrayBuilder.append("[");
+        StringBuilder arrayBuilder = new StringBuilder("[");
 
         if (reducePoints) {
-            points = DouglasPeckerAlgorithm.reducePoints(points, 0);
+            points = DouglasPeuckerAlgorithm.reducePoints(points, 0);
         }
 
         if (reduceGapTriangles) {
@@ -45,7 +51,7 @@ public class ScatterGraphCreator {
                     long lastDate = (long) lastPoint.getX();
                     double y = point.getY();
                     double lastY = lastPoint.getY();
-                    if (y != lastY && Math.abs(lastY - y) > 0.5) {
+                    if (Double.compare(y, lastY) != 0 && Math.abs(lastY - y) > 0.5) {
                         if (lastDate < date - TimeAmount.MINUTE.ms() * 10L) {
                             toAdd.add(new Point(lastDate + 1, lastY));
                             toAdd.add(new Point(date - 1, lastY));

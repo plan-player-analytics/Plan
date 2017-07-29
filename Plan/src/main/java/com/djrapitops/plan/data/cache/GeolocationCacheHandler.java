@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -21,6 +22,14 @@ import java.util.Map;
  * @since 3.5.5
  */
 public class GeolocationCacheHandler {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private GeolocationCacheHandler() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .build();
@@ -71,12 +80,20 @@ public class GeolocationCacheHandler {
      */
     private static String getUncachedCountry(String ipAddress) {
         Benchmark.start("getUncachedCountry");
+
+        URL url;
+
+        String urlString = "http://freegeoip.net/csv/" + ipAddress;
         try {
-            URL url = new URL("http://freegeoip.net/csv/" + ipAddress);
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            url = new URL(urlString);
+        } catch (MalformedURLException e) {
+            Log.error("The URL \"" + urlString + "\" couldn't be converted to URL: " + e.getCause()); //Shouldn't ever happen
+            return "Not Known";
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
             String resultLine = in.readLine();
-            Log.debug(resultLine);
-            in.close();
+            Log.debug("Result for country request for " + ipAddress + ": " + resultLine);
 
             String[] results = resultLine.split(",");
             String result = results[2];

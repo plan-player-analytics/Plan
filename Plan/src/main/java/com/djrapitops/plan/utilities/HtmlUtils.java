@@ -17,6 +17,13 @@ import java.util.Scanner;
 public class HtmlUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private HtmlUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param fileName
      * @return
      * @throws FileNotFoundException
@@ -52,9 +59,13 @@ public class HtmlUtils {
      * @return
      */
     public static String replacePlaceholders(String html, Map<String, String> replaceMap) {
-        for (String key : replaceMap.keySet()) {
-            html = html.replace(key, replaceMap.get(key));
+        for (Map.Entry<String, String> entrySet : replaceMap.entrySet()) {
+            String placeholder = entrySet.getKey();
+            String replacer = entrySet.getValue();
+
+            html = html.replace(placeholder, replacer);
         }
+
         return html;
     }
 
@@ -73,7 +84,7 @@ public class HtmlUtils {
         String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", "" + port);
+            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         }
         return "//" + ip + "/server";
     }
@@ -95,7 +106,7 @@ public class HtmlUtils {
         String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
         boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
         if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", "" + port);
+            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         }
         return "//" + ip + "/player/" + playerName;
     }
@@ -167,15 +178,17 @@ public class HtmlUtils {
     public static String swapColorsToSpan(String string) {
         Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
                 Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,
-                Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
+                Html.COLOR_A, Html.COLOR_B, Html.COLOR_C, Html.COLOR_D, Html.COLOR_E, Html.COLOR_F};
 
         for (Html html : replacer) {
-            string = string.replace("§" + html.name().charAt(6), html.parse());
+            string = string.replace("§" + Character.toLowerCase(html.name().charAt(6)), html.parse());
         }
+
         int spans = string.split("<span").length - 1;
         for (int i = 0; i < spans; i++) {
             string = Html.SPAN.parse(string);
         }
+
         return string.replace("§r", "");
     }
 

@@ -93,7 +93,7 @@ public class KillsTable extends Table {
             List<KillData> killData = new ArrayList<>();
             while (set.next()) {
                 int victimID = set.getInt(columnVictimUserID);
-                UUID victimUUID = usersTable.getUserUUID(victimID + "");
+                UUID victimUUID = usersTable.getUserUUID(String.valueOf(victimID));
                 killData.add(new KillData(victimUUID, victimID, set.getString(columnWeapon), set.getLong(columnDate)));
             }
             return killData;
@@ -131,20 +131,24 @@ public class KillsTable extends Table {
                 if (kill == null) {
                     continue;
                 }
+
                 statement.setInt(1, userId);
                 int victimUserID = kill.getVictimUserID();
+
                 if (victimUserID == -1) {
                     victimUserID = db.getUsersTable().getUserId(kill.getVictim());
                     if (victimUserID == -1) {
                         continue;
                     }
                 }
+
                 statement.setInt(2, victimUserID);
                 statement.setString(3, kill.getWeapon());
                 statement.setLong(4, kill.getDate());
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }
@@ -200,6 +204,7 @@ public class KillsTable extends Table {
         if (kills == null || kills.isEmpty()) {
             return;
         }
+
         Benchmark.start("Database: Save Kills multiple");
         Map<Integer, List<KillData>> saved = getPlayerKills(kills.keySet(), uuids);
 
@@ -213,16 +218,22 @@ public class KillsTable extends Table {
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
             int i = 0;
-            for (Integer id : kills.keySet()) {
-                List<KillData> playerKills = kills.get(id);
+
+            for (Map.Entry<Integer, List<KillData>> entrySet : kills.entrySet()) {
+                Integer id = entrySet.getKey();
+                List<KillData> playerKills = entrySet.getValue();
+
                 List<KillData> s = saved.get(id);
+
                 if (s != null) {
                     playerKills.removeAll(s);
                 }
+
                 for (KillData kill : playerKills) {
                     if (kill == null) {
                         continue;
                     }
+
                     statement.setInt(1, id);
                     int victimUserID = kill.getVictimUserID();
                     if (victimUserID == -1) {
@@ -230,11 +241,14 @@ public class KillsTable extends Table {
                                 .stream().filter(e -> e.getValue().equals(kill.getVictim()))
                                 .map(Map.Entry::getKey)
                                 .collect(Collectors.toList());
+
                         if (matchingIds.isEmpty()) {
                             continue;
                         }
+
                         victimUserID = matchingIds.get(0);
                     }
+
                     statement.setInt(2, victimUserID);
                     statement.setString(3, kill.getWeapon());
                     statement.setLong(4, kill.getDate());
@@ -242,14 +256,15 @@ public class KillsTable extends Table {
                     commitRequired = true;
                     i++;
                 }
+
                 if (commitRequired) {
                     Log.debug("Executing kills batch: " + i);
                     statement.executeBatch();
                 }
             }
-            Benchmark.stop("Database: Save Kills multiple");
         } finally {
             close(statement);
+            Benchmark.stop("Database: Save Kills multiple");
         }
     }
 }

@@ -119,17 +119,20 @@ public class TPS {
         if (this == obj) {
             return true;
         }
+
         if (obj == null) {
             return false;
         }
+
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final TPS other = (TPS) obj;
-        return this.date == other.date
-                && Double.doubleToLongBits(this.tps) == Double.doubleToLongBits(other.tps)
+        return date == other.date
+                && Double.compare(this.tps, other.tps) == 0
                 && this.players == other.players
-                && this.cpuUsage == other.cpuUsage;
+                && Double.compare(cpuUsage, other.cpuUsage) == 0;
     }
 
     @Override

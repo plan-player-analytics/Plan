@@ -90,14 +90,17 @@ public class CommandUseTable extends Table {
         insertCommands(newData);
         Map<String, Integer> updateData = new HashMap<>(data);
         updateData.keySet().removeAll(newData.keySet());
-        for (String cmd : saved.keySet()) {
-            Integer toSave = updateData.get(cmd);
-            if (toSave != null) {
-                if (toSave <= saved.get(cmd)) {
-                    updateData.remove(cmd);
-                }
+        for (Map.Entry<String, Integer> entrySet : saved.entrySet()) {
+            String cmd = entrySet.getKey();
+            Integer toSave = entrySet.getValue();
+
+            if (toSave == null || toSave > saved.get(cmd)) {
+                continue;
             }
+
+            updateData.remove(cmd);
         }
+
         updateCommands(updateData);
         Benchmark.stop("Database: Save Commanduse");
     }
@@ -108,16 +111,20 @@ public class CommandUseTable extends Table {
             String updateStatement = "UPDATE " + tableName + " SET " + columnTimesUsed + "=? WHERE (" + columnCommand + "=?)";
             statement = prepareStatement(updateStatement);
             boolean commitRequired = false;
-            for (String key : data.keySet()) {
-                Integer amount = data.get(key);
+            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
+                String key = entrySet.getKey();
+                Integer amount = entrySet.getValue();
+
                 if (key.length() > 20) {
                     continue;
                 }
+
                 statement.setInt(1, amount);
                 statement.setString(2, key);
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }
@@ -135,16 +142,20 @@ public class CommandUseTable extends Table {
                     + ") VALUES (?, ?)";
             statement = prepareStatement(insertStatement);
             boolean commitRequired = false;
-            for (String key : data.keySet()) {
-                Integer amount = data.get(key);
+            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
+                String key = entrySet.getKey();
+                Integer amount = entrySet.getValue();
+
                 if (key.length() > 20) {
                     continue;
                 }
+
                 statement.setString(1, key);
                 statement.setInt(2, amount);
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }

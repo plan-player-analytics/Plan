@@ -5,19 +5,26 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Ramer-Douglas-Pecker Point Reduction Algorithm for reducing points from
+ * Ramer-Douglas-Peucker Point Reduction Algorithm for reducing points from
  * graphs.
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class DouglasPeckerAlgorithm {
+public class DouglasPeuckerAlgorithm {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private DouglasPeuckerAlgorithm() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static List<Point> reducePoints(List<Point> points, double epsilon) {
         if (points.isEmpty()) {
             return points;
         }
-        if (epsilon == -1) {
+        if (Double.compare(epsilon, -1) == 0) {
             epsilon = 0.002;
         }
         int size = points.size();

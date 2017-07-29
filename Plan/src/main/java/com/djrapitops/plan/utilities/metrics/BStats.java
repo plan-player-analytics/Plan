@@ -30,7 +30,6 @@ public class BStats {
         boolean gatherGMTimes = Settings.GATHERGMTIMES.isTrue();
         boolean gatherCommands = Settings.GATHERCOMMANDS.isTrue();
 
-
         addEnabledDisabledPie("webserver_enabled", webserver);
         addEnabledDisabledPie("analysis_enable_refresh", analysisRefreshEnable);
         addEnabledDisabledPie("analysis_auto_refresh", analysisAutoRefresh);
@@ -40,7 +39,7 @@ public class BStats {
         addEnabledDisabledPie("gather_gmtimes", gatherGMTimes);
         addEnabledDisabledPie("gather_commands", gatherCommands);
 
-        String serverType = plugin.getDB().getName();
+        String serverType = plugin.getServer().getName();
         String databaseType = plugin.getDB().getName();
 
         addStringSettingPie("server_type", serverType);

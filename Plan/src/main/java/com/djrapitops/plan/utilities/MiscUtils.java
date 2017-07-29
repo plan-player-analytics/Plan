@@ -23,6 +23,13 @@ import java.util.stream.Collectors;
 public class MiscUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private MiscUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Used to get the current time as milliseconds.
      *
      * @return Epoch ms.
@@ -56,7 +63,7 @@ public class MiscUtils {
         } else if (args.length > 0) {
             if (sender.hasPermission(perm.getPermission())) {
                 playerName = args[0];
-            } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
+            } else if (args[0].equalsIgnoreCase(sender.getName())) {
                 playerName = sender.getName();
             } else {
                 sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());

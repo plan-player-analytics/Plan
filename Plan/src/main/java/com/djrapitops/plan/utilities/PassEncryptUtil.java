@@ -17,6 +17,13 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class PassEncryptUtil {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private PassEncryptUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
     // These constants may be changed without breaking existing hashes.
     public static final int SALT_BYTE_SIZE = 24;
@@ -161,25 +168,25 @@ public class PassEncryptUtil {
     }
 
     @SuppressWarnings("serial")
-    static public class InvalidHashException extends Exception {
+    public static class InvalidHashException extends Exception {
 
-        public InvalidHashException(String message) {
+        InvalidHashException(String message) {
             super(message);
         }
 
-        public InvalidHashException(String message, Throwable source) {
+        InvalidHashException(String message, Throwable source) {
             super(message, source);
         }
     }
 
     @SuppressWarnings("serial")
-    static public class CannotPerformOperationException extends Exception {
+    public static class CannotPerformOperationException extends Exception {
 
-        public CannotPerformOperationException(String message) {
+        CannotPerformOperationException(String message) {
             super(message);
         }
 
-        public CannotPerformOperationException(String message, Throwable source) {
+        CannotPerformOperationException(String message, Throwable source) {
             super(message, source);
         }
     }

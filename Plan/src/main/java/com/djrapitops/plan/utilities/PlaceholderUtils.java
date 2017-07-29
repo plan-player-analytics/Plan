@@ -24,6 +24,13 @@ import java.util.UUID;
 public class PlaceholderUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private PlaceholderUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Gets the HashMap that is used to replace placeholders in Analysis.
      *
      * @param data AnalysisData used to replace the placeholders with
@@ -94,19 +101,19 @@ public class PlaceholderUtils {
         replaceMap.put("%banned%", data.isBanned() ? Html.BANNED.parse() : "");
         replaceMap.put("%op%", data.isOp() ? Html.OPERATOR.parse() : "");
         replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
-        replaceMap.put("%deaths%", data.getDeaths() + "");
-        replaceMap.put("%playerkills%", data.getPlayerKills().size() + "");
-        replaceMap.put("%mobkills%", data.getMobKills() + "");
+        replaceMap.put("%deaths%", String.valueOf(data.getDeaths()));
+        replaceMap.put("%playerkills%", String.valueOf(data.getPlayerKills().size()));
+        replaceMap.put("%mobkills%", String.valueOf(data.getMobKills()));
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(data.getSessions()))));
         replaceMap.put("%killstable%", KillsTableCreator.createKillsTable(data.getPlayerKills()));
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%planlite%", "");
-        replaceMap.put("%graphmaxplayers%", 2 + "");
+        replaceMap.put("%graphmaxplayers%", "2");
         String scatterGraphData = PlayerActivityGraphCreator.buildScatterDataStringSessions(data.getSessions(), TimeAmount.WEEK.ms());
         replaceMap.put("%dataweek%", scatterGraphData);
-        replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
-        replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
+        replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
+        replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL.toString());
         replaceMap.put("%datapunchcard%", PunchCardGraphCreator.generateDataArray(data.getSessions()));
         String[] distribution = SessionLengthDistributionGraphCreator.generateDataArraySessions(data.getSessions());
         replaceMap.put("%datasessiondistribution%", distribution[0]);
@@ -119,8 +126,8 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        replaceMap.put("%refreshlong%", plugin.getInspectCache().getCacheTime(uuid) + "");
-        replaceMap.put("%currenttime%", MiscUtils.getTime() + "");
+        replaceMap.put("%refreshlong%", String.valueOf(plugin.getInspectCache().getCacheTime(uuid)));
+        replaceMap.put("%currenttime%", String.valueOf(MiscUtils.getTime()));
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);

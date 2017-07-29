@@ -11,6 +11,13 @@ import java.util.stream.Stream;
  */
 public class MathUtils {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private MathUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.##", decimalFormatSymbols);
 

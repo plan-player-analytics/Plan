@@ -60,10 +60,10 @@ public class PlanDeathEventListener implements Listener {
             Material itemInHand;
             try {
                 itemInHand = killer.getInventory().getItemInMainHand().getType();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 try {
                     itemInHand = killer.getInventory().getItemInHand().getType(); // Support for non dual wielding versions.
-                } catch (Throwable e2) {
+                } catch (Exception e2) {
                     itemInHand = Material.AIR;
                 }
             }

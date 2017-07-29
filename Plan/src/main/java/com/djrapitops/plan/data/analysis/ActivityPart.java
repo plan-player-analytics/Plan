@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class ActivityPart extends RawData<ActivityPart> {
+public class ActivityPart extends RawData {
 
     private final JoinInfoPart joins;
     private final TPSPart tpsPart;

@@ -15,7 +15,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class GeolocationPart extends RawData<GeolocationPart> {
+public class GeolocationPart extends RawData {
 
     private final Map<String, Integer> geoLocations;
     private final Map<String, String> geoCodes;

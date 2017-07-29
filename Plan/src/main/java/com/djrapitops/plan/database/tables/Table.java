@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
@@ -68,13 +69,21 @@ public abstract class Table {
     }
 
     /**
-     * @param statement
+     * @param statementString
      * @return
      * @throws SQLException
      */
-    protected boolean execute(String statement) throws SQLException {
+    protected boolean execute(String statementString) throws SQLException {
         Connection connection = getConnection();
-        return connection.createStatement().execute(statement);
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            return statement.execute(statementString);
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
     }
 
     /**

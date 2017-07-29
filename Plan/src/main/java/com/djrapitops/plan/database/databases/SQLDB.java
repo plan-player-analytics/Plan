@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,12 +64,22 @@ public abstract class SQLDB extends Database {
         plugin.getRunnableFactory().createNew(new AbsRunnable("DBConnectionPingTask " + getName()) {
             @Override
             public void run() {
+                Statement statement = null;
                 try {
                     if (connection != null && !connection.isClosed()) {
-                        connection.createStatement().execute("/* ping */ SELECT 1");
+                        statement = connection.createStatement();
+                        statement.execute("/* ping */ SELECT 1");
                     }
                 } catch (SQLException e) {
                     connection = getNewConnection();
+                } finally {
+                    if (statement != null) {
+                        try {
+                            statement.close();
+                        } catch (SQLException e) {
+                            Log.error("Error at closing statement");
+                        }
+                    }
                 }
             }
         }).runTaskTimerAsynchronously(60 * 20, 60 * 20);
@@ -113,27 +124,34 @@ public abstract class SQLDB extends Database {
                 getVersion();
                 newDatabase = false;
             } catch (Exception e) {
+
             }
             if (!versionTable.createTable()) {
                 Log.error("Failed to create table: " + versionTable.getTableName());
                 return false;
             }
+
             if (newDatabase) {
                 Log.info("New Database created.");
                 setVersion(7);
             }
+
             Benchmark.start("Database: Create tables");
+
             for (Table table : getAllTables()) {
                 if (!table.createTable()) {
                     Log.error("Failed to create table: " + table.getTableName());
                     return false;
                 }
             }
+
             if (!securityTable.createTable()) {
                 Log.error("Failed to create table: " + securityTable.getTableName());
                 return false;
             }
+
             Benchmark.stop("Database: Create tables");
+
             if (!newDatabase && getVersion() < 7) {
                 setVersion(7);
             }
@@ -304,7 +322,7 @@ public abstract class SQLDB extends Database {
 
         List<String> nicknames = nicknamesTable.getNicknames(userId);
         data.addNicknames(nicknames);
-        if (nicknames.size() > 0) {
+        if (!nicknames.isEmpty()) {
             data.setLastNick(nicknames.get(nicknames.size() - 1));
         }
 
@@ -397,13 +415,16 @@ public abstract class SQLDB extends Database {
         Map<Integer, List<SessionData>> sessions = new HashMap<>();
         Map<Integer, Map<String, Long>> gmTimes = new HashMap<>();
         // Put to dataset
-        for (UUID uuid : userDatas.keySet()) {
+        for (Map.Entry<UUID, UserData> entrySet : userDatas.entrySet()) {
+            UUID uuid = entrySet.getKey();
+            UserData uData = entrySet.getValue();
             Integer id = userIds.get(uuid);
-            UserData uData = userDatas.get(uuid);
+
             if (id == -1) {
                 Log.debug("User not seen before, saving last: " + uuid);
                 continue;
             }
+
             uData.access();
             nicknames.put(id, new HashSet<>(uData.getNicknames()));
             lastNicks.put(id, uData.getLastNick());
@@ -464,7 +485,6 @@ public abstract class SQLDB extends Database {
             checkConnection();
             tpsTable.clean();
             locationsTable.removeAllData();
-//            sessionsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);

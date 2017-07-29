@@ -15,6 +15,13 @@ import java.util.Map;
 public class CommandUseTableCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private CommandUseTableCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param commandUse
      * @return
      */

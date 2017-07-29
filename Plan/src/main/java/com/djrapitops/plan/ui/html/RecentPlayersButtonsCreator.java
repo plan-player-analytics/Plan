@@ -10,6 +10,13 @@ import java.util.List;
 public class RecentPlayersButtonsCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private RecentPlayersButtonsCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Creates recent players buttons inside a p-tag.
      *
      * @param names The name of players sorted by last playtime.

@@ -9,11 +9,10 @@ import java.util.Map;
 /**
  * Extending objects should represent, add together and analyse data.
  *
- * @param <T> The extending class, return value for get method.
  * @author Rsl1122
  * @since 3.5.2
  */
-public abstract class RawData<T extends RawData> {
+public abstract class RawData {
 
     private final Map<String, String> replaceMap;
 
@@ -79,10 +78,10 @@ public abstract class RawData<T extends RawData> {
 
     private String addPlaceholderSigns(String placeholder) {
         if (placeholder.charAt(0) != '%') {
-            placeholder = '%' + placeholder;
+            placeholder = "%" + placeholder;
         }
         if (placeholder.charAt(placeholder.length() - 1) != '%') {
-            placeholder += '%';
+            placeholder += "%";
         }
         return placeholder;
     }

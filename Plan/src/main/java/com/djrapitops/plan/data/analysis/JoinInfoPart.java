@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class JoinInfoPart extends RawData<JoinInfoPart> {
+public class JoinInfoPart extends RawData {
 
     private final Map<UUID, List<SessionData>> sessions;
     private final List<Long> registered;

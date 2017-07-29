@@ -63,7 +63,6 @@ public class DataCacheSaveQueueTest {
                     calledSaveUserData2 = true;
                 }
                 calledSaveUserData = true;
-
             }
         };
         when(plan.getDB()).thenReturn(db);

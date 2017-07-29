@@ -45,12 +45,12 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
             map.put(uuid, Arrays.asList(processors));
             queue.add(map);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", String.valueOf(Settings.PROCESS_GET_LIMIT.getNumber())));
         }
     }
 
     public boolean containsUUIDtoBeCached(UUID uuid) {
-        return uuid != null && new ArrayList<>(queue).stream().anyMatch((map) -> (map.get(uuid) != null && map.get(uuid).size() >= 2));
+        return uuid != null && new ArrayList<>(queue).stream().anyMatch(map -> (map.get(uuid) != null && map.get(uuid).size() >= 2));
     }
 }
 
@@ -70,11 +70,15 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
         }
 
         try {
-            for (UUID uuid : processors.keySet()) {
+            for (Map.Entry<UUID, List<DBCallableProcessor>> entrySet : processors.entrySet()) {
+                UUID uuid = entrySet.getKey();
+
                 if (uuid == null) {
                     continue;
                 }
-                List<DBCallableProcessor> processorsList = processors.get(uuid);
+
+                List<DBCallableProcessor> processorsList = entrySet.getValue();
+
                 if (processorsList != null) {
                     Log.debug(uuid + ": Get, For:" + processorsList.size());
                     try {

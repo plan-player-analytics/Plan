@@ -43,7 +43,6 @@ public class LogoutInfoTest {
         data.setLastPlayed(10L);
         data.updateBanned(false);
         long time = 20L;
-        Exception ex = null;
         data.setLastGamemode("SURVIVAL");
         LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, Gamemode.CREATIVE, new SessionData(0, 1));
         assertTrue(i.process(data));

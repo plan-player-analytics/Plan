@@ -9,6 +9,13 @@ import main.java.com.djrapitops.plan.Plan;
 public class Benchmark {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private Benchmark() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param source
      */
     public static void start(String source) {

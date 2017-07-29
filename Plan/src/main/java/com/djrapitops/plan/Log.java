@@ -13,6 +13,13 @@ import java.util.Collection;
 public class Log {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private Log() {
+        throw new IllegalStateException("Utility Class");
+    }
+
+    /**
      * Logs the message to the console as INFO.
      *
      * @param message "Message" will show up as [INFO][Plan]: Message
