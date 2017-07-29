@@ -32,6 +32,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
@@ -223,25 +224,32 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     @Override
     public void onDisable() {
+        //Clears the page cache
+        PageCacheHandler.clearCache();
+
         // Stop the UI Server
         if (uiServer != null) {
             uiServer.stop();
         }
+
         getServer().getScheduler().cancelTasks(this);
+
         if (Verify.notNull(handler, db)) {
             Benchmark.start("Disable: DataCache Save");
             // Saves the DataCache to the database without Bukkit's Schedulers.
-            Log.info(Phrase.CACHE_SAVE + "");
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            Log.info(Phrase.CACHE_SAVE.toString());
+
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
                 Benchmark.stop("Disable: DataCache Save");
             });
-            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
 
+            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
         }
-        Log.info(Phrase.DISABLED + "");
+
+        Log.info(Phrase.DISABLED.toString());
     }
 
     private void registerListeners() {

@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -56,6 +57,9 @@ public class Analysis {
         if (isAnalysisBeingRun()) {
             return;
         }
+
+        PageCacheHandler.clearCache();
+
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START.toString());
         // Async task for Analysis

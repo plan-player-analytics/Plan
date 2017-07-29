@@ -72,8 +72,7 @@ public class DataRequestHandler {
             }
             return HtmlUtils.replacePlaceholders(
                     HtmlUtils.getStringFromResource("analysis.html"),
-                    PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData())
-            );
+                    PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData()));
         } catch (FileNotFoundException ex) {
             return "<h1>404 analysis.html was not found</h1>";
         }

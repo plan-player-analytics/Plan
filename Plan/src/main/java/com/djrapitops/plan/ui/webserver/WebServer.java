@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
@@ -224,11 +225,11 @@ public class WebServer {
 
     private Response getResponse(String target, WebUser user) {
         if ("/favicon.ico".equals(target)) {
-            return new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico");
+            return PageCacheHandler.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
         if (usingHttps) {
             if (user == null) {
-                return new PromptAuthorizationResponse();
+                return PageCacheHandler.loadPage("promptAuthorization", PromptAuthorizationResponse::new);
             }
 
             int permLevel = user.getPermLevel(); // Lower number has higher clearance.
@@ -245,7 +246,7 @@ public class WebServer {
         String page = args[1];
         switch (page) {
             case "players":
-                return new PlayersPageResponse(plugin);
+                return PageCacheHandler.loadPage("players", () -> new PlayersPageResponse(plugin));
             case "player":
                 return playerResponse(args);
             case "server":
@@ -255,15 +256,17 @@ public class WebServer {
         }
     }
 
-    private ForbiddenResponse forbiddenResponse(int permLevel, int required) {
-        ForbiddenResponse response403 = new ForbiddenResponse();
-        String content = "<h1>403 Forbidden - Access Denied</h1>"
-                + "<p>Unauthorized User.<br>"
-                + "Make sure your user has the correct access level.<br>"
-                + "This page requires permission level of " + String.valueOf(required) + ",<br>"
-                + "This user has permission level of " + String.valueOf(permLevel) + "</p>";
-        response403.setContent(content);
-        return response403;
+    private Response forbiddenResponse(int permLevel, int required) {
+        return PageCacheHandler.loadPage("forbidden", () -> {
+            ForbiddenResponse response403 = new ForbiddenResponse();
+            String content = "<h1>403 Forbidden - Access Denied</h1>"
+                    + "<p>Unauthorized User.<br>"
+                    + "Make sure your user has the correct access level.<br>"
+                    + "This page requires permission level of " + String.valueOf(required) + ",<br>"
+                    + "This user has permission level of " + String.valueOf(permLevel) + "</p>";
+            response403.setContent(content);
+            return response403;
+        });
     }
 
     private Response rootPageResponse(WebUser user) {
@@ -274,7 +277,7 @@ public class WebServer {
             case 0:
                 return serverResponse();
             case 1:
-                return new PlayersPageResponse(plugin);
+                return PageCacheHandler.loadPage("players", () -> new PlayersPageResponse(plugin));
             case 2:
                 return playerResponse(new String[]{"", "", user.getName()});
             default:
@@ -284,34 +287,45 @@ public class WebServer {
 
     private Response serverResponse() {
         if (!dataReqHandler.checkIfAnalysisIsCached()) {
-            return new NotFoundResponse("Analysis Data was not cached.<br>Use /plan analyze to cache the Data.");
+            String error = "Analysis Data was not cached.<br>Use /plan analyze to cache the Data.";
+            PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
-        return new AnalysisPageResponse(dataReqHandler);
+
+        return PageCacheHandler.loadPage("analysisPage", () -> new AnalysisPageResponse(dataReqHandler));
     }
 
     private Response playerResponse(String[] args) {
         if (args.length < 3) {
-            return new NotFoundResponse();
+            return PageCacheHandler.loadPage("notFound", NotFoundResponse::new);
         }
+
         String playerName = args[2].trim();
         UUID uuid = UUIDUtility.getUUIDOf(playerName);
+
         if (uuid == null) {
-            return new NotFoundResponse("Player has no UUID");
+            String error = "Player has no UUID";
+            return PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
+
         if (!dataReqHandler.checkIfCached(uuid)) {
-            return new NotFoundResponse("Player's data was not cached.<br>Use /plan inspect " + playerName + " to cache the Data.");
+            String error = "Player's data was not cached.<br>Use /plan inspect " + playerName + " to cache the Data.";
+            return PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
-        return new InspectPageResponse(dataReqHandler, uuid);
+
+        return PageCacheHandler.loadPage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(dataReqHandler, uuid));
     }
 
     private Response notFoundResponse() {
-        NotFoundResponse response404 = new NotFoundResponse();
-        String content = "<h1>404 Not Found</h1>"
+        String error = "<h1>404 Not Found</h1>"
                 + "<p>Make sure you're accessing a link given by a command, Examples:</p>"
                 + "<p>" + getProtocol() + HtmlUtils.getInspectUrl("<player>") + " or<br>"
                 + getProtocol() + HtmlUtils.getServerAnalysisUrl() + "</p>";
-        response404.setContent(content);
-        return response404;
+
+        return PageCacheHandler.loadPage("notFound: " + error, () -> {
+            Response response404 = new NotFoundResponse();
+            response404.setContent(error);
+            return response404;
+        });
     }
 
     /**
@@ -357,13 +371,11 @@ public class WebServer {
                 if (t.length < 3) {
                     return 1;
                 }
+
                 final String wantedUser = t[2].toLowerCase().trim();
                 final String theUser = user.trim().toLowerCase();
-                if (wantedUser.equals(theUser)) {
-                    return 2;
-                } else {
-                    return 1;
-                }
+
+                return wantedUser.equals(theUser) ? 2 : 1;
             default:
                 return 0;
         }
