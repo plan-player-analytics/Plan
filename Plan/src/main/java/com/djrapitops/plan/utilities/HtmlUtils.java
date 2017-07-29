@@ -181,12 +181,14 @@ public class HtmlUtils {
                 Html.COLOR_A, Html.COLOR_B, Html.COLOR_C, Html.COLOR_D, Html.COLOR_E, Html.COLOR_F};
 
         for (Html html : replacer) {
-            string = string.replace("§" + html.name().charAt(6), html.parse());
+            string = string.replace("§" + Character.toLowerCase(html.name().charAt(6)), html.parse());
         }
+
         int spans = string.split("<span").length - 1;
         for (int i = 0; i < spans; i++) {
             string = Html.SPAN.parse(string);
         }
+
         return string.replace("§r", "");
     }
 

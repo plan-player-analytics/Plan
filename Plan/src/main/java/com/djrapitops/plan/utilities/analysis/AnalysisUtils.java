@@ -105,7 +105,7 @@ public class AnalysisUtils {
                     return source.parseContainer("", "Wrong Analysistype specified: " + analysisType.name());
             }
             return source.parseContainer(analysisType.getModifier(), String.valueOf(total));
-        } catch (Exception e) {
+        } catch (Exception | NoClassDefFoundError e) {
             return logPluginDataCausedError(source, e);
         }
     }
