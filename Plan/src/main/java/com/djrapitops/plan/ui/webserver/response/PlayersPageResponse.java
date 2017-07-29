@@ -20,7 +20,7 @@ public class PlayersPageResponse extends Response {
     }
 
     public static String buildContent(List<UserData> cached) {
-        StringBuilder html = new StringBuilder("<h1>Cached Players</h1><p>");
+        StringBuilder html = new StringBuilder("<!DOCTYPE html><html><body><h1>Cached Players</h1><p>");
 
         int size = cached.size();
         html.append(size)
@@ -37,7 +37,7 @@ public class PlayersPageResponse extends Response {
             }
             i++;
         }
-        html.append("</tr></table>");
+        html.append("</tr></table></body></html>");
         return html.toString();
     }
 }

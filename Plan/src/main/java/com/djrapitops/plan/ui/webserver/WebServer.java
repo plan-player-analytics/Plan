@@ -17,10 +17,7 @@ import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.ChatColor;
 
 import javax.net.ssl.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.security.*;
@@ -29,7 +26,9 @@ import java.security.cert.CertificateException;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Rsl1122
@@ -65,6 +64,7 @@ public class WebServer {
         if (enabled) {
             return;
         }
+
         Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             usingHttps = startHttpsServer();
@@ -97,9 +97,15 @@ public class WebServer {
 
                         String content = response.getContent();
                         exchange.sendResponseHeaders(response.getCode(), content.length());
-                        os = exchange.getResponseBody();
-
-                        os.write(content.getBytes());
+                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody())) {
+                            try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+                                byte[] buffer = new byte[2048];
+                                int count;
+                                while ((count = bis.read(buffer)) != -1) {
+                                    out.write(buffer, 0, count);
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName(), e);
                         throw e;
@@ -109,7 +115,13 @@ public class WebServer {
                     }
                 }
             });
-            server.setExecutor(Executors.newSingleThreadExecutor());
+
+            if (startSuccessful) {
+                context.setAuthenticator(new Authenticator(plugin, "/"));
+            }
+
+            server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
+
             server.start();
 
             enabled = true;
