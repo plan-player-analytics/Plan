@@ -276,7 +276,7 @@ public class WebServer {
             case 1:
                 return new PlayersPageResponse(plugin);
             case 2:
-                return playerResponse(new String[]{"", user.getName()});
+                return playerResponse(new String[]{"", "", user.getName()});
             default:
                 return forbiddenResponse(user.getPermLevel(), 0);
         }
