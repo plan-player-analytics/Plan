@@ -342,7 +342,8 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>
+                        <!--<canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>-->
+						<div id="playerChartDay" style="width=100%; height=350px;"></div>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i
                                 class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
                     </div>
@@ -723,12 +724,54 @@
         </div>
     </div>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>	
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+	<script>
+		// Data Variables
+		var playersOnlineSeries = {
+			name: 'Players Online',
+			data: %playersonlineseries%,
+			type: 'spline',
+            tooltip: {
+                valueDecimals: 0
+            }
+		};
+	</script>
+	<script>
+		function playersChart() {
+			var myChart = Highcharts.stockChart('playerChartDay', {
+				rangeSelector: {
+					selected: 1,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},				
+				title: {text: 'Players Online'},
+				series: [playersOnlineSeries]
+			});
+		}
+	</script>
     <script>
         // Script for Players Online charts using Chart.js
-        var ctxday = document.getElementById("playerChartDay");
+        //var ctxday = document.getElementById("playerChartDay");
         var ctxday2 = document.getElementById("playerChartDay2");
         var ctxweek = document.getElementById("playerChartWeek");
         var ctxmonth = document.getElementById("playerChartMonth");
@@ -807,7 +850,7 @@
                         data: %datascattermonth% ,
             }]
         }
-        var playersChartDay = new Chart(ctxday, {
+        /*var playersChartDay = new Chart(ctxday, {
             type: 'scatter',
             data: dataday,
             options: {
@@ -834,7 +877,7 @@
         }]
         }
         }
-        });
+        }); */
         var playersChartDay2 = new Chart(ctxday2, {
             type: 'scatter',
             data: dataday,
@@ -1808,6 +1851,7 @@
         openFunc(slideIndex)();
         gmPie();
 		activityPie();
+		playersChart();
         countUpTimer();
 
         function openFunc(i) {

@@ -80,14 +80,15 @@ public class WebServer {
                     try {
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
-
+                        Headers responseHeaders = exchange.getResponseHeaders();
+                        responseHeaders.set("Content-Type", "text/html;");
                         WebUser user = null;
                         if (usingHttps) {
                             user = getUser(exchange.getRequestHeaders());
 
                             // Prompt authorization
                             if (user == null) {
-                                Headers responseHeaders = exchange.getResponseHeaders();
+
                                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
                             }
                         }

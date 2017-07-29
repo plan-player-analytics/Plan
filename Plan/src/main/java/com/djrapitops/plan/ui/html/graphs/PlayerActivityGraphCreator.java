@@ -22,6 +22,13 @@ public class PlayerActivityGraphCreator {
         throw new IllegalStateException("Utility class");
     }
 
+    public static String buildSeriesDataString(List<TPS> tpsData) {
+        List<Point> points = tpsData.stream()
+                .map(tps -> new Point(tps.getDate(), tps.getPlayers()))
+                .collect(Collectors.toList());
+        return SeriesCreator.seriesGraph(points, true);
+    }
+
     public static String buildScatterDataString(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()

@@ -91,6 +91,8 @@ public class ActivityPart extends RawData {
         addValue("datascatterweek", weekScatter);
         addValue("datascattermonth", monthScatter);
 
+        addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
+
         addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
         addValue("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
     }
