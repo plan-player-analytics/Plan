@@ -5,15 +5,11 @@
  */
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeuckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
-import main.java.com.djrapitops.plan.utilities.comparators.PointComparator;
+import main.java.com.djrapitops.plan.utilities.analysis.ReduceGapTriangles;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Abstract scatter graph creator used by other graph creators.
@@ -42,26 +38,7 @@ public class ScatterGraphCreator {
         }
 
         if (reduceGapTriangles) {
-            Point lastPoint = null;
-
-            Set<Point> toAdd = new HashSet<>();
-            for (Point point : points) {
-                if (Verify.notNull(point, lastPoint)) {
-                    long date = (long) point.getX();
-                    long lastDate = (long) lastPoint.getX();
-                    double y = point.getY();
-                    double lastY = lastPoint.getY();
-                    if (Double.compare(y, lastY) != 0 && Math.abs(lastY - y) > 0.5) {
-                        if (lastDate < date - TimeAmount.MINUTE.ms() * 10L) {
-                            toAdd.add(new Point(lastDate + 1, lastY));
-                            toAdd.add(new Point(date - 1, lastY));
-                        }
-                    }
-                }
-                lastPoint = point;
-            }
-            points.addAll(toAdd);
-            points.sort(new PointComparator());
+            points = ReduceGapTriangles.reduce(points);
         }
 
         int size = points.size();
