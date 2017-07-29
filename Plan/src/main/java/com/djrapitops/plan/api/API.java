@@ -12,7 +12,7 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
-import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 import java.sql.SQLException;
@@ -173,7 +173,7 @@ public class API {
      * @return player.html with all placeholders replaced.
      */
     public String getPlayerHtmlAsString(UUID uuid) {
-        WebSocketServer server = plugin.getUiServer();
+        WebServer server = plugin.getUiServer();
         if (Verify.notNull(server)) {
             return server.getDataReqHandler().getInspectHtml(uuid);
         }
@@ -208,7 +208,7 @@ public class API {
      * @return analysis.html with all placeholders replaced.
      */
     public String getAnalysisHtmlAsString() {
-        WebSocketServer server = plugin.getUiServer();
+        WebServer server = plugin.getUiServer();
         if (Verify.notNull(server)) {
             return server.getDataReqHandler().getAnalysisHtml();
         }

@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 /**
  * @author Rsl1122
  */
-public class WebSocketServer {
+public class WebServer {
 
     private final Plan plugin;
     private final DataRequestHandler dataReqHandler;
@@ -47,7 +47,7 @@ public class WebSocketServer {
      *
      * @param plugin Current instance of Plan
      */
-    public WebSocketServer(Plan plugin) {
+    public WebServer(Plan plugin) {
         this.plugin = plugin;
         this.port = Settings.WEBSERVER_PORT.getNumber();
         shutdown = false;

@@ -37,7 +37,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.ui.html.Html;
-import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -73,7 +73,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private Database db;
     private HashSet<Database> databases;
 
-    private WebSocketServer uiServer;
+    private WebServer uiServer;
 
     private ServerVariableHolder serverVariableHolder;
     private int bootAnalysisTaskID = -1;
@@ -180,7 +180,7 @@ public class Plan extends BukkitPlugin<Plan> {
         boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
 
         if (webserverIsEnabled) {
-            uiServer = new WebSocketServer(this);
+            uiServer = new WebServer(this);
             uiServer.initServer();
             if (!uiServer.isEnabled()) {
                 Log.error("WebServer was not Initialized.");
@@ -471,7 +471,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return the Webserver
      */
-    public WebSocketServer getUiServer() {
+    public WebServer getUiServer() {
         return uiServer;
     }
 
