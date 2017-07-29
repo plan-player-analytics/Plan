@@ -23,6 +23,13 @@ public class RamGraphCreator {
         throw new IllegalStateException("Utility class");
     }
 
+    public static String buildSeriesDataString(List<TPS> tpsData) {
+        List<Point> points = tpsData.stream()
+                .map(tps -> new Point(tps.getDate(), tps.getUsedMemory()))
+                .collect(Collectors.toList());
+        return SeriesCreator.seriesGraph(points, true);
+    }
+
     /**
      * Creates a scatter data string from given data.
      *

@@ -16,6 +16,20 @@ import java.util.stream.Collectors;
  */
 public class WorldLoadGraphCreator {
 
+    public static String buildSeriesDataStringEntities(List<TPS> tpsData) {
+        List<Point> points = tpsData.stream()
+                .map(tps -> new Point(tps.getDate(), tps.getEntityCount()))
+                .collect(Collectors.toList());
+        return SeriesCreator.seriesGraph(points, true);
+    }
+
+    public static String buildSeriesDataStringChunks(List<TPS> tpsData) {
+        List<Point> points = tpsData.stream()
+                .map(tps -> new Point(tps.getDate(), tps.getChunksLoaded()))
+                .collect(Collectors.toList());
+        return SeriesCreator.seriesGraph(points, true);
+    }
+
     /**
      * Constructor used to hide the public constructor
      */

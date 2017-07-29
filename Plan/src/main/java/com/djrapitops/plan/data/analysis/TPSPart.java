@@ -56,6 +56,12 @@ public class TPSPart extends RawData {
         addValue("tpsscatterday", tpsScatterDay);
         addValue("tpsscatterweek", tpsScatterWeek);
 
+        addValue("tpsseries", TPSGraphCreator.buildSeriesDataString(tpsData));
+        addValue("cpuseries", CPUGraphCreator.buildSeriesDataString(tpsData));
+        addValue("ramseries", RamGraphCreator.buildSeriesDataString(tpsData));
+        addValue("entityseries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
+        addValue("chunkseries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
+
         addValue("cpuscatterday", cpuScatterDay);
         addValue("cpuscatterweek", cpuScatterWeek);
         addValue("ramscatterday", ramScatterDay);

@@ -69,7 +69,7 @@ public class SeriesCreator {
             Point point = points.get(i);
             double y = point.getY();
             long date = (long) point.getX();
-            arrayBuilder.append("[").append(date).append(",").append(y).append("]");
+            arrayBuilder.append("{x:").append(date).append(",y:").append(y).append("}");
             if (i < size - 1) {
                 arrayBuilder.append(",");
             }
