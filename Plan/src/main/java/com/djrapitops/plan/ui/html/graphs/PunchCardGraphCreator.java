@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -43,8 +44,7 @@ public class PunchCardGraphCreator {
     }
 
     private static StringBuilder buildString(int[][] scaled) {
-        StringBuilder arrayBuilder = new StringBuilder();
-        arrayBuilder.append("[");
+        StringBuilder arrayBuilder = new StringBuilder("[");
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {
                 int value = scaled[i][j];
@@ -68,6 +68,7 @@ public class PunchCardGraphCreator {
             int h = dAndH[1];
             dataArray[d][h] = dataArray[d][h] + 1;
         }
+
         if (Settings.ANALYSIS_REMOVE_OUTLIERS.isTrue()) {
             int avg = findAverage(dataArray);
             double standardDeviation = getStandardDeviation(dataArray, avg);
@@ -93,8 +94,8 @@ public class PunchCardGraphCreator {
             }
         }
 
-        int size = array.length * array[0].length;
-        int sum = sum(valueMinusAvg);
+        double size = array.length * array[0].length;
+        double sum = sum(valueMinusAvg);
         return Math.sqrt(sum / size);
     }
 
@@ -105,13 +106,7 @@ public class PunchCardGraphCreator {
     }
 
     private static int sum(int[][] array) {
-        int total = 0;
-        for (int[] is : array) {
-            for (int i : is) {
-                total += i;
-            }
-        }
-        return total;
+        return Arrays.stream(array).mapToInt(is -> is.length).sum();
     }
 
     private static List<Long> getSessionStarts(Collection<SessionData> data) {

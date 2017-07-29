@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.ChatColor;
@@ -26,7 +25,9 @@ import java.security.cert.CertificateException;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Rsl1122
@@ -75,7 +76,6 @@ public class WebServer {
             server.createContext("/", new HttpHandler() {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
-                    OutputStream os = null;
                     try {
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
@@ -94,26 +94,25 @@ public class WebServer {
                         Response response = getResponse(target, user);
 
                         String content = response.getContent();
-                        exchange.sendResponseHeaders(response.getCode(), content.length());
-                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody())) {
-                            try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
-                                byte[] buffer = new byte[2048];
-                                int count;
-                                while ((count = bis.read(buffer)) != -1) {
-                                    out.write(buffer, 0, count);
-                                }
+                        exchange.sendResponseHeaders(200, 0);
+
+                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody());
+                             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+                            byte[] buffer = new byte[2048];
+                            int count;
+                            while ((count = bis.read(buffer)) != -1) {
+                                out.write(buffer, 0, count);
                             }
                         }
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName(), e);
                         throw e;
                     } finally {
-                        MiscUtils.close(os);
                         exchange.close();
                     }
                 }
             });
-            server.setExecutor(Executors.newSingleThreadExecutor());
+            server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
             server.start();
 
             enabled = true;
