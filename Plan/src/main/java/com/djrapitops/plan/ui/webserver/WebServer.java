@@ -17,10 +17,7 @@ import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.ChatColor;
 
 import javax.net.ssl.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.security.*;
@@ -97,9 +94,15 @@ public class WebServer {
 
                         String content = response.getContent();
                         exchange.sendResponseHeaders(response.getCode(), content.length());
-                        os = exchange.getResponseBody();
-
-                        os.write(content.getBytes());
+                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody())) {
+                            try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+                                byte[] buffer = new byte[2048];
+                                int count;
+                                while ((count = bis.read(buffer)) != -1) {
+                                    out.write(buffer, 0, count);
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName(), e);
                         throw e;
