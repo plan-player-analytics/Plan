@@ -72,15 +72,14 @@ public class WebServer {
             Log.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
 
             if (!usingHttps) {
-                server = HttpServer.create();
+                server = HttpServer.create(new InetSocketAddress(port), 10);
             }
 
             server.createContext("/", new HttpHandler() {
                 @Override
-                public void handle(HttpExchange xchange) throws IOException {
+                public void handle(HttpExchange exchange) throws IOException {
                     OutputStream os = null;
                     try {
-                        HttpsExchange exchange = (HttpsExchange) xchange;
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
 
@@ -106,13 +105,13 @@ public class WebServer {
                         throw e;
                     } finally {
                         MiscUtils.close(os);
-                        xchange.close();
+                        exchange.close();
                     }
                 }
             });
             server.setExecutor(Executors.newSingleThreadExecutor());
-
             server.start();
+
             enabled = true;
 
             Log.info(Phrase.WEBSERVER_RUNNING.parse(String.valueOf(server.getAddress().getPort())));
@@ -210,9 +209,7 @@ public class WebServer {
             Log.error("WebServer: SSL Context Initialization Failed.");
             Log.toLog(this.getClass().getName(), e);
         } catch (FileNotFoundException e) {
-            Log.error("!--------!---------!---------!");
-            Log.error("WebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
-            Log.error("!--------!---------!---------!");
+            Log.infoColor(ChatColor.YELLOW + "WebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
             Log.info("No Certificate -> Using Http server for Visualization.");
             Log.infoColor(ChatColor.YELLOW + "User Authorization Disabled! (Not possible over http)");
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
