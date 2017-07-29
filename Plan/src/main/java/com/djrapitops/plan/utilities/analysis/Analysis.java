@@ -208,7 +208,7 @@ public class Analysis {
                 if (analysisTypes.contains(boolTot)) {
                     replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
-            } catch (NoClassDefFoundError | Exception e) {
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
 
                 Log.toLog(this.getClass().getName(), e);

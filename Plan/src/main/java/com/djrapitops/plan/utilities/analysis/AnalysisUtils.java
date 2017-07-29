@@ -105,7 +105,7 @@ public class AnalysisUtils {
                     return source.parseContainer("", "Wrong Analysistype specified: " + analysisType.name());
             }
             return source.parseContainer(analysisType.getModifier(), String.valueOf(total));
-        } catch (Exception | NoClassDefFoundError e) {
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return logPluginDataCausedError(source, e);
         }
     }
@@ -150,7 +150,7 @@ public class AnalysisUtils {
                     return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
             }
             return source.parseContainer(analysisType.getModifier(), FormatUtils.cutDecimals(average));
-        } catch (Exception e) {
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return logPluginDataCausedError(source, e);
         }
     }
@@ -169,7 +169,7 @@ public class AnalysisUtils {
                         .collect(Collectors.toList());
                 long count = tempList.stream().filter(value -> value).count();
                 return source.parseContainer(analysisType.getModifier(), ((double) (count / tempList.size()) * 100) + "%");
-            } catch (Exception e) {
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
                 return logPluginDataCausedError(source, e);
             }
         }
