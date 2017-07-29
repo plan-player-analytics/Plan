@@ -94,7 +94,7 @@ public class WebServer {
                         Response response = getResponse(target, user);
 
                         String content = response.getContent();
-                        exchange.sendResponseHeaders(200, 0);
+                        exchange.sendResponseHeaders(response.getCode(), 0);
 
                         try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody());
                              ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
