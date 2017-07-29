@@ -73,39 +73,6 @@ public class WebServer {
 
             if (!usingHttps) {
                 server = HttpServer.create();
-                return;
-                // TODO Http Redirect Server
-//            } else {
-//                HttpServer protocolUpdateServer = HttpServer.create(new InetSocketAddress(port), 10);
-//                protocolUpdateServer.setExecutor(Executors.newSingleThreadExecutor());
-//
-//                protocolUpdateServer.createContext("/", new HttpHandler() {
-//                    @Override
-//                    public void handle(HttpExchange exchange) throws IOException {
-//                        try {
-//                            URI uri = exchange.getRequestURI();
-//                            Headers requestHeaders = exchange.getRequestHeaders();
-//                            List<String> host = requestHeaders.get("Host");
-//                            String currentAddress;
-//                            if (Verify.isEmpty(host)) {
-//                                currentAddress = HtmlUtils.getIP();
-//                            } else {
-//                                currentAddress = host.get(0);
-//                            }
-//                            Headers responseHeaders = exchange.getResponseHeaders();
-//                            String newAddress = "https://" + currentAddress + uri.toASCIIString();
-//                            responseHeaders.set("Location", newAddress);
-//                            Log.debug("Redirected http " + uri + " to new address: " + newAddress);
-//                            exchange.sendResponseHeaders(301, 0);
-//                            exchange.getResponseBody().close();
-//                        } finally {
-//                            exchange.close();
-//                        }
-//
-//                    }
-//                });
-
-//                protocolUpdateServer.start();
             }
 
             HttpContext context = server.createContext("/", new HttpHandler() {
