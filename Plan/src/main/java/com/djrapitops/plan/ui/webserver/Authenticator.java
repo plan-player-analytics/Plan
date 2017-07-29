@@ -31,14 +31,14 @@ public class Authenticator extends BasicAuthenticator {
     private boolean isAuthorized(String user, String passwordRaw, String target) throws PassEncryptUtil.CannotPerformOperationException, PassEncryptUtil.InvalidHashException, SQLException {
         SecurityTable securityTable = plugin.getDB().getSecurityTable();
         if (!securityTable.userExists(user)) {
-            throw new IllegalArgumentException("User Doesn't exist");
+            return false;
         }
         WebUser securityInfo = securityTable.getSecurityInfo(user);
 
         boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, securityInfo.getSaltedPassHash());
         if (!correctPass) {
-            throw new IllegalArgumentException("User and Password do not match");
-        }
+            return false;
+    }
         int permLevel = securityInfo.getPermLevel(); // Lower number has higher clearance.
         int required = getRequiredPermLevel(target, securityInfo.getName());
         return permLevel <= required;

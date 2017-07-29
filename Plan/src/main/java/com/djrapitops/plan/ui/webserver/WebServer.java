@@ -1,17 +1,13 @@
 package main.java.com.djrapitops.plan.ui.webserver;
 
-import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import javax.net.ssl.*;
@@ -20,11 +16,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.sql.SQLException;
-import java.util.Base64;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
@@ -124,17 +119,29 @@ public class WebServer {
             }
 
             Log.debug("Create server context");
-            server.createContext("/", serverResponse(null));
-            HttpContext analysisPage = server.createContext("/server", serverResponse(null));
-            HttpContext playersPage = server.createContext("/players", new PlayersPageResponse(null, plugin));
-            HttpContext inspectPage = server.createContext("/player", new InspectPageResponse(null, dataReqHandler, UUID.randomUUID())); // TODO
+            HttpContext context = server.createContext("/", new HttpHandler() {
+                @Override
+                public void handle(HttpExchange xghng) throws IOException {
+                    HttpsExchange exchange = (HttpsExchange) xghng;
+                    try {
+                        URI uri = exchange.getRequestURI();
+                        String target = uri.toString();
+                        Response response = getResponse(target);
+                        String content = response.getContent();
+                        exchange.sendResponseHeaders(response.getCode(), content.length());
 
-            if (startSuccessful) {
-                for (HttpContext c : new HttpContext[]{analysisPage, playersPage, inspectPage}) {
-                    c.setAuthenticator(new Authenticator(plugin, c.getPath()));
+                        OutputStream os = exchange.getResponseBody();
+                        os.write(content.getBytes());
+                        os.close();
+                    } catch (Exception e) {
+                        Log.toLog(this.getClass().getName(), e);
+                        throw e;
+                    }
                 }
+            });
+            if (startSuccessful) {
+                context.setAuthenticator(new Authenticator(plugin, "/"));
             }
-
             server.setExecutor(Executors.newSingleThreadExecutor());
 
             server.start();
@@ -147,55 +154,37 @@ public class WebServer {
         }
     }
 
-    // Used for deciding the Response appropriate for the Request.
-    private Response getResponse(Request request, OutputStream output) {
-        try {
-            Verify.nullCheck(request);
-            Verify.nullCheck(output);
+//    if (!request.hasAuthorization()) {
+//        return new PromptAuthorizationResponse(output);
+//    }
+//            try {
+//        if (!isAuthorized(request)) {
+//            ForbiddenResponse response403 = new ForbiddenResponse(output);
+//            String content = "<h1>403 Forbidden - Access Denied</h1>"
+//                    + "<p>Unauthorized User.<br>"
+//                    + "Make sure your user has the correct access level.<br>"
+//                    + "You can use /plan web check <username> to check the permission level.</p>";
+//            response403.setContent(content);
+//            return response403;
+//        }
 
-            if (isFaviconRequest(request)) {
-                return new RedirectResponse(output, "https://puu.sh/tK0KL/6aa2ba141b.ico");
-            }
-
-            if (!request.hasAuthorization()) {
-                return new PromptAuthorizationResponse(output);
-            }
-            try {
-                if (!isAuthorized(request)) {
-                    ForbiddenResponse response403 = new ForbiddenResponse(output);
-                    String content = "<h1>403 Forbidden - Access Denied</h1>"
-                            + "<p>Unauthorized User.<br>"
-                            + "Make sure your user has the correct access level.<br>"
-                            + "You can use /plan web check <username> to check the permission level.</p>";
-                    response403.setContent(content);
-                    return response403;
-                }
-            } catch (IllegalArgumentException e) {
-                return new PromptAuthorizationResponse(output);
-            }
-            String req = request.getRequest();
-            String target = request.getTarget();
-            if (!req.equals("GET") || target.equals("/")) {
-                return responseNotFound(output);
-            }
-            String[] args = target.split("/");
-            if (args.length < 2) {
-                return responseNotFound(output);
-            }
-            String page = args[1];
-            switch (page) {
-                case "players":
-                    return new PlayersPageResponse(output, plugin);
-                case "player":
-                    return playerResponse(args, output);
-                case "server":
-                    return serverResponse(output);
-                default:
-                    return responseNotFound(output);
-            }
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-            return new InternalErrorResponse(output, e, request.getTarget());
+    private Response getResponse(String target) {
+        String[] args = target.split("/");
+        if (args.length < 2) {
+            return responseNotFound(null);
+        }
+        String page = args[1];
+        switch (page) {
+            case "favicon.ico":
+                return new RedirectResponse(null, "https://puu.sh/tK0KL/6aa2ba141b.ico");
+            case "players":
+                return new PlayersPageResponse(null, plugin);
+            case "player":
+                return playerResponse(args, null);
+            case "server":
+                return serverResponse(null);
+            default:
+                return responseNotFound(null);
         }
     }
 
@@ -254,64 +243,5 @@ public class WebServer {
      */
     public DataRequestHandler getDataReqHandler() {
         return dataReqHandler;
-    }
-
-    private boolean isAuthorized(Request request) throws PassEncryptUtil.CannotPerformOperationException, PassEncryptUtil.InvalidHashException, SQLException {
-        Base64.Decoder decoder = Base64.getDecoder();
-        String auth = request.getAuthorization();
-        byte[] decoded = decoder.decode(auth);
-        String[] userInfo = new String(decoded).split(":");
-        if (userInfo.length != 2) {
-            throw new IllegalArgumentException("User and Password not specified");
-        }
-        String user = userInfo[0];
-        String passwordRaw = userInfo[1];
-        return isAuthorized(user, passwordRaw, request.getTarget());
-    }
-
-    private boolean isAuthorized(String user, String passwordRaw, String target) throws PassEncryptUtil.CannotPerformOperationException, PassEncryptUtil.InvalidHashException, SQLException {
-
-        SecurityTable securityTable = plugin.getDB().getSecurityTable();
-        if (!securityTable.userExists(user)) {
-            throw new IllegalArgumentException("User Doesn't exist");
-        }
-        WebUser securityInfo = securityTable.getSecurityInfo(user);
-
-        boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, securityInfo.getSaltedPassHash());
-        if (!correctPass) {
-            throw new IllegalArgumentException("User and Password do not match");
-        }
-        int permLevel = securityInfo.getPermLevel(); // Lower number has higher clearance.
-        int required = getRequiredPermLevel(target, securityInfo.getName());
-        return permLevel <= required;
-    }
-
-    private int getRequiredPermLevel(String target, String user) {
-        String[] t = target.split("/");
-        if (t.length < 3) {
-            return 0;
-        }
-        final String wantedUser = t[2].toLowerCase().trim();
-        final String theUser = user.trim().toLowerCase();
-        if (t[1].equals("players")) {
-            return 1;
-        }
-        if (t[1].equals("player")) {
-            if (wantedUser.equals(theUser)) {
-                return 2;
-            } else {
-                return 1;
-            }
-        }
-        return 0;
-    }
-
-    private boolean isFaviconRequest(Request request) {
-        String[] args = request.getTarget().split("/");
-        if (args.length < 2 || args.length > 2) {
-            return false;
-        }
-        String page = args[1];
-        return page.equals("favicon.ico");
     }
 }
