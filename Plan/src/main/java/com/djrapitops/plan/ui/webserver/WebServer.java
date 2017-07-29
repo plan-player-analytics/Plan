@@ -63,7 +63,6 @@ public class WebServer {
         if (enabled) {
             return;
         }
-
         Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             usingHttps = startHttpsServer();
@@ -113,7 +112,6 @@ public class WebServer {
                     }
                 }
             });
-
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
             server.start();
 
