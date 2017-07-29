@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.ChatColor;
@@ -78,7 +77,6 @@ public class WebServer {
             server.createContext("/", new HttpHandler() {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
-                    OutputStream os = null;
                     try {
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
@@ -110,18 +108,12 @@ public class WebServer {
                         Log.toLog(this.getClass().getName(), e);
                         throw e;
                     } finally {
-                        MiscUtils.close(os);
                         exchange.close();
                     }
                 }
             });
 
-            if (startSuccessful) {
-                context.setAuthenticator(new Authenticator(plugin, "/"));
-            }
-
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
-
             server.start();
 
             enabled = true;
