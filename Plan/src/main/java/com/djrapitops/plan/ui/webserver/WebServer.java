@@ -94,14 +94,14 @@ public class WebServer {
                         Response response = getResponse(target, user);
 
                         String content = response.getContent();
-                        exchange.sendResponseHeaders(response.getCode(), content.length());
-                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody())) {
-                            try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
-                                byte[] buffer = new byte[2048];
-                                int count;
-                                while ((count = bis.read(buffer)) != -1) {
-                                    out.write(buffer, 0, count);
-                                }
+                        exchange.sendResponseHeaders(200, 0);
+
+                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody());
+                             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+                            byte[] buffer = new byte[2048];
+                            int count;
+                            while ((count = bis.read(buffer)) != -1) {
+                                out.write(buffer, 0, count);
                             }
                         }
                     } catch (Exception e) {
