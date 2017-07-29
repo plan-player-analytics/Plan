@@ -15,6 +15,13 @@ import java.util.UUID;
 public class ConditionUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private ConditionUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Check if the plugin can display the data.
      *
      * @return true/false

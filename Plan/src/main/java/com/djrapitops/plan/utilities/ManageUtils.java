@@ -19,14 +19,20 @@ import java.util.stream.Collectors;
 public class ManageUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private ManageUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Creates a new backup sqlite file with the data of copyFromDB.
      *
      * @param dbName     Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
      * @return success?
-     * @throws java.sql.SQLException
      */
-    public static boolean backup(String dbName, Database copyFromDB) throws SQLException {
+    public static boolean backup(String dbName, Database copyFromDB) {
         Plan plugin = Plan.getInstance();
         String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;

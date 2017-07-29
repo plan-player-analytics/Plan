@@ -13,7 +13,7 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class PlaytimePart extends RawData<PlaytimePart> {
+public class PlaytimePart extends RawData {
 
     private final PlayerCountPart playerCount;
     private long totalPlaytime;

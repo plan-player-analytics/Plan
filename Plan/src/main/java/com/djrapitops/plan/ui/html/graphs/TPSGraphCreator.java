@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
  */
 public class TPSGraphCreator {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private TPSGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String buildScatterDataStringTPS(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()

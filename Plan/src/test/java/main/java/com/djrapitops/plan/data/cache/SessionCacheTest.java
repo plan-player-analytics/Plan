@@ -41,7 +41,7 @@ public class SessionCacheTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
         test = new SessionCache();
     }
 

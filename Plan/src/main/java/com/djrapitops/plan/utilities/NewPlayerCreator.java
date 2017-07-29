@@ -11,6 +11,13 @@ import main.java.com.djrapitops.plan.data.UserData;
 public class NewPlayerCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private NewPlayerCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Creates a new instance of UserData with default values.
      *
      * @param player Player the UserData is created for.

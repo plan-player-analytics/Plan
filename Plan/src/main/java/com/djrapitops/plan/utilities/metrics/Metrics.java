@@ -351,9 +351,9 @@ public class Metrics {
                     return null;
                 }
                 chart.put("data", data);
-            } catch (Throwable t) {
+            } catch (Exception e) {
                 if (logFailedRequests) {
-                    Bukkit.getLogger().log(Level.WARNING, "Failed to get data for custom chart with id " + chartId, t);
+                    Bukkit.getLogger().log(Level.WARNING, "Failed to get data for custom chart with id " + chartId, e);
                 }
                 return null;
             }

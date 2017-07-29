@@ -130,7 +130,7 @@ public class Analysis {
 
             Benchmark.start("Analysis Phase");
             plugin.processStatus().setStatus("Analysis", "Analysis Phase");
-            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", fetchPhaseLength + ""));
+            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(String.valueOf(rawData.size()), String.valueOf(fetchPhaseLength)));
 
             String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
             analysisData.setPlayersTable(playersTable);
@@ -146,11 +146,12 @@ public class Analysis {
 
             analysisCache.cache(analysisData);
             long time = plugin.processStatus().finishExecution("Analysis");
+
             if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
-                Log.info(Phrase.ANALYSIS_COMPLETE.parse(time + "", HtmlUtils.getServerAnalysisUrlWithProtocol()));
+                Log.info(Phrase.ANALYSIS_COMPLETE.parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
             ExportUtility.export(plugin, analysisData, rawData);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             plugin.processStatus().setStatus("Analysis", "Error: " + e);
             return false;
@@ -207,7 +208,7 @@ public class Analysis {
                 if (analysisTypes.contains(boolTot)) {
                     replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
 
                 Log.toLog(this.getClass().getName(), e);
@@ -247,7 +248,7 @@ public class Analysis {
         long now = MiscUtils.getTime();
 
         Benchmark.start("Analysis: Fill Dataset");
-        rawData.forEach((uData) -> {
+        rawData.forEach(uData -> {
             uData.access();
             Map<String, Long> gmTimes = uData.getGmTimes();
             String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};

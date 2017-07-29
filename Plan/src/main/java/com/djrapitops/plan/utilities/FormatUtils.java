@@ -12,6 +12,15 @@ import java.text.DecimalFormat;
  */
 public class FormatUtils {
 
+    private static DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private FormatUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * @param ms
      * @return
@@ -170,8 +179,6 @@ public class FormatUtils {
      * @return
      */
     public static String cutDecimals(double d) {
-        DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
-//        df.setRoundingMode(RoundingMode.CEILING);
         return df.format(d);
     }
 }

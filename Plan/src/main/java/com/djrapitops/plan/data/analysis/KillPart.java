@@ -22,7 +22,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class KillPart extends RawData<KillPart> {
+public class KillPart extends RawData {
 
     private final PlayerCountPart playerCount;
     private final Map<UUID, List<KillData>> playerKills;

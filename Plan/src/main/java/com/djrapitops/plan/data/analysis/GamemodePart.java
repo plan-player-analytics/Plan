@@ -20,7 +20,7 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class GamemodePart extends RawData<GamemodePart> {
+public class GamemodePart extends RawData {
 
     private long survivalTime;
     private long creativeTime;

@@ -180,7 +180,7 @@ public class UserData {
     public String toString() {
         try {
             return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|geolocation:" + geolocation + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return "UserData: Error on toString:" + e;
         }
     }
@@ -752,41 +752,6 @@ public class UserData {
         this.lastNick = lastNick;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final UserData other = (UserData) obj;
-//        if (this.lastPlayed != other.lastPlayed) {
-//            return false;
-//        }
-
-        return this.registered == other.registered
-                && this.playTime == other.playTime
-                && this.loginTimes == other.loginTimes
-                && this.timesKicked == other.timesKicked
-                && this.lastGmSwapTime == other.lastGmSwapTime
-                && this.mobKills == other.mobKills
-                && this.deaths == other.deaths
-                && Objects.equals(this.lastNick, other.lastNick)
-                && Objects.equals(this.name, other.name)
-                && Objects.equals(this.uuid, other.uuid)
-                && Objects.equals(this.ips, other.ips)
-                && Objects.equals(this.nicknames, other.nicknames)
-                && Objects.equals(this.lastGamemode, other.lastGamemode)
-                && Objects.equals(this.gmTimes, other.gmTimes)
-                && Objects.equals(this.playerKills, other.playerKills)
-                && Objects.equals(this.sessions, other.sessions);
-    }
-
     /**
      * Check whether or not the object should be cleared from cache after it has
      * been saved.
@@ -813,5 +778,66 @@ public class UserData {
 
     public void setGeolocation(String geolocation) {
         this.geolocation = geolocation;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sessions.hashCode();
+        result = 31 * result + accessing;
+        result = 31 * result + (clearAfterSave ? 1 : 0);
+        result = 31 * result + uuid.hashCode();
+        result = 31 * result + ips.hashCode();
+        result = 31 * result + nicknames.hashCode();
+        result = 31 * result + lastNick.hashCode();
+        result = 31 * result + (int) (registered ^ (registered >>> 32));
+        result = 31 * result + (int) (lastPlayed ^ (lastPlayed >>> 32));
+        result = 31 * result + (int) (playTime ^ (playTime >>> 32));
+        result = 31 * result + loginTimes;
+        result = 31 * result + timesKicked;
+        result = 31 * result + (int) (lastGmSwapTime ^ (lastGmSwapTime >>> 32));
+        result = 31 * result + lastGamemode.hashCode();
+        result = 31 * result + gmTimes.hashCode();
+        result = 31 * result + (isOp ? 1 : 0);
+        result = 31 * result + (isBanned ? 1 : 0);
+        result = 31 * result + geolocation.hashCode();
+        result = 31 * result + mobKills;
+        result = 31 * result + playerKills.hashCode();
+        result = 31 * result + deaths;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (isOnline ? 1 : 0);
+        result = 31 * result + currentSession.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final UserData other = (UserData) obj;
+
+        return this.registered == other.registered
+                && this.playTime == other.playTime
+                && this.loginTimes == other.loginTimes
+                && this.timesKicked == other.timesKicked
+                && this.lastGmSwapTime == other.lastGmSwapTime
+                && this.mobKills == other.mobKills
+                && this.deaths == other.deaths
+                && Objects.equals(this.lastNick, other.lastNick)
+                && Objects.equals(this.name, other.name)
+                && Objects.equals(this.uuid, other.uuid)
+                && Objects.equals(this.ips, other.ips)
+                && Objects.equals(this.nicknames, other.nicknames)
+                && Objects.equals(this.lastGamemode, other.lastGamemode)
+                && Objects.equals(this.gmTimes, other.gmTimes)
+                && Objects.equals(this.playerKills, other.playerKills)
+                && Objects.equals(this.sessions, other.sessions);
     }
 }

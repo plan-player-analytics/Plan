@@ -13,11 +13,18 @@ import java.util.List;
  */
 public class DouglasPeuckerAlgorithm {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private DouglasPeuckerAlgorithm() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static List<Point> reducePoints(List<Point> points, double epsilon) {
         if (points.isEmpty()) {
             return points;
         }
-        if (epsilon == -1) {
+        if (Double.compare(epsilon, -1) == 0) {
             epsilon = 0.002;
         }
         int size = points.size();

@@ -61,10 +61,8 @@ public class NicknamesTable extends Table {
         } else {
             query = "ALTER TABLE " + tableName + " ADD COLUMN " + columnCurrent + " boolean NOT NULL DEFAULT 0";
         }
-        try {
-            execute(query);
-        } catch (Exception e) {
-        }
+
+        executeUnsafe(query);
     }
 
     /**
@@ -201,11 +199,15 @@ public class NicknamesTable extends Table {
                     lastNicks.put(id, nickname);
                 }
             }
-            for (Integer id : lastNicks.keySet()) {
-                String lastNick = lastNicks.get(id);
+
+            //TODO figure out what the heck that method does @Rsl1122
+            for (Map.Entry<Integer, String> entrySet : lastNicks.entrySet()) {
+                Integer id = entrySet.getKey();
+                String lastNick = entrySet.getValue();
+
                 List<String> list = nicks.get(id);
-                list.remove(lastNick);
-                list.add(lastNick);
+                list.remove(lastNick); //NOTE: Remove here?
+                list.add(lastNick); //NOTE: And add here again?
             }
 
             return nicks;
@@ -225,7 +227,9 @@ public class NicknamesTable extends Table {
         if (nicknames == null || nicknames.isEmpty()) {
             return;
         }
+
         Benchmark.start("Database: Save Nicknames Multiple");
+
         Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
         PreparedStatement statement = null;
         try {
@@ -235,16 +239,22 @@ public class NicknamesTable extends Table {
                     + columnCurrent + ", "
                     + columnNick
                     + ") VALUES (?, ?, ?)");
-            for (Integer id : nicknames.keySet()) {
-                Set<String> newNicks = nicknames.get(id);
+
+            for (Map.Entry<Integer, Set<String>> entrySet : nicknames.entrySet()) {
+                Integer id = entrySet.getKey();
+                Set<String> newNicks = entrySet.getValue();
+
                 String lastNick = lastNicks.get(id);
                 List<String> s = saved.get(id);
+
                 if (s != null) {
                     newNicks.removeAll(s);
                 }
+
                 if (newNicks.isEmpty()) {
                     continue;
                 }
+
                 for (String name : newNicks) {
                     statement.setInt(1, id);
                     statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
@@ -253,6 +263,7 @@ public class NicknamesTable extends Table {
                     commitRequired = true;
                 }
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }

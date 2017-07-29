@@ -28,8 +28,7 @@ public class Authenticator extends BasicAuthenticator {
         }
     }
 
-    private boolean isAuthorized(String user, String passwordRaw, String target) throws IllegalArgumentException, PassEncryptUtil.CannotPerformOperationException, PassEncryptUtil.InvalidHashException, SQLException {
-
+    private boolean isAuthorized(String user, String passwordRaw, String target) throws PassEncryptUtil.CannotPerformOperationException, PassEncryptUtil.InvalidHashException, SQLException {
         SecurityTable securityTable = plugin.getDB().getSecurityTable();
         if (!securityTable.userExists(user)) {
             throw new IllegalArgumentException("User Doesn't exist");

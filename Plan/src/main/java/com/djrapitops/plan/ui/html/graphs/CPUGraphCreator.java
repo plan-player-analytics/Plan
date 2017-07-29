@@ -8,6 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CPUGraphCreator {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private CPUGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String buildScatterDataString(List<TPS> tpsData, long scale) {
         long now = MiscUtils.getTime();
         List<Point> points = tpsData.stream()

@@ -23,9 +23,15 @@ public class UsersTable extends Table {
 
     private final String columnID;
     private final String columnUUID;
-    @Deprecated // Removed in 3.5.2
+    /**
+     * @deprecated removed in 3.5.2
+     */
+    @Deprecated
     private final String columnDemAge;
-    @Deprecated // Removed in 3.5.2
+    /**
+     * @deprecated removed in 3.5.2
+     */
+    @Deprecated
     private final String columnDemGender;
     private final String columnGeolocation;
     private final String columnLastGM;

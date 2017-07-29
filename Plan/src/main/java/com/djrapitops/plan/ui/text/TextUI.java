@@ -21,6 +21,13 @@ import java.util.UUID;
 public class TextUI {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private TextUI() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param uuid
      * @return
      */

@@ -30,7 +30,7 @@ public class HookHandler {
         configHandler = new PluginConfigSectionHandler(plugin);
         try {
             Bridge.hook(this);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }

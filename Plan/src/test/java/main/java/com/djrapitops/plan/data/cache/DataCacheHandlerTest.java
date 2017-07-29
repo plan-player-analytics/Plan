@@ -74,7 +74,7 @@ public class DataCacheHandlerTest {
             }
 
             @Override
-            public HashMap<String, Integer> getCommandUse() {
+            public Map<String, Integer> getCommandUse() {
                 return new HashMap<>();
             }
 

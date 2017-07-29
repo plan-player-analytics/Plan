@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,6 +16,13 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  */
 public class SessionLengthDistributionGraphCreator {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private SessionLengthDistributionGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * @param data
@@ -33,15 +39,14 @@ public class SessionLengthDistributionGraphCreator {
      */
     public static String[] generateDataArray(Collection<Long> lengths) {
         Map<Long, Integer> values = getValues(lengths);
-//        Map<Long, Integer> scaled = scale(values);
         StringBuilder arrayBuilder = buildString(values);
         StringBuilder labelBuilder = buildLabels(values);
+
         return new String[]{arrayBuilder.toString(), labelBuilder.toString()};
     }
 
     private static StringBuilder buildString(Map<Long, Integer> scaled) {
-        StringBuilder arrayBuilder = new StringBuilder();
-        arrayBuilder.append("[");
+        StringBuilder arrayBuilder = new StringBuilder("[");
 
         long big = MathUtils.getBiggestLong(scaled.keySet());
         for (long key = 0; key <= big; key++) {
@@ -59,8 +64,7 @@ public class SessionLengthDistributionGraphCreator {
     }
 
     private static StringBuilder buildLabels(Map<Long, Integer> scaled) {
-        StringBuilder arrayBuilder = new StringBuilder();
-        arrayBuilder.append("[");
+        StringBuilder arrayBuilder = new StringBuilder("[");
 
         long big = MathUtils.getBiggestLong(scaled.keySet());
         for (long key = 0; key <= big; key++) {
@@ -81,6 +85,7 @@ public class SessionLengthDistributionGraphCreator {
         List<Long> unused = new ArrayList<>(lengths);
         Map<Long, Integer> values = new HashMap<>();
         long lengthInMinutes = 5;
+
         while (!unused.isEmpty() && lengthInMinutes < 120) {
             long length = lengthInMinutes * 60 * 1000;
             List<Long> lessThan = unused.stream().filter(l -> l < length).collect(Collectors.toList());
@@ -89,14 +94,5 @@ public class SessionLengthDistributionGraphCreator {
             lengthInMinutes += 5;
         }
         return values;
-    }
-
-    private static Map<Long, Integer> scale(Map<Long, Integer> values) {
-        Map<Long, Integer> scaled = new HashMap<>();
-        int total = MathUtils.sumInt(values.values().stream().map(i -> (Serializable) i));
-        for (long key : values.keySet()) {
-            scaled.put(key, (int) ((1.0 * values.get(key) / total) * 100));
-        }
-        return scaled;
     }
 }

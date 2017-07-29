@@ -19,6 +19,13 @@ import java.util.stream.Stream;
 public class AnalysisUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private AnalysisUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param now
      * @param lastPlayed
      * @param playTime
@@ -27,18 +34,16 @@ public class AnalysisUtils {
      */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
+
         if (timeToActive < 0) {
             timeToActive = 0;
         }
+
         long twoWeeks = 1209600000;
-        if (now - lastPlayed < twoWeeks) {
-            if (loginTimes > 3) {
-                if (playTime > 60 * timeToActive) {
-                    return true;
-                }
-            }
-        }
-        return false;
+
+        return now - lastPlayed < twoWeeks
+                && loginTimes > 3
+                && playTime > 60 * timeToActive;
     }
 
     /**
@@ -99,8 +104,8 @@ public class AnalysisUtils {
                 default:
                     return source.parseContainer("", "Wrong Analysistype specified: " + analysisType.name());
             }
-            return source.parseContainer(analysisType.getModifier(), total + "");
-        } catch (Throwable e) {
+            return source.parseContainer(analysisType.getModifier(), String.valueOf(total));
+        } catch (Exception e) {
             return logPluginDataCausedError(source, e);
         }
     }
@@ -131,7 +136,7 @@ public class AnalysisUtils {
                     return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
                 case LONG_AVG:
                     long averageLong = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    return source.parseContainer(analysisType.getModifier(), averageLong + "");
+                    return source.parseContainer(analysisType.getModifier(), String.valueOf(averageLong));
                 case LONG_TIME_MS_AVG:
                     average = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
                     return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
@@ -145,7 +150,7 @@ public class AnalysisUtils {
                     return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
             }
             return source.parseContainer(analysisType.getModifier(), FormatUtils.cutDecimals(average));
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return logPluginDataCausedError(source, e);
         }
     }
@@ -164,7 +169,7 @@ public class AnalysisUtils {
                         .collect(Collectors.toList());
                 long count = tempList.stream().filter(value -> value).count();
                 return source.parseContainer(analysisType.getModifier(), ((double) (count / tempList.size()) * 100) + "%");
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 return logPluginDataCausedError(source, e);
             }
         }
@@ -185,7 +190,7 @@ public class AnalysisUtils {
                         .collect(Collectors.toList());
                 long count = tempList.stream().filter(value -> value).count();
                 return source.parseContainer(analysisType.getModifier(), count + " / " + tempList.size());
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 return logPluginDataCausedError(source, e);
             }
         }
@@ -210,15 +215,12 @@ public class AnalysisUtils {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         Set<UUID> uniqueJoins = new HashSet<>();
-        sessions.keySet().forEach((uuid) -> {
-            List<SessionData> s = sessions.get(uuid);
-            for (SessionData session : s) {
-                if (session.getSessionStart() < nowMinusScale) {
-                    continue;
-                }
-                uniqueJoins.add(uuid);
-            }
-        });
+        sessions.forEach((uuid, s) ->
+                s.stream()
+                        .filter(session -> session.getSessionStart() >= nowMinusScale)
+                        .map(session -> uuid)
+                        .forEach(uniqueJoins::add)
+        );
         return uniqueJoins.size();
     }
 
@@ -231,13 +233,12 @@ public class AnalysisUtils {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
-        sessions.keySet().forEach((uuid) -> {
-            List<SessionData> s = sessions.get(uuid);
+
+        sessions.forEach((uuid, s) -> {
             for (SessionData session : s) {
-                if (scale != -1) {
-                    if (session.getSessionStart() < nowMinusScale) {
-                        continue;
-                    }
+                if (scale != -1
+                        && session.getSessionStart() < nowMinusScale) {
+                    continue;
                 }
 
                 int day = getDayOfYear(session);
@@ -246,11 +247,14 @@ public class AnalysisUtils {
                 uniqueJoins.get(day).add(uuid);
             }
         });
+
         int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
-        int numberOfDays = uniqueJoins.keySet().size();
+        int numberOfDays = uniqueJoins.size();
+
         if (numberOfDays == 0) {
             return 0;
         }
+
         return total / numberOfDays;
     }
 
@@ -268,8 +272,10 @@ public class AnalysisUtils {
                 days.add(day);
             }
         }
+
         long total = registers.stream().filter(date -> date >= nowMinusScale).count();
         int numberOfDays = days.size();
+
         if (numberOfDays == 0) {
             return 0;
         }

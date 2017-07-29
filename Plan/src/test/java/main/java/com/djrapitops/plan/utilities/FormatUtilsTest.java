@@ -42,7 +42,7 @@ public class FormatUtilsTest {
      */
     @Test
     public void testFormatTimeAmount() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
         long second = 1000L;
         String expResult = "1s";
         String result = FormatUtils.formatTimeAmount(second);

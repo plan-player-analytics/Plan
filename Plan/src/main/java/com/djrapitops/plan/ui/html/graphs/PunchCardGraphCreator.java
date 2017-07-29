@@ -22,6 +22,13 @@ import java.util.stream.Collectors;
 public class PunchCardGraphCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private PunchCardGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param data
      * @return
      */
@@ -85,6 +92,7 @@ public class PunchCardGraphCreator {
                 valueMinusAvg[i][j] = (int) Math.pow(Math.abs(array[i][j] - avg), 2);
             }
         }
+
         int size = array.length * array[0].length;
         int sum = sum(valueMinusAvg);
         return Math.sqrt(sum / size);

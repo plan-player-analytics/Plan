@@ -19,6 +19,13 @@ import java.util.UUID;
 public class UUIDUtility {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private UUIDUtility() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param playername
      * @return
      */

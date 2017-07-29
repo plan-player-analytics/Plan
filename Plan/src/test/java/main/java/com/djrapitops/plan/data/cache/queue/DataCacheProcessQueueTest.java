@@ -50,7 +50,7 @@ public class DataCacheProcessQueueTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
         handler = new DataCacheHandler(Plan.getInstance()) {
             @Override
             public boolean getCommandUseFromDb() {

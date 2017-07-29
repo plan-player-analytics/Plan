@@ -27,12 +27,12 @@ public enum Html {
     COLOR_7("<span class=\"gray\">"),
     COLOR_8("<span class=\"darkgray\">"),
     COLOR_9("<span class=\"blue\">"),
-    COLOR_a("<span class=\"green\">"),
-    COLOR_b("<span class=\"aqua\">"),
-    COLOR_c("<span class=\"red\">"),
-    COLOR_d("<span class=\"pink\">"),
-    COLOR_e("<span class=\"yellow\">"),
-    COLOR_f("<span class=\"white\">"),
+    COLOR_A("<span class=\"green\">"),
+    COLOR_B("<span class=\"aqua\">"),
+    COLOR_C("<span class=\"red\">"),
+    COLOR_D("<span class=\"pink\">"),
+    COLOR_E("<span class=\"yellow\">"),
+    COLOR_F("<span class=\"white\">"),
     //
     FONT_AWESOME_ICON("<i class=\"fa fa-REPLACE0\" aria-hidden=\"true\"></i>"),
     MINOTAR_SMALL_IMG("<img style=\"float: left; padding: 2px 2px 0px 2px\" alt=\"" + REPLACE0 + "\" src=\"https://minotar.net/avatar/" + REPLACE0 + "/19\">"),
@@ -115,19 +115,21 @@ public enum Html {
      * @param localeFile
      */
     public static void loadLocale(File localeFile) {
-        try {
-            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
+        try (Scanner localeScanner = new Scanner(localeFile, "UTF-8")){
             List<String> localeRows = new ArrayList<>();
             boolean html = false;
+
             while (localeScanner.hasNextLine()) {
                 String line = localeScanner.nextLine();
                 if (line.equals("<<<<<<HTML>>>>>>")) {
                     html = true;
                     continue;
                 }
+
                 if (!html) {
                     continue;
                 }
+
                 localeRows.add(line);
             }
             for (String localeRow : localeRows) {
@@ -139,7 +141,7 @@ public enum Html {
                 }
             }
         } catch (IOException e) {
-
+            Log.error("Something went wrong at loading locale " + localeFile.getAbsoluteFile() + ": " + e.getCause());
         }
     }
 

@@ -45,8 +45,10 @@ import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.Bukkit;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -133,7 +135,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
         Benchmark.start("Enable: Init Database");
         Log.info(Phrase.DB_INIT + "");
-        if (Check.isTrue_Error(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
+        if (Check.ErrorIfFalse(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
             disablePlugin();
@@ -274,7 +276,7 @@ public class Plan extends BukkitPlugin<Plan> {
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
 
-        String dbType = (Settings.DB_TYPE + "").toLowerCase().trim();
+        String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
 
         for (Database database : databases) {
             String databaseType = database.getConfigName().toLowerCase().trim();
@@ -284,11 +286,13 @@ public class Plan extends BukkitPlugin<Plan> {
                 break;
             }
         }
+
         if (!Verify.notNull(db)) {
             Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString() + " " + dbType);
             return false;
         }
-        return Check.isTrue_Error(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
+
+        return Check.ErrorIfFalse(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
@@ -300,9 +304,7 @@ public class Plan extends BukkitPlugin<Plan> {
             @Override
             public void run() {
                 Log.debug("Running PeriodicalAnalysisTask");
-                if (!analysisCache.isCached()) {
-                    analysisCache.updateCache();
-                } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
+                if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
                     analysisCache.updateCache();
                 }
             }
@@ -331,10 +333,14 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public void writeNewLocaleFile() {
         File genLocale = new File(getDataFolder(), "locale_EN.txt");
-        try {
-            genLocale.createNewFile();
-            FileWriter fw = new FileWriter(genLocale, true);
-            PrintWriter pw = new PrintWriter(fw);
+        try (
+                FileWriter fw = new FileWriter(genLocale, true);
+                PrintWriter pw = new PrintWriter(fw)
+        ) {
+            if (genLocale.createNewFile()) {
+                Log.debug(genLocale.getAbsoluteFile() + " created");
+            }
+
             for (Phrase p : Phrase.values()) {
                 pw.println(p.name() + " <> " + p.parse());
                 pw.flush();
@@ -350,41 +356,76 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     private void initLocale() {
+        String defaultLocale = "Default: EN";
+
         String locale = Settings.LOCALE.toString().toUpperCase();
         Benchmark.start("Enable: Initializing locale");
         File localeFile = new File(getDataFolder(), "locale.txt");
-        boolean skipLoc = false;
-        String usingLocale = "";
+
+        String usingLocale;
+
         if (localeFile.exists()) {
             Phrase.loadLocale(localeFile);
             Html.loadLocale(localeFile);
-            skipLoc = true;
-            usingLocale = "locale.txt";
+
+            stopInitLocale(defaultLocale);
+            return;
         }
-        if (!locale.equals("DEFAULT")) {
-            try {
-                if (!skipLoc) {
-                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt");
-                    InputStream inputStream = localeURL.openStream();
-                    OutputStream outputStream = new FileOutputStream(localeFile);
-                    int read;
-                    byte[] bytes = new byte[1024];
-                    while ((read = inputStream.read(bytes)) != -1) {
-                        outputStream.write(bytes, 0, read);
-                    }
-                    Phrase.loadLocale(localeFile);
-                    Html.loadLocale(localeFile);
-                    usingLocale = locale;
-                    localeFile.delete();
-                }
-            } catch (FileNotFoundException ex) {
-                Log.error("Attempted using locale that doesn't exist.");
-                usingLocale = "Default: EN";
-            } catch (IOException e) {
+
+        if (locale.equals("DEFAULT")) {
+            stopInitLocale(defaultLocale);
+            return;
+        }
+
+        String urlString = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt";
+
+        URL localeURL;
+        try {
+            localeURL = new URL(urlString);
+        } catch (MalformedURLException e) {
+            Log.error("Error at parsing \"" + urlString + "\" to an URL"); //Shouldn't ever happen
+
+            stopInitLocale(defaultLocale);
+            return;
+        }
+
+        try (InputStream inputStream = localeURL.openStream();
+                OutputStream outputStream = new FileOutputStream(localeFile)) {
+
+            int read;
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
             }
-        } else {
-            usingLocale = "Default: EN";
+
+            Phrase.loadLocale(localeFile);
+            Html.loadLocale(localeFile);
+            usingLocale = locale;
+
+            if (localeFile.delete()) {
+                Log.debug(localeFile.getAbsoluteFile() + " (Locale File) deleted");
+            }
+
+            stopInitLocale(usingLocale);
+        } catch (FileNotFoundException ex) {
+            Log.error("Attempted using locale that doesn't exist.");
+
+            stopInitLocale(defaultLocale);
+        } catch (IOException e) {
+            Log.error("Error at loading locale from GitHub, using default locale.");
+
+            stopInitLocale(defaultLocale);
         }
+    }
+
+    /**
+     * Stops initializing the locale
+     *
+     * @implNote Removes clutter in the method
+     *
+     * @param usingLocale The locale that's used
+     */
+    private void stopInitLocale(String usingLocale) {
         Benchmark.stop("Enable: Initializing locale");
         Log.info("Using locale: " + usingLocale);
     }
@@ -450,7 +491,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return Set containing the SqLite and MySQL objects.
      */
-    public HashSet<Database> getDatabases() {
+    public Set<Database> getDatabases() {
         return databases;
     }
 

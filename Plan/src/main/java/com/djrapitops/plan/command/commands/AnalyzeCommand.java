@@ -61,10 +61,10 @@ public class AnalyzeCommand extends SubCommand {
         if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString(), sender)) {
             return true;
         }
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)) {
-            if (!analysisCache.isCached()) {
-                return true;
-            }
+
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)
+                && !analysisCache.isCached()) {
+            return true;
         }
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");

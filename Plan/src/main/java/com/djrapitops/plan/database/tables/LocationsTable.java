@@ -21,6 +21,7 @@ public class LocationsTable extends Table {
     /**
      * @param db
      * @param usingMySQL
+     * @deprecated Deprecated because it isn't used anymore
      */
     @Deprecated
     public LocationsTable(SQLDB db, boolean usingMySQL) {

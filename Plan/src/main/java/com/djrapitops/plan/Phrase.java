@@ -189,8 +189,7 @@ public enum Phrase {
     }
 
     static void loadLocale(File localeFile) {
-        try {
-            Scanner localeScanner = new Scanner(localeFile, "UTF-8");
+        try (Scanner localeScanner = new Scanner(localeFile, "UTF-8")) {
             List<String> localeRows = new ArrayList<>();
             while (localeScanner.hasNextLine()) {
                 String line = localeScanner.nextLine();
@@ -210,7 +209,7 @@ public enum Phrase {
                 }
             }
         } catch (IOException e) {
-
+            Log.error("Error at Locale Scanning: " + e.getCause());
         }
     }
 

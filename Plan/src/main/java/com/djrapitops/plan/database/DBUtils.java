@@ -19,6 +19,13 @@ import java.util.Map.Entry;
  */
 public class DBUtils {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private DBUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final int BATCH_SIZE = 2048;
 
     /**

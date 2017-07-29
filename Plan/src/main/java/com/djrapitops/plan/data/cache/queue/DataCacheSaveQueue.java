@@ -116,13 +116,11 @@ class SaveConsumer extends Consumer<UserData> {
             db.saveUserData(data);
             data.stopAccessing();
             Log.debug(uuid + ": Saved!");
-            if (data.shouldClearAfterSave()) {
-                if (handler != null) {
-                    handler.getClearTask().scheduleForClear(uuid);
-                }
+            if (data.shouldClearAfterSave()
+                    && handler != null) {
+                handler.getClearTask().scheduleForClear(uuid);
             }
         } catch (SQLException ex) {
-//            queue.add(data);
             Log.toLog(this.getClass().getName(), ex);
         }
     }
@@ -132,6 +130,7 @@ class SaveConsumer extends Consumer<UserData> {
         if (db != null) {
             db = null;
         }
+
         if (handler != null) {
             handler = null;
         }

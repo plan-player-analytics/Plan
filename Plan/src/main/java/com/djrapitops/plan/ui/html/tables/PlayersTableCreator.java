@@ -17,6 +17,13 @@ import java.util.List;
 public class PlayersTableCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private PlayersTableCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param data
      * @return
      */

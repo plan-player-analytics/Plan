@@ -15,6 +15,13 @@ import java.util.List;
 public class KillsTableCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private KillsTableCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param killData
      * @return
      */

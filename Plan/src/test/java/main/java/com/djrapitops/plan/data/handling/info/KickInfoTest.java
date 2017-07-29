@@ -37,7 +37,7 @@ public class KickInfoTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**

@@ -17,6 +17,13 @@ import java.util.stream.Collectors;
 public class RamGraphCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private RamGraphCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Creates a scatter data string from given data.
      *
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.

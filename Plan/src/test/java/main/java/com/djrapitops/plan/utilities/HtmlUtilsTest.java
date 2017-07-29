@@ -45,7 +45,7 @@ public class HtmlUtilsTest {
      */
     @Test
     public void testGetHtmlStringFromResource() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
         String fileName = "player.html";
         String result = HtmlUtils.getStringFromResource(fileName);
         assertTrue("Result empty", !result.isEmpty());

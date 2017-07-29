@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class CommandUsagePart extends RawData<CommandUsagePart> {
+public class CommandUsagePart extends RawData {
 
     private final Map<String, Integer> commandUsage;
 

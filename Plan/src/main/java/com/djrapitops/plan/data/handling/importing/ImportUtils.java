@@ -36,7 +36,7 @@ public class ImportUtils {
         try {
             importers.put("ontime", new OnTimeImporter());
             importers.put("offline", new OfflinePlayerImporter());
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.toLog("ImportUtils.getImporters", e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }

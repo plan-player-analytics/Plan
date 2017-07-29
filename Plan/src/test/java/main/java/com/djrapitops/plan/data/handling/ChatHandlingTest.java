@@ -36,7 +36,7 @@ public class ChatHandlingTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**
@@ -46,7 +46,7 @@ public class ChatHandlingTest {
     public void testProcessChatInfoAddedNickname() {
         UserData data = MockUtils.mockUser2();
         String expected = "TestNicknameChatHandling";
-        ChatHandling.processChatInfo(data, expected, "");
+        ChatHandling.processChatInfo(data, expected);
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
     }
 }

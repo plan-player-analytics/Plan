@@ -26,7 +26,7 @@ public class HtmlTest {
      *
      */
     @Test
-    public void testParse_0args() {
+    public void testParseWithZeroArgs() {
         Html instance = Html.REPLACE0;
         String expResult = "REPLACE0";
         String result = instance.parse();
@@ -37,7 +37,7 @@ public class HtmlTest {
      *
      */
     @Test
-    public void testParse_StringArr() {
+    public void testParseStringArr() {
         Html instance = Html.REPLACE0;
         String expResult = "Test";
         String result = instance.parse(expResult);
