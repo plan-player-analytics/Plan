@@ -168,7 +168,7 @@ public class AnalysisUtils {
                         .map(value -> (boolean) value)
                         .collect(Collectors.toList());
                 long count = tempList.stream().filter(value -> value).count();
-                return source.parseContainer(analysisType.getModifier(), ((double) (count / tempList.size()) * 100) + "%");
+                return source.parseContainer(analysisType.getModifier(), (((double) count / tempList.size()) * 100) + "%");
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
                 return logPluginDataCausedError(source, e);
             }

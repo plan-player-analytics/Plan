@@ -24,15 +24,18 @@ public class RecentPlayersButtonsCreator {
      * @return html p-tag list of recent log-ins.
      */
     public static String createRecentLoginsButtons(List<String> names, int limit) {
-        StringBuilder html = new StringBuilder();
-        html.append("<p>");
-        for (int i = 0; i < names.size(); i++) {
-            if (i < limit) {
-                String name = names.get(i);
-                html.append(Html.BUTTON.parse(HtmlUtils.getRelativeInspectUrl(name), name));
-                html.append(" ");
+        StringBuilder html = new StringBuilder("<p>");
+
+        int i = 0;
+        for (String name : names) {
+            if (i >= limit) {
+                break;
             }
+
+            html.append(Html.BUTTON.parse(HtmlUtils.getRelativeInspectUrl(name), name)).append(" ");
+            i++;
         }
+
         html.append("</p>");
         return html.toString();
     }

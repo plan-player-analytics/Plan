@@ -115,7 +115,7 @@ public enum Html {
      * @param localeFile
      */
     public static void loadLocale(File localeFile) {
-        try (Scanner localeScanner = new Scanner(localeFile, "UTF-8")){
+        try (Scanner localeScanner = new Scanner(localeFile, "UTF-8")) {
             List<String> localeRows = new ArrayList<>();
             boolean html = false;
 
@@ -132,6 +132,7 @@ public enum Html {
 
                 localeRows.add(line);
             }
+
             for (String localeRow : localeRows) {
                 try {
                     String[] split = localeRow.split(" <> ");
