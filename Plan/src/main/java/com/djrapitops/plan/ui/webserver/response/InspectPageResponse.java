@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.ui.webserver.response;
 
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 
-import java.io.OutputStream;
 import java.util.UUID;
 
 /**
@@ -11,8 +10,7 @@ import java.util.UUID;
  */
 public class InspectPageResponse extends Response {
 
-    public InspectPageResponse(OutputStream output, DataRequestHandler h, UUID uuid) {
-        super(output);
+    public InspectPageResponse(DataRequestHandler h, UUID uuid) {
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(h.getInspectHtml(uuid));
     }

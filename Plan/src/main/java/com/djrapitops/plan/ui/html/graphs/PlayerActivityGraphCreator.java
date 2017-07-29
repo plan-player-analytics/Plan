@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -41,8 +40,6 @@ public class PlayerActivityGraphCreator {
                 .map(session -> new Point[]{new Point(session.getSessionStart(), 1), new Point(session.getSessionEnd(), 0)})
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toList());
-
-        Log.debug(points.stream().map(Point::getY).collect(Collectors.toList()).toString());
         return ScatterGraphCreator.scatterGraph(points, true, false);
     }
 

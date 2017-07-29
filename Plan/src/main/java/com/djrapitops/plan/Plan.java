@@ -42,11 +42,14 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
-import org.bukkit.Bukkit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -186,7 +189,11 @@ public class Plan extends BukkitPlugin<Plan> {
                 Log.error("WebServer was not Initialized.");
             }
             // Prevent passwords showing up on console.
-            Bukkit.getLogger().setFilter(new RegisterCommandFilter());
+            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+            Collection<LoggerConfig> lc = ctx.getConfiguration().getLoggers().values();
+            for (LoggerConfig c : lc) {
+                c.addFilter(new RegisterCommandFilter());
+            }
         } else if (!hasDataViewCapability) {
             Log.infoColor(Phrase.ERROR_NO_DATA_VIEW.toString());
         }
@@ -390,7 +397,7 @@ public class Plan extends BukkitPlugin<Plan> {
         }
 
         try (InputStream inputStream = localeURL.openStream();
-                OutputStream outputStream = new FileOutputStream(localeFile)) {
+             OutputStream outputStream = new FileOutputStream(localeFile)) {
 
             int read;
             byte[] bytes = new byte[1024];
@@ -421,9 +428,8 @@ public class Plan extends BukkitPlugin<Plan> {
     /**
      * Stops initializing the locale
      *
-     * @implNote Removes clutter in the method
-     *
      * @param usingLocale The locale that's used
+     * @implNote Removes clutter in the method
      */
     private void stopInitLocale(String usingLocale) {
         Benchmark.stop("Enable: Initializing locale");
