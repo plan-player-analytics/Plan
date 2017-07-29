@@ -59,7 +59,7 @@ public class InspectCommand extends SubCommand {
                 sCol + "  Alias: /plan <name>"
         };
 
-        setInDepthHelp(help);
+        super.setInDepthHelp(help);
     }
 
     @Override

@@ -88,7 +88,7 @@ public class WebSocketServer {
                 trustManagerFactory.init(keystore);
 
                 server = HttpsServer.create(new InetSocketAddress(port), 10);
-                SSLContext sslContext = SSLContext.getInstance("SSL");
+                SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
                 sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
 
                 ((HttpsServer) server).setHttpsConfigurator(new HttpsConfigurator(sslContext) {

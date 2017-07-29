@@ -260,16 +260,16 @@ public class GMTimesTable extends Table {
                             + columnSpectatorTime
                             + ") VALUES (?, ?, ?, ?, ?)");
             boolean commitRequired = false;
-            for (Map.Entry<Integer, Map<String, Long>> entrySet : gamemodeTimes.entrySet()) {
-                Integer id = entrySet.getKey();
+            for (Map.Entry<Integer, Map<String, Long>> entry : gamemodeTimes.entrySet()) {
+                Integer id = entry.getKey();
 
                 statement.setInt(1, id);
                 for (int i = 0; i < gms.length; i++) {
                     try {
-                        Map<String, Long> times = entrySet.getValue();
+                        Map<String, Long> times = entry.getValue();
                         Long time = times.get(gms[i]);
 
-                        statement.setLong(i + 1, time != null ? time : 0);
+                        statement.setLong(i + 2, time != null ? time : 0);
                     } catch (NoSuchFieldError e) {
                         statement.setLong(i + 2, 0);
                     }
