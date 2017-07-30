@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
@@ -89,12 +88,9 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
             return;
         }
         Log.debug(info.getUuid() + ": Processing type: " + info.getType().name());
-        DBCallableProcessor p = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                if (!info.process(data)) {
-                    Log.error("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
-                }
+        DBCallableProcessor p = data -> {
+            if (!info.process(data)) {
+                Log.error("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
             }
         };
         handler.getUserDataForProcessing(p, info.getUuid());

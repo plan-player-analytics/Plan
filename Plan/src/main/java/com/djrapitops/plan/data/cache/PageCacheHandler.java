@@ -35,9 +35,9 @@ public class PageCacheHandler {
      * <p>
      * If the Response is created, it's automatically cached.
      *
-     * @param identifier
-     * @param loader
-     * @return
+     * @param identifier The identifier of the page
+     * @param loader     The {@link PageLoader} (How should it load the page if it's not cached)
+     * @return The Response that was cached or created by the {@link PageLoader loader}
      */
     public static Response loadPage(String identifier, PageLoader loader) {
         Response response = pageCache.asMap().get(identifier);
@@ -51,6 +51,19 @@ public class PageCacheHandler {
         pageCache.put(identifier, response);
 
         return response;
+    }
+
+    /**
+     * Puts the page into the page cache.
+     * <p>
+     * If the cache already inherits that {@code identifier}, it's renewed.
+     *
+     * @param identifier The identifier of the page
+     * @param loader     The {@link PageLoader} (How it should load the page)
+     */
+    public static void cachePage(String identifier, PageLoader loader) {
+        Response response = loader.createResponse();
+        pageCache.put(identifier, response);
     }
 
     /**

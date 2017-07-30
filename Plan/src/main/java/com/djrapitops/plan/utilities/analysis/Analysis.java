@@ -17,6 +17,8 @@ import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
+import main.java.com.djrapitops.plan.ui.webserver.response.AnalysisPageResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -48,7 +50,7 @@ public class Analysis {
      * Analyzes the data of all offline players on the server.
      * <p>
      * First retrieves all offline players and checks those that are in the
-     * database. Then Runs a new Analysis Task Asynchronously. Saves AnalysisData
+     * database. Then runs a new Analysis Task asynchronously. Saves AnalysisData
      * to the provided Cache. Saves all UserData to InspectCache for 15 minutes.
      *
      * @param analysisCache Cache that the data is saved to.
@@ -58,8 +60,6 @@ public class Analysis {
             return;
         }
 
-        PageCacheHandler.clearCache();
-
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START.toString());
         // Async task for Analysis
@@ -68,6 +68,8 @@ public class Analysis {
             public void run() {
                 taskId = this.getTaskId();
                 analyze(analysisCache, plugin.getDB());
+                PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(Plan.getInstance().getUiServer().getDataReqHandler()));
+                PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
                 taskId = -1;
                 this.cancel();
             }
@@ -83,8 +85,9 @@ public class Analysis {
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
-        log(Phrase.ANALYSIS_FETCH_DATA + "");
+        log(Phrase.ANALYSIS_FETCH_DATA.toString());
         Benchmark.start("Analysis: Fetch Phase");
+
         plugin.processStatus().setStatus("Analysis", "Analysis Fetch Phase");
         try {
             inspectCache.cacheAllUserData(db);
@@ -92,18 +95,22 @@ public class Analysis {
             Log.toLog(this.getClass().getName(), ex);
             Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL.toString());
         }
+
         List<UserData> rawData = inspectCache.getCachedUserData();
         if (rawData.isEmpty()) {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA.toString());
             return false;
         }
+
         List<TPS> tpsData = new ArrayList<>();
+
         try {
             tpsData = db.getTpsTable().getTPSData();
             Log.debug("TPS Data Size: " + tpsData.size());
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
         }
+
         return analyzeData(rawData, tpsData, analysisCache);
     }
 
@@ -154,7 +161,9 @@ public class Analysis {
             if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
                 Log.info(Phrase.ANALYSIS_COMPLETE.parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
+
             ExportUtility.export(plugin, analysisData, rawData);
+            PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(Plan.getInstance().getUiServer().getDataReqHandler()));
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             plugin.processStatus().setStatus("Analysis", "Error: " + e);
