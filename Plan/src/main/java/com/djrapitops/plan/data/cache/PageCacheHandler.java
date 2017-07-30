@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.ui.webserver.response.Response;
  * This cache uses the Google Guava {@link Cache}.
  *
  * @author Fuzzlemann
+ * @since 3.6.0
  */
 public class PageCacheHandler {
 

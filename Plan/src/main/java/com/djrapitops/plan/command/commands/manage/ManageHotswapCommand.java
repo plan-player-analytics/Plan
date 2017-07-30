@@ -64,7 +64,7 @@ public class ManageHotswapCommand extends SubCommand {
             return true;
         }
 
-        if (Check.isTrue(dbName.equals(plugin.getDB().getConfigName()), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
+        if (Check.isTrue(dbName.equals(plugin.getDB().getConfigName()), Phrase.MANAGE_ERROR_SAME_DB.toString(), sender)) {
             return true;
         }
 

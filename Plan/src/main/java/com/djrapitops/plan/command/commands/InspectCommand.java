@@ -89,7 +89,7 @@ public class InspectCommand extends SubCommand {
                     if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
                         return;
                     }
-                    sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+                    sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE.toString());
                     if (CommandUtils.isPlayer(sender) && plugin.getUiServer().isAuthRequired()) {
                         boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
                         if (!senderHasWebUser) {
@@ -140,7 +140,7 @@ public class InspectCommand extends SubCommand {
         } else {
             // Link
             String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
-            String message = Phrase.CMD_LINK + "";
+            String message = Phrase.CMD_LINK.toString();
             boolean console = !CommandUtils.isPlayer(sender);
             if (console) {
                 sender.sendMessage(message + url);
@@ -150,6 +150,6 @@ public class InspectCommand extends SubCommand {
             }
         }
 
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
+        sender.sendMessage(Phrase.CMD_FOOTER.toString());
     }
 }

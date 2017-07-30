@@ -69,9 +69,9 @@ public class PlaceholderUtils {
         HashMap<String, String> replaceMap = new HashMap<>();
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
-        replaceMap.put("%uuid%", (showIPandUUID ? "" + uuid : Html.HIDDEN.parse()));
+        replaceMap.put("%uuid%", (showIPandUUID ? String.valueOf(uuid) : Html.HIDDEN.parse()));
         replaceMap.put("%lastseen%", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
-        replaceMap.put("%logintimes%", "" + data.getLoginTimes());
+        replaceMap.put("%logintimes%", String.valueOf(data.getLoginTimes()));
         replaceMap.put("%geoloc%", data.getGeolocation());
         long now = MiscUtils.getTime();
         boolean isActive = AnalysisUtils.isActive(now, data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());

@@ -149,7 +149,7 @@ public class UserDataTest {
     public void testSetGMTime() {
         test.setGMTime("SURVIVAL", 1L);
         final Long result = test.getGmTimes().get("SURVIVAL");
-        assertTrue("" + result, result == 1L);
+        assertTrue(String.valueOf(result), result == 1L);
     }
 
     /**
@@ -161,7 +161,7 @@ public class UserDataTest {
         String gm = "SURVIVAL";
         test.setGMTime(gm, 1L);
         final Long result = test.getGmTimes().get(gm);
-        assertTrue("" + result, result == 1L);
+        assertTrue(String.valueOf(result), result == 1L);
     }
 
     /**

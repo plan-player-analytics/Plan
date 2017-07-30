@@ -105,9 +105,9 @@ public class TestInit {
     }
 
     private YamlConfiguration mockConfig() throws IOException, InvalidConfigurationException {
-        File configfile = new File(getClass().getResource("/config.yml").getPath());
+        File configFile = new File(getClass().getResource("/config.yml").getPath());
         YamlConfiguration configuration = new YamlConfiguration();
-        configuration.load(configfile.getAbsolutePath());
+        configuration.load(configFile.getAbsolutePath());
         return configuration;
     }
 
