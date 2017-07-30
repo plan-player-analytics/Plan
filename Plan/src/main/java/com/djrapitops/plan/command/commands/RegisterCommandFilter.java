@@ -1,11 +1,14 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.message.Message;
+
+import java.util.Set;
 
 /**
  * Filters out WebUser registration command logs.
@@ -14,6 +17,8 @@ import org.apache.logging.log4j.message.Message;
  * @since 3.5.2
  */
 public class RegisterCommandFilter extends AbstractFilter {
+
+    private Set<String> censoredCommands = ImmutableSet.of("/plan web register", "/plan webuser register", "/plan register");
 
     @Override
     public Result filter(LogEvent event) {
@@ -43,7 +48,7 @@ public class RegisterCommandFilter extends AbstractFilter {
         return validateMessage(msg.toString());
     }
 
-    private static Result validateMessage(Message message) {
+    private Result validateMessage(Message message) {
         if (message == null) {
             return Result.NEUTRAL;
         }
@@ -51,14 +56,18 @@ public class RegisterCommandFilter extends AbstractFilter {
         return validateMessage(message.getFormattedMessage());
     }
 
-    private static Result validateMessage(String message) {
+    private Result validateMessage(String message) {
         return isSensibleCommand(message)
                 ? Result.DENY
                 : Result.NEUTRAL;
     }
 
-    private static boolean isSensibleCommand(String message) {
+    private boolean isSensibleCommand(String message) {
         message = message.toLowerCase();
-        return message.contains("issued server command:") && message.contains("/plan register");
+        return message.contains("issued server command:") && isSensible(message);
+    }
+
+    private boolean isSensible(String message) {
+        return censoredCommands.stream().anyMatch(message::contains);
     }
 }
