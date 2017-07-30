@@ -283,23 +283,28 @@ public class AnalysisUtils {
     }
 
     /**
-     * @param sessionStarts
-     * @return
+     * Transforms the session start list into a list of int arrays.
+     * <p>
+     * First number signifies the Day of Week. (0 = Monday, 6 = Sunday)
+     * Second number signifies the Hour of Day. (0 = 0 AM, 23 = 11 PM)
+     *
+     * @param sessionStarts List of Session start Epoch ms.
+     * @return list of int arrays.
      */
     public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
         return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
-            int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
-            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2;
-            if (hourOfDay == 24) {
+            int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
+            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1
+            if (hourOfDay == 24) { // Check if hour is 24 (Should be impossible but.)
                 hourOfDay = 0;
                 dayOfWeek += 1;
             }
-            if (dayOfWeek > 6) {
+            if (dayOfWeek > 6) { // If Hour added a day on Sunday, move to Monday
                 dayOfWeek = 0;
             }
-            if (dayOfWeek < 0) {
+            if (dayOfWeek < 0) { // Move Sunday to 6
                 dayOfWeek = 6;
             }
             return new int[]{dayOfWeek, hourOfDay};

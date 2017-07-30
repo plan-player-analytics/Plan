@@ -29,6 +29,30 @@ public class PunchCardGraphCreator {
         throw new IllegalStateException("Utility class");
     }
 
+
+    public static String createDataSeries(Collection<SessionData> sessions) {
+        List<Long> sessionStarts = getSessionStarts(sessions);
+        List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
+        int[][] dataArray = createDataArray(daysAndHours);
+        int big = findBiggestValue(dataArray);
+        int[][] scaled = scale(dataArray, big);
+        StringBuilder arrayBuilder = new StringBuilder("[");
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 24; j++) {
+                int value = scaled[i][j];
+                if (value == 0) {
+                    continue;
+                }
+                arrayBuilder.append("{x:").append(j * 3600000).append(", y:").append(i).append(", z:").append(value).append(", marker: { radius:").append(value).append("}}");
+                if (i != 6 || j != 23) {
+                    arrayBuilder.append(",");
+                }
+            }
+        }
+        arrayBuilder.append("]");
+        return arrayBuilder.toString();
+    }
+
     /**
      * @param data
      * @return

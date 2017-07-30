@@ -69,15 +69,12 @@ public class ActivityPart extends RawData {
 
         final List<SessionData> sessions = joins.getAllSessions();
 
-        long averageLength = MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(sessions));
+        List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
+        long averageLength = MathUtils.averageLong(lengths);
         addValue("sessionaverage", FormatUtils.formatTimeAmount(averageLength));
 
-        String punchCardArray = PunchCardGraphCreator.generateDataArray(sessions);
-        addValue("datapunchcard", punchCardArray);
-
-        String[] sessionDistribution = SessionLengthDistributionGraphCreator.generateDataArraySessions(sessions);
-        addValue("datasessiondistribution", sessionDistribution[0]);
-        addValue("labelssessiondistribution", sessionDistribution[1]);
+        addValue("punchcardseries", PunchCardGraphCreator.createDataSeries(sessions));
+        addValue("sessionlengthseries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
     }
 
     private void playerActivityGraphs() {

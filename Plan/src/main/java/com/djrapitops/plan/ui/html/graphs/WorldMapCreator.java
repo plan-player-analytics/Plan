@@ -4,6 +4,19 @@ import java.util.Map;
 
 public class WorldMapCreator {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private WorldMapCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * Creates a data series with iso-a3 specification of Country codes.
+     *
+     * @param geoCodeCounts
+     * @return
+     */
     public static String createDataSeries(Map<String, Integer> geoCodeCounts) {
         StringBuilder arrayBuilder = new StringBuilder("[");
 

@@ -25,6 +25,37 @@ public class SessionLengthDistributionGraphCreator {
     }
 
     /**
+     * Creates a data series of session lengths for Sessions bar chart.
+     * <p>
+     * Contains values from 0 up to 120 minutes
+     *
+     * @param lengths Lengths of all sessions in a list.
+     * @return Data for Highcharts series.
+     */
+    public static String createDataSeries(List<Long> lengths) {
+        Map<Long, Integer> bars = getValues(lengths);
+        List<Long> keys = new ArrayList<>(bars.keySet());
+        Collections.sort(keys);
+
+        StringBuilder arrayBuilder = new StringBuilder("[");
+        int i = 0;
+        int size = keys.size();
+        for (Long key : keys) {
+            if (key > 120) {
+                break;
+            }
+            Integer value = bars.get(key);
+            arrayBuilder.append("['").append(key - 5).append(" - ").append(key).append(" min',").append(value).append("]");
+            if (i < size) {
+                arrayBuilder.append(", ");
+            }
+            i++;
+        }
+        arrayBuilder.append("]");
+        return arrayBuilder.toString();
+    }
+
+    /**
      * @param data
      * @return
      */
@@ -86,11 +117,14 @@ public class SessionLengthDistributionGraphCreator {
         Map<Long, Integer> values = new HashMap<>();
         long lengthInMinutes = 5;
 
-        while (!unused.isEmpty() && lengthInMinutes < 120) {
+        while (!unused.isEmpty() || lengthInMinutes <= 120) {
             long length = lengthInMinutes * 60 * 1000;
             List<Long> lessThan = unused.stream().filter(l -> l < length).collect(Collectors.toList());
-            values.put(lengthInMinutes, lessThan.size());
-            unused.removeAll(lessThan);
+            int amount = lessThan.size();
+            if (amount != 0) {
+                values.put(lengthInMinutes, amount);
+                unused.removeAll(lessThan);
+            }
             lengthInMinutes += 5;
         }
         return values;

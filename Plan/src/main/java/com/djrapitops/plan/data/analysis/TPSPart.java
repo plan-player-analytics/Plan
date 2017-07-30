@@ -40,40 +40,12 @@ public class TPSPart extends RawData {
         List<TPS> week = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.WEEK.ms());
         List<TPS> day = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.DAY.ms());
 
-        String tpsScatterDay = TPSGraphCreator.buildScatterDataStringTPS(day, TimeAmount.DAY.ms());
-        String tpsScatterWeek = TPSGraphCreator.buildScatterDataStringTPS(week, TimeAmount.WEEK.ms());
-
-        String cpuScatterDay = CPUGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
-        String cpuScatterWeek = CPUGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
-        String ramScatterDay = RamGraphCreator.buildScatterDataString(day, TimeAmount.DAY.ms());
-        String ramScatterWeek = RamGraphCreator.buildScatterDataString(week, TimeAmount.WEEK.ms());
-
-        String entityScatterDay = WorldLoadGraphCreator.buildScatterDataStringEntities(day, TimeAmount.DAY.ms());
-        String entityScatterWeek = WorldLoadGraphCreator.buildScatterDataStringEntities(week, TimeAmount.WEEK.ms());
-        String chunkScatterDay = WorldLoadGraphCreator.buildScatterDataStringChunks(day, TimeAmount.DAY.ms());
-        String chunkScatterWeek = WorldLoadGraphCreator.buildScatterDataStringChunks(week, TimeAmount.WEEK.ms());
-
-        addValue("tpsscatterday", tpsScatterDay);
-        addValue("tpsscatterweek", tpsScatterWeek);
 
         addValue("tpsseries", TPSGraphCreator.buildSeriesDataString(tpsData));
         addValue("cpuseries", CPUGraphCreator.buildSeriesDataString(tpsData));
         addValue("ramseries", RamGraphCreator.buildSeriesDataString(tpsData));
         addValue("entityseries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
         addValue("chunkseries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
-
-        addValue("cpuscatterday", cpuScatterDay);
-        addValue("cpuscatterweek", cpuScatterWeek);
-        addValue("ramscatterday", ramScatterDay);
-        addValue("ramscatterweek", ramScatterWeek);
-
-        addValue("entityscatterday", entityScatterDay);
-        addValue("entityscatterweek", entityScatterWeek);
-        addValue("chunkscatterday", chunkScatterDay);
-        addValue("chunkscatterweek", chunkScatterWeek);
-
-        Runtime runtime = Runtime.getRuntime();
-        addValue("maxram", runtime.maxMemory() / 1000000);
 
         double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
         double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
