@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 
 import java.util.List;
@@ -16,20 +15,6 @@ import java.util.stream.Collectors;
  */
 public class WorldLoadGraphCreator {
 
-    public static String buildSeriesDataStringEntities(List<TPS> tpsData) {
-        List<Point> points = tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getEntityCount()))
-                .collect(Collectors.toList());
-        return SeriesCreator.seriesGraph(points, true);
-    }
-
-    public static String buildSeriesDataStringChunks(List<TPS> tpsData) {
-        List<Point> points = tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getChunksLoaded()))
-                .collect(Collectors.toList());
-        return SeriesCreator.seriesGraph(points, true);
-    }
-
     /**
      * Constructor used to hide the public constructor
      */
@@ -38,34 +23,28 @@ public class WorldLoadGraphCreator {
     }
 
     /**
-     * Creates scatter graph data of entity load.
+     * Creates series graph data of entity load.
      *
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.
-     * @param scale Time span this graph resides within. (Milliseconds)
-     * @return Scatter Graph data string for ChartJs
+     * @return Series data for HighCharts
      */
-    public static String buildScatterDataStringEntities(List<TPS> tpsData, long scale) {
-        long now = MiscUtils.getTime();
-        List<Point> entityPoints = tpsData.stream()
-                .filter(tps -> tps.getDate() >= now - scale)
+    public static String buildSeriesDataStringEntities(List<TPS> tpsData) {
+        List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getEntityCount()))
                 .collect(Collectors.toList());
-        return ScatterGraphCreator.scatterGraph(entityPoints, true);
+        return SeriesCreator.seriesGraph(points, true);
     }
 
     /**
-     * Creates scatter graph data of chunk load.
+     * Creates series data of chunk load.
      *
      * @param tpsData TPS Data collected by TPSCountTimer, one data point for each minute.
-     * @param scale Time span this graph resides within. (Milliseconds)
-     * @return Scatter Graph data string for ChartJs
+     * @return Series data for HighCharts
      */
-    public static String buildScatterDataStringChunks(List<TPS> tpsData, long scale) {
-        long now = MiscUtils.getTime();
-        List<Point> chunkPoints = tpsData.stream()
-                .filter(tps -> tps.getDate() >= now - scale)
+    public static String buildSeriesDataStringChunks(List<TPS> tpsData) {
+        List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getChunksLoaded()))
                 .collect(Collectors.toList());
-        return ScatterGraphCreator.scatterGraph(chunkPoints, true);
+        return SeriesCreator.seriesGraph(points, true);
     }
 }

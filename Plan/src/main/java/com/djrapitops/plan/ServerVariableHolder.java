@@ -11,7 +11,6 @@ import org.bukkit.Server;
  */
 public class ServerVariableHolder {
 
-    private final int maxPlayers;
     private final String ip;
     private final boolean usingPaper;
 
@@ -21,21 +20,11 @@ public class ServerVariableHolder {
      * @param server instance the plugin is running on.
      */
     public ServerVariableHolder(Server server) {
-        maxPlayers = server.getMaxPlayers();
         ip = server.getIp();
 
         String serverName = server.getName();
         usingPaper = serverName.equals("Paper")
                 || serverName.equals("TacoSpigot"); //Fork of Paper
-    }
-
-    /**
-     * Maximum amount of players defined in server.properties.
-     *
-     * @return number.
-     */
-    public int getMaxPlayers() {
-        return maxPlayers;
     }
 
     /**

@@ -19,12 +19,10 @@ import java.util.Map;
  */
 public class GeolocationPart extends RawData {
 
-    private final Map<String, Integer> geoLocations;
     private final Map<String, String> geoCodes;
     private final Map<String, Integer> geoCodeCounts;
 
     public GeolocationPart() {
-        geoLocations = new HashMap<>();
         geoCodes = new HashMap<>();
         geoCodeCounts = new HashMap<>();
 
@@ -34,7 +32,6 @@ public class GeolocationPart extends RawData {
             String country = countries[i];
             String countryCode = codes[i];
 
-            geoLocations.put(country, 0);
             geoCodes.put(country, countryCode);
             geoCodeCounts.put(countryCode, 0);
         }
@@ -42,21 +39,10 @@ public class GeolocationPart extends RawData {
 
     @Override
     public void analyse() {
-        choroplethMapValues();
-    }
-
-    private void choroplethMapValues() {
-        String[] choropleth = WorldMapCreator.choroplethMapValues(geoLocations, geoCodes);
-
         addValue("geomapseries", WorldMapCreator.createDataSeries(geoCodeCounts));
-
-        addValue("geomapz", choropleth[0]);
-        addValue("geomapcountries", choropleth[1]);
-        addValue("geomapcodes", choropleth[2]);
     }
 
-    public void addGeoloc(String country) {
-        geoLocations.computeIfPresent(country, (computedCountry, amount) -> amount + 1);
+    public void addGeolocation(String country) {
         String countryCode = geoCodes.get(country);
         if (countryCode != null) {
             geoCodeCounts.computeIfPresent(countryCode, (computedCountry, amount) -> amount + 1);

@@ -277,7 +277,7 @@ public class Analysis {
             joinInfo.addToLoginTimes(uData.getLoginTimes());
             joinInfo.addRegistered(uData.getRegistered());
 
-            geolocPart.addGeoloc(uData.getGeolocation());
+            geolocPart.addGeolocation(uData.getGeolocation());
 
             final UUID uuid = uData.getUuid();
             if (uData.isOp()) {

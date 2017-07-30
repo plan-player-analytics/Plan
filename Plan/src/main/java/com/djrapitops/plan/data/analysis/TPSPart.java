@@ -66,8 +66,8 @@ public class TPSPart extends RawData {
         addValue("averagetpsweek", FormatUtils.cutDecimals(averageTPSWeek));
         addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSDay));
 
-        addValue("averagecpuweek", FormatUtils.cutDecimals(averageCPUWeek));
-        addValue("averagecpuday", FormatUtils.cutDecimals(averageCPUDay));
+        addValue("averagecpuweek", averageCPUWeek >= 0 ? FormatUtils.cutDecimals(averageCPUWeek) + "%" : "Unavailable");
+        addValue("averagecpuday", averageCPUDay >= 0 ? FormatUtils.cutDecimals(averageCPUDay) + "%" : "Unavailable");
 
         addValue("averagememoryweek", FormatUtils.cutDecimals(averageUsedMemoryWeek));
         addValue("averagememoryday", FormatUtils.cutDecimals(averageUsedMemoryDay));

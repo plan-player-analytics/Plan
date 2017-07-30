@@ -379,80 +379,7 @@
                             <i class="fa fa-globe" aria-hidden="true"></i> Has Connected from ips: %ips%</p>
                     </div>
                     <div class="about box column">
-                        <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Gamemode Usage</span></div>
-                            </div>
-                            <div class="infobox">
-                                <div class="info-icon">
-                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %gmtotal%
-                                    </div>
-                                    <div class="info-label">
-                                        Total
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box-area">
-                            <div class="infobox" style="float: left; background-color: #%gm0col%; width: 45%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-fire" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm0%
-                                    </div>
-                                    <div class="info-label">
-                                        Survival
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="float: left; background-color: #%gm1col%; width: 45%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-cube" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm1%
-                                    </div>
-                                    <div class="info-label">
-                                        Creative
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="float: left; background-color: #%gm2col%; width: 45%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm2%
-                                    </div>
-                                    <div class="info-label">
-                                        Adventure
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="float: left; background-color: #%gm3col%; width: 45%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm3%
-                                    </div>
-                                    <div class="info-label">
-                                        Spectator
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="gmPie" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
                 <div class="row">
@@ -476,7 +403,7 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
+                        <div id="playerChart" style="width=100%; height=350px;"></div>
                     </div>
                     <div class="about box column">
                         <div class="headerbox">
@@ -524,7 +451,7 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="punchcard" style="width: 100%; height:400px;"></div>
                     </div>
                 </div>
                 <div class="row">
@@ -548,7 +475,7 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="sessionDistribution" style="width: 100%; height:400px;"></div>
                     </div>
                 </div>
             </div>
@@ -557,10 +484,168 @@
             </div>
         </div>
     </div>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script>
-        var serverTime = new Date(%currenttime%);
-        var now = new Date();
-        var timediff = serverTime.getTime()-now.getTime();
+        var playersOnlineSeries = {
+			name: 'Online',
+			data: %playersonlineseries%,
+			type: 'spline',
+			color: '#%playersgraphcolor%',
+            tooltip: {
+                valueDecimals: 0
+            }
+		};
+        var gmData = %gmdata%;
+		var gmSeries = {
+			name: 'GM Usage',
+			colorByPoint: true,
+			data: [{
+				name: 'Survival',
+				y: gmData[0],
+				sliced: true,
+				selected: true
+			}, {
+				name: 'Creative',
+				y: gmData[1]
+			}, {
+				name: 'Adventure',
+				y: gmData[2]
+			}, {
+				name: 'Spectator',
+				y: gmData[3]
+			}]
+		};
+		var sessionLengthSeries = {
+			name: 'Sessions',
+			color: '#89c471',
+			data: %sessionlengthseries%
+		};
+		var punchcardSeries = {
+			name: 'Relative Activity',
+			color: '#222',
+			data: %punchcardseries%
+		};
+    </script>
+    <script>
+		function playersChart() {
+			var myChart = Highcharts.stockChart('playerChart', {
+				rangeSelector: {
+					selected: 2,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},
+				title: {text: 'Online Activity'},
+				series: [playersOnlineSeries]
+			});
+		}
+	</script>
+    <script>
+        function gmPie() {
+            Highcharts.chart('gmPie', {
+                chart: {
+                    plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Gamemode Usage'},
+				subtitle: {text: '%gmtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%gmcolors%],
+                        showInLegend: true
+                    }
+                },
+                series: [gmSeries]
+            });
+        };
+    </script>
+    <script>
+		function punchCard() {
+			Highcharts.chart('punchcard' , {
+				chart: {
+					defaultSeriesType: 'scatter'
+				},
+				title: {
+					text: 'Player Join PunchCard'
+				},
+				xAxis: {
+					type: 'datetime',
+					dateTimeLabelFormats: {
+						hour: '%I %P'
+					},
+					tickInterval: 3600000
+				},
+				yAxis: {
+				  categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+				},
+				tooltip: {
+					pointFormat: 'Activity: {point.z}'
+				},
+				series: [punchcardSeries]
+			});
+		}
+	</script>
+    <script>
+        function sessionDistributionChart() {
+			Highcharts.chart('sessionDistribution', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'Session Length Distribution'
+				},
+				xAxis: {
+					type: 'category',
+					labels: {
+						rotation: -45
+					}
+				},
+				 yAxis: {
+					min: 0,
+					title: {
+						text: 'Sessions'
+					}
+				},
+				legend: {
+					enabled: false
+				},
+				plotOptions: {
+					series: {
+						groupPadding: 0
+					},
+					pointPadding: 0
+				},
+				series: [sessionLengthSeries]
+			});
+		};
+    </script>
+    <script>
         function openNav() {
             document.getElementById("sidenav").style.width = "100%";
             document.getElementById("limiter").style.display = "none";
@@ -588,6 +673,12 @@
         }
         x.style.opacity = "1";
         openFunc(slideIndex)();
+
+        playersChart();
+        sessionDistributionChart();
+        gmPie();
+        punchCard();
+
         countUpTimer();
 
         function openFunc(i) {
@@ -618,7 +709,7 @@
 
         function countUpTimer() {
             var now = new Date();
-            var begin = new Date(%refreshlong%-timediff);
+            var begin = new Date(%refreshlong%);
             var out = "";
 
             var seconds = now.getTime() - begin.getTime();
@@ -649,256 +740,6 @@
             document.getElementById('divTime').innerHTML = out;
             setTimeout('countUpTimer()', 1000);
         }
-
-    </script>
-    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-    <script>
-        function hour(i) {
-            switch (i) {
-                case 25:
-                case -1:
-                case -2:
-                case -3:
-                case -4:
-                case -5:
-                    return '';
-                default:
-                    return i+':00';
-            }
-        }
-        function day(i) {
-            switch (i) {
-                case 0:
-                    return 'Monday';
-                case 1:
-                    return 'Tuesday';
-                case 2:
-                    return 'Wednesday';
-                case 3:
-                    return 'Thursday';
-                case 4:
-                    return 'Friday';
-                case 5:
-                    return 'Saturday';
-                case 6:
-                    return 'Sunday';
-                default:
-                    break;
-                    return '';
-            }
-        }
-        // Script for All charts using Chart.js
-        var ctxgmpie = document.getElementById("gmPie");
-        var dataGmPie = {
-                labels: %gmlabels% ,
-            datasets: [{
-            data: %gmdata% ,
-            backgroundColor: [ %gmcolors% ],
-        hoverBackgroundColor: [ %gmcolors% ]
-        }]
-        }
-        var GMPie = new Chart(ctxgmpie, {
-            type: 'doughnut',
-            data: dataGmPie,
-            options: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 7
-                    }
-                }
-            }
-        });
-        var ctxweek = document.getElementById("playerChartWeek");
-        var dataweek = {
-            datasets: [{
-                label: "Online",
-                fill: true,
-                lineTension: 0.1,
-                backgroundColor: "#%playersgraphfill%",
-                borderColor: "#%playersgraphcolor%",
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: "#%playersgraphcolor%",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                pointHoverBorderColor: "#8fabc6",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                spanGaps: false,
-                data: %dataweek% ,
-        }]};
-        var playersChartWeek = new Chart(ctxweek, {
-            type: 'scatter',
-            data: dataweek,
-            options: {
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            var newDate = new Date();
-                            newDate.setTime(tooltipItems.xLabel);
-                            dateString = newDate.toUTCString();
-                            return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                        }
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks: {
-                            callback: function(value, index, values) {
-                                switch (value) {
-                                    case 0:
-                                        return '0';
-                                    case 1:
-                                        return '1';
-                                    default:
-                                        return '';
-                                };
-                            },
-                            suggestedMax: %graphmaxplayers%,
-                        suggestedMin: 0
-                    }
-                }],
-        xAxes: [{
-            type: 'linear',
-            display: false
-        }]
-        }
-        }
-        });
-        var ctxpunch = document.getElementById("punchcard");
-        var datapunch = {
-            datasets: [
-                {
-                    label: 'Player Join Punchcard',
-                    data: %datapunchcard%,
-                backgroundColor: "#222",
-            hoverBackgroundColor: "#333",
-        }]
-        };
-        var punchcardChart = new Chart(ctxpunch, {
-            type: 'bubble',
-            data: datapunch,
-            options: {
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            function day(i) {
-                                switch (i) {
-                                    case 0:
-                                        return 'Monday';
-                                    case 1:
-                                        return 'Tuesday';
-                                    case 2:
-                                        return 'Wednesday';
-                                    case 3:
-                                        return 'Thursday';
-                                    case 4:
-                                        return 'Friday';
-                                    case 5:
-                                        return 'Saturday';
-                                    case 6:
-                                        return 'Sunday';
-                                    default:
-                                        return '';
-                                }
-                            }
-                            function hour(i) {
-                                switch (i) {
-                                    case 25:
-                                    case -1:
-                                    case -2:
-                                    case -3:
-                                    case -4:
-                                    case -5:
-                                        return '';
-                                    default:
-                                        return i+':00';
-                                }
-                            }
-                            return day(tooltipItems.yLabel)+': '+hour(tooltipItems.xLabel);
-                        }
-                    }
-                },
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return hour(value);
-                            },
-                            suggestedMax: 25,
-                            suggestedMin: -1
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return day(value);
-                            },
-                            suggestedMax: 7,
-                            suggestedMin: -1
-                        }
-                    }]
-                }
-            }
-        });
-        var ctxDistribution = document.getElementById("sessiondistribution");
-        var dataDistr = {
-                labels: %labelssessiondistribution%,
-            datasets: [
-            {
-                label: 'Session Length Distribution',
-                data: %datasessiondistribution%,
-            backgroundColor: "#89c471",
-            fill: true,
-            borderColor: "#348e0f",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "#348e0f",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "#348e0f",
-            pointHoverBorderColor: "#348e0f",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            spanGaps: false,
-        }]
-        };
-        var sessionDistributions = new Chart(ctxDistribution, {
-            type: 'bar',
-            data: dataDistr,
-            options: {
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItems, data) {
-                            return tooltipItems.xLabel+'utes: '+tooltipItems.yLabel+' sessions';
-                        }
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return value+'';
-                            }
-                        }
-                    }]
-                }
-            }
-        });
-
     </script>
 </div>
 </body>

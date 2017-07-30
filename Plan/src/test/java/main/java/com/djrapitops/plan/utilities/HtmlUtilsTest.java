@@ -14,7 +14,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -74,29 +73,6 @@ public class HtmlUtilsTest {
         String result = HtmlUtils.replacePlaceholders("%test% alright %test%", replace);
         String exp = "/\\ alright /\\";
         assertEquals(result, exp);
-    }
-
-    /**
-     * @throws FileNotFoundException
-     */
-    @Test
-    public void testGetServerAnalysisUrl() throws Exception {
-        TestInit.init();
-        String result = HtmlUtils.getServerAnalysisUrlWithProtocol();
-        String exp = "http://0.0.0.0:8804/server";
-        assertEquals(exp, result);
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testGetInspectUrl() throws Exception {
-        TestInit.init();
-        String playerName = "Test";
-        String expResult = "http://0.0.0.0:8804/player/Test";
-        String result = HtmlUtils.getInspectUrlWithProtocol(playerName);
-        assertEquals(expResult, result);
     }
 
     /**

@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.utilities;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
 import main.java.com.djrapitops.plan.ui.html.Html;
@@ -14,9 +14,7 @@ import main.java.com.djrapitops.plan.ui.html.tables.KillsTableCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -42,11 +40,9 @@ public class PlaceholderUtils {
         replaceMap.putAll(data.getReplaceMap());
         replaceMap.put("%plugins%", data.replacePluginsTabLayout());
 
-        replaceMap.put("%currenttime%", MiscUtils.getTime() + "");
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getTime()));
         replaceMap.put("%refreshlong%", data.getRefreshDate() + "");
 
-        replaceMap.put("%graphmaxplayers%", Settings.GRAPH_PLAYERS_USEMAXPLAYERS_SCALE.isTrue() ? Plan.getInstance().getVariable().getMaxPlayers() + "" : "2");
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
 
         // Html Theme colors
@@ -108,17 +104,14 @@ public class PlaceholderUtils {
         replaceMap.put("%killstable%", KillsTableCreator.createKillsTable(data.getPlayerKills()));
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
-        replaceMap.put("%planlite%", "");
-        replaceMap.put("%graphmaxplayers%", "2");
-        String scatterGraphData = PlayerActivityGraphCreator.buildScatterDataStringSessions(data.getSessions(), TimeAmount.WEEK.ms());
-        replaceMap.put("%dataweek%", scatterGraphData);
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
-        replaceMap.put("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL.toString());
-        replaceMap.put("%datapunchcard%", PunchCardGraphCreator.generateDataArray(data.getSessions()));
-        String[] distribution = SessionLengthDistributionGraphCreator.generateDataArraySessions(data.getSessions());
-        replaceMap.put("%datasessiondistribution%", distribution[0]);
-        replaceMap.put("%labelssessiondistribution%", distribution[1]);
-        replaceMap.put("%inaccuratedatawarning%", (now - data.getRegistered() < 180000) ? Html.WARN_INACCURATE.parse() : "");
+        Set<SessionData> sessions = new HashSet<>(data.getSessions());
+        replaceMap.put("%punchcardseries%", PunchCardGraphCreator.createDataSeries(sessions));
+        List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
+        replaceMap.put("%sessionlengthseries%", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
+
+        replaceMap.put("%playersonlineseries%", PlayerActivityGraphCreator.buildSeriesDataStringSessions(sessions));
+
         String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
         String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};
         for (int i = 0; i < colors.length; i++) {
@@ -126,8 +119,9 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        replaceMap.put("%refreshlong%", String.valueOf(plugin.getInspectCache().getCacheTime(uuid)));
-        replaceMap.put("%currenttime%", String.valueOf(MiscUtils.getTime()));
+        long cacheTime = plugin.getInspectCache().getCacheTime(uuid);
+        replaceMap.put("%refresh%", FormatUtils.formatTimeAmountDifference(cacheTime, now));
+        replaceMap.put("%refreshlong%", String.valueOf(cacheTime));
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);

@@ -15,7 +15,6 @@ public enum Settings {
     ANALYSIS_REFRESH_ON_ENABLE("Settings.Cache.AnalysisCache.RefreshAnalysisCacheOnEnable"),
     ANALYSIS_LOG_TO_CONSOLE("Settings.Analysis.LogProgressOnConsole"),
     ANALYSIS_LOG_FINISHED("Settings.Analysis.NotifyWhenFinished"),
-    ANALYSIS_REMOVE_OUTLIERS("Settings.Analysis.RemoveOutliersFromVisualization"),
     ANALYSIS_EXPORT("Settings.Analysis.Export.Enabled"),
     SHOW_ALTERNATIVE_IP("Settings.WebServer.ShowAlternativeServerIP"),
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
@@ -26,7 +25,6 @@ public enum Settings {
     DO_NOT_LOG_UNKNOWN_COMMANDS("Customization.Data.DoNotLogUnknownCommands"),
     COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND("Customization.Data.CombineCommandAliasesToMainCommand"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
-    GRAPH_PLAYERS_USEMAXPLAYERS_SCALE("Customization.Graphs.PlayersOnlineGraph.UseMaxPlayersAsScale"),
     PLAYERLIST_SHOW_IMAGES("Customization.SmallHeadImagesOnAnalysisPlayerlist"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
@@ -76,7 +74,6 @@ public enum Settings {
     HCOLOR_TER("Customization.Colors.HTML.UI.Tertiary"),
     HCOLOR_TER_DARK("Customization.Colors.HTML.UI.TertiaryDark"),
     HCOLOR_ACT_ONL("Customization.Colors.HTML.ActivityGraph.OnlinePlayers"),
-    HCOLOR_ACT_ONL_FILL("Customization.Colors.HTML.ActivityGraph.OnlinePlayersFill"),
     HCOLOR_ACTP_ACT("Customization.Colors.HTML.ActivityPie.Active"),
     HCOLOR_ACTP_BAN("Customization.Colors.HTML.ActivityPie.Banned"),
     HCOLOR_ACTP_INA("Customization.Colors.HTML.ActivityPie.Inactive"),

@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
@@ -73,25 +74,17 @@ public class ActivityPart extends RawData {
         long averageLength = MathUtils.averageLong(lengths);
         addValue("sessionaverage", FormatUtils.formatTimeAmount(averageLength));
 
-        addValue("punchcardseries", PunchCardGraphCreator.createDataSeries(sessions));
+        List<SessionData> sessionsMonth = sessions.stream()
+                .filter(s -> s.getSessionStart() > MiscUtils.getTime() - TimeAmount.MONTH.ms())
+                .collect(Collectors.toList());
+        addValue("punchcardseries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
         addValue("sessionlengthseries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
     }
 
     private void playerActivityGraphs() {
         List<TPS> tpsData = tpsPart.getTpsData();
-
-        String dayScatter = PlayerActivityGraphCreator.buildScatterDataString(tpsData, TimeAmount.DAY.ms());
-        String weekScatter = PlayerActivityGraphCreator.buildScatterDataString(tpsData, TimeAmount.WEEK.ms());
-        String monthScatter = PlayerActivityGraphCreator.buildScatterDataString(tpsData, TimeAmount.MONTH.ms());
-
-        addValue("datascatterday", dayScatter);
-        addValue("datascatterweek", weekScatter);
-        addValue("datascattermonth", monthScatter);
-
         addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
-
         addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
-        addValue("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
     }
 
     private void activityPiechart() {

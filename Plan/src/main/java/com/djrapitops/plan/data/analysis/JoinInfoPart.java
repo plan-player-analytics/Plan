@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.data.analysis;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.ui.html.graphs.NewPlayersGraphCreator;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
@@ -87,14 +86,6 @@ public class JoinInfoPart extends RawData {
         addValue("newperdayday", newPerDayDay);
         addValue("newperdayweek", newPerDayWeek);
         addValue("newperdaymonth", newPerDayMonth);
-
-        String scatterDay = NewPlayersGraphCreator.buildScatterDataString(registered, TimeAmount.DAY.ms(), now);
-        String scatterWeek = NewPlayersGraphCreator.buildScatterDataString(registered, TimeAmount.WEEK.ms(), now);
-        String scatterMonth = NewPlayersGraphCreator.buildScatterDataString(registered, TimeAmount.MONTH.ms(), now);
-
-        addValue("npdataday", scatterDay);
-        addValue("npdataweek", scatterWeek);
-        addValue("npdatamonth", scatterMonth);
     }
 
     public void addToLoginTimes() {

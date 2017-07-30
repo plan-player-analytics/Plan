@@ -38,34 +38,4 @@ public class WorldMapCreator {
         arrayBuilder.append("]");
         return arrayBuilder.toString();
     }
-
-    public static String[] choroplethMapValues(Map<String, Integer> geoLocations, Map<String, String> geoCodes) {
-        StringBuilder locations = new StringBuilder("[");
-        StringBuilder z = new StringBuilder("[");
-        StringBuilder text = new StringBuilder("[");
-
-        int i = 0;
-        int size = geoLocations.size();
-        for (Map.Entry<String, Integer> entrySet : geoLocations.entrySet()) {
-            String country = entrySet.getKey();
-            String code = geoCodes.getOrDefault(country, "UNK");
-            int amount = entrySet.getValue();
-
-            z.append("\"").append(amount).append("\"");
-            locations.append("\"").append(country).append("\"");
-            text.append("\"").append(code).append("\"");
-
-            if (i < size - 1) {
-                locations.append(",");
-                z.append(",");
-                text.append(",");
-            }
-        }
-
-        locations.append("]");
-        z.append("]");
-        text.append("]");
-
-        return new String[]{z.toString(), locations.toString(), text.toString()};
-    }
 }
