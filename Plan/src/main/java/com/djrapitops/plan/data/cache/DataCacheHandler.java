@@ -296,12 +296,7 @@ public class DataCacheHandler extends SessionCache {
         for (HandlingInfo i : toProcess) {
             UserData uData = dataCache.get(i.getUuid());
             if (uData == null) {
-                DBCallableProcessor p = new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        i.process(data);
-                    }
-                };
+                DBCallableProcessor p = i::process;
                 getUserDataForProcessing(p, i.getUuid());
             } else {
                 i.process(uData);
@@ -316,13 +311,10 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveCachedData(UUID uuid) {
         Log.debug(uuid + ": SaveCachedData");
-        DBCallableProcessor saveProcessor = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                data.access();
-                data.setClearAfterSave(true);
-                saveTask.scheduleForSave(data);
-            }
+        DBCallableProcessor saveProcessor = data -> {
+            data.access();
+            data.setClearAfterSave(true);
+            saveTask.scheduleForSave(data);
         };
         getUserDataForProcessing(saveProcessor, uuid);
     }
