@@ -673,7 +673,7 @@
 		var playersOnlineSeries = {
 			name: 'Players Online',
 			data: %playersonlineseries%,
-			type: 'spline',
+			type: 'areaspline',
 			color: '#%playersgraphcolor%',
             tooltip: {
                 valueDecimals: 0
@@ -692,7 +692,7 @@
 		var cpuSeries = {
 			name: 'CPU Usage',
 			data: %cpuseries%,
-			type: 'spline',
+			type: 'areaspline',
 			color: '#e0d264',
 			tooltip: {
 				pointFormat: '{series.name}: <b>{point.y:.2f}%</b>'
@@ -701,7 +701,7 @@
 		var ramSeries = {
 			name: 'RAM Usage',
 			data: %ramseries%,
-			type: 'spline',
+			type: 'areaspline',
 			color: '#7dcc24',
 			tooltip: {
 				valueDecimals: 0
@@ -711,7 +711,7 @@
 		var entitySeries = {
 			name: 'Loaded Entities',			
 			data: %entityseries%,
-			type: 'spline',
+			type: 'areaspline',
 			color: '#ac69ef',
 			tooltip: {
 				valueDecimals: 0
@@ -721,7 +721,7 @@
 		var chunkSeries = {
 			name: 'Loaded Chunks',			
 			data: %chunkseries%,
-			type: 'spline',
+			type: 'areaspline',
 			color: '#b58310',
 			tooltip: {
 				valueDecimals: 0
@@ -811,6 +811,11 @@
 					}]
 				},				
 				title: {text: 'Players Online'},
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
 				series: [playersOnlineSeries]
 			});
 		}
@@ -838,7 +843,12 @@
 						type: 'all',
 						text: 'All'
 					}]
-				},				
+				},
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
 				title: {text: 'Players Online'},
 				series: [playersOnlineSeries]
 			});
@@ -893,6 +903,11 @@
 					height: '55%',
 					lineWidth: 2
 				}],
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
 				title: {text: 'Ticks Per Second'},
 				series: [tpsSeries, playersOnlineSeries]
 			});
@@ -947,6 +962,11 @@
 					offset: 0,
 					lineWidth: 2
 				}],
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
 				title: {text: 'Resource Usage'},
 				series: [cpuSeries, ramSeries]
 			});
@@ -1001,6 +1021,11 @@
 					offset: 0,
 					lineWidth: 2
 				}],
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
 				title: {text: 'World Load'},
 				series: [entitySeries, chunkSeries]
 			});

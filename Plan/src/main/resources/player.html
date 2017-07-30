@@ -490,7 +490,7 @@
         var playersOnlineSeries = {
 			name: 'Online',
 			data: %playersonlineseries%,
-			type: 'spline',
+			type: 'areaspline',
 			color: '#%playersgraphcolor%',
             tooltip: {
                 valueDecimals: 0
@@ -552,6 +552,11 @@
 						type: 'all',
 						text: 'All'
 					}]
+				},
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
 				},
 				title: {text: 'Online Activity'},
 				series: [playersOnlineSeries]

@@ -24,7 +24,7 @@ public class TPSGraphCreator {
         List<Point> points = tpsData.stream()
                 .map(tps -> new Point(tps.getDate(), tps.getTps()))
                 .collect(Collectors.toList());
-        return ScatterGraphCreator.scatterGraph(points, true);
+        return SeriesCreator.seriesGraph(points, true);
 
     }
 
