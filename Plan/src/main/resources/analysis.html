@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon"/>
     <script src="https://use.fontawesome.com/df48eb908b.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         header {
             position: fixed;
@@ -656,7 +655,7 @@
                             </div>
                         </div>
                         <div style="width:100%;">
-                            <div id="cloropleth"></div>
+                            <div id="choropleth" style="width: 100%; height: 700px;"></div>
                         </div>
                     </div>
                 </div>
@@ -667,7 +666,9 @@
         </div>
     </div>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-	<script src="https://code.highcharts.com/stock/highstock.js"></script>	
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/map.js"></script>
+	<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
 	<script>
@@ -725,6 +726,52 @@
 			tooltip: {
 				valueDecimals: 0
 			}
+		};
+		var activitySeries = {
+			name: 'Players',
+			colorByPoint: true,
+			data: [{
+				name: 'Active',
+				y: %active%
+			}, {
+				name: 'Inactive',
+				y: %inactive%,
+				sliced: true,
+				selected: true
+			}, {
+				name: 'Single Join',
+				y: %joinleaver%
+			}, {
+				name: 'Banned',
+				y: %banned%
+			}]
+		};
+		var gmData = %gmdata%;
+		var gmSeries = {
+			name: 'GM Usage',
+			colorByPoint: true,
+			data: [{
+				name: 'Survival',
+				y: gmData[0],
+				sliced: true,
+				selected: true
+			}, {
+				name: 'Creative',
+				y: gmData[1]
+			}, {
+				name: 'Adventure',
+				y: gmData[2]
+			}, {
+				name: 'Spectator',
+				y: gmData[3]
+			}]
+		};
+		var mapSeries = {
+			name: 'Players',
+			type: 'map',
+			mapData: Highcharts.maps['custom/world'],
+			data: %geomapseries%,
+			joinBy: ['iso-a3', 'code']
 		};
 	</script>
 	<script>	
@@ -905,31 +952,12 @@
                         showInLegend: true
                     }
                 },
-                series: [{
-                    name: 'Players',
-                    colorByPoint: true,
-                    data: [{
-                        name: 'Active',
-                        y: %active%,
-                        sliced: true,
-                        selected: true
-                    }, {
-                        name: 'Inactive',
-                        y: %inactive%
-                    }, {
-                        name: 'Single Join',
-                        y: %joinleaver%
-                    }, {
-                        name: 'Banned',
-                        y: %banned%
-                    }]
-                }]
+                series: [activitySeries]
             });
         };
     </script>
 	<script>
-        function gmPie() {
-			var gmData = %gmdata%;
+        function gmPie() {			
             var myChart = Highcharts.chart('gmPie', {
                 chart: {
                     plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
@@ -951,25 +979,7 @@
                         showInLegend: true
                     }
                 },
-                series: [{
-                    name: 'GM Usage',
-                    colorByPoint: true,
-                    data: [{
-                        name: 'Survival',
-                        y: gmData[0],
-                        sliced: true,
-                        selected: true
-                    }, {
-                        name: 'Creative',
-                        y: gmData[1]
-                    }, {
-                        name: 'Adventure',
-                        y: gmData[2]
-                    }, {
-                        name: 'Spectator',
-                        y: gmData[3]
-                    }]
-                }]
+                series: [gmSeries]
             });
         };
     </script>
@@ -1109,47 +1119,23 @@
 
     </script>
     <script>	
-        //        Geolocation map
-        CLOROPLETH = document.getElementById('cloropleth');
-        var data = [{
-            type: 'choropleth',
-            locationmode: "country names",
-            locations: %geomapcountries% ,
-            z: %geomapz% ,
-            text: %geomapcodes% ,
-            colorscale: [
-            [0, 'rgb(38, 127, 0)'], [1, 'rgb(220, 220, 220)']],
-            autocolorscale: false,
-            reversescale: true,
-            marker: {
-            line: {
-                color: 'rgb(100,100,100)',
-                    width: 0.5
-            }
-        },
-        tick0: 0,
-            zmin: 0,
-            dtick: 1000,
-            colorbar: {
-            autotic: false,
-                tickprefix: '',
-                title: 'Players'
-        }
-        }];
-        var layout = {
-            title: '',
-            autosize: false,
-            width: window.innerWidth*0.7,
-            height: window.innerHeight*0.7,
-            geo:{
-                showframe: false,
-                showcoastlines: false,
-                projection:{
-                    type: 'mercator'
-                }
-            }
-        };
-        Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
+        function worldMap() {
+			var myChart = Highcharts.mapChart('choropleth', {
+				title: {
+					text: 'Geolocation Map'
+				},
+				chart: {
+					animation: true
+				},
+				colorAxis: {
+					min: 1,
+					type: 'logarithmic',
+					minColor: '#EEFFEE',
+					maxColor: '#267f00'
+				},
+				series: [mapSeries]
+			});
+		}
     </script>
     <script>
         // Navigation & Refresh time clock
@@ -1187,7 +1173,7 @@
 		playersChart2();
 		tpsChart();
 		resourceChart();
-		worldChart();
+		worldMap();
         countUpTimer();
 
         function openFunc(i) {
