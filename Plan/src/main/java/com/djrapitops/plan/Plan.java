@@ -44,13 +44,10 @@ import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -133,12 +130,12 @@ public class Plan extends BukkitPlugin<Plan> {
 
         Benchmark.start("Enable: Copy default config");
         getConfig().options().copyDefaults(true);
-        getConfig().options().header(Phrase.CONFIG_HEADER + "");
+        getConfig().options().header(Phrase.CONFIG_HEADER.toString());
         saveConfig();
         Benchmark.stop("Enable: Copy default config");
 
         Benchmark.start("Enable: Init Database");
-        Log.info(Phrase.DB_INIT + "");
+        Log.info(Phrase.DB_INIT.toString());
         if (Check.ErrorIfFalse(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
@@ -186,15 +183,12 @@ public class Plan extends BukkitPlugin<Plan> {
         if (webserverIsEnabled) {
             uiServer = new WebServer(this);
             uiServer.initServer();
+
             if (!uiServer.isEnabled()) {
-                Log.error("WebServer was not Initialized.");
+                Log.error("WebServer was not successfully initialized.");
             }
-            // Prevent passwords showing up on console.
-            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-            Collection<LoggerConfig> lc = ctx.getConfiguration().getLoggers().values();
-            for (LoggerConfig c : lc) {
-                c.addFilter(new RegisterCommandFilter());
-            }
+
+            setupFilter();
         } else if (!hasDataViewCapability) {
             Log.infoColor(Phrase.ERROR_NO_DATA_VIEW.toString());
         }
@@ -434,6 +428,14 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     /**
+     * Setups the command console output filter
+     */
+    private void setupFilter() {
+        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new RegisterCommandFilter());
+    }
+
+     /**
      * Stops initializing the locale
      *
      * @param usingLocale The locale that's used
