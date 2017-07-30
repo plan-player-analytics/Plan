@@ -68,8 +68,6 @@ public class Analysis {
             public void run() {
                 taskId = this.getTaskId();
                 analyze(analysisCache, plugin.getDB());
-                PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(Plan.getInstance().getUiServer().getDataReqHandler()));
-                PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
                 taskId = -1;
                 this.cancel();
             }
@@ -164,6 +162,7 @@ public class Analysis {
 
             ExportUtility.export(plugin, analysisData, rawData);
             PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(Plan.getInstance().getUiServer().getDataReqHandler()));
+            PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             plugin.processStatus().setStatus("Analysis", "Error: " + e);
