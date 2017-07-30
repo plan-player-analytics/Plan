@@ -2,9 +2,9 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.message.Message;
 
 /**
@@ -13,128 +13,52 @@ import org.apache.logging.log4j.message.Message;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class RegisterCommandFilter implements Filter {
-
-    private boolean start = true;
-
-    private Result filter(String message) {
-        boolean block = message.contains("command: /plan register")
-                || message.contains("command: /plan web register")
-                || message.contains("command: /plan webuser register");
-        if (block) {
-            return Result.DENY;
-        }
-        return null;
-    }
+public class RegisterCommandFilter extends AbstractFilter {
 
     @Override
     public Result filter(LogEvent event) {
-        String message = event.getMessage().toString().toLowerCase();
-        return filter(message);
+        if (event == null) {
+            return Result.NEUTRAL;
+        }
+
+        return validateMessage(event.getMessage());
     }
 
     @Override
-    public Result filter(Logger arg0, Level arg1, Marker arg2, String arg3, Object... arg4) {
-        return filter(arg3);
+    public Result filter(Logger logger, Level level, Marker marker, Message msg, Throwable t) {
+        return validateMessage(msg);
     }
 
     @Override
-    public Result filter(Logger arg0, Level arg1, Marker arg2, Object arg3, Throwable arg4) {
-        return null;
+    public Result filter(Logger logger, Level level, Marker marker, String msg, Object... params) {
+        return validateMessage(msg);
     }
 
     @Override
-    public Result filter(Logger arg0, Level arg1, Marker arg2, Message arg3, Throwable arg4) {
-        return filter(arg3.toString());
+    public Result filter(Logger logger, Level level, Marker marker, Object msg, Throwable t) {
+        if (msg == null) {
+            return Result.NEUTRAL;
+        }
+
+        return validateMessage(msg.toString());
     }
 
-    @Override
-    public Result getOnMatch() {
-        return null;
+    private static Result validateMessage(Message message) {
+        if (message == null) {
+            return Result.NEUTRAL;
+        }
+
+        return validateMessage(message.getFormattedMessage());
     }
 
-    @Override
-    public Result getOnMismatch() {
-        return null;
+    private static Result validateMessage(String message) {
+        return isSensibleCommand(message)
+                ? Result.DENY
+                : Result.NEUTRAL;
     }
 
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3, Object o4) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3, Object o4, Object o5) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3, Object o4, Object o5, Object o6) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3, Object o4, Object o5, Object o6, Object o7) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3, Object o4, Object o5, Object o6, Object o7, Object o8) {
-        return filter(s);
-    }
-
-    @Override
-    public Result filter(Logger logger, Level level, Marker marker, String s, Object o, Object o1, Object o2, Object o3, Object o4, Object o5, Object o6, Object o7, Object o8, Object o9) {
-        return filter(s);
-    }
-
-    @Override
-    public State getState() {
-        return null;
-    }
-
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void start() {
-        start = true;
-    }
-
-    @Override
-    public void stop() {
-        start = false;
-    }
-
-    @Override
-    public boolean isStarted() {
-        return start;
-    }
-
-    @Override
-    public boolean isStopped() {
-        return !start;
+    private static boolean isSensibleCommand(String message) {
+        message = message.toLowerCase();
+        return message.contains("issued server command:") && message.contains("/plan register");
     }
 }
