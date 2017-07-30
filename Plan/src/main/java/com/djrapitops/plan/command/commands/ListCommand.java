@@ -22,8 +22,6 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
  */
 public class ListCommand extends SubCommand {
 
-    private final Plan plugin;
-
     /**
      * Class Constructor.
      *
@@ -32,7 +30,6 @@ public class ListCommand extends SubCommand {
     public ListCommand(Plan plugin) {
         super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), "List to all cached players", "");
 
-        this.plugin = plugin;
         setHelp(plugin);
     }
 

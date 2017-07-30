@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class RegisterCommandFilter extends AbstractFilter {
 
-    private Set<String> censoredCommands = ImmutableSet.of("/plan web register", "/plan webuser register", "/plan register");
+    private final Set<String> censoredCommands = ImmutableSet.of("/plan web register", "/plan webuser register", "/plan register");
 
     @Override
     public Result filter(LogEvent event) {

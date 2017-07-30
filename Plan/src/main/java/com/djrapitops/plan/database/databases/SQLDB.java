@@ -123,7 +123,7 @@ public abstract class SQLDB extends Database {
             try {
                 getVersion();
                 newDatabase = false;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
             if (!versionTable.createTable()) {

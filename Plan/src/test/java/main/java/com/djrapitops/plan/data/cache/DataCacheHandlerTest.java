@@ -40,7 +40,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest(JavaPlugin.class)
 public class DataCacheHandlerTest {
 
-    private Plan plan;
     private Database db;
     private DataCacheHandler handler;
     private boolean calledSaveCommandUse;
@@ -59,7 +58,7 @@ public class DataCacheHandlerTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+        Plan plan = t.getPlanMock();
         calledSaveCommandUse = false;
         calledSaveUserData = false;
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {

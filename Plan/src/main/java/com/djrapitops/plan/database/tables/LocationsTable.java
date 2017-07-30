@@ -38,7 +38,7 @@ public class LocationsTable extends Table {
     public boolean removeAllData() {
         try {
             execute("DELETE FROM " + tableName);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return true;
     }

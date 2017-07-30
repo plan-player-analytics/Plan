@@ -31,8 +31,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({JavaPlugin.class})
 public class DataCacheSaveQueueTest {
 
-    private Plan plan;
-    private Database db;
     private boolean calledSaveUserData;
     private boolean calledSaveUserData2;
 
@@ -48,10 +46,10 @@ public class DataCacheSaveQueueTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+        Plan plan = t.getPlanMock();
         calledSaveUserData = false;
         calledSaveUserData2 = false;
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
+        Database db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask() {
 

@@ -85,11 +85,11 @@ public class API {
      * This method is useful if you have a table and want to link to the inspect
      * page.
      * <p>
-     * Html.LINK.parse("Link", "Playername") can be used to get a link
-     * {@code <a href="Link">Playername</a>}
+     * Html.LINK.parse("Link", "PlayerName") can be used to get a link
+     * {@code <a href="Link">PlayerName</a>}
      *
-     * @param name Playername of the player
-     * @return ip:port/security/player/Playername
+     * @param name Name of the player
+     * @return ip:port/security/player/PlayerName
      */
     public String getPlayerInspectPageLink(String name) {
         return HtmlUtils.getInspectUrlWithProtocol(name);
@@ -229,10 +229,10 @@ public class API {
     }
 
     /**
-     * Used to get the playerName of a player who has played on the server.
+     * Used to get the PlayerName of a player who has played on the server.
      *
      * @param uuid UUID of the player.
-     * @return Playername, eg "Rsl1122"
+     * @return PlayerName, eg "Rsl1122"
      * @throws IllegalArgumentException If uuid is null.
      * @throws IllegalStateException    If the player has not played on the server
      *                                  before.
@@ -253,7 +253,7 @@ public class API {
      * @return UUID of the Player
      * @throws Exception if player's name is not registered at Mojang
      */
-    public UUID playerNameToUUID(String playerName) throws Exception {
+    public UUID PlayerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
     }
 

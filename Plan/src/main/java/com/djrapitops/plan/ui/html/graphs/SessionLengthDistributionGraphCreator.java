@@ -26,7 +26,7 @@ public class SessionLengthDistributionGraphCreator {
      * Contains values from 0 up to 120 minutes
      *
      * @param lengths Lengths of all sessions in a list.
-     * @return Data for Highcharts series.
+     * @return Data for HighCharts series.
      */
     public static String createDataSeries(List<Long> lengths) {
         Map<Long, Integer> bars = getValues(lengths);

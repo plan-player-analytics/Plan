@@ -75,7 +75,6 @@ public class PassEncryptUtil {
         // Currently, Java only supports SHA1.
         if (!params[HASH_ALGORITHM_INDEX].equals("sha1")) {
             throw new CannotPerformOperationException(
-                    "Unsupported hash type."
             );
         }
 
@@ -182,8 +181,8 @@ public class PassEncryptUtil {
     @SuppressWarnings("serial")
     public static class CannotPerformOperationException extends Exception {
 
-        CannotPerformOperationException(String message) {
-            super(message);
+        CannotPerformOperationException() {
+            super("Unsupported hash type.");
         }
 
         CannotPerformOperationException(String message, Throwable source) {
