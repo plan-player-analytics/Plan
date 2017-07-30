@@ -161,7 +161,7 @@ public class Analysis {
             }
 
             ExportUtility.export(plugin, analysisData, rawData);
-            PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(Plan.getInstance().getUiServer().getDataReqHandler()));
+            PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
             PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
