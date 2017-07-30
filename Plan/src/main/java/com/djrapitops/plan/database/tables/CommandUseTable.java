@@ -93,14 +93,14 @@ public class CommandUseTable extends Table {
         Map<String, Integer> updateData = new HashMap<>(data);
         updateData.keySet().removeAll(newData.keySet());
 
-        for (String cmd : saved.keySet()) {
+        for (Map.Entry<String, Integer> entrySet : saved.entrySet()) {
+            String cmd = entrySet.getKey();
             // IMPORTANT - not using saved as value
             Integer toSave = updateData.get(cmd);
 
-            if (toSave == null || toSave > saved.get(cmd)) {
-                continue;
+            if (toSave != null && toSave <= entrySet.getValue()) {
+                updateData.remove(cmd);
             }
-            updateData.remove(cmd);
         }
 
         updateCommands(updateData);

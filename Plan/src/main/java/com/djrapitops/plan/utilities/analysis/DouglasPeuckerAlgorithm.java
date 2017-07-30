@@ -24,9 +24,11 @@ public class DouglasPeuckerAlgorithm {
         if (points.isEmpty()) {
             return points;
         }
+
         if (Double.compare(epsilon, -1) == 0) {
             epsilon = 0.002;
         }
+
         int size = points.size();
         final int lastIndex = size - 1;
         final Point start = points.get(0);

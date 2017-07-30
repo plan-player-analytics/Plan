@@ -199,6 +199,7 @@ public class NicknamesTable extends Table {
                     lastNicks.put(id, nickname);
                 }
             }
+
             for (Map.Entry<Integer, String> entry : lastNicks.entrySet()) {
                 Integer id = entry.getKey();
                 String lastNick = entry.getValue();
@@ -208,8 +209,7 @@ public class NicknamesTable extends Table {
                 // Moves the last known nickname to the end of the List.
                 // This is due to the way nicknames are added to UserData,
                 // Nicknames are stored as a Set and last Nickname is a separate String.
-                list.remove(lastNick);
-                list.add(lastNick);
+                list.set(list.size() - 1, lastNick);
             }
 
             return nicks;

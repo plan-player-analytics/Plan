@@ -118,7 +118,7 @@ public class PunchCardGraphCreator {
             }
         }
 
-        double size = array.length * array[0].length;
+        int size = array.length * array[0].length;
         double sum = sum(valueMinusAvg);
         return Math.sqrt(sum / size);
     }

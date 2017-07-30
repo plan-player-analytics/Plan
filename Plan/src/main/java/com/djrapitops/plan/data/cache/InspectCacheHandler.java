@@ -4,6 +4,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.ui.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.ExportUtility;
 
@@ -48,6 +49,7 @@ public class InspectCacheHandler {
             public void process(UserData data) {
                 cache.put(uuid, new UserData(data));
                 cacheTimes.put(uuid, MiscUtils.getTime());
+                PageCacheHandler.cachePage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(Plan.getInstance().getUiServer().getDataReqHandler(), uuid));
                 try {
                     ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()));
                 } catch (IOException ex) {

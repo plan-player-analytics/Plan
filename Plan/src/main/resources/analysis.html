@@ -1152,13 +1152,13 @@
             var dm = Math.floor(seconds / 60);
             seconds -= (dm * 60);
             seconds = Math.floor(seconds);
-            if (dd != 0) {
+            if (dd !== 0) {
                 out += dd.toString() + "d ";
             }
-            if (dh != 0) {
+            if (dh !== 0) {
                 out += dh.toString() + "h ";
             }
-            if (dm != 0) {
+            if (dm !== 0) {
                 out += dm.toString() + "m ";
             }
             out += seconds.toString() + "s ";

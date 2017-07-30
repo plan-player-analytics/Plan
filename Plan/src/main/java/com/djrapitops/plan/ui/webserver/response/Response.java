@@ -36,10 +36,6 @@ public abstract class Response {
     }
 
     public int getCode() {
-        if (header == null) {
-            return 500;
-        } else {
-            return Integer.parseInt(header.split(" ")[1]);
-        }
+        return header == null ? 500 : Integer.parseInt(header.split(" ")[1]);
     }
 }

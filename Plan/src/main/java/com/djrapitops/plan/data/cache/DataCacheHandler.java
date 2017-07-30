@@ -176,12 +176,7 @@ public class DataCacheHandler extends SessionCache {
         UserData uData = dataCache.get(uuid);
         if (uData == null) {
             if (cache) {
-                DBCallableProcessor cacher = new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        cache(data);
-                    }
-                };
+                DBCallableProcessor cacher = this::cache;
                 getTask.scheduleForGet(uuid, cacher, processor);
             } else {
                 getTask.scheduleForGet(uuid, processor);
