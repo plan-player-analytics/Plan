@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LogoutHandling;
@@ -17,8 +16,7 @@ public class LogoutInfo extends HandlingInfo {
 
     private final boolean banned;
     private final SessionData sData;
-    private final GamemodeInfo gmInfo;
-    private final WorldInfo worldInfo;
+    private final PlaytimeDependentInfo playtimeDependentInfo;
 
     /**
      * Constructor.
@@ -30,12 +28,11 @@ public class LogoutInfo extends HandlingInfo {
      * @param sData  session that has been ended at the moment of the logout
      *               event.
      */
-    public LogoutInfo(UUID uuid, long time, boolean banned, Gamemode gm, SessionData sData, String worldName) {
+    public LogoutInfo(UUID uuid, long time, boolean banned, String gm, SessionData sData, String worldName) {
         super(uuid, InfoType.LOGOUT, time);
         this.banned = banned;
         this.sData = sData;
-        this.gmInfo = new GamemodeInfo(uuid, time, gm);
-        worldInfo = new WorldInfo(uuid, time, worldName);
+        this.playtimeDependentInfo = new PlaytimeDependentInfo(uuid, InfoType.OTHER, time, gm, worldName);
     }
 
     @Override
@@ -45,8 +42,7 @@ public class LogoutInfo extends HandlingInfo {
         }
         uData.addSession(sData);
         LogoutHandling.processLogoutInfo(uData, time, banned);
-        gmInfo.process(uData);
-        worldInfo.process(uData);
+        playtimeDependentInfo.process(uData);
         return true;
     }
 

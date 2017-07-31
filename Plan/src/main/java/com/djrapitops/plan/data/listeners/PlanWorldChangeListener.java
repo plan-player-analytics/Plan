@@ -1,10 +1,9 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
-import main.java.com.djrapitops.plan.data.handling.info.WorldInfo;
+import main.java.com.djrapitops.plan.data.handling.info.InfoType;
+import main.java.com.djrapitops.plan.data.handling.info.PlaytimeDependentInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +30,6 @@ public class PlanWorldChangeListener implements Listener {
         }
         UUID uuid = p.getUniqueId();
         long time = MiscUtils.getTime();
-        handler.addToPool(new GamemodeInfo(uuid, time, Gamemode.wrap(p.getGameMode())));
-        handler.addToPool(new WorldInfo(uuid, time, worldName));
+        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.GM, time, p.getGameMode().name(), p.getWorld().getName()));
     }
 }

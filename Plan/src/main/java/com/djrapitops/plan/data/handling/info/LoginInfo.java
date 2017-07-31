@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.LoginHandling;
 
@@ -18,8 +17,7 @@ public class LoginInfo extends HandlingInfo {
     private final InetAddress ip;
     private final boolean banned;
     private final String nickname;
-    private final GamemodeInfo gmInfo;
-    private final WorldInfo worldInfo;
+    private final PlaytimeDependentInfo playtimeDependentInfo;
     private final int loginTimes;
 
     /**
@@ -33,19 +31,18 @@ public class LoginInfo extends HandlingInfo {
      * @param gm         current gamemode of the player
      * @param loginTimes number the loginTimes should be incremented with.
      */
-    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, int loginTimes, String worldName) {
+    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, String gm, int loginTimes, String worldName) {
         super(uuid, InfoType.LOGIN, time);
         this.ip = ip;
         this.banned = banned;
         this.nickname = nickname;
-        this.gmInfo = new GamemodeInfo(uuid, time, gm);
-        worldInfo = new WorldInfo(uuid, time, worldName);
+        this.playtimeDependentInfo = new PlaytimeDependentInfo(uuid, InfoType.OTHER, time, gm, worldName);
         this.loginTimes = loginTimes;
     }
 
     /**
      * Constructor for not incrementing the loginTimes.
-     *
+     * <p>
      * This constructor is used only by ReloadInfo
      *
      * @param uuid     UUID of the player.
@@ -55,13 +52,12 @@ public class LoginInfo extends HandlingInfo {
      * @param nickname Nickname of the player
      * @param gm       current gamemode of the player
      */
-    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, String worldName) {
+    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, String gm, String worldName) {
         super(uuid, InfoType.RELOAD, time);
         this.ip = ip;
         this.banned = banned;
         this.nickname = nickname;
-        this.gmInfo = new GamemodeInfo(uuid, time, gm);
-        worldInfo = new WorldInfo(uuid, time, worldName);
+        this.playtimeDependentInfo = new PlaytimeDependentInfo(uuid, InfoType.OTHER, time, gm, worldName);
         this.loginTimes = 0;
     }
 
@@ -71,8 +67,7 @@ public class LoginInfo extends HandlingInfo {
             return false;
         }
         LoginHandling.processLoginInfo(uData, time, ip, banned, nickname, loginTimes);
-        gmInfo.process(uData);
-        worldInfo.process(uData);
+        playtimeDependentInfo.process(uData);
         return true;
     }
 }

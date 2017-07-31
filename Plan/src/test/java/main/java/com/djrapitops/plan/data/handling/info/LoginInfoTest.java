@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,7 +53,7 @@ public class LoginInfoTest {
         long time = 10L;
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE, 1, "World");
+        LoginInfo i = new LoginInfo(data.getUuid(), time, ip, true, nick, "CREATIVE", 1, "World");
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
@@ -77,7 +76,7 @@ public class LoginInfoTest {
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
         String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(null, time, ip, true, nick, Gamemode.CREATIVE, 1, "World");
+        LoginInfo i = new LoginInfo(null, time, ip, true, nick, "CREATIVE", 1, "World");
         assertTrue(!i.process(data));
     }
 }

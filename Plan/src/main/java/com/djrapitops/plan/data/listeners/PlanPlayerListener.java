@@ -74,7 +74,7 @@ public class PlanPlayerListener implements Listener {
                 InetAddress ip = player.getAddress().getAddress();
                 boolean banned = player.isBanned();
                 String displayName = player.getDisplayName();
-                Gamemode gm = Gamemode.wrap(player.getGameMode());
+                String gm = player.getGameMode().name();
                 String worldName = player.getWorld().getName();
 
                 LoginInfo loginInfo = new LoginInfo(uuid, time, ip, banned, displayName, gm, 1, worldName);
@@ -114,7 +114,7 @@ public class PlanPlayerListener implements Listener {
         Gamemode gm = Gamemode.wrap(player.getGameMode());
         String worldName = player.getWorld().getName();
 
-        handler.addToPool(new LogoutInfo(uuid, time, banned, gm, handler.getSession(uuid), worldName));
+        handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerQuitEvent_END");
     }
@@ -140,7 +140,7 @@ public class PlanPlayerListener implements Listener {
         Gamemode gm = Gamemode.wrap(player.getGameMode());
         String worldName = player.getWorld().getName();
 
-        handler.addToPool(new LogoutInfo(uuid, time, banned, gm, handler.getSession(uuid), worldName));
+        handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerKickEvent_END");

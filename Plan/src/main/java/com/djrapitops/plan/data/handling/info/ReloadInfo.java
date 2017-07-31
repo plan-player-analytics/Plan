@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
-
 import java.net.InetAddress;
 import java.util.UUID;
 
@@ -23,7 +21,7 @@ public class ReloadInfo extends LoginInfo {
      * @param nickname Nickname of the player
      * @param gm       current gamemode of the player
      */
-    public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, String worldName) {
+    public ReloadInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, String gm, String worldName) {
         super(uuid, time, ip, banned, nickname, gm, worldName);
     }
 }

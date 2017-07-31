@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -55,7 +54,7 @@ public class ReloadInfoTest {
         long time = MiscUtils.getTime();
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE, "World");
+        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, "CREATIVE", "World");
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
@@ -77,7 +76,7 @@ public class ReloadInfoTest {
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, Gamemode.CREATIVE, "World");
+        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, "CREATIVE", "World");
         assertTrue(!i.process(data));
     }
 }

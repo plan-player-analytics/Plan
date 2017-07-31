@@ -265,7 +265,7 @@ public class DataCacheHandler extends SessionCache {
             UUID uuid = p.getUuid();
             endSession(uuid);
             String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
-            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid), worldName));
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode().name(), getSession(uuid), worldName));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         toProcess.sort(new HandlingInfoTimeComparator());
@@ -388,7 +388,7 @@ public class DataCacheHandler extends SessionCache {
         long time = MiscUtils.getTime();
         UUID uuid = p.getUuid();
         String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
-        ReloadInfo info = new ReloadInfo(uuid, time, p.getAddress().getAddress(), p.isBanned(), p.getDisplayName(), p.getGamemode(), worldName);
+        ReloadInfo info = new ReloadInfo(uuid, time, p.getAddress().getAddress(), p.isBanned(), p.getDisplayName(), p.getGamemode().name(), worldName);
         if (!pool) {
             UserData data = dataCache.get(uuid);
             if (data != null) {

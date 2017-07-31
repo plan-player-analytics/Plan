@@ -78,6 +78,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/PlaytimeHandling.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/WorldTimeHandling.java">
           <value>
             <set />
@@ -99,6 +104,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/LogoutInfo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/PlaytimeDependentInfo.java">
           <value>
             <set />
           </value>
@@ -279,6 +289,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/utilities/NewPlayerCreatorTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/utilities/comparators/HandlingInfoTimeComparatorTest.java">
           <value>
             <set />
           </value>

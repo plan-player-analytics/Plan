@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
@@ -44,7 +43,7 @@ public class LogoutInfoTest {
         data.updateBanned(false);
         long time = 20L;
         data.getGmTimes().setState("SURVIVAL");
-        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, Gamemode.CREATIVE, new SessionData(0, 1), "World");
+        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, "CREATIVE", new SessionData(0, 1), "World");
         assertTrue(i.process(data));
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
         assertTrue("Playtime wrong", data.getPlayTime() == 10L);
@@ -64,7 +63,7 @@ public class LogoutInfoTest {
         data.updateBanned(false);
         long time = 20L;
         Exception ex = null;
-        LogoutInfo i = new LogoutInfo(null, time, true, Gamemode.CREATIVE, new SessionData(0, 1), "World");
+        LogoutInfo i = new LogoutInfo(null, time, true, "CREATIVE", new SessionData(0, 1), "World");
         assertTrue(!i.process(data));
     }
 
