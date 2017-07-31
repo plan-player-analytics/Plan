@@ -5,9 +5,9 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +20,7 @@ import test.java.utils.TestInit;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -50,10 +51,10 @@ public class ReloadInfoTest {
     public void testProcess() throws UnknownHostException {
         UserData data = MockUtils.mockUser();
         InetAddress ip = InetAddress.getByName("137.19.188.146");
-        long time = 10L;
+        long time = MiscUtils.getTime();
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE);
+        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, "CREATIVE", "World");
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
@@ -62,7 +63,8 @@ public class ReloadInfoTest {
         assertTrue("Nick not last nick", data.getLastNick().equals(nick));
         String geo = data.getGeolocation();
         assertTrue("Wrong location " + geo, geo.equals("United States"));
-        assertTrue("Didn't process gamemode", data.getLastGamemode().equals("CREATIVE"));
+        assertEquals("CREATIVE", data.getGmTimes().getState());
+        assertEquals("World", data.getWorldTimes().getState());
     }
 
     /**
@@ -74,7 +76,7 @@ public class ReloadInfoTest {
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, Gamemode.CREATIVE);
+        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, "CREATIVE", "World");
         assertTrue(!i.process(data));
     }
 }

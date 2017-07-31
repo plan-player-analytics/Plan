@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -137,7 +138,7 @@ public class GMTimesTable extends Table {
      * @throws SQLException
      */
     public void saveGMTimes(int userId, Map<String, Long> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
+        if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
         PreparedStatement statement = null;
@@ -191,7 +192,7 @@ public class GMTimesTable extends Table {
     }
 
     public void saveGMTimes(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
+        if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
         Benchmark.start("Database: Save GMTimes");
@@ -244,12 +245,11 @@ public class GMTimesTable extends Table {
     }
 
     private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
+        if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
-
         try {
             statement = prepareStatement(
                     "INSERT INTO " + tableName + " ("
@@ -287,9 +287,11 @@ public class GMTimesTable extends Table {
     }
 
     private void addNewGMTimesRow(int userId, Map<String, Long> gamemodeTimes) throws SQLException {
+        if (Verify.isEmpty(gamemodeTimes)) {
+            return;
+        }
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
-
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "

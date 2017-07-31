@@ -20,7 +20,6 @@ public enum Settings {
     USE_ALTERNATIVE_UI("Settings.UseTextUI"),
     GATHERCHAT("Settings.Data.ChatListener"),
     GATHERKILLS("Settings.Data.GatherKillData"),
-    GATHERGMTIMES("Settings.Data.GamemodeChangeListener"),
     GATHERCOMMANDS("Settings.Data.GatherCommandUsage"),
     DO_NOT_LOG_UNKNOWN_COMMANDS("Customization.Data.DoNotLogUnknownCommands"),
     COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND("Customization.Data.CombineCommandAliasesToMainCommand"),

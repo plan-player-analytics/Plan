@@ -107,6 +107,7 @@ public abstract class Table {
      * @throws SQLException
      */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
+        Log.debug(sql);
         return getConnection().prepareStatement(sql);
     }
 
@@ -144,5 +145,31 @@ public abstract class Table {
      */
     protected <T> List<List<Container<T>>> splitIntoBatches(Map<Integer, List<T>> objects) {
         return DBUtils.splitIntoBatchesId(objects);
+    }
+
+    protected void addColumns(String... columnInfo) {
+        for (int i = 0; i < columnInfo.length; i++) {
+            columnInfo[i] = "ALTER TABLE " + tableName + " ADD " + (usingMySQL ? "" : "COLUMN ") + columnInfo[i];
+        }
+        executeUnsafe(columnInfo);
+    }
+
+    protected void removeColumns(String... columnNames) {
+        if (usingMySQL) {
+            StringBuilder sqlBuild = new StringBuilder();
+            sqlBuild.append("ALTER TABLE ").append(tableName);
+            for (int i = 0; i < columnNames.length; i++) {
+                sqlBuild.append(" DROP COLUMN ").append(columnNames[i]);
+                if (i < columnNames.length - 1) {
+                    sqlBuild.append(",");
+                }
+            }
+            executeUnsafe(sqlBuild.toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return tableName;
     }
 }

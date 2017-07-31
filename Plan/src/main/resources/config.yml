@@ -5,7 +5,6 @@ Settings:
   Data:
     ChatListener: true
     GatherKillData: true
-    GamemodeChangeListener: true
     GatherCommandUsage: true
   Analysis:
     LogProgressOnConsole: false

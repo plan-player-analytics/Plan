@@ -54,15 +54,7 @@ public class NicknamesTable extends Table {
     }
 
     private void alterTablesV3() {
-        String query;
-        if (usingMySQL) {
-            query = "ALTER TABLE " + tableName + " ADD " + columnCurrent + " boolean NOT NULL DEFAULT 0";
-
-        } else {
-            query = "ALTER TABLE " + tableName + " ADD COLUMN " + columnCurrent + " boolean NOT NULL DEFAULT 0";
-        }
-
-        executeUnsafe(query);
+        addColumns(columnCurrent + " boolean NOT NULL DEFAULT 0");
     }
 
     /**

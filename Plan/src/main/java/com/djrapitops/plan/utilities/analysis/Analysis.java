@@ -256,13 +256,14 @@ public class Analysis {
         KillPart killPart = analysisData.getKillPart();
         PlayerCountPart playerCount = analysisData.getPlayerCountPart();
         PlaytimePart playtime = analysisData.getPlaytimePart();
+        WorldPart worldPart = analysisData.getWorldPart();
 
         long now = MiscUtils.getTime();
 
         Benchmark.start("Analysis: Fill Dataset");
         rawData.forEach(uData -> {
             uData.access();
-            Map<String, Long> gmTimes = uData.getGmTimes();
+            Map<String, Long> gmTimes = uData.getGmTimes().getTimes();
             String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
             if (gmTimes != null) {
                 for (String gm : gms) {
@@ -272,6 +273,11 @@ public class Analysis {
                     }
                 }
             }
+            Map<String, Long> worldTimes = uData.getWorldTimes().getTimes();
+            for (Map.Entry<String, Long> world : worldTimes.entrySet()) {
+                worldPart.addToWorld(world.getKey(), world.getValue());
+            }
+
             final long playTime = uData.getPlayTime();
             playtime.addToPlaytime(playTime);
             joinInfo.addToLoginTimes(uData.getLoginTimes());

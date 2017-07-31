@@ -250,7 +250,6 @@ public class Plan extends BukkitPlugin<Plan> {
         Benchmark.start("Enable: Register Listeners");
         registerListener(new PlanPlayerListener(this));
         boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER.toString());
-        boolean gamemodeChangeListenerIsEnabled = Check.isTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER.toString());
         boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER.toString());
         boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER.toString());
 
@@ -258,9 +257,8 @@ public class Plan extends BukkitPlugin<Plan> {
             registerListener(new PlanChatListener(this));
         }
 
-        if (gamemodeChangeListenerIsEnabled) {
-            registerListener(new PlanGamemodeChangeListener(this));
-        }
+        registerListener(new PlanGamemodeChangeListener(this));
+        registerListener(new PlanWorldChangeListener(this));
 
         if (commandListenerIsEnabled) {
             registerListener(new PlanCommandPreprocessListener(this));
@@ -435,7 +433,7 @@ public class Plan extends BukkitPlugin<Plan> {
         logger.addFilter(new RegisterCommandFilter());
     }
 
-     /**
+    /**
      * Stops initializing the locale
      *
      * @param usingLocale The locale that's used

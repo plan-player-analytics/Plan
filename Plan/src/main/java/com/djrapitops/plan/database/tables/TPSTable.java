@@ -73,32 +73,15 @@ public class TPSTable extends Table {
     }
 
     private void alterTablesV6() {
-        try {
-            if (usingMySQL) {
-                execute("ALTER TABLE " + tableName + " ADD " + columnCPUUsage + " double NOT NULL DEFAULT 0");
-            } else {
-                execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL DEFAULT 0");
-            }
-        } catch (SQLException ignored) {
-        }
+        addColumns(columnCPUUsage + " double NOT NULL DEFAULT 0");
     }
 
     private void alterTablesV7() {
-        String[] sql;
-        if (usingMySQL) {
-            sql = new String[]{
-                    "ALTER TABLE " + tableName + " ADD " + columnRAMUsage + " bigint NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD " + columnEntities + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD " + columnChunksLoaded + " integer NOT NULL DEFAULT 0"
-            };
-        } else {
-            sql = new String[]{
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnRAMUsage + " bigint NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnEntities + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnChunksLoaded + " integer NOT NULL DEFAULT 0"
-            };
-        }
-        executeUnsafe(sql);
+        addColumns(
+                columnRAMUsage + " bigint NOT NULL DEFAULT 0",
+                columnEntities + " integer NOT NULL DEFAULT 0",
+                columnChunksLoaded + " integer NOT NULL DEFAULT 0"
+        );
     }
 
     /**

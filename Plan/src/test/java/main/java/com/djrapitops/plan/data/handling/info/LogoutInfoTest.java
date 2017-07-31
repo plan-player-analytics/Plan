@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
@@ -43,13 +42,14 @@ public class LogoutInfoTest {
         data.setLastPlayed(10L);
         data.updateBanned(false);
         long time = 20L;
-        data.setLastGamemode("SURVIVAL");
-        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, Gamemode.CREATIVE, new SessionData(0, 1));
+        data.getGmTimes().setState("SURVIVAL");
+        LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, "CREATIVE", new SessionData(0, 1), "World");
         assertTrue(i.process(data));
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
         assertTrue("Playtime wrong", data.getPlayTime() == 10L);
         assertTrue("Banned wrong", data.isBanned());
-        assertTrue("Didn't process gamemode", data.getLastGamemode().equals("CREATIVE"));
+        assertEquals("CREATIVE", data.getGmTimes().getState());
+        assertEquals("World", data.getWorldTimes().getState());
         assertEquals(1, data.getSessions().size());
     }
 
@@ -63,18 +63,8 @@ public class LogoutInfoTest {
         data.updateBanned(false);
         long time = 20L;
         Exception ex = null;
-        LogoutInfo i = new LogoutInfo(null, time, true, Gamemode.CREATIVE, new SessionData(0, 1));
-        try {
-            assertTrue(!i.process(data));
-        } catch (NullPointerException e) {
-            ex = e;
-        }
-        assertTrue("Caught endSessionException", ex == null);
-        assertTrue("Last Played wrong", data.getLastPlayed() == 10L);
-        assertTrue("Playtime wrong", data.getPlayTime() == 0L);
-        assertTrue("Banned wrong", !data.isBanned());
-        assertTrue("Didn't process gamemode", data.getLastGamemode().equals("SURVIVAL"));
-        assertEquals(0, data.getSessions().size());
+        LogoutInfo i = new LogoutInfo(null, time, true, "CREATIVE", new SessionData(0, 1), "World");
+        assertTrue(!i.process(data));
     }
 
 }
