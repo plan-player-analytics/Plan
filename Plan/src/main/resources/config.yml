@@ -36,7 +36,7 @@ Settings:
     Security:
       DisplayIPsAndUUIDs: true
       Certificate:
-        KeyStorePath: '\SSLCertificate.keystore'
+        KeyStorePath: 'SSLCertificate.keystore'
         KeyPass: 'default'
         StorePass: 'default'
         Alias: 'alias'
