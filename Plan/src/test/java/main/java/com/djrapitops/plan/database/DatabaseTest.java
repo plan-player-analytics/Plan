@@ -242,7 +242,7 @@ public class DatabaseTest {
             @Override
             public void process(UserData d) {
                 System.out.println("\nOriginal: " + data);
-                System.out.println("Database: "+d);
+                System.out.println("Database: " + d);
                 assertTrue("Not Equals", data.equals(d));
             }
         };
@@ -294,24 +294,14 @@ public class DatabaseTest {
         list.add(data2);
         db.saveMultipleUserData(list);
         data.addPlayerKill(new KillData(MockUtils.getPlayer2UUID(), 2, "DiamondSword", 75843759L));
-        DBCallableProcessor process = new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                System.out.println("\n" + data.toString());
-                System.out.println(d.toString());
-                assertTrue("Not Equals", data.equals(d));
-            }
-        };
-        db.giveUserDataToProcessors(data.getUuid(), process);
-        DBCallableProcessor process2 = new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                System.out.println("\n" + data2.toString());
-                System.out.println(d.toString());
-                assertTrue("Not Equals", data2.equals(d));
-            }
-        };
-        db.giveUserDataToProcessors(data2.getUuid(), process2);
+        List<UserData> userDataForUUIDS = db.getUserDataForUUIDS(MockUtils.getUUIDs());
+
+        System.out.println("\nData1:" + data.toString());
+        System.out.println("Data2:" + data2.toString() + "\n");
+        for (UserData uData : userDataForUUIDS) {
+            System.out.println("uData:" + uData.toString());
+            assertTrue("Not Equals", (data.equals(uData) || data2.equals(uData)));
+        }
     }
 
     /**

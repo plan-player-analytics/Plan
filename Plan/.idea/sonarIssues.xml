@@ -263,12 +263,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/KillHandlingTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/ChatInfoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/DeathInfoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/GamemodeInfoTest.java">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/InfoUuidCorrectionTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/KillInfoTest.java">
           <value>
             <set />
           </value>

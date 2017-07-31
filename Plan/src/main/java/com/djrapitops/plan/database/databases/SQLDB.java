@@ -394,7 +394,9 @@ public abstract class SQLDB extends Database {
             UUID uuid = uData.getUuid();
             Integer id = userIds.get(uuid);
             uData.addIpAddresses(ipList.get(id));
-            uData.addNicknames(nicknames.get(id));
+            List<String> nickNames = nicknames.get(id);
+            uData.addNicknames(nickNames);
+            uData.setLastNick(nickNames.get(nickNames.size()-1));
             uData.addSessions(sessionData.get(id));
             uData.setPlayerKills(playerKills.get(id));
             uData.getGmTimes().setTimes(gmTimes.get(id));

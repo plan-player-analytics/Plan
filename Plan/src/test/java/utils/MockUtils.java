@@ -19,6 +19,8 @@ import org.powermock.api.mockito.PowerMockito;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -119,6 +121,13 @@ public class MockUtils {
      */
     public static UUID getPlayer2UUID() {
         return UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
+    }
+
+    public static Set<UUID> getUUIDs() {
+        Set<UUID> uuids = new HashSet<>();
+        uuids.add(getPlayerUUID());
+        uuids.add(getPlayer2UUID());
+        return uuids;
     }
 
     /**
