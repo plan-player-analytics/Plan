@@ -48,7 +48,7 @@ public enum Settings {
     ANALYSIS_EXPORT_PATH("Settings.Analysis.Export.DestinationFolder"),
     WEBSERVER_CERTIFICATE_PATH("Settings.WebServer.Security.Certificate.KeyStorePath"),
     WEBSERVER_CERTIFICATE_KEYPASS("Settings.WebServer.Security.Certificate.KeyPass"),
-    WEBSERVER_CERTIFICATE_STOREPASS("Settings.WebServer.Security.Certificate.KeyPass"),
+    WEBSERVER_CERTIFICATE_STOREPASS("Settings.WebServer.Security.Certificate.StorePass"),
     WEBSERVER_CERTIFICATE_ALIAS("Settings.WebServer.Security.Certificate.Alias"),
     LINK_PROTOCOL("Settings.WebServer.ExternalWebServerLinkProtocol"),
     //

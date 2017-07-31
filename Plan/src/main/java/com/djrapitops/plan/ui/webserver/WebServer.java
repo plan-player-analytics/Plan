@@ -72,6 +72,7 @@ public class WebServer {
             Log.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
 
             if (!usingHttps) {
+                Log.infoColor(ChatColor.YELLOW + "User Authorization Disabled! (Not possible over http)");
                 server = HttpServer.create(new InetSocketAddress(port), 10);
             }
 
@@ -171,7 +172,7 @@ public class WebServer {
     private boolean startHttpsServer() throws IOException {
         String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
         if (!Paths.get(keyStorePath).isAbsolute()) {
-            keyStorePath = plugin.getDataFolder() + keyStorePath;
+            keyStorePath = plugin.getDataFolder() + File.separator + keyStorePath;
         }
         char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();
         char[] keypass = Settings.WEBSERVER_CERTIFICATE_KEYPASS.toString().toCharArray();
@@ -216,7 +217,9 @@ public class WebServer {
         } catch (FileNotFoundException e) {
             Log.infoColor(ChatColor.YELLOW + "WebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
             Log.info("No Certificate -> Using Http server for Visualization.");
-            Log.infoColor(ChatColor.YELLOW + "User Authorization Disabled! (Not possible over http)");
+        } catch (IOException e) {
+            Log.error("WebServer: " + e);
+            Log.toLog(this.getClass().getName(), e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
             Log.error("WebServer: SSL Certificate loading Failed.");
             Log.toLog(this.getClass().getName(), e);
