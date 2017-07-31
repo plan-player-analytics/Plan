@@ -55,7 +55,7 @@ public class ReloadInfoTest {
         long time = MiscUtils.getTime();
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE);
+        ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, Gamemode.CREATIVE, "World");
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
@@ -65,6 +65,7 @@ public class ReloadInfoTest {
         String geo = data.getGeolocation();
         assertTrue("Wrong location " + geo, geo.equals("United States"));
         assertEquals("CREATIVE", data.getGmTimes().getState());
+        assertEquals("World", data.getWorldTimes().getState());
     }
 
     /**
@@ -76,7 +77,7 @@ public class ReloadInfoTest {
         InetAddress ip = InetAddress.getByName("137.19.188.146");
         long time = 10L;
         String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, Gamemode.CREATIVE);
+        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, Gamemode.CREATIVE, "World");
         assertTrue(!i.process(data));
     }
 }

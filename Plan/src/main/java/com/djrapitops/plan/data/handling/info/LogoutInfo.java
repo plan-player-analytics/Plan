@@ -18,6 +18,7 @@ public class LogoutInfo extends HandlingInfo {
     private final boolean banned;
     private final SessionData sData;
     private final GamemodeInfo gmInfo;
+    private final WorldInfo worldInfo;
 
     /**
      * Constructor.
@@ -29,11 +30,12 @@ public class LogoutInfo extends HandlingInfo {
      * @param sData  session that has been ended at the moment of the logout
      *               event.
      */
-    public LogoutInfo(UUID uuid, long time, boolean banned, Gamemode gm, SessionData sData) {
+    public LogoutInfo(UUID uuid, long time, boolean banned, Gamemode gm, SessionData sData, String worldName) {
         super(uuid, InfoType.LOGOUT, time);
         this.banned = banned;
         this.sData = sData;
         this.gmInfo = new GamemodeInfo(uuid, time, gm);
+        worldInfo = new WorldInfo(uuid, time, worldName);
     }
 
     @Override
@@ -44,6 +46,7 @@ public class LogoutInfo extends HandlingInfo {
         uData.addSession(sData);
         LogoutHandling.processLogoutInfo(uData, time, banned);
         gmInfo.process(uData);
+        worldInfo.process(uData);
         return true;
     }
 

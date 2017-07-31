@@ -390,6 +390,9 @@
                                     class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
                     </div>
                     <div class=" box column">
+                        <div id="worldPie" style="width: 100%; height: 400px;"></div>
+                    </div>
+                    <div class=" box column">
                         <div id="gmPie" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
@@ -768,6 +771,11 @@
 				y: gmData[3]
 			}]
 		};
+		var worldSeries = {
+		    name: 'World Playtime',
+		    colorByPoint: true,
+		    data: %worldseries%
+		};
 		var mapSeries = {
 			name: 'Players',
 			type: 'map',
@@ -1078,6 +1086,35 @@
 
     </script>
     <script>
+        function worldPie() {
+            var myChart = Highcharts.chart('worldPie', {
+                chart: {
+                    plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'World Playtime'},
+				subtitle: {text: '%worldtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [worldSeries]
+            });
+        };
+
+    </script>
+    <script>
         function gmPie() {			
             Highcharts.chart('gmPie', {
                 chart: {
@@ -1216,6 +1253,7 @@
         openFunc(slideIndex)();
         gmPie();
 		activityPie();
+		worldPie();
 		playersChart();
 		playersChart2();
 		tpsChart();

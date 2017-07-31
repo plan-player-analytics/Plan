@@ -541,13 +541,9 @@ public class UsersTable extends Table {
 
                 statement = prepareStatement(sql);
                 statement.setString(1, data.getGeolocation());
-                String gm = data.getLastGamemode();
-                if (gm != null) {
-                    statement.setString(2, gm);
-                } else {
-                    statement.setString(2, "SURVIVAL");
-                }
-                statement.setLong(3, data.getLastGmSwapTime());
+                GMTimes gmTimes = data.getGmTimes();
+                statement.setString(2, gmTimes.getState());
+                statement.setLong(3, gmTimes.getLastStateChange());
                 statement.setLong(4, data.getPlayTime());
                 statement.setInt(5, data.getLoginTimes());
                 statement.setLong(6, data.getLastPlayed());

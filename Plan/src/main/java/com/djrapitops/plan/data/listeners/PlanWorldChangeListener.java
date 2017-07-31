@@ -10,43 +10,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import java.util.UUID;
 
-/**
- * Event Listener for PlayerGameModeChangeEvents.
- *
- * @author Rsl1122
- */
-public class PlanGamemodeChangeListener implements Listener {
-
+public class PlanWorldChangeListener implements Listener {
     private final DataCacheHandler handler;
 
-    /**
-     * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
-     */
-    public PlanGamemodeChangeListener(Plan plugin) {
-        handler = plugin.getHandler();
-
+    public PlanWorldChangeListener(Plan plugin) {
+        this.handler = plugin.getHandler();
     }
 
-    /**
-     * GM Change Event Listener.
-     *
-     * @param event Fired Event.
-     */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onGamemodeChange(PlayerGameModeChangeEvent event) {
-        if (event.isCancelled()) {
+    public void onWorldChange(PlayerChangedWorldEvent event) {
+        Player p = event.getPlayer();
+        String previousWorld = event.getFrom().getName();
+        String worldName = p.getWorld().getName();
+        if (previousWorld.equals(worldName)) {
             return;
         }
-        Player p = event.getPlayer();
         UUID uuid = p.getUniqueId();
         long time = MiscUtils.getTime();
-        handler.addToPool(new GamemodeInfo(uuid, time, Gamemode.wrap(event.getNewGameMode())));
-        handler.addToPool(new WorldInfo(uuid, time, p.getWorld().getName()));
+        handler.addToPool(new GamemodeInfo(uuid, time, Gamemode.wrap(p.getGameMode())));
+        handler.addToPool(new WorldInfo(uuid, time, worldName));
     }
 }

@@ -22,7 +22,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * Class containing main logic for different data related save & load functionality.
+ *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public abstract class SQLDB extends Database {
 
@@ -134,7 +137,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(7);
+                setVersion(8);
             }
 
             Benchmark.start("Database: Create tables");
@@ -153,8 +156,8 @@ public abstract class SQLDB extends Database {
 
             Benchmark.stop("Database: Create tables");
 
-            if (!newDatabase && getVersion() < 7) {
-                setVersion(7);
+            if (!newDatabase && getVersion() < 8) {
+                setVersion(8);
             }
         }
         return true;

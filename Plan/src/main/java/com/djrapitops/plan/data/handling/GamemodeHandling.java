@@ -14,6 +14,13 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 public class GamemodeHandling {
 
     /**
+     * Utility Class, hides constructor.
+     */
+    private GamemodeHandling() {
+        throw new IllegalStateException("Utility Class.");
+    }
+
+    /**
      * Processes the information of the Event and changes UserData object
      * accordingly.
      *

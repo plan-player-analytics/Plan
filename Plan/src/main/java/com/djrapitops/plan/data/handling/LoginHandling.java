@@ -15,6 +15,13 @@ import java.net.InetAddress;
 public class LoginHandling {
 
     /**
+     * Utility Class, hides constructor.
+     */
+    private LoginHandling() {
+        throw new IllegalStateException("Utility Class.");
+    }
+
+    /**
      * Processes the information of the Event and changes UserData object
      * accordingly.
      *

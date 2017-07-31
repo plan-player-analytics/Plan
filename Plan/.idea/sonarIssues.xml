@@ -23,6 +23,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/Plan.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/Settings.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/AnalysisData.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/TimeKeeper.java">
           <value>
             <set />
@@ -38,7 +53,77 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/analysis/WorldPart.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/cache/DataCacheHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/GamemodeHandling.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/KillHandling.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/LoginHandling.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/WorldTimeHandling.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/GamemodeInfo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/InfoType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/LoginInfo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/LogoutInfo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/ReloadInfo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/handling/info/WorldInfo.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/listeners/PlanGamemodeChangeListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/listeners/PlanPlayerListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/data/listeners/PlanWorldChangeListener.java">
           <value>
             <set />
           </value>
@@ -113,6 +198,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/ui/html/graphs/WorldPieCreator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/utilities/NewPlayerCreator.java">
           <value>
             <set />
@@ -128,6 +218,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/utilities/metrics/BStats.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/analysis.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/config.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/UserDataTest.java">
           <value>
             <set />
@@ -139,6 +244,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/GamemodeInfoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/LoginInfoTest.java">
           <value>
             <set />
           </value>

@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 /**
@@ -69,7 +70,14 @@ public class PlanPlayerListener implements Listener {
         plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
             @Override
             public void run() {
-                LoginInfo loginInfo = new LoginInfo(uuid, MiscUtils.getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), Gamemode.wrap(player.getGameMode()), 1);
+                long time = MiscUtils.getTime();
+                InetAddress ip = player.getAddress().getAddress();
+                boolean banned = player.isBanned();
+                String displayName = player.getDisplayName();
+                Gamemode gm = Gamemode.wrap(player.getGameMode());
+                String worldName = player.getWorld().getName();
+
+                LoginInfo loginInfo = new LoginInfo(uuid, time, ip, banned, displayName, gm, 1, worldName);
                 boolean isNewPlayer = !plugin.getDB().wasSeenBefore(uuid);
 
                 if (isNewPlayer) {
@@ -101,7 +109,12 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
         Log.debug(uuid + ": PlayerQuitEvent");
-        handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), Gamemode.wrap(player.getGameMode()), handler.getSession(uuid)));
+        long time = MiscUtils.getTime();
+        boolean banned = player.isBanned();
+        Gamemode gm = Gamemode.wrap(player.getGameMode());
+        String worldName = player.getWorld().getName();
+
+        handler.addToPool(new LogoutInfo(uuid, time, banned, gm, handler.getSession(uuid), worldName));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerQuitEvent_END");
     }
@@ -122,7 +135,12 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
         Log.debug(uuid + ": PlayerKickEvent");
-        handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), Gamemode.wrap(player.getGameMode()), handler.getSession(uuid)));
+        long time = MiscUtils.getTime();
+        boolean banned = player.isBanned();
+        Gamemode gm = Gamemode.wrap(player.getGameMode());
+        String worldName = player.getWorld().getName();
+
+        handler.addToPool(new LogoutInfo(uuid, time, banned, gm, handler.getSession(uuid), worldName));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerKickEvent_END");

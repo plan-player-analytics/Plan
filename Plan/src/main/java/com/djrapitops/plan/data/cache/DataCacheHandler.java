@@ -21,6 +21,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
+import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -263,7 +264,8 @@ public class DataCacheHandler extends SessionCache {
         for (IPlayer p : onlinePlayers) {
             UUID uuid = p.getUuid();
             endSession(uuid);
-            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
+            String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid), worldName));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         toProcess.sort(new HandlingInfoTimeComparator());
@@ -382,10 +384,11 @@ public class DataCacheHandler extends SessionCache {
         onlinePlayers.forEach(p -> saveHandlerDataToCache(p, false));
     }
 
-    private void saveHandlerDataToCache(IPlayer player, boolean pool) {
+    private void saveHandlerDataToCache(IPlayer p, boolean pool) {
         long time = MiscUtils.getTime();
-        UUID uuid = player.getUuid();
-        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGamemode());
+        UUID uuid = p.getUuid();
+        String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
+        ReloadInfo info = new ReloadInfo(uuid, time, p.getAddress().getAddress(), p.isBanned(), p.getDisplayName(), p.getGamemode(), worldName);
         if (!pool) {
             UserData data = dataCache.get(uuid);
             if (data != null) {

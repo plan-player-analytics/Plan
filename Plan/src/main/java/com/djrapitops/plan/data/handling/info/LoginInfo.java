@@ -19,6 +19,7 @@ public class LoginInfo extends HandlingInfo {
     private final boolean banned;
     private final String nickname;
     private final GamemodeInfo gmInfo;
+    private final WorldInfo worldInfo;
     private final int loginTimes;
 
     /**
@@ -32,17 +33,20 @@ public class LoginInfo extends HandlingInfo {
      * @param gm         current gamemode of the player
      * @param loginTimes number the loginTimes should be incremented with.
      */
-    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, int loginTimes) {
+    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, int loginTimes, String worldName) {
         super(uuid, InfoType.LOGIN, time);
         this.ip = ip;
         this.banned = banned;
         this.nickname = nickname;
         this.gmInfo = new GamemodeInfo(uuid, time, gm);
+        worldInfo = new WorldInfo(uuid, time, worldName);
         this.loginTimes = loginTimes;
     }
 
     /**
      * Constructor for not incrementing the loginTimes.
+     *
+     * This constructor is used only by ReloadInfo
      *
      * @param uuid     UUID of the player.
      * @param time     Epoch ms of the event.
@@ -51,8 +55,14 @@ public class LoginInfo extends HandlingInfo {
      * @param nickname Nickname of the player
      * @param gm       current gamemode of the player
      */
-    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm) {
-        this(uuid, time, ip, banned, nickname, gm, 0);
+    public LoginInfo(UUID uuid, long time, InetAddress ip, boolean banned, String nickname, Gamemode gm, String worldName) {
+        super(uuid, InfoType.RELOAD, time);
+        this.ip = ip;
+        this.banned = banned;
+        this.nickname = nickname;
+        this.gmInfo = new GamemodeInfo(uuid, time, gm);
+        worldInfo = new WorldInfo(uuid, time, worldName);
+        this.loginTimes = 0;
     }
 
     @Override
@@ -62,6 +72,7 @@ public class LoginInfo extends HandlingInfo {
         }
         LoginHandling.processLoginInfo(uData, time, ip, banned, nickname, loginTimes);
         gmInfo.process(uData);
+        worldInfo.process(uData);
         return true;
     }
 }
