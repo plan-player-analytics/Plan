@@ -133,12 +133,7 @@ public class DataCacheHandlerTest {
 //        db.init();
         UserData data = MockUtils.mockUser();
         db.saveUserData(data);
-        handler.getUserDataForProcessing(new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                assertTrue(d.equals(data));
-            }
-        }, data.getUuid());
+        handler.getUserDataForProcessing(d -> assertTrue(d.equals(data)), data.getUuid());
         Thread.sleep(1000);
         assertTrue(handler.getDataCache().containsKey(data.getUuid()));
         assertTrue(handler.getDataCache().get(data.getUuid()).equals(data));
@@ -153,12 +148,7 @@ public class DataCacheHandlerTest {
     public void testGetUserDataForProcessingDontCache() throws SQLException, InterruptedException {
         UserData data = MockUtils.mockUser();
         db.saveUserData(data);
-        handler.getUserDataForProcessing(new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                assertTrue(d.equals(data));
-            }
-        }, data.getUuid(), false);
+        handler.getUserDataForProcessing(d -> assertTrue(d.equals(data)), data.getUuid(), false);
         Thread.sleep(1000);
         assertTrue(!handler.getDataCache().containsKey(data.getUuid()));
         assertTrue(handler.getDataCache().get(data.getUuid()) == null);

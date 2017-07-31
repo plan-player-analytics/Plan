@@ -5,7 +5,6 @@ import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -26,7 +25,7 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
      * @param handler current instance of DataCacheHandler.
      */
     public DataCacheProcessQueue(DataCacheHandler handler) {
-        super(new ArrayBlockingQueue(20000));
+        super(new ArrayBlockingQueue<>(20000));
         setup = new ProcessSetup(queue, handler);
         setup.go();
     }
@@ -65,7 +64,7 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        return uuid != null && new ArrayList<>(queue).stream().anyMatch(info -> info.getUuid().equals(uuid));
+        return uuid != null && queue.stream().anyMatch(info -> info.getUuid().equals(uuid));
     }
 }
 
@@ -73,7 +72,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
 
     private DataCacheHandler handler;
 
-    ProcessConsumer(BlockingQueue q, DataCacheHandler h) {
+    ProcessConsumer(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
         super(q, "ProcessQueueConsumer");
         handler = h;
     }
@@ -83,16 +82,19 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
         if (handler == null) {
             return;
         }
+
         if (handler.getGetTask().containsUUIDtoBeCached(info.getUuid())) { // Wait for get queue.
             queue.add(info);
             return;
         }
+
         Log.debug(info.getUuid() + ": Processing type: " + info.getType().name());
         DBCallableProcessor p = data -> {
             if (!info.process(data)) {
                 Log.error("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
             }
         };
+
         handler.getUserDataForProcessing(p, info.getUuid());
     }
 

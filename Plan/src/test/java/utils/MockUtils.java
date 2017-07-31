@@ -2,6 +2,7 @@ package test.java.utils;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IPlayer;
+import com.sun.net.httpserver.HttpServer;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -16,6 +17,8 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.UUID;
 
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -140,5 +143,12 @@ public class MockUtils {
      */
     public static CommandSender mockConsoleSender() {
         return PowerMockito.mock(CommandSender.class);
+    }
+
+    public static HttpServer mockHTTPServer() throws UnknownHostException {
+        HttpServer httpServer = PowerMockito.mock(HttpServer.class);
+        when(httpServer.getAddress()).thenReturn(InetSocketAddress.createUnresolved("127.0.0.1", 80));
+        when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));
+        return httpServer;
     }
 }

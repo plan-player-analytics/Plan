@@ -98,7 +98,7 @@ public class ManageMoveCommand extends SubCommand {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
 
                     if (ManageUtils.clearAndCopy(toDatabase, fromDatabase, uuids)) {
-                        sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS + "");
+                        sender.sendMessage(Phrase.MANAGE_MOVE_SUCCESS.toString());
                         boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
 
                         Check.isTrue(!movedToCurrentDatabase, Phrase.MANAGE_DB_CONFIG_REMINDER.toString(), sender);

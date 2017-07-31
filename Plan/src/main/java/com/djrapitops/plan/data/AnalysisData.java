@@ -97,11 +97,9 @@ public class AnalysisData extends RawData {
     }
 
     public List<RawData> getAllParts() {
-        return Arrays.asList(new RawData[]{
-                activityPart, commandUsagePart, gamemodePart,
+        return Arrays.asList(activityPart, commandUsagePart, gamemodePart,
                 geolocationPart, joinInfoPart, killPart,
-                playerCountPart, playtimePart, tpsPart, worldPart
-        });
+                playerCountPart, playtimePart, tpsPart, worldPart);
     }
 
     public String getPlanVersion() {

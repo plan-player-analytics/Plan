@@ -89,10 +89,10 @@ public class ActivityPart extends RawData {
 
     private void activityPiechart() {
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
-        final String colAct = Settings.HCOLOR_ACTP_ACT + "";
-        final String colIna = Settings.HCOLOR_ACTP_INA + "";
-        final String colJoi = Settings.HCOLOR_ACTP_JON + "";
-        final String colBan = Settings.HCOLOR_ACTP_BAN + "";
+        final String colAct = Settings.HCOLOR_ACTP_ACT.toString();
+        final String colIna = Settings.HCOLOR_ACTP_INA.toString();
+        final String colJoi = Settings.HCOLOR_ACTP_JON.toString();
+        final String colBan = Settings.HCOLOR_ACTP_BAN.toString();
 
         addValue("%activecol%", colAct);
         addValue("%inactivecol%", colIna);

@@ -31,7 +31,7 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.SEARCH.getPermission(), Phrase.CMD_USG_SEARCH + "", Phrase.ARG_SEARCH + "");
+        super("search", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.SEARCH.getPermission(), Phrase.CMD_USG_SEARCH.toString(), Phrase.ARG_SEARCH.toString());
         this.plugin = plugin;
         setHelp(plugin);
     }
@@ -57,7 +57,7 @@ public class SearchCommand extends SubCommand {
         if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
-        sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING + "");
+        sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING.toString());
 
         runSearchTask(args, sender);
         return true;
@@ -74,8 +74,9 @@ public class SearchCommand extends SubCommand {
                     if (names.isEmpty()) {
                         sender.sendMessage(Phrase.CMD_NO_RESULTS.parse(Arrays.toString(args)));
                     } else {
-                        sender.sendMessage(Phrase.CMD_MATCH + "" + FormattingUtils.collectionToStringNoBrackets(names));
+                        sender.sendMessage(Phrase.CMD_MATCH.toString() + FormattingUtils.collectionToStringNoBrackets(names));
                     }
+
                     sender.sendMessage(Phrase.CMD_FOOTER.toString());
                 } finally {
                     this.cancel();

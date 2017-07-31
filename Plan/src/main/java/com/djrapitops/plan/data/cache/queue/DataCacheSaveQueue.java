@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -31,7 +30,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @param handler DataCacheHandler
      */
     public DataCacheSaveQueue(Plan plugin, DataCacheHandler handler) {
-        super(new ArrayBlockingQueue(Settings.PROCESS_SAVE_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(Settings.PROCESS_SAVE_LIMIT.getNumber()));
         setup = new SaveSetup(queue, handler, plugin.getDB());
         setup.go();
     }
@@ -85,7 +84,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @return true/false
      */
     public boolean containsUUID(UUID uuid) {
-        return uuid != null && new ArrayList<>(queue).stream().anyMatch(d -> d.getUuid().equals(uuid));
+        return uuid != null && queue.stream().anyMatch(d -> d.getUuid().equals(uuid));
     }
 }
 
@@ -94,7 +93,7 @@ class SaveConsumer extends Consumer<UserData> {
     private Database db;
     private DataCacheHandler handler;
 
-    SaveConsumer(BlockingQueue q, DataCacheHandler handler, Database db) {
+    SaveConsumer(BlockingQueue<UserData> q, DataCacheHandler handler, Database db) {
         super(q, "SaveQueueConsumer");
         this.db = db;
         this.handler = handler;
@@ -106,11 +105,13 @@ class SaveConsumer extends Consumer<UserData> {
         if (db == null) {
             return;
         }
+
         UUID uuid = data.getUuid();
         if (handler.getProcessTask().containsUUID(uuid)) { // Wait for process queue.
             queue.add(data);
             return;
         }
+
         Log.debug(uuid + ": Saving: " + uuid);
         try {
             db.saveUserData(data);
