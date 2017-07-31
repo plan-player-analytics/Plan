@@ -96,7 +96,7 @@ public abstract class Table {
         for (String statement : statements) {
             try {
                 execute(statement);
-            } catch (SQLException e) {
+            } catch (SQLException ignored) {
             }
         }
     }

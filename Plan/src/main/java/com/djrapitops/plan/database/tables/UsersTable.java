@@ -123,7 +123,7 @@ public class UsersTable extends Table {
                 execute("ALTER TABLE " + tableName
                         + " DROP COLUMN " + columnDemAge + ","
                         + " DROP COLUMN " + columnDemGender);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

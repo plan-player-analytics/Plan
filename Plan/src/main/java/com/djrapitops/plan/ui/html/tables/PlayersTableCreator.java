@@ -60,7 +60,7 @@ public class PlayersTableCreator {
                         String.valueOf(uData.getLastPlayed()), FormatUtils.formatTimeStamp(uData.getLastPlayed()),
                         String.valueOf(uData.getGeolocation())
                 ));
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
             }
 
             i++;

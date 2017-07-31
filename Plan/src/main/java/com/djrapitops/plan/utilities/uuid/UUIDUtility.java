@@ -53,7 +53,7 @@ public class UUIDUtility {
             if (uuid == null) {
                 uuid = UUIDFetcher.getUUIDOf(playername);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return uuid;
     }

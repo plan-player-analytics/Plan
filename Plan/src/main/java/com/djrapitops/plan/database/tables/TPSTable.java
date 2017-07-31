@@ -79,7 +79,7 @@ public class TPSTable extends Table {
             } else {
                 execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL DEFAULT 0");
             }
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
         }
     }
 

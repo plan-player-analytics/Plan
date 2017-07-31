@@ -24,9 +24,6 @@ import test.java.utils.TestInit;
 @PrepareForTest({JavaPlugin.class})
 public class DataCacheClearQueueTest {
 
-    private Plan plan;
-    private DataCacheHandler handler;
-
     /**
      *
      */
@@ -39,8 +36,8 @@ public class DataCacheClearQueueTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
-        handler = new DataCacheHandler(plan) {
+        Plan plan = t.getPlanMock();
+        DataCacheHandler handler = new DataCacheHandler(plan) {
             @Override
             public boolean getCommandUseFromDb() {
                 return true;

@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
 /**
- * This class is used for storing start and end of a playsession inside UserData
+ * This class is used for storing start and end of a play session inside UserData
  * object.
  *
  * @author Rsl1122

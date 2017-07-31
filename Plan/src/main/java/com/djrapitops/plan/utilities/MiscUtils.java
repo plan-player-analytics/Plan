@@ -99,7 +99,7 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException ex) {
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -110,7 +110,7 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             }
         }

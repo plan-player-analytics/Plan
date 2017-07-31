@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
  */
 public class FormatUtils {
 
-    private static DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
+    private static final DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
 
     /**
      * Constructor used to hide the public constructor

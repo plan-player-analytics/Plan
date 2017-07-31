@@ -6,7 +6,6 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
 import java.util.Collection;
@@ -15,7 +14,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Utility class for creating Punch Card Data Array for the javascripts.
+ * Utility class for creating Punch Card Data Array for the JavaScripts.
  *
  * @author Rsl1122
  * @since 3.6.0
@@ -30,9 +29,9 @@ public class PunchCardGraphCreator {
     }
 
     /**
-     * Creates a Punchcard series data Array for HighCharts
+     * Creates a PunchCard series data Array for HighCharts
      *
-     * @param sessions Sessions (Unique/Player) to be placed into the punchcard.
+     * @param sessions Sessions (Unique/Player) to be placed into the PunchCard.
      * @return Data array as a string.
      */
     public static String createDataSeries(Collection<SessionData> sessions) {
@@ -73,12 +72,10 @@ public class PunchCardGraphCreator {
     }
 
     private static List<Long> getSessionStarts(Collection<SessionData> data) {
-        long now = MiscUtils.getTime();
         return data.stream()
                 .filter(Objects::nonNull)
                 .filter(SessionData::isValid)
                 .map(SessionData::getSessionStart)
-                .filter(start -> now - start < (long) 2592000 * (long) 1000)
                 .sorted()
                 .collect(Collectors.toList());
     }

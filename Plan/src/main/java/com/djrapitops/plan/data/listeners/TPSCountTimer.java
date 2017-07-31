@@ -114,7 +114,7 @@ public class TPSCountTimer extends AbsRunnable {
             diff -= twentySeconds;
         }
 
-        double tpsN = MathUtils.round(twentySeconds / diff);
+        double tpsN = twentySeconds * 1.0 / diff;
 
         return new TPS(now, tpsN, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }
