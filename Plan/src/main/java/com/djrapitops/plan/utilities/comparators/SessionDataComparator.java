@@ -9,7 +9,6 @@ import java.util.Comparator;
  */
 public class SessionDataComparator implements Comparator<SessionData> {
 
-    // This method should only be used if FactionsHook.isEnabled() returns true.
     @Override
     public int compare(SessionData s1, SessionData s2) {
         return Long.compare(s1.getSessionStart(), s2.getSessionStart());
