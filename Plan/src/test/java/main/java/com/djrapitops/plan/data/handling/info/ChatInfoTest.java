@@ -36,15 +36,4 @@ public class ChatInfoTest {
         assertTrue("Didn't succeed", i.process(data));
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
     }
-
-    /**
-     *
-     */
-    @Test
-    public void testProcessWrongUUID() {
-        UserData data = MockUtils.mockUser();
-        String expected = "TestNicknameChatInfo";
-        ChatInfo i = new ChatInfo(null, expected);
-        assertTrue("Succeeded.", !i.process(data));
-    }
 }

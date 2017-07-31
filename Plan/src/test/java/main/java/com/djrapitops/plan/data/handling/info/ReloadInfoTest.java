@@ -66,17 +66,4 @@ public class ReloadInfoTest {
         assertEquals("CREATIVE", data.getGmTimes().getState());
         assertEquals("World", data.getWorldTimes().getState());
     }
-
-    /**
-     * @throws UnknownHostException
-     */
-    @Test
-    public void testProcessWrongUUID() throws UnknownHostException {
-        UserData data = MockUtils.mockUser();
-        InetAddress ip = InetAddress.getByName("137.19.188.146");
-        long time = 10L;
-        String nick = "TestProcessLoginInfo";
-        ReloadInfo i = new ReloadInfo(null, time, ip, true, nick, "CREATIVE", "World");
-        assertTrue(!i.process(data));
-    }
 }

@@ -105,17 +105,4 @@ public class KillInfoTest {
         assertTrue("Added a kill", data.getPlayerKills().isEmpty());
         assertEquals(1, data.getMobKills());
     }
-
-    /**
-     * @throws SQLException
-     */
-    @Test
-    public void testProcessMobKillWrongUUID() throws SQLException {
-        UserData data = MockUtils.mockUser();
-        KillInfo i = new KillInfo(null, 10L, null, "TestWeapon");
-        assertTrue(!i.process(data));
-        assertTrue("Added a kill", data.getPlayerKills().isEmpty());
-        assertEquals(0, data.getMobKills());
-    }
-
 }

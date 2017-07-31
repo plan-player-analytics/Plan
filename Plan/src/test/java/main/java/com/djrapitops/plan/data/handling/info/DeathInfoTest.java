@@ -42,16 +42,4 @@ public class DeathInfoTest {
         assertTrue(i.process(data));
         assertEquals(1, data.getDeaths());
     }
-
-    /**
-     *
-     */
-    @Test
-    public void testProcessWrongUUID() {
-        UserData data = MockUtils.mockUser();
-        DeathInfo i = new DeathInfo(null);
-        assertTrue(!i.process(data));
-        assertEquals(0, data.getDeaths());
-    }
-
 }
