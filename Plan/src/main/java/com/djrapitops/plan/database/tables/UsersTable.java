@@ -382,7 +382,8 @@ public class UsersTable extends Table {
                 data.setBanned(banned);
                 data.setGeolocation(set.getString(columnGeolocation));
                 data.getGmTimes().setLastStateChange(set.getLong(columnLastGMSwapTime));
-                data.setPlayTime(set.getLong(columnPlayTime));
+                long playTime = set.getLong(columnPlayTime);
+                data.setPlayTime(playTime);
                 data.setLoginTimes(set.getInt(columnLoginTimes));
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
@@ -392,6 +393,8 @@ public class UsersTable extends Table {
                 String lastWorld = set.getString(columnLastWorld);
                 if (!"Unknown".equals(lastWorld)) {
                     worldTimes.setState(lastWorld);
+                } else {
+                    worldTimes.setLastStateChange(playTime);
                 }
                 return data;
             }
@@ -426,7 +429,8 @@ public class UsersTable extends Table {
                 data.setBanned(banned);
                 data.setGeolocation(set.getString(columnGeolocation));
                 data.getGmTimes().setLastStateChange(set.getLong(columnLastGMSwapTime));
-                data.setPlayTime(set.getLong(columnPlayTime));
+                long playTime = set.getLong(columnPlayTime);
+                data.setPlayTime(playTime);
                 data.setLoginTimes(set.getInt(columnLoginTimes));
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
@@ -436,6 +440,8 @@ public class UsersTable extends Table {
                 String lastWorld = set.getString(columnLastWorld);
                 if (!"Unknown".equals(lastWorld)) {
                     worldTimes.setState(lastWorld);
+                } else {
+                    worldTimes.setLastStateChange(playTime);
                 }
                 datas.add(data);
             }
@@ -464,7 +470,8 @@ public class UsersTable extends Table {
                 GMTimes gmTimes = data.getGmTimes();
                 gmTimes.setState(set.getString(columnLastGM));
                 gmTimes.setLastStateChange(set.getLong(columnLastGMSwapTime));
-                data.setPlayTime(set.getLong(columnPlayTime));
+                long playTime = set.getLong(columnPlayTime);
+                data.setPlayTime(playTime);
                 data.setLoginTimes(set.getInt(columnLoginTimes));
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
@@ -474,6 +481,8 @@ public class UsersTable extends Table {
                 String lastWorld = set.getString(columnLastWorld);
                 if (!"Unknown".equals(lastWorld)) {
                     worldTimes.setState(lastWorld);
+                } else {
+                    worldTimes.setLastStateChange(playTime);
                 }
             }
         } finally {
@@ -503,7 +512,8 @@ public class UsersTable extends Table {
                 }
                 UserData uData = userDatas.get(uuid);
                 uData.setGeolocation(set.getString(columnGeolocation));
-                uData.setPlayTime(set.getLong(columnPlayTime));
+                long playTime = set.getLong(columnPlayTime);
+                uData.setPlayTime(playTime);
                 uData.setLoginTimes(set.getInt(columnLoginTimes));
                 uData.setLastPlayed(set.getLong(columnLastPlayed));
                 uData.setDeaths(set.getInt(columnDeaths));
@@ -516,6 +526,8 @@ public class UsersTable extends Table {
                 String lastWorld = set.getString(columnLastWorld);
                 if (!"Unknown".equals(lastWorld)) {
                     worldTimes.setState(lastWorld);
+                } else {
+                    worldTimes.setLastStateChange(playTime);
                 }
             }
         } finally {
