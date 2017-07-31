@@ -36,6 +36,7 @@ public class AnalysisData extends RawData {
     private final PlayerCountPart playerCountPart;
     private final PlaytimePart playtimePart;
     private final TPSPart tpsPart;
+    private final WorldPart worldPart;
     private long refreshDate;
     private String planVersion;
     private String pluginsTabLayout;
@@ -52,6 +53,7 @@ public class AnalysisData extends RawData {
         gamemodePart = new GamemodePart();
         tpsPart = new TPSPart(tpsData);
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
+        worldPart = new WorldPart();
     }
 
     public ActivityPart getActivityPart() {
@@ -90,12 +92,14 @@ public class AnalysisData extends RawData {
         return tpsPart;
     }
 
+    public WorldPart getWorldPart() {
+        return worldPart;
+    }
+
     public List<RawData> getAllParts() {
-        return Arrays.asList(new RawData[]{
-                activityPart, commandUsagePart, gamemodePart,
+        return Arrays.asList(activityPart, commandUsagePart, gamemodePart,
                 geolocationPart, joinInfoPart, killPart,
-                playerCountPart, playtimePart, tpsPart
-        });
+                playerCountPart, playtimePart, tpsPart, worldPart);
     }
 
     public String getPlanVersion() {
