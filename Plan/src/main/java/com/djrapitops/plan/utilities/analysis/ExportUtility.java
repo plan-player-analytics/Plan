@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ExportUtility {
      */
     public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
-        if (path.contains(":")) {
+        if (Paths.get(path).isAbsolute()) {
             File folder = new File(path);
             if (folder.exists()
                     && folder.isDirectory()) {

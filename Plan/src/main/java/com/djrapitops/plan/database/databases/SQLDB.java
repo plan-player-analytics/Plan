@@ -344,7 +344,11 @@ public abstract class SQLDB extends Database {
         Map<String, Long> gmTimes = gmTimesTable.getGMTimes(userId);
         data.getGmTimes().setTimes(gmTimes);
         Map<String, Long> worldTimes = worldTimesTable.getWorldTimes(userId);
-        data.getWorldTimes().setTimes(worldTimes);
+        WorldTimes worldT = data.getWorldTimes();
+        worldT.setTimes(worldTimes);
+        if (worldT.getLastStateChange() == 0) {
+            worldT.setLastStateChange(data.getPlayTime());
+        }
 
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
@@ -394,13 +398,19 @@ public abstract class SQLDB extends Database {
             UUID uuid = uData.getUuid();
             Integer id = userIds.get(uuid);
             uData.addIpAddresses(ipList.get(id));
-            List<String> nickNames = nicknames.get(id);
-            uData.addNicknames(nickNames);
-            uData.setLastNick(nickNames.get(nickNames.size()-1));
+            List<String> userNicks = nicknames.get(id);
+            uData.addNicknames(userNicks);
+            if (!userNicks.isEmpty()) {
+                uData.setLastNick(userNicks.get(userNicks.size() - 1));
+            }
             uData.addSessions(sessionData.get(id));
             uData.setPlayerKills(playerKills.get(id));
             uData.getGmTimes().setTimes(gmTimes.get(id));
-            uData.getWorldTimes().setTimes(worldTimes.get(id));
+            WorldTimes worldT = uData.getWorldTimes();
+            worldT.setTimes(worldTimes.get(id));
+            if (worldT.getLastStateChange() == 0) {
+                worldT.setLastStateChange(uData.getPlayTime());
+            }
         }
 
         Benchmark.stop("Database: Get UserData for " + uuidsCol.size());

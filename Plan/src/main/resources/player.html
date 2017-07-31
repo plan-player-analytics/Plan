@@ -412,7 +412,7 @@
                         <div class="headerbox">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span
-                                        class="header-text"> Last 10 Kills</span></div>
+                                        class="header-text"> Last 25 Kills</span></div>
                             </div>
                             <div class="infobox" style="float: right;">
                                 <div class="info-icon">
@@ -490,6 +490,33 @@
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script>
+        function formatTime(seconds) {
+            var out = "";
+            seconds = Math.floor(seconds / 1000);
+
+            var dd = Math.floor(seconds / 86400);
+            seconds -= (dd * 86400);
+
+            var dh = Math.floor(seconds / 3600);
+            seconds -= (dh * 3600);
+
+            var dm = Math.floor(seconds / 60);
+            seconds -= (dm * 60);
+
+            seconds = Math.floor(seconds);
+
+            if (dd != 0) {
+                out += dd.toString() + "d ";
+            }
+            if (dh != 0) {
+                out += dh.toString() + "h ";
+            }
+            if (dm != 0) {
+                out += dm.toString() + "m ";
+            }
+            out += seconds.toString() + "s ";
+            return out;
+        }
         var playersOnlineSeries = {
 			name: 'Online',
 			data: %playersonlineseries%,
@@ -753,32 +780,9 @@
         function countUpTimer() {
             var now = new Date();
             var begin = new Date(%refreshlong%);
-            var out = "";
-
             var seconds = now.getTime() - begin.getTime();
-            seconds = Math.floor(seconds / 1000);
 
-            var dd = Math.floor(seconds / 86400);
-            seconds -= (dd * 86400);
-
-            var dh = Math.floor(seconds / 3600);
-            seconds -= (dh * 3600);
-
-            var dm = Math.floor(seconds / 60);
-            seconds -= (dm * 60);
-
-            seconds = Math.floor(seconds);
-
-            if (dd != 0) {
-                out += dd.toString() + "d ";
-            }
-            if (dh != 0) {
-                out += dh.toString() + "h ";
-            }
-            if (dm != 0) {
-                out += dm.toString() + "m ";
-            }
-            out += seconds.toString() + "s ";
+            var out = formatTime(seconds);
 
             document.getElementById('divTime').innerHTML = out;
             setTimeout('countUpTimer()', 1000);
