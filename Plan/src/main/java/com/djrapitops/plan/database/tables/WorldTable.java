@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class WorldTable extends Table {
      * @param worlds List of world names.
      * @throws SQLException Database error occurs.
      */
-    public void saveWorlds(List<String> worlds) throws SQLException {
+    public void saveWorlds(Collection<String> worlds) throws SQLException {
         Verify.nullCheck(worlds);
 
         List<String> saved = getWorlds();
@@ -113,4 +114,10 @@ public class WorldTable extends Table {
     public String getColumnID() {
         return columnWorldId;
     }
+
+    public String getColumnWorldName() {
+        return columnWorldName;
+    }
+
+
 }

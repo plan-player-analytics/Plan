@@ -8,6 +8,7 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 import com.djrapitops.plugin.utilities.player.Gamemode;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.GamemodeInfo;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
 import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.MockUtils;
@@ -39,13 +40,12 @@ public class GamemodeInfoTest {
     public void testProcess() {
         UserData data = MockUtils.mockUser();
         data.setPlayTime(100L);
-        data.setLastGamemode("CREATIVE");
-        data.setLastGmSwapTime(50L);
+        data.setGmTimes(new GMTimes("CREATIVE", 50L));
         data.setLastPlayed(1000L);
         long time = 2000L;
         GamemodeInfo i = new GamemodeInfo(data.getUuid(), time, Gamemode.SURVIVAL);
         assertTrue(i.process(data));
-        Long result = data.getGmTimes().get(Gamemode.CREATIVE.name());
+        Long result = data.getGmTimes().getTime(Gamemode.CREATIVE.name());
         assertTrue("Gamemode time was " + result, result == 1050L);
         result = data.getPlayTime();
         assertTrue("Playtime was" + result, result == 1100L);
@@ -64,13 +64,12 @@ public class GamemodeInfoTest {
     public void testProcessWrongUUID() {
         UserData data = MockUtils.mockUser();
         data.setPlayTime(100L);
-        data.setLastGamemode("CREATIVE");
-        data.setLastGmSwapTime(50L);
+        data.setGmTimes(new GMTimes("CREATIVE", 50L));
         data.setLastPlayed(1000L);
         long time = 2000L;
         GamemodeInfo i = new GamemodeInfo(null, time, Gamemode.SURVIVAL);
         assertTrue(!i.process(data));
-        Long result = data.getGmTimes().get(Gamemode.CREATIVE.name());
+        Long result = data.getGmTimes().getTime(Gamemode.CREATIVE.name());
         assertTrue("Gamemode time was " + result, result == 0L);
         result = data.getPlayTime();
         assertTrue("Playtime was" + result, result == 100L);
@@ -89,13 +88,12 @@ public class GamemodeInfoTest {
     public void testProcessNullGM() {
         UserData data = MockUtils.mockUser();
         data.setPlayTime(100L);
-        data.setLastGamemode("CREATIVE");
-        data.setLastGmSwapTime(50L);
+        data.setGmTimes(new GMTimes("CREATIVE", 50L));
         data.setLastPlayed(1000L);
         long time = 2000L;
         GamemodeInfo i = new GamemodeInfo(data.getUuid(), time, null);
         assertTrue(!i.process(data));
-        Long result = data.getGmTimes().get(Gamemode.CREATIVE.name());
+        Long result = data.getGmTimes().getTime(Gamemode.CREATIVE.name());
         assertTrue("Gamemode time was " + result, result == 0L);
         result = data.getPlayTime();
         assertTrue("Playtime was" + result, result == 100L);

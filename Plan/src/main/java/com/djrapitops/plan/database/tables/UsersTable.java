@@ -3,11 +3,12 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.GameMode;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,30 +24,42 @@ public class UsersTable extends Table {
 
     private final String columnID;
     private final String columnUUID;
-    /**
-     * @deprecated removed in 3.5.2
-     */
-    @Deprecated
-    private final String columnDemAge;
-    /**
-     * @deprecated removed in 3.5.2
-     */
-    @Deprecated
-    private final String columnDemGender;
     private final String columnGeolocation;
     private final String columnLastGM;
     private final String columnLastGMSwapTime;
     private final String columnPlayTime;
     private final String columnLoginTimes;
     private final String columnLastPlayed;
-    private final String columnPlayerKills;
     private final String columnDeaths;
     private final String columnMobKills;
+    /**
+     * @since 3.3.0
+     */
     private final String columnRegistered;
+    /**
+     * @since 3.3.0
+     */
     private final String columnOP;
+    /**
+     * @since 3.3.0
+     */
     private final String columnName;
+    /**
+     * @since 3.3.0
+     */
     private final String columnBanned;
+    /**
+     * @since 3.3.0
+     */
     private final String columnContainsBukkitData;
+    /**
+     * @since 3.6.0
+     */
+    private final String columnLastWorldSwapTime;
+    /**
+     * @since 3.6.0
+     */
+    private final String columnLastWorld;
 
     /**
      * @param db
@@ -56,8 +69,6 @@ public class UsersTable extends Table {
         super("plan_users", db, usingMySQL);
         columnID = "id";
         columnUUID = "uuid";
-        columnDemAge = "age";
-        columnDemGender = "gender";
         columnGeolocation = "geolocation";
         columnLastGM = "last_gamemode";
         columnLastGMSwapTime = "last_gamemode_swap";
@@ -65,14 +76,16 @@ public class UsersTable extends Table {
         columnLoginTimes = "login_times";
         columnLastPlayed = "last_played";
         columnMobKills = "mob_kills";
-        columnPlayerKills = "player_kills"; // Removed in 2.7.0
+
         columnDeaths = "deaths";
-        // Added in 3.3.0
         columnRegistered = "registered";
         columnOP = "opped";
         columnName = "name";
         columnBanned = "banned";
         columnContainsBukkitData = "contains_bukkit_data";
+
+        columnLastWorldSwapTime = "last_world_swap";
+        columnLastWorld = "last_world";
     }
 
     /**
@@ -96,7 +109,9 @@ public class UsersTable extends Table {
                     + columnOP + " boolean NOT NULL DEFAULT 0, "
                     + columnName + " varchar(16) NOT NULL, "
                     + columnBanned + " boolean NOT NULL DEFAULT 0, "
-                    + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0"
+                    + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0, "
+                    + columnLastWorld + " varchar(255) NOT NULL, "
+                    + columnLastWorldSwapTime + " bigint NOT NULL"
                     + (usingMySQL ? ", PRIMARY KEY (" + columnID + ")" : "")
                     + ")"
             );
@@ -110,6 +125,9 @@ public class UsersTable extends Table {
             if (version < 5) {
                 alterTablesV5();
             }
+            if (version < 8) {
+                alterTablesV8();
+            }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -117,54 +135,33 @@ public class UsersTable extends Table {
         }
     }
 
+    private void alterTablesV8() {
+        addColumns(
+                columnLastWorldSwapTime + " bigint NOT NULL DEFAULT 0",
+                columnLastWorld + " varchar(255) NOT NULL DEFAULT 'Unknown'"
+        );
+    }
+
     private void alterTablesV5() {
-        if (usingMySQL) {
-            try {
-                execute("ALTER TABLE " + tableName
-                        + " DROP COLUMN " + columnDemAge + ","
-                        + " DROP COLUMN " + columnDemGender);
-            } catch (Exception ignored) {
-            }
-        }
+        removeColumns("age", "gender");
     }
 
     private void alterTablesV4() {
-        String[] statements;
-        if (usingMySQL) {
-            statements = new String[]{
-                    "ALTER TABLE " + tableName + " ADD " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD " + columnOP + " boolean NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD " + columnBanned + " boolean NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
-                    "ALTER TABLE " + tableName + " ADD " + columnRegistered + " bigint NOT NULL DEFAULT 0"
-            };
-        } else {
-            statements = new String[]{
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnOP + " boolean NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnBanned + " boolean NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " varchar(16) NOT NULL DEFAULT \'Unknown\'",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnRegistered + " bigint NOT NULL DEFAULT 0"
-            };
-        }
-        executeUnsafe(statements);
+        addColumns(
+                columnContainsBukkitData + " boolean NOT NULL DEFAULT 0",
+                columnOP + " boolean NOT NULL DEFAULT 0",
+                columnBanned + " boolean NOT NULL DEFAULT 0",
+                columnName + " varchar(16) NOT NULL DEFAULT 'Unknown'",
+                columnRegistered + " bigint NOT NULL DEFAULT 0"
+        );
     }
 
     private void alterTablesV3() {
-        String[] statements;
-        if (usingMySQL) {
-            statements = new String[]{
-                    "ALTER TABLE " + tableName + " ADD " + columnDeaths + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD " + columnMobKills + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " DROP INDEX " + columnPlayerKills
-            };
-        } else {
-            statements = new String[]{
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnDeaths + " integer NOT NULL DEFAULT 0",
-                    "ALTER TABLE " + tableName + " ADD COLUMN " + columnMobKills + " integer NOT NULL DEFAULT 0"
-            };
-        }
-        executeUnsafe(statements);
+        addColumns(
+                columnDeaths + " integer NOT NULL DEFAULT 0",
+                columnMobKills + " integer NOT NULL DEFAULT 0"
+        );
+        removeColumns("player_kills");
     }
 
     /**
@@ -383,14 +380,19 @@ public class UsersTable extends Table {
                 long registered = set.getLong(columnRegistered);
                 UserData data = new UserData(uuid, registered, op, gm, name, false);
                 data.setBanned(banned);
-                data.setLastGamemode(gm);
                 data.setGeolocation(set.getString(columnGeolocation));
-                data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
+                data.getGmTimes().setLastStateChange(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
+                WorldTimes worldTimes = data.getWorldTimes();
+                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+                String lastWorld = set.getString(columnLastWorld);
+                if (!"Unknown".equals(lastWorld)) {
+                    worldTimes.setState(lastWorld);
+                }
                 return data;
             }
         } finally {
@@ -422,14 +424,19 @@ public class UsersTable extends Table {
                 long registered = set.getLong(columnRegistered);
                 UserData data = new UserData(uuid, registered, op, gm, name, false);
                 data.setBanned(banned);
-                data.setLastGamemode(gm);
                 data.setGeolocation(set.getString(columnGeolocation));
-                data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
+                data.getGmTimes().setLastStateChange(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
+                WorldTimes worldTimes = data.getWorldTimes();
+                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+                String lastWorld = set.getString(columnLastWorld);
+                if (!"Unknown".equals(lastWorld)) {
+                    worldTimes.setState(lastWorld);
+                }
                 datas.add(data);
             }
         } finally {
@@ -454,13 +461,20 @@ public class UsersTable extends Table {
             set = statement.executeQuery();
             while (set.next()) {
                 data.setGeolocation(set.getString(columnGeolocation));
-                data.setLastGamemode(set.getString(columnLastGM));
-                data.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
+                GMTimes gmTimes = data.getGmTimes();
+                gmTimes.setState(set.getString(columnLastGM));
+                gmTimes.setLastStateChange(set.getLong(columnLastGMSwapTime));
                 data.setPlayTime(set.getLong(columnPlayTime));
                 data.setLoginTimes(set.getInt(columnLoginTimes));
                 data.setLastPlayed(set.getLong(columnLastPlayed));
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
+                WorldTimes worldTimes = data.getWorldTimes();
+                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+                String lastWorld = set.getString(columnLastWorld);
+                if (!"Unknown".equals(lastWorld)) {
+                    worldTimes.setState(lastWorld);
+                }
             }
         } finally {
             close(set);
@@ -489,13 +503,20 @@ public class UsersTable extends Table {
                 }
                 UserData uData = userDatas.get(uuid);
                 uData.setGeolocation(set.getString(columnGeolocation));
-                uData.setLastGamemode(set.getString(columnLastGM));
-                uData.setLastGmSwapTime(set.getLong(columnLastGMSwapTime));
                 uData.setPlayTime(set.getLong(columnPlayTime));
                 uData.setLoginTimes(set.getInt(columnLoginTimes));
                 uData.setLastPlayed(set.getLong(columnLastPlayed));
                 uData.setDeaths(set.getInt(columnDeaths));
                 uData.setMobKills(set.getInt(columnMobKills));
+                GMTimes gmTimes = uData.getGmTimes();
+                gmTimes.setState(set.getString(columnLastGM));
+                gmTimes.setLastStateChange(set.getLong(columnLastGMSwapTime));
+                WorldTimes worldTimes = uData.getWorldTimes();
+                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+                String lastWorld = set.getString(columnLastWorld);
+                if (!"Unknown".equals(lastWorld)) {
+                    worldTimes.setState(lastWorld);
+                }
             }
         } finally {
             close(set);
@@ -537,7 +558,10 @@ public class UsersTable extends Table {
                 statement.setBoolean(11, data.isBanned());
                 statement.setString(12, data.getName());
                 statement.setLong(13, data.getRegistered());
-                statement.setString(14, uuid.toString());
+                WorldTimes worldTimes = data.getWorldTimes();
+                statement.setString(14, worldTimes.getState());
+                statement.setLong(15, worldTimes.getLastStateChange());
+                statement.setString(16, uuid.toString());
                 update = statement.executeUpdate();
             }
             if (update == 0) {
@@ -546,13 +570,9 @@ public class UsersTable extends Table {
 
                 statement.setString(1, uuid.toString());
                 statement.setString(2, data.getGeolocation());
-                String gm = data.getLastGamemode();
-                if (gm != null) {
-                    statement.setString(3, gm);
-                } else {
-                    statement.setString(3, "SURVIVAL");
-                }
-                statement.setLong(4, data.getLastGmSwapTime());
+                GMTimes gmTimes = data.getGmTimes();
+                statement.setString(3, gmTimes.getState());
+                statement.setLong(4, gmTimes.getLastStateChange());
                 statement.setLong(5, data.getPlayTime());
                 statement.setInt(6, data.getLoginTimes());
                 statement.setLong(7, data.getLastPlayed());
@@ -563,6 +583,9 @@ public class UsersTable extends Table {
                 statement.setBoolean(12, data.isBanned());
                 statement.setString(13, data.getName());
                 statement.setLong(14, data.getRegistered());
+                WorldTimes worldTimes = data.getWorldTimes();
+                statement.setString(15, worldTimes.getState());
+                statement.setLong(16, worldTimes.getLastStateChange());
                 statement.execute();
             }
         } finally {
@@ -579,7 +602,7 @@ public class UsersTable extends Table {
             ResultSet set = null;
             try {
                 try {
-                    statement = prepareStatement("SELECT " + columnDemAge + " FROM " + tableName + " LIMIT 1");
+                    statement = prepareStatement("SELECT age FROM " + tableName + " LIMIT 1");
                     set = statement.executeQuery();
                     Log.debug("UsersTable has V4 columns.");
                     return true;
@@ -594,7 +617,7 @@ public class UsersTable extends Table {
 
     private String getInsertStatement() {
         final boolean hasV4Columns = tableHasV4Columns();
-        String v4rows = hasV4Columns ? columnDemAge + ", " + columnDemGender + ", " : "";
+        String v4rows = hasV4Columns ? "age, gender, " : "";
         String v4values = hasV4Columns ? "-1, Deprecated, " : "";
         return "INSERT INTO " + tableName + " ("
                 + v4rows
@@ -611,13 +634,15 @@ public class UsersTable extends Table {
                 + columnOP + ", "
                 + columnBanned + ", "
                 + columnName + ", "
-                + columnRegistered
-                + ") VALUES (" + v4values + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + columnRegistered + ", "
+                + columnLastWorld + ", "
+                + columnLastWorldSwapTime
+                + ") VALUES (" + v4values + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     private String getUpdateStatement() {
         final boolean hasV4Columns = tableHasV4Columns();
-        String v4rows = hasV4Columns ? columnDemAge + "=-1, " + columnDemGender + "='Deprecated', " : "";
+        String v4rows = hasV4Columns ? "age=-1, gender='Deprecated', " : "";
         return "UPDATE " + tableName + " SET "
                 + v4rows
                 + columnGeolocation + "=?, "
@@ -632,7 +657,9 @@ public class UsersTable extends Table {
                 + columnOP + "=?, "
                 + columnBanned + "=?, "
                 + columnName + "=?, "
-                + columnRegistered + "=? "
+                + columnRegistered + "=?, "
+                + columnLastWorld + "=?, "
+                + columnLastWorldSwapTime + "=? "
                 + "WHERE " + columnUUID + "=?";
     }
 
@@ -665,13 +692,9 @@ public class UsersTable extends Table {
                 UUID uuid = uData.getUuid();
                 statement.setString(1, uuid.toString());
                 statement.setString(2, uData.getGeolocation());
-                String gm = uData.getLastGamemode();
-                if (gm != null) {
-                    statement.setString(3, gm);
-                } else {
-                    statement.setString(3, "SURVIVAL");
-                }
-                statement.setLong(4, uData.getLastGmSwapTime());
+                GMTimes gmTimes = uData.getGmTimes();
+                statement.setString(3, gmTimes.getState());
+                statement.setLong(4, gmTimes.getLastStateChange());
                 statement.setLong(5, uData.getPlayTime());
                 statement.setInt(6, uData.getLoginTimes());
                 statement.setLong(7, uData.getLastPlayed());
@@ -682,6 +705,9 @@ public class UsersTable extends Table {
                 statement.setBoolean(12, uData.isBanned());
                 statement.setString(13, uData.getName());
                 statement.setLong(14, uData.getRegistered());
+                WorldTimes worldTimes = uData.getWorldTimes();
+                statement.setString(15, worldTimes.getState());
+                statement.setLong(16, worldTimes.getLastStateChange());
                 statement.addBatch();
                 commitRequired = true;
                 i++;
@@ -728,13 +754,9 @@ public class UsersTable extends Table {
                 }
                 uData.access();
                 statement.setString(1, uData.getGeolocation());
-                String gm = uData.getLastGamemode();
-                if (gm != null) {
-                    statement.setString(2, gm);
-                } else {
-                    statement.setString(2, GameMode.SURVIVAL.name());
-                }
-                statement.setLong(3, uData.getLastGmSwapTime());
+                GMTimes gmTimes = uData.getGmTimes();
+                statement.setString(2, gmTimes.getState());
+                statement.setLong(3, uData.getGmTimes().getLastStateChange());
                 statement.setLong(4, uData.getPlayTime());
                 statement.setInt(5, uData.getLoginTimes());
                 statement.setLong(6, uData.getLastPlayed());
@@ -745,7 +767,10 @@ public class UsersTable extends Table {
                 statement.setBoolean(11, uData.isBanned());
                 statement.setString(12, uData.getName());
                 statement.setLong(13, uData.getRegistered());
-                statement.setString(14, uuid.toString());
+                WorldTimes worldTimes = uData.getWorldTimes();
+                statement.setString(14, worldTimes.getState());
+                statement.setLong(15, worldTimes.getLastStateChange());
+                statement.setString(16, uuid.toString());
                 statement.addBatch();
                 uData.stopAccessing();
                 commitRequired = true;

@@ -262,7 +262,7 @@ public class Analysis {
         Benchmark.start("Analysis: Fill Dataset");
         rawData.forEach(uData -> {
             uData.access();
-            Map<String, Long> gmTimes = uData.getGmTimes();
+            Map<String, Long> gmTimes = uData.getGmTimes().getTimes();
             String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
             if (gmTimes != null) {
                 for (String gm : gms) {

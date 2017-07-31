@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
+import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
@@ -77,8 +78,8 @@ public class PlaceholderUtils {
         boolean isActive = AnalysisUtils.isActive(now, data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
         replaceMap.put("%active%", isActive ? Html.ACTIVE.parse() : Html.INACTIVE.parse());
         GamemodePart gmPart = new GamemodePart();
-        Map<String, Long> gmTimes = data.getGmTimes();
-        String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
+        Map<String, Long> gmTimes = data.getGmTimes().getTimes();
+        String[] gms = GMTimesTable.getGMKeyArray();
         for (String gm : gms) {
             Long time = gmTimes.get(gm);
             if (time != null) {

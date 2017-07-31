@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -289,7 +290,15 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             int userId = usersTable.getUserId(uuid);
-            return userId != -1 && locationsTable.removeUserLocations(userId) && ipsTable.removeUserIps(userId) && nicknamesTable.removeUserNicknames(userId) && gmTimesTable.removeUserGMTimes(userId) && sessionsTable.removeUserSessions(userId) && killsTable.removeUserKillsAndVictims(userId) && usersTable.removeUser(uuid);
+            return userId != -1
+                    && locationsTable.removeUserLocations(userId)
+                    && ipsTable.removeUserIps(userId)
+                    && nicknamesTable.removeUserNicknames(userId)
+                    && gmTimesTable.removeUserGMTimes(userId)
+                    && sessionsTable.removeUserSessions(userId)
+                    && killsTable.removeUserKillsAndVictims(userId)
+                    && worldTimesTable.removeUserWorldTimes(userId)
+                    && usersTable.removeUser(uuid);
         } finally {
             Benchmark.stop("Database: Remove Account");
             setAvailable();
@@ -329,8 +338,11 @@ public abstract class SQLDB extends Database {
         List<InetAddress> ips = ipsTable.getIPAddresses(userId);
         data.addIpAddresses(ips);
 
-        Map<String, Long> times = gmTimesTable.getGMTimes(userId);
-        data.setGmTimes(times);
+        Map<String, Long> gmTimes = gmTimesTable.getGMTimes(userId);
+        data.getGmTimes().setTimes(gmTimes);
+        Map<String, Long> worldTimes = worldTimesTable.getWorldTimes(userId);
+        data.getWorldTimes().setTimes(worldTimes);
+
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
         data.setPlayerKills(killsTable.getPlayerKills(userId));
@@ -372,6 +384,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
         Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
         Map<Integer, Map<String, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
+        Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
         Log.debug("Sizes: UUID:" + uuids.size() + " DATA:" + data.size() + " ID:" + userIds.size() + " N:" + nicknames.size() + " I:" + ipList.size() + " K:" + playerKills.size() + " S:" + sessionData.size());
 
         for (UserData uData : data) {
@@ -381,7 +394,8 @@ public abstract class SQLDB extends Database {
             uData.addNicknames(nicknames.get(id));
             uData.addSessions(sessionData.get(id));
             uData.setPlayerKills(playerKills.get(id));
-            uData.setGmTimes(gmTimes.get(id));
+            uData.getGmTimes().setTimes(gmTimes.get(id));
+            uData.getWorldTimes().setTimes(worldTimes.get(id));
         }
 
         Benchmark.stop("Database: Get UserData for " + uuidsCol.size());
@@ -402,6 +416,7 @@ public abstract class SQLDB extends Database {
         }
         setStatus("Save userdata (multiple) for " + data.size());
         usersTable.saveUserDataInformationBatch(data);
+
         // Transform to map
         Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
         // Get UserIDs
@@ -414,7 +429,15 @@ public abstract class SQLDB extends Database {
         Map<Integer, UUID> uuids = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
         Map<Integer, List<SessionData>> sessions = new HashMap<>();
         Map<Integer, Map<String, Long>> gmTimes = new HashMap<>();
+        Map<Integer, Map<String, Long>> worldTimes = new HashMap<>();
         // Put to dataset
+        List<String> worldNames = data.stream()
+                .map(UserData::getWorldTimes)
+                .map(WorldTimes::getTimes)
+                .map(Map::keySet)
+                .flatMap(keySet -> keySet.stream())
+                .distinct()
+                .collect(Collectors.toList());
         for (Map.Entry<UUID, UserData> entrySet : userDatas.entrySet()) {
             UUID uuid = entrySet.getKey();
             UserData uData = entrySet.getValue();
@@ -431,7 +454,8 @@ public abstract class SQLDB extends Database {
             ips.put(id, new HashSet<>(uData.getIps()));
             kills.put(id, new ArrayList<>(uData.getPlayerKills()));
             sessions.put(id, new ArrayList<>(uData.getSessions()));
-            gmTimes.put(id, uData.getGmTimes());
+            gmTimes.put(id, new HashMap<>(uData.getGmTimes().getTimes()));
+            worldTimes.put(id, new HashMap<>(uData.getWorldTimes().getTimes()));
         }
         // Save
         nicknamesTable.saveNickLists(nicknames, lastNicks);
@@ -439,6 +463,8 @@ public abstract class SQLDB extends Database {
         killsTable.savePlayerKills(kills, uuids);
         sessionsTable.saveSessionData(sessions);
         gmTimesTable.saveGMTimes(gmTimes);
+        worldTable.saveWorlds(worldNames);
+        worldTimesTable.saveWorldTimes(worldTimes);
         userDatas.values().stream()
                 .filter(Objects::nonNull)
                 .filter(UserData::isAccessed)
@@ -470,7 +496,9 @@ public abstract class SQLDB extends Database {
         nicknamesTable.saveNickList(userId, new HashSet<>(data.getNicknames()), data.getLastNick());
         ipsTable.saveIPList(userId, new HashSet<>(data.getIps()));
         killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
-        gmTimesTable.saveGMTimes(userId, data.getGmTimes());
+        gmTimesTable.saveGMTimes(userId, data.getGmTimes().getTimes());
+        worldTable.saveWorlds(new HashSet<>(data.getWorldTimes().getTimes().keySet()));
+        worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
         data.stopAccessing();
         setAvailable();
     }
