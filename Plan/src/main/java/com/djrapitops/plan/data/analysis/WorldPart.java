@@ -1,11 +1,24 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Part responsible for all World Playtime related analysis.
+ * <p>
+ * World times Pie
+ * <p>
+ * Placeholder values can be retrieved using the get method.
+ * <p>
+ * Contains following place-holders: worldtotal, worldseries
+ *
+ * @author Rsl1122
+ * @since 3.6.0
+ */
 public class WorldPart extends RawData {
 
     private final Map<String, Long> worldTimes;
@@ -16,7 +29,8 @@ public class WorldPart extends RawData {
 
     @Override
     protected void analyse() {
-        addValue("worldtotal", FormatUtils.formatTimeAmount(worldTimes.values().stream().mapToLong(Long::longValue).sum()));
+        WorldTimes t = new WorldTimes(worldTimes);
+        addValue("worldtotal", FormatUtils.formatTimeAmount(t.getTotal()));
         addValue("worldseries", WorldPieCreator.createSeriesData(worldTimes));
     }
 
@@ -24,5 +38,4 @@ public class WorldPart extends RawData {
         Long value = worldTimes.computeIfAbsent(worldName, ifNotFound -> 0L);
         worldTimes.put(worldName, value + playTime);
     }
-
 }
