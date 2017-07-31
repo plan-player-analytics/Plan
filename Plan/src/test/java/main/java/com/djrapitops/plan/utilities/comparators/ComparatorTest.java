@@ -42,10 +42,11 @@ public class ComparatorTest {
         for (int i = 0; i < 20; i++) {
             test.add(new Point(r.nextLong(), r.nextLong()));
         }
-        List<Long> longValues = test.stream().map(Point::getX).map(i -> (Long) (long) (double) i).collect(Collectors.toList());
+
+        List<Long> longValues = test.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
         longValues.sort(Long::compare);
         test.sort(new PointComparator());
-        List<Long> afterSort = test.stream().map(Point::getX).map(i -> (Long) (long) (double) i).collect(Collectors.toList());
+        List<Long> afterSort = test.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
         assertEquals(longValues, afterSort);
     }
 

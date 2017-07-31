@@ -84,7 +84,7 @@ public class ActivityPart extends RawData {
     private void playerActivityGraphs() {
         List<TPS> tpsData = tpsPart.getTpsData();
         addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
-        addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
+        addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
     }
 
     private void activityPiechart() {
