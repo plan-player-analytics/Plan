@@ -52,19 +52,4 @@ public class LogoutInfoTest {
         assertEquals("World", data.getWorldTimes().getState());
         assertEquals(1, data.getSessions().size());
     }
-
-    /**
-     *
-     */
-    @Test
-    public void testProcessWrongUUID() {
-        UserData data = MockUtils.mockUser();
-        data.setLastPlayed(10L);
-        data.updateBanned(false);
-        long time = 20L;
-        Exception ex = null;
-        LogoutInfo i = new LogoutInfo(null, time, true, "CREATIVE", new SessionData(0, 1), "World");
-        assertTrue(!i.process(data));
-    }
-
 }

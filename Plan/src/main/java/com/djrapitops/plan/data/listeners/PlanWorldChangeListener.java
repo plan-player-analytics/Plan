@@ -30,6 +30,6 @@ public class PlanWorldChangeListener implements Listener {
         }
         UUID uuid = p.getUniqueId();
         long time = MiscUtils.getTime();
-        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.GM, time, p.getGameMode().name(), p.getWorld().getName()));
+        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.WORLD, time, p.getGameMode().name(), p.getWorld().getName()));
     }
 }

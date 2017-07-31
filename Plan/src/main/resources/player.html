@@ -379,6 +379,9 @@
                             <i class="fa fa-globe" aria-hidden="true"></i> Has Connected from ips: %ips%</p>
                     </div>
                     <div class="about box column">
+                        <div id="worldPie" style="width: 100%; height: 400px;"></div>
+                    </div>
+                    <div class="about box column">
                         <div id="gmPie" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
@@ -409,7 +412,7 @@
                         <div class="headerbox">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-crosshairs" aria-hidden="true"></i><span
-                                        class="header-text"> Last 10 Kills</span></div>
+                                        class="header-text"> Last 25 Kills</span></div>
                             </div>
                             <div class="infobox" style="float: right;">
                                 <div class="info-icon">
@@ -487,6 +490,33 @@
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script>
+        function formatTime(seconds) {
+            var out = "";
+            seconds = Math.floor(seconds / 1000);
+
+            var dd = Math.floor(seconds / 86400);
+            seconds -= (dd * 86400);
+
+            var dh = Math.floor(seconds / 3600);
+            seconds -= (dh * 3600);
+
+            var dm = Math.floor(seconds / 60);
+            seconds -= (dm * 60);
+
+            seconds = Math.floor(seconds);
+
+            if (dd != 0) {
+                out += dd.toString() + "d ";
+            }
+            if (dh != 0) {
+                out += dh.toString() + "h ";
+            }
+            if (dm != 0) {
+                out += dm.toString() + "m ";
+            }
+            out += seconds.toString() + "s ";
+            return out;
+        }
         var playersOnlineSeries = {
 			name: 'Online',
 			data: %playersonlineseries%,
@@ -515,6 +545,11 @@
 				name: 'Spectator',
 				y: gmData[3]
 			}]
+		};
+		var worldSeries = {
+		    name: 'World Playtime',
+		    colorByPoint: true,
+		    data: %worldseries%
 		};
 		var sessionLengthSeries = {
 			name: 'Sessions',
@@ -589,6 +624,35 @@
                 series: [gmSeries]
             });
         };
+    </script>
+    <script>
+        function worldPie() {
+            var myChart = Highcharts.chart('worldPie', {
+                chart: {
+                    plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'World Playtime'},
+				subtitle: {text: '%worldtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [worldSeries]
+            });
+        };
+
     </script>
     <script>
 		function punchCard() {
@@ -682,6 +746,7 @@
         playersChart();
         sessionDistributionChart();
         gmPie();
+        worldPie();
         punchCard();
 
         countUpTimer();
@@ -715,32 +780,9 @@
         function countUpTimer() {
             var now = new Date();
             var begin = new Date(%refreshlong%);
-            var out = "";
-
             var seconds = now.getTime() - begin.getTime();
-            seconds = Math.floor(seconds / 1000);
 
-            var dd = Math.floor(seconds / 86400);
-            seconds -= (dd * 86400);
-
-            var dh = Math.floor(seconds / 3600);
-            seconds -= (dh * 3600);
-
-            var dm = Math.floor(seconds / 60);
-            seconds -= (dm * 60);
-
-            seconds = Math.floor(seconds);
-
-            if (dd != 0) {
-                out += dd.toString() + "d ";
-            }
-            if (dh != 0) {
-                out += dh.toString() + "h ";
-            }
-            if (dm != 0) {
-                out += dm.toString() + "m ";
-            }
-            out += seconds.toString() + "s ";
+            var out = formatTime(seconds);
 
             document.getElementById('divTime').innerHTML = out;
             setTimeout('countUpTimer()', 1000);

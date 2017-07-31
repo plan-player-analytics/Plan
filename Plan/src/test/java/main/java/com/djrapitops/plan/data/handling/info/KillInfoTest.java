@@ -5,17 +5,16 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.handling.info;
 
-import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +24,7 @@ import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -62,16 +62,21 @@ public class KillInfoTest {
             public void convertBukkitDataToDB() {
 
             }
+
+            @Override
+            public UsersTable getUsersTable() {
+                return new UsersTable(null, false) {
+                    @Override
+                    public int getUserId(UUID uuid) {
+                         if (uuid.equals(MockUtils.getPlayerUUID())) {
+                             return 2;
+                         }
+                         return 1;
+                    }
+                };
+            }
         };
         when(plan.getDB()).thenReturn(db);
-    }
-
-    /**
-     * @throws SQLException
-     */
-    @After
-    public void tearDown() throws SQLException {
-        db.close();
     }
 
     /**
@@ -81,8 +86,6 @@ public class KillInfoTest {
     public void testProcess() throws SQLException {
         UserData data = MockUtils.mockUser();
         Player dead = MockUtils.mockPlayer2();
-        db.init();
-        db.saveUserData(new UserData(Fetch.wrapBukkit(dead)));
         KillInfo i = new KillInfo(data.getUuid(), 10L, dead, "TestWeapon");
         assertTrue(i.process(data));
         KillData expected = new KillData(dead.getUniqueId(), 1, "TestWeapon", 10L);
@@ -105,17 +108,4 @@ public class KillInfoTest {
         assertTrue("Added a kill", data.getPlayerKills().isEmpty());
         assertEquals(1, data.getMobKills());
     }
-
-    /**
-     * @throws SQLException
-     */
-    @Test
-    public void testProcessMobKillWrongUUID() throws SQLException {
-        UserData data = MockUtils.mockUser();
-        KillInfo i = new KillInfo(null, 10L, null, "TestWeapon");
-        assertTrue(!i.process(data));
-        assertTrue("Added a kill", data.getPlayerKills().isEmpty());
-        assertEquals(0, data.getMobKills());
-    }
-
 }

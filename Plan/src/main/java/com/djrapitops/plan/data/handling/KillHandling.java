@@ -42,7 +42,7 @@ public class KillHandling {
             int victimID;
             try {
                 UUID victimUUID = deadPlayer.getUniqueId();
-                victimID = plugin.getDB().getUsersTable().getUserId(victimUUID + "");
+                victimID = plugin.getDB().getUsersTable().getUserId(victimUUID);
                 if (victimID == -1) {
                     return;
                 }

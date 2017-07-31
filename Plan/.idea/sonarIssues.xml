@@ -228,6 +228,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/utilities/comparators/SessionDataComparator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/com/djrapitops/plan/utilities/metrics/BStats.java">
           <value>
             <set />
@@ -243,6 +248,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/player.html">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/UserDataTest.java">
           <value>
             <set />
@@ -253,7 +263,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/KillHandlingTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/ChatInfoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/DeathInfoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/GamemodeInfoTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/InfoUuidCorrectionTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/data/handling/info/KillInfoTest.java">
           <value>
             <set />
           </value>
@@ -289,6 +324,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/utilities/NewPlayerCreatorTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/test/java/main/java/com/djrapitops/plan/utilities/comparators/ComparatorTest.java">
           <value>
             <set />
           </value>

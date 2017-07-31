@@ -6,11 +6,13 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
+import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.ui.html.tables.KillsTableCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -106,12 +108,15 @@ public class PlaceholderUtils {
         Plan plugin = Plan.getInstance();
         replaceMap.put("%version%", plugin.getDescription().getVersion());
         replaceMap.put("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
-        Set<SessionData> sessions = new HashSet<>(data.getSessions());
-        replaceMap.put("%punchcardseries%", PunchCardGraphCreator.createDataSeries(sessions));
-        List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
-        replaceMap.put("%sessionlengthseries%", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
 
+        Set<SessionData> sessions = new HashSet<>(data.getSessions());
+        List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
+        replaceMap.put("%punchcardseries%", PunchCardGraphCreator.createDataSeries(sessions));
+        replaceMap.put("%sessionlengthseries%", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
         replaceMap.put("%playersonlineseries%", PlayerActivityGraphCreator.buildSeriesDataStringSessions(sessions));
+        WorldTimes worldTimes = data.getWorldTimes();
+        replaceMap.put("%worldseries%", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
+        replaceMap.put("%worldtotal%", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
 
         String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
         String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};

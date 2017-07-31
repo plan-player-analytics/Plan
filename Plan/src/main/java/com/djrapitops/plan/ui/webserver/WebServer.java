@@ -20,6 +20,7 @@ import javax.net.ssl.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -169,7 +170,7 @@ public class WebServer {
 
     private boolean startHttpsServer() throws IOException {
         String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
-        if (!keyStorePath.contains(":")) {
+        if (!Paths.get(keyStorePath).isAbsolute()) {
             keyStorePath = plugin.getDataFolder() + keyStorePath;
         }
         char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();

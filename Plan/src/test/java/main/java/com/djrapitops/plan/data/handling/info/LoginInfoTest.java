@@ -65,18 +65,4 @@ public class LoginInfoTest {
         assertEquals("CREATIVE", data.getGmTimes().getState());
         assertEquals("World", data.getWorldTimes().getState());
     }
-
-    /**
-     * @throws UnknownHostException
-     */
-    @Test
-    public void testProcessWrongUUID() throws UnknownHostException {
-        UserData data = MockUtils.mockUser();
-        data.setLastPlayed(0L);
-        InetAddress ip = InetAddress.getByName("137.19.188.146");
-        long time = 10L;
-        String nick = "TestProcessLoginInfo";
-        LoginInfo i = new LoginInfo(null, time, ip, true, nick, "CREATIVE", 1, "World");
-        assertTrue(!i.process(data));
-    }
 }
