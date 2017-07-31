@@ -41,7 +41,7 @@ public class PageCacheHandler {
      * @return The Response that was cached or created by the {@link PageLoader loader}
      */
     public static Response loadPage(String identifier, PageLoader loader) {
-        Response response = pageCache.asMap().get(identifier);
+        Response response = pageCache.getIfPresent(identifier);
 
         if (response != null) {
             return response;
