@@ -34,8 +34,7 @@ public class RandomData {
      * Random enough.
      */
     public static String randomString(int size) {
-        String randomString = UUID.randomUUID().toString().replaceAll("-", "").substring(0, size);
-        return randomString;
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, size);
     }
 
     public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
@@ -75,7 +74,7 @@ public class RandomData {
     public static List<HandlingInfo> randomHandlingInfo() {
         List<HandlingInfo> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new HandlingInfo(UUID.randomUUID(), InfoType.OTHER, r.nextLong()) {
+            test.add(new HandlingInfo(UUID.randomUUID(), randomEnum(InfoType.class), r.nextLong()) {
                 @Override
                 public boolean process(UserData uData) {
                     return false;
@@ -85,5 +84,8 @@ public class RandomData {
         return test;
     }
 
-
+    public static <T extends Enum> T randomEnum(Class<T> clazz) {
+        int x = r.nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
+    }
 }

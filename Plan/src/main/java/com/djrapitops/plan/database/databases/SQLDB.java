@@ -450,7 +450,7 @@ public abstract class SQLDB extends Database {
                 .map(UserData::getWorldTimes)
                 .map(WorldTimes::getTimes)
                 .map(Map::keySet)
-                .flatMap(keySet -> keySet.stream())
+                .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
         for (Map.Entry<UUID, UserData> entrySet : userDatas.entrySet()) {
