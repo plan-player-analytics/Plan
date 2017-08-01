@@ -5,7 +5,7 @@
 - [Permissions Enum](/Plan/src/main/java/com/djrapitops/plan/Permissions.java)
 
 This page is an in depth documentation of all permissions & commands.  
-Page version: **3.5.2**
+Page version: **3.6.0**
 
 # Commands
 
@@ -50,3 +50,4 @@ none | plan.ignore.commanduse | false | Commands issued by players with this per
 ### plan.*
 - plan.staff
 - plan.manage
+- apf.notify
