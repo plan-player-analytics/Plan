@@ -200,6 +200,7 @@ public enum Phrase {
                     localeRows.add(line);
                 }
             }
+
             for (String localeRow : localeRows) {
                 try {
                     String[] split = localeRow.split(" <> ");

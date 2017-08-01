@@ -35,7 +35,7 @@ public class WorldPart extends RawData {
     }
 
     public void addToWorld(String worldName, long playTime) {
-        Long value = worldTimes.computeIfAbsent(worldName, ifNotFound -> 0L);
+        Long value = worldTimes.getOrDefault(worldName, 0L);
         worldTimes.put(worldName, value + playTime);
     }
 }
