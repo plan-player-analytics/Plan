@@ -1,10 +1,10 @@
 ![Player Analytics](https://puu.sh/t8vin.png)
-# Links to Dependencies - Version 3.5.4
+# Links to Dependencies - Version 3.6.0
 
-In order to fork the project, some dependencies need to be installed locally.
+In order to fork the project, some dependencies may need to be installed locally.
 
-- [Spigot 1.12](https://www.spigotmc.org/wiki/buildtools/)
+- [PaperSpigot 1.12](https://yivesmirror.com/downloads/paperspigot)
 
 - [PlanPluginBridge](/PlanPluginBridge) (Included in the Repository)
 
-- [Abstract Plugin Framework](https://github.com/Rsl1122/Abstract-Plugin-Framework/releases/tag/2.0.0)
+- [Abstract Plugin Framework](https://github.com/Rsl1122/Abstract-Plugin-Framework/releases/)
