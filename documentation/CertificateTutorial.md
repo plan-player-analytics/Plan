@@ -64,9 +64,9 @@ Requirements:
 
 If you wish to bypass the security warning (not seeing that the connection isn’t private), you can use ![Cloudflare](https://www.cloudflare.com)
 
-Connect your domain to Cloudflare
-Add a DNS record of the type “A” which points to your Server IP
-Go to “Crypto” -> “SSL” and set the option to “Flexible”
+- Connect your domain to Cloudflare
+- Add a DNS record of the type “A” which points to your Server IP
+- Go to “Crypto” -> “SSL” and set the option to “Flexible”
 
 Notes:
 If you only want to use HTTPS on the Analytics site, you can use the “Page Rules”
