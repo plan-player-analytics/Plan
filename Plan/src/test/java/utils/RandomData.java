@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class RandomData {
      * Random enough.
      */
     public static String randomString(int size) {
-        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, size);
+        return RandomStringUtils.random(size);
     }
 
     public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
