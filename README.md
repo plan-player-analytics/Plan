@@ -18,12 +18,12 @@ Originally the plugin only displayed data of other plugins, but now it gathers i
   - Visualization
 - Guides
   - [Configuration](documentation/Configuration.md)
+  - [Configuring SSL Certificate](documentation/CertificateTutorial.md)
   - [Commands & Permissions](documentation/CommandsAndPermissions.md)
   - [Localization](documentation/Localization.md)
   - [Html Customization](documentation/HtmlCustomization.md)
   - [Manage Command Guide](documentation/ManageCommandGuide.md)
 - Used libraries
-  - [Chart.js](http://www.chartjs.org/docs/) | [Licence](http://www.chartjs.org/docs/#notes-license)
-  - [Plotly.js](https://plot.ly/javascript/) | [Licence](https://github.com/plotly/plotly.js/blob/master/LICENSE)
+  - [HighCharts](https://www.highcharts.com/) | [Licence](https://www.highcharts.com/products/highcharts/#non-commercial)
   - [Font Awesome Icons](http://fontawesome.io/icons/) | [Licence](https://opensource.org/licenses/mit-license.html)
   - [Sortable Tables](https://kryogenix.org/code/browser/sorttable/) | [Licence](https://kryogenix.org/code/browser/licence.html)
