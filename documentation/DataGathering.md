@@ -2,11 +2,12 @@
 # Gathering the Data & Datacache
 
 This article is an in depth explanation how the data Plan stores is gathered.
+Page Version: **3.6.0**
 
 [Stored Data & Data Format](/documentation/StoredData.md)
 
 ## Bukkit Player data
-Some information is taken from Bukkit's Player or OfflinePlayer objects:
+Some information is taken from Bukkit's Player or OfflinePlayer objects & Stored in the database:
 - UUID (Used for saving & processing)
 - Register Date
 - Is the player banned
@@ -22,7 +23,7 @@ Inside Plan, there are 6 listeners:
 - Death Listener*, Kills & Deaths
 - Gamemode Change Listener*, Gamemode time calculation
 - Player Listener*, Join, Leave & Kick
-- Move Listener, Locations
+- World Change Listener, World time calculation
 
 *When an event is fired, the information contained within it is placed inside  [HandlingInfo objects](/Plan/src/main/java/com/djrapitops/plan/data/handling/info) related to the event.
 This object is passed to the [DataCacheProcessQueue](/Plan/src/main/java/com/djrapitops/plan/data/cache/queue/DataCacheProcessQueue.java), where it will be processed.
@@ -44,5 +45,5 @@ There are 3 Caches.
 - Players data: [UserData object](/Plan/src/main/java/com/djrapitops/plan/data/UserData.java)
 - Analysis data: [AnalysisData object](/Plan/src/main/java/com/djrapitops/plan/data/AnalysisData.java)
 - Command Usage: [DataCacheHandler](/Plan/src/main/java/com/djrapitops/plan/data/cache/DataCacheHandler.java#L52)
-- Locations: [LocationCache](/Plan/src/main/java/com/djrapitops/plan/data/cache/LocationCache.java)
 - Active Sessions: [SessionCache](/Plan/src/main/java/com/djrapitops/plan/data/cache/SessionCache.java)
+- Html Pages: [PageCacheHandler](/Plan/src/main/java/com/djrapitops/plan/data/cache/PageCacheHandler.java)
