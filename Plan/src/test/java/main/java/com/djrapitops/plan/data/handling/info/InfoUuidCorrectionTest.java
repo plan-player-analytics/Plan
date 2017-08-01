@@ -20,6 +20,7 @@ public class InfoUuidCorrectionTest {
         HandlingInfo[] h = new HandlingInfo[]{
             new ChatInfo(test, ""),
                 new DeathInfo(test),
+                new KickInfo(test),
                 new KillInfo(test, now, null, ""),
                 new LoginInfo(test, now, null, false, "", "", 0, ""),
                 new LogoutInfo(test, now, false, "", null, ""),
