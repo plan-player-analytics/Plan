@@ -1,7 +1,8 @@
 ![Player Analytics](https://puu.sh/t8vin.png)
 # Stored Data & Data format
 
-This Article is about the information stored in the Database.
+This Article is about the information stored in the Database.  
+Page version: **3.6.0**
 
 ## Stored Data & Format
 
@@ -16,6 +17,9 @@ Last GM Swap Time | bigint | plan_users | Playtime ms the user swapped their gam
 Playtime | bigint | plan_users | Total playtime of the player
 Login Times | integer | plan_users | How many times the player has joined.
 Last Played | bigint | plan_users | Last time the player's data was processed, used for Playtime calculations
+Register Date | bigint | plan_users | Bukkit's Register date
+Banned | boolean | plan_users | Bukkit's Ban value
+OP | boolean | plan_users | Bukkit's OP value
 Nicknames | varchar | plan_nicknames | All the nicknames the player has used
 Last nickname | boolean | plan_nicknames | The last nickname known stated as a boolean.
 IPs | varchar | plan_ips | InetAddress the player connected from
@@ -26,11 +30,7 @@ Deaths | integer | plan_users | How many times the player has died
 Player kills & Weapon used | integer, varchar, bigint, string | plan_kills | User the player killed, the time of the kill & the name of MATERIAL of the weapon.
 SessionData (Start & End of session) | bigint, bigint | plan_sessions | Used for all sorts of activity calculation.
 Command Usage | varchar | plan_commandusages | Each base command & how many times they have been used.
+World times | bigint | plan_world_times | World Playtimes
+World names | varchar(255) | plan_worlds | All names worlds have appeared as.
 
-### Bukkit Player Data
-Some information is taken from Bukkit's Player or OfflinePlayer objects:
-- UUID (Used for saving & processing)
-- Register Date
-- Is the player banned
-- Is the player opped
-- Is the player online
+Player Online is determined by the data being in the DataCache.
