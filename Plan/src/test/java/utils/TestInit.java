@@ -37,12 +37,18 @@ public class TestInit {
 
     public static TestInit init() throws Exception {
         TestInit t = new TestInit();
-        t.setUp();
+        t.setUp(true);
+        return t;
+    }
+
+    public static TestInit init(boolean clearOnStart) throws Exception {
+        TestInit t = new TestInit();
+        t.setUp(clearOnStart);
         return t;
     }
 
     @Deprecated // Use Test.init instead.
-    public void setUp() throws Exception {
+    public void setUp(boolean clearOnStart) throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -50,7 +56,10 @@ public class TestInit {
         YamlConfiguration config = mockConfig();
         when(planMock.getConfig()).thenReturn(config);
 
-        File testFolder = getEmptyTestFolder();
+        File testFolder = getTestFolder();
+        if (clearOnStart) {
+            clean(testFolder);
+        }
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
         // Html Files
@@ -91,17 +100,23 @@ public class TestInit {
         return mockServer;
     }
 
-    private File getEmptyTestFolder() throws IOException {
+    private static File getTestFolder() throws IOException {
         File testFolder = new File("temporaryTestFolder");
-        if (testFolder.exists()) {
+        testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
+    }
+
+    public static void clean() throws IOException {
+        clean(getTestFolder());
+    }
+
+    public static void clean(File testFolder) throws IOException {
+        if (testFolder.exists() && testFolder.isDirectory()) {
             for (File f : testFolder.listFiles()) {
                 Files.deleteIfExists(f.toPath());
             }
         }
-        Files.deleteIfExists(new File("temporaryTestFolder").toPath());
-        testFolder = new File("temporaryTestFolder");
-        testFolder.mkdir();
-        return testFolder;
     }
 
     private YamlConfiguration mockConfig() throws IOException, InvalidConfigurationException {
