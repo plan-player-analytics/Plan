@@ -16,7 +16,7 @@ import java.util.Map;
  * <p>
  * It caches all IPs with their matching country.
  * <p>
- * This cache uses the Google Guava {@link Cache} and has a capacity of 10.000 entries.
+ * This cache uses the Google Guava {@link Cache}.
  *
  * @author Fuzzlemann
  * @since 3.5.5
@@ -31,7 +31,6 @@ public class GeolocationCacheHandler {
     }
 
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
-            .maximumSize(10000)
             .build();
 
     /**

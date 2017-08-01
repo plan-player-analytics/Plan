@@ -25,6 +25,7 @@ public class PluginConfigSectionHandler {
         if (!section.contains(pluginName)) {
             return false;
         }
+
         ConfigurationSection pluginSection = section.getConfigurationSection(pluginName);
         return pluginSection.contains(dataSource.getPlaceholder(""));
     }
@@ -38,8 +39,10 @@ public class PluginConfigSectionHandler {
         ConfigurationSection section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
         String source = dataSource.placeholder;
+
         section.addDefault(pluginName + ".Enabled", true);
         section.addDefault(pluginName + ".Data." + source, true);
+
         FileConfiguration config = plan.getConfig();
         config.set("Customization.Plugins", section);
         plan.saveConfig();
@@ -47,9 +50,11 @@ public class PluginConfigSectionHandler {
 
     public boolean isEnabled(PluginData dataSource) {
         ConfigurationSection section = getPluginsSection();
+
         String pluginName = dataSource.getSourcePlugin();
         if (!section.getBoolean(pluginName + ".Enabled")) {
             return false;
+
         }
         String source = dataSource.placeholder;
         return section.getBoolean(pluginName + ".Data." + source);
