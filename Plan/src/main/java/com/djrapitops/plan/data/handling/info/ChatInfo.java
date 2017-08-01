@@ -14,19 +14,16 @@ import java.util.UUID;
 public class ChatInfo extends HandlingInfo {
 
     private final String nickname;
-    private final String message;
 
     /**
      * Constructor.
      *
-     * @param uuid UUID of the player.
+     * @param uuid     UUID of the player.
      * @param nickname Nickname of the player.
-     * @param message Message the player sent.
      */
-    public ChatInfo(UUID uuid, String nickname, String message) {
+    public ChatInfo(UUID uuid, String nickname) {
         super(uuid, InfoType.CHAT, 0L);
         this.nickname = nickname;
-        this.message = message;
     }
 
     @Override
@@ -34,7 +31,7 @@ public class ChatInfo extends HandlingInfo {
         if (!uData.getUuid().equals(uuid)) {
             return false;
         }
-        ChatHandling.processChatInfo(uData, nickname, message);
+        ChatHandling.processChatInfo(uData, nickname);
         return true;
     }
 }

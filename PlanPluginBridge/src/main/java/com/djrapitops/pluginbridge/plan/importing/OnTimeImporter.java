@@ -47,9 +47,7 @@ public class OnTimeImporter extends Importer {
                 }
                 if (playTime > uData.getPlayTime()) {
                     uData.setPlayTime(playTime);
-                    uData.setLastGamemode("SURVIVAL");
-                    uData.setAllGMTimes(playTime, 0, 0, 0);
-                    uData.setLastGmSwapTime(playTime);
+                    uData.getGmTimes().resetTimes(playTime);
                 }
                 return true;
             }

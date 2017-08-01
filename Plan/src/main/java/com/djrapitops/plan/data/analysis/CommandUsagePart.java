@@ -5,23 +5,24 @@
  */
 package main.java.com.djrapitops.plan.data.analysis;
 
-import java.util.Map;
 import main.java.com.djrapitops.plan.ui.html.tables.CommandUseTableCreator;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
+import java.util.Map;
+
 /**
  * Part responsible for all CommandUsage related analysis.
- *
+ * <p>
  * Command Usage Table.
- * 
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: uniquecommands, totalcommands, commanduse
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class CommandUsagePart extends RawData<CommandUsagePart> {
+public class CommandUsagePart extends RawData {
 
     private final Map<String, Integer> commandUsage;
 
@@ -31,8 +32,8 @@ public class CommandUsagePart extends RawData<CommandUsagePart> {
 
     @Override
     public void analyse() {
-        addValue("uniquecommands", getUniqueCommands() + "");
-        addValue("totalcommands", getCommandTotal() + "");
+        addValue("uniquecommands", String.valueOf(getUniqueCommands()));
+        addValue("totalcommands", String.valueOf(getCommandTotal()));
         String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
         addValue("commanduse", HtmlUtils.removeXSS(commandUsageTable));
     }

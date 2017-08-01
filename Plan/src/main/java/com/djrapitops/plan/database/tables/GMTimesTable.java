@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -10,7 +11,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- *
  * @author Rsl1122
  */
 public class GMTimesTable extends Table {
@@ -22,7 +22,6 @@ public class GMTimesTable extends Table {
     private final String columnSpectatorTime;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -40,7 +39,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -64,7 +62,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -84,7 +81,6 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -137,13 +133,12 @@ public class GMTimesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param gamemodeTimes
      * @throws SQLException
      */
     public void saveGMTimes(int userId, Map<String, Long> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
+        if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
         PreparedStatement statement = null;
@@ -152,11 +147,11 @@ public class GMTimesTable extends Table {
         try {
             statement = prepareStatement(
                     "UPDATE " + tableName + " SET "
-                    + columnSurvivalTime + "=?, "
-                    + columnCreativeTime + "=?, "
-                    + columnAdventureTime + "=?, "
-                    + columnSpectatorTime + "=? "
-                    + " WHERE (" + columnUserID + "=?)");
+                            + columnSurvivalTime + "=?, "
+                            + columnCreativeTime + "=?, "
+                            + columnAdventureTime + "=?, "
+                            + columnSpectatorTime + "=? "
+                            + " WHERE (" + columnUserID + "=?)");
             statement.setInt(5, userId);
             for (int i = 0; i < gms.length; i++) {
                 try {
@@ -197,7 +192,7 @@ public class GMTimesTable extends Table {
     }
 
     public void saveGMTimes(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
+        if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
         Benchmark.start("Database: Save GMTimes");
@@ -208,26 +203,26 @@ public class GMTimesTable extends Table {
         try {
             statement = prepareStatement(
                     "UPDATE " + tableName + " SET "
-                    + columnSurvivalTime + "=?, "
-                    + columnCreativeTime + "=?, "
-                    + columnAdventureTime + "=?, "
-                    + columnSpectatorTime + "=? "
-                    + " WHERE (" + columnUserID + "=?)");
+                            + columnSurvivalTime + "=?, "
+                            + columnCreativeTime + "=?, "
+                            + columnAdventureTime + "=?, "
+                            + columnSpectatorTime + "=? "
+                            + " WHERE (" + columnUserID + "=?)");
             boolean commitRequired = false;
-            for (Integer id : gamemodeTimes.keySet()) {
+            for (Map.Entry<Integer, Map<String, Long>> entrySet : gamemodeTimes.entrySet()) {
+                Integer id = entrySet.getKey();
+
                 if (!savedIDs.contains(id)) {
                     continue;
                 }
+
                 statement.setInt(5, id);
                 for (int i = 0; i < gms.length; i++) {
                     try {
-                        Map<String, Long> times = gamemodeTimes.get(id);
+                        Map<String, Long> times = entrySet.getValue();
                         Long time = times.get(gms[i]);
-                        if (time != null) {
-                            statement.setLong(i + 1, time);
-                        } else {
-                            statement.setLong(i + 1, 0);
-                        }
+
+                        statement.setLong(i + 1, time != null ? time : 0);
                     } catch (NoSuchFieldError e) {
                         statement.setLong(i + 1, 0);
                     }
@@ -235,45 +230,46 @@ public class GMTimesTable extends Table {
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }
+
             gamemodeTimes.keySet().removeAll(savedIDs);
         } finally {
             close(statement);
         }
+
         addNewGMTimesRows(gamemodeTimes);
         Benchmark.stop("Database: Save GMTimes");
     }
 
     private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
-        if (gamemodeTimes == null || gamemodeTimes.isEmpty()) {
+        if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
-
         try {
             statement = prepareStatement(
                     "INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnSurvivalTime + ", "
-                    + columnCreativeTime + ", "
-                    + columnAdventureTime + ", "
-                    + columnSpectatorTime
-                    + ") VALUES (?, ?, ?, ?, ?)");
+                            + columnUserID + ", "
+                            + columnSurvivalTime + ", "
+                            + columnCreativeTime + ", "
+                            + columnAdventureTime + ", "
+                            + columnSpectatorTime
+                            + ") VALUES (?, ?, ?, ?, ?)");
             boolean commitRequired = false;
-            for (Integer id : gamemodeTimes.keySet()) {
+            for (Map.Entry<Integer, Map<String, Long>> entry : gamemodeTimes.entrySet()) {
+                Integer id = entry.getKey();
+
                 statement.setInt(1, id);
                 for (int i = 0; i < gms.length; i++) {
                     try {
-                        Map<String, Long> times = gamemodeTimes.get(id);
+                        Map<String, Long> times = entry.getValue();
                         Long time = times.get(gms[i]);
-                        if (time != null) {
-                            statement.setLong(i + 2, time);
-                        } else {
-                            statement.setLong(i + 2, 0);
-                        }
+
+                        statement.setLong(i + 2, time != null ? time : 0);
                     } catch (NoSuchFieldError e) {
                         statement.setLong(i + 2, 0);
                     }
@@ -281,6 +277,7 @@ public class GMTimesTable extends Table {
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }
@@ -290,9 +287,11 @@ public class GMTimesTable extends Table {
     }
 
     private void addNewGMTimesRow(int userId, Map<String, Long> gamemodeTimes) throws SQLException {
+        if (Verify.isEmpty(gamemodeTimes)) {
+            return;
+        }
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
-
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "
@@ -306,15 +305,13 @@ public class GMTimesTable extends Table {
             for (int i = 0; i < gms.length; i++) {
                 try {
                     Long time = gamemodeTimes.get(gms[i]);
-                    if (time != null) {
-                        statement.setLong(i + 2, time);
-                    } else {
-                        statement.setLong(i + 2, 0);
-                    }
+
+                    statement.setLong(i + 2, time != null ? time : 0);
                 } catch (NoSuchFieldError e) {
                     statement.setLong(i + 2, 0);
                 }
             }
+
             statement.execute();
         } finally {
             close(statement);

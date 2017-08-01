@@ -5,21 +5,16 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.
@@ -38,9 +33,27 @@ public class AnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Phrase.CMD_USG_ANALYZE.parse());
+        super("analyze, analyse, analysis, a", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Phrase.CMD_USG_ANALYZE.parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Analysis Command",
+                tCol + "  Used to Refresh analysis cache & Access the result page",
+                sCol + "  /plan status can be used to check status of analysis while it is running.",
+                sCol + "  Aliases: analyze, analyse, analysis, a"
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override
@@ -48,30 +61,32 @@ public class AnalyzeCommand extends SubCommand {
         if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString(), sender)) {
             return true;
         }
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)) {
-            if (!analysisCache.isCached()) {
-                return true;
-            }
+
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)
+                && !analysisCache.isCached()) {
+            return true;
         }
 
         sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-        plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
-            @Override
-            public void run() {
-                try {
-                    if (CommandUtils.isPlayer(sender)) {
-                        boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
-                        if (!senderHasWebUser) {
-                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+        if (plugin.getUiServer().isAuthRequired()) {
+            plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
+                @Override
+                public void run() {
+                    try {
+                        if (CommandUtils.isPlayer(sender)) {
+                            boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
+                            if (!senderHasWebUser) {
+                                sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
+                            }
                         }
+                    } catch (Exception e) {
+                        Log.toLog(this.getClass().getName() + getName(), e);
+                    } finally {
+                        this.cancel();
                     }
-                } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + getName(), e);
-                } finally {
-                    this.cancel();
                 }
-            }
-        }).runTaskAsynchronously();
+            }).runTaskAsynchronously();
+        }
         updateCache();
         runMessageSenderTask(sender);
         return true;
@@ -110,7 +125,7 @@ public class AnalyzeCommand extends SubCommand {
 
     /**
      * Used to send the message after /plan analysis.
-     *
+     * <p>
      * Final because
      *
      * @param sender Command sender.
@@ -129,17 +144,9 @@ public class AnalyzeCommand extends SubCommand {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sendLink(sender, url);
+                sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
             }
         }
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
-    }
-
-    @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
-    private void sendLink(ISender sender, String url) throws CommandException {
-        plugin.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(),
-                "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+        sender.sendMessage(Phrase.CMD_FOOTER.toString());
     }
 }

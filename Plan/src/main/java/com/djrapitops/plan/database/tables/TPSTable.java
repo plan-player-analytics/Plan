@@ -26,6 +26,9 @@ public class TPSTable extends Table {
     private final String columnTPS;
     private final String columnPlayers;
     private final String columnCPUUsage;
+    private final String columnRAMUsage;
+    private final String columnEntities;
+    private final String columnChunksLoaded;
 
     /**
      * @param db
@@ -37,6 +40,9 @@ public class TPSTable extends Table {
         columnTPS = "tps";
         columnPlayers = "players_online";
         columnCPUUsage = "cpu_usage";
+        columnRAMUsage = "ram_usage";
+        columnEntities = "entities";
+        columnChunksLoaded = "chunks_loaded";
     }
 
     @Override
@@ -46,12 +52,18 @@ public class TPSTable extends Table {
                     + columnDate + " bigint NOT NULL, "
                     + columnTPS + " double NOT NULL, "
                     + columnPlayers + " integer NOT NULL, "
-                    + columnCPUUsage + " double NOT NULL"
+                    + columnCPUUsage + " double NOT NULL, "
+                    + columnRAMUsage + " bigint NOT NULL, "
+                    + columnEntities + " integer NOT NULL, "
+                    + columnChunksLoaded + " integer NOT NULL"
                     + ")"
             );
             int version = getVersion();
             if (version < 6) {
                 alterTablesV6();
+            }
+            if (version < 7) {
+                alterTablesV7();
             }
             return true;
         } catch (SQLException ex) {
@@ -61,15 +73,15 @@ public class TPSTable extends Table {
     }
 
     private void alterTablesV6() {
-        try {
-            if (usingMySQL) {
-                execute("ALTER TABLE " + tableName + " ADD " + columnCPUUsage + " double NOT NULL DEFAULT 0");
-            } else {
-                execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnCPUUsage + " double NOT NULL DEFAULT 0");
-            }
-        } catch (SQLException e) {
+        addColumns(columnCPUUsage + " double NOT NULL DEFAULT 0");
+    }
 
-        }
+    private void alterTablesV7() {
+        addColumns(
+                columnRAMUsage + " bigint NOT NULL DEFAULT 0",
+                columnEntities + " integer NOT NULL DEFAULT 0",
+                columnChunksLoaded + " integer NOT NULL DEFAULT 0"
+        );
     }
 
     /**
@@ -88,7 +100,10 @@ public class TPSTable extends Table {
                 double tps = set.getDouble(columnTPS);
                 int players = set.getInt(columnPlayers);
                 double cpuUsage = set.getDouble(columnCPUUsage);
-                data.add(new TPS(date, tps, players, cpuUsage));
+                long ramUsage = set.getLong(columnRAMUsage);
+                int entities = set.getInt(columnEntities);
+                int chunksLoaded = set.getInt(columnChunksLoaded);
+                data.add(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
             }
             return data;
         } finally {
@@ -116,8 +131,11 @@ public class TPSTable extends Table {
                     + columnDate + ", "
                     + columnTPS + ", "
                     + columnPlayers + ", "
-                    + columnCPUUsage
-                    + ") VALUES (?, ?, ?, ?)");
+                    + columnCPUUsage + ", "
+                    + columnRAMUsage + ", "
+                    + columnEntities + ", "
+                    + columnChunksLoaded
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?)");
 
             boolean commitRequired = false;
             int i = 0;
@@ -126,6 +144,9 @@ public class TPSTable extends Table {
                 statement.setDouble(2, tps.getTps());
                 statement.setInt(3, tps.getPlayers());
                 statement.setDouble(4, tps.getCPUUsage());
+                statement.setLong(5, tps.getUsedMemory());
+                statement.setDouble(6, tps.getEntityCount());
+                statement.setDouble(7, tps.getChunksLoaded());
                 statement.addBatch();
                 commitRequired = true;
                 i++;

@@ -14,13 +14,18 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class UUIDUtility {
 
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private UUIDUtility() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param playername
      * @return
      */
@@ -33,7 +38,6 @@ public class UUIDUtility {
     }
 
     /**
-     *
      * @param playername
      * @param db
      * @return
@@ -49,7 +53,7 @@ public class UUIDUtility {
             if (uuid == null) {
                 uuid = UUIDFetcher.getUUIDOf(playername);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return uuid;
     }

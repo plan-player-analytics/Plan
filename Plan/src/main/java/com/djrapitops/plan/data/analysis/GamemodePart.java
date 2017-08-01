@@ -9,18 +9,18 @@ import java.util.Arrays;
 
 /**
  * Part responsible for all Gamemode usage related analysis.
- *
+ * <p>
  * Gamemode Piechart, Percentages and Totals.
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: gmtotal, gm0col-gm3col, gmcolors, gmlabels,
  * gm0-gm3, gmdata, gm0total-gm3total
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class GamemodePart extends RawData<GamemodePart> {
+public class GamemodePart extends RawData {
 
     private long survivalTime;
     private long creativeTime;
@@ -45,18 +45,18 @@ public class GamemodePart extends RawData<GamemodePart> {
         addValue("gmtotal", FormatUtils.formatTimeAmount(totalTime));
 
         double[] percentages = new double[]{
-            (survivalTime * 100.0) / totalTime,
-            (creativeTime * 100.0) / totalTime,
-            (adventureTime * 100.0) / totalTime,
-            (spectatorTime * 100.0) / totalTime
+                (survivalTime * 100.0) / totalTime,
+                (creativeTime * 100.0) / totalTime,
+                (adventureTime * 100.0) / totalTime,
+                (spectatorTime * 100.0) / totalTime
         };
         long[] times = new long[]{
-            survivalTime, creativeTime, adventureTime, spectatorTime
+                survivalTime, creativeTime, adventureTime, spectatorTime
         };
-        String col0 = Settings.HCOLOR_GMP_0 + "";
-        String col1 = Settings.HCOLOR_GMP_1 + "";
-        String col2 = Settings.HCOLOR_GMP_2 + "";
-        String col3 = Settings.HCOLOR_GMP_3 + "";
+        String col0 = Settings.HCOLOR_GMP_0.toString();
+        String col1 = Settings.HCOLOR_GMP_1.toString();
+        String col2 = Settings.HCOLOR_GMP_2.toString();
+        String col3 = Settings.HCOLOR_GMP_3.toString();
 
         addValue("%gm0col%", col0);
         addValue("%gm1col%", col1);

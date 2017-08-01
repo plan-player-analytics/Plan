@@ -5,9 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
@@ -17,7 +14,6 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,8 +23,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -48,7 +50,7 @@ public class DataCacheProcessQueueTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
         handler = new DataCacheHandler(Plan.getInstance()) {
             @Override
             public boolean getCommandUseFromDb() {
@@ -84,7 +86,6 @@ public class DataCacheProcessQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore("Scheduler")
@@ -105,7 +106,6 @@ public class DataCacheProcessQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore("Scheduler")
@@ -130,7 +130,6 @@ public class DataCacheProcessQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore("Inconsistant")

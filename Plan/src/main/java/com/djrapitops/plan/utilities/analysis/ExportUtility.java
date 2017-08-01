@@ -13,28 +13,33 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * @author Rsl1122
  * @since 3.4.0
  */
 public class ExportUtility {
 
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private ExportUtility() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @return
      */
     public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
-        if (path.contains(":")) {
+        if (Paths.get(path).isAbsolute()) {
             File folder = new File(path);
-            if (folder.exists()) {
-                if (folder.isDirectory()) {
-                    return folder;
-                }
+            if (folder.exists()
+                    && folder.isDirectory()) {
+                return folder;
             }
             folder.mkdirs();
             return folder;
@@ -46,7 +51,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param plugin
      * @param analysisData
      * @param rawData
@@ -74,7 +78,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param folder
      * @return
      */
@@ -85,7 +88,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param userData
      * @param playersFolder
      * @throws FileNotFoundException
@@ -95,7 +97,7 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
-        String inspectHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getHtmlStringFromResource("player.html"),
+        String inspectHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("player.html"),
                 PlaceholderUtils.getInspectReplaceRules(userData));
         File playerFolder = new File(playersFolder, userData.getName());
         playerFolder.mkdir();
@@ -105,7 +107,6 @@ public class ExportUtility {
     }
 
     /**
-     *
      * @param analysisData
      * @param serverFolder
      * @throws FileNotFoundException
@@ -115,7 +116,7 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
-        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getHtmlStringFromResource("analysis.html"),
+        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("analysis.html"),
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");

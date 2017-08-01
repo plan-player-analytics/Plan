@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import com.djrapitops.plugin.utilities.player.Fetch;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
- *
+ * <p>
  * Supported plugins (v3.0.0) : OnTime
  *
  * @author Rsl1122
@@ -39,6 +40,24 @@ public class ManageImportCommand extends SubCommand {
     public ManageImportCommand(Plan plugin) {
         super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT.toString(), Phrase.ARG_IMPORT.toString());
         this.plugin = plugin;
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Manage Import command",
+                tCol + "  Used to import data from other sources",
+                sCol + "  Analysis will be disabled during import.",
+                sCol + "  If a lot of users are not in the database, saving may take a long time."
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override
@@ -58,6 +77,7 @@ public class ManageImportCommand extends SubCommand {
         if (!Check.isTrue(importPlugins.keySet().contains(importFromPlugin), Phrase.MANAGE_ERROR_INCORRECT_PLUGIN + importFromPlugin, sender)) {
             return true;
         }
+
         if (!Check.isTrue(ImportUtils.isPluginEnabled(importFromPlugin), Phrase.MANAGE_ERROR_PLUGIN_NOT_ENABLED + importFromPlugin, sender)) {
             return true;
         }

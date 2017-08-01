@@ -4,6 +4,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -17,11 +18,11 @@ import org.bukkit.ChatColor;
 
 /**
  * Command for registering web users.
- *
+ * <p>
  * Registers a new webuser to the database.
- *
+ * <p>
  * No permission required for self registration. (Constructor string is empty)
- *
+ * <p>
  * plan.webmanage required for registering other users.
  *
  * @author Rsl1122
@@ -34,6 +35,24 @@ public class RegisterCommand extends SubCommand {
     public RegisterCommand(Plan plugin) {
         super("register", CommandType.CONSOLE_WITH_ARGUMENTS, "", "Register a user for the webserver", "<password> [name] [access lvl]");
         this.plugin = plugin;
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Web Register command",
+                tCol + "  Used to register a new user for the webserver.",
+                sCol + "  Registering a user for another player requires " + Permissions.MANAGE_WEB.getPerm() + " permission.",
+                sCol + "  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override

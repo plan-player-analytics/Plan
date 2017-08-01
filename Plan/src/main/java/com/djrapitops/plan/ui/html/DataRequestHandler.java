@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class DataRequestHandler {
@@ -43,7 +42,7 @@ public class DataRequestHandler {
      * Returns the player.html as string with replaced placeholders.
      *
      * @param uuid UUID of player, whose UserData is used to replace
-     * placeholders with
+     *             placeholders with
      * @return The html
      */
     public String getInspectHtml(UUID uuid) {
@@ -53,7 +52,7 @@ public class DataRequestHandler {
                 return "<h1>404 Data was not found in cache</h1>";
             }
             return HtmlUtils.replacePlaceholders(
-                    HtmlUtils.getHtmlStringFromResource("player.html"),
+                    HtmlUtils.getStringFromResource("player.html"),
                     PlaceholderUtils.getInspectReplaceRules(data)
             );
         } catch (FileNotFoundException ex) {
@@ -72,9 +71,8 @@ public class DataRequestHandler {
                 return "<h1>404 Data was not found in cache</h1>";
             }
             return HtmlUtils.replacePlaceholders(
-                    HtmlUtils.getHtmlStringFromResource("analysis.html"),
-                    PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData())
-            );
+                    HtmlUtils.getStringFromResource("analysis.html"),
+                    PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData()));
         } catch (FileNotFoundException ex) {
             return "<h1>404 analysis.html was not found</h1>";
         }

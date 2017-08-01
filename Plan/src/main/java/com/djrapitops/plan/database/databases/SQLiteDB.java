@@ -1,13 +1,13 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import main.java.com.djrapitops.plan.Plan;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import main.java.com.djrapitops.plan.Plan;
 
 /**
- *
  * @author Rsl1122
  */
 public class SQLiteDB extends SQLDB {
@@ -24,7 +24,6 @@ public class SQLiteDB extends SQLDB {
     }
 
     /**
-     *
      * @param plugin
      * @param dbName
      */
@@ -44,7 +43,6 @@ public class SQLiteDB extends SQLDB {
     }
 
     /**
-     *
      * @param dbName
      * @return
      */
@@ -59,7 +57,6 @@ public class SQLiteDB extends SQLDB {
     }
 
     /**
-     *
      * @return
      */
     @Override

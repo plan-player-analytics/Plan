@@ -4,9 +4,9 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
@@ -17,6 +17,8 @@ import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
+
+import java.util.UUID;
 
 /**
  * This command is used to cache UserData to InspectCache and to view some of
@@ -36,10 +38,28 @@ public class QuickInspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QuickInspectCommand(Plan plugin) {
-        super("qinspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.QUICK_INSPECT.getPermission(), Phrase.CMD_USG_QINSPECT + "", Phrase.ARG_PLAYER + "");
+        super("qinspect, qi", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.QUICK_INSPECT.getPermission(), Phrase.CMD_USG_QINSPECT + "", Phrase.ARG_PLAYER + "");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Quick Inspect command",
+                tCol + "  Used to get some inspect info in game.",
+                sCol + "  Has less info than full Inspect web page.",
+                sCol + "  Alias: /plan qi"
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override

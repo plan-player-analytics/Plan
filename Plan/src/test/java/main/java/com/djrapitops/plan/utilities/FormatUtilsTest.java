@@ -18,19 +18,11 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class FormatUtilsTest {
-
-    /**
-     *
-     */
-    @Before
-    public void setUp() {
-    }
 
     /**
      *
@@ -41,9 +33,17 @@ public class FormatUtilsTest {
     /**
      *
      */
+    @Before
+    public void setUp() throws Exception{
+        TestInit.init();
+    }
+
+    /**
+     *
+     */
     @Test
     public void testFormatTimeAmount() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
         long second = 1000L;
         String expResult = "1s";
         String result = FormatUtils.formatTimeAmount(second);

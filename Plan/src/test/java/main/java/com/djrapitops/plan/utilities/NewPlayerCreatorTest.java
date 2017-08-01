@@ -15,7 +15,6 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +22,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -59,13 +59,11 @@ public class NewPlayerCreatorTest {
         IOfflinePlayer p = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer2());
         UserData result = NewPlayerCreator.createNewOfflinePlayer(p);
         UserData exp = new UserData(p);
-        exp.setLastGamemode("SURVIVAL");
+        exp.getGmTimes().setState("SURVIVAL");
         exp.setLastPlayed(MiscUtils.getTime());
-        long zero = Long.parseLong("0");
-        exp.setPlayTime(zero);
+        exp.setPlayTime(0);
         exp.setTimesKicked(0);
         exp.setLoginTimes(0);
-        exp.setLastGmSwapTime(zero);
         exp.setDeaths(0);
         exp.setMobKills(0);
         assertTrue(exp.equals(result));
@@ -79,13 +77,11 @@ public class NewPlayerCreatorTest {
         IPlayer p = BukkitPlayer.wrap(MockUtils.mockPlayer2());
         UserData result = NewPlayerCreator.createNewPlayer(p);
         UserData exp = new UserData(p);
-        exp.setLastGamemode("SPECTATOR");
+        exp.getGmTimes().setState("SPECTATOR");
         exp.setLastPlayed(MiscUtils.getTime());
-        long zero = Long.parseLong("0");
-        exp.setPlayTime(zero);
+        exp.setPlayTime(0);
         exp.setTimesKicked(0);
         exp.setLoginTimes(0);
-        exp.setLastGmSwapTime(zero);
         exp.setDeaths(0);
         exp.setMobKills(0);
         assertTrue(exp.equals(result));
@@ -99,13 +95,11 @@ public class NewPlayerCreatorTest {
         IOfflinePlayer p = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer());
         UserData result = NewPlayerCreator.createNewPlayer(p, Gamemode.CREATIVE);
         UserData exp = new UserData(p);
-        exp.setLastGamemode("CREATIVE");
+        exp.getGmTimes().setState("CREATIVE");
         exp.setLastPlayed(MiscUtils.getTime());
-        long zero = Long.parseLong("0");
-        exp.setPlayTime(zero);
+        exp.setPlayTime(0);
         exp.setTimesKicked(0);
         exp.setLoginTimes(0);
-        exp.setLastGmSwapTime(zero);
         exp.setDeaths(0);
         exp.setMobKills(0);
         assertTrue(exp.equals(result));

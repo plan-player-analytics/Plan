@@ -1,20 +1,15 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 /**
- *
  * @author Rsl1122
  */
 public class NicknamesTable extends Table {
@@ -24,7 +19,6 @@ public class NicknamesTable extends Table {
     private final String columnCurrent;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -36,7 +30,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -61,21 +54,10 @@ public class NicknamesTable extends Table {
     }
 
     private void alterTablesV3() {
-        String query;
-        if (usingMySQL) {
-            query = "ALTER TABLE " + tableName + " ADD " + columnCurrent + " boolean NOT NULL DEFAULT 0";
-
-        } else {
-            query = "ALTER TABLE " + tableName + " ADD COLUMN " + columnCurrent + " boolean NOT NULL DEFAULT 0";
-        }
-        try {
-            execute(query);
-        } catch (Exception e) {
-        }
+        addColumns(columnCurrent + " boolean NOT NULL DEFAULT 0");
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -95,7 +77,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -133,7 +114,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param names
      * @param lastNick
@@ -177,7 +157,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws SQLException
@@ -212,11 +191,17 @@ public class NicknamesTable extends Table {
                     lastNicks.put(id, nickname);
                 }
             }
-            for (Integer id : lastNicks.keySet()) {
-                String lastNick = lastNicks.get(id);
+
+            for (Map.Entry<Integer, String> entry : lastNicks.entrySet()) {
+                Integer id = entry.getKey();
+                String lastNick = entry.getValue();
+
                 List<String> list = nicks.get(id);
-                list.remove(lastNick);
-                list.add(lastNick);
+
+                // Moves the last known nickname to the end of the List.
+                // This is due to the way nicknames are added to UserData,
+                // Nicknames are stored as a Set and last Nickname is a separate String.
+                list.set(list.size() - 1, lastNick);
             }
 
             return nicks;
@@ -228,7 +213,6 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     *
      * @param nicknames
      * @param lastNicks
      * @throws SQLException
@@ -237,7 +221,9 @@ public class NicknamesTable extends Table {
         if (nicknames == null || nicknames.isEmpty()) {
             return;
         }
+
         Benchmark.start("Database: Save Nicknames Multiple");
+
         Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
         PreparedStatement statement = null;
         try {
@@ -247,16 +233,22 @@ public class NicknamesTable extends Table {
                     + columnCurrent + ", "
                     + columnNick
                     + ") VALUES (?, ?, ?)");
-            for (Integer id : nicknames.keySet()) {
-                Set<String> newNicks = nicknames.get(id);
+
+            for (Map.Entry<Integer, Set<String>> entrySet : nicknames.entrySet()) {
+                Integer id = entrySet.getKey();
+                Set<String> newNicks = entrySet.getValue();
+
                 String lastNick = lastNicks.get(id);
                 List<String> s = saved.get(id);
+
                 if (s != null) {
                     newNicks.removeAll(s);
                 }
+
                 if (newNicks.isEmpty()) {
                     continue;
                 }
+
                 for (String name : newNicks) {
                     statement.setInt(1, id);
                     statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
@@ -265,6 +257,7 @@ public class NicknamesTable extends Table {
                     commitRequired = true;
                 }
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }

@@ -32,27 +32,30 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.ui.html.Html;
-import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
-import org.bukkit.Bukkit;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main class for Bukkit that manages the plugin.
- *
+ * <p>
  * Everything can be accessed through this class. Use Plan.getInstance() to get
  * the initialised instance of Plan.
  *
@@ -71,14 +74,38 @@ public class Plan extends BukkitPlugin<Plan> {
     private Database db;
     private HashSet<Database> databases;
 
-    private WebSocketServer uiServer;
+    private WebServer uiServer;
 
     private ServerVariableHolder serverVariableHolder;
     private int bootAnalysisTaskID = -1;
 
     /**
-     * OnEnable method.
+     * Used to get the PlanAPI. @see API
      *
+     * @return API of the current instance of Plan.
+     * @throws IllegalStateException If onEnable method has not been called on
+     *                               Plan and the instance is null.
+     */
+    public static API getPlanAPI() throws IllegalStateException {
+        Plan instance = getInstance();
+        if (instance == null) {
+            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
+        }
+        return instance.api;
+    }
+
+    /**
+     * Used to get the plugin-instance singleton.
+     *
+     * @return this object.
+     */
+    public static Plan getInstance() {
+        return (Plan) getPluginInstance(Plan.class);
+    }
+
+    /**
+     * OnEnable method.
+     * <p>
      * - Enables the plugin's subsystems.
      */
     @Override
@@ -103,13 +130,13 @@ public class Plan extends BukkitPlugin<Plan> {
 
         Benchmark.start("Enable: Copy default config");
         getConfig().options().copyDefaults(true);
-        getConfig().options().header(Phrase.CONFIG_HEADER + "");
+        getConfig().options().header(Phrase.CONFIG_HEADER.toString());
         saveConfig();
         Benchmark.stop("Enable: Copy default config");
 
         Benchmark.start("Enable: Init Database");
-        Log.info(Phrase.DB_INIT + "");
-        if (Check.isTrue_Error(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
+        Log.info(Phrase.DB_INIT.toString());
+        if (Check.ErrorIfFalse(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
         } else {
             disablePlugin();
@@ -154,15 +181,19 @@ public class Plan extends BukkitPlugin<Plan> {
         boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
 
         if (webserverIsEnabled) {
-            uiServer = new WebSocketServer(this);
+            uiServer = new WebServer(this);
             uiServer.initServer();
-            // Prevent passwords showing up on console.
-            Bukkit.getLogger().setFilter(new RegisterCommandFilter());
+
+            if (!uiServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+            }
+
+            setupFilter();
         } else if (!hasDataViewCapability) {
-            Log.infoColor(Phrase.ERROR_NO_DATA_VIEW + "");
+            Log.infoColor(Phrase.ERROR_NO_DATA_VIEW.toString());
         }
         if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
-            Log.infoColor(Phrase.NOTIFY_EMPTY_IP + "");
+            Log.infoColor(Phrase.NOTIFY_EMPTY_IP.toString());
         }
         Benchmark.stop("Enable: WebServer Initialization");
 
@@ -176,64 +207,73 @@ public class Plan extends BukkitPlugin<Plan> {
         bStats.registerMetrics();
 
         Log.debug("Verbose debug messages are enabled.");
-        Log.info(Phrase.ENABLED + "");
+        Log.info(Phrase.ENABLED.toString());
         processStatus().finishExecution("Enable");
     }
 
     /**
      * Disables the plugin.
-     *
+     * <p>
      * Stops the webserver, cancels all tasks and saves cache to the database.
      */
     @Override
     public void onDisable() {
+        //Clears the page cache
+        PageCacheHandler.clearCache();
+
         // Stop the UI Server
         if (uiServer != null) {
             uiServer.stop();
         }
+
         getServer().getScheduler().cancelTasks(this);
+
         if (Verify.notNull(handler, db)) {
             Benchmark.start("Disable: DataCache Save");
             // Saves the DataCache to the database without Bukkit's Schedulers.
-            Log.info(Phrase.CACHE_SAVE + "");
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            Log.info(Phrase.CACHE_SAVE.toString());
+
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.execute(() -> {
                 handler.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
                 Benchmark.stop("Disable: DataCache Save");
             });
-            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
 
+            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
         }
-        Log.info(Phrase.DISABLED + "");
+
+        Log.info(Phrase.DISABLED.toString());
     }
 
     private void registerListeners() {
         Benchmark.start("Enable: Register Listeners");
         registerListener(new PlanPlayerListener(this));
-        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER + "");
-        boolean gamemodeChangeListenerIsEnabled = Check.isTrue(Settings.GATHERGMTIMES.isTrue(), Phrase.NOTIFY_DISABLED_GMLISTENER + "");
-        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER + "");
-        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER + "");
+        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER.toString());
+        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER.toString());
+        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER.toString());
 
         if (chatListenerIsEnabled) {
             registerListener(new PlanChatListener(this));
         }
-        if (gamemodeChangeListenerIsEnabled) {
-            registerListener(new PlanGamemodeChangeListener(this));
-        }
+
+        registerListener(new PlanGamemodeChangeListener(this));
+        registerListener(new PlanWorldChangeListener(this));
+
         if (commandListenerIsEnabled) {
             registerListener(new PlanCommandPreprocessListener(this));
         }
+
         if (deathListenerIsEnabled) {
             registerListener(new PlanDeathEventListener(this));
         }
+
         Benchmark.stop("Enable: Register Listeners");
     }
 
     /**
      * Initializes the database according to settings in the config.
-     *
+     * <p>
      * If database connection can not be established plugin is disabled.
      *
      * @return true if init was successful, false if not.
@@ -243,7 +283,7 @@ public class Plan extends BukkitPlugin<Plan> {
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
 
-        String dbType = (Settings.DB_TYPE + "").toLowerCase().trim();
+        String dbType = Settings.DB_TYPE.toString().toLowerCase().trim();
 
         for (Database database : databases) {
             String databaseType = database.getConfigName().toLowerCase().trim();
@@ -253,11 +293,13 @@ public class Plan extends BukkitPlugin<Plan> {
                 break;
             }
         }
+
         if (!Verify.notNull(db)) {
             Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString() + " " + dbType);
             return false;
         }
-        return Check.isTrue_Error(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
+
+        return Check.ErrorIfFalse(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
@@ -269,9 +311,7 @@ public class Plan extends BukkitPlugin<Plan> {
             @Override
             public void run() {
                 Log.debug("Running PeriodicalAnalysisTask");
-                if (!analysisCache.isCached()) {
-                    analysisCache.updateCache();
-                } else if (MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
+                if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
                     analysisCache.updateCache();
                 }
             }
@@ -300,10 +340,14 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public void writeNewLocaleFile() {
         File genLocale = new File(getDataFolder(), "locale_EN.txt");
-        try {
-            genLocale.createNewFile();
-            FileWriter fw = new FileWriter(genLocale, true);
-            PrintWriter pw = new PrintWriter(fw);
+        try (
+                FileWriter fw = new FileWriter(genLocale, true);
+                PrintWriter pw = new PrintWriter(fw)
+        ) {
+            if (genLocale.createNewFile()) {
+                Log.debug(genLocale.getAbsoluteFile() + " created");
+            }
+
             for (Phrase p : Phrase.values()) {
                 pw.println(p.name() + " <> " + p.parse());
                 pw.flush();
@@ -319,41 +363,83 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     private void initLocale() {
+        String defaultLocale = "Default: EN";
+
         String locale = Settings.LOCALE.toString().toUpperCase();
         Benchmark.start("Enable: Initializing locale");
         File localeFile = new File(getDataFolder(), "locale.txt");
-        boolean skipLoc = false;
-        String usingLocale = "";
+
+        String usingLocale;
+
         if (localeFile.exists()) {
             Phrase.loadLocale(localeFile);
             Html.loadLocale(localeFile);
-            skipLoc = true;
-            usingLocale = "locale.txt";
+
+            stopInitLocale(defaultLocale);
+            return;
         }
-        if (!locale.equals("DEFAULT")) {
-            try {
-                if (!skipLoc) {
-                    URL localeURL = new URL("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt");
-                    InputStream inputStream = localeURL.openStream();
-                    OutputStream outputStream = new FileOutputStream(localeFile);
-                    int read;
-                    byte[] bytes = new byte[1024];
-                    while ((read = inputStream.read(bytes)) != -1) {
-                        outputStream.write(bytes, 0, read);
-                    }
-                    Phrase.loadLocale(localeFile);
-                    Html.loadLocale(localeFile);
-                    usingLocale = locale;
-                    localeFile.delete();
-                }
-            } catch (FileNotFoundException ex) {
-                Log.error("Attempted using locale that doesn't exist.");
-                usingLocale = "Default: EN";
-            } catch (IOException e) {
+
+        if (locale.equals("DEFAULT")) {
+            stopInitLocale(defaultLocale);
+            return;
+        }
+
+        String urlString = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt";
+
+        URL localeURL;
+        try {
+            localeURL = new URL(urlString);
+        } catch (MalformedURLException e) {
+            Log.error("Error at parsing \"" + urlString + "\" to an URL"); //Shouldn't ever happen
+
+            stopInitLocale(defaultLocale);
+            return;
+        }
+
+        try (InputStream inputStream = localeURL.openStream();
+             OutputStream outputStream = new FileOutputStream(localeFile)) {
+
+            int read;
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
             }
-        } else {
-            usingLocale = "Default: EN";
+
+            Phrase.loadLocale(localeFile);
+            Html.loadLocale(localeFile);
+            usingLocale = locale;
+
+            if (localeFile.delete()) {
+                Log.debug(localeFile.getAbsoluteFile() + " (Locale File) deleted");
+            }
+
+            stopInitLocale(usingLocale);
+        } catch (FileNotFoundException ex) {
+            Log.error("Attempted using locale that doesn't exist.");
+
+            stopInitLocale(defaultLocale);
+        } catch (IOException e) {
+            Log.error("Error at loading locale from GitHub, using default locale.");
+
+            stopInitLocale(defaultLocale);
         }
+    }
+
+    /**
+     * Setups the command console output filter
+     */
+    private void setupFilter() {
+        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new RegisterCommandFilter());
+    }
+
+    /**
+     * Stops initializing the locale
+     *
+     * @param usingLocale The locale that's used
+     * @implNote Removes clutter in the method
+     */
+    private void stopInitLocale(String usingLocale) {
         Benchmark.stop("Enable: Initializing locale");
         Log.info("Using locale: " + usingLocale);
     }
@@ -399,7 +485,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return the Webserver
      */
-    public WebSocketServer getUiServer() {
+    public WebServer getUiServer() {
         return uiServer;
     }
 
@@ -414,12 +500,12 @@ public class Plan extends BukkitPlugin<Plan> {
 
     /**
      * Used to get all possible database objects.
-     *
+     * <p>
      * #init() might need to be called in order for the object to function.
      *
      * @return Set containing the SqLite and MySQL objects.
      */
-    public HashSet<Database> getDatabases() {
+    public Set<Database> getDatabases() {
         return databases;
     }
 
@@ -446,35 +532,11 @@ public class Plan extends BukkitPlugin<Plan> {
     /**
      * Old method for getting the API.
      *
-     * @deprecated Use Plan.getPlanAPI() (static method) instead.
      * @return the Plan API.
+     * @deprecated Use Plan.getPlanAPI() (static method) instead.
      */
     @Deprecated
     public API getAPI() {
         return api;
-    }
-
-    /**
-     * Used to get the PlanAPI. @see API
-     *
-     * @return API of the current instance of Plan.
-     * @throws IllegalStateException If onEnable method has not been called on
-     * Plan and the instance is null.
-     */
-    public static API getPlanAPI() throws IllegalStateException {
-        Plan instance = getInstance();
-        if (instance == null) {
-            throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
-        }
-        return instance.api;
-    }
-
-    /**
-     * Used to get the plugin-instance singleton.
-     *
-     * @return this object.
-     */
-    public static Plan getInstance() {
-        return (Plan) getPluginInstance(Plan.class);
     }
 }

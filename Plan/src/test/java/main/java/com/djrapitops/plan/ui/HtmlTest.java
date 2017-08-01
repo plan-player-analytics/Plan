@@ -6,11 +6,12 @@
 package test.java.main.java.com.djrapitops.plan.ui;
 
 import main.java.com.djrapitops.plan.ui.html.Html;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 public class HtmlTest {
@@ -25,7 +26,7 @@ public class HtmlTest {
      *
      */
     @Test
-    public void testParse_0args() {
+    public void testParseWithZeroArgs() {
         Html instance = Html.REPLACE0;
         String expResult = "REPLACE0";
         String result = instance.parse();
@@ -36,7 +37,7 @@ public class HtmlTest {
      *
      */
     @Test
-    public void testParse_StringArr() {
+    public void testParseStringArr() {
         Html instance = Html.REPLACE0;
         String expResult = "Test";
         String result = instance.parse(expResult);

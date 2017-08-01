@@ -5,8 +5,6 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +12,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- *
  * @author Rsl1122
  */
 public class SessionsTable extends Table {
@@ -24,7 +21,6 @@ public class SessionsTable extends Table {
     private final String columnSessionEnd;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -36,7 +32,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -58,7 +53,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -86,7 +80,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -106,7 +99,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param sessions
      * @throws SQLException
@@ -152,7 +144,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws SQLException
@@ -190,7 +181,6 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @param sessions
      * @throws SQLException
      */
@@ -198,20 +188,27 @@ public class SessionsTable extends Table {
         if (sessions == null || sessions.isEmpty()) {
             return;
         }
+
         Benchmark.start("Database: Save Sessions multiple");
+
         Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
-        for (Integer id : sessions.keySet()) {
-            List<SessionData> sessionList = sessions.get(id);
+        for (Map.Entry<Integer, List<SessionData>> entrySet : sessions.entrySet()) {
+            Integer id = entrySet.getKey();
+            List<SessionData> sessionList = entrySet.getValue();
+
             List<SessionData> s = saved.get(id);
             if (s != null) {
                 sessionList.removeAll(s);
             }
+
             if (sessionList.isEmpty()) {
                 continue;
             }
+
             saved.put(id, sessionList);
         }
         List<List<Container<SessionData>>> batches = splitIntoBatches(sessions);
+
         for (List<Container<SessionData>> batch : batches) {
             saveSessionBatch(batch);
         }
@@ -255,48 +252,9 @@ public class SessionsTable extends Table {
     }
 
     /**
-     *
      * @throws SQLException
      */
     public void clean() throws SQLException {
-        Map<Integer, Integer> loginTimes = db.getUsersTable().getLoginTimes();
-        Map<Integer, List<SessionData>> allSessions = getSessionData(loginTimes.keySet());
-        Benchmark.start("Database: Combine Sessions");
-        int before = MathUtils.sumInt(allSessions.values().stream().map(List::size));
-        Log.debug("Sessions before: " + before);
-        Map<Integer, Integer> beforeM = new HashMap<>();
-        Map<Integer, Integer> afterM = new HashMap<>();
-        for (Integer id : allSessions.keySet()) {
-            List<SessionData> sessions = allSessions.get(id);
-            beforeM.put(id, sessions.size());
-            if (sessions.isEmpty()) {
-                afterM.put(id, 0);
-                continue;
-            }
-            Integer times = loginTimes.get(id);
-            if (sessions.size() == times) {
-                afterM.put(id, times);
-                continue;
-            }
-            List<SessionData> combined = ManageUtils.combineSessions(sessions, times);
-            afterM.put(id, combined.size());
-            allSessions.put(id, combined);
-        }
-        int after = MathUtils.sumInt(allSessions.values().stream().map(List::size));
-        Log.debug("Sessions after: " + after);
-        if (before - after > 50) {
-            Benchmark.start("Database: Save combined sessions");
-            for (Integer id : new HashSet<>(allSessions.keySet())) {
-                if (afterM.get(id) < beforeM.get(id)) {
-                    removeUserSessions(id);
-                } else {
-                    allSessions.remove(id);
-                }
-            }
-            saveSessionData(allSessions);
-            Benchmark.stop("Database: Save combined sessions");
-        }
-        Benchmark.stop("Database: Combine Sessions");
-        Log.info("Combined " + (before - after) + " sessions.");
+        // TODO Clean sessions before Configurable time span
     }
 }

@@ -1,9 +1,11 @@
 package main.java.com.djrapitops.plan.data.handling.importing;
 
 import com.djrapitops.pluginbridge.plan.importing.OnTimeImporter;
+import main.java.com.djrapitops.plan.Log;
+
 import java.util.HashMap;
 import java.util.Map;
-import main.java.com.djrapitops.plan.Log;
+
 import static org.bukkit.Bukkit.getPluginManager;
 
 /**
@@ -34,7 +36,7 @@ public class ImportUtils {
         try {
             importers.put("ontime", new OnTimeImporter());
             importers.put("offline", new OfflinePlayerImporter());
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.toLog("ImportUtils.getImporters", e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }

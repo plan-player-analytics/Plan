@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
@@ -32,11 +33,29 @@ public class ManageClearCommand extends SubCommand {
         super("clear", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAR + "", "<DB> [-a]");
 
         this.plugin = plugin;
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Manage Clear command",
+                tCol + "  Used to delete ALL data in the active database.",
+                sCol + "  Plugin should be reloaded after successful clear.",
+                sCol + "  Alias: /plan pl"
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE + "", sender)) {
+        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
 
@@ -54,7 +73,7 @@ public class ManageClearCommand extends SubCommand {
         final Database database = ManageUtils.getDB(plugin, dbName);
 
         // If DB is null return
-        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE + "", sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
             Log.error(dbName + " was null!");
             return true;
         }
@@ -71,6 +90,7 @@ public class ManageClearCommand extends SubCommand {
                     sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
 
                     if (database.removeAllData()) {
+                        plugin.getHandler().getDataCache().clear();
                         sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS.toString());
                     } else {
                         sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());

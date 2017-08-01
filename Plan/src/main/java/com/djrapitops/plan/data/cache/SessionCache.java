@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This class is used to store active sessions of players in memory.
@@ -54,7 +55,7 @@ public class SessionCache {
     /**
      * Used to get the SessionData of the player in the sessionCache.
      *
-     * @param uuid UUId of the player.
+     * @param uuid UUID of the player.
      * @return SessionData or null if not cached.
      */
     public SessionData getSession(UUID uuid) {
@@ -78,7 +79,7 @@ public class SessionCache {
 
     /**
      * Used to get the Map of active sessions.
-     *
+     * <p>
      * Used for testing.
      *
      * @return key:value UUID:SessionData

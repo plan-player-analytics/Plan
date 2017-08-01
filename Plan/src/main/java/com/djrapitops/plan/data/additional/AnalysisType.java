@@ -3,10 +3,10 @@ package main.java.com.djrapitops.plan.data.additional;
 /**
  * This class contains Enum values for different types of Analysis that can be
  * performed on values of PluginData.
- *
+ * <p>
  * The enum determines what should be done to the return value of
  * PluginData.getValue() method when the analysis is run.
- *
+ * <p>
  * Refer to the documentation on GitHub for additional information.
  *
  * @author Rsl1122
@@ -17,56 +17,56 @@ public enum AnalysisType {
     /**
      * Used when the getValue() method returns an integer and average should be
      * calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     INT_AVG("avgInt_", "Average "),
     /**
      * Used when the getValue() method returns a long and average should be
      * calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_AVG("avgLong_", "Average "),
     /**
      * Used when the getValue() method returns double and average should be
      * calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     DOUBLE_AVG("avgDouble_", "Average "),
     /**
      * Used when the getValue() method returns an integer and total should be
      * calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     INT_TOTAL("totalInt_", "Total "),
     /**
      * Used when the getValue() method returns a long and total should be
      * calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_TOTAL("totalLong_", "Total "),
     /**
      * Used when the getValue() method returns a double and total should be
      * calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     DOUBLE_TOTAL("totalDouble_", "Total "),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
      * and average should be calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_TIME_MS_AVG("avgTimeMs_", "Average "),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
      * and total should be calculated.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_TIME_MS_TOTAL("totalTimeMs_"),
@@ -74,11 +74,11 @@ public enum AnalysisType {
      * Used when the getValue() method returns an Epoch Millisecond as long and
      * average of differences between the millisecond and current millisecond
      * should be calculated.
-     *
+     * <p>
      * For example if a player has dropped a Foo on epoch ms 1494486504000 and
      * that was 5s (5000ms) ago. Now you want to calculate the average
      * time-since for all players. Then you use this one.
-     *
+     * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
     LONG_EPOCH_MS_MINUS_NOW_AVG("avgEpochMsMinusNow_", "Average "),
@@ -89,13 +89,13 @@ public enum AnalysisType {
     /**
      * Used to calculate number of true values for the returned boolean values
      * of getValue().
-     *
+     * <p>
      * Will be presented as "n / total".
      */
     BOOLEAN_TOTAL("totalBool_"),
     /**
      * Used to add html tags to the plugins tab.
-     *
+     * <p>
      * Can be used to add Tables, Images (for example maps) and other html
      * elements.
      */
@@ -121,7 +121,7 @@ public enum AnalysisType {
 
     /**
      * Used to get the modifier for the Prefix of the value.
-     *
+     * <p>
      * For example: "Average Votes" when INT_AVG is used and Prefix is set as
      * "Votes".
      *

@@ -5,8 +5,8 @@ import main.java.com.djrapitops.plan.Plan;
 /**
  * Abstract representation of a queue setup.
  *
- * @author Rsl1122
  * @param <T> Object this queue consumes.
+ * @author Rsl1122
  */
 public abstract class Setup<T> {
 

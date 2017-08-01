@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
@@ -32,6 +33,23 @@ public class ManageHotswapCommand extends SubCommand {
         super("hotswap", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_HOTSWAP.toString(), "<DB>");
 
         this.plugin = plugin;
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Manage Hotswap command",
+                tCol + "  Used to change database in use on the fly.",
+                sCol + "  Does not change database if connection fails"
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override
@@ -46,7 +64,7 @@ public class ManageHotswapCommand extends SubCommand {
             return true;
         }
 
-        if (Check.isTrue(dbName.equals(plugin.getDB().getConfigName()), Phrase.MANAGE_ERROR_SAME_DB + "", sender)) {
+        if (Check.isTrue(dbName.equals(plugin.getDB().getConfigName()), Phrase.MANAGE_ERROR_SAME_DB.toString(), sender)) {
             return true;
         }
 

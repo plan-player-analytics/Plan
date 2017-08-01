@@ -12,7 +12,7 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
-import main.java.com.djrapitops.plan.ui.webserver.WebSocketServer;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 import java.sql.SQLException;
@@ -25,20 +25,20 @@ import java.util.stream.Collectors;
 
 /**
  * This class contains the API methods.
- *
+ * <p>
  * Methods can be called from Asynchronous task and are thread safe unless
  * otherwise stated.
- *
+ * <p>
  * Use Plan.getPlanAPI() to get the API.
- *
+ * <p>
  * More information about API methods can be found on GitHub.
  *
  * @author Rsl1122
- * @since 2.0.0
  * @see PluginData
  * @see AnalysisType
  * @see DBCallableProcessor
  * @see HandlingInfo
+ * @since 2.0.0
  */
 public class API {
 
@@ -65,12 +65,12 @@ public class API {
     /**
      * Add a source of plugin data to the Plugins tab on Analysis and/or Inspect
      * page.
-     *
+     * <p>
      * Refer to documentation on GitHub or Javadoc of PluginData to set-up a
      * data source that extends PluginData correctly.
      *
      * @param dataSource an object that extends PluginData-object, thus allowing
-     * Analysis and Inspect to manage the data of a plugin correctly.
+     *                   Analysis and Inspect to manage the data of a plugin correctly.
      * @see PluginData
      */
     public void addPluginDataSource(PluginData dataSource) {
@@ -81,15 +81,15 @@ public class API {
 
     /**
      * Used to get the link to InspectPage of a player.
-     *
+     * <p>
      * This method is useful if you have a table and want to link to the inspect
      * page.
+     * <p>
+     * Html.LINK.parse("Link", "PlayerName") can be used to get a link
+     * {@code <a href="Link">PlayerName</a>}
      *
-     * Html.LINK.parse("Link", "Playername") can be used to get a link
-     * {@code <a href="Link">Playername</a>}
-     *
-     * @param name Playername of the player
-     * @return ip:port/security/player/Playername
+     * @param name Name of the player
+     * @return ip:port/security/player/PlayerName
      */
     public String getPlayerInspectPageLink(String name) {
         return HtmlUtils.getInspectUrlWithProtocol(name);
@@ -98,12 +98,12 @@ public class API {
     /**
      * Schedule a UserData object to be fetched from the database or cache if
      * the player is online.
-     *
+     * <p>
      * The data will not be cached if it is not already cached.
      *
-     * @param uuid UUID of the player.
+     * @param uuid      UUID of the player.
      * @param processor Object implementing DBCallableProcessor, which
-     * process (UserData data) method will be called.
+     *                  process (UserData data) method will be called.
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
         plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
@@ -111,7 +111,7 @@ public class API {
 
     /**
      * Schedule a HandlingInfo object to be processed.
-     *
+     * <p>
      * UserData associated with the UUID of the HandlingInfo object will be
      * cached.
      *
@@ -123,11 +123,11 @@ public class API {
 
     /**
      * Used to cache a UserData object.
-     *
+     * <p>
      * If data is already cached it will be overridden.
      *
      * @param data UserData object. Will be placed to the data.getUuid() key in
-     * the cache.
+     *             the cache.
      */
     public void placeDataToCache(UserData data) {
         plugin.getHandler().cache(data);
@@ -135,7 +135,7 @@ public class API {
 
     /**
      * Used to save the cached data to the database.
-     *
+     * <p>
      * Should be only called from an Asynchronous thread.
      */
     public void saveCachedData() {
@@ -154,7 +154,7 @@ public class API {
 
     /**
      * Cache the UserData to InspectCache.
-     *
+     * <p>
      * Uses cache if data is cached or database if not. Call from an Asynchronous
      * thread.
      *
@@ -166,14 +166,14 @@ public class API {
 
     /**
      * Used to get the full Html of the Inspect page as a string.
-     *
+     * <p>
      * Check if the data is cached to InspectCache before calling this.
      *
      * @param uuid UUID of the player.
      * @return player.html with all placeholders replaced.
      */
     public String getPlayerHtmlAsString(UUID uuid) {
-        WebSocketServer server = plugin.getUiServer();
+        WebServer server = plugin.getUiServer();
         if (Verify.notNull(server)) {
             return server.getDataReqHandler().getInspectHtml(uuid);
         }
@@ -193,7 +193,7 @@ public class API {
     /**
      * Run's the analysis with the current data in the cache and fetches rest
      * from the database.
-     *
+     * <p>
      * Starts a new Asynchronous task to run the analysis.
      */
     public void updateAnalysisCache() {
@@ -202,13 +202,13 @@ public class API {
 
     /**
      * Used to get the full HTML of the Analysis page as a string.
-     *
+     * <p>
      * Check if the data is cached to AnalysisCache before calling this.
      *
      * @return analysis.html with all placeholders replaced.
      */
     public String getAnalysisHtmlAsString() {
-        WebSocketServer server = plugin.getUiServer();
+        WebServer server = plugin.getUiServer();
         if (Verify.notNull(server)) {
             return server.getDataReqHandler().getAnalysisHtml();
         }
@@ -218,7 +218,7 @@ public class API {
 
     /**
      * Used to get the AnalysisData object.
-     *
+     * <p>
      * Check if the data is cached to AnalysisCache before calling this.
      *
      * @return AnalysisData object.
@@ -229,13 +229,13 @@ public class API {
     }
 
     /**
-     * Used to get the playerName of a player who has played on the server.
+     * Used to get the PlayerName of a player who has played on the server.
      *
      * @param uuid UUID of the player.
-     * @return Playername, eg "Rsl1122"
+     * @return PlayerName, eg "Rsl1122"
      * @throws IllegalArgumentException If uuid is null.
-     * @throws IllegalStateException If the player has not played on the server
-     * before.
+     * @throws IllegalStateException    If the player has not played on the server
+     *                                  before.
      */
     public String getPlayerName(UUID uuid) throws IllegalStateException, IllegalArgumentException {
         Verify.nullCheck(uuid);
@@ -253,13 +253,13 @@ public class API {
      * @return UUID of the Player
      * @throws Exception if player's name is not registered at Mojang
      */
-    public UUID playerNameToUUID(String playerName) throws Exception {
+    public UUID PlayerNameToUUID(String playerName) throws Exception {
         return UUIDFetcher.getUUIDOf(playerName);
     }
 
     /**
      * Get the saved UUIDs in the database.
-     *
+     * <p>
      * Should be called from async thread.
      *
      * @return Collection of UUIDs that can be found in the database.
@@ -272,9 +272,9 @@ public class API {
 
     /**
      * Get the saved UserData in the database for a collection of UUIDs.
-     *
+     * <p>
      * Will not contain data for UUIDs not found in the database.
-     *
+     * <p>
      * Should be called from async thread.
      *
      * @param uuids Collection of UUIDs that can be found in the database.
@@ -288,7 +288,7 @@ public class API {
 
     /**
      * Get the cached UserData objects in the InspectCache.
-     *
+     * <p>
      * This can be used with PluginData objects safely to get the data for all
      * users in Plan database, because all data is InspectCached before analysis
      * begins.
@@ -302,7 +302,7 @@ public class API {
 
     /**
      * Get the cached UserData objects in the InspectCache in a Map form.
-     *
+     * <p>
      * This can be used with PluginData objects safely to get the data for all
      * users in Plan database, because all data is InspectCached before analysis
      * begins.

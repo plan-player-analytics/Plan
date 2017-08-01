@@ -4,13 +4,18 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 
 /**
- *
  * @author Rsl1122
  */
 public class Benchmark {
 
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private Benchmark() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param source
      */
     public static void start(String source) {
@@ -19,7 +24,6 @@ public class Benchmark {
     }
 
     /**
-     *
      * @param source
      * @return
      */

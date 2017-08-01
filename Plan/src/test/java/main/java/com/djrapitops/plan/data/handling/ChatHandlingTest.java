@@ -8,7 +8,6 @@ package test.java.main.java.com.djrapitops.plan.data.handling;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.ChatHandling;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +16,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -36,7 +36,7 @@ public class ChatHandlingTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**
@@ -46,7 +46,7 @@ public class ChatHandlingTest {
     public void testProcessChatInfoAddedNickname() {
         UserData data = MockUtils.mockUser2();
         String expected = "TestNicknameChatHandling";
-        ChatHandling.processChatInfo(data, expected, "");
+        ChatHandling.processChatInfo(data, expected);
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
     }
 }

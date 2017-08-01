@@ -39,6 +39,7 @@ public class ManageCleanCommand extends SubCommand {
         if (!Check.isTrue(args.length != 0, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
             return true;
         }
+
         String dbName = args[0].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
 

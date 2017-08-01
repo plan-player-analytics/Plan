@@ -17,16 +17,24 @@ import java.util.List;
 public class PlayersTableCreator {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private PlayersTableCreator() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param data
      * @return
      */
     public static String createSortablePlayersTable(List<UserData> data) {
         Benchmark.start("Create Players table");
         StringBuilder html = new StringBuilder();
+
         long now = MiscUtils.getTime();
         boolean showImages = Settings.PLAYERLIST_SHOW_IMAGES.isTrue();
+
         int i = 0;
-//        Collections.sort(data, new UserDataLastPlayedComparator()); // Already sorted.
         for (UserData uData : data) {
             if (i >= 750) {
                 break;
@@ -46,16 +54,18 @@ public class PlayersTableCreator {
                 html.append(Html.TABLELINE_PLAYERS.parse(
                         img + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()),
                         activityString,
-                        uData.getPlayTime() + "", FormatUtils.formatTimeAmount(uData.getPlayTime()),
-                        uData.getLoginTimes() + "",
-                        uData.getRegistered() + "", FormatUtils.formatTimeStampYear(uData.getRegistered()),
-                        uData.getLastPlayed() + "", FormatUtils.formatTimeStamp(uData.getLastPlayed()),
-                        uData.getGeolocation()
+                        String.valueOf(uData.getPlayTime()), FormatUtils.formatTimeAmount(uData.getPlayTime()),
+                        String.valueOf(uData.getLoginTimes()),
+                        String.valueOf(uData.getRegistered()), FormatUtils.formatTimeStampYear(uData.getRegistered()),
+                        String.valueOf(uData.getLastPlayed()), FormatUtils.formatTimeStamp(uData.getLastPlayed()),
+                        String.valueOf(uData.getGeolocation())
                 ));
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
             }
+
             i++;
         }
+
         Benchmark.stop("Create Players table");
         return html.toString();
     }

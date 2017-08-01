@@ -4,26 +4,23 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandException;
 
 /**
  * Command used to display link to the player list webpage.
- * 
+ * <p>
  * Subcommand is not registered if Webserver is not enabled.
- * 
+ *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class ListCommand extends SubCommand {
-
-    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -31,9 +28,26 @@ public class ListCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ListCommand(Plan plugin) {
-        super("list", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), "List to all cached players", "");
+        super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), "List to all cached players", "");
 
-        this.plugin = plugin;
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "List command",
+                tCol + "  Used to get a link to players page.",
+                sCol + "  Players page contains links to all cached inspect pages.",
+                sCol + "  Alias: /plan pl"
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override
@@ -50,22 +64,14 @@ public class ListCommand extends SubCommand {
 
         // Link
         String url = HtmlUtils.getServerAnalysisUrlWithProtocol().replace("server", "players");
-        String message = Phrase.CMD_LINK + "";
+        String message = Phrase.CMD_LINK.toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
             sender.sendMessage(message + url);
         } else {
             sender.sendMessage(message);
-            sendLink(sender, url);
+            sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
         }
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
-    }
-
-    @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
-    private void sendLink(ISender sender, String url) throws CommandException {
-        plugin.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(),
-                "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+        sender.sendMessage(Phrase.CMD_FOOTER.toString());
     }
 }

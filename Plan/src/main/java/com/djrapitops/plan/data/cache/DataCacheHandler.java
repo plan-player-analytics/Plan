@@ -21,19 +21,20 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
+import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.*;
 
 /**
  * This Class contains the Cache.
- *
+ * <p>
  * This class is the main processing class that initialises Save, Clear, Process
  * and Get queue and Starts the asynchronous save task.
- *
+ * <p>
  * It is used to store command use, locations, active sessions and UserData
  * objects in memory.
- *
+ * <p>
  * Its methods can be used to access all the data it stores and to clear them.
  *
  * @author Rsl1122
@@ -42,13 +43,15 @@ import java.util.*;
 public class DataCacheHandler extends SessionCache {
 
     // Cache
-    private final HashMap<UUID, UserData> dataCache;
-    private Map<String, Integer> commandUse;
-    private List<List<TPS>> unsavedTPSHistory;
+    private final Map<UUID, UserData> dataCache;
 
     // Plan
     private final Plan plugin;
     private final Database db;
+
+    //Cache
+    private Map<String, Integer> commandUse;
+    private List<List<TPS>> unsavedTPSHistory;
 
     // Queues
     private DataCacheSaveQueue saveTask;
@@ -61,7 +64,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Class Constructor.
-     *
+     * <p>
      * Gets the Database from the plugin. Starts the queues. Registers
      * Asynchronous Periodic Save Task
      *
@@ -115,8 +118,8 @@ public class DataCacheHandler extends SessionCache {
      * Used to start the Asynchronous Save Task.
      *
      * @throws IllegalArgumentException BukkitRunnable was given wrong
-     * parameters.
-     * @throws IllegalStateException BukkitScheduler is in a wrong state.
+     *                                  parameters.
+     * @throws IllegalStateException    BukkitScheduler is in a wrong state.
      */
     public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
@@ -160,26 +163,21 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Uses Database or Cache to retrieve the UserData of a matching player.
-     *
+     * <p>
      * Caches the data to the Cache if cache-parameter is true.
      *
      * @param processor DBCallableProcessor Object used to process the data
-     * after it was retrieved
-     * @param uuid Player's UUID
-     * @param cache Whether or not the UserData will be Cached in this instance
-     * of DataCacheHandler after it has been fetched (if not already fetched)
+     *                  after it was retrieved
+     * @param uuid      Player's UUID
+     * @param cache     Whether or not the UserData will be Cached in this instance
+     *                  of DataCacheHandler after it has been fetched (if not already fetched)
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid, boolean cache) {
         Log.debug(uuid + ": HANDLER getForProcess," + " Cache:" + cache);
         UserData uData = dataCache.get(uuid);
         if (uData == null) {
             if (cache) {
-                DBCallableProcessor cacher = new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        cache(data);
-                    }
-                };
+                DBCallableProcessor cacher = this::cache;
                 getTask.scheduleForGet(uuid, cacher, processor);
             } else {
                 getTask.scheduleForGet(uuid, processor);
@@ -191,7 +189,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Used to Cache a UserData object to the Cache.
-     *
+     * <p>
      * If a object already exists it will be replaced.
      *
      * @param data UserData object with the UUID inside used as key.
@@ -204,12 +202,12 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Uses Database or Cache to retrieve the UserData of a matching player.
-     *
+     * <p>
      * Always Caches the data after retrieval (unless already cached)
      *
      * @param processor DBCallableProcessor Object used to process the data
-     * after it was retrieved
-     * @param uuid Player's UUID
+     *                  after it was retrieved
+     * @param uuid      Player's UUID
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid) {
         getUserDataForProcessing(processor, uuid, true);
@@ -217,9 +215,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Saves all UserData in the cache to Database.
-     *
-     * ATTENTION: TODO - Doesn't save the Locations in the locationCache.
-     *
+     * <p>
      * Should only be called from Async thread
      */
     public void saveCachedUserData() {
@@ -234,7 +230,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Used to add event HandlingInfo to the processTask's pool.
-     *
+     * <p>
      * Given HandlingInfo object's process method will be called.
      *
      * @param i Object that extends HandlingInfo.
@@ -249,9 +245,9 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * Saves all data in the cache to Database and closes the database down.
-     *
+     * <p>
      * Stops all tasks.
-     *
+     * <p>
      * If processTask has unprocessed information, it will be processed.
      */
     public void saveCacheOnDisable() {
@@ -268,7 +264,8 @@ public class DataCacheHandler extends SessionCache {
         for (IPlayer p : onlinePlayers) {
             UUID uuid = p.getUuid();
             endSession(uuid);
-            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode(), getSession(uuid)));
+            String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode().name(), getSession(uuid), worldName));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         toProcess.sort(new HandlingInfoTimeComparator());
@@ -301,12 +298,7 @@ public class DataCacheHandler extends SessionCache {
         for (HandlingInfo i : toProcess) {
             UserData uData = dataCache.get(i.getUuid());
             if (uData == null) {
-                DBCallableProcessor p = new DBCallableProcessor() {
-                    @Override
-                    public void process(UserData data) {
-                        i.process(data);
-                    }
-                };
+                DBCallableProcessor p = i::process;
                 getUserDataForProcessing(p, i.getUuid());
             } else {
                 i.process(uData);
@@ -321,20 +313,17 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveCachedData(UUID uuid) {
         Log.debug(uuid + ": SaveCachedData");
-        DBCallableProcessor saveProcessor = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                data.access();
-                data.setClearAfterSave(true);
-                saveTask.scheduleForSave(data);
-            }
+        DBCallableProcessor saveProcessor = data -> {
+            data.access();
+            data.setClearAfterSave(true);
+            saveTask.scheduleForSave(data);
         };
         getUserDataForProcessing(saveProcessor, uuid);
     }
 
     /**
      * Saves the cached CommandUse.
-     *
+     * <p>
      * Should be only called from an Asynchronous Thread.
      */
     public void saveCommandUse() {
@@ -366,11 +355,14 @@ public class DataCacheHandler extends SessionCache {
 
         for (List<TPS> history : copy) {
             final long lastDate = history.get(history.size() - 1).getDate();
-            final double averageTPS = MathUtils.averageDouble(history.stream().map(TPS::getTps));
+            final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTps)));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
-            final double averageCPUUsage = MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage));
+            final double averageCPUUsage = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage)));
+            final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));
+            final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
+            final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
 
-            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage));
+            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded));
         }
         unsavedTPSHistory.removeAll(copy);
         return averages;
@@ -381,13 +373,14 @@ public class DataCacheHandler extends SessionCache {
      */
     public void saveHandlerDataToCache() {
         final List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
-        onlinePlayers.forEach((p) -> saveHandlerDataToCache(p, false));
+        onlinePlayers.forEach(p -> saveHandlerDataToCache(p, false));
     }
 
-    private void saveHandlerDataToCache(IPlayer player, boolean pool) {
+    private void saveHandlerDataToCache(IPlayer p, boolean pool) {
         long time = MiscUtils.getTime();
-        UUID uuid = player.getUuid();
-        ReloadInfo info = new ReloadInfo(uuid, time, player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), player.getGamemode());
+        UUID uuid = p.getUuid();
+        String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
+        ReloadInfo info = new ReloadInfo(uuid, time, p.getAddress().getAddress(), p.isBanned(), p.getDisplayName(), p.getGamemode().name(), worldName);
         if (!pool) {
             UserData data = dataCache.get(uuid);
             if (data != null) {
@@ -474,9 +467,9 @@ public class DataCacheHandler extends SessionCache {
     /**
      * Used to get the contents of the cache.
      *
-     * @return The HashMap containing all Cached UserData
+     * @return The Map containing all Cached UserData
      */
-    public HashMap<UUID, UserData> getDataCache() {
+    public Map<UUID, UserData> getDataCache() {
         return dataCache;
     }
 
@@ -491,7 +484,7 @@ public class DataCacheHandler extends SessionCache {
 
     /**
      * If /reload is run this treats every online player as a new login.
-     *
+     * <p>
      * Calls all the methods that are ran when PlayerJoinEvent is fired
      */
     public void handleReload() {
@@ -525,7 +518,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheSaveQueue getSaveTask() {
@@ -533,7 +525,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheClearQueue getClearTask() {
@@ -541,7 +532,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheProcessQueue getProcessTask() {
@@ -549,7 +539,6 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     *
      * @return
      */
     public DataCacheGetQueue getGetTask() {

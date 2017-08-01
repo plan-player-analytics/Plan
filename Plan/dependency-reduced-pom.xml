@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.djrapitops</groupId>
   <artifactId>Plan</artifactId>
-  <version>3.5.4</version>
+  <version>3.5.5</version>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
     <defaultGoal>clean package install</defaultGoal>
@@ -100,15 +100,19 @@
   </build>
   <repositories>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      <id>plan-repo</id>
+      <url>http://repo.fuzzlemann.de/artifactory/libs-release/</url>
+    </repository>
+    <repository>
+      <id>plan-snapshot-repo</id>
+      <url>http://repo.fuzzlemann.de/artifactory/libs-snapshot/</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot</artifactId>
-      <version>1.12-R0.1-SNAPSHOT</version>
+      <groupId>com.destroystokyo.paper</groupId>
+      <artifactId>paper</artifactId>
+      <version>1.12-R0.1-20170725.202533-1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

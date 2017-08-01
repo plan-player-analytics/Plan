@@ -6,10 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Rsl1122
  */
 public class MapComparator {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private MapComparator() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Sorts a HashMap of String, Integer by the Values of the HashMap.
@@ -20,19 +26,18 @@ public class MapComparator {
      */
     public static List<String[]> sortByValue(Map<String, Integer> hashMap) {
         List<String[]> sortedList = new ArrayList<>();
-        hashMap.keySet().forEach((key) -> sortedList.add(new String[]{"" + hashMap.get(key), key}));
+        hashMap.keySet().forEach(key -> sortedList.add(new String[]{String.valueOf(hashMap.get(key)), key}));
         sortedList.sort(Comparator.comparingInt(strings -> Integer.parseInt(strings[0])));
         return sortedList;
     }
 
     /**
-     *
      * @param hashMap
      * @return
      */
     public static List<String[]> sortByValueLong(Map<String, Long> hashMap) {
         List<String[]> sortedList = new ArrayList<>();
-        hashMap.keySet().forEach((key) -> sortedList.add(new String[]{"" + hashMap.get(key), key}));
+        hashMap.keySet().forEach(key -> sortedList.add(new String[]{String.valueOf(hashMap.get(key)), key}));
         sortedList.sort(Comparator.comparing(strings -> Long.valueOf(strings[0])));
         return sortedList;
     }

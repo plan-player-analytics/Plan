@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,19 +12,19 @@ import java.util.UUID;
 
 /**
  * Part responsible for all Death related analysis.
- *
+ * <p>
  * Totals
- * 
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
- * Contains following place-holders: deaths, mobkills, playerkilss
+ * <p>
+ * Contains following place-holders: deaths, mobkills, playerkills, avgdeaths, avgmobkills, avgplayerkills
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class KillPart extends RawData<KillPart> {
+public class KillPart extends RawData {
 
-    private final PlayerCountPart playerCount; // TODO Averages
+    private final PlayerCountPart playerCount;
     private final Map<UUID, List<KillData>> playerKills;
     private long mobKills;
     private long deaths;
@@ -39,7 +40,12 @@ public class KillPart extends RawData<KillPart> {
     public void analyse() {
         addValue("deaths", deaths);
         addValue("mobkills", mobKills);
-        addValue("playerkills", getAllPlayerKills().size());
+        int playerKillAmount = getAllPlayerKills().size();
+        addValue("playerkills", playerKillAmount);
+        int playerCount = this.playerCount.getPlayerCount();
+        addValue("avgdeaths", MathUtils.averageLong(deaths, playerCount));
+        addValue("avgmobkills", MathUtils.averageLong(mobKills, playerCount));
+        addValue("avgplayerkills", MathUtils.averageLong(playerKillAmount, playerCount));
     }
 
     public void addKills(UUID uuid, List<KillData> kills) throws IllegalArgumentException {

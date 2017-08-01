@@ -5,7 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache.queue;
 
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
@@ -19,19 +18,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import static org.powermock.api.mockito.PowerMockito.when;
 import test.java.utils.TestInit;
 
+import java.sql.SQLException;
+
+import static org.powermock.api.mockito.PowerMockito.when;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})
 public class DataCacheSaveQueueTest {
 
-    private Plan plan;
-    private Database db;
     private boolean calledSaveUserData;
     private boolean calledSaveUserData2;
 
@@ -47,10 +46,10 @@ public class DataCacheSaveQueueTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+        Plan plan = t.getPlanMock();
         calledSaveUserData = false;
         calledSaveUserData2 = false;
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
+        Database db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask() {
 
@@ -62,7 +61,6 @@ public class DataCacheSaveQueueTest {
                     calledSaveUserData2 = true;
                 }
                 calledSaveUserData = true;
-
             }
         };
         when(plan.getDB()).thenReturn(db);
@@ -76,7 +74,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore
@@ -90,7 +87,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore("Inconsistant")
@@ -109,7 +105,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore
@@ -136,7 +131,6 @@ public class DataCacheSaveQueueTest {
     }
 
     /**
-     *
      * @throws InterruptedException
      */
     @Ignore

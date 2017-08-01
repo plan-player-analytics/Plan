@@ -30,7 +30,7 @@ public class HookHandler {
         configHandler = new PluginConfigSectionHandler(plugin);
         try {
             Bridge.hook(this);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             Log.error("Plan Plugin Bridge not included in the plugin jar.");
         }
@@ -38,10 +38,10 @@ public class HookHandler {
 
     /**
      * Adds a new PluginData source to the list.
-     *
+     * <p>
      * The plugin data will appear on Analysis and/or Inspect pages depending on
      * how the extending object is set up.
-     *
+     * <p>
      * Refer to documentation on GitHub for more information.
      *
      * @param dataSource an object extending the PluginData class.

@@ -11,19 +11,20 @@ import java.util.stream.Collectors;
 
 /**
  * Part responsible for all Player login related analysis.
- *
+ * <p>
  * Unique per Day, Unique, New Players, Logins
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: totallogins, uniquejoinsday,
  * uniquejoinsweek, uniquejoinsmonth, avguniquejoins, avguniquejoinsday,
- * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth
+ * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth,
+ * npdataday, npdataweek, npdatamonth, newperday, newperdayday, newperdayweek, newperdaymonth
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class JoinInfoPart extends RawData<JoinInfoPart> {
+public class JoinInfoPart extends RawData {
 
     private final Map<UUID, List<SessionData>> sessions;
     private final List<Long> registered;
@@ -67,13 +68,24 @@ public class JoinInfoPart extends RawData<JoinInfoPart> {
     }
 
     private void newPlayers() {
-        int newDay = AnalysisUtils.getNewPlayers(registered, TimeAmount.DAY.ms(), MiscUtils.getTime());
-        int newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), MiscUtils.getTime());
-        int newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), MiscUtils.getTime());
+        long now = MiscUtils.getTime();
+        long newDay = AnalysisUtils.getNewPlayers(registered, TimeAmount.DAY.ms(), now);
+        long newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), now);
+        long newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), now);
 
         addValue("npday", newDay);
         addValue("npweek", newWeek);
         addValue("npmonth", newMonth);
+
+        long newPerDay = AnalysisUtils.getNewUsersPerDay(registered, -1);
+        long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.DAY.ms());
+        long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.WEEK.ms());
+        long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.MONTH.ms());
+
+        addValue("newperday", newPerDay);
+        addValue("newperdayday", newPerDayDay);
+        addValue("newperdayweek", newPerDayWeek);
+        addValue("newperdaymonth", newPerDayMonth);
     }
 
     public void addToLoginTimes() {

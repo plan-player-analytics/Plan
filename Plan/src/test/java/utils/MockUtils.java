@@ -2,9 +2,11 @@ package test.java.utils;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IPlayer;
+import com.sun.net.httpserver.HttpServer;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -15,18 +17,20 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
- *
  * @author Rsl1122
  */
 public class MockUtils {
 
     /**
-     *
      * @return
      */
     public static World mockWorld() {
@@ -45,12 +49,13 @@ public class MockUtils {
         mock.addNickname("MoreNicks");
         mock.addPlayerKill(new KillData(getPlayer2UUID(), 1, "WEP", 126873643232L));
         mock.addSession(new SessionData(12345L, 23456L));
-        mock.setAllGMTimes(1234, 2345, 4356, 4767);
+        GMTimes gmTimes = mock.getGmTimes();
+        gmTimes.setAllGMTimes(1234, 2345, 4356, 4767);
+        gmTimes.setState("ADVENTURE");
         mock.setDeaths(5);
         mock.setTimesKicked(5);
         mock.setPlayTime(34438926);
         mock.setGeolocation("Finland");
-        mock.setLastGamemode("ADVENTURE");
         mock.setLoginTimes(5);
         mock.setMobKills(5);
         return mock;
@@ -61,7 +66,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static IPlayer mockIPlayer() {
@@ -84,7 +88,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static UUID getPlayerUUID() {
@@ -92,7 +95,6 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static IPlayer mockIPlayer2() {
@@ -115,15 +117,20 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static UUID getPlayer2UUID() {
         return UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
     }
 
+    public static Set<UUID> getUUIDs() {
+        Set<UUID> uuids = new HashSet<>();
+        uuids.add(getPlayerUUID());
+        uuids.add(getPlayer2UUID());
+        return uuids;
+    }
+
     /**
-     *
      * @return
      */
     public static IPlayer mockBrokenPlayer() {
@@ -141,10 +148,16 @@ public class MockUtils {
     }
 
     /**
-     *
      * @return
      */
     public static CommandSender mockConsoleSender() {
         return PowerMockito.mock(CommandSender.class);
+    }
+
+    public static HttpServer mockHTTPServer() throws UnknownHostException {
+        HttpServer httpServer = PowerMockito.mock(HttpServer.class);
+        when(httpServer.getAddress()).thenReturn(InetSocketAddress.createUnresolved("127.0.0.1", 80));
+        when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));
+        return httpServer;
     }
 }

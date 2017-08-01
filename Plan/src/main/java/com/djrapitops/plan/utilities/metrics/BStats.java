@@ -25,21 +25,16 @@ public class BStats {
         boolean analysisRefreshEnable = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
         boolean analysisAutoRefresh = Settings.ANALYSIS_AUTO_REFRESH.getNumber() != -1;
         boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-        boolean gatherChat = Settings.GATHERCHAT.isTrue();
-        boolean gatherKills = Settings.GATHERKILLS.isTrue();
-        boolean gatherGMTimes = Settings.GATHERGMTIMES.isTrue();
-        boolean gatherCommands = Settings.GATHERCOMMANDS.isTrue();
 
         addEnabledDisabledPie("webserver_enabled", webserver);
         addEnabledDisabledPie("analysis_enable_refresh", analysisRefreshEnable);
         addEnabledDisabledPie("analysis_auto_refresh", analysisAutoRefresh);
         addEnabledDisabledPie("html_export", export);
-        addEnabledDisabledPie("gather_chat", gatherChat);
-        addEnabledDisabledPie("gather_kills", gatherKills);
-        addEnabledDisabledPie("gather_gmtimes", gatherGMTimes);
-        addEnabledDisabledPie("gather_commands", gatherCommands);
 
-        String databaseType = Settings.DB_TYPE.toString();
+        String serverType = plugin.getServer().getName();
+        String databaseType = plugin.getDB().getName();
+
+        addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
     }
 

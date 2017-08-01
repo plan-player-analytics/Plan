@@ -3,7 +3,6 @@ package test.java.main.java.com.djrapitops.plan;
 import main.java.com.djrapitops.plan.Phrase;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +10,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -30,7 +30,7 @@ public class PhraseTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**
@@ -49,7 +49,7 @@ public class PhraseTest {
      *
      */
     @Test
-    public void testParse_0args() {
+    public void testParseWithZeroArgs() {
         Phrase instance = Phrase.DEM_UNKNOWN;
         String expResult = "Not Known";
         String result = instance.parse();
@@ -60,7 +60,7 @@ public class PhraseTest {
      *
      */
     @Test
-    public void testParse_StringArr() {
+    public void testParseStringArr() {
         Phrase instance = Phrase.REPLACE0;
         String expResult = "Test";
         String result = instance.parse(expResult);

@@ -1,16 +1,16 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 /**
- *
  * @author Rsl1122
  */
 public class CommandUseTable extends Table {
@@ -19,7 +19,6 @@ public class CommandUseTable extends Table {
     private final String columnTimesUsed;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -30,7 +29,6 @@ public class CommandUseTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -49,7 +47,6 @@ public class CommandUseTable extends Table {
     }
 
     /**
-     *
      * @return @throws SQLException
      */
     public Map<String, Integer> getCommandUse() throws SQLException {
@@ -78,7 +75,6 @@ public class CommandUseTable extends Table {
     }
 
     /**
-     *
      * @param data
      * @throws SQLException
      * @throws NullPointerException
@@ -91,17 +87,22 @@ public class CommandUseTable extends Table {
         Map<String, Integer> newData = new HashMap<>(data);
         Map<String, Integer> saved = getCommandUse();
         newData.keySet().removeAll(saved.keySet());
+
         insertCommands(newData);
+
         Map<String, Integer> updateData = new HashMap<>(data);
         updateData.keySet().removeAll(newData.keySet());
-        for (String cmd : saved.keySet()) {
+
+        for (Map.Entry<String, Integer> savedEntry : saved.entrySet()) {
+            String cmd = savedEntry.getKey();
+            // IMPORTANT - not using saved as value
             Integer toSave = updateData.get(cmd);
-            if (toSave != null) {
-                if (toSave <= saved.get(cmd)) {
-                    updateData.remove(cmd);
-                }
+
+            if (toSave != null && toSave <= savedEntry.getValue()) {
+                updateData.remove(cmd);
             }
         }
+
         updateCommands(updateData);
         Benchmark.stop("Database: Save Commanduse");
     }
@@ -112,16 +113,20 @@ public class CommandUseTable extends Table {
             String updateStatement = "UPDATE " + tableName + " SET " + columnTimesUsed + "=? WHERE (" + columnCommand + "=?)";
             statement = prepareStatement(updateStatement);
             boolean commitRequired = false;
-            for (String key : data.keySet()) {
-                Integer amount = data.get(key);
+            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
+                String key = entrySet.getKey();
+                Integer amount = entrySet.getValue();
+
                 if (key.length() > 20) {
                     continue;
                 }
+
                 statement.setInt(1, amount);
                 statement.setString(2, key);
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }
@@ -139,16 +144,20 @@ public class CommandUseTable extends Table {
                     + ") VALUES (?, ?)";
             statement = prepareStatement(insertStatement);
             boolean commitRequired = false;
-            for (String key : data.keySet()) {
-                Integer amount = data.get(key);
+            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
+                String key = entrySet.getKey();
+                Integer amount = entrySet.getValue();
+
                 if (key.length() > 20) {
                     continue;
                 }
+
                 statement.setString(1, key);
                 statement.setInt(2, amount);
                 statement.addBatch();
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }

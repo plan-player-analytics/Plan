@@ -16,13 +16,18 @@ import org.bukkit.ChatColor;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class TextUI {
 
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private TextUI() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param uuid
      * @return
      */
@@ -41,19 +46,18 @@ public class TextUI {
         boolean online = d.isOnline();
         String ball = sec + " " + Phrase.BALL + main;
         return new String[]{
-            sec + " " + Phrase.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
-            ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
-            ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
-            ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),
-            ball + " Login times: " + sec + d.getLoginTimes(),
-            ball + " Average session length: " + sec + FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(d.getSessions()))),
-            ball + " Kills: " + sec + d.getPlayerKills().size() + main + " Mobs: " + sec + d.getMobKills() + main + " Deaths: " + sec + d.getDeaths(),
-            ball + " Geolocation: " + sec + d.getGeolocation()
+                sec + " " + Phrase.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
+                ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
+                ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
+                ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),
+                ball + " Login times: " + sec + d.getLoginTimes(),
+                ball + " Average session length: " + sec + FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(d.getSessions()))),
+                ball + " Kills: " + sec + d.getPlayerKills().size() + main + " Mobs: " + sec + d.getMobKills() + main + " Deaths: " + sec + d.getDeaths(),
+                ball + " Geolocation: " + sec + d.getGeolocation()
         };
     }
 
     /**
-     *
      * @return
      */
     public static String[] getAnalysisMessages() {
@@ -72,21 +76,21 @@ public class TextUI {
         final PlayerCountPart count = d.getPlayerCountPart();
         final TPSPart tps = d.getTpsPart();
         return new String[]{
-            ball + " Total Players: " + sec + count.getPlayerCount(),
-            //
-            ball + " Active: " + sec + activity.getActive().size()
-            + main + " Inactive: " + sec + activity.getInactive().size()
-            + main + " Single Join: " + sec + activity.getJoinedOnce().size()
-            + main + " Banned: " + sec + activity.getBans().size(),
-            //
-            ball + " New Players 24h: " + sec + join.get("npday") + main + " 7d: " + sec + d.get("npweek") + main + " 30d: " + sec + d.get("npmonth"),
-            "",
-            ball + " Total Playtime: " + sec + playtime.get("totalplaytime") + main + " Player Avg: " + sec + playtime.get("avgplaytime"),
-            ball + " Average Session Length: " + sec + activity.get("sessionaverage"),
-            ball + " Total Logintimes: " + sec + join.getLoginTimes(),
-            ball + " Kills: " + sec + kills.getAllPlayerKills().size() + main + " Mobs: " + sec + kills.getMobKills() + main + " Deaths: " + sec + kills.getDeaths(),
-            "",
-            ball + " Average TPS 24h: " + sec + tps.get("averagetpsday")
+                ball + " Total Players: " + sec + count.getPlayerCount(),
+                //
+                ball + " Active: " + sec + activity.getActive().size()
+                        + main + " Inactive: " + sec + activity.getInactive().size()
+                        + main + " Single Join: " + sec + activity.getJoinedOnce().size()
+                        + main + " Banned: " + sec + activity.getBans().size(),
+                //
+                ball + " New Players 24h: " + sec + join.get("npday") + main + " 7d: " + sec + d.get("npweek") + main + " 30d: " + sec + d.get("npmonth"),
+                "",
+                ball + " Total Playtime: " + sec + playtime.get("totalplaytime") + main + " Player Avg: " + sec + playtime.get("avgplaytime"),
+                ball + " Average Session Length: " + sec + activity.get("sessionaverage"),
+                ball + " Total Logintimes: " + sec + join.getLoginTimes(),
+                ball + " Kills: " + sec + kills.getAllPlayerKills().size() + main + " Mobs: " + sec + kills.getMobKills() + main + " Deaths: " + sec + kills.getDeaths(),
+                "",
+                ball + " Average TPS 24h: " + sec + tps.get("averagetpsday")
         };
     }
 

@@ -6,7 +6,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 /**
- *
  * @author ristolah
  */
 public class Line {
@@ -56,7 +55,6 @@ public class Line {
 
     public double getPerpendicularDistance(Point from) {
         double a = getA();
-        double b = -1;
         double x = from.getX();
         double y = from.getY();
         return Math.abs(a * x - y + c) / Math.sqrt(Math.pow(a, 2) + 1);

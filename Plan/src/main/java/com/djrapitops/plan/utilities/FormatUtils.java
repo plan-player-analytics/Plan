@@ -8,13 +8,20 @@ import org.bukkit.Location;
 import java.text.DecimalFormat;
 
 /**
- *
  * @author Rsl1122
  */
 public class FormatUtils {
 
+    private static final DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
+
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private FormatUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param ms
      * @return
      */
@@ -23,7 +30,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param before
      * @param after
      * @return
@@ -33,7 +39,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param epochMs
      * @return
      */
@@ -42,7 +47,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param epochMs
      * @return
      */
@@ -51,7 +55,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param epochMs
      * @return
      */
@@ -74,7 +77,6 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param dataPoint
      * @return
      */
@@ -103,33 +105,33 @@ public class FormatUtils {
             if (years == 1) {
                 builder.append(Settings.FORMAT_YEAR.toString());
             } else {
-                builder.append(Settings.FORMAT_YEARS.toString().replace("%years%", "" + years));
+                builder.append(Settings.FORMAT_YEARS.toString().replace("%years%", String.valueOf(years)));
             }
         }
         if (days != 0) {
             if (days == 1) {
                 builder.append(Settings.FORMAT_DAY.toString());
             } else {
-                builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", "" + days));
+                builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", String.valueOf(days)));
             }
         }
         if (hours != 0) {
-            String h = Settings.FORMAT_HOURS.toString().replace("%hours%", "" + hours);
-            if (h.contains("%zero%") && (hours + "").length() == 1) {
+            String h = Settings.FORMAT_HOURS.toString().replace("%hours%", String.valueOf(hours));
+            if (h.contains("%zero%") && String.valueOf(hours).length() == 1) {
                 builder.append('0');
             }
             builder.append(h);
         }
         if (minutes != 0) {
-            String m = Settings.FORMAT_MINUTES.toString().replace("%minutes%", "" + minutes);
-            if (m.contains("%zero%") && (minutes + "").length() == 1) {
+            String m = Settings.FORMAT_MINUTES.toString().replace("%minutes%", String.valueOf(minutes));
+            if (m.contains("%zero%") && String.valueOf(minutes).length() == 1) {
                 builder.append('0');
             }
             builder.append(m);
         }
         if (seconds != 0) {
-            String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", "" + seconds);
-            if (s.contains("%zero%") && (seconds + "").length() == 1) {
+            String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", String.valueOf(seconds));
+            if (s.contains("%zero%") && String.valueOf(seconds).length() == 1) {
                 builder.append('0');
             }
             builder.append(s);
@@ -173,13 +175,10 @@ public class FormatUtils {
     }
 
     /**
-     *
      * @param d
      * @return
      */
     public static String cutDecimals(double d) {
-        DecimalFormat df = new DecimalFormat(Settings.FORMAT_DECIMALS.toString());
-//        df.setRoundingMode(RoundingMode.CEILING);
         return df.format(d);
     }
 }

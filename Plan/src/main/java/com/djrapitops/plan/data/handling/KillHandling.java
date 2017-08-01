@@ -1,13 +1,14 @@
 package main.java.com.djrapitops.plan.data.handling;
 
-import java.sql.SQLException;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
+import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Class containing static methods for processing information contained in a
@@ -19,12 +20,19 @@ import org.bukkit.entity.Player;
 public class KillHandling {
 
     /**
+     * Utility Class, hides constructor.
+     */
+    private KillHandling() {
+        throw new IllegalStateException("Utility Class.");
+    }
+
+    /**
      * Processes the information of the Event and changes UserData object
      * accordingly.
      *
-     * @param data UserData of the player.
-     * @param time Epoch ms the event occurred.
-     * @param dead Mob or a Player the player killed.
+     * @param data       UserData of the player.
+     * @param time       Epoch ms the event occurred.
+     * @param dead       Mob or a Player the player killed.
      * @param weaponName The name of the Weapon used.
      */
     public static void processKillInfo(UserData data, long time, LivingEntity dead, String weaponName) {
@@ -34,7 +42,7 @@ public class KillHandling {
             int victimID;
             try {
                 UUID victimUUID = deadPlayer.getUniqueId();
-                victimID = plugin.getDB().getUsersTable().getUserId(victimUUID + "");
+                victimID = plugin.getDB().getUsersTable().getUserId(victimUUID);
                 if (victimID == -1) {
                     return;
                 }

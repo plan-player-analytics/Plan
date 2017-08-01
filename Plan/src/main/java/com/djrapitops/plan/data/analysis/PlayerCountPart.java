@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,17 +9,17 @@ import java.util.UUID;
 
 /**
  * Part responsible for counting players.
- *
+ * <p>
  * Total player count, op count
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: activitytotal, ops
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class PlayerCountPart extends RawData<PlayerCountPart> {
+public class PlayerCountPart extends RawData {
 
     private final Set<UUID> uuids;
     private final Set<UUID> ops;

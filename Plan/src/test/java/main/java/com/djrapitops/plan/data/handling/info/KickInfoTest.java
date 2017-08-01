@@ -8,7 +8,6 @@ package test.java.main.java.com.djrapitops.plan.data.handling.info;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import org.bukkit.plugin.java.JavaPlugin;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +16,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -36,7 +37,7 @@ public class KickInfoTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**

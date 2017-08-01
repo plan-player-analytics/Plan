@@ -2,13 +2,6 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
@@ -19,17 +12,21 @@ import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Part responsible for all Player Activity related analysis.
- *
+ * <p>
  * Online Graphs, Player-base pie-chart, Recent Players and Session
  * visualisation.
- *
+ * <p>
  * Placeholder values can be retrieved using the get method.
- *
+ * <p>
  * Contains following place-holders: recentlogins, sessionaverage,
  * datapunchcard, datasessiondistribution, labelssessiondistribution,
  * datascatterday, datascatterweek, datascattermonth, playersonlinecolor,
@@ -40,18 +37,16 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
  * @author Rsl1122
  * @since 3.5.2
  */
-public class ActivityPart extends RawData<ActivityPart> {
+public class ActivityPart extends RawData {
 
     private final JoinInfoPart joins;
     private final TPSPart tpsPart;
-
-    private List<String> recentPlayers;
-    private List<UUID> recentPlayersUUIDs;
-
     private final Set<UUID> bans;
     private final Set<UUID> active;
     private final Set<UUID> inactive;
     private final Set<UUID> joinedOnce;
+    private List<String> recentPlayers;
+    private List<UUID> recentPlayersUUIDs;
 
     public ActivityPart(JoinInfoPart joins, TPSPart tps) {
         this.joins = joins;
@@ -75,38 +70,29 @@ public class ActivityPart extends RawData<ActivityPart> {
 
         final List<SessionData> sessions = joins.getAllSessions();
 
-        long averageLength = MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(sessions));
+        List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
+        long averageLength = MathUtils.averageLong(lengths);
         addValue("sessionaverage", FormatUtils.formatTimeAmount(averageLength));
 
-        String punchCardArray = PunchCardGraphCreator.generateDataArray(sessions);
-        addValue("datapunchcard", punchCardArray);
-
-        String[] sessionDistribution = SessionLengthDistributionGraphCreator.generateDataArraySessions(sessions);
-        addValue("datasessiondistribution", sessionDistribution[0]);
-        addValue("labelssessiondistribution", sessionDistribution[1]);
+        List<SessionData> sessionsMonth = sessions.stream()
+                .filter(s -> s.getSessionStart() > MiscUtils.getTime() - TimeAmount.MONTH.ms())
+                .collect(Collectors.toList());
+        addValue("punchcardseries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
+        addValue("sessionlengthseries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
     }
 
     private void playerActivityGraphs() {
         List<TPS> tpsData = tpsPart.getTpsData();
-
-        String dayScatter = PlayerActivityGraphCreator.buildScatterDataString(tpsData, TimeAmount.DAY.ms());
-        String weekScatter = PlayerActivityGraphCreator.buildScatterDataString(tpsData, TimeAmount.WEEK.ms());
-        String monthScatter = PlayerActivityGraphCreator.buildScatterDataString(tpsData, TimeAmount.MONTH.ms());
-
-        addValue("datascatterday", dayScatter);
-        addValue("datascatterweek", weekScatter);
-        addValue("datascattermonth", monthScatter);
-
-        addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL + "");
-        addValue("%playersgraphfill%", Settings.HCOLOR_ACT_ONL_FILL + "");
+        addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
+        addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
     }
 
     private void activityPiechart() {
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
-        final String colAct = Settings.HCOLOR_ACTP_ACT + "";
-        final String colIna = Settings.HCOLOR_ACTP_INA + "";
-        final String colJoi = Settings.HCOLOR_ACTP_JON + "";
-        final String colBan = Settings.HCOLOR_ACTP_BAN + "";
+        final String colAct = Settings.HCOLOR_ACTP_ACT.toString();
+        final String colIna = Settings.HCOLOR_ACTP_INA.toString();
+        final String colJoi = Settings.HCOLOR_ACTP_JON.toString();
+        final String colBan = Settings.HCOLOR_ACTP_BAN.toString();
 
         addValue("%activecol%", colAct);
         addValue("%inactivecol%", colIna);
@@ -149,14 +135,6 @@ public class ActivityPart extends RawData<ActivityPart> {
         joinedOnce.add(uuid);
     }
 
-    public void setRecentPlayers(List<String> recentPlayers) {
-        this.recentPlayers = recentPlayers;
-    }
-
-    public void setRecentPlayersUUIDs(List<UUID> recentPlayersUUIDs) {
-        this.recentPlayersUUIDs = recentPlayersUUIDs;
-    }
-
     public Map<Long, Integer> getPlayersOnline() {
         return tpsPart.getTpsData().stream().collect(Collectors.toMap(TPS::getDate, TPS::getPlayers));
     }
@@ -165,8 +143,16 @@ public class ActivityPart extends RawData<ActivityPart> {
         return recentPlayers;
     }
 
+    public void setRecentPlayers(List<String> recentPlayers) {
+        this.recentPlayers = recentPlayers;
+    }
+
     public List<UUID> getRecentPlayersUUIDs() {
         return recentPlayersUUIDs;
+    }
+
+    public void setRecentPlayersUUIDs(List<UUID> recentPlayersUUIDs) {
+        this.recentPlayersUUIDs = recentPlayersUUIDs;
     }
 
     public Set<UUID> getBans() {

@@ -1,15 +1,16 @@
 package com.djrapitops.pluginbridge.plan.griefprevention;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * PluginData class for GriefPrevention-plugin.
@@ -38,6 +39,7 @@ public class GriefPreventionClaims extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         Verify.nullCheck(uuid);
         List<Claim> claims = dataStore.getClaims().stream()
+                .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .collect(Collectors.toList());
         return parseContainer(modifierPrefix, claims.size()+"");
@@ -47,6 +49,7 @@ public class GriefPreventionClaims extends PluginData {
     public Serializable getValue(UUID uuid) {
         Verify.nullCheck(uuid);
         return dataStore.getClaims().stream()
+                .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .collect(Collectors.toList()).size();
     }

@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
@@ -35,6 +36,21 @@ public class ManageRemoveCommand extends SubCommand {
         super("remove", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_REMOVE.toString(), Phrase.ARG_PLAYER + " [-a]");
 
         this.plugin = plugin;
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Manage Remove command",
+                tCol + "  Used to Remove user's data from the active database."
+        };
+
+        setInDepthHelp(help);
     }
 
     @Override
@@ -56,13 +72,16 @@ public class ManageRemoveCommand extends SubCommand {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     String message = Phrase.USERNAME_NOT_VALID.toString();
+
                     if (!Check.isTrue(Verify.notNull(uuid), message, sender)) {
                         return;
                     }
+
                     message = Phrase.USERNAME_NOT_KNOWN.toString();
                     if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
                         return;
                     }
+
                     message = Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName()));
                     if (!Check.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;

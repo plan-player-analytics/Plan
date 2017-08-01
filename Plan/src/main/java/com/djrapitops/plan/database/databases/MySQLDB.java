@@ -1,15 +1,15 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
- *
  * @author Rsl1122
  */
 public class MySQLDB extends SQLDB {
@@ -45,7 +45,6 @@ public class MySQLDB extends SQLDB {
     }
 
     /**
-     *
      * @return
      */
     @Override

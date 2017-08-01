@@ -14,8 +14,11 @@ import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
+import main.java.com.djrapitops.plan.ui.webserver.response.AnalysisPageResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -25,7 +28,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Rsl1122
  */
 public class Analysis {
@@ -46,9 +48,9 @@ public class Analysis {
 
     /**
      * Analyzes the data of all offline players on the server.
-     *
+     * <p>
      * First retrieves all offline players and checks those that are in the
-     * database. Then Runs a new Analysis Task Asynchronously. Saves AnalysisData
+     * database. Then runs a new Analysis Task asynchronously. Saves AnalysisData
      * to the provided Cache. Saves all UserData to InspectCache for 15 minutes.
      *
      * @param analysisCache Cache that the data is saved to.
@@ -57,6 +59,7 @@ public class Analysis {
         if (isAnalysisBeingRun()) {
             return;
         }
+
         plugin.processStatus().startExecution("Analysis");
         log(Phrase.ANALYSIS_START.toString());
         // Async task for Analysis
@@ -75,13 +78,14 @@ public class Analysis {
      * Caches analyzed data of db to the provided cache analysisCache.
      *
      * @param analysisCache Cache that will contain AnalysisData result of this
-     * method.
-     * @param db Database which data will be analyzed.
+     *                      method.
+     * @param db            Database which data will be analyzed.
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
-        log(Phrase.ANALYSIS_FETCH_DATA + "");
+        log(Phrase.ANALYSIS_FETCH_DATA.toString());
         Benchmark.start("Analysis: Fetch Phase");
+
         plugin.processStatus().setStatus("Analysis", "Analysis Fetch Phase");
         try {
             inspectCache.cacheAllUserData(db);
@@ -89,23 +93,26 @@ public class Analysis {
             Log.toLog(this.getClass().getName(), ex);
             Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL.toString());
         }
+
         List<UserData> rawData = inspectCache.getCachedUserData();
         if (rawData.isEmpty()) {
             Log.info(Phrase.ANALYSIS_FAIL_NO_DATA.toString());
             return false;
         }
+
         List<TPS> tpsData = new ArrayList<>();
+
         try {
             tpsData = db.getTpsTable().getTPSData();
             Log.debug("TPS Data Size: " + tpsData.size());
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
         }
+
         return analyzeData(rawData, tpsData, analysisCache);
     }
 
     /**
-     *
      * @param rawData
      * @param tpsData
      * @param analysisCache
@@ -132,7 +139,7 @@ public class Analysis {
 
             Benchmark.start("Analysis Phase");
             plugin.processStatus().setStatus("Analysis", "Analysis Phase");
-            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(rawData.size() + "", fetchPhaseLength + ""));
+            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(String.valueOf(rawData.size()), String.valueOf(fetchPhaseLength)));
 
             String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
             analysisData.setPlayersTable(playersTable);
@@ -148,11 +155,15 @@ public class Analysis {
 
             analysisCache.cache(analysisData);
             long time = plugin.processStatus().finishExecution("Analysis");
+
             if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
-                Log.info(Phrase.ANALYSIS_COMPLETE.parse(time + "", HtmlUtils.getServerAnalysisUrlWithProtocol()));
+                Log.info(Phrase.ANALYSIS_COMPLETE.parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
+
             ExportUtility.export(plugin, analysisData, rawData);
-        } catch (Throwable e) {
+            PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
+            PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             plugin.processStatus().setStatus("Analysis", "Error: " + e);
             return false;
@@ -174,10 +185,10 @@ public class Analysis {
                 .filter(p -> !p.getAnalysisTypes().isEmpty())
                 .collect(Collectors.toList());
         final AnalysisType[] totalTypes = new AnalysisType[]{
-            AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
+                AnalysisType.INT_TOTAL, AnalysisType.LONG_TOTAL, AnalysisType.LONG_TIME_MS_TOTAL, AnalysisType.DOUBLE_TOTAL
         };
         final AnalysisType[] avgTypes = new AnalysisType[]{
-            AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
+                AnalysisType.INT_AVG, AnalysisType.LONG_AVG, AnalysisType.LONG_TIME_MS_AVG, AnalysisType.LONG_EPOCH_MS_MINUS_NOW_AVG, AnalysisType.DOUBLE_AVG
         };
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
@@ -209,7 +220,7 @@ public class Analysis {
                 if (analysisTypes.contains(boolTot)) {
                     replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
-            } catch (Throwable e) {
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
 
                 Log.toLog(this.getClass().getName(), e);
@@ -222,7 +233,6 @@ public class Analysis {
     }
 
     /**
-     *
      * @return
      */
     public boolean isAnalysisBeingRun() {
@@ -246,13 +256,14 @@ public class Analysis {
         KillPart killPart = analysisData.getKillPart();
         PlayerCountPart playerCount = analysisData.getPlayerCountPart();
         PlaytimePart playtime = analysisData.getPlaytimePart();
+        WorldPart worldPart = analysisData.getWorldPart();
 
         long now = MiscUtils.getTime();
 
         Benchmark.start("Analysis: Fill Dataset");
-        rawData.forEach((uData) -> {
+        rawData.forEach(uData -> {
             uData.access();
-            Map<String, Long> gmTimes = uData.getGmTimes();
+            Map<String, Long> gmTimes = uData.getGmTimes().getTimes();
             String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
             if (gmTimes != null) {
                 for (String gm : gms) {
@@ -262,12 +273,17 @@ public class Analysis {
                     }
                 }
             }
+            Map<String, Long> worldTimes = uData.getWorldTimes().getTimes();
+            for (Map.Entry<String, Long> world : worldTimes.entrySet()) {
+                worldPart.addToWorld(world.getKey(), world.getValue());
+            }
+
             final long playTime = uData.getPlayTime();
             playtime.addToPlaytime(playTime);
             joinInfo.addToLoginTimes(uData.getLoginTimes());
             joinInfo.addRegistered(uData.getRegistered());
 
-            geolocPart.addGeoloc(uData.getGeolocation());
+            geolocPart.addGeolocation(uData.getGeolocation());
 
             final UUID uuid = uData.getUuid();
             if (uData.isOp()) {

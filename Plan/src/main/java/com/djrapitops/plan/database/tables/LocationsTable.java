@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
- *
  * @author Rsl1122
  */
 @Deprecated
@@ -18,20 +18,10 @@ public class LocationsTable extends Table {
     private final String columnCoordinatesZ;
     private final String columnWorld;
 
-    @Override
-    @Deprecated
-    public boolean removeAllData() {
-        try {
-            execute("DELETE FROM " + tableName);
-        } catch (Exception e) {
-        }
-        return true;
-    }
-
     /**
-     *
      * @param db
      * @param usingMySQL
+     * @deprecated Deprecated because it isn't used anymore
      */
     @Deprecated
     public LocationsTable(SQLDB db, boolean usingMySQL) {
@@ -43,8 +33,17 @@ public class LocationsTable extends Table {
         columnWorld = "world_name";
     }
 
+    @Override
+    @Deprecated
+    public boolean removeAllData() {
+        try {
+            execute("DELETE FROM " + tableName);
+        } catch (Exception ignored) {
+        }
+        return true;
+    }
+
     /**
-     *
      * @return
      */
     @Override
@@ -70,7 +69,6 @@ public class LocationsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */

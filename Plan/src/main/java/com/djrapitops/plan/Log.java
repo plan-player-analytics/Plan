@@ -4,13 +4,20 @@ import java.util.Collection;
 
 /**
  * This class manages the messages going to the Console Logger.
- *
+ * <p>
  * Methods of Abstract Plugin Framework log utility are used.
  *
  * @author Rsl1122
  * @since 3.0.0
  */
 public class Log {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private Log() {
+        throw new IllegalStateException("Utility Class");
+    }
 
     /**
      * Logs the message to the console as INFO.
@@ -52,7 +59,7 @@ public class Log {
      * Logs trace of caught Exception to Errors.txt and notifies on console.
      *
      * @param source Class name the exception was caught in.
-     * @param e Throwable, eg NullPointerException
+     * @param e      Throwable, eg NullPointerException
      */
     public static void toLog(String source, Throwable e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);
@@ -62,7 +69,7 @@ public class Log {
      * Logs multiple caught Errors to Errors.txt.
      *
      * @param source Class name the exception was caught in.
-     * @param e Collection of Throwables, eg NullPointerException
+     * @param e      Collection of Throwables, eg NullPointerException
      */
     public static void toLog(String source, Collection<Throwable> e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);
@@ -71,7 +78,7 @@ public class Log {
     /**
      * Logs a message to the a given file with a timestamp.
      *
-     * @param message Message to log to Errors.txt [timestamp] Message
+     * @param message  Message to log to Errors.txt [timestamp] Message
      * @param filename Name of the file to write to.
      */
     public static void toLog(String message, String filename) {

@@ -18,15 +18,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class})
 public class DataCacheClearQueueTest {
-
-    private Plan plan;
-    private DataCacheHandler handler;
 
     /**
      *
@@ -40,8 +36,8 @@ public class DataCacheClearQueueTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
-        handler = new DataCacheHandler(plan) {
+        Plan plan = t.getPlanMock();
+        DataCacheHandler handler = new DataCacheHandler(plan) {
             @Override
             public boolean getCommandUseFromDb() {
                 return true;

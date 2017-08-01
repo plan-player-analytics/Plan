@@ -1,8 +1,7 @@
 name: Plan
 author: Rsl1122
 main: main.java.com.djrapitops.plan.Plan
-version: 3.5.5
-
+version: 3.6.0
 softdepend:
 - OnTime
 - EssentialsX
@@ -107,3 +106,4 @@ permissions:
     children:
       plan.manage: true
       plan.staff: true
+      apf.notify: true

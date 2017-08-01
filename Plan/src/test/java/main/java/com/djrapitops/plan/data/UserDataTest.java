@@ -16,13 +16,14 @@ import test.java.utils.TestInit;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -48,7 +49,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws UnknownHostException
      */
     @Test
@@ -66,7 +66,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws UnknownHostException
      */
     @Test
@@ -149,45 +148,6 @@ public class UserDataTest {
      *
      */
     @Test
-    public void testSetGMTime() {
-        test.setGMTime("SURVIVAL", 1L);
-        final Long result = test.getGmTimes().get("SURVIVAL");
-        assertTrue("" + result, result == 1L);
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testSetGMTimeWhenGMTimesNull() {
-        test.setGmTimes(null);
-        String gm = "SURVIVAL";
-        test.setGMTime(gm, 1L);
-        final Long result = test.getGmTimes().get(gm);
-        assertTrue("" + result, result == 1L);
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testSetAllGMTimes() {
-        HashMap<String, Long> gmTimes = new HashMap<>();
-        gmTimes.put(null, 0L);
-        test.setGmTimes(gmTimes);
-        test.setAllGMTimes(1L, 2L, 3L, 4L);
-        Map<String, Long> times = test.getGmTimes();
-        assertTrue("Cleared gmTimes", !times.containsKey(null));
-        assertTrue("Not equal 0", times.get("SURVIVAL") == 1L);
-        assertTrue("Not equal 1", times.get("CREATIVE") == 2L);
-        assertTrue("Not equal 2", times.get("ADVENTURE") == 3L);
-        assertTrue("Not equal 3", times.get("SPECTATOR") == 4L);
-    }
-
-    /**
-     *
-     */
-    @Test
     public void testAddSession() {
         SessionData correct = new SessionData(0, 1);
         test.addSession(correct);
@@ -239,16 +199,6 @@ public class UserDataTest {
         List<SessionData> o = new ArrayList<>();
         test.addSessions(o);
         assertTrue("Added something", test.getSessions().isEmpty());
-    }
-
-    /**
-     *
-     */
-    @Test
-    public void testSetCurrentSession() {
-        SessionData s = new SessionData(0);
-        test.setCurrentSession(s);
-        assertEquals(test.getCurrentSession(), s);
     }
 
     /**
@@ -342,7 +292,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws IOException
      */
     @Test
@@ -366,7 +315,6 @@ public class UserDataTest {
     }
 
     /**
-     *
      * @throws IOException
      */
     @Test

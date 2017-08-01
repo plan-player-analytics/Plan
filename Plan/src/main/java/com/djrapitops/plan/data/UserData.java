@@ -4,6 +4,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 
 import java.net.InetAddress;
 import java.util.*;
@@ -20,85 +22,85 @@ public class UserData {
     private boolean clearAfterSave;
 
     private UUID uuid;
-    private Set<InetAddress> ips;
+    private String name;
     private Set<String> nicknames;
     private String lastNick;
-    private long registered;
-    private long lastPlayed;
-    private long playTime;
+    private String geolocation;
+    private Set<InetAddress> ips;
+
     private int loginTimes;
     private int timesKicked;
-    private long lastGmSwapTime;
-    private String lastGamemode;
-    private Map<String, Long> gmTimes;
+
     private boolean isOp;
     private boolean isBanned;
-    private String geolocation;
+    private boolean isOnline;
 
     private int mobKills;
     private List<KillData> playerKills;
     private int deaths;
 
-    private String name;
-    private boolean isOnline;
+    private long registered;
+    private long lastPlayed;
+    private long playTime;
 
-    private SessionData currentSession;
+    private GMTimes gmTimes;
+    private WorldTimes worldTimes;
+
     private final List<SessionData> sessions;
 
     /**
      * Creates a new UserData object with given values and default values.
-     *
+     * <p>
      * Some variables are left uninitialized: isBanned, lastPlayed, playTime,
-     * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths and
-     * currentSession.
-     *
+     * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths, lastWorldSwapTime, lastWorld
+     * <p>
      * These variables need to be set with setters.
-     *
+     * <p>
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
-     *
-     * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
+     * <p>
+     * gmTimes Map will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
+     * worldTimes Map is left empty.
      *
-     * @param uuid UUID of the player
-     * @param reg Epoch millisecond the player registered.
-     * @param op Is the player op? (true/false)
-     * @param lastGM last GameMode the player was seen in.
-     * @param name Name of the player.
+     * @param uuid   UUID of the player
+     * @param reg    Epoch millisecond the player registered.
+     * @param op     Is the player op? (true/false)
+     * @param name   Name of the player.
      * @param online Is the player online?
      */
-    public UserData(UUID uuid, long reg, boolean op, String lastGM, String name, boolean online) {
+    public UserData(UUID uuid, long reg, boolean op, String gm, String name, boolean online) {
         accessing = 0;
+
+        this.gmTimes = new GMTimes(gm);
+        this.worldTimes = new WorldTimes();
+
         this.uuid = uuid;
-        registered = reg;
-        isOp = op;
+        this.name = name;
+        lastNick = "";
         nicknames = new HashSet<>();
         ips = new HashSet<>();
-        gmTimes = new HashMap<>();
-        String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
-        for (String gm : gms) {
-            gmTimes.put(gm, 0L);
-        }
-        lastGamemode = lastGM;
         geolocation = "Not Known";
-        this.name = name;
+
+        isOp = op;
         isOnline = online;
+        registered = reg;
+
         sessions = new ArrayList<>();
-        lastNick = "";
         playerKills = new ArrayList<>();
     }
 
     /**
      * Creates a new UserData object with the variables inside a Player object.
-     *
+     * <p>
      * Some variables are left uninitialized: lastPlayed, playTime, loginTimes,
      * timesKicked, lastGmSwapTime, mobKills, deaths and currentSession.
-     *
+     * <p>
      * These variables need to be set with setters.
-     *
+     * <p>
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
-     *
+     * <p>
      * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
      *
@@ -118,19 +120,19 @@ public class UserData {
     /**
      * Creates a new UserData object with the variables inside a OfflinePlayer
      * object.
-     *
+     * <p>
      * Some variables are left uninitialized: location, lastPlayed, playTime,
      * loginTimes, timesKicked, lastGmSwapTime, mobKills, deaths and
      * currentSession.
-     *
+     * <p>
      * These variables need to be set with setters.
-     *
+     * <p>
      * All Collections are left empty: locations, nicknames, ips, sessions,
      * playerKills. Because nicknames is empty, lastNick is an empty string.
-     *
+     * <p>
      * gmTimes HashMap will contain 4 '0L' values: SURVIVAL, CREATIVE,
      * ADVENTURE, SPECTATOR
-     *
+     * <p>
      * lastGM will be set as SURVIVAL
      *
      * @param player IOfflinePlayer object.
@@ -164,10 +166,8 @@ public class UserData {
         this.playTime = data.getPlayTime();
         this.loginTimes = data.getLoginTimes();
         this.timesKicked = data.getTimesKicked();
-        this.lastGmSwapTime = data.getLastGmSwapTime();
-        this.lastGamemode = data.getLastGamemode();
-        this.gmTimes = new HashMap<>();
-        gmTimes.putAll(data.getGmTimes());
+        this.gmTimes = data.getGmTimes();
+        this.worldTimes = data.getWorldTimes();
         this.isOp = data.isOp();
         this.isBanned = data.isBanned();
         this.geolocation = data.getGeolocation();
@@ -183,10 +183,20 @@ public class UserData {
     @Override
     public String toString() {
         try {
-            return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|lastGmSwapTime:" + lastGmSwapTime + "|lastGamemode:" + lastGamemode + "|gmTimes:" + gmTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|geolocation:" + geolocation + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|currentSession:" + currentSession + "|sessions:" + sessions + '}';
-        } catch (Throwable e) {
+            return "{" + "accessing:" + accessing + "|uuid:" + uuid + "|ips:" + ips + "|nicknames:" + nicknames + "|lastNick:" + lastNick + "|registered:" + registered + "|lastPlayed:" + lastPlayed + "|playTime:" + playTime + "|loginTimes:" + loginTimes + "|timesKicked:" + timesKicked + "|gm:" + gmTimes + "|world:" + worldTimes + "|isOp:" + isOp + "|isBanned:" + isBanned + "|geolocation:" + geolocation + "|mobKills:" + mobKills + "|playerKills:" + playerKills + "|deaths:" + deaths + "|name:" + name + "|isOnline:" + isOnline + "|sessions:" + sessions + '}';
+        } catch (Exception e) {
             return "UserData: Error on toString:" + e;
         }
+    }
+
+    @Deprecated
+    public String getLastGamemode() {
+        return gmTimes.getState();
+    }
+
+    @Deprecated
+    public long getLastGmSwapTime() {
+        return gmTimes.getLastStateChange();
     }
 
     /**
@@ -215,9 +225,9 @@ public class UserData {
 
     /**
      * Adds a nickname to the nicknames Set.
-     *
+     * <p>
      * null or empty values filtered.
-     *
+     * <p>
      * lastNick will be set as the given parameter, if accepted.
      *
      * @param nick Displayname of the player.
@@ -237,7 +247,7 @@ public class UserData {
 
     /**
      * Adds nicknames to the nicknames Set.
-     *
+     * <p>
      * null or empty values filtered.
      *
      * @param addNicks Collection of nicknames.
@@ -247,39 +257,8 @@ public class UserData {
     }
 
     /**
-     * Set a specific GameMode's millisecond value.
-     *
-     * @param gm Name of Gamemode.
-     * @param time Milliseconds spent in the gamemode.
-     */
-    public void setGMTime(String gm, long time) {
-        if (!Verify.notNull(gmTimes)) {
-            gmTimes = new HashMap<>();
-        }
-        if (Verify.notNull(gm)) {
-            gmTimes.put(gm, time);
-        }
-    }
-
-    /**
-     * Set every GameMode's millisecond value.
-     *
-     * @param survivalTime ms spent in SURVIVAL
-     * @param creativeTime ms spent in CREATIVE
-     * @param adventureTime ms spent in ADVENTURE
-     * @param spectatorTime ms spent in SPECTATOR
-     */
-    public void setAllGMTimes(long survivalTime, long creativeTime, long adventureTime, long spectatorTime) {
-        gmTimes.clear();
-        gmTimes.put("SURVIVAL", survivalTime);
-        gmTimes.put("CREATIVE", creativeTime);
-        gmTimes.put("ADVENTURE", adventureTime);
-        gmTimes.put("SPECTATOR", spectatorTime);
-    }
-
-    /**
      * Adds a new SessionData to the sessions list.
-     *
+     * <p>
      * null and invalid sessions filtered.
      *
      * @param session SessionData object
@@ -292,7 +271,7 @@ public class UserData {
 
     /**
      * Adds SessionData objects to the sessions list.
-     *
+     * <p>
      * null and invalid sessions filtered.
      *
      * @param sessions Collection of SessionData objects.
@@ -303,28 +282,6 @@ public class UserData {
                 .filter(SessionData::isValid)
                 .collect(Collectors.toList());
         this.sessions.addAll(filteredSessions);
-    }
-
-    /**
-     * Sets the current session.
-     *
-     * Currently unused.
-     *
-     * @param session SessionData object, no restrictions.
-     */
-    public void setCurrentSession(SessionData session) {
-        currentSession = session;
-    }
-
-    /**
-     * Gets the current session.
-     *
-     * Currently unused.
-     *
-     * @return SessionData object with a recent start.
-     */
-    public SessionData getCurrentSession() {
-        return currentSession;
     }
 
     /**
@@ -370,12 +327,32 @@ public class UserData {
     }
 
     /**
+     * Set the UUID.
+     *
+     * @param uuid UUID
+     */
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    /**
      * Get the InetAddress Set.
      *
      * @return a HashSet of ips.
      */
     public Set<InetAddress> getIps() {
         return ips;
+    }
+
+    /**
+     * Set the ips set.
+     *
+     * @param ips ips of the user.
+     */
+    public void setIps(Set<InetAddress> ips) {
+        if (Verify.notNull(ips)) {
+            this.ips = ips;
+        }
     }
 
     /**
@@ -388,6 +365,17 @@ public class UserData {
     }
 
     /**
+     * Set the nicknames set.
+     *
+     * @param nicknames nicknames of the user.
+     */
+    public void setNicknames(Set<String> nicknames) {
+        if (Verify.notNull(nicknames)) {
+            this.nicknames = nicknames;
+        }
+    }
+
+    /**
      * Get the Epoch millisecond the player registered.
      *
      * @return long in ms.
@@ -397,8 +385,17 @@ public class UserData {
     }
 
     /**
-     * Get the Epoch millisecond the player was last seen.
+     * Set the time the user was registered.
      *
+     * @param registered Epoch millisecond of register time.
+     */
+    public void setRegistered(long registered) {
+        this.registered = registered;
+    }
+
+    /**
+     * Get the Epoch millisecond the player was last seen.
+     * <p>
      * NOT INITIALIZED BY CONSTRUCTORS. Value is updated periodically by cache
      * if the player is online.
      *
@@ -409,8 +406,20 @@ public class UserData {
     }
 
     /**
-     * Get the playtime in milliseconds.
+     * Set the time the user was last seen.
+     * <p>
+     * Affects playtime calculation, playtime should be updated before updating
+     * this value.
      *
+     * @param lastPlayed Epoch millisecond of last seen moment.
+     */
+    public void setLastPlayed(long lastPlayed) {
+        this.lastPlayed = lastPlayed;
+    }
+
+    /**
+     * Get the playtime in milliseconds.
+     * <p>
      * NOT INITIALIZED BY CONSTRUCTORS. Value is updated periodically by cache
      * if the player is online.
      *
@@ -421,8 +430,17 @@ public class UserData {
     }
 
     /**
-     * Get how many times the player has logged in.
+     * Set the time the user has been playing.
      *
+     * @param playTime Time in ms.
+     */
+    public void setPlayTime(long playTime) {
+        this.playTime = playTime;
+    }
+
+    /**
+     * Get how many times the player has logged in.
+     * <p>
      * NOT INITIALIZED BY CONSTRUCTORS.
      *
      * @return 0 to Integer.MAX
@@ -432,8 +450,19 @@ public class UserData {
     }
 
     /**
-     * Get how many times the player has been kicked.
+     * Set how many times the user has logged in.
+     * <p>
+     * No check for input.
      *
+     * @param loginTimes 0 to Int.MAX
+     */
+    public void setLoginTimes(int loginTimes) {
+        this.loginTimes = loginTimes;
+    }
+
+    /**
+     * Get how many times the player has been kicked.
+     * <p>
      * NOT INITIALIZED BY CONSTRUCTORS.
      *
      * @return 0 to Integer.MAX
@@ -443,36 +472,42 @@ public class UserData {
     }
 
     /**
-     * Get the GMTimes Map.
+     * Set how many times the user has been kicked.
+     * <p>
+     * No check for input.
      *
-     * @return a GameMode map with 4 keys: SURVIVAL, CREATIVE, ADVENTURE,
-     * SPECTATOR.
+     * @param timesKicked 0 to Int.MAX
      */
-    public Map<String, Long> getGmTimes() {
-        if (gmTimes == null) {
-            gmTimes = new HashMap<>();
-        }
+    public void setTimesKicked(int timesKicked) {
+        this.timesKicked = timesKicked;
+    }
+
+    /**
+     * Get the GMTimes object.
+     *
+     * @return TimeKeeper object with possible keys of SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR
+     */
+    public GMTimes getGmTimes() {
         return gmTimes;
     }
 
     /**
-     * Get the last time a Gamemode time was updated.
+     * Set the GM Times object containing playtime in each gamemode.
      *
-     * @return Epoch millisecond of last GM Time update.
+     * @param gmTimes GM Times object
      */
-    public long getLastGmSwapTime() {
-        return lastGmSwapTime;
+    public void setGmTimes(GMTimes gmTimes) {
+        if (Verify.notNull(gmTimes)) {
+            this.gmTimes = gmTimes;
+        }
     }
 
-    /**
-     * Get the last Gamemode that the user was seen in.
-     *
-     * When player changes to SURVIVAL this is set to SURVIVAL.
-     *
-     * @return Gamemode.
-     */
-    public String getLastGamemode() {
-        return lastGamemode;
+    public void setGmTimes(Map<String, Long> times) {
+        if (Verify.notNull(times)) {
+            for (Map.Entry<String, Long> entry : times.entrySet()) {
+                gmTimes.setTime(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     /**
@@ -494,138 +529,21 @@ public class UserData {
     }
 
     /**
+     * Set the banned value.
+     *
+     * @param isBanned true/false
+     */
+    public void setBanned(boolean isBanned) {
+        this.isBanned = isBanned;
+    }
+
+    /**
      * Get the username of the player.
      *
      * @return username.
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Set the UUID.
-     *
-     * @param uuid UUID
-     */
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    /**
-     * Set the ips set.
-     *
-     * @param ips ips of the user.
-     */
-    public void setIps(Set<InetAddress> ips) {
-        if (Verify.notNull(ips)) {
-            this.ips = ips;
-        }
-    }
-
-    /**
-     * Set the nicknames set.
-     *
-     * @param nicknames nicknames of the user.
-     */
-    public void setNicknames(Set<String> nicknames) {
-        if (Verify.notNull(nicknames)) {
-            this.nicknames = nicknames;
-        }
-    }
-
-    /**
-     * Set the time the user was registered.
-     *
-     * @param registered Epoch millisecond of register time.
-     */
-    public void setRegistered(long registered) {
-        this.registered = registered;
-    }
-
-    /**
-     * Set the time the user was last seen.
-     *
-     * Affects playtime calculation, playtime should be updated before updating
-     * this value.
-     *
-     * @param lastPlayed Epoch millisecond of last seen moment.
-     */
-    public void setLastPlayed(long lastPlayed) {
-        this.lastPlayed = lastPlayed;
-    }
-
-    /**
-     * Set the time the user has been playing.
-     *
-     * @param playTime Time in ms.
-     */
-    public void setPlayTime(long playTime) {
-        this.playTime = playTime;
-    }
-
-    /**
-     * Set how many times the user has logged in.
-     *
-     * No check for input.
-     *
-     * @param loginTimes 0 to Int.MAX
-     */
-    public void setLoginTimes(int loginTimes) {
-        this.loginTimes = loginTimes;
-    }
-
-    /**
-     * Set how many times the user has been kicked.
-     *
-     * No check for input.
-     *
-     * @param timesKicked 0 to Int.MAX
-     */
-    public void setTimesKicked(int timesKicked) {
-        this.timesKicked = timesKicked;
-    }
-
-    /**
-     * Set the GM Times map containing playtime in each gamemode.
-     *
-     * @param gmTimes Map containing SURVIVAL, CREATIVE, ADVENTURE and SPECTATOR
-     * (After 1.8) keys.
-     */
-    public void setGmTimes(Map<String, Long> gmTimes) {
-        if (Verify.notNull(gmTimes)) {
-            this.gmTimes = gmTimes;
-        }
-    }
-
-    /**
-     * Set the last time a Gamemode time was updated.
-     *
-     * @param lastGmSwapTime Epoch millisecond a gm time was updated.
-     */
-    public void setLastGmSwapTime(long lastGmSwapTime) {
-        this.lastGmSwapTime = lastGmSwapTime;
-    }
-
-    /**
-     * Set the last gamemode the user was seen in.
-     *
-     * @param lastGamemode gamemode.
-     */
-    public void setLastGamemode(String lastGamemode) {
-        this.lastGamemode = lastGamemode;
-    }
-
-    /**
-     * Set whether or not player is op.
-     *
-     * @param isOp operator?
-     */
-    public void setIsOp(boolean isOp) {
-        this.isOp = isOp;
-    }
-
-    public void setGeolocation(String geolocation) {
-        this.geolocation = geolocation;
     }
 
     /**
@@ -638,12 +556,30 @@ public class UserData {
     }
 
     /**
+     * Set whether or not player is op.
+     *
+     * @param isOp operator?
+     */
+    public void setIsOp(boolean isOp) {
+        this.isOp = isOp;
+    }
+
+    /**
      * Is the player online?
      *
      * @return true if data is cached to datacache, false if not.
      */
     public boolean isOnline() {
         return isOnline;
+    }
+
+    /**
+     * Set the online value.
+     *
+     * @param isOnline true/false
+     */
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
     }
 
     /**
@@ -722,7 +658,7 @@ public class UserData {
 
     /**
      * Get the last nickname the user has set.
-     *
+     * <p>
      * Set when using addNickname(String)
      *
      * @return last nickname used.
@@ -733,7 +669,7 @@ public class UserData {
 
     /**
      * Set the last nickname the user has set.
-     *
+     * <p>
      * Also set when using addNickname(String)
      *
      * @param lastNick last nickname used.
@@ -742,39 +678,13 @@ public class UserData {
         this.lastNick = lastNick;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
 
-        final UserData other = (UserData) obj;
-//        if (this.lastPlayed != other.lastPlayed) {
-//            return false;
-//        }
+    public WorldTimes getWorldTimes() {
+        return worldTimes;
+    }
 
-        return this.registered == other.registered
-                && this.playTime == other.playTime
-                && this.loginTimes == other.loginTimes
-                && this.timesKicked == other.timesKicked
-                && this.lastGmSwapTime == other.lastGmSwapTime
-                && this.mobKills == other.mobKills
-                && this.deaths == other.deaths
-                && Objects.equals(this.lastNick, other.lastNick)
-                && Objects.equals(this.name, other.name)
-                && Objects.equals(this.uuid, other.uuid)
-                && Objects.equals(this.ips, other.ips)
-                && Objects.equals(this.nicknames, other.nicknames)
-                && Objects.equals(this.lastGamemode, other.lastGamemode)
-                && Objects.equals(this.gmTimes, other.gmTimes)
-                && Objects.equals(this.playerKills, other.playerKills)
-                && Objects.equals(this.sessions, other.sessions);
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
     }
 
     /**
@@ -797,25 +707,69 @@ public class UserData {
         this.clearAfterSave = clearAfterSave;
     }
 
-    /**
-     * Set the banned value.
-     *
-     * @param isBanned true/false
-     */
-    public void setBanned(boolean isBanned) {
-        this.isBanned = isBanned;
-    }
-
-    /**
-     * Set the online value.
-     *
-     * @param isOnline true/false
-     */
-    public void setOnline(boolean isOnline) {
-        this.isOnline = isOnline;
-    }
-
     public String getGeolocation() {
         return geolocation;
+    }
+
+    public void setGeolocation(String geolocation) {
+        this.geolocation = geolocation;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sessions.hashCode();
+        result = 31 * result + accessing;
+        result = 31 * result + (clearAfterSave ? 1 : 0);
+        result = 31 * result + uuid.hashCode();
+        result = 31 * result + ips.hashCode();
+        result = 31 * result + nicknames.hashCode();
+        result = 31 * result + lastNick.hashCode();
+        result = 31 * result + (int) (registered ^ (registered >>> 32));
+        result = 31 * result + (int) (lastPlayed ^ (lastPlayed >>> 32));
+        result = 31 * result + (int) (playTime ^ (playTime >>> 32));
+        result = 31 * result + loginTimes;
+        result = 31 * result + timesKicked;
+        result = 31 * result + gmTimes.hashCode();
+        result = 31 * result + worldTimes.hashCode();
+        result = 31 * result + (isOp ? 1 : 0);
+        result = 31 * result + (isBanned ? 1 : 0);
+        result = 31 * result + geolocation.hashCode();
+        result = 31 * result + mobKills;
+        result = 31 * result + playerKills.hashCode();
+        result = 31 * result + deaths;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (isOnline ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final UserData other = (UserData) obj;
+
+        return this.registered == other.registered
+                && this.playTime == other.playTime
+                && this.loginTimes == other.loginTimes
+                && this.timesKicked == other.timesKicked
+                && this.mobKills == other.mobKills
+                && this.deaths == other.deaths
+                && Objects.equals(this.lastNick, other.lastNick)
+                && Objects.equals(this.name, other.name)
+                && Objects.equals(this.uuid, other.uuid)
+                && Objects.equals(this.ips, other.ips)
+                && Objects.equals(this.nicknames, other.nicknames)
+                && Objects.equals(this.gmTimes, other.gmTimes)
+                && Objects.equals(this.worldTimes, other.worldTimes)
+                && Objects.equals(this.playerKills, other.playerKills)
+                && Objects.equals(this.sessions, other.sessions);
     }
 }

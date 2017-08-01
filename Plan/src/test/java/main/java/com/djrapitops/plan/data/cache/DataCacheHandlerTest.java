@@ -5,11 +5,6 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
@@ -26,20 +21,25 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
+
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
-import test.java.utils.TestInit;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class DataCacheHandlerTest {
 
-    private Plan plan;
     private Database db;
     private DataCacheHandler handler;
     private boolean calledSaveCommandUse;
@@ -58,7 +58,7 @@ public class DataCacheHandlerTest {
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+        Plan plan = t.getPlanMock();
         calledSaveCommandUse = false;
         calledSaveUserData = false;
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
@@ -73,7 +73,7 @@ public class DataCacheHandlerTest {
             }
 
             @Override
-            public HashMap<String, Integer> getCommandUse() {
+            public Map<String, Integer> getCommandUse() {
                 return new HashMap<>();
             }
 
@@ -116,7 +116,6 @@ public class DataCacheHandlerTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @After
@@ -125,7 +124,6 @@ public class DataCacheHandlerTest {
     }
 
     /**
-     *
      * @throws SQLException
      * @throws InterruptedException
      */
@@ -135,19 +133,13 @@ public class DataCacheHandlerTest {
 //        db.init();
         UserData data = MockUtils.mockUser();
         db.saveUserData(data);
-        handler.getUserDataForProcessing(new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                assertTrue(d.equals(data));
-            }
-        }, data.getUuid());
+        handler.getUserDataForProcessing(d -> assertTrue(d.equals(data)), data.getUuid());
         Thread.sleep(1000);
         assertTrue(handler.getDataCache().containsKey(data.getUuid()));
         assertTrue(handler.getDataCache().get(data.getUuid()).equals(data));
     }
 
     /**
-     *
      * @throws SQLException
      * @throws InterruptedException
      */
@@ -156,12 +148,7 @@ public class DataCacheHandlerTest {
     public void testGetUserDataForProcessingDontCache() throws SQLException, InterruptedException {
         UserData data = MockUtils.mockUser();
         db.saveUserData(data);
-        handler.getUserDataForProcessing(new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                assertTrue(d.equals(data));
-            }
-        }, data.getUuid(), false);
+        handler.getUserDataForProcessing(d -> assertTrue(d.equals(data)), data.getUuid(), false);
         Thread.sleep(1000);
         assertTrue(!handler.getDataCache().containsKey(data.getUuid()));
         assertTrue(handler.getDataCache().get(data.getUuid()) == null);

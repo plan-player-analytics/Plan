@@ -14,13 +14,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- *
  * @author Rsl1122
  */
 public class AnalysisUtils {
 
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private AnalysisUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param now
      * @param lastPlayed
      * @param playTime
@@ -29,41 +34,37 @@ public class AnalysisUtils {
      */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
+
         if (timeToActive < 0) {
             timeToActive = 0;
         }
+
         long twoWeeks = 1209600000;
-        if (now - lastPlayed < twoWeeks) {
-            if (loginTimes > 3) {
-                if (playTime > 60 * timeToActive) {
-                    return true;
-                }
-            }
-        }
-        return false;
+
+        return now - lastPlayed < twoWeeks
+                && loginTimes > 3
+                && playTime > 60 * timeToActive;
     }
 
     /**
-     *
      * @param registered
      * @param scale
      * @param now
      * @return
      */
-    public static int getNewPlayers(List<Long> registered, long scale, long now) {
-        int newPlayers = 0;
+    public static long getNewPlayers(List<Long> registered, long scale, long now) {
+        long newPlayers = 0;
         if (!registered.isEmpty()) {
             newPlayers = registered.stream()
-                    .filter((reg) -> (reg != null))
-                    .filter((reg) -> (reg > now - scale))
-                    .map((_item) -> 1).reduce(newPlayers, Integer::sum);
+                    .filter(Objects::nonNull)
+                    .filter(reg -> reg > now - scale)
+                    .count();
         }
         // Filters out register dates before scale
         return newPlayers;
     }
 
     /**
-     *
      * @param data
      * @return
      */
@@ -76,7 +77,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -104,8 +104,8 @@ public class AnalysisUtils {
                 default:
                     return source.parseContainer("", "Wrong Analysistype specified: " + analysisType.name());
             }
-            return source.parseContainer(analysisType.getModifier(), total + "");
-        } catch (Throwable e) {
+            return source.parseContainer(analysisType.getModifier(), String.valueOf(total));
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return logPluginDataCausedError(source, e);
         }
     }
@@ -118,7 +118,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -137,7 +136,7 @@ public class AnalysisUtils {
                     return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
                 case LONG_AVG:
                     long averageLong = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
-                    return source.parseContainer(analysisType.getModifier(), averageLong + "");
+                    return source.parseContainer(analysisType.getModifier(), String.valueOf(averageLong));
                 case LONG_TIME_MS_AVG:
                     average = MathUtils.averageLong(getCorrectValues(uuids, source).map(i -> (Long) i));
                     return source.parseContainer(analysisType.getModifier(), FormatUtils.formatTimeAmount((long) average));
@@ -151,13 +150,12 @@ public class AnalysisUtils {
                     return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
             }
             return source.parseContainer(analysisType.getModifier(), FormatUtils.cutDecimals(average));
-        } catch (Throwable e) {
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return logPluginDataCausedError(source, e);
         }
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -170,8 +168,8 @@ public class AnalysisUtils {
                         .map(value -> (boolean) value)
                         .collect(Collectors.toList());
                 long count = tempList.stream().filter(value -> value).count();
-                return source.parseContainer(analysisType.getModifier(), ((double) (count / tempList.size()) * 100) + "%");
-            } catch (Throwable e) {
+                return source.parseContainer(analysisType.getModifier(), (((double) count / tempList.size()) * 100) + "%");
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
                 return logPluginDataCausedError(source, e);
             }
         }
@@ -179,7 +177,6 @@ public class AnalysisUtils {
     }
 
     /**
-     *
      * @param analysisType
      * @param source
      * @param uuids
@@ -193,7 +190,7 @@ public class AnalysisUtils {
                         .collect(Collectors.toList());
                 long count = tempList.stream().filter(value -> value).count();
                 return source.parseContainer(analysisType.getModifier(), count + " / " + tempList.size());
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 return logPluginDataCausedError(source, e);
             }
         }
@@ -208,29 +205,26 @@ public class AnalysisUtils {
     }
 
     /**
+     * Used to calculate unique players that have played within the time frame determined by scale.
      *
-     * @param sessions
-     * @param scale
-     * @return
+     * @param sessions All sessions sorted in a map by User's UUID
+     * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
+     * @return Amount of Unique joins within the time span.
      */
     public static int getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
         Set<UUID> uniqueJoins = new HashSet<>();
-        sessions.keySet().forEach((uuid) -> {
-            List<SessionData> s = sessions.get(uuid);
-            for (SessionData session : s) {
-                if (session.getSessionStart() < nowMinusScale) {
-                    continue;
-                }
-                uniqueJoins.add(uuid);
-            }
-        });
+        sessions.forEach((uuid, s) ->
+                s.stream()
+                        .filter(session -> session.getSessionStart() >= nowMinusScale)
+                        .map(session -> uuid)
+                        .forEach(uniqueJoins::add)
+        );
         return uniqueJoins.size();
     }
 
     /**
-     *
      * @param sessions
      * @param scale
      * @return
@@ -239,13 +233,12 @@ public class AnalysisUtils {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
-        sessions.keySet().forEach((uuid) -> {
-            List<SessionData> s = sessions.get(uuid);
+
+        sessions.forEach((uuid, s) -> {
             for (SessionData session : s) {
-                if (scale != -1) {
-                    if (session.getSessionStart() < nowMinusScale) {
-                        continue;
-                    }
+                if (scale != -1
+                        && session.getSessionStart() < nowMinusScale) {
+                    continue;
                 }
 
                 int day = getDayOfYear(session);
@@ -254,33 +247,64 @@ public class AnalysisUtils {
                 uniqueJoins.get(day).add(uuid);
             }
         });
+
         int total = MathUtils.sumInt(uniqueJoins.values().stream().map(Set::size));
-        int size = uniqueJoins.keySet().size();
-        if (size == 0) {
+        int numberOfDays = uniqueJoins.size();
+
+        if (numberOfDays == 0) {
             return 0;
         }
-        return total / size;
+
+        return total / numberOfDays;
+    }
+
+    public static long getNewUsersPerDay(List<Long> registers, long scale) {
+        long now = MiscUtils.getTime();
+        long nowMinusScale = now - scale;
+
+        Set<Integer> days = new HashSet<>();
+        for (Long date : registers) {
+            if (scale != -1) {
+                if (date < nowMinusScale) {
+                    continue;
+                }
+                int day = getDayOfYear(date);
+                days.add(day);
+            }
+        }
+
+        long total = registers.stream().filter(date -> date >= nowMinusScale).count();
+        int numberOfDays = days.size();
+
+        if (numberOfDays == 0) {
+            return 0;
+        }
+        return total / numberOfDays;
     }
 
     /**
+     * Transforms the session start list into a list of int arrays.
+     * <p>
+     * First number signifies the Day of Week. (0 = Monday, 6 = Sunday)
+     * Second number signifies the Hour of Day. (0 = 0 AM, 23 = 11 PM)
      *
-     * @param sessionStarts
-     * @return
+     * @param sessionStarts List of Session start Epoch ms.
+     * @return list of int arrays.
      */
     public static List<int[]> getDaysAndHours(List<Long> sessionStarts) {
         return sessionStarts.stream().map((Long start) -> {
             Calendar day = Calendar.getInstance();
             day.setTimeInMillis(start);
-            int hourOfDay = day.get(Calendar.HOUR_OF_DAY);
-            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2;
-            if (hourOfDay == 24) {
+            int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
+            int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1
+            if (hourOfDay == 24) { // Check if hour is 24 (Should be impossible but.)
                 hourOfDay = 0;
                 dayOfWeek += 1;
             }
-            if (dayOfWeek > 6) {
+            if (dayOfWeek > 6) { // If Hour added a day on Sunday, move to Monday
                 dayOfWeek = 0;
             }
-            if (dayOfWeek < 0) {
+            if (dayOfWeek < 0) { // Move Sunday to 6
                 dayOfWeek = 6;
             }
             return new int[]{dayOfWeek, hourOfDay};
@@ -288,8 +312,13 @@ public class AnalysisUtils {
     }
 
     private static int getDayOfYear(SessionData session) {
+        return getDayOfYear(session.getSessionStart());
+
+    }
+
+    private static int getDayOfYear(long date) {
         Calendar day = Calendar.getInstance();
-        day.setTimeInMillis(session.getSessionStart());
+        day.setTimeInMillis(date);
         return day.get(Calendar.DAY_OF_YEAR);
     }
 }

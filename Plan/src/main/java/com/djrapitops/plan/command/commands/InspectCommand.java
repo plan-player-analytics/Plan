@@ -5,6 +5,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.*;
@@ -15,9 +16,7 @@ import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -43,6 +42,24 @@ public class InspectCommand extends SubCommand {
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
+        setHelp(plugin);
+    }
+
+    private void setHelp(Plan plugin) {
+        ColorScheme colorScheme = plugin.getColorScheme();
+
+        String mCol = colorScheme.getMainColor();
+        String sCol = colorScheme.getSecondaryColor();
+        String tCol = colorScheme.getTertiaryColor();
+
+        String[] help = new String[]{
+                mCol + "Inspect command",
+                tCol + "  Used to get a link to User's inspect page.",
+                sCol + "  Own inspect page can be accessed with /plan inspect",
+                sCol + "  Alias: /plan <name>"
+        };
+
+        super.setInDepthHelp(help);
     }
 
     @Override
@@ -72,8 +89,8 @@ public class InspectCommand extends SubCommand {
                     if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
                         return;
                     }
-                    sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
-                    if (CommandUtils.isPlayer(sender)) {
+                    sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE.toString());
+                    if (CommandUtils.isPlayer(sender) && plugin.getUiServer().isAuthRequired()) {
                         boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
                         if (!senderHasWebUser) {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
@@ -123,24 +140,16 @@ public class InspectCommand extends SubCommand {
         } else {
             // Link
             String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
-            String message = Phrase.CMD_LINK + "";
+            String message = Phrase.CMD_LINK.toString();
             boolean console = !CommandUtils.isPlayer(sender);
             if (console) {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sendLink(sender, url);
+                sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
             }
         }
 
-        sender.sendMessage(Phrase.CMD_FOOTER + "");
-    }
-
-    @Deprecated // TODO Will be rewritten to the RslPlugin abstractions in the future.
-    private void sendLink(ISender sender, String url) throws CommandException {
-        plugin.getServer().dispatchCommand(
-                Bukkit.getConsoleSender(),
-                "tellraw " + sender.getName() + " [\"\",{\"text\":\"" + Phrase.CMD_CLICK_ME + "\",\"underlined\":true,"
-                + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + url + "\"}}]");
+        sender.sendMessage(Phrase.CMD_FOOTER.toString());
     }
 }

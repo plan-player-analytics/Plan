@@ -5,16 +5,17 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities.analysis;
 
+import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import org.junit.Test;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
- *
  * @author Rsl1122
  */
 public class MathUtilsTest {
@@ -37,7 +38,7 @@ public class MathUtilsTest {
         l.add(5);
         l.add(15);
         double result = MathUtils.averageInt(l.stream());
-        assertTrue(exp == result);
+        assertTrue(Double.compare(exp, result) == 0);
     }
 
     /**
@@ -48,7 +49,7 @@ public class MathUtilsTest {
         List<Integer> l = new ArrayList<>();
         double exp = 0;
         double result = MathUtils.averageInt(l.stream());
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     /**
@@ -63,7 +64,7 @@ public class MathUtilsTest {
         l.add(5L);
         l.add(15L);
         double result = MathUtils.averageLong(l);
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     /**
@@ -78,7 +79,7 @@ public class MathUtilsTest {
         l.add(4.5);
         l.add(15.0);
         double result = MathUtils.averageDouble(l.stream());
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
 
     }
 
@@ -89,7 +90,7 @@ public class MathUtilsTest {
     public void testAverage() {
         double exp = 10;
         double result = MathUtils.average(40, 4);
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     /**
@@ -106,7 +107,7 @@ public class MathUtilsTest {
             l.add(false);
         }
         long result = MathUtils.countTrueBoolean(l.stream());
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     /**
@@ -121,7 +122,7 @@ public class MathUtilsTest {
         l.add(5);
         l.add(15);
         double result = MathUtils.sumInt(l.stream());
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     /**
@@ -136,7 +137,7 @@ public class MathUtilsTest {
         l.add(5L);
         l.add(15L);
         long result = MathUtils.sumLong(l.stream());
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     /**
@@ -151,7 +152,6 @@ public class MathUtilsTest {
         l.add(45.0);
         l.add(5.0531541);
         double result = MathUtils.sumDouble(l.stream());
-        assertTrue(result + "/" + exp, exp == result);
+        assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
-
 }

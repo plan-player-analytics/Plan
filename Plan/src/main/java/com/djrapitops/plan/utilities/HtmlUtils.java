@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,18 +13,23 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- *
  * @author Rsl1122
  */
 public class HtmlUtils {
 
     /**
-     *
+     * Constructor used to hide the public constructor
+     */
+    private HtmlUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * @param fileName
      * @return
      * @throws FileNotFoundException
      */
-    public static String getHtmlStringFromResource(String fileName) throws FileNotFoundException {
+    public static String getStringFromResource(String fileName) throws FileNotFoundException {
         InputStream resourceStream = null;
         Scanner scanner = null;
         try {
@@ -49,61 +55,71 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param html
      * @param replaceMap
      * @return
      */
     public static String replacePlaceholders(String html, Map<String, String> replaceMap) {
-        for (String key : replaceMap.keySet()) {
-            html = html.replace(key, replaceMap.get(key));
+        for (Map.Entry<String, String> entrySet : replaceMap.entrySet()) {
+            String placeholder = entrySet.getKey();
+            String replacer = entrySet.getValue();
+
+            html = html.replace(placeholder, replacer);
         }
+
         return html;
     }
 
     /**
-     *
      * @return
      */
     public static String getServerAnalysisUrlWithProtocol() {
-        return Settings.LINK_PROTOCOL.toString() + ":" + getServerAnalysisUrl();
+        return getProtocol() + ":" + getServerAnalysisUrl();
     }
 
     /**
-     *
      * @return
      */
     public static String getServerAnalysisUrl() {
-        int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
-        boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", "" + port);
-        }
+        String ip = getIP();
         return "//" + ip + "/server";
     }
 
     /**
+     * Used to get the WebServer's IP with Port.
      *
+     * @return For example 127.0.0.1:8804
+     */
+    public static String getIP() {
+        int port = Settings.WEBSERVER_PORT.getNumber();
+        String ip;
+        if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
+            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
+        } else {
+            ip = Plan.getInstance().getVariable().getIp() + ":" + port;
+        }
+        return ip;
+    }
+
+    private static String getProtocol() {
+        WebServer uiServer = Plan.getInstance().getUiServer();
+        return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.LINK_PROTOCOL.toString();
+    }
+
+    /**
      * @param playerName
      * @return
      */
     public static String getInspectUrlWithProtocol(String playerName) {
-        return Settings.LINK_PROTOCOL.toString() + ":" + getInspectUrl(playerName);
+        return getProtocol() + ":" + getInspectUrl(playerName);
     }
 
     /**
-     *
      * @param playerName
      * @return
      */
     public static String getInspectUrl(String playerName) {
-        int port = Settings.WEBSERVER_PORT.getNumber();
-        String ip = Plan.getInstance().getVariable().getIp() + ":" + port;
-        boolean useAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        if (useAlternativeIP) {
-            ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", "" + port);
-        }
+        String ip = getIP();
         return "//" + ip + "/player/" + playerName;
     }
 
@@ -112,7 +128,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param string
      * @return
      */
@@ -124,7 +139,6 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param pluginNames
      * @param placeholders
      * @return
@@ -170,22 +184,23 @@ public class HtmlUtils {
     }
 
     /**
-     *
      * @param string
      * @return
      */
     public static String swapColorsToSpan(String string) {
         Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
-            Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,
-            Html.COLOR_a, Html.COLOR_b, Html.COLOR_c, Html.COLOR_d, Html.COLOR_e, Html.COLOR_f};
+                Html.COLOR_4, Html.COLOR_5, Html.COLOR_6, Html.COLOR_7, Html.COLOR_8, Html.COLOR_9,
+                Html.COLOR_A, Html.COLOR_B, Html.COLOR_C, Html.COLOR_D, Html.COLOR_E, Html.COLOR_F};
 
         for (Html html : replacer) {
-            string = string.replace("§" + html.name().charAt(6), html.parse());
+            string = string.replace("§" + Character.toLowerCase(html.name().charAt(6)), html.parse());
         }
+
         int spans = string.split("<span").length - 1;
         for (int i = 0; i < spans; i++) {
             string = Html.SPAN.parse(string);
         }
+
         return string.replace("§r", "");
     }
 

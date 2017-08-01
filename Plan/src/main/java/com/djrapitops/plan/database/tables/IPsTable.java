@@ -1,23 +1,17 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
+import java.util.*;
 
 /**
- *
  * @author Rsl1122
  */
 public class IPsTable extends Table {
@@ -26,7 +20,6 @@ public class IPsTable extends Table {
     private final String columnIP;
 
     /**
-     *
      * @param db
      * @param usingMySQL
      */
@@ -37,7 +30,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -58,7 +50,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      */
@@ -78,7 +69,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @return
      * @throws SQLException
@@ -93,9 +83,11 @@ public class IPsTable extends Table {
             set = statement.executeQuery();
             List<InetAddress> ips = new ArrayList<>();
             while (set.next()) {
+                String ipAddressName = set.getString(columnIP);
                 try {
-                    ips.add(InetAddress.getByName(set.getString(columnIP)));
+                    ips.add(InetAddress.getByName(ipAddressName));
                 } catch (UnknownHostException e) {
+                    Log.error("Host not found at getIPAddresses: " + ipAddressName); //Shouldn't ever happen
                 }
             }
             return ips;
@@ -107,7 +99,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param userId
      * @param ips
      * @throws SQLException
@@ -116,11 +107,14 @@ public class IPsTable extends Table {
         if (ips == null) {
             return;
         }
+
         Benchmark.start("Database: Save Ips");
         ips.removeAll(getIPAddresses(userId));
+
         if (ips.isEmpty()) {
             return;
         }
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -129,14 +123,18 @@ public class IPsTable extends Table {
                     + ") VALUES (?, ?)");
             boolean commitRequired = false;
             for (InetAddress ip : ips) {
+
                 if (ip == null) {
                     continue;
                 }
+
                 statement.setInt(1, userId);
                 statement.setString(2, ip.getHostAddress());
                 statement.addBatch();
+
                 commitRequired = true;
             }
+
             if (commitRequired) {
                 statement.executeBatch();
             }
@@ -147,7 +145,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param ids
      * @return
      * @throws SQLException
@@ -156,26 +153,36 @@ public class IPsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
+
         Benchmark.start("Database: Get Ips Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
+
         try {
             statement = prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             Map<Integer, Set<InetAddress>> ips = new HashMap<>();
+
             for (Integer id : ids) {
                 ips.put(id, new HashSet<>());
             }
+
             while (set.next()) {
                 Integer id = set.getInt(columnUserID);
+
                 if (!ids.contains(id)) {
                     continue;
                 }
+
+                String ipAddressName = set.getString(columnIP);
+
                 try {
-                    ips.get(id).add(InetAddress.getByName(set.getString(columnIP)));
+                    ips.get(id).add(InetAddress.getByName(ipAddressName));
                 } catch (UnknownHostException e) {
+                    Log.error("Host not found at getIPAddresses: " + ipAddressName); //Shouldn't ever happen
                 }
             }
+
             return ips;
         } finally {
             close(set);
@@ -185,7 +192,6 @@ public class IPsTable extends Table {
     }
 
     /**
-     *
      * @param ips
      * @throws SQLException
      */
@@ -203,19 +209,25 @@ public class IPsTable extends Table {
                     + ") VALUES (?, ?)");
             boolean commitRequired = false;
             int i = 0;
-            for (Integer id : ips.keySet()) {
-                Set<InetAddress> ipAddresses = ips.get(id);
+            for (Map.Entry<Integer, Set<InetAddress>> entrySet : ips.entrySet()) {
+                Integer id = entrySet.getKey();
+                Set<InetAddress> ipAddresses = entrySet.getValue();
+
                 Set<InetAddress> s = saved.get(id);
+
                 if (s != null) {
                     ipAddresses.removeAll(s);
                 }
+
                 if (ipAddresses.isEmpty()) {
                     continue;
                 }
+
                 for (InetAddress ip : ipAddresses) {
                     if (ip == null) {
                         continue;
                     }
+
                     statement.setInt(1, id);
                     statement.setString(2, ip.getHostAddress());
                     statement.addBatch();
@@ -223,13 +235,14 @@ public class IPsTable extends Table {
                     i++;
                 }
             }
+
             if (commitRequired) {
                 Log.debug("Executing ips batch: " + i);
                 statement.executeBatch();
             }
-            Benchmark.stop("Database: Save Ips Multiple");
         } finally {
             close(statement);
+            Benchmark.stop("Database: Save Ips Multiple");
         }
     }
 }

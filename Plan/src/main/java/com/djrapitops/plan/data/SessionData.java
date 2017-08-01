@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
 /**
- * This class is used for storing start and end of a playsession inside UserData
+ * This class is used for storing start and end of a play session inside UserData
  * object.
  *
  * @author Rsl1122
@@ -25,7 +25,7 @@ public class SessionData {
      * Creates a new session with given start and end.
      *
      * @param sessionStart Epoch millisecond the session was started.
-     * @param sessionEnd Epoch millisecond the session ended.
+     * @param sessionEnd   Epoch millisecond the session ended.
      */
     public SessionData(long sessionStart, long sessionEnd) {
         this.sessionStart = sessionStart;
@@ -44,7 +44,7 @@ public class SessionData {
 
     /**
      * Ends the session with given end point.
-     *
+     * <p>
      * (Changes the end to the parameter.).
      *
      * @param endOfSession Epoch millisecond the session ended.

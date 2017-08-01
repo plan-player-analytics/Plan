@@ -3,16 +3,16 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import main.java.com.djrapitops.plan.Permissions;
+import main.java.com.djrapitops.plan.Phrase;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 
 /**
  * Utility method class containing various static methods.
@@ -21,6 +21,13 @@ import main.java.com.djrapitops.plan.Phrase;
  * @since 2.0.0
  */
 public class MiscUtils {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private MiscUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Used to get the current time as milliseconds.
@@ -32,7 +39,6 @@ public class MiscUtils {
     }
 
     /**
-     *
      * @param args
      * @param sender
      * @return
@@ -44,7 +50,7 @@ public class MiscUtils {
     /**
      * Used by the inspect command.
      *
-     * @param args Arguments of a command, must not be empty if console sender.
+     * @param args   Arguments of a command, must not be empty if console sender.
      * @param sender Command sender
      * @param perm
      * @return The name of the player (first argument or sender)
@@ -57,7 +63,7 @@ public class MiscUtils {
         } else if (args.length > 0) {
             if (sender.hasPermission(perm.getPermission())) {
                 playerName = args[0];
-            } else if (args[0].toLowerCase().equals(sender.getName().toLowerCase())) {
+            } else if (args[0].equalsIgnoreCase(sender.getName())) {
                 playerName = sender.getName();
             } else {
                 sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
@@ -93,7 +99,7 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException ex) {
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -104,7 +110,7 @@ public class MiscUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Exception ex) {
+                } catch (Exception ignored) {
                 }
             }
         }

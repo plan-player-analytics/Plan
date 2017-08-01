@@ -13,27 +13,19 @@ import java.util.Map;
 
 /**
  * Big container object for Data.
- *
+ * <p>
  * Contains parts that can be analysed. Each part has their own purpose.
- *
+ * <p>
  * Parts contain variables that can be added to. These variables are then
  * analysed using the analysis method.
- *
+ * <p>
  * After being analysed the ReplaceMap can be retrieved for replacing
  * placeholders on the analysis.html file.
  *
  * @author Rsl1122
  * @since 3.5.2
  */
-public class AnalysisData extends RawData<AnalysisData> {
-
-    private long refreshDate;
-
-    private String planVersion;
-    private String pluginsTabLayout;
-    private Map<String, String> additionalDataReplaceMap;
-
-    private String playersTable;
+public class AnalysisData extends RawData {
 
     private final ActivityPart activityPart;
     private final CommandUsagePart commandUsagePart;
@@ -44,6 +36,12 @@ public class AnalysisData extends RawData<AnalysisData> {
     private final PlayerCountPart playerCountPart;
     private final PlaytimePart playtimePart;
     private final TPSPart tpsPart;
+    private final WorldPart worldPart;
+    private long refreshDate;
+    private String planVersion;
+    private String pluginsTabLayout;
+    private Map<String, String> additionalDataReplaceMap;
+    private String playersTable;
 
     public AnalysisData(Map<String, Integer> commandUsage, List<TPS> tpsData) {
         commandUsagePart = new CommandUsagePart(commandUsage);
@@ -55,6 +53,7 @@ public class AnalysisData extends RawData<AnalysisData> {
         gamemodePart = new GamemodePart();
         tpsPart = new TPSPart(tpsData);
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
+        worldPart = new WorldPart();
     }
 
     public ActivityPart getActivityPart() {
@@ -93,12 +92,14 @@ public class AnalysisData extends RawData<AnalysisData> {
         return tpsPart;
     }
 
+    public WorldPart getWorldPart() {
+        return worldPart;
+    }
+
     public List<RawData> getAllParts() {
-        return Arrays.asList(new RawData[]{
-            activityPart, commandUsagePart, gamemodePart,
-            geolocationPart, joinInfoPart, killPart,
-            playerCountPart, playtimePart, tpsPart
-        });
+        return Arrays.asList(activityPart, commandUsagePart, gamemodePart,
+                geolocationPart, joinInfoPart, killPart,
+                playerCountPart, playtimePart, tpsPart, worldPart);
     }
 
     public String getPlanVersion() {
@@ -125,10 +126,6 @@ public class AnalysisData extends RawData<AnalysisData> {
         this.additionalDataReplaceMap = additionalDataReplaceMap;
     }
 
-    public void setRefreshDate(long refreshDate) {
-        this.refreshDate = refreshDate;
-    }
-
     public void setPlayersTable(String playersTable) {
         this.playersTable = playersTable;
     }
@@ -143,7 +140,7 @@ public class AnalysisData extends RawData<AnalysisData> {
         addValue("version", planVersion);
 
         final List<RawData> parts = getAllParts();
-        parts.forEach((part) -> {
+        parts.forEach(part -> {
             try {
                 Benchmark.start("Analysis Phase: " + part.getClass().getSimpleName());
                 part.analyseData();
@@ -165,5 +162,9 @@ public class AnalysisData extends RawData<AnalysisData> {
 
     public long getRefreshDate() {
         return refreshDate;
+    }
+
+    public void setRefreshDate(long refreshDate) {
+        this.refreshDate = refreshDate;
     }
 }

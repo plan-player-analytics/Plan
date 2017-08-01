@@ -6,7 +6,7 @@
 package main.java.com.djrapitops.plan.data;
 
 /**
- * Class containing single datapoint of TPS/players online.
+ * Class containing single datapoint of TPS / Players online / CPU Usage / Used Memory / Entity Count / Chunks loaded.
  *
  * @author Rsl1122
  * @since 3.5.0
@@ -17,20 +17,29 @@ public class TPS {
     private final double tps;
     private final int players;
     private final double cpuUsage;
+    private final long usedMemory;
+    private final int entityCount;
+    private final int chunksLoaded;
 
     /**
      * Constructor.
      *
-     * @param date time of the average calculation.
-     * @param tps average tps for the last minute.
-     * @param players average players for the last minute.
-     * @param cpuUsage average CPU usage for the last minute.
+     * @param date         time of the TPS calculation.
+     * @param tps          average tps for the last minute.
+     * @param players      players for the minute.
+     * @param cpuUsage     CPU usage for the minute
+     * @param usedMemory   used memory at the time of fetching
+     * @param entityCount  amount of entities at the time of fetching
+     * @param chunksLoaded amount of chunks loaded at the time of fetching
      */
-    public TPS(long date, double tps, int players, double cpuUsage) {
+    public TPS(long date, double tps, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
         this.date = date;
         this.tps = tps;
         this.players = players;
         this.cpuUsage = cpuUsage;
+        this.usedMemory = usedMemory;
+        this.entityCount = entityCount;
+        this.chunksLoaded = chunksLoaded;
     }
 
     /**
@@ -52,7 +61,7 @@ public class TPS {
     }
 
     /**
-     * Get the average players for the minute.
+     * Get the player for the time, when the data was fetched.
      *
      * @return Players online.
      */
@@ -61,12 +70,39 @@ public class TPS {
     }
 
     /**
-     * Get the average CPU Usage for the minute.
+     * Get the average CPU Usage for the minute
      *
-     * @return 0-20 double
+     * @return 0-100 double
      */
     public double getCPUUsage() {
         return cpuUsage;
+    }
+
+    /**
+     * Get the used memory for the time, when the data was fetched.
+     *
+     * @return Used Memory in Megabyte
+     */
+    public long getUsedMemory() {
+        return usedMemory;
+    }
+
+    /**
+     * Get the amount of entities for the time, when the data was fetched
+     *
+     * @return Amount of entities
+     */
+    public int getEntityCount() {
+        return entityCount;
+    }
+
+    /**
+     * Get the amount of chunks loaded for the time, when the data was fetched
+     *
+     * @return Amount of chunks loaded
+     */
+    public int getChunksLoaded() {
+        return chunksLoaded;
     }
 
     @Override
@@ -83,17 +119,20 @@ public class TPS {
         if (this == obj) {
             return true;
         }
+
         if (obj == null) {
             return false;
         }
+
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final TPS other = (TPS) obj;
-        return this.date == other.date
-                && Double.doubleToLongBits(this.tps) == Double.doubleToLongBits(other.tps)
+        return date == other.date
+                && Double.compare(this.tps, other.tps) == 0
                 && this.players == other.players
-                && this.cpuUsage == other.cpuUsage;
+                && Double.compare(cpuUsage, other.cpuUsage) == 0;
     }
 
     @Override

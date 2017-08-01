@@ -5,13 +5,11 @@ Settings:
   Data:
     ChatListener: true
     GatherKillData: true
-    GamemodeChangeListener: true
     GatherCommandUsage: true
   Analysis:
     LogProgressOnConsole: false
     NotifyWhenFinished: true
     MinutesPlayedUntilConsidiredActive: 10
-    RemoveOutliersFromVisualization: true
     Export:
       Enabled: false
       DestinationFolder: 'Analysis Results'
@@ -34,9 +32,14 @@ Settings:
     InternalIP: 0.0.0.0
     ShowAlternativeServerIP: false
     AlternativeIP: your.ip.here:%port%
-    LinkProtocol: http
+    ExternalWebServerLinkProtocol: http
     Security:
       DisplayIPsAndUUIDs: true
+      Certificate:
+        KeyStorePath: 'SSLCertificate.keystore'
+        KeyPass: 'default'
+        StorePass: 'default'
+        Alias: 'alias'
 
 Customization:
   ServerName: 'Plan'
@@ -44,9 +47,6 @@ Customization:
   Data:
     DoNotLogUnknownCommands: false
     CombineCommandAliasesToMainCommand: false
-  Graphs:
-    PlayersOnlineGraph:
-      UseMaxPlayersAsScale: true
   Formats:
     TimeAmount:
       Year: '1 year, '
@@ -71,13 +71,12 @@ Customization:
         TertiaryDark: 5da341
       ActivityGraph:
         OnlinePlayers: '1E90FF'
-        OnlinePlayersFill: '75BBFF'
         NewPlayers: '228B22'
       GamemodePie:
-        Survival: '951800'
-        Creative: '01A1DB'
-        Adventure: '769316'
-        Spectator: '228B22'
+        Survival: '438c99'
+        Creative: '639A67'
+        Adventure: 'D8EBB5'
+        Spectator: 'D9BF77'
       ActivityPie:
         Active: '228B22'
         Banned: '951800'

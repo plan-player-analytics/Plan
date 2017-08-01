@@ -7,276 +7,277 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon"/>
     <script src="https://use.fontawesome.com/df48eb908b.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-            header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 88px;
-                padding: 0px;
-                background-color: #348e0f;
-                z-index: 1;
-            }
-            .header-content {
-                padding: 5px 20px;
-            }
-            body {
-                font-family: Verdana, sans-serif;
-                background-color: #ddd;
-                color: #fff;
-            }
-            .sidenav {
-                height: 100%;
-                width: 15%;
-                position: fixed;
-                top: 0;
-                left: 0;
-                background-color: #5cb239;
-                overflow-x: hidden;
-                transition: 0.5s;
-                padding-top: 88px;
-                text-align: left;
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 88px;
+            padding: 0px;
+            background-color: #348e0f;
+            z-index: 1;
+        }
+        .header-content {
+            padding: 5px 20px;
+        }
+        body {
+            font-family: Verdana, sans-serif;
+            background-color: #ddd;
+            color: #fff;
+        }
+        .sidenav {
+            height: 100%;
+            width: 15%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5cb239;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 88px;
+            text-align: left;
+        }
+        .sidenav p {
+            width: 100%;
+            padding: 8px 8px 8px 16px;
+            text-decoration: none;
+            background-color: #89c471;
+            color: #fff;
+            margin: 10px 0px;
+        }
+
+        .sidenav a {
+            margin: 10px 0px;
+            width: 100%;
+            padding: 8px 8px 8px 16px;
+            text-decoration: none;
+            background-color: #89c471;
+            font-size: 22px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+            z-index: 1;
+        }
+
+        .sidenav a.active {
+            background-color: #5da341;
+        }
+
+        .sidenav a:hover, .offcanvas a:focus{
+            background-color: #5da341;
+        }
+
+        .main-limiter {
+            margin-left: 15%;
+            width: 85%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .main-wrapper {
+            margin-top: 88px;
+            transform: translate3d(0, 0, 0);
+            opacity: 0;
+            transition: 1.5s;
+        }
+
+        .box {
+            background-color: #fff;
+            padding: 5px;
+            text-decoration: none;!important;
+            color: #000
+            text-align: left;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .box p {
+            color: #000;
+        }
+        .tab {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            text-align: left;
+            align-content: flex-start;
+        }
+        .content {
+            text-align: center;
+            padding: 5px;
+            margin: 0px;
+        }
+        .row {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        .columns {
+            display: flex;
+        }
+        .column {
+            flex: 1;
+        }
+        .box-area {
+            width: 100%;
+            display: flex;
+        }
+        .infobox {
+            margin-left: 3px;
+            color: white;
+            background-color: #348e0f;
+            padding: 8px 14px;
+            border-radius: 6px;
+            float: right;
+        }
+        .info-text {
+            float: right;
+            width: 50%;
+            text-align: right;
+        }
+        .info-number {
+            font-size: x-large;
+            float: right;
+        }
+        .info-label {
+            float: right;
+            font-size: medium;
+        }
+        .info-icon {
+            font-size: xx-large;
+            float: left;
+        }
+        .headerbox {
+            color: #348e0f;
+            display: inline-block;
+            border-style: solid;
+            border-color: #348e0f;
+            padding: 8px 14px;
+			border-radius: 3px;
+            width: 95%;
+        }
+        .header-icon {
+            font-size: xx-large;
+            float: left;
+        }
+        .header-text {
+            font-size: x-large;
+        }
+        .header-label {
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+        }
+        .button {
+            padding: 8px 14px;
+            background-color: #348e0f;
+            border: none;
+            color: white;
+            outline: 0;
+            text-decoration:none!important;
+        }
+        .button:hover {
+            background-color: #267F00;
+        }
+        .table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            border-style: solid;
+            border-width: 1px;
+            padding: 8px 14px;
+            width: 100%;
+        }
+        .buttons {
+            line-height: 270%;
+        }
+        .link {
+            color: #348e0f;
+            text-decoration:none!important;
+        }
+        .link:hover {
+            color: #267F00;
+        }
+        table.sortable thead {
+            background-color: #348e0f;
+            color:#fff;
+            font-weight: bold;
+            cursor: default;
+            width: 100%;
+            overflow: hidden;
+        }
+        table.sortable tbody {
+            color: #000;
+        }
+        table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+            content: " \25B4\25BE"
+        }
+        .plugin-container {
+            color: #000;
+            height: 100%;
+            max-height: 400px;
+            overflow: auto;
+        }
+        .plugin-data {
+            color: #000;
+        }
+        header img {
+            float: right;
+            padding: 5px;
+            display: inline;
+        }
+        header p {
+            float: right;
+            text-align: right;
+        }
+        #navbutton {
+            display: none;
+            font-size: 40px;
+            cursor:pointer;
+        }
+        @media only screen and (max-width: 850px) {
+            #navbutton {
+                display: inline;
             }
             .sidenav p {
-                width: 100%;
-                padding: 8px 8px 8px 16px;
-                text-decoration: none;
-                background-color: #89c471;
-                color: #fff;
-                margin: 10px 0px;
+                display: none;
             }
-
-            .sidenav a {
-                margin: 10px 0px;
-                width: 100%;
-                padding: 8px 8px 8px 16px;
-                text-decoration: none;
-                background-color: #89c471;
-                font-size: 22px;
-                color: #fff;
-                display: block;
-                transition: 0.3s;
-                z-index: 1;
+            header {
+                margin: 0px;
+                padding 0px;
             }
-
-            .sidenav a.active {
-                background-color: #5da341;
-            }
-
-            .sidenav a:hover, .offcanvas a:focus{
-                background-color: #5da341;
-            }
-
-            .main-limiter {
-                margin-left: 15%;
-                width: 85%;
-                height: 100%;
-                overflow: hidden;
-            }
-
-            .main-wrapper {
-                margin-top: 88px;
-                transform: translate3d(0, 0, 0);
-                opacity: 0;
-                transition: 1.5s;
-            }
-
-            .box {
-                background-color: #fff;
-                padding: 5px;
-                text-decoration: none;!important;
-                color: #000
-                    text-align: left;
-                margin: 5px;
-                padding: 5px;
-            }
-
-            .box p {
-                color: #000;
-            }
-            .tab {
-                width: 20%;
-                height: 100%;
-                float: left;
-                display: flex;
-                text-align: left;
-                align-content: flex-start;
-            }
-            .content {
-                text-align: center;
-                padding: 5px;
+            header h1 {
                 margin: 0px;
             }
-            .row {
-                width: 50%;
-                display: flex;
+            header img {
+                margin: 0px;
+                padding: 0px;
+                margin-right: 0px;
+            }
+            header p {
+                margin: 0px;
+                margin-top: 5px;
+            }
+            .tab {
                 flex-direction: column;
             }
             .columns {
-                display: flex;
+                flex-direction: column;
             }
-            .column {
-                flex: 1;
-            }
-            .box-area {
-                width: 100%;
-                display: flex;
-            }
-            .infobox {
-                margin-left: 3px;
-                color: white;
-                background-color: #348e0f;
-                padding: 8px 14px;
-                border-radius: 10px;
-                float: right;
-            }
-            .info-text {
-                float: right;
-                width: 50%;
-                text-align: right;
-            }
-            .info-number {
-                font-size: x-large;
-                float: right;
-            }
-            .info-label {
-                float: right;
-                font-size: medium;
-            }
-            .info-icon {
-                font-size: xx-large;
-                float: left;
-            }
-            .headerbox {
-                color: #348e0f;
-                display: inline-block;
-                border-style: solid;
-                border-color: #348e0f;
-                padding: 8px 14px;
-                border-radius: 10px;
-                width: 95%;
-            }
-            .header-icon {
-                font-size: xx-large;
-                float: left;
-            }
-            .header-text {
-                font-size: x-large;
-            }
-            .header-label {
-                padding: 0px;
-                margin: 0px;
-                border: 0px;
-            }
-            .button {
-                padding: 8px 14px;
-                background-color: #348e0f;
-                border: none;
-                color: white;
-                outline: 0;
-                text-decoration:none!important;
-            }
-            .button:hover {
-                background-color: #267F00;
-            }
-            .table {
-                border-collapse: collapse;
-                table-layout: fixed;
-                border-style: solid;
-                border-width: 1px;
-                padding: 8px 14px;
+            .row {
                 width: 100%;
             }
-            .buttons {
-                line-height: 270%;
+            .sidenav {
+                width: 0%;
+                transition: 0s;
             }
-            .link {
-                color: #348e0f;
-                text-decoration:none!important;
-            }
-            .link:hover {
-                color: #267F00;
-            }
-            table.sortable thead {
-                background-color: #348e0f;
-                color:#fff;
-                font-weight: bold;
-                cursor: default;
+            .main-limiter {
+                margin-left: 0%;
                 width: 100%;
-                overflow: hidden;
             }
-            table.sortable tbody {
-                color: #000;
-            }
-            table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
-                content: " \25B4\25BE"
-            }
-            .plugin-container {
-                color: #000;
-                height: 100%;
-                max-height: 400px;
-                overflow: auto;
-            }
-            .plugin-data {
-                color: #000;
-            }
-            header img {
-                float: right;
-                padding: 5px;
-                display: inline;
-            }
-            header p {
-                float: right;
-                text-align: right;
-            }
-            #navbutton {
-                display: none;
-                font-size: 40px;
-                cursor:pointer;
-            }
-            @media only screen and (max-width: 850px) {
-                #navbutton {
-                    display: inline;
-                }
-                .sidenav p {
-                    display: none;
-                }
-                header {
-                    margin: 0px;
-                    padding 0px;
-                }
-                header h1 {
-                    margin: 0px;
-                }
-                header img {
-                    margin: 0px;
-                    padding: 0px;
-                    margin-right: 0px;
-                }
-                header p {
-                    margin: 0px;
-                    margin-top: 5px;
-                }
-                .tab {
-                    flex-direction: column;
-                }
-                .columns {
-                    flex-direction: column;
-                }
-                .row {
-                    width: 100%;
-                }
-                .sidenav {
-                    width: 0%;
-                    transition: 0s;
-                }
-                .main-limiter {
-                    margin-left: 0%;
-                    width: 100%;
-                }
-            }
+        }
+
+
 
     </style>
 </head>
@@ -325,7 +326,7 @@
                         <div class="headerbox">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Player Activity - Last 24h</span></div>
+                                        class="header-text"> Player Activity</span></div>
                             </div>
                             <div class="infobox" style="float: right; width: 33%;">
                                 <div class="info-icon">
@@ -336,12 +337,12 @@
                                         %npday%
                                     </div>
                                     <div class="info-label">
-                                        New Players
+                                        New Players / 24h
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <canvas id="playerChartDay" width="1000" height="350" style="width: 95%;"></canvas>
+                        <div id="playerChartDay" style="width=100%; height=350px;"></div>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i
                                 class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
                     </div>
@@ -382,70 +383,17 @@
                             <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Total Login times:
                             %totallogins%<br/>
                             <i class="fa fa-user-circle-o" aria-hidden="true"></i> Average Unique Players/Day:
-                            %avguniquejoins%<br>
+                            %avguniquejoins% | <i class="fa fa-user-plus" aria-hidden="true"></i> Average New/Day:
+                            %newperday%<br>
                             <b><i class="fa fa-crosshairs" aria-hidden="true"></i></b> Player kills: %playerkills% | <i
                                     class="fa fa-crosshairs" aria-hidden="true"></i> Mob kills: %mobkills% | <i
                                     class="fa fa-meh-o" aria-hidden="true"></i> Deaths: %deaths%</p>
                     </div>
                     <div class=" box column">
-                        <p class="header-label" style="color: #267F00; "><i class="fa fa-pie-chart"
-                                                                            aria-hidden="true"></i><span
-                                class="header-text"> Gamemode Usage</span></p><br/>
-                        <div class="box-area">
-                            <div class="infobox" style="background-color: #%gm0col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-fire" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm0%
-                                    </div>
-                                    <div class="info-label">
-                                        Survival
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm1col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-cube" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm1%
-                                    </div>
-                                    <div class="info-label">
-                                        Creative
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm2col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm2%
-                                    </div>
-                                    <div class="info-label">
-                                        Adventure
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%gm3col%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %gm3%
-                                    </div>
-                                    <div class="info-label">
-                                        Spectator
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="gmPie" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="worldPie" style="width: 100%; height: 400px;"></div>
+                    </div>
+                    <div class=" box column">
+                        <div id="gmPie" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
             </div>
@@ -455,82 +403,49 @@
                         <div class="headerbox">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Player Activity - Last 24h</span></div>
+                                        class="header-text"> Player Activity</span></div>
                             </div>
-                            <div class="infobox" style="float: right; width: 33%;">
+                            <div class="infobox" style="float: right; width: 40%;">
                                 <div class="info-icon">
                                     <i class="fa fa-user-plus" aria-hidden="true"></i>
                                 </div>
-                                <div class="info-text">
+                                <div class="info-text" style="width: 60%;">
                                     <div class="info-number">
-                                        %npday%
+                                        %newperdaymonth%
                                     </div>
                                     <div class="info-label">
-                                        New Players
+                                        New Players / Day
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <canvas id="playerChartDay2" width="1000" height="350" style="width: 95%;"></canvas>
-                        <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
+                        <div id="playerChartMonth" style="width=100%; height=350px;"></div>
                     </div>
                     <div class=" box column">
-                        <div class="headerbox">
-                            <div class="header-icon">
-                                <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Player Activity - Last 7d</span></div>
-                            </div>
-                            <div class="infobox" style="float: right; width: 33%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %npweek%
-                                    </div>
-                                    <div class="info-label">
-                                        New Players
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="playerChartWeek" width="1000" height="350" style="width: 95%;"></canvas>
-                        <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsweek% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek%</p>
-                    </div>
-                    <div class=" box column">
-                        <div class="headerbox">
-                            <div class="header-icon">
-                                <div class="header-label"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Player Activity - Last 30d</span></div>
-                            </div>
-                            <div class="infobox" style="float: right; width: 33%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %npmonth%
-                                    </div>
-                                    <div class="info-label">
-                                        New Players
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="playerChartMonth" width="1000" height="350" style="width: 95%;"></canvas>
-                        <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsmonth% | <i
-                                class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth%
-                        </p>
+                        <p><b>Month:</b><br>
+                            <i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsmonth% <br>
+                            <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsmonth%
+                            <br>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> New Players: %npmonth% <br>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> New Players / Day: %newperdaymonth% </p>
+                        <p><b>Week:</b><br>
+                            <i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsweek% <br>
+                            <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsweek% <br>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> New Players: %npweek% <br>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> New Players / Day: %newperdayweek%</p>
+                        <p><b>Day:</b><br>
+                            <i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% <br>
+                            <i class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday% <br>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> New Players: %npday% <br>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> New Players / Day: %newperdayday% </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="box column">
-                        <div class="headerbox">
+                        <div class="headerbox" style="width: 95%;">
                             <div class="header-icon">
                                 <div class="header-label"><i class="fa fa-pie-chart" aria-hidden="true"></i><span
-                                        class="header-text"> Playerbase Composition</span></div>
+                                        class="header-text"> Playerbase</span></div>
                             </div>
                             <div class="infobox" style="float: right; width: 40%;">
                                 <div class="info-icon">
@@ -546,63 +461,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-area">
-                            <div class="infobox" style="background-color: #%activecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %active%
-                                    </div>
-                                    <div class="info-label">
-                                        <span style="color: #%activecol%;">__</span>Active
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%inactivecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-o" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %inactive%
-                                    </div>
-                                    <div class="info-label">
-                                        Inactive
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%joinleavecol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-user-secret" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %joinleaver%
-                                    </div>
-                                    <div class="info-label">
-                                        Single<span style="color: #%joinleavecol%;">_</span>join
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="infobox" style="background-color: #%bancol%; width: 20%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-ban" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text">
-                                    <div class="info-number">
-                                        %banned%
-                                    </div>
-                                    <div class="info-label">
-                                        Banned
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br><br>
-                        <canvas id="activityPie" width="1000" height="600" style="width: 95%;"></canvas>
-                        <br>
+                        <div id="activityPie" style="width: 100%; height: 400px;"></div>
                     </div>
                     <div class=" box column">
                         <p class="header-label" style="color: #267F00; "><i class="fa fa-calendar-check-o"
@@ -636,7 +495,7 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="punchcard" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="punchcard" style="width: 100%; height:400px;"></div>
                     </div>
                 </div>
                 <div class="row">
@@ -660,7 +519,7 @@
                                 </div>
                             </div>
                         </div>
-                        <canvas id="sessiondistribution" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="sessionDistribution" style="width: 100%; height:400px;"></div>
                     </div>
                 </div>
             </div>
@@ -668,57 +527,36 @@
                 <div class="row">
                     <div class="box column">
                         <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span
-                                        class="header-text"> TPS - 7d</span></div>
-                            </div>
-                            <div class="infobox" style="width: 40%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %averagetps%
-                                    </div>
-                                    <div class="info-label">
-                                        Average 7d
-                                    </div>
-                                </div>
+                            <div class="header-icon">
+                                <div class="header-label"><i class="fa fa-cogs" aria-hidden="true"></i><span
+                                        class="header-text"> Performance</span></div>
                             </div>
                         </div>
-                        <canvas id="tps7d" width="1000" height="600" style="width: 95%;"></canvas>
+                        <p><b>Week:</b><br>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i> Average TPS: %averagetpsweek%<br>
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Average CPU: %averagecpuweek%<br>
+                            <i class="fa fa-microchip" aria-hidden="true"></i> Average RAM: %averagememoryweek%Mb<br>
+                            <i class="fa fa-umbrella" aria-hidden="true"></i> Avg. Entities: %averageentitiesweek%<br>
+                            <i class="fa fa-tree" aria-hidden="true"></i> Average Chunks: %averagechunksweek%
+                        </p>
+                        <p><b>Day:</b><br>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i> Average TPS: %averagetpsday%<br>
+                            <i class="fa fa-building-o" aria-hidden="true"></i> Average CPU: %averagecpuday%<br>
+                            <i class="fa fa-microchip" aria-hidden="true"></i> Average RAM: %averagememoryday%Mb<br>
+                            <i class="fa fa-umbrella" aria-hidden="true"></i> Avg. Entities: %averageentitiesday%<br>
+                            <i class="fa fa-tree" aria-hidden="true"></i> Average Chunks: %averagechunksday%</p>
                     </div>
                     <div class="box column">
-                        <canvas id="cpu7d" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="resourceGraph" style="width: 100%; height: 400px;"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="box column">
-                        <div class="headerbox">
-                            <div class="header-icon" style="width: 50%">
-                                <div class="header-label"><i class="fa fa-tachometer" aria-hidden="true"></i><span
-                                        class="header-text"> TPS - 24h</span></div>
-                            </div>
-                            <div class="infobox" style="width: 40%;">
-                                <div class="info-icon">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                </div>
-                                <div class="info-text" style="width: 70%;">
-                                    <div class="info-number">
-                                        %averagetpsday%
-                                    </div>
-                                    <div class="info-label">
-                                        Average 24h
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="tps24h" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="tpsGraph" style="width: 100%; height: 400px;"></div>
                     </div>
                     <div class="box column">
-                        <canvas id="cpu24h" width="1000" height="600" style="width: 95%;"></canvas>
+                        <div id="worldGraph" style="width: 100%; height: 400px;"></div>
                     </div>
-                    <p>If CPU Graph displays '-1' CPU usage is not available for this platform.</p>
                 </div>
             </div>
             <div class="tab">
@@ -743,7 +581,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="sortable table">
+                        <table class="sortable table" style="height: 100%; max-height: 800px; overflow: auto;">
                             <thead>
                             <tr>
                                 <th><i class="fa fa-user" aria-hidden="true"></i> Player</th>
@@ -784,7 +622,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="sortable table">
+                        <table class="sortable table" style="height: 100%; max-height: 800px; overflow: auto;">
                             <thead>
                             <tr>
                                 <th><i class="fa fa-chevron-right" aria-hidden="true"></i> Command</th>
@@ -821,7 +659,7 @@
                             </div>
                         </div>
                         <div style="width:100%;">
-                            <div id="cloropleth"></div>
+                            <div id="choropleth" style="width: 100%; height: 700px;"></div>
                         </div>
                     </div>
                 </div>
@@ -831,51 +669,615 @@
             </div>
         </div>
     </div>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
     <script>
-                // Navigation & Refresh time clock
-                var serverTime = new Date(%currenttime%);
-                var now = new Date();
-                var timediff = serverTime.getTime() - now.getTime();
-                function openNav() {
-                document.getElementById("sidenav").style.width = "100%";
-                document.getElementById("limiter").style.display = "none";
-                document.getElementById("navbutton").onclick = function () { closeNav(); };
-                }
-                function closeNav() {
-                document.getElementById("sidenav").style.width = "0%";
-                document.getElementById("limiter").style.display = "block";
-                document.getElementById("navbutton").onclick = function () { openNav(); };
-                }
-                var navButtons = document.getElementsByClassName("nav-button");
-                var tabs = document.getElementsByClassName("tab");
-                var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
-                if (slideIndex == null) {
-                slideIndex = 0;
-                }
-                var x = document.getElementById("main");
-                x.style.transform = "translate3d(0px,0px,0)";
-                x.style.width = "" + navButtons.length * 100 + "%";
-                for (i = 0; i < navButtons.length; i++) {
-                navButtons[i].onclick = openFunc(i)
-                        tabs[i].style.width = "" + 100 / navButtons.length + "%";
-                }
-                x.style.opacity = "1";
-                openFunc(slideIndex)();
-                countUpTimer();
-                function openFunc(i) {
-                return function() {
+		// Data Variables
+		var playersOnlineSeries = {
+			name: 'Players Online',
+			data: %playersonlineseries%,
+			type: 'areaspline',
+			color: '#%playersgraphcolor%',
+            tooltip: {
+                valueDecimals: 0
+            }
+		};
+		var tpsSeries = {
+			name: 'TPS',			
+			data: %tpsseries%,
+			type: 'spline',
+			color: '#b74343',
+			tooltip: {
+				valueDecimals: 2
+			},
+			yAxis: 1
+		};
+		var cpuSeries = {
+			name: 'CPU Usage',
+			data: %cpuseries%,
+			type: 'areaspline',
+			color: '#e0d264',
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.y:.2f}%</b>'
+			}
+		};
+		var ramSeries = {
+			name: 'RAM Usage',
+			data: %ramseries%,
+			type: 'areaspline',
+			color: '#7dcc24',
+			tooltip: {
+				valueDecimals: 0
+			},
+			yAxis: 1
+		};
+		var entitySeries = {
+			name: 'Loaded Entities',			
+			data: %entityseries%,
+			type: 'areaspline',
+			color: '#ac69ef',
+			tooltip: {
+				valueDecimals: 0
+			},
+			yAxis: 1
+		};
+		var chunkSeries = {
+			name: 'Loaded Chunks',			
+			data: %chunkseries%,
+			type: 'areaspline',
+			color: '#b58310',
+			tooltip: {
+				valueDecimals: 0
+			}
+		};
+		var activitySeries = {
+			name: 'Players',
+			colorByPoint: true,
+			data: [{
+				name: 'Active',
+				y: %active%
+			}, {
+				name: 'Inactive',
+				y: %inactive%,
+				sliced: true,
+				selected: true
+			}, {
+				name: 'Single Join',
+				y: %joinleaver%
+			}, {
+				name: 'Banned',
+				y: %banned%
+			}]
+		};
+		var gmData = %gmdata%;
+		var gmSeries = {
+			name: 'GM Usage',
+			colorByPoint: true,
+			data: [{
+				name: 'Survival',
+				y: gmData[0],
+				sliced: true,
+				selected: true
+			}, {
+				name: 'Creative',
+				y: gmData[1]
+			}, {
+				name: 'Adventure',
+				y: gmData[2]
+			}, {
+				name: 'Spectator',
+				y: gmData[3]
+			}]
+		};
+		var worldSeries = {
+		    name: 'World Playtime',
+		    colorByPoint: true,
+		    data: %worldseries%
+		};
+		var mapSeries = {
+			name: 'Players',
+			type: 'map',
+			mapData: Highcharts.maps['custom/world'],
+			data: %geomapseries%,
+			joinBy: ['iso-a3', 'code']
+		};
+		var sessionLengthSeries = {
+			name: 'Sessions',
+			color: '#89c471',			
+			data: %sessionlengthseries%
+		};
+		var punchcardSeries = {
+			name: 'Relative Activity',
+			color: '#222',
+			data: %punchcardseries%
+		};
+
+    </script>
+    <script>
+		function playersChart() {
+			var myChart = Highcharts.stockChart('playerChartDay', {
+				rangeSelector: {
+					selected: 1,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},				
+				title: {text: 'Players Online'},
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
+				series: [playersOnlineSeries]
+			});
+		}
+		function playersChart2() {
+			var myChart = Highcharts.stockChart('playerChartMonth', {
+				rangeSelector: {
+					selected: 4,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
+				title: {text: 'Players Online'},
+				series: [playersOnlineSeries]
+			});
+		}
+
+    </script>
+    <script>
+		function tpsChart() {
+			var myChart = Highcharts.stockChart('tpsGraph', {
+				rangeSelector: {
+					selected: 1,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},
+				yAxis: [{
+				    labels: {
+						align: 'right',
+						x: -3
+					},
+					title: {
+						text: 'Players'
+					},
+					height: '30%',
+				}, {
+					lineWidth: 2,
+					labels: {
+						align: 'right',
+						x: -3
+					},
+					title: {
+						text: 'TPS'
+					},
+					height: '70%',
+					top: '30%',
+					offset: 0,
+					lineWidth: 2
+				}],
+				tooltip: {
+                    split: true
+                },
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
+				title: {text: 'Ticks Per Second'},
+				series: [tpsSeries, playersOnlineSeries]
+			});
+		}
+
+    </script>
+    <script>
+		function resourceChart() {
+			var myChart = Highcharts.stockChart('resourceGraph', {
+				rangeSelector: {
+					selected: 1,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},
+				yAxis: [{
+					labels: {
+						align: 'right',
+						x: -3
+					},
+					title: {
+						text: 'CPU / %'
+					},
+					height: '55%',
+					lineWidth: 2
+				}, {
+					labels: {
+						align: 'right',
+						x: -3
+					},
+					title: {
+						text: 'RAM / MB'
+					},
+					top: '55%',
+					height: '40%',
+					offset: 0,
+					lineWidth: 2
+				}],
+				tooltip: {
+                    split: true
+                },
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
+				title: {text: 'Resource Usage'},
+				series: [cpuSeries, ramSeries]
+			});
+		}
+
+    </script>
+    <script>
+		function worldChart() {
+			var myChart = Highcharts.stockChart('worldGraph', {
+				rangeSelector: {
+					selected: 1,
+					buttons: [{
+						type: 'hour',
+						count: 12,
+						text: '12h'
+					},{
+						type: 'hour',
+						count: 24,
+						text: '24h'
+					},{
+						type: 'day',
+						count: 7,
+						text: '7d'
+					},{
+						type: 'month',
+						count: 1,
+						text: '30d'
+					},{
+						type: 'all',
+						text: 'All'
+					}]
+				},	
+				yAxis: [{
+					labels: {
+						align: 'right',
+						x: -3
+					},
+					title: {
+						text: 'Chunks'
+					},
+					height: '50%',
+					lineWidth: 2
+				}, {
+					labels: {
+						align: 'right',
+						x: -3
+					},
+					title: {
+						text: 'Entities'
+					},
+					top: '50%',
+					height: '40%',
+					offset: 0,
+					lineWidth: 2
+				}],
+				tooltip: {
+                    split: true
+                },
+				plotOptions: {
+					areaspline: {
+						fillOpacity: 0.4
+					}
+				},
+				title: {text: 'World Load'},
+				series: [entitySeries, chunkSeries]
+			});
+		}
+
+    </script>
+    <script>
+        function activityPie() {
+            var myChart = Highcharts.chart('activityPie', {
+                chart: {
+                    plotBackgroundColor: null, 
+					plotBorderWidth: null, 
+					plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Playerbase Composition'},
+				subtitle: {text: 'Total Players: %activitytotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%activitycolors%],
+                        showInLegend: true
+                    }
+                },
+                series: [activitySeries]
+            });
+        };
+
+    </script>
+    <script>
+        function worldPie() {
+            var myChart = Highcharts.chart('worldPie', {
+                chart: {
+                    plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'World Playtime'},
+				subtitle: {text: '%worldtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [worldSeries]
+            });
+        };
+
+    </script>
+    <script>
+        function gmPie() {			
+            Highcharts.chart('gmPie', {
+                chart: {
+                    plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
+                    type: 'pie'
+                },
+                title: {text: 'Gamemode Usage'},
+				subtitle: {text: '%gmtotal%'},
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+						colors: [%gmcolors%],
+                        showInLegend: true
+                    }
+                },
+                series: [gmSeries]
+            });
+        };
+
+    </script>
+    <script>
+		function punchCard() {
+			Highcharts.chart('punchcard' , {
+				chart: {
+					defaultSeriesType: 'scatter'
+				},
+				title: {
+					text: 'Player Join PunchCard'
+				},
+				xAxis: {
+					type: 'datetime',
+					dateTimeLabelFormats: {
+						hour: '%I %P'
+					},
+					tickInterval: 3600000
+				},
+				yAxis: {
+				  categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+				},
+				tooltip: {
+					pointFormat: 'Activity: {point.z}'
+				},
+				series: [punchcardSeries]
+			});
+		}
+
+    </script>
+    <script>
+        function sessionDistributionChart() {
+			Highcharts.chart('sessionDistribution', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'Session Length Distribution'
+				},
+				xAxis: {
+					type: 'category',
+					labels: {
+						rotation: -45
+					}
+				},
+				 yAxis: {
+					min: 0,
+					title: {
+						text: 'Sessions'
+					}
+				},
+				legend: {
+					enabled: false
+				},
+				plotOptions: {
+					series: {
+						groupPadding: 0
+					},
+					pointPadding: 0
+				},
+				series: [sessionLengthSeries]
+			});
+		};
+
+    </script>
+    <script>	
+        function worldMap() {
+			var myChart = Highcharts.mapChart('choropleth', {
+				title: {
+					text: 'Geolocation Map'
+				},
+				chart: {
+					animation: true
+				},
+				colorAxis: {
+					min: 1,
+					type: 'logarithmic',
+					minColor: '#EEFFEE',
+					maxColor: '#267f00'
+				},
+				series: [mapSeries]
+			});
+		}
+
+    </script>
+    <script>
+        // Navigation & Refresh time clock
+        function openNav() {
+            document.getElementById("sidenav").style.width = "100%";
+            document.getElementById("limiter").style.display = "none";
+            document.getElementById("navbutton").onclick = function () { closeNav(); };
+        }
+        function closeNav() {
+            document.getElementById("sidenav").style.width = "0%";
+            document.getElementById("limiter").style.display = "block";
+            document.getElementById("navbutton").onclick = function () { openNav(); };
+        }
+        var navButtons = document.getElementsByClassName("nav-button");
+        var tabs = document.getElementsByClassName("tab");
+        var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
+        if (slideIndex == null) {
+            slideIndex = 0;
+        }
+        var x = document.getElementById("main");
+        x.style.transform = "translate3d(0px,0px,0)";
+        x.style.width = "" + navButtons.length * 100 + "%";
+        for (i = 0; i < navButtons.length; i++) {
+            navButtons[i].onclick = openFunc(i)
+            tabs[i].style.width = "" + 100 / navButtons.length + "%";
+        }
+        x.style.opacity = "1";
+        openFunc(slideIndex)();
+        gmPie();
+		activityPie();
+		worldPie();
+		playersChart();
+		playersChart2();
+		tpsChart();
+		resourceChart();
+		worldChart();
+		worldMap();
+		sessionDistributionChart();
+		punchCard();
+        countUpTimer();
+
+        function openFunc(i) {
+            return function() {
                 if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
-                closeNav();
+                    closeNav();
                 }
                 var max = navButtons.length;
                 for (var j = 0; j < max; j++) {
-                if (j == i) {
-                navButtons[j].classList.add('active');
-                continue;
-                }
-                if (navButtons[j].classList.contains('active')) {
-                navButtons[j].classList.remove('active');
-                }
+                    if (j == i) {
+                        navButtons[j].classList.add('active');
+                        continue;
+                    }
+                    if (navButtons[j].classList.contains('active')) {
+                        navButtons[j].classList.remove('active');
+                    }
                 }
                 var perc = - 100 / navButtons.length;
                 slideIndex = i;
@@ -885,784 +1287,36 @@
                 var value = slideIndex * perc;
                 x.style.transition = "0.5s";
                 x.style.transform = "translate3d(" + value + "%,0px,0)";
-                };
-                }
-                function countUpTimer() {
-                var now = new Date();
-                var begin = new Date( %refreshlong% - timediff);
-                var out = "";
-                var seconds = now.getTime() - begin.getTime();
-                seconds = Math.floor(seconds / 1000);
-                var dd = Math.floor(seconds / 86400);
-                seconds -= (dd * 86400);
-                var dh = Math.floor(seconds / 3600);
-                seconds -= (dh * 3600);
-                var dm = Math.floor(seconds / 60);
-                seconds -= (dm * 60);
-                seconds = Math.floor(seconds);
-                if (dd != 0) {
+            };
+        }
+        function countUpTimer() {
+            var now = new Date();
+            var begin = new Date(%refreshlong%);
+            var out = "";
+            var seconds = now.getTime() - begin.getTime();
+            seconds = Math.floor(seconds / 1000);
+            var dd = Math.floor(seconds / 86400);
+            seconds -= (dd * 86400);
+            var dh = Math.floor(seconds / 3600);
+            seconds -= (dh * 3600);
+            var dm = Math.floor(seconds / 60);
+            seconds -= (dm * 60);
+            seconds = Math.floor(seconds);
+            if (dd !== 0) {
                 out += dd.toString() + "d ";
-                }
-                if (dh != 0) {
+            }
+            if (dh !== 0) {
                 out += dh.toString() + "h ";
-                }
-                if (dm != 0) {
+            }
+            if (dm !== 0) {
                 out += dm.toString() + "m ";
-                }
-                out += seconds.toString() + "s ";
-                document.getElementById('divTime').innerHTML = out;
-                setTimeout('countUpTimer()', 1000);
-                }
-
-    </script>
-    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-    <script>
-                // Script for Players Online charts using Chart.js
-                var ctxday = document.getElementById("playerChartDay");
-                var ctxday2 = document.getElementById("playerChartDay2");
-                var ctxweek = document.getElementById("playerChartWeek");
-                var ctxmonth = document.getElementById("playerChartMonth");
-                var dataday = {
-                        datasets: [
-                        {
-                        label: "Players Online",
-                                fill: true,
-                                lineTension: 0.1,
-                                backgroundColor: "#%playersgraphfill%",
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %datascatterday% ,
-                        }]
-                }
-                var dataweek = {
-                        datasets: [
-                        {
-                        label: "Players Online",
-                                fill: true,
-                                lineTension: 0.1,
-                                backgroundColor: "#%playersgraphfill%",
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %datascatterweek% ,
-                        }]
-                }
-                var datamonth = {
-                        datasets: [
-                        {
-                        label: "Players Online",
-                                fill: true,
-                                lineTension: 0.1,
-                                backgroundColor: "#%playersgraphfill%",
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %datascattermonth% ,
-                        }]
-                }
-                var playersChartDay = new Chart(ctxday, {
-                type: 'scatter',
-                        data: dataday,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
-                                }
-                        }],
-                                xAxes: [{
-                                        type: 'linear',
-                                display: false
-                                }]
-                        }
-                        }
-                });
-                var playersChartDay2 = new Chart(ctxday2, {
-                type: 'scatter',
-                        data: dataday,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
-                                }
-                        }],
-                                xAxes: [{
-                                        type: 'linear',
-                                display: false
-                                }]
-                        }
-                        }
-                });
-                var playersChartWeek = new Chart(ctxweek, {
-                type: 'scatter',
-                        data: dataweek,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    display: true,
-                                    ticks: {
-                                        suggestedMax: %graphmaxplayers%
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                        }
-                        }
-                });
-                var playersChartMonth = new Chart(ctxmonth, {
-                type: 'scatter',
-                        data: datamonth,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel+ ' Players';
-                                    }
-                                }
-                            },
-                        scales: {
-                        yAxes: [{
-                        display: true,
-                                ticks: {
-                                suggestedMax: %graphmaxplayers%
-                                }
-                        }],
-                                xAxes: [{
-                                        type: 'linear',
-                                        display: false
-                                }]
-                        }
-                        }
-                });
-
-    </script>
-    <script>
-                // TPS Graph 7d
-                var ctxtps = document.getElementById("tps7d");
-                var datatps = {
-                        datasets: [
-                        {
-                            label: "TPS",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#b74343",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#b74343",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#b74343",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'A',
-                                data: %tpsscatterweek%
-                        }, {
-                            label: "Players Online",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'B',
-                                data: %datascatterweek%
-                        }]
-                };
-                var tpsChart = new Chart(ctxtps, {
-                type: 'scatter',
-                        data: datatps,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString +': '+ tooltipItems.yLabel;
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    id: 'A',
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 21,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'TPS'
-                                    }
-                                  }, {
-                                    id: 'B',
-                                    type: 'linear',
-                                    position: 'right',
-                                    ticks: {
-                                        suggestedMax: %graphmaxplayers%,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'Players'
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-
-    </script>
-    <script>
-                // TPS Graph 24h
-                var ctxtps = document.getElementById("tps24h");
-                var datatps = {
-                        datasets: [
-                        {
-                            label: "TPS",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#b74343",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#b74343",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#b74343",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'A',
-                                data: %tpsscatterday%
-                        }, {
-                            label: "Players Online",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#%playersgraphcolor%",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#%playersgraphcolor%",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#%playersgraphcolor%",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                yAxisID: 'B',
-                                data: %datascatterday%
-                        }]
-                };
-                var tpsChart = new Chart(ctxtps, {
-                type: 'scatter',
-                        data: datatps,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel;
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    id: 'A',
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 21,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'TPS'
-                                    }
-                                  }, {
-                                    id: 'B',
-                                    type: 'linear',
-                                    position: 'right',
-                                    ticks: {
-                                        suggestedMax: %graphmaxplayers%,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'Players'
-                                    }
-                                }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-
-    </script>
-    <script>
-                // CPU Graph 24h
-                var ctxcpu = document.getElementById("cpu24h");
-                var datacpu = {
-                        datasets: [
-                        {
-                            label: "CPU Usage",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#e0d264",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#e0d264",
-                                pointBackgroundColor: "#ede5aa",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#e0d264",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %cpuscatterday%
-                        }]
-                };
-                var cpuChart = new Chart(ctxcpu, {
-                type: 'scatter',
-                        data: datacpu,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel + '%';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 100,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'CPU Usage'
-                                    }
-                                  }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-
-    </script>
-    <script>
-                // CPU Graph 7d
-                var ctxcpu = document.getElementById("cpu7d");
-                var datacpu = {
-                        datasets: [
-                        {
-                            label: "CPU Usage",
-                                fill: false,
-                                lineTension: 0.1,
-                                borderColor: "#e0d264",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#e0d264",
-                                pointBackgroundColor: "#ede5aa",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#e0d264",
-                                pointHoverBorderColor: "#8fabc6",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                                data: %cpuscatterweek%
-                        }]
-                };
-                var cpuChart = new Chart(ctxcpu, {
-                type: 'scatter',
-                        data: datacpu,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        var newDate = new Date();
-                                        newDate.setTime(tooltipItems.xLabel);
-                                        dateString = newDate.toUTCString();
-                                        return dateString+ ': '+ tooltipItems.yLabel + '%';
-                                    }
-                                }
-                            },
-                            scales: {
-                                yAxes: [{
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        suggestedMax: 100,
-                                        suggestedMin: 0
-                                    },
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: 'CPU Usage'
-                                    }
-                                  }],
-                                xAxes: [{
-                                        type: 'linear',
-                                    display: false
-                                }]
-                            }
-                        }
-                });
-    </script>
-    <script>
-                //    ActivityPie Graph
-                var ctxactivitypie = document.getElementById("activityPie");
-                var dataActivityPie = {
-                labels: %labelsactivity% ,
-                        datasets: [
-                        {
-                        data: %activitydata% ,
-                                backgroundColor: [ %activitycolors% ],
-                                hoverBackgroundColor: [ %activitycolors% ]
-                        }
-                        ]
-                }
-                var ActivityPie = new Chart(ctxactivitypie, {
-                type: 'doughnut',
-                        data: dataActivityPie,
-                        options: {
-                        legend: {
-                        position: 'right',
-                                labels: {
-                                padding: 7
-                                }
-                        }
-                        }
-                });
-
-    </script>
-    <script>
-                //    GMPie Graph
-                var ctxgmpie = document.getElementById("gmPie");
-                var dataGmPie = {
-                labels: %gmlabels% ,
-                        datasets: [
-                        {
-                        data: %gmdata% ,
-                                backgroundColor: [ %gmcolors% ],
-                                hoverBackgroundColor: [ %gmcolors% ]
-                        }
-                        ]
-                }
-                var GMPie = new Chart(ctxgmpie, {
-                type: 'doughnut',
-                        data: dataGmPie,
-                        options: {
-                        legend: {
-                        position: 'right',
-                                labels: {
-                                padding: 7
-                                }
-                        }
-                        }
-                });
-
-    </script>
-    <script>
-                //    Session start puchcard bubblechart
-                function day(i) {
-                switch (i) {
-                case 0:
-                        return 'Monday';
-                case 1:
-                        return 'Tuesday';
-                case 2:
-                        return 'Wednesday';
-                case 3:
-                        return 'Thursday';
-                case 4:
-                        return 'Friday';
-                case 5:
-                        return 'Saturday';
-                case 6:
-                        return 'Sunday';
-                default:
-                        return '';
-                }
-                }
-                function hour(i) {
-                switch (i) {
-                case 25:
-                        case - 1:
-                        case - 2:
-                        case - 3:
-                        case - 4:
-                        case - 5:
-                        return '';
-                default:
-                        return i + ':00';
-                }
-                }
-                var ctxpunch = document.getElementById("punchcard");
-                var datapunch = {
-                datasets: [
-                {
-                label: 'Player Join Punchcard',
-                        data: %datapunchcard% ,
-                        backgroundColor: "#222",
-                        hoverBackgroundColor: "#333",
-                }]
-                };
-                var punchcardChart = new Chart(ctxpunch, {
-                type: 'bubble',
-                        data: datapunch,
-                        options: {
-                            tooltips: {
-                                callbacks: {
-                                    label: function(tooltipItems, data) {
-                                        return day(tooltipItems.yLabel) + ': ' + hour(tooltipItems.xLabel);
-                                    }
-                                }
-                            },
-                                scales: {
-                                xAxes: [{
-                                showXLabels: 1,
-                                        ticks: {
-                                        callback: function(value, index, values) {
-                                        return hour(value);
-                                        },
-                                                suggestedMax: 25,
-                                                suggestedMin: - 1
-                                        }
-                                }],
-                                        yAxes: [{
-                                        ticks: {
-                                        callback: function(value, index, values) {
-                                        return day(value);
-                                        },
-                                                suggestedMax: 7,
-                                                suggestedMin: - 1
-                                        }
-                                        }]
-                                }
-                        }
-                });
-
-    </script>
-    <script>
-                //    Session length distribution barchart
-                var ctxDistribution = document.getElementById("sessiondistribution");
-                var dataDistr = {
-                labels: %labelssessiondistribution%,
-                        datasets: [
-                        {
-                        label: 'Session Length Distribution',
-                                data: %datasessiondistribution% ,
-                                backgroundColor: "#89c471",
-                                fill: true,
-                                borderColor: "#348e0f",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "#348e0f",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "#348e0f",
-                                pointHoverBorderColor: "#348e0f",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                spanGaps: false,
-                        }]
-                };
-                var sessionDistributions = new Chart(ctxDistribution, {
-                type: 'bar',
-                        data: dataDistr,
-                        options: {
-                        tooltips: {
-                        callbacks: {
-                        label: function(tooltipItems, data) {
-                        return tooltipItems.xLabel + 'utes: ' + tooltipItems.yLabel + ' sessions';
-                        }
-                        }
-                        },
-                                scales: {
-                                yAxes: [{
-                                ticks: {
-                                callback: function(value, index, values) {
-                                return value + '';
-                                }
-                                }
-                                }]
-                                }
-                        }
-                });
-
-    </script>
-    <script>
-                //        Geolocation map
-                CLOROPLETH = document.getElementById('cloropleth');
-                var data = [{
-                type: 'choropleth',
-                        locationmode: "country names",
-                        locations: %geomapcountries% ,
-                        z: %geomapz% ,
-                        text: %geomapcodes% ,
-                        colorscale: [
-                        [0, 'rgb(38, 127, 0)'], [1, 'rgb(220, 220, 220)']],
-                        autocolorscale: false,
-                        reversescale: true,
-                        marker: {
-                        line: {
-                        color: 'rgb(100,100,100)',
-                                width: 0.5
-                        }
-                        },
-                        tick0: 0,
-                        zmin: 0,
-                        dtick: 1000,
-                        colorbar: {
-                        autotic: false,
-                                tickprefix: '',
-                                title: 'Players'
-                        }
-                }];
-                var layout = {
-                title: '',
-                        autosize: true,
-                        geo:{
-                        showframe: false,
-                                showcoastlines: false,
-                                projection:{
-                                type: 'mercator'
-                                }
-                        }
-                };
-                Plotly.plot(CLOROPLETH, data, layout, {showLink: false});
+            }
+            out += seconds.toString() + "s ";
+            document.getElementById('divTime').innerHTML = out;
+            setTimeout('countUpTimer()', 1000);
+        }
 
     </script>
 </div>
 </body>
-</html> 
+</html>

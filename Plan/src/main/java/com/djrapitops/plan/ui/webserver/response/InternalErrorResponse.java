@@ -1,17 +1,14 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
-import java.io.OutputStream;
 import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
- *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class InternalErrorResponse extends Response {
 
-    public InternalErrorResponse(OutputStream output, Throwable e, String cause) {
-        super(output);
+    public InternalErrorResponse(Throwable e, String cause) {
         super.setHeader("HTTP/1.1 500 Internal Error");
         StringBuilder content = new StringBuilder();
         content.append("<h1>500 Internal Error occurred</h1>");

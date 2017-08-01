@@ -12,10 +12,17 @@ import main.java.com.djrapitops.plan.Log;
 public class Check {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private Check() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * If check is false, send message.
      *
      * @param condition Condition.
-     * @param message Message to send if Condition is false
+     * @param message   Message to send if Condition is false
      * @return Condition
      */
     public static boolean isTrue(boolean condition, String message) {
@@ -29,8 +36,8 @@ public class Check {
      * If check is false, send message to sender.
      *
      * @param condition Condition.
-     * @param message Message to send if Condition is false
-     * @param sender Sender to send message to
+     * @param message   Message to send if Condition is false
+     * @param sender    Sender to send message to
      * @return Condition
      */
     public static boolean isTrue(boolean condition, String message, ISender sender) {
@@ -44,10 +51,10 @@ public class Check {
      * If check is false, send error message.
      *
      * @param condition Condition.
-     * @param message Message to send if Condition is false
+     * @param message   Message to send if Condition is false
      * @return Condition
      */
-    public static boolean isTrue_Error(boolean condition, String message) {
+    public static boolean ErrorIfFalse(boolean condition, String message) {
         if (!condition) {
             Log.error(message);
             Log.toLog(message, Log.getErrorsFilename());

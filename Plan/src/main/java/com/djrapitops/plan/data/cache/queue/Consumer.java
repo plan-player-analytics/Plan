@@ -1,24 +1,26 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
 import com.djrapitops.plugin.task.AbsRunnable;
+import main.java.com.djrapitops.plan.Log;
+
 import java.util.concurrent.BlockingQueue;
 
 /**
  * Abstract class representing a queue consumer.
  *
- * @author Rsl1122
  * @param <T>
+ * @author Rsl1122
  */
 public abstract class Consumer<T> extends AbsRunnable {
 
-    boolean run;
     final BlockingQueue<T> queue;
+    boolean run;
 
     /**
      * Constructor, defines queue.
      *
      * @param queue Queue to consume from.
-     * @param name Name of the queue.
+     * @param name  Name of the queue.
      */
     public Consumer(BlockingQueue<T> queue, String name) {
         super(name);
@@ -33,6 +35,8 @@ public abstract class Consumer<T> extends AbsRunnable {
                 consume(queue.take());
             }
         } catch (InterruptedException ex) {
+            Log.error("Consumer interrupted: " + ex.getCause());
+            Thread.currentThread().interrupt();
         }
     }
 

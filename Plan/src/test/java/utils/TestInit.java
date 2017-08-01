@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
- *
  * @author Rsl1122
  */
 public class TestInit {
@@ -106,14 +105,13 @@ public class TestInit {
     }
 
     private YamlConfiguration mockConfig() throws IOException, InvalidConfigurationException {
-        File configfile = new File(getClass().getResource("/config.yml").getPath());
+        File configFile = new File(getClass().getResource("/config.yml").getPath());
         YamlConfiguration configuration = new YamlConfiguration();
-        configuration.load(configfile.getAbsolutePath());
+        configuration.load(configFile.getAbsolutePath());
         return configuration;
     }
 
     /**
-     *
      * @return
      */
     public Plan getPlanMock() {

@@ -5,11 +5,11 @@
  */
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import java.util.Comparator;
 import main.java.com.djrapitops.plan.data.UserData;
 
+import java.util.Comparator;
+
 /**
- *
  * @author Risto
  */
 public class UserDataNameComparator implements Comparator<UserData> {

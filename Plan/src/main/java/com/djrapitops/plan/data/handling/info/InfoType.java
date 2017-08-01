@@ -2,9 +2,9 @@ package main.java.com.djrapitops.plan.data.handling.info;
 
 /**
  * Enum class for the types of HandlingInfo to be processed.
- *
+ * <p>
  * Type is only used for debugging.
- *
+ * <p>
  * OTHER should be used when
  *
  * @author Rsl1122
@@ -49,5 +49,6 @@ public enum InfoType {
      *
      * @since 3.1.1
      */
+    WORLD,
     OTHER
 }

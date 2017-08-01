@@ -19,15 +19,22 @@ import java.util.Map.Entry;
  */
 public class DBUtils {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private DBUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final int BATCH_SIZE = 2048;
 
     /**
      * Splits a collection of objects into lists with the size defined by
      * BATCH_SIZE.
      *
-     * @param <T> Object type
+     * @param <T>     Object type
      * @param objects Collection of the objects. // * @return Lists with max
-     * size of BATCH_SIZE.
+     *                size of BATCH_SIZE.
      * @return
      */
     public static <T> List<List<T>> splitIntoBatches(Collection<T> objects) {
@@ -50,7 +57,6 @@ public class DBUtils {
     }
 
     /**
-     *
      * @param <T>
      * @param objects
      * @return

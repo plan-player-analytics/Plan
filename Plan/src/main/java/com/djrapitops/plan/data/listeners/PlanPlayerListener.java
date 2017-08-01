@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.Gamemode;
-import com.djrapitops.plugin.utilities.player.bukkit.BukkitPlayer;
+import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -20,12 +21,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
  *
  * @author Rsl1122
+ * @since 2.0.0
  */
 public class PlanPlayerListener implements Listener {
 
@@ -34,9 +37,8 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * Class Constructor.
-     *
-     * Copies the references to multiple handlers from Current instance of
-     * handler.
+     * <p>
+     * Copies the references to multiple handlers from Current instance of handler.
      *
      * @param plugin Current instance of Plan
      */
@@ -47,42 +49,57 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * PlayerJoinEvent Listener.
-     *
-     * If player is a new player, creates a new data in the database for the
-     * player. Retrieves the UserData, updates and then saves it to the Cache.
+     * <p>
+     * If player is a new player, creates new data for the player.
+     * <p>
+     * Adds a LoginInfo to the processingQueue if the user is not new.
      *
      * @param event The Fired event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+
+        IPlayer iPlayer = Fetch.wrapBukkit(player);
+        plugin.getNotificationCenter().checkNotifications(iPlayer);
+
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
         Log.debug(uuid + ": PlayerJoinEvent");
+
         plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
             @Override
             public void run() {
-                LoginInfo loginInfo = new LoginInfo(uuid, MiscUtils.getTime(), player.getAddress().getAddress(), player.isBanned(), player.getDisplayName(), Gamemode.wrap(player.getGameMode()), 1);
+                long time = MiscUtils.getTime();
+                InetAddress ip = player.getAddress().getAddress();
+                boolean banned = player.isBanned();
+                String displayName = player.getDisplayName();
+                String gm = player.getGameMode().name();
+                String worldName = player.getWorld().getName();
+
+                LoginInfo loginInfo = new LoginInfo(uuid, time, ip, banned, displayName, gm, 1, worldName);
                 boolean isNewPlayer = !plugin.getDB().wasSeenBefore(uuid);
+
                 if (isNewPlayer) {
-                    UserData newUserData = NewPlayerCreator.createNewPlayer(BukkitPlayer.wrap(player));
+                    UserData newUserData = NewPlayerCreator.createNewPlayer(iPlayer);
                     loginInfo.process(newUserData);
                     handler.newPlayer(newUserData);
                 } else {
                     handler.addToPool(loginInfo);
                 }
+
                 Log.debug(uuid + ": PlayerJoinEvent_AsyncTask_END, New:" + isNewPlayer);
                 this.cancel();
             }
         }).runTaskAsynchronously();
+
         Log.debug(uuid + ": PlayerJoinEvent_END");
     }
 
     /**
      * PlayerQuitEvent Listener.
-     *
-     * Retrieves the current UserData for the Player, updates it, saves the data
-     * to Database and clears it from cache.
+     * <p>
+     * Adds a LogoutInfo to the processing Queue.
      *
      * @param event Fired event
      */
@@ -92,15 +109,20 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
         Log.debug(uuid + ": PlayerQuitEvent");
-        handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), Gamemode.wrap(player.getGameMode()), handler.getSession(uuid)));
+        long time = MiscUtils.getTime();
+        boolean banned = player.isBanned();
+        Gamemode gm = Gamemode.wrap(player.getGameMode());
+        String worldName = player.getWorld().getName();
+
+        handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerQuitEvent_END");
     }
 
     /**
      * PlayerKickEvent Listener.
-     *
-     * Updates current playerdata and saves it to the Database.
+     * <p>
+     * Adds a KickInfo & LogoutInfo to the processing Queue.
      *
      * @param event Fired event
      */
@@ -113,7 +135,12 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
         Log.debug(uuid + ": PlayerKickEvent");
-        handler.addToPool(new LogoutInfo(uuid, MiscUtils.getTime(), player.isBanned(), Gamemode.wrap(player.getGameMode()), handler.getSession(uuid)));
+        long time = MiscUtils.getTime();
+        boolean banned = player.isBanned();
+        Gamemode gm = Gamemode.wrap(player.getGameMode());
+        String worldName = player.getWorld().getName();
+
+        handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
         Log.debug(uuid + ": PlayerKickEvent_END");

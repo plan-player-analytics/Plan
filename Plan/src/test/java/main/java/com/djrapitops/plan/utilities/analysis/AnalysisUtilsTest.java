@@ -23,7 +23,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
@@ -41,7 +40,7 @@ public class AnalysisUtilsTest {
      */
     @Before
     public void setUp() throws Exception {
-        TestInit t = TestInit.init();
+        TestInit.init();
     }
 
     /**
@@ -102,9 +101,8 @@ public class AnalysisUtilsTest {
         registered.add(1L);
         long scale = 8L;
         long now = 10L;
-        int expResult = 1;
-        int result = AnalysisUtils.getNewPlayers(registered, scale, now);
-        assertEquals(expResult, result);
+        long result = AnalysisUtils.getNewPlayers(registered, scale, now);
+        assertEquals(1L, result);
     }
 
     /**
@@ -115,9 +113,8 @@ public class AnalysisUtilsTest {
         List<Long> registered = new ArrayList<>();
         long scale = 1L;
         long now = 2L;
-        int expResult = 0;
-        int result = AnalysisUtils.getNewPlayers(registered, scale, now);
-        assertEquals(expResult, result);
+        long result = AnalysisUtils.getNewPlayers(registered, scale, now);
+        assertEquals(0L, result);
     }
 
     /**
