@@ -106,7 +106,7 @@ public abstract class Importer {
                     });
 
             Benchmark.stop(createUserObjects);
-            processStatus.setStatus(processName, "Save new UserData objects (" + unSaved.size() + ")");
+            processStatus.setStatus(processName, "Save new UserData objects (" + amount + ")");
 
             try {
                 plan.getDB().saveMultipleUserData(newUsers);
