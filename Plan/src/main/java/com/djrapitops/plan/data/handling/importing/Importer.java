@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Abstract class used for importing data from other plugins.
@@ -81,7 +82,9 @@ public abstract class Importer {
             List<UUID> unSaved = new ArrayList<>(uuids);
             unSaved.removeAll(saved);
 
-            String createUserObjects = "Creating new UserData objects for: " + unSaved.size();
+            int amount = unSaved.size();
+
+            String createUserObjects = "Creating " + amount + " new UserData objects";
             processStatus.setStatus(processName, createUserObjects);
 
             Map<UUID, IOfflinePlayer> offlinePlayers = Fetch.getIOfflinePlayers().stream().collect(Collectors.toMap(IOfflinePlayer::getUuid, Function.identity()));
@@ -95,14 +98,23 @@ public abstract class Importer {
                     .collect(Collectors.toList());
 
             AtomicInteger currentUser = new AtomicInteger(0);
-            int amount = unSaved.size();
+            AtomicInteger currentPercent = new AtomicInteger(0);
+
+            int fivePercent = amount / 20;
+
+            //Using Set because of better Collection#contains() performance
+            Set<Integer> milestones = IntStream.rangeClosed(1, 20)
+                    .mapToObj(i -> i * fivePercent)
+                    .collect(Collectors.toSet());
 
             offlineP.parallelStream()
                     .map(NewPlayerCreator::createNewOfflinePlayer)
                     .forEach(newPlayer -> {
                         newPlayer.setLastPlayed(newPlayer.getRegistered());
                         newUsers.add(newPlayer);
-                        processStatus.setStatus(processName, "Creating new UserData objects: " + currentUser.addAndGet(1) + "/" + amount);
+                        if (milestones.contains(currentUser.incrementAndGet())) {
+                            processStatus.setStatus(processName, "Creating new UserData objects: " + currentPercent.addAndGet(5) + "%");
+                        }
                     });
 
             Benchmark.stop(createUserObjects);
