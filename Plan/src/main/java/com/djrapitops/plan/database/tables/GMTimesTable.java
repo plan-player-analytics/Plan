@@ -298,7 +298,7 @@ public class GMTimesTable extends Table {
 
         List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
 
-        batches.stream().forEach(batch -> {
+        batches.forEach(batch -> {
             try {
                 addNewGMTimesBatch(batch);
             } catch (SQLException e) {
