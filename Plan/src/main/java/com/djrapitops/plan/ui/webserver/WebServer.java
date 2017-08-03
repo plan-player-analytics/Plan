@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Rsl1122
@@ -65,6 +66,7 @@ public class WebServer {
         if (enabled) {
             return;
         }
+
         Log.info(Phrase.WEBSERVER_INIT.toString());
         try {
             usingHttps = startHttpsServer();
@@ -82,24 +84,28 @@ public class WebServer {
                     try {
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
+
                         Headers responseHeaders = exchange.getResponseHeaders();
                         responseHeaders.set("Content-Type", "text/html;");
                         WebUser user = null;
+
                         if (usingHttps) {
                             user = getUser(exchange.getRequestHeaders());
 
                             // Prompt authorization
                             if (user == null) {
-
                                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
                             }
                         }
+
+                         responseHeaders.set("Content-Encoding", "gzip");
+
                         Response response = getResponse(target, user);
 
                         String content = response.getContent();
                         exchange.sendResponseHeaders(response.getCode(), 0);
 
-                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody());
+                        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
                              ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
                             byte[] buffer = new byte[2048];
                             int count;
@@ -115,6 +121,7 @@ public class WebServer {
                     }
                 }
             });
+
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
             server.start();
 
@@ -133,18 +140,21 @@ public class WebServer {
             if (Verify.isEmpty(authorization)) {
                 return null;
             }
+
             String auth = authorization.get(0);
             if (auth.contains("Basic ")) {
                 auth = auth.split(" ")[1];
             } else {
                 throw new IllegalArgumentException("Wrong format of Auth");
             }
+
             Base64.Decoder decoder = Base64.getDecoder();
             byte[] decoded = decoder.decode(auth);
             String[] userInfo = new String(decoded).split(":");
             if (userInfo.length != 2) {
                 throw new IllegalArgumentException("User and Password not specified");
             }
+
             String user = userInfo[0];
             String passwordRaw = userInfo[1];
 
