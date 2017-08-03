@@ -12,6 +12,13 @@ import main.java.com.djrapitops.plan.data.UserData;
 public class LogoutHandling {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private LogoutHandling() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Processes the information of the Event and changes UserData object
      * accordingly.
      *
