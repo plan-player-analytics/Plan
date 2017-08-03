@@ -90,6 +90,7 @@ public class IPsTable extends Table {
                     Log.error("Host not found at getIPAddresses: " + ipAddressName); //Shouldn't ever happen
                 }
             }
+
             return ips;
         } finally {
             close(set);

@@ -83,6 +83,7 @@ public class CommandUseTable extends Table {
         if (data.isEmpty()) {
             return;
         }
+
         Benchmark.start("Database: Save Commanduse");
         Map<String, Integer> newData = new HashMap<>(data);
         Map<String, Integer> saved = getCommandUse();

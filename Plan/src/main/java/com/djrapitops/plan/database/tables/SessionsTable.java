@@ -107,36 +107,38 @@ public class SessionsTable extends Table {
         if (sessions == null) {
             return;
         }
+
         Benchmark.start("Database: Save Sessions");
         sessions.removeAll(getSessionData(userId));
+
         if (sessions.isEmpty()) {
+            Benchmark.stop("Database: Save Sessions");
             return;
         }
-        PreparedStatement statement = null;
-        try {
 
+        PreparedStatement statement = null;
+
+        try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "
                     + columnSessionStart + ", "
                     + columnSessionEnd
                     + ") VALUES (?, ?, ?)");
 
-            boolean commitRequired = false;
             for (SessionData session : sessions) {
                 long end = session.getSessionEnd();
                 long start = session.getSessionStart();
                 if (end < start) {
                     continue;
                 }
+
                 statement.setInt(1, userId);
                 statement.setLong(2, start);
                 statement.setLong(3, end);
                 statement.addBatch();
-                commitRequired = true;
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+
+            statement.executeBatch();
         } finally {
             close(statement);
             Benchmark.stop("Database: Save Sessions");
@@ -152,25 +154,31 @@ public class SessionsTable extends Table {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
+
         Benchmark.start("Database: Get Sessions multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
+
         try {
             Map<Integer, List<SessionData>> sessions = new HashMap<>();
             statement = prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
+
             for (Integer id : ids) {
                 sessions.put(id, new ArrayList<>());
             }
+
             while (set.next()) {
                 Integer id = set.getInt(columnUserID);
                 if (!ids.contains(id)) {
                     continue;
                 }
-                sessions.get(id).add(new SessionData(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
+
+                long sessionStart = set.getLong(columnSessionStart);
+                long sessionEnd = set.getLong(columnSessionEnd);
+
+                sessions.get(id).add(new SessionData(sessionStart, sessionEnd));
             }
-            set.close();
-            statement.close();
 
             return sessions;
         } finally {
@@ -195,8 +203,8 @@ public class SessionsTable extends Table {
         for (Map.Entry<Integer, List<SessionData>> entrySet : sessions.entrySet()) {
             Integer id = entrySet.getKey();
             List<SessionData> sessionList = entrySet.getValue();
-
             List<SessionData> s = saved.get(id);
+
             if (s != null) {
                 sessionList.removeAll(s);
             }
@@ -207,11 +215,17 @@ public class SessionsTable extends Table {
 
             saved.put(id, sessionList);
         }
+
         List<List<Container<SessionData>>> batches = splitIntoBatches(sessions);
 
-        for (List<Container<SessionData>> batch : batches) {
-            saveSessionBatch(batch);
-        }
+        batches.parallelStream().forEach(batch -> {
+            try {
+                saveSessionBatch(batch);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         Benchmark.stop("Database: Save Sessions multiple");
     }
 
@@ -219,6 +233,10 @@ public class SessionsTable extends Table {
         if (batch.isEmpty()) {
             return;
         }
+
+        int batchSize = batch.size();
+        Log.debug("Preparing insertion of sessions... Batch Size: " + batchSize);
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -227,25 +245,21 @@ public class SessionsTable extends Table {
                     + columnSessionEnd
                     + ") VALUES (?, ?, ?)");
 
-            boolean commitRequired = false;
-            int i = 0;
             for (Container<SessionData> data : batch) {
                 SessionData session = data.getObject();
                 int id = data.getId();
                 if (!session.isValid()) {
                     continue;
                 }
+
                 statement.setInt(1, id);
                 statement.setLong(2, session.getSessionStart());
                 statement.setLong(3, session.getSessionEnd());
                 statement.addBatch();
-                commitRequired = true;
-                i++;
             }
-            if (commitRequired) {
-                Log.debug("Executing session batch: " + i);
-                statement.executeBatch();
-            }
+
+            Log.debug("Executing session batch: " + batchSize);
+            statement.executeBatch();
         } finally {
             close(statement);
         }
