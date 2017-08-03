@@ -424,19 +424,24 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void saveMultipleUserData(Collection<UserData> data) throws SQLException {
-        Benchmark.start("Database: Save multiple Userdata");
-        checkConnection();
-        if (data.isEmpty()) {
+        if (data == null || data.isEmpty()) {
             return;
         }
+
+        Benchmark.start("Database: Save multiple Userdata");
+        data.removeIf(Objects::isNull);
+
+        checkConnection();
         setStatus("Save userdata (multiple) for " + data.size());
         usersTable.saveUserDataInformationBatch(data);
 
         // Transform to map
-        Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
+        Map<UUID, UserData> userDatas = data.stream()
+                .collect(Collectors.toMap(UserData::getUuid, Function.identity()));
+
         // Get UserIDs
         Map<UUID, Integer> userIds = usersTable.getAllUserIds();
-        // Empty dataset
+        // Create empty data sets
         Map<Integer, Set<String>> nicknames = new HashMap<>();
         Map<Integer, String> lastNicks = new HashMap<>();
         Map<Integer, Set<InetAddress>> ips = new HashMap<>();
@@ -445,14 +450,16 @@ public abstract class SQLDB extends Database {
         Map<Integer, List<SessionData>> sessions = new HashMap<>();
         Map<Integer, Map<String, Long>> gmTimes = new HashMap<>();
         Map<Integer, Map<String, Long>> worldTimes = new HashMap<>();
-        // Put to dataset
+
+        // Put in data set
         List<String> worldNames = data.stream()
                 .map(UserData::getWorldTimes)
                 .map(WorldTimes::getTimes)
                 .map(Map::keySet)
-                .flatMap(keySet -> keySet.stream())
+                .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
+
         for (Map.Entry<UUID, UserData> entrySet : userDatas.entrySet()) {
             UUID uuid = entrySet.getKey();
             UserData uData = entrySet.getValue();
@@ -472,6 +479,7 @@ public abstract class SQLDB extends Database {
             gmTimes.put(id, new HashMap<>(uData.getGmTimes().getTimes()));
             worldTimes.put(id, new HashMap<>(uData.getWorldTimes().getTimes()));
         }
+
         // Save
         nicknamesTable.saveNickLists(nicknames, lastNicks);
         ipsTable.saveIPList(ips);

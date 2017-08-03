@@ -2,6 +2,9 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.database.Container;
+import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
@@ -93,12 +96,14 @@ public class GMTimesTable extends Table {
             statement.setInt(1, userId);
             set = statement.executeQuery();
             HashMap<String, Long> times = new HashMap<>();
+
             while (set.next()) {
                 times.put("SURVIVAL", set.getLong(columnSurvivalTime));
                 times.put("CREATIVE", set.getLong(columnCreativeTime));
                 times.put("ADVENTURE", set.getLong(columnAdventureTime));
                 times.put("SPECTATOR", set.getLong(columnSpectatorTime));
             }
+
             return times;
         } finally {
             close(set);
@@ -113,18 +118,21 @@ public class GMTimesTable extends Table {
         try {
             statement = prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
+
             while (set.next()) {
                 Map<String, Long> gmTimes = new HashMap<>();
                 int id = set.getInt(columnUserID);
                 if (!userIds.contains(id)) {
                     continue;
                 }
+
                 gmTimes.put("SURVIVAL", set.getLong(columnSurvivalTime));
                 gmTimes.put("CREATIVE", set.getLong(columnCreativeTime));
                 gmTimes.put("ADVENTURE", set.getLong(columnAdventureTime));
                 gmTimes.put("SPECTATOR", set.getLong(columnSpectatorTime));
                 times.put(id, gmTimes);
             }
+
             return times;
         } finally {
             close(set);
@@ -141,8 +149,10 @@ public class GMTimesTable extends Table {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
+
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
+
         int update;
         try {
             statement = prepareStatement(
@@ -153,22 +163,17 @@ public class GMTimesTable extends Table {
                             + columnSpectatorTime + "=? "
                             + " WHERE (" + columnUserID + "=?)");
             statement.setInt(5, userId);
+
             for (int i = 0; i < gms.length; i++) {
-                try {
-                    Long time = gamemodeTimes.get(gms[i]);
-                    if (time != null) {
-                        statement.setLong(i + 1, time);
-                    } else {
-                        statement.setLong(i + 1, 0);
-                    }
-                } catch (NoSuchFieldError e) {
-                    statement.setLong(i + 1, 0);
-                }
+                Long time = gamemodeTimes.get(gms[i]);
+                statement.setLong(i + 1, time != null ? time : 0);
             }
+
             update = statement.executeUpdate();
         } finally {
             close(statement);
         }
+
         if (update == 0) {
             addNewGMTimesRow(userId, gamemodeTimes);
         }
@@ -195,11 +200,52 @@ public class GMTimesTable extends Table {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
+
         Benchmark.start("Database: Save GMTimes");
-        PreparedStatement statement = null;
-        String[] gms = getGMKeyArray();
 
         Set<Integer> savedIDs = getSavedIDs();
+
+        Map<Integer, GMTimes> gmTimes = new HashMap<>();
+
+        for (Map.Entry<Integer, Map<String, Long>> entrySet : gamemodeTimes.entrySet()) {
+            int userID = entrySet.getKey();
+
+            if (!savedIDs.contains(userID)) {
+                continue;
+            }
+
+            Map<String, Long> gmTimesMap = entrySet.getValue();
+            gmTimes.put(userID, new GMTimes(gmTimesMap));
+        }
+
+        List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
+
+        batches.parallelStream().forEach(batch -> {
+            try {
+                saveGMTimesBatch(batch);
+            } catch (SQLException e) {
+                Log.toLog("GMTimesTable.saveGMTimes", e);
+            }
+        });
+
+        gamemodeTimes.keySet().removeAll(savedIDs);
+
+        addNewGMTimesRows(gamemodeTimes);
+        Benchmark.stop("Database: Save GMTimes");
+    }
+
+    private void saveGMTimesBatch(List<Container<GMTimes>> batch) throws SQLException {
+        if (batch.isEmpty()) {
+            return;
+        }
+
+        int batchSize = batch.size();
+        Log.debug("Preparing insertion of GM Times... Batch Size: " + batchSize);
+
+        String[] gms = getGMKeyArray();
+        Set<Integer> savedIDs = getSavedIDs();
+
+        PreparedStatement statement = null;
         try {
             statement = prepareStatement(
                     "UPDATE " + tableName + " SET "
@@ -208,48 +254,72 @@ public class GMTimesTable extends Table {
                             + columnAdventureTime + "=?, "
                             + columnSpectatorTime + "=? "
                             + " WHERE (" + columnUserID + "=?)");
-            boolean commitRequired = false;
-            for (Map.Entry<Integer, Map<String, Long>> entrySet : gamemodeTimes.entrySet()) {
-                Integer id = entrySet.getKey();
+
+            for (Container<GMTimes> data : batch) {
+                int id = data.getId();
 
                 if (!savedIDs.contains(id)) {
                     continue;
                 }
 
                 statement.setInt(5, id);
+
                 for (int i = 0; i < gms.length; i++) {
-                    try {
-                        Map<String, Long> times = entrySet.getValue();
-                        Long time = times.get(gms[i]);
+                    Map<String, Long> times = data.getObject().getTimes();
+                    Long time = times.get(gms[i]);
 
-                        statement.setLong(i + 1, time != null ? time : 0);
-                    } catch (NoSuchFieldError e) {
-                        statement.setLong(i + 1, 0);
-                    }
+                    statement.setLong(i + 1, time != null ? time : 0);
                 }
+
                 statement.addBatch();
-                commitRequired = true;
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
-
-            gamemodeTimes.keySet().removeAll(savedIDs);
+            Log.debug("Executing GM Times batch: " + batchSize);
+            statement.executeBatch();
         } finally {
             close(statement);
         }
-
-        addNewGMTimesRows(gamemodeTimes);
-        Benchmark.stop("Database: Save GMTimes");
     }
 
     private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
-        PreparedStatement statement = null;
+
+        Benchmark.start("Database: Add GMTimes Rows");
+
+        Map<Integer, GMTimes> gmTimes = new HashMap<>();
+
+        for (Map.Entry<Integer, Map<String, Long>> entrySet : gamemodeTimes.entrySet()) {
+            int userID = entrySet.getKey();
+            Map<String, Long> gmTimesMap = entrySet.getValue();
+            gmTimes.put(userID, new GMTimes(gmTimesMap));
+        }
+
+        List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
+
+        batches.parallelStream().forEach(batch -> {
+            try {
+                addNewGMTimesBatch(batch);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Benchmark.stop("Database: Add GMTimes Rows");
+    }
+
+    private void addNewGMTimesBatch(List<Container<GMTimes>> batch) throws SQLException {
+        if (batch.isEmpty()) {
+            return;
+        }
+
+        int batchSize = batch.size();
+        Log.debug("Preparing insertion of GM Times... Batch Size: " + batchSize);
+
         String[] gms = getGMKeyArray();
+
+        PreparedStatement statement = null;
         try {
             statement = prepareStatement(
                     "INSERT INTO " + tableName + " ("
@@ -259,28 +329,22 @@ public class GMTimesTable extends Table {
                             + columnAdventureTime + ", "
                             + columnSpectatorTime
                             + ") VALUES (?, ?, ?, ?, ?)");
-            boolean commitRequired = false;
-            for (Map.Entry<Integer, Map<String, Long>> entry : gamemodeTimes.entrySet()) {
-                Integer id = entry.getKey();
 
-                statement.setInt(1, id);
+            for (Container<GMTimes> data : batch) {
+                statement.setInt(1, data.getId());
+
                 for (int i = 0; i < gms.length; i++) {
-                    try {
-                        Map<String, Long> times = entry.getValue();
-                        Long time = times.get(gms[i]);
+                    Map<String, Long> times = data.getObject().getTimes();
+                    Long time = times.get(gms[i]);
 
-                        statement.setLong(i + 2, time != null ? time : 0);
-                    } catch (NoSuchFieldError e) {
-                        statement.setLong(i + 2, 0);
-                    }
+                    statement.setLong(i + 2, time != null ? time : 0);
                 }
+
                 statement.addBatch();
-                commitRequired = true;
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            Log.debug("Executing GM Times batch: " + batchSize);
+            statement.executeBatch();
         } finally {
             close(statement);
         }
@@ -290,6 +354,7 @@ public class GMTimesTable extends Table {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
+
         PreparedStatement statement = null;
         String[] gms = getGMKeyArray();
         try {
@@ -302,14 +367,10 @@ public class GMTimesTable extends Table {
                     + ") VALUES (?, ?, ?, ?, ?)");
 
             statement.setInt(1, userId);
-            for (int i = 0; i < gms.length; i++) {
-                try {
-                    Long time = gamemodeTimes.get(gms[i]);
 
-                    statement.setLong(i + 2, time != null ? time : 0);
-                } catch (NoSuchFieldError e) {
-                    statement.setLong(i + 2, 0);
-                }
+            for (int i = 0; i < gms.length; i++) {
+                Long time = gamemodeTimes.get(gms[i]);
+                statement.setLong(i + 2, time != null ? time : 0);
             }
 
             statement.execute();

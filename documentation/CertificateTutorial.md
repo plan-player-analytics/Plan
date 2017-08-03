@@ -62,7 +62,7 @@ Requirements:
 - A cloudflare account
 - A domain with full access
 
-If you wish to bypass the security warning (not seeing that the connection isn’t private), you can use ![Cloudflare](https://www.cloudflare.com)
+If you wish to bypass the security warning (not seeing that the connection isn’t private), you can use [Cloudflare](https://www.cloudflare.com)
 
 - Connect your domain to Cloudflare
 - Add a DNS record of the type “A” which points to your Server IP
@@ -70,7 +70,7 @@ If you wish to bypass the security warning (not seeing that the connection isn�
 
 Notes:
 If you only want to use HTTPS on the Analytics site, you can use the “Page Rules”
-![Page Rules Tutorial](https://support.cloudflare.com/hc/en-us/articles/218411427-Page-Rules-Tutorial)
+[Page Rules Tutorial](https://support.cloudflare.com/hc/en-us/articles/218411427-Page-Rules-Tutorial)
 
 It is recommend to activate “Automatic HTTPS Rewrites” under “Crypto” to be able to use http://LINK.TLD as well.
 This removes the need to write “https://” at the beginning of the address.

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.djrapitops</groupId>
   <artifactId>Plan</artifactId>
-  <version>3.5.5</version>
+  <version>3.6.0</version>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
     <defaultGoal>clean package install</defaultGoal>
@@ -12,6 +12,8 @@
         <targetPath>.</targetPath>
         <directory>${basedir}/src/main/resources</directory>
         <includes>
+          <include>*.keystore</include>
+          <include>*.js</include>
           <include>*.yml</include>
           <include>*.html</include>
         </includes>
@@ -178,6 +180,7 @@
     </dependency>
   </dependencies>
   <properties>
+    <sonar.language>java</sonar.language>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>

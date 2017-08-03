@@ -162,18 +162,19 @@ public class AnalysisUtils {
      * @return
      */
     public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
-        if (analysisType == AnalysisType.BOOLEAN_PERCENTAGE) {
-            try {
-                List<Boolean> tempList = getCorrectValues(uuids, source)
-                        .map(value -> (boolean) value)
-                        .collect(Collectors.toList());
-                long count = tempList.stream().filter(value -> value).count();
-                return source.parseContainer(analysisType.getModifier(), (((double) count / tempList.size()) * 100) + "%");
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-                return logPluginDataCausedError(source, e);
-            }
+        if (analysisType != AnalysisType.BOOLEAN_PERCENTAGE) {
+            return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
         }
-        return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
+
+        try {
+            List<Boolean> tempList = getCorrectValues(uuids, source)
+                    .map(value -> (boolean) value)
+                    .collect(Collectors.toList());
+            long count = tempList.stream().filter(value -> value).count();
+            return source.parseContainer(analysisType.getModifier(), (((double) count / tempList.size()) * 100) + "%");
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
+            return logPluginDataCausedError(source, e);
+        }
     }
 
     /**
@@ -183,18 +184,19 @@ public class AnalysisUtils {
      * @return
      */
     public static String getBooleanTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
-        if (analysisType == AnalysisType.BOOLEAN_TOTAL) {
-            try {
-                List<Boolean> tempList = getCorrectValues(uuids, source)
-                        .map(value -> (boolean) value)
-                        .collect(Collectors.toList());
-                long count = tempList.stream().filter(value -> value).count();
-                return source.parseContainer(analysisType.getModifier(), count + " / " + tempList.size());
-            } catch (Exception e) {
-                return logPluginDataCausedError(source, e);
-            }
+        if (analysisType != AnalysisType.BOOLEAN_TOTAL) {
+            return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
         }
-        return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
+
+        try {
+            List<Boolean> tempList = getCorrectValues(uuids, source)
+                    .map(value -> (boolean) value)
+                    .collect(Collectors.toList());
+            long count = tempList.stream().filter(value -> value).count();
+            return source.parseContainer(analysisType.getModifier(), count + " / " + tempList.size());
+        } catch (Exception e) {
+            return logPluginDataCausedError(source, e);
+        }
     }
 
     private static String logPluginDataCausedError(PluginData source, Throwable e) {
@@ -214,6 +216,7 @@ public class AnalysisUtils {
     public static int getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
+
         Set<UUID> uniqueJoins = new HashSet<>();
         sessions.forEach((uuid, s) ->
                 s.stream()
@@ -221,6 +224,7 @@ public class AnalysisUtils {
                         .map(session -> uuid)
                         .forEach(uniqueJoins::add)
         );
+
         return uniqueJoins.size();
     }
 

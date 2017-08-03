@@ -44,17 +44,14 @@ public class InspectCacheHandler {
      * @param uuid UUID of the player.
      */
     public void cache(UUID uuid) {
-        DBCallableProcessor cacher = new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                cache.put(uuid, new UserData(data));
-                cacheTimes.put(uuid, MiscUtils.getTime());
-                PageCacheHandler.cachePage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(Plan.getInstance().getUiServer().getDataReqHandler(), uuid));
-                try {
-                    ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()));
-                } catch (IOException ex) {
-                    Log.toLog(this.getClass().getName(), ex);
-                }
+        DBCallableProcessor cacher = data -> {
+            cache.put(uuid, new UserData(data));
+            cacheTimes.put(uuid, MiscUtils.getTime());
+            PageCacheHandler.cachePage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(Plan.getInstance().getUiServer().getDataReqHandler(), uuid));
+            try {
+                ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()));
+            } catch (IOException ex) {
+                Log.toLog(this.getClass().getName(), ex);
             }
         };
 

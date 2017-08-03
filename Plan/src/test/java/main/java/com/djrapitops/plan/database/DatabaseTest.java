@@ -235,13 +235,10 @@ public class DatabaseTest {
         db.saveUserData(data);
         data.addNickname("TestUpdateForSave");
         db.saveUserData(data);
-        DBCallableProcessor process = new DBCallableProcessor() {
-            @Override
-            public void process(UserData d) {
-                System.out.println("\nOriginal: " + data);
-                System.out.println("Database: " + d);
-                assertTrue("Not Equals", data.equals(d));
-            }
+        DBCallableProcessor process = d -> {
+            System.out.println("\nOriginal: " + data);
+            System.out.println("Database: " + d);
+            assertTrue("Not Equals", data.equals(d));
         };
         db.giveUserDataToProcessors(data.getUuid(), process);
     }
