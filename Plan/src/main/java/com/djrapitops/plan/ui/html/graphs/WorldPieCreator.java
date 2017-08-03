@@ -15,13 +15,16 @@ public class WorldPieCreator {
         for (Map.Entry<String, Long> world : worldTimes.entrySet()) {
             arrayBuilder.append("{name:'").append(world.getKey())
                     .append("',y:").append(world.getValue());
+
             if (i == 1) {
                 arrayBuilder.append(", sliced: true, selected: true");
             }
+
             arrayBuilder.append("}");
             if (i < size - 1) {
                 arrayBuilder.append(",");
             }
+            i++;
         }
         arrayBuilder.append("]");
         return arrayBuilder.toString();

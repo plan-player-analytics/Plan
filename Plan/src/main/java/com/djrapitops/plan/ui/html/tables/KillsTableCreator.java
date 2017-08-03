@@ -6,7 +6,9 @@ import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.comparators.KillDataComparator;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,6 +34,10 @@ public class KillsTableCreator {
             html.append(Html.TABLELINE_3.parse(Html.KILLDATA_NONE.parse(), "", ""));
         } else {
             int i = 0;
+
+            killData.sort(new KillDataComparator());
+            Collections.reverse(killData);
+
             for (KillData kill : killData) {
                 if (i >= 20) {
                     break;

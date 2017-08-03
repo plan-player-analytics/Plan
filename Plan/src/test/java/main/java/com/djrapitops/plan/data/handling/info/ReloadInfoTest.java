@@ -58,11 +58,10 @@ public class ReloadInfoTest {
         assertTrue(i.process(data));
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
-        assertTrue("Logintimes +1", data.getLoginTimes() == loginTimes);
+        assertTrue("Login times is not the same", data.getLoginTimes() == loginTimes);
         assertTrue("Nick not added", data.getNicknames().contains(nick));
-        assertTrue("Nick not last nick", data.getLastNick().equals(nick));
-        String geo = data.getGeolocation();
-        assertTrue("Wrong location " + geo, geo.equals("United States"));
+        assertEquals(nick, data.getLastNick());
+        assertEquals("United States", data.getGeolocation());
         assertEquals("CREATIVE", data.getGmTimes().getState());
         assertEquals("World", data.getWorldTimes().getState());
     }

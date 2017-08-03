@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.handling.importing;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import com.djrapitops.plugin.utilities.status.ProcessStatus;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -14,8 +15,10 @@ import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Abstract class used for importing data from other plugins.
@@ -58,11 +61,16 @@ public abstract class Importer {
     public boolean importData(Collection<UUID> uuids, String... args) {
         Plan plan = Plan.getInstance();
         plan.getAnalysisCache().disableAnalysisTemporarily();
+
         try {
             String processName = "Import, " + getClass().getSimpleName();
-            plan.processStatus().startExecution(processName);
+
+            ProcessStatus<Plan> processStatus = plan.processStatus();
             DataCacheHandler handler = plan.getHandler();
             Database db = plan.getDB();
+
+            processStatus.startExecution(processName);
+
             Set<UUID> saved;
             try {
                 saved = db.getSavedUUIDs();
@@ -70,30 +78,58 @@ public abstract class Importer {
                 Log.toLog(this.getClass().getName(), ex);
                 return false;
             }
+
             List<UUID> unSaved = new ArrayList<>(uuids);
             unSaved.removeAll(saved);
-            String createUserObjects = "Creating new UserData objects for: " + unSaved.size();
-            plan.processStatus().setStatus(processName, createUserObjects);
+
+            int amount = unSaved.size();
+
+            String createUserObjects = "Creating " + amount + " new UserData objects";
+            processStatus.setStatus(processName, createUserObjects);
+
             Map<UUID, IOfflinePlayer> offlinePlayers = Fetch.getIOfflinePlayers().stream().collect(Collectors.toMap(IOfflinePlayer::getUuid, Function.identity()));
+
             Benchmark.start(createUserObjects);
-            List<IOfflinePlayer> offlineP = unSaved.stream().map(offlinePlayers::get).collect(Collectors.toList());
+
             List<UserData> newUsers = new ArrayList<>();
-            for (IOfflinePlayer p : offlineP) {
-                UserData newPlayer = NewPlayerCreator.createNewOfflinePlayer(p);
-                newPlayer.setLastPlayed(newPlayer.getRegistered());
-                newUsers.add(newPlayer);
-                plan.processStatus().setStatus(processName, "Creating new UserData objects: " + newUsers.size() + "/" + unSaved.size());
-            }
+            List<IOfflinePlayer> offlineP = unSaved
+                    .stream()
+                    .map(offlinePlayers::get)
+                    .collect(Collectors.toList());
+
+            AtomicInteger currentUser = new AtomicInteger(0);
+            AtomicInteger currentPercent = new AtomicInteger(0);
+
+            int fivePercent = amount / 20;
+
+            //Using Set because of better Collection#contains() performance
+            Set<Integer> milestones = IntStream.rangeClosed(1, 20)
+                    .mapToObj(i -> i * fivePercent)
+                    .collect(Collectors.toSet());
+
+            offlineP.parallelStream()
+                    .map(NewPlayerCreator::createNewOfflinePlayer)
+                    .forEach(newPlayer -> {
+                        newPlayer.setLastPlayed(newPlayer.getRegistered());
+                        newUsers.add(newPlayer);
+                        if (milestones.contains(currentUser.incrementAndGet())) {
+                            processStatus.setStatus(processName, "Creating new UserData objects: " + currentPercent.addAndGet(5) + "%");
+                        }
+                    });
+
             Benchmark.stop(createUserObjects);
-            plan.processStatus().setStatus(processName, "Save new UserData objects (" + unSaved.size() + ")");
+            processStatus.setStatus(processName, "Save new UserData objects (" + amount + ")");
+
             try {
                 plan.getDB().saveMultipleUserData(newUsers);
             } catch (SQLException ex) {
                 Log.toLog(this.getClass().getName(), ex);
             }
+
             for (UUID uuid : uuids) {
                 handler.addToPool(importData(uuid, args));
             }
+
             plan.processStatus().finishExecution(processName);
         } finally {
             plan.getAnalysisCache().enableAnalysis();

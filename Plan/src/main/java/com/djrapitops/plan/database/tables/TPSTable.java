@@ -119,12 +119,24 @@ public class TPSTable extends Table {
      */
     public void saveTPSData(List<TPS> data) throws SQLException {
         List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
-        for (List<TPS> batch : batches) {
-            saveTPSBatch(batch);
-        }
+        batches.stream()
+                .forEach(batch -> {
+                    try {
+                        saveTPSBatch(batch);
+                    } catch (SQLException e) {
+                        Log.toLog("UsersTable.saveUserDataInformationBatch", e);
+                    }
+                });
     }
 
     private void saveTPSBatch(List<TPS> batch) throws SQLException {
+        if (batch.isEmpty()) {
+            return;
+        }
+
+        int batchSize = batch.size();
+        Log.debug("Preparing insertion of TPS... Batch Size: " + batchSize);
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -137,8 +149,6 @@ public class TPSTable extends Table {
                     + columnChunksLoaded
                     + ") VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-            boolean commitRequired = false;
-            int i = 0;
             for (TPS tps : batch) {
                 statement.setLong(1, tps.getDate());
                 statement.setDouble(2, tps.getTps());
@@ -148,13 +158,10 @@ public class TPSTable extends Table {
                 statement.setDouble(6, tps.getEntityCount());
                 statement.setDouble(7, tps.getChunksLoaded());
                 statement.addBatch();
-                commitRequired = true;
-                i++;
             }
-            if (commitRequired) {
-                Log.debug("Executing tps batch: " + i);
-                statement.executeBatch();
-            }
+
+            Log.debug("Executing tps batch: " + batchSize);
+            statement.executeBatch();
         } finally {
             close(statement);
         }

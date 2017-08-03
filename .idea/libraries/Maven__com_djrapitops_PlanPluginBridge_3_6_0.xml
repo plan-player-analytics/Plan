@@ -7,7 +7,6 @@
       <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/PlanPluginBridge/3.6.0/PlanPluginBridge-3.6.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../PlanPluginBridge/src/main/java" />
       <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/PlanPluginBridge/3.6.0/PlanPluginBridge-3.6.0-sources.jar!/" />
     </SOURCES>
   </library>

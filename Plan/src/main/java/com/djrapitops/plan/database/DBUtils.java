@@ -72,11 +72,33 @@ public class DBUtils {
                 if (wrappedBatches.size() <= j) {
                     wrappedBatches.add(new ArrayList<>());
                 }
+
                 wrappedBatches.get(j).add(new Container<>(object, entry.getKey()));
                 i++;
                 if (i % BATCH_SIZE == 0) {
                     j++;
                 }
+            }
+        }
+        return wrappedBatches;
+    }
+
+    public static <T> List<List<Container<T>>> splitIntoBatchesWithID(Map<Integer, T> objects) {
+        List<List<Container<T>>> wrappedBatches = new ArrayList<>();
+
+        int i = 0;
+        int j = 0;
+
+        for (Entry<Integer, T> entry : objects.entrySet()) {
+            T object = entry.getValue();
+            if (wrappedBatches.size() <= j) {
+                wrappedBatches.add(new ArrayList<>());
+            }
+
+            wrappedBatches.get(j).add(new Container<>(object, entry.getKey()));
+            i++;
+            if (i % BATCH_SIZE == 0) {
+                j++;
             }
         }
         return wrappedBatches;

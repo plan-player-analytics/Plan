@@ -680,10 +680,18 @@ public class UsersTable extends Table {
         try {
             List<UserData> newUserdata = updateExistingUserData(data);
             Benchmark.start("Database: Insert new UserInfo multiple");
+
             List<List<UserData>> batches = DBUtils.splitIntoBatches(newUserdata);
-            for (List<UserData> batch : batches) {
-                insertNewUserData(batch);
-            }
+
+            batches.stream()
+                    .forEach(batch -> {
+                        try {
+                            insertNewUserData(batch);
+                        } catch (SQLException e) {
+                            Log.toLog("UsersTable.saveUserDataInformationBatch", e);
+                        }
+                    });
+
             Benchmark.stop("Database: Insert new UserInfo multiple");
         } finally {
             Benchmark.stop("Database: Save UserInfo multiple");
@@ -691,18 +699,27 @@ public class UsersTable extends Table {
     }
 
     private void insertNewUserData(Collection<UserData> data) throws SQLException {
+        if (data.isEmpty()) {
+            return;
+        }
+
+        int batchSize = data.size();
+        Log.debug("Preparing insertion of new users... Batch Size: " + batchSize);
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement(getInsertStatement());
-            boolean commitRequired = false;
-            int i = 0;
+
             for (UserData uData : data) {
                 UUID uuid = uData.getUuid();
+
                 statement.setString(1, uuid.toString());
                 statement.setString(2, uData.getGeolocation());
+
                 GMTimes gmTimes = uData.getGmTimes();
                 statement.setString(3, gmTimes.getState());
                 statement.setLong(4, gmTimes.getLastStateChange());
+
                 statement.setLong(5, uData.getPlayTime());
                 statement.setInt(6, uData.getLoginTimes());
                 statement.setLong(7, uData.getLastPlayed());
@@ -713,17 +730,16 @@ public class UsersTable extends Table {
                 statement.setBoolean(12, uData.isBanned());
                 statement.setString(13, uData.getName());
                 statement.setLong(14, uData.getRegistered());
+
                 WorldTimes worldTimes = uData.getWorldTimes();
                 statement.setString(15, worldTimes.getState());
                 statement.setLong(16, worldTimes.getLastStateChange());
+
                 statement.addBatch();
-                commitRequired = true;
-                i++;
             }
-            if (commitRequired) {
-                Log.debug("Executing session batch: " + i);
-                statement.executeBatch();
-            }
+
+            Log.debug("Executing users batch: " + batchSize);
+            statement.executeBatch();
         } finally {
             close(statement);
         }

@@ -117,26 +117,6 @@ public abstract class TimeKeeper {
         return times;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TimeKeeper that = (TimeKeeper) o;
-
-        if (lastStateChange != that.lastStateChange) return false;
-        if (times != null ? !times.equals(that.times) : that.times != null) return false;
-        return state != null ? state.equals(that.state) : that.state == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = times != null ? times.hashCode() : 0;
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (int) (lastStateChange ^ (lastStateChange >>> 32));
-        return result;
-    }
-
     public void setState(String state) {
         this.state = state;
     }
@@ -154,9 +134,31 @@ public abstract class TimeKeeper {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TimeKeeper that = (TimeKeeper) o;
+
+        return lastStateChange == that.lastStateChange &&
+                times != null ? times.equals(that.times) : that.times == null
+                && state != null ? state.equals(that.state) : that.state == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = times != null ? times.hashCode() : 0;
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (int) (lastStateChange ^ (lastStateChange >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "times:" + times +
-                ",state:" + state +
-                ",lastStateChange:" + lastStateChange;
+        return getClass().getSimpleName()+"{" +
+                "times=" + times +
+                ", state='" + state + '\'' +
+                ", lastStateChange=" + lastStateChange +
+                '}';
     }
 }
