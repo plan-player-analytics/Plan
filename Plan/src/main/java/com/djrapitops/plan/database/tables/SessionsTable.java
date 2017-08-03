@@ -218,7 +218,7 @@ public class SessionsTable extends Table {
 
         List<List<Container<SessionData>>> batches = splitIntoBatches(sessions);
 
-        batches.parallelStream().forEach(batch -> {
+        batches.stream().forEach(batch -> {
             try {
                 saveSessionBatch(batch);
             } catch (SQLException e) {

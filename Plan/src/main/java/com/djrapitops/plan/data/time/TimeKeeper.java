@@ -155,7 +155,7 @@ public abstract class TimeKeeper {
 
     @Override
     public String toString() {
-        return "TimeKeeper{" +
+        return getClass().getSimpleName()+"{" +
                 "times=" + times +
                 ", state='" + state + '\'' +
                 ", lastStateChange=" + lastStateChange +

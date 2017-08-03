@@ -119,7 +119,7 @@ public class TPSTable extends Table {
      */
     public void saveTPSData(List<TPS> data) throws SQLException {
         List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
-        batches.parallelStream()
+        batches.stream()
                 .forEach(batch -> {
                     try {
                         saveTPSBatch(batch);

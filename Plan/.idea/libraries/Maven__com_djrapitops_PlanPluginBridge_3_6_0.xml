@@ -1,14 +1,14 @@
 <component name="libraryTable">
   <library name="Maven: com.djrapitops:PlanPluginBridge:3.6.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../PlanPluginBridge/PlanPluginBridge-3.6.0.jar!/" />
-      <root url="file://$PROJECT_DIR$/../PlanPluginBridge" />
-      <root url="file://$PROJECT_DIR$/../PlanPluginBridge" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/PlanPluginBridge/3.6.0/PlanPluginBridge-3.6.0.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/PlanPluginBridge/3.6.0/PlanPluginBridge-3.6.0-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="file://$PROJECT_DIR$/../PlanPluginBridge/src/main/java" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/PlanPluginBridge/3.6.0/PlanPluginBridge-3.6.0-sources.jar!/" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/../PlanPluginBridge" recursive="false" />
   </library>
 </component>

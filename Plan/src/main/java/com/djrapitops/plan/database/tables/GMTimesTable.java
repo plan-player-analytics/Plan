@@ -220,7 +220,7 @@ public class GMTimesTable extends Table {
 
         List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
 
-        batches.parallelStream().forEach(batch -> {
+        batches.stream().forEach(batch -> {
             try {
                 saveGMTimesBatch(batch);
             } catch (SQLException e) {
@@ -298,7 +298,7 @@ public class GMTimesTable extends Table {
 
         List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
 
-        batches.parallelStream().forEach(batch -> {
+        batches.stream().forEach(batch -> {
             try {
                 addNewGMTimesBatch(batch);
             } catch (SQLException e) {
