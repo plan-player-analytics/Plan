@@ -45,7 +45,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
             map.put(uuid, Arrays.asList(processors));
             queue.add(map);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", String.valueOf(Settings.PROCESS_GET_LIMIT.getNumber())));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber()));
         }
     }
 

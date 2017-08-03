@@ -45,9 +45,10 @@ public class PlanGamemodeChangeListener implements Listener {
 
         Player p = event.getPlayer();
         UUID uuid = p.getUniqueId();
-        String gameMode = event.getNewGameMode().name();
         long time = MiscUtils.getTime();
+        String gameMode = event.getNewGameMode().name();
+        String worldName = p.getWorld().getName();
 
-        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.GM, time, event.getNewGameMode().name(), p.getWorld().getName()));
+        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.GM, time, gameMode, worldName));
     }
 }

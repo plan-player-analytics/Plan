@@ -222,7 +222,7 @@ public class SessionsTable extends Table {
             try {
                 saveSessionBatch(batch);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.toLog("SessionsTable.saveSessionData", e);
             }
         });
 

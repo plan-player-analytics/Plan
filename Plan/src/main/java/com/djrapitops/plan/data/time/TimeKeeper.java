@@ -109,28 +109,28 @@ public abstract class TimeKeeper {
         return times.values().stream().mapToLong(i -> i).sum();
     }
 
-    public void setTimes(Map<String, Long> times) {
-        this.times = times;
-    }
-
     public Map<String, Long> getTimes() {
         return times;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public void setLastStateChange(long lastStateChange) {
-        this.lastStateChange = lastStateChange;
+    public void setTimes(Map<String, Long> times) {
+        this.times = times;
     }
 
     public String getState() {
         return state;
     }
 
+    public void setState(String state) {
+        this.state = state;
+    }
+
     public long getLastStateChange() {
         return lastStateChange;
+    }
+
+    public void setLastStateChange(long lastStateChange) {
+        this.lastStateChange = lastStateChange;
     }
 
     @Override
@@ -155,7 +155,7 @@ public abstract class TimeKeeper {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()+"{" +
+        return getClass().getSimpleName() + "{" +
                 "times=" + times +
                 ", state='" + state + '\'' +
                 ", lastStateChange=" + lastStateChange +

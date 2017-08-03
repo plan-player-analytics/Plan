@@ -302,7 +302,7 @@ public class GMTimesTable extends Table {
             try {
                 addNewGMTimesBatch(batch);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.toLog("GMTimesTable.addNewGMTimesRows", e);
             }
         });
 

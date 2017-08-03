@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -39,10 +40,9 @@ public class WebServer {
 
     private final Plan plugin;
     private final DataRequestHandler dataReqHandler;
+    private final int port;
     private boolean enabled = false;
     private HttpServer server;
-    private final int port;
-
     private boolean usingHttps;
 
     /**
@@ -98,7 +98,7 @@ public class WebServer {
                             }
                         }
 
-                         responseHeaders.set("Content-Encoding", "gzip");
+                        responseHeaders.set("Content-Encoding", "gzip");
 
                         Response response = getResponse(target, user);
 
@@ -135,6 +135,7 @@ public class WebServer {
     }
 
     private WebUser getUser(Headers requestHeaders) {
+        Benchmark.start("getUser");
         try {
             List<String> authorization = requestHeaders.get("Authorization");
             if (Verify.isEmpty(authorization)) {
@@ -169,6 +170,8 @@ public class WebServer {
             if (!correctPass) {
                 throw new IllegalArgumentException("User and Password do not match");
             }
+
+            Benchmark.stop("getUser: " + requestHeaders);
             return webUser;
         } catch (IllegalArgumentException e) {
             Log.debug("WebServer: " + e.getMessage());
@@ -184,6 +187,7 @@ public class WebServer {
         if (!Paths.get(keyStorePath).isAbsolute()) {
             keyStorePath = plugin.getDataFolder() + File.separator + keyStorePath;
         }
+
         char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();
         char[] keypass = Settings.WEBSERVER_CERTIFICATE_KEYPASS.toString().toCharArray();
         String alias = Settings.WEBSERVER_CERTIFICATE_ALIAS.toString();
@@ -241,6 +245,7 @@ public class WebServer {
         if ("/favicon.ico".equals(target)) {
             return PageCacheHandler.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
+
         if (usingHttps) {
             if (user == null) {
                 return PageCacheHandler.loadPage("promptAuthorization", PromptAuthorizationResponse::new);

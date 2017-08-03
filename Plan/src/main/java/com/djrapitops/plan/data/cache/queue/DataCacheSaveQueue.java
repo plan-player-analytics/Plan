@@ -45,7 +45,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.add(data);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
         }
     }
 
@@ -59,7 +59,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.addAll(data);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
         }
     }
 
@@ -73,7 +73,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.add(data);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
         }
     }
 

@@ -18,35 +18,28 @@ import java.util.stream.Collectors;
  */
 public class UserData {
 
+    private final List<SessionData> sessions;
     private int accessing;
     private boolean clearAfterSave;
-
     private UUID uuid;
     private String name;
     private Set<String> nicknames;
     private String lastNick;
     private String geolocation;
     private Set<InetAddress> ips;
-
     private int loginTimes;
     private int timesKicked;
-
     private boolean isOp;
     private boolean isBanned;
     private boolean isOnline;
-
     private int mobKills;
     private List<KillData> playerKills;
     private int deaths;
-
     private long registered;
     private long lastPlayed;
     private long playTime;
-
     private GMTimes gmTimes;
     private WorldTimes worldTimes;
-
-    private final List<SessionData> sessions;
 
     /**
      * Creates a new UserData object with given values and default values.
@@ -491,6 +484,14 @@ public class UserData {
         return gmTimes;
     }
 
+    public void setGmTimes(Map<String, Long> times) {
+        if (Verify.notNull(times)) {
+            for (Map.Entry<String, Long> entry : times.entrySet()) {
+                gmTimes.setTime(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
     /**
      * Set the GM Times object containing playtime in each gamemode.
      *
@@ -499,14 +500,6 @@ public class UserData {
     public void setGmTimes(GMTimes gmTimes) {
         if (Verify.notNull(gmTimes)) {
             this.gmTimes = gmTimes;
-        }
-    }
-
-    public void setGmTimes(Map<String, Long> times) {
-        if (Verify.notNull(times)) {
-            for (Map.Entry<String, Long> entry : times.entrySet()) {
-                gmTimes.setTime(entry.getKey(), entry.getValue());
-            }
         }
     }
 

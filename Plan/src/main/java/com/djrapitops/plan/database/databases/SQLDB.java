@@ -86,7 +86,7 @@ public abstract class SQLDB extends Database {
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(60 * 20, 60 * 20);
+        }).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
     }
 
     /**

@@ -55,7 +55,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
         try {
             queue.addAll(uuids);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber() + ""));
+            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber()));
         }
     }
 }

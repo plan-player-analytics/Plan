@@ -23,15 +23,15 @@ import java.util.Map;
  */
 public class GeolocationCacheHandler {
 
+    private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
+            .build();
+
     /**
      * Constructor used to hide the public constructor
      */
     private GeolocationCacheHandler() {
         throw new IllegalStateException("Utility class");
     }
-
-    private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
-            .build();
 
     /**
      * Retrieves the country in full length (e.g. United States) from the IP Address.

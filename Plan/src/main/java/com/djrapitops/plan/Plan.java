@@ -168,6 +168,7 @@ public class Plan extends BukkitPlugin<Plan> {
         if (bootAnalysisIsEnabled) {
             startBootAnalysisTask();
         }
+
         if (analysisRefreshTaskIsEnabled) {
             startAnalysisRefreshTask(analysisRefreshMinutes);
         }

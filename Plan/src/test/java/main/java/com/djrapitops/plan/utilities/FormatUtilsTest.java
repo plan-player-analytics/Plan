@@ -34,7 +34,7 @@ public class FormatUtilsTest {
      *
      */
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         TestInit.init();
     }
 
