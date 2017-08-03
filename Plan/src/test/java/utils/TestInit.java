@@ -100,9 +100,8 @@ public class TestInit {
         return mockServer;
     }
 
-    private static File getTestFolder() throws IOException {
+    private static File getTestFolder() {
         File testFolder = new File("temporaryTestFolder");
-        testFolder = new File("temporaryTestFolder");
         testFolder.mkdir();
         return testFolder;
     }

@@ -683,7 +683,7 @@ public class UsersTable extends Table {
 
             List<List<UserData>> batches = DBUtils.splitIntoBatches(newUserdata);
 
-            batches.stream()
+            batches
                     .forEach(batch -> {
                         try {
                             insertNewUserData(batch);

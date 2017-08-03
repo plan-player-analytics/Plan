@@ -169,7 +169,7 @@ public class WebServer {
         }
     }
 
-    private boolean startHttpsServer() throws IOException {
+    private boolean startHttpsServer() {
         String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
         if (!Paths.get(keyStorePath).isAbsolute()) {
             keyStorePath = plugin.getDataFolder() + File.separator + keyStorePath;

@@ -339,11 +339,8 @@ public class DataCacheHandler extends SessionCache {
         if (averages.isEmpty()) {
             return;
         }
-        try {
-            db.getTpsTable().saveTPSData(averages);
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-        }
+
+        db.getTpsTable().saveTPSData(averages);
     }
 
     private List<TPS> calculateAverageTpsForEachMinute() {

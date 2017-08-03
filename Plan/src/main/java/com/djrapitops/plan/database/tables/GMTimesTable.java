@@ -220,7 +220,7 @@ public class GMTimesTable extends Table {
 
         List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
 
-        batches.stream().forEach(batch -> {
+        batches.forEach(batch -> {
             try {
                 saveGMTimesBatch(batch);
             } catch (SQLException e) {
@@ -281,7 +281,7 @@ public class GMTimesTable extends Table {
         }
     }
 
-    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
+    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }

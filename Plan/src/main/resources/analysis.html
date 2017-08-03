@@ -14,7 +14,7 @@
             left: 0;
             width: 100%;
             height: 88px;
-            padding: 0px;
+            padding: 0;
             background-color: #348e0f;
             z-index: 1;
         }
@@ -44,11 +44,11 @@
             text-decoration: none;
             background-color: #89c471;
             color: #fff;
-            margin: 10px 0px;
+            margin: 10px 0;
         }
 
         .sidenav a {
-            margin: 10px 0px;
+            margin: 10px 0;
             width: 100%;
             padding: 8px 8px 8px 16px;
             text-decoration: none;
@@ -86,10 +86,9 @@
             background-color: #fff;
             padding: 5px;
             text-decoration: none;!important;
-            color: #000
+            color: #000;
             text-align: left;
             margin: 5px;
-            padding: 5px;
         }
 
         .box p {
@@ -106,7 +105,7 @@
         .content {
             text-align: center;
             padding: 5px;
-            margin: 0px;
+            margin: 0;
         }
         .row {
             width: 50%;
@@ -151,8 +150,7 @@
         .headerbox {
             color: #348e0f;
             display: inline-block;
-            border-style: solid;
-            border-color: #348e0f;
+            border: solid #348e0f;
             padding: 8px 14px;
 			border-radius: 3px;
             width: 95%;
@@ -165,9 +163,9 @@
             font-size: x-large;
         }
         .header-label {
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
+            padding: 0;
+            margin: 0;
+            border: 0;
         }
         .button {
             padding: 8px 14px;
@@ -183,8 +181,7 @@
         .table {
             border-collapse: collapse;
             table-layout: fixed;
-            border-style: solid;
-            border-width: 1px;
+            border: 1px solid;
             padding: 8px 14px;
             width: 100%;
         }
@@ -243,20 +240,18 @@
                 display: none;
             }
             header {
-                margin: 0px;
-                padding 0px;
+                margin: 0;
+                padding: 0;
             }
             header h1 {
-                margin: 0px;
+                margin: 0;
             }
             header img {
+                padding: 0;
                 margin: 0px;
-                padding: 0px;
-                margin-right: 0px;
             }
             header p {
-                margin: 0px;
-                margin-top: 5px;
+                margin: 5px 0px 0px;
             }
             .tab {
                 flex-direction: column;
@@ -268,11 +263,11 @@
                 width: 100%;
             }
             .sidenav {
-                width: 0%;
+                width: 0;
                 transition: 0s;
             }
             .main-limiter {
-                margin-left: 0%;
+                margin-left: 0;
                 width: 100%;
             }
         }
@@ -342,7 +337,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="playerChartDay" style="width=100%; height=350px;"></div>
+                        <div id="playerChartDay" style="width:100%; height:350px;"></div>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i
                                 class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
                     </div>
@@ -419,7 +414,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="playerChartMonth" style="width=100%; height=350px;"></div>
+                        <div id="playerChartMonth" style="width: 100%; height: 350px;"></div>
                     </div>
                     <div class=" box column">
                         <p><b>Month:</b><br>
@@ -678,7 +673,8 @@
 		var playersOnlineSeries = {
 			name: 'Players Online',
 			data: %playersonlineseries%,
-			type: 'areaspline',
+			type: 'areaspline'
+            ,
 			color: '#%playersgraphcolor%',
             tooltip: {
                 valueDecimals: 0
@@ -797,7 +793,7 @@
     </script>
     <script>
 		function playersChart() {
-			var myChart = Highcharts.stockChart('playerChartDay', {
+			Highcharts.stockChart('playerChartDay', {
 				rangeSelector: {
 					selected: 1,
 					buttons: [{
@@ -1239,13 +1235,13 @@
         var navButtons = document.getElementsByClassName("nav-button");
         var tabs = document.getElementsByClassName("tab");
         var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
-        if (slideIndex == null) {
+        if (slideIndex === null) {
             slideIndex = 0;
         }
         var x = document.getElementById("main");
         x.style.transform = "translate3d(0px,0px,0)";
         x.style.width = "" + navButtons.length * 100 + "%";
-        for (i = 0; i < navButtons.length; i++) {
+        for (var i = 0; i < navButtons.length; i++) {
             navButtons[i].onclick = openFunc(i)
             tabs[i].style.width = "" + 100 / navButtons.length + "%";
         }
@@ -1266,12 +1262,12 @@
 
         function openFunc(i) {
             return function() {
-                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') === "inline") {
                     closeNav();
                 }
                 var max = navButtons.length;
                 for (var j = 0; j < max; j++) {
-                    if (j == i) {
+                    if (j === i) {
                         navButtons[j].classList.add('active');
                         continue;
                     }

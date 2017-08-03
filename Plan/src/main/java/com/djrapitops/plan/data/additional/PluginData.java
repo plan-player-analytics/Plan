@@ -31,7 +31,7 @@ public abstract class PluginData {
      * <p>
      * Second parameter of any super constructor.
      */
-    protected String placeholder;
+    protected final String placeholder;
     /**
      * Name of the plugin the data is coming from.
      * <p>
@@ -43,7 +43,7 @@ public abstract class PluginData {
      * <p>
      * First parameter of any super constructor.
      */
-    protected String sourcePlugin;
+    protected final String sourcePlugin;
     /**
      * Determines if the datapoint should only be used for the analysis page.
      * <p>
