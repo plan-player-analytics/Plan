@@ -19,8 +19,6 @@ import org.powermock.api.mockito.PowerMockito;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -158,7 +156,7 @@ public class MockUtils {
 
     public static HttpServer mockHTTPServer() throws IOException {
         HttpServer httpServer = PowerMockito.mock(HttpServer.class);
-        when(httpServer.getAddress()).thenReturn(new ServerSocket(80, 0, InetAddress.getByName(null));
+        when(httpServer.getAddress()).thenReturn(new InetSocketAddress(80));
         when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));
         return httpServer;
     }
