@@ -43,7 +43,7 @@ public class WebCheckCommand extends SubCommand {
                     if (!Check.isTrue(table.userExists(user), ChatColor.RED + "[Plan] User Doesn't exist.", sender)) {
                         return;
                     }
-                    WebUser info = table.getSecurityInfo(user);
+                    WebUser info = table.getWebUser(user);
                     sender.sendMessage(info.getName() + ": Permission level: " + info.getPermLevel());
                 } catch (Exception ex) {
                     Log.toLog(this.getClass().getName(), ex);

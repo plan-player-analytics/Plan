@@ -105,6 +105,7 @@ public class CommandUseTable extends Table {
         }
 
         updateCommands(updateData);
+        commit();
         Benchmark.stop("Database: Save Commanduse");
     }
 

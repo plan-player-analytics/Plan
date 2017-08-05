@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public abstract class SQLDB extends Database {
 
     private final boolean supportsModification;
+    private final boolean usingMySQL;
 
     private Connection connection;
 
@@ -40,7 +41,7 @@ public abstract class SQLDB extends Database {
     public SQLDB(Plan plugin, boolean supportsModification) {
         super(plugin);
         this.supportsModification = supportsModification;
-        boolean usingMySQL = getName().equals("MySQL");
+        usingMySQL = getName().equals("MySQL");
 
         usersTable = new UsersTable(this, usingMySQL);
         gmTimesTable = new GMTimesTable(this, usingMySQL);
@@ -153,7 +154,6 @@ public abstract class SQLDB extends Database {
                 Log.error("Failed to create table: " + securityTable.getTableName());
                 return false;
             }
-
             Benchmark.stop("Database: Create tables");
 
             if (!newDatabase && getVersion() < 8) {
@@ -250,6 +250,7 @@ public abstract class SQLDB extends Database {
     @Override
     public void setVersion(int version) throws SQLException {
         versionTable.setVersion(version);
+        commit();
     }
 
     /**
@@ -293,7 +294,7 @@ public abstract class SQLDB extends Database {
                 return false;
             }
             int userId = usersTable.getUserId(uuid);
-            return userId != -1
+            boolean success = userId != -1
                     && locationsTable.removeUserLocations(userId)
                     && ipsTable.removeUserIps(userId)
                     && nicknamesTable.removeUserNicknames(userId)
@@ -302,6 +303,12 @@ public abstract class SQLDB extends Database {
                     && killsTable.removeUserKillsAndVictims(userId)
                     && worldTimesTable.removeUserWorldTimes(userId)
                     && usersTable.removeUser(uuid);
+            if (success) {
+                commit();
+            } else {
+                rollback();
+            }
+            return success;
         } finally {
             Benchmark.stop("Database: Remove Account");
             setAvailable();
@@ -488,6 +495,7 @@ public abstract class SQLDB extends Database {
         gmTimesTable.saveGMTimes(gmTimes);
         worldTable.saveWorlds(worldNames);
         worldTimesTable.saveWorldTimes(worldTimes);
+        commit();
         userDatas.values().stream()
                 .filter(Objects::nonNull)
                 .filter(UserData::isAccessed)
@@ -523,6 +531,7 @@ public abstract class SQLDB extends Database {
         worldTable.saveWorlds(new HashSet<>(data.getWorldTimes().getTimes().keySet()));
         worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
         data.stopAccessing();
+        commit();
         setAvailable();
     }
 
@@ -547,14 +556,25 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean removeAllData() {
+        boolean success = true;
         setStatus("Clearing all data");
-        for (Table table : getAllTablesInRemoveOrder()) {
-            if (!table.removeAllData()) {
-                return false;
+        try {
+            for (Table table : getAllTablesInRemoveOrder()) {
+                if (!table.removeAllData()) {
+                    success = false;
+                    break;
+                }
             }
+            if (success) {
+                commit();
+            } else {
+                rollback();
+            }
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
         }
         setAvailable();
-        return true;
+        return success;
     }
 
     /**
@@ -577,5 +597,27 @@ public abstract class SQLDB extends Database {
 
     private void setAvailable() {
         setStatus("Running");
+    }
+
+    /**
+     * Commits changes to the .db file when using SQLite Database.
+     * <p>
+     * MySQL has Auto Commit enabled.
+     */
+    public void commit() throws SQLException {
+        if (!usingMySQL) {
+            getConnection().commit();
+        }
+    }
+
+    /**
+     * Reverts transaction when using SQLite Database.
+     * <p>
+     * MySQL has Auto Commit enabled.
+     */
+    public void rollback() throws SQLException {
+        if (!usingMySQL) {
+            connection.rollback();
+        }
     }
 }
