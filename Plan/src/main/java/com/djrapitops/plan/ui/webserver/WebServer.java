@@ -153,7 +153,7 @@ public class WebServer {
                 throw new IllegalArgumentException("User Doesn't exist");
             }
 
-            WebUser webUser = securityTable.getSecurityInfo(user);
+            WebUser webUser = securityTable.getWebUser(user);
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
             if (!correctPass) {

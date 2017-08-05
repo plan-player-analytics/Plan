@@ -127,6 +127,7 @@ public class TPSTable extends Table {
                         Log.toLog("UsersTable.saveUserDataInformationBatch", e);
                     }
                 });
+        commit();
     }
 
     private void saveTPSBatch(List<TPS> batch) throws SQLException {
