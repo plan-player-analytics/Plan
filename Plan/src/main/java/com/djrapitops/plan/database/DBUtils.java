@@ -19,7 +19,7 @@ import java.util.Map.Entry;
  */
 public class DBUtils {
 
-    private static final int BATCH_SIZE = 2048;
+    private static final int BATCH_SIZE = 10192;
 
     /**
      * Constructor used to hide the public constructor

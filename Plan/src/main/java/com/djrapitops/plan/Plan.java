@@ -72,7 +72,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private HookHandler hookHandler; // Manages 3rd party data sources
 
     private Database db;
-    private HashSet<Database> databases;
+    private Set<Database> databases;
 
     private WebServer uiServer;
 
@@ -85,8 +85,9 @@ public class Plan extends BukkitPlugin<Plan> {
      * @return API of the current instance of Plan.
      * @throws IllegalStateException If onEnable method has not been called on
      *                               Plan and the instance is null.
+     * @throws NoClassDefFoundError  If Plan is not installed.
      */
-    public static API getPlanAPI() throws IllegalStateException {
+    public static API getPlanAPI() throws IllegalStateException, NoClassDefFoundError {
         Plan instance = getInstance();
         if (instance == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
@@ -110,7 +111,7 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     @Override
     public void onEnable() {
-        // Sets the Required variables for RslPlugin instance to function correctly
+        // Sets the Required variables for BukkitPlugin instance to function correctly
         setInstance(this);
         super.setDebugMode(Settings.DEBUG.toString());
         super.setColorScheme(new ColorScheme(Phrase.COLOR_MAIN.color(), Phrase.COLOR_SEC.color(), Phrase.COLOR_TER.color()));
