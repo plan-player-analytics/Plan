@@ -26,7 +26,7 @@ public class DBUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final int BATCH_SIZE = 2048;
+    private static final int BATCH_SIZE = 10192;
 
     /**
      * Splits a collection of objects into lists with the size defined by
