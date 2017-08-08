@@ -42,7 +42,7 @@ public class WebServer {
     private HttpServer server;
     private final int port;
 
-    private boolean usingHttps;
+    private boolean usingHttps = false;
 
     /**
      * Class Constructor.

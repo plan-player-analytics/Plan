@@ -203,6 +203,10 @@ public abstract class PluginData {
      */
     public abstract Serializable getValue(UUID uuid);
 
+    public Map<UUID, Serializable> getValues(Collection<UUID> uuids) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not overridden.");
+    }
+
     /**
      * Used to set the Font Awesome icon.
      *
@@ -267,6 +271,11 @@ public abstract class PluginData {
      */
     public final void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public final boolean isBanData() {
+        return placeholder.contains("banned")
+                && analysisTypes.contains(AnalysisType.BOOLEAN_TOTAL);
     }
 
     /**

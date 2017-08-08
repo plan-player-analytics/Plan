@@ -24,6 +24,7 @@ import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserDataLastPlayedComparator;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -185,6 +186,7 @@ public class Analysis {
         final Map<String, String> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
         final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
+                .filter(p -> !p.isBanData())
                 .filter(p -> !p.getAnalysisTypes().isEmpty())
                 .collect(Collectors.toList());
         final AnalysisType[] totalTypes = new AnalysisType[]{
@@ -264,6 +266,8 @@ public class Analysis {
         long now = MiscUtils.getTime();
 
         Benchmark.start("Fill Dataset");
+        List<PluginData> banSources  = plugin.getHookHandler().getAdditionalDataSources()
+                .stream().filter(PluginData::isBanData).collect(Collectors.toList());
         rawData.forEach(uData -> {
             uData.access();
             Map<String, Long> gmTimes = uData.getGmTimes().getTimes();
@@ -292,7 +296,20 @@ public class Analysis {
             if (uData.isOp()) {
                 playerCount.addOP(uuid);
             }
-            if (uData.isBanned()) {
+
+            boolean banned = uData.isBanned();
+            if (!banned) {
+                banned = banSources.stream()
+                        .anyMatch(banData -> {
+                            Serializable value = banData.getValue(uuid);
+                            if (value instanceof Boolean) {
+                                return (Boolean) value;
+                            }
+                            return false;
+                        });
+            }
+
+            if (banned) {
                 activity.addBan(uuid);
             } else if (uData.getLoginTimes() == 1) {
                 activity.addJoinedOnce(uuid);

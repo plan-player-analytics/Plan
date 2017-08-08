@@ -38,7 +38,7 @@ public class ManageClearCommand extends SubCommand {
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = plugin.getColorScheme();
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
