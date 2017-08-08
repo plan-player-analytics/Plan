@@ -117,17 +117,15 @@ public class TPSTable extends Table {
      * @param data
      * @throws SQLException
      */
-    public void saveTPSData(List<TPS> data) throws SQLException {
+    public void saveTPSData(List<TPS> data) {
         List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
-        batches.stream()
-                .forEach(batch -> {
-                    try {
-                        saveTPSBatch(batch);
-                    } catch (SQLException e) {
-                        Log.toLog("UsersTable.saveUserDataInformationBatch", e);
-                    }
-                });
-        commit();
+        batches.forEach(batch -> {
+            try {
+                saveTPSBatch(batch);
+            } catch (SQLException e) {
+                Log.toLog("UsersTable.saveUserDataInformationBatch", e);
+            }
+        });
     }
 
     private void saveTPSBatch(List<TPS> batch) throws SQLException {
