@@ -77,16 +77,17 @@ public class SecurityTable extends Table {
             statement.setString(2, saltPassHash);
             statement.setInt(3, permLevel);
             statement.execute();
+            commit();
         } finally {
             close(statement);
         }
     }
 
     public boolean userExists(String user) throws SQLException {
-        return getSecurityInfo(user) != null;
+        return getWebUser(user) != null;
     }
 
-    public WebUser getSecurityInfo(String user) throws SQLException {
+    public WebUser getWebUser(String user) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {

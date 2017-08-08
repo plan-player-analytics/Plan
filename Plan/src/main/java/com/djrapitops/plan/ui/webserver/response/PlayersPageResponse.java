@@ -21,22 +21,26 @@ public class PlayersPageResponse extends Response {
 
     public static String buildContent(List<UserData> cached) {
         StringBuilder html = new StringBuilder("<!DOCTYPE html><html><body><h1>Cached Players</h1><p>");
-
         int size = cached.size();
+
         html.append(size)
                 .append(" players. Use browser's Search to find players by name. (Chrome Ctrl+F)</p><table><tr>");
+
         cached.sort(new UserDataNameComparator());
+
         int i = 1;
         for (UserData userData : cached) {
             String name = userData.getName();
             String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
+
             html.append("<td>").append(link).append("</td>");
-            if (i < size
-                    && i % 8 == 0) {
+
+            if (i < size && i % 8 == 0) {
                 html.append("</tr><tr>");
             }
             i++;
         }
+
         html.append("</tr></table></body></html>");
         return html.toString();
     }

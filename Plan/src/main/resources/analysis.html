@@ -1277,8 +1277,12 @@
                 }
                 var perc = - 100 / navButtons.length;
                 slideIndex = i;
-                if (slideIndex > max) {slideIndex = 0};
-                if (slideIndex < 0) {slideIndex = max};
+                if (slideIndex > max) {
+                    slideIndex = 0
+                }
+                if (slideIndex < 0) {
+                    slideIndex = max
+                }
                 window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
                 var value = slideIndex * perc;
                 x.style.transition = "0.5s";

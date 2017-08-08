@@ -3,9 +3,11 @@ package test.java.main.java.com.djrapitops.plan.database;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
@@ -124,5 +126,16 @@ public class DatabaseCommitTest {
         db.close();
         db.init();
         assertTrue(!db.getUserDataForUUIDS(uuids).isEmpty());
+    }
+
+    @Test
+    public void testCommitToDBFile5() throws SQLException, PassEncryptUtil.CannotPerformOperationException {
+        db.init();
+        List<UserData> data = RandomData.randomUserData();
+        WebUser webUser = new WebUser("Test", PassEncryptUtil.createHash("surprise"), 0);
+        db.getSecurityTable().addNewUser(webUser);
+        db.close();
+        db.init();
+        assertTrue(webUser.equals(db.getSecurityTable().getWebUser("Test")));
     }
 }
