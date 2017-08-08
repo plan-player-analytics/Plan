@@ -122,20 +122,20 @@ public class Plan extends BukkitPlugin<Plan> {
         // Initializes BukkitPlugin variables, Checks version & Logs the debug header
         super.onEnableDefaultTasks();
 
-        processStatus().startExecution("Enable");
+        Benchmark.start("Enable");
 
         initLocale();
-        Benchmark.start("Enable: Reading server variables");
+        Benchmark.start("Reading server variables");
         serverVariableHolder = new ServerVariableHolder(getServer());
-        Benchmark.stop("Enable: Reading server variables");
+        Benchmark.stop("Enable", "Reading server variables");
 
-        Benchmark.start("Enable: Copy default config");
+        Benchmark.start("Copy default config");
         getConfig().options().copyDefaults(true);
         getConfig().options().header(Phrase.CONFIG_HEADER.toString());
         saveConfig();
-        Benchmark.stop("Enable: Copy default config");
+        Benchmark.stop("Enable", "Copy default config");
 
-        Benchmark.start("Enable: Init Database");
+        Benchmark.start("Init Database");
         Log.info(Phrase.DB_INIT.toString());
         if (Check.ErrorIfFalse(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
             Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
@@ -143,23 +143,23 @@ public class Plan extends BukkitPlugin<Plan> {
             disablePlugin();
             return;
         }
-        Benchmark.stop("Enable: Init Database");
+        Benchmark.stop("Enable", "Init Database");
 
-        Benchmark.start("Enable: Init DataCache");
+        Benchmark.start("Init DataCache");
         this.handler = new DataCacheHandler(this);
         this.inspectCache = new InspectCacheHandler(this);
         this.analysisCache = new AnalysisCacheHandler(this);
-        Benchmark.stop("Enable: Init DataCache");
+        Benchmark.stop("Enable", "Init DataCache");
 
         super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
         registerListeners();
 
         this.api = new API(this);
-        Benchmark.start("Enable: Handle Reload");
+        Benchmark.start("Handle Reload");
         handler.handleReload();
-        Benchmark.stop("Enable: Handle Reload");
+        Benchmark.stop("Enable", "Handle Reload");
 
-        Benchmark.start("Enable: Analysis refresh task registration");
+        Benchmark.start("Analysis refresh task registration");
         // Analysis refresh settings
         boolean bootAnalysisIsEnabled = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
@@ -172,9 +172,9 @@ public class Plan extends BukkitPlugin<Plan> {
         if (analysisRefreshTaskIsEnabled) {
             startAnalysisRefreshTask(analysisRefreshMinutes);
         }
-        Benchmark.stop("Enable: Analysis refresh task registration");
+        Benchmark.stop("Enable", "Analysis refresh task registration");
 
-        Benchmark.start("Enable: WebServer Initialization");
+        Benchmark.start("WebServer Initialization");
         // Data view settings
         boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
         boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
@@ -196,20 +196,20 @@ public class Plan extends BukkitPlugin<Plan> {
         if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
             Log.infoColor(Phrase.NOTIFY_EMPTY_IP.toString());
         }
-        Benchmark.stop("Enable: WebServer Initialization");
+        Benchmark.stop("Enable", "WebServer Initialization");
 
         registerCommand(new PlanCommand(this));
 
-        Benchmark.start("Enable: Hook to 3rd party plugins");
+        Benchmark.start("Hook to 3rd party plugins");
         hookHandler = new HookHandler(this);
-        Benchmark.stop("Enable: Hook to 3rd party plugins");
+        Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
         BStats bStats = new BStats(this);
         bStats.registerMetrics();
 
         Log.debug("Verbose debug messages are enabled.");
+        Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
         Log.info(Phrase.ENABLED.toString());
-        processStatus().finishExecution("Enable");
     }
 
     /**
@@ -248,7 +248,7 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     private void registerListeners() {
-        Benchmark.start("Enable: Register Listeners");
+        Benchmark.start("Register Listeners");
         registerListener(new PlanPlayerListener(this));
         boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER.toString());
         boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER.toString());
@@ -269,7 +269,7 @@ public class Plan extends BukkitPlugin<Plan> {
             registerListener(new PlanDeathEventListener(this));
         }
 
-        Benchmark.stop("Enable: Register Listeners");
+        Benchmark.stop("Register Listeners");
     }
 
     /**
@@ -288,7 +288,6 @@ public class Plan extends BukkitPlugin<Plan> {
 
         for (Database database : databases) {
             String databaseType = database.getConfigName().toLowerCase().trim();
-            Log.debug(databaseType + ": " + Verify.equalsIgnoreCase(dbType, databaseType));
             if (Verify.equalsIgnoreCase(dbType, databaseType)) {
                 this.db = database;
                 break;
@@ -304,7 +303,7 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
-        Benchmark.start("Enable: Schedule PeriodicAnalysisTask");
+        Benchmark.start("Schedule PeriodicAnalysisTask");
         if (everyXMinutes <= 0) {
             return;
         }
@@ -317,11 +316,11 @@ public class Plan extends BukkitPlugin<Plan> {
                 }
             }
         }).runTaskTimerAsynchronously(everyXMinutes * TimeAmount.MINUTE.ticks(), everyXMinutes * TimeAmount.MINUTE.ticks());
-        Benchmark.stop("Enable: Schedule PeriodicAnalysisTask");
+        Benchmark.stop("Schedule PeriodicAnalysisTask");
     }
 
     private void startBootAnalysisTask() throws IllegalStateException {
-        Benchmark.start("Enable: Schedule boot analysis task");
+        Benchmark.start("Schedule boot analysis task");
         Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
         ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new AbsRunnable() {
             @Override
@@ -333,7 +332,7 @@ public class Plan extends BukkitPlugin<Plan> {
             }
         }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
-        Benchmark.stop("Enable: Schedule boot analysis task");
+        Benchmark.stop("Enable", "Schedule boot analysis task");
     }
 
     /**
@@ -367,7 +366,7 @@ public class Plan extends BukkitPlugin<Plan> {
         String defaultLocale = "Default: EN";
 
         String locale = Settings.LOCALE.toString().toUpperCase();
-        Benchmark.start("Enable: Initializing locale");
+        Benchmark.start("Initializing locale");
         File localeFile = new File(getDataFolder(), "locale.txt");
 
         String usingLocale;
@@ -441,7 +440,7 @@ public class Plan extends BukkitPlugin<Plan> {
      * @implNote Removes clutter in the method
      */
     private void stopInitLocale(String usingLocale) {
-        Benchmark.stop("Enable: Initializing locale");
+        Benchmark.stop("Enable", "Initializing locale");
         Log.info("Using locale: " + usingLocale);
     }
 

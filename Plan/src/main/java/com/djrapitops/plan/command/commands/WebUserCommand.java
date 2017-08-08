@@ -21,10 +21,11 @@ public class WebUserCommand extends TreeCommand<Plan> {
     public WebUserCommand(Plan plugin, RegisterCommand register) {
         super(plugin, "webuser, web", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "Manage Webusers", "plan web");
         commands.add(register);
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
+    @Override
+    public String[] addHelp() {
         ColorScheme colorScheme = plugin.getColorScheme();
 
         String mCol = colorScheme.getMainColor();
@@ -41,7 +42,7 @@ public class WebUserCommand extends TreeCommand<Plan> {
                 sCol + "  Alias: /plan web"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

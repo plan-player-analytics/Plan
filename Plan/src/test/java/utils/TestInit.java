@@ -78,7 +78,7 @@ public class TestInit {
 
         // Abstract Plugin Framework Mocks.
         BukkitLog<Plan> log = new BukkitLog<>(planMock, "console", "");
-        BenchUtil bench = new BenchUtil();
+        BenchUtil bench = new BenchUtil(planMock);
         ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
         ProcessStatus<Plan> process = new ProcessStatus<>(planMock);
         Fetch fetch = new Fetch(planMock);

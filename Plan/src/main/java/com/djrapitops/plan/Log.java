@@ -1,5 +1,8 @@
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.plugin.utilities.log.DebugInfo;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
 import java.util.Collection;
 
 /**
@@ -56,6 +59,48 @@ public class Log {
     }
 
     /**
+     * Used for logging larger debug complexes.
+     *
+     * @param task    complex this debug message is a part of.
+     * @param message message
+     * @return full debug complex so far.
+     */
+    public static DebugInfo debug(String task, String message) {
+        DebugInfo debug = getDebug(task);
+        debug.addLine(message, MiscUtils.getTime());
+        return debug;
+    }
+
+    /**
+     * Used for logging larger debug complexes.
+     *
+     * @param task complex to get
+     * @return full debug complex so far.
+     */
+    public static DebugInfo getDebug(String task) {
+        return Plan.getInstance().getPluginLogger().getDebug(task);
+    }
+
+    /**
+     * Logs the full debug complex to the debug log.
+     *
+     * @param task complex to log.
+     */
+    public static void logDebug(String task) {
+        getDebug(task).toLog();
+    }
+
+    /**
+     * Logs the full debug complex to the debug log with an execution time.
+     *
+     * @param task complex to log.
+     * @param time execution time.
+     */
+    public static void logDebug(String task, long time) {
+        getDebug(task).toLog(time);
+    }
+
+    /**
      * Logs trace of caught Exception to Errors.txt and notifies on console.
      *
      * @param source Class name the exception was caught in.
@@ -80,7 +125,10 @@ public class Log {
      *
      * @param message  Message to log to Errors.txt [timestamp] Message
      * @param filename Name of the file to write to.
+     * @deprecated Should no longer be used, may break other log handling mechanisms.
+     * If exception requires additional information it should be placed in the source string.
      */
+    @Deprecated
     public static void toLog(String message, String filename) {
         Plan.getInstance().getPluginLogger().toLog(message, filename);
     }
@@ -89,7 +137,9 @@ public class Log {
      * Used to get the name for the error log file.
      *
      * @return Name of the error log file.
+     * @deprecated Should no longer be used, Errors.txt is handled by a separate class.
      */
+    @Deprecated
     public static String getErrorsFilename() {
         return Plan.getInstance().getPluginLogger().getErrorsFilename();
     }

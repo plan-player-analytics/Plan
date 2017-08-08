@@ -60,7 +60,7 @@ public class Analysis {
             return;
         }
 
-        plugin.processStatus().startExecution("Analysis");
+        Benchmark.start("Analysis");
         log(Phrase.ANALYSIS_START.toString());
         // Async task for Analysis
         plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
@@ -84,8 +84,8 @@ public class Analysis {
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
         log(Phrase.ANALYSIS_FETCH_DATA.toString());
-        Benchmark.start("Analysis: Fetch Phase");
-
+        Benchmark.start("Fetch Phase");
+        Log.debug("Database", "Analysis Fetch");
         plugin.processStatus().setStatus("Analysis", "Analysis Fetch Phase");
         try {
             inspectCache.cacheAllUserData(db);
@@ -104,7 +104,8 @@ public class Analysis {
 
         try {
             tpsData = db.getTpsTable().getTPSData();
-            Log.debug("TPS Data Size: " + tpsData.size());
+            Log.debug("Analysis", "Raw Data Size: " + rawData.size());
+            Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
         }
@@ -122,7 +123,7 @@ public class Analysis {
         try {
             rawData.sort(new UserDataLastPlayedComparator());
             List<UUID> uuids = rawData.stream().map(UserData::getUuid).collect(Collectors.toList());
-            Benchmark.start("Analysis: Create Empty dataset");
+            Benchmark.start("Create Empty dataset");
             DataCacheHandler handler = plugin.getHandler();
             Map<String, Integer> commandUse = handler.getCommandUse();
 
@@ -134,8 +135,8 @@ public class Analysis {
             analysisData.getPlayerCountPart().addPlayers(uuids);
             activityPart.setRecentPlayers(rawData.stream().map(UserData::getName).collect(Collectors.toList()));
 
-            Benchmark.stop("Analysis: Create Empty dataset");
-            long fetchPhaseLength = Benchmark.stop("Analysis: Fetch Phase");
+            Benchmark.stop("Analysis", "Create Empty dataset");
+            long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             Benchmark.start("Analysis Phase");
             plugin.processStatus().setStatus("Analysis", "Analysis Phase");
@@ -147,14 +148,16 @@ public class Analysis {
             fillDataset(analysisData, rawData);
             // Analyze
             analysisData.analyseData();
-            Benchmark.stop("Analysis Phase");
+            Benchmark.stop("Analysis", "Analysis Phase");
 
             log(Phrase.ANALYSIS_THIRD_PARTY.toString());
             plugin.processStatus().setStatus("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
             analysisCache.cache(analysisData);
-            long time = plugin.processStatus().finishExecution("Analysis");
+            long time = Benchmark.stop("Analysis", "Analysis");
+
+            Log.logDebug("Analysis", time);
 
             if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
                 Log.info(Phrase.ANALYSIS_COMPLETE.parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
@@ -178,7 +181,7 @@ public class Analysis {
     }
 
     private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
-        Benchmark.start("Analysis: 3rd party");
+        Benchmark.start("3rd party");
         final Map<String, String> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
         final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
@@ -192,7 +195,7 @@ public class Analysis {
         };
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
-        Log.debug("Analyzing additional sources: " + sources.size());
+        Log.debug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().filter(Verify::notNull).forEach(source -> {
             try {
                 Benchmark.start("Source " + source.getPlaceholder("").replace("%", ""));
@@ -225,10 +228,10 @@ public class Analysis {
 
                 Log.toLog(this.getClass().getName(), e);
             } finally {
-                Benchmark.stop("Source " + source.getPlaceholder("").replace("%", ""));
+                Benchmark.stop("Analysis", "Source " + source.getPlaceholder("").replace("%", ""));
             }
         });
-        Benchmark.stop("Analysis: 3rd party");
+        Benchmark.stop("Analysis", "3rd party");
         return replaceMap;
     }
 
@@ -260,7 +263,7 @@ public class Analysis {
 
         long now = MiscUtils.getTime();
 
-        Benchmark.start("Analysis: Fill Dataset");
+        Benchmark.start("Fill Dataset");
         rawData.forEach(uData -> {
             uData.access();
             Map<String, Long> gmTimes = uData.getGmTimes().getTimes();
@@ -307,6 +310,6 @@ public class Analysis {
             joinInfo.addSessions(uuid, sessions);
             uData.stopAccessing();
         });
-        Benchmark.stop("Analysis: Fill Dataset");
+        Benchmark.stop("Analysis", "Fill Dataset");
     }
 }

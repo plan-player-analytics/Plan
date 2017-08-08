@@ -149,7 +149,7 @@ public class PassEncryptUtil {
             return skf.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException ex) {
             throw new CannotPerformOperationException(
-                    "Hash algorithm not supported.", ex
+                    "Hash algorithm not supported: " + PBKDF2_ALGORITHM, ex
             );
         } catch (InvalidKeySpecException ex) {
             throw new CannotPerformOperationException(

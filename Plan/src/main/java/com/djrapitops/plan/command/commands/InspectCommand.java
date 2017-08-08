@@ -42,10 +42,11 @@ public class InspectCommand extends SubCommand {
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
+    @Override
+    public String[] addHelp() {
         ColorScheme colorScheme = plugin.getColorScheme();
 
         String mCol = colorScheme.getMainColor();
@@ -59,7 +60,7 @@ public class InspectCommand extends SubCommand {
                 sCol + "  Alias: /plan <name>"
         };
 
-        super.setInDepthHelp(help);
+        return help;
     }
 
     @Override

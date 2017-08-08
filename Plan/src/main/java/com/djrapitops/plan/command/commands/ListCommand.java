@@ -30,11 +30,12 @@ public class ListCommand extends SubCommand {
     public ListCommand(Plan plugin) {
         super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), "List to all cached players", "");
 
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -47,7 +48,7 @@ public class ListCommand extends SubCommand {
                 sCol + "  Alias: /plan pl"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

@@ -40,10 +40,11 @@ public class ManageImportCommand extends SubCommand {
     public ManageImportCommand(Plan plugin) {
         super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT.toString(), Phrase.ARG_IMPORT.toString());
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
+    @Override
+    public String[] addHelp() {
         ColorScheme colorScheme = plugin.getColorScheme();
 
         String mCol = colorScheme.getMainColor();
@@ -57,7 +58,7 @@ public class ManageImportCommand extends SubCommand {
                 sCol + "  If a lot of users are not in the database, saving may take a long time."
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

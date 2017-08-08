@@ -37,10 +37,11 @@ public class QuickAnalyzeCommand extends SubCommand {
         super("qanalyze, qanalyse, qanalysis, qa", CommandType.CONSOLE, Permissions.QUICK_ANALYZE.getPermission(), Phrase.CMD_USG_QANALYZE.parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
+    @Override
+    public String[] addHelp() {
         ColorScheme colorScheme = plugin.getColorScheme();
 
         String mCol = colorScheme.getMainColor();
@@ -54,7 +55,7 @@ public class QuickAnalyzeCommand extends SubCommand {
                 sCol + "  Aliases: qanalyze, ganalyse, qanalysis, qa"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

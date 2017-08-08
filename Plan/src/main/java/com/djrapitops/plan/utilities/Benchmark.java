@@ -20,7 +20,6 @@ public class Benchmark {
      */
     public static void start(String source) {
         Plan.getInstance().benchmark().start(source);
-        Log.debug(source);
     }
 
     /**
@@ -32,6 +31,18 @@ public class Benchmark {
         if (ms != -1) {
             Log.debug(source + " took " + ms + " ms");
         }
+        return ms;
+    }
+
+    /**
+     * Used to add Benchmark timings to larger Debug log task parts.
+     *
+     * @param task   Task this benchmark is a part of.
+     * @param source Bench source
+     * @return Execution time in ms.
+     */
+    public static long stop(String task, String source) {
+        long ms = Plan.getInstance().benchmark().stop(task, source);
         return ms;
     }
 }

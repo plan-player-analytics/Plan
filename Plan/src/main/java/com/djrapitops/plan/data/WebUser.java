@@ -30,4 +30,23 @@ public class WebUser {
         return permLevel;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WebUser webUser = (WebUser) o;
+
+        if (permLevel != webUser.permLevel) return false;
+        if (!user.equals(webUser.user)) return false;
+        return saltedPassHash.equals(webUser.saltedPassHash);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = user.hashCode();
+        result = 31 * result + saltedPassHash.hashCode();
+        result = 31 * result + permLevel;
+        return result;
+    }
 }

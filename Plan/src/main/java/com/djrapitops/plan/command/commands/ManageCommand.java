@@ -25,10 +25,11 @@ public class ManageCommand extends TreeCommand<Plan> {
      */
     public ManageCommand(Plan plugin) {
         super(plugin, "manage,m", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE + "", "plan m");
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
+    @Override
+    public String[] addHelp() {
         ColorScheme colorScheme = plugin.getColorScheme();
 
         String mCol = colorScheme.getMainColor();
@@ -43,7 +44,7 @@ public class ManageCommand extends TreeCommand<Plan> {
                 sCol + "  /plan m <subcommand> ? - in depth help"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

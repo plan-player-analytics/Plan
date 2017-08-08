@@ -88,7 +88,7 @@ public class TPSTable extends Table {
      * @return @throws SQLException
      */
     public List<TPS> getTPSData() throws SQLException {
-        Benchmark.start("Database: Get TPS");
+        Benchmark.start("Get TPS");
         List<TPS> data = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -109,7 +109,7 @@ public class TPSTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get TPS");
+            Benchmark.stop("Database", "Get TPS");
         }
     }
 
@@ -119,14 +119,14 @@ public class TPSTable extends Table {
      */
     public void saveTPSData(List<TPS> data) throws SQLException {
         List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
-        batches.stream()
-                .forEach(batch -> {
-                    try {
-                        saveTPSBatch(batch);
-                    } catch (SQLException e) {
-                        Log.toLog("UsersTable.saveUserDataInformationBatch", e);
-                    }
-                });
+        batches.forEach(batch -> {
+            try {
+                saveTPSBatch(batch);
+            } catch (SQLException e) {
+                Log.toLog("UsersTable.saveUserDataInformationBatch", e);
+            }
+        });
+        db.setAvailable();
         commit();
     }
 
@@ -136,7 +136,7 @@ public class TPSTable extends Table {
         }
 
         int batchSize = batch.size();
-        Log.debug("Preparing insertion of TPS... Batch Size: " + batchSize);
+        Log.debug("Database", "Preparing insertion of TPS - Batch Size: " + batchSize);
 
         PreparedStatement statement = null;
         try {
@@ -161,7 +161,7 @@ public class TPSTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Executing tps batch: " + batchSize);
+            Log.debug("Database", "Executing tps batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);
