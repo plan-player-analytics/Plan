@@ -674,6 +674,11 @@
     <script src="https://code.highcharts.com/maps/modules/map.js"></script>
     <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
     <script>
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: %timezone% * 60
+            }
+        });
 		// Data Variables
 		var playersOnlineSeries = {
 			name: 'Players Online',

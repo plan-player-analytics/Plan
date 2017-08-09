@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -155,8 +156,8 @@ public class HookHandler {
      * @param uuid UUID of the player whose page is being inspected.
      * @return Map: key|value - %placeholder%|value
      */
-    public Map<String, String> getAdditionalInspectReplaceRules(UUID uuid) {
-        Map<String, String> addReplace = new HashMap<>();
+    public Map<String, Serializable> getAdditionalInspectReplaceRules(UUID uuid) {
+        Map<String, Serializable> addReplace = new HashMap<>();
         for (PluginData source : additionalDataSources) {
             if (source.analysisOnly()) {
                 continue;

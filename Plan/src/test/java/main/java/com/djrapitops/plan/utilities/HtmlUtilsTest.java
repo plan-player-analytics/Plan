@@ -14,7 +14,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -56,7 +58,7 @@ public class HtmlUtilsTest {
     @Test
     public void testReplacePlaceholders() {
         String html = "%test%";
-        HashMap<String, String> replaceMap = new HashMap<>();
+        Map<String, Serializable> replaceMap = new HashMap<>();
         replaceMap.put("%test%", "Success");
         String expResult = "Success";
         String result = HtmlUtils.replacePlaceholders(html, replaceMap);
@@ -68,7 +70,7 @@ public class HtmlUtilsTest {
      */
     @Test
     public void testReplacePlaceholdersBackslash() {
-        HashMap<String, String> replace = new HashMap<>();
+        Map<String, Serializable> replace = new HashMap<>();
         replace.put("%test%", "/\\");
         String result = HtmlUtils.replacePlaceholders("%test% alright %test%", replace);
         String exp = "/\\ alright /\\";

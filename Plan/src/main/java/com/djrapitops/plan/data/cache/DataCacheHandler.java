@@ -144,6 +144,7 @@ public class DataCacheHandler extends SessionCache {
                 }
                 try {
                     periodicTaskIsSaving = true;
+                    Log.debug("Database", "Periodic Cache Save");
                     handler.saveHandlerDataToCache();
                     handler.saveCachedUserData();
                     if (timesSaved % clearAfterXsaves == 0) {
@@ -340,6 +341,7 @@ public class DataCacheHandler extends SessionCache {
             return;
         }
         try {
+            Log.debug("Database", "Periodic TPS Save");
             db.getTpsTable().saveTPSData(averages);
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
