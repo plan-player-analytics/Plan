@@ -39,6 +39,7 @@ public class ManageImportCommand extends SubCommand {
      */
     public ManageImportCommand(Plan plugin) {
         super("import", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_IMPORT.toString(), Phrase.ARG_IMPORT.toString());
+
         this.plugin = plugin;
         setHelp(plugin);
     }
