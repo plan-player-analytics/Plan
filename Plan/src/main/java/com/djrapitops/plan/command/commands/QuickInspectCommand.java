@@ -42,11 +42,12 @@ public class QuickInspectCommand extends SubCommand {
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -59,7 +60,7 @@ public class QuickInspectCommand extends SubCommand {
                 sCol + "  Alias: /plan qi"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

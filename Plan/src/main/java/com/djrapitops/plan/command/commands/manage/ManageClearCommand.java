@@ -33,11 +33,12 @@ public class ManageClearCommand extends SubCommand {
         super("clear", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAR.toString(), "<DB> [-a]");
 
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -50,7 +51,7 @@ public class ManageClearCommand extends SubCommand {
                 sCol + "  Alias: /plan pl"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

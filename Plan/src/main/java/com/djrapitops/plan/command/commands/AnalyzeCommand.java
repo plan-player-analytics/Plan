@@ -36,11 +36,11 @@ public class AnalyzeCommand extends SubCommand {
         super("analyze, analyse, analysis, a", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Phrase.CMD_USG_ANALYZE.parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
-        setHelp(plugin);
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -52,8 +52,7 @@ public class AnalyzeCommand extends SubCommand {
                 sCol + "  /plan status can be used to check status of analysis while it is running.",
                 sCol + "  Aliases: analyze, analyse, analysis, a"
         };
-
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

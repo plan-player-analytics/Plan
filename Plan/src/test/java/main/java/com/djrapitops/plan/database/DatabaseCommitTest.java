@@ -132,7 +132,7 @@ public class DatabaseCommitTest {
     public void testCommitToDBFile5() throws SQLException, PassEncryptUtil.CannotPerformOperationException {
         db.init();
         List<UserData> data = RandomData.randomUserData();
-        WebUser webUser = new WebUser("Test", PassEncryptUtil.createHash("surprise"), 0);
+        WebUser webUser = new WebUser("Test", "SHA1:rioegnorgiengoieng:oiegnoeigneo:352", 0);
         db.getSecurityTable().addNewUser(webUser);
         db.close();
         db.init();

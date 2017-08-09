@@ -13,7 +13,7 @@ public class BStats {
     }
 
     public void registerMetrics() {
-        Log.debug("Enabling bStats Metrics.");
+        Log.debug("Enable", "Enabling bStats Metrics.");
         if (bStats == null) {
             bStats = new Metrics(plugin);
         }
