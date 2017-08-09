@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class AnalysisData extends RawData {
     private long refreshDate;
     private String planVersion;
     private String pluginsTabLayout;
-    private Map<String, String> additionalDataReplaceMap;
+    private Map<String, Serializable> additionalDataReplaceMap;
     private String playersTable;
 
     public AnalysisData(Map<String, Integer> commandUsage, List<TPS> tpsData) {
@@ -118,11 +119,11 @@ public class AnalysisData extends RawData {
         this.pluginsTabLayout = pluginsTabLayout;
     }
 
-    public Map<String, String> getAdditionalDataReplaceMap() {
+    public Map<String, Serializable> getAdditionalDataReplaceMap() {
         return additionalDataReplaceMap;
     }
 
-    public void setAdditionalDataReplaceMap(Map<String, String> additionalDataReplaceMap) {
+    public void setAdditionalDataReplaceMap(Map<String, Serializable> additionalDataReplaceMap) {
         this.additionalDataReplaceMap = additionalDataReplaceMap;
     }
 

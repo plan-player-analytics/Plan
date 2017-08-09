@@ -669,13 +669,17 @@
     <script src="https://code.highcharts.com/maps/modules/map.js"></script>
     <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
     <script>
-        // Data Variables
-        var playersOnlineSeries = {
-                name: 'Players Online',
-                data: %playersonlineseries%,
-            type: 'areaspline'
-            ,
-            color: '#%playersgraphcolor%',
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: %timezone% * 60
+            }
+        });
+		// Data Variables
+		var playersOnlineSeries = {
+			name: 'Players Online',
+			data: %playersonlineseries%,
+			type: 'areaspline',
+			color: '#%playersgraphcolor%',
             tooltip: {
             valueDecimals: 0
         }

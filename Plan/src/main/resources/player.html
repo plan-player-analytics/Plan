@@ -473,6 +473,11 @@
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script>
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: %timezone% * 60
+            }
+        });
         function formatTime(seconds) {
             var out = "";
             seconds = Math.floor(seconds / 1000);

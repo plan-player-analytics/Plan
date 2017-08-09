@@ -181,9 +181,9 @@ public class Analysis {
         }
     }
 
-    private Map<String, String> analyzeAdditionalPluginData(List<UUID> uuids) {
+    private Map<String, Serializable> analyzeAdditionalPluginData(List<UUID> uuids) {
         Benchmark.start("3rd party");
-        final Map<String, String> replaceMap = new HashMap<>();
+        final Map<String, Serializable> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
         final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
                 .filter(p -> !p.isBanData())

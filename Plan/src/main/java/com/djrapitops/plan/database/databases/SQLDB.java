@@ -180,6 +180,7 @@ public abstract class SQLDB extends Database {
             public void run() {
                 try {
                     Benchmark.start("Convert BukkitData to DB data");
+                    Log.debug("Database", "Bukkit Data Conversion");
                     Set<UUID> uuids = usersTable.getSavedUUIDs();
                     uuids.removeAll(usersTable.getContainsBukkitData(uuids));
                     if (uuids.isEmpty()) {
@@ -410,15 +411,15 @@ public abstract class SQLDB extends Database {
         Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
 
         Log.debug("Database", "Data found for:");
-        Log.debug("Database", "UUIDs: " + uuids.size());
-        Log.debug("Database", "IDs: " + userIds.size());
-        Log.debug("Database", "UserData: " + data.size());
-        Log.debug("Database", "  Nicknames: " + nicknames.size());
-        Log.debug("Database", "  IPs: " + ipList.size());
-        Log.debug("Database", "  Kills: " + playerKills.size());
-        Log.debug("Database", "  Sessions: " + sessionData.size());
-        Log.debug("Database", "  GM Times: " + gmTimes.size());
-        Log.debug("Database", "  World Times: " + worldTimes.size());
+        Log.debug("Database", "  UUIDs: " + uuids.size());
+        Log.debug("Database", "  IDs: " + userIds.size());
+        Log.debug("Database", "  UserData: " + data.size());
+        Log.debug("Database", "    Nicknames: " + nicknames.size());
+        Log.debug("Database", "    IPs: " + ipList.size());
+        Log.debug("Database", "    Kills: " + playerKills.size());
+        Log.debug("Database", "    Sessions: " + sessionData.size());
+        Log.debug("Database", "    GM Times: " + gmTimes.size());
+        Log.debug("Database", "    World Times: " + worldTimes.size());
 
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();

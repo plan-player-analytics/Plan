@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -59,10 +60,10 @@ public class HtmlUtils {
      * @param replaceMap
      * @return
      */
-    public static String replacePlaceholders(String html, Map<String, String> replaceMap) {
-        for (Map.Entry<String, String> entrySet : replaceMap.entrySet()) {
+    public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
+        for (Map.Entry<String, Serializable> entrySet : replaceMap.entrySet()) {
             String placeholder = entrySet.getKey();
-            String replacer = entrySet.getValue();
+            String replacer = entrySet.getValue().toString();
 
             html = html.replace(placeholder, replacer);
         }
