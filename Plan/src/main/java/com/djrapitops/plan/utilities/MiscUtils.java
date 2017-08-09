@@ -41,7 +41,7 @@ public class MiscUtils {
     }
 
     public static int getTimeZoneOffsetHours() {
-        return TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
+        return -TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
     }
 
     /**
