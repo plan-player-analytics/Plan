@@ -43,7 +43,6 @@ public class WebServer {
     private final int port;
     private boolean enabled = false;
     private HttpServer server;
-    private final int port;
 
     private boolean usingHttps = false;
 

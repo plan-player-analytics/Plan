@@ -117,7 +117,7 @@ public class TPSTable extends Table {
      * @param data
      * @throws SQLException
      */
-    public void saveTPSData(List<TPS> data) {
+    public void saveTPSData(List<TPS> data) throws SQLException {
         List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
         batches.forEach(batch -> {
             try {
