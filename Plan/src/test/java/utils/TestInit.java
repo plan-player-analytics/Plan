@@ -47,6 +47,24 @@ public class TestInit {
         return t;
     }
 
+    private static File getTestFolder() {
+        File testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
+    }
+
+    public static void clean() throws IOException {
+        clean(getTestFolder());
+    }
+
+    public static void clean(File testFolder) throws IOException {
+        if (testFolder.exists() && testFolder.isDirectory()) {
+            for (File f : testFolder.listFiles()) {
+                Files.deleteIfExists(f.toPath());
+            }
+        }
+    }
+
     @Deprecated // Use Test.init instead.
     public void setUp(boolean clearOnStart) throws Exception {
         planMock = PowerMockito.mock(Plan.class);
@@ -98,25 +116,6 @@ public class TestInit {
         OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
         when(mockServer.getOfflinePlayers()).thenReturn(ops);
         return mockServer;
-    }
-
-    private static File getTestFolder() throws IOException {
-        File testFolder = new File("temporaryTestFolder");
-        testFolder = new File("temporaryTestFolder");
-        testFolder.mkdir();
-        return testFolder;
-    }
-
-    public static void clean() throws IOException {
-        clean(getTestFolder());
-    }
-
-    public static void clean(File testFolder) throws IOException {
-        if (testFolder.exists() && testFolder.isDirectory()) {
-            for (File f : testFolder.listFiles()) {
-                Files.deleteIfExists(f.toPath());
-            }
-        }
     }
 
     private YamlConfiguration mockConfig() throws IOException, InvalidConfigurationException {

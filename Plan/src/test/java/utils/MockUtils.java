@@ -16,9 +16,9 @@ import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -154,9 +154,9 @@ public class MockUtils {
         return PowerMockito.mock(CommandSender.class);
     }
 
-    public static HttpServer mockHTTPServer() throws UnknownHostException {
+    public static HttpServer mockHTTPServer() throws IOException {
         HttpServer httpServer = PowerMockito.mock(HttpServer.class);
-        when(httpServer.getAddress()).thenReturn(InetSocketAddress.createUnresolved("127.0.0.1", 80));
+        when(httpServer.getAddress()).thenReturn(new InetSocketAddress(80));
         when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));
         return httpServer;
     }

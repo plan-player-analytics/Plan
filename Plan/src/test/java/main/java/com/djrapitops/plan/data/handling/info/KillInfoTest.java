@@ -37,8 +37,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest(JavaPlugin.class)
 public class KillInfoTest {
 
-    private Database db;
-
     /**
      *
      */
@@ -52,7 +50,7 @@ public class KillInfoTest {
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         Plan plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
+        Database db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask() {
 
@@ -68,10 +66,10 @@ public class KillInfoTest {
                 return new UsersTable(null, false) {
                     @Override
                     public int getUserId(UUID uuid) {
-                         if (uuid.equals(MockUtils.getPlayerUUID())) {
-                             return 2;
-                         }
-                         return 1;
+                        if (uuid.equals(MockUtils.getPlayerUUID())) {
+                            return 2;
+                        }
+                        return 1;
                     }
                 };
             }

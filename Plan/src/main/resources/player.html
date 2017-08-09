@@ -13,7 +13,7 @@
             left: 0;
             width: 100%;
             height: 88px;
-            padding: 0px;
+            padding: 0;
             background-color: #348e0f;
             z-index: 1;
         }
@@ -43,11 +43,11 @@
             text-decoration: none;
             background-color: #89c471;
             color: #fff;
-            margin: 10px 0px;
+            margin: 10px 0;
         }
 
         .sidenav a {
-            margin: 10px 0px;
+            margin: 10px 0;
             width: 100%;
             padding: 8px 8px 8px 16px;
             text-decoration: none;
@@ -88,7 +88,6 @@
             color: #000;
             text-align: left;
             margin: 5px;
-            padding: 5px;
         }
 
         .box p {
@@ -111,17 +110,17 @@
         .content {
             text-align: center;
             padding: 5px;
-            margin: 0px;
+            margin: 0;
         }
+
         .columns {
             display: flex;
         }
+
         .column {
             flex: 1;
         }
-        .box-area {
-            width: 100%;
-        }
+
         .infobox {
             margin-left: 3px;
             color: white;
@@ -150,8 +149,7 @@
         .headerbox {
             color: #348e0f;
             display: inline-block;
-            border-style: solid;
-            border-color: #348e0f;
+            border: solid #348e0f;
             padding: 8px 14px;
             border-radius: 10px;
             width: 95%;
@@ -164,32 +162,19 @@
             font-size: x-large;
         }
         .header-label {
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
+            padding: 0;
+            margin: 0;
+            border: 0;
         }
-        .button {
-            padding: 8px 14px;
-            background-color: #348e0f;
-            border: none;
-            color: white;
-            outline: 0;
-            text-decoration:none!important;
-        }
-        .button:hover {
-            background-color: #267F00;
-        }
+
         .table {
             border-collapse: collapse;
             table-layout: fixed;
-            border-style: solid;
-            border-width: 1px;
+            border: 1px solid;
             padding: 8px 14px;
             width: 100%;
         }
-        .buttons {
-            line-height: 270%;
-        }
+
         .link {
             color: #348e0f;
             text-decoration:none!important;
@@ -281,20 +266,18 @@
                 display: none;
             }
             header {
-                margin: 0px;
-                padding 0px;
+                margin: 0;
+                padding: 0;
             }
             header h1 {
-                margin: 0px;
+                margin: 0;
             }
             header img {
                 margin: 0px;
-                padding: 0px;
-                margin-right: 0px;
+                padding: 0;
             }
             header p {
-                margin: 0px;
-                margin-top: 5px;
+                margin: 5px 0px 0px;
             }
             .tab {
                 flex-direction: column;
@@ -306,11 +289,11 @@
                 width: 100%;
             }
             .sidenav {
-                width: 0%;
+                width: 0;
                 transition: 0s;
             }
             .main-limiter {
-                margin-left: 0%;
+                margin-left: 0;
                 width: 100%;
             }
         }
@@ -406,7 +389,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="playerChart" style="width=100%; height=350px;"></div>
+                        <div id="playerChart" style="width:100%; height:350px;"></div>
                     </div>
                     <div class="about box column">
                         <div class="headerbox">
@@ -510,13 +493,13 @@
 
             seconds = Math.floor(seconds);
 
-            if (dd != 0) {
+            if (dd !== 0) {
                 out += dd.toString() + "d ";
             }
-            if (dh != 0) {
+            if (dh !== 0) {
                 out += dh.toString() + "h ";
             }
-            if (dm != 0) {
+            if (dm !== 0) {
                 out += dm.toString() + "m ";
             }
             out += seconds.toString() + "s ";
@@ -569,7 +552,7 @@
     </script>
     <script>
 		function playersChart() {
-			var myChart = Highcharts.stockChart('playerChart', {
+			Highcharts.stockChart('playerChart', {
 				rangeSelector: {
 					selected: 2,
 					buttons: [{
@@ -632,7 +615,7 @@
     </script>
     <script>
         function worldPie() {
-            var myChart = Highcharts.chart('worldPie', {
+            Highcharts.chart('worldPie', {
                 chart: {
                     plotBackgroundColor: null,
 					plotBorderWidth: null,
@@ -676,7 +659,7 @@
 					tickInterval: 3600000
 				},
 				yAxis: {
-				  categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+				  categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 				},
 				tooltip: {
 					pointFormat: 'Activity: {point.z}'
@@ -733,7 +716,7 @@
         var navButtons = document.getElementsByClassName("nav-button");
         var tabs = document.getElementsByClassName("tab");
         var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
-        if (slideIndex == null) {
+        if (slideIndex === null) {
             slideIndex = 0;
         }
         var x = document.getElementById("main");
@@ -741,7 +724,7 @@
         x.style.transform = "translate3d(0px,0px,0)";
         x.style.width = ""+navButtons.length*100+"%";
 
-        for (i=0; i < navButtons.length; i++) {
+        for (var i = 0; i < navButtons.length; i++) {
             navButtons[i].onclick = openFunc(i)
             tabs[i].style.width = ""+100/navButtons.length+"%";
         }

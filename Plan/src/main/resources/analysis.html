@@ -14,7 +14,7 @@
             left: 0;
             width: 100%;
             height: 88px;
-            padding: 0px;
+            padding: 0;
             background-color: #348e0f;
             z-index: 1;
         }
@@ -44,11 +44,11 @@
             text-decoration: none;
             background-color: #89c471;
             color: #fff;
-            margin: 10px 0px;
+            margin: 10px 0;
         }
 
         .sidenav a {
-            margin: 10px 0px;
+            margin: 10px 0;
             width: 100%;
             padding: 8px 8px 8px 16px;
             text-decoration: none;
@@ -86,10 +86,9 @@
             background-color: #fff;
             padding: 5px;
             text-decoration: none;!important;
-            color: #000
+            color: #000;
             text-align: left;
             margin: 5px;
-            padding: 5px;
         }
 
         .box p {
@@ -106,7 +105,7 @@
         .content {
             text-align: center;
             padding: 5px;
-            margin: 0px;
+            margin: 0;
         }
         .row {
             width: 50%;
@@ -151,10 +150,9 @@
         .headerbox {
             color: #348e0f;
             display: inline-block;
-            border-style: solid;
-            border-color: #348e0f;
+            border: solid #348e0f;
             padding: 8px 14px;
-			border-radius: 3px;
+            border-radius: 3px;
             width: 95%;
         }
         .header-icon {
@@ -165,9 +163,9 @@
             font-size: x-large;
         }
         .header-label {
-            padding: 0px;
-            margin: 0px;
-            border: 0px;
+            padding: 0;
+            margin: 0;
+            border: 0;
         }
         .button {
             padding: 8px 14px;
@@ -183,8 +181,7 @@
         .table {
             border-collapse: collapse;
             table-layout: fixed;
-            border-style: solid;
-            border-width: 1px;
+            border: 1px solid;
             padding: 8px 14px;
             width: 100%;
         }
@@ -243,20 +240,18 @@
                 display: none;
             }
             header {
-                margin: 0px;
-                padding 0px;
+                margin: 0;
+                padding: 0;
             }
             header h1 {
-                margin: 0px;
+                margin: 0;
             }
             header img {
+                padding: 0;
                 margin: 0px;
-                padding: 0px;
-                margin-right: 0px;
             }
             header p {
-                margin: 0px;
-                margin-top: 5px;
+                margin: 5px 0px 0px;
             }
             .tab {
                 flex-direction: column;
@@ -268,11 +263,11 @@
                 width: 100%;
             }
             .sidenav {
-                width: 0%;
+                width: 0;
                 transition: 0s;
             }
             .main-limiter {
-                margin-left: 0%;
+                margin-left: 0;
                 width: 100%;
             }
         }
@@ -342,7 +337,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="playerChartDay" style="width=100%; height=350px;"></div>
+                        <div id="playerChartDay" style="width:100%; height:350px;"></div>
                         <p><i class="fa fa-user-circle" aria-hidden="true"></i> Unique Players: %uniquejoinsday% | <i
                                 class="fa fa-user-circle-o" aria-hidden="true"></i> Unique/Day: %avguniquejoinsday%</p>
                     </div>
@@ -419,7 +414,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="playerChartMonth" style="width=100%; height=350px;"></div>
+                        <div id="playerChartMonth" style="width: 100%; height: 350px;"></div>
                     </div>
                     <div class=" box column">
                         <p><b>Month:</b><br>
@@ -686,391 +681,391 @@
 			type: 'areaspline',
 			color: '#%playersgraphcolor%',
             tooltip: {
-                valueDecimals: 0
-            }
-		};
-		var tpsSeries = {
-			name: 'TPS',			
-			data: %tpsseries%,
-			type: 'spline',
-			color: '#b74343',
-			tooltip: {
-				valueDecimals: 2
-			},
-			yAxis: 1
-		};
-		var cpuSeries = {
-			name: 'CPU Usage',
-			data: %cpuseries%,
-			type: 'areaspline',
-			color: '#e0d264',
-			tooltip: {
-				pointFormat: '{series.name}: <b>{point.y:.2f}%</b>'
-			}
-		};
-		var ramSeries = {
-			name: 'RAM Usage',
-			data: %ramseries%,
-			type: 'areaspline',
-			color: '#7dcc24',
-			tooltip: {
-				valueDecimals: 0
-			},
-			yAxis: 1
-		};
-		var entitySeries = {
-			name: 'Loaded Entities',			
-			data: %entityseries%,
-			type: 'areaspline',
-			color: '#ac69ef',
-			tooltip: {
-				valueDecimals: 0
-			},
-			yAxis: 1
-		};
-		var chunkSeries = {
-			name: 'Loaded Chunks',			
-			data: %chunkseries%,
-			type: 'areaspline',
-			color: '#b58310',
-			tooltip: {
-				valueDecimals: 0
-			}
-		};
-		var activitySeries = {
-			name: 'Players',
-			colorByPoint: true,
-			data: [{
-				name: 'Active',
-				y: %active%
-			}, {
-				name: 'Inactive',
-				y: %inactive%,
-				sliced: true,
-				selected: true
-			}, {
-				name: 'Single Join',
-				y: %joinleaver%
-			}, {
-				name: 'Banned',
-				y: %banned%
-			}]
-		};
-		var gmData = %gmdata%;
-		var gmSeries = {
-			name: 'GM Usage',
-			colorByPoint: true,
-			data: [{
-				name: 'Survival',
-				y: gmData[0],
-				sliced: true,
-				selected: true
-			}, {
-				name: 'Creative',
-				y: gmData[1]
-			}, {
-				name: 'Adventure',
-				y: gmData[2]
-			}, {
-				name: 'Spectator',
-				y: gmData[3]
-			}]
-		};
-		var worldSeries = {
-		    name: 'World Playtime',
-		    colorByPoint: true,
-		    data: %worldseries%
-		};
-		var mapSeries = {
-			name: 'Players',
-			type: 'map',
-			mapData: Highcharts.maps['custom/world'],
-			data: %geomapseries%,
-			joinBy: ['iso-a3', 'code']
-		};
-		var sessionLengthSeries = {
-			name: 'Sessions',
-			color: '#89c471',			
-			data: %sessionlengthseries%
-		};
-		var punchcardSeries = {
-			name: 'Relative Activity',
-			color: '#222',
-			data: %punchcardseries%
-		};
+            valueDecimals: 0
+        }
+        };
+        var tpsSeries = {
+                name: 'TPS',
+                data: %tpsseries%,
+            type: 'spline',
+            color: '#b74343',
+            tooltip: {
+            valueDecimals: 2
+        },
+        yAxis: 1
+        };
+        var cpuSeries = {
+                name: 'CPU Usage',
+                data: %cpuseries%,
+            type: 'areaspline',
+            color: '#e0d264',
+            tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.2f}%</b>'
+        }
+        };
+        var ramSeries = {
+                name: 'RAM Usage',
+                data: %ramseries%,
+            type: 'areaspline',
+            color: '#7dcc24',
+            tooltip: {
+            valueDecimals: 0
+        },
+        yAxis: 1
+        };
+        var entitySeries = {
+                name: 'Loaded Entities',
+                data: %entityseries%,
+            type: 'areaspline',
+            color: '#ac69ef',
+            tooltip: {
+            valueDecimals: 0
+        },
+        yAxis: 1
+        };
+        var chunkSeries = {
+                name: 'Loaded Chunks',
+                data: %chunkseries%,
+            type: 'areaspline',
+            color: '#b58310',
+            tooltip: {
+            valueDecimals: 0
+        }
+        };
+        var activitySeries = {
+            name: 'Players',
+            colorByPoint: true,
+            data: [{
+                name: 'Active',
+                y: %active%
+        }, {
+            name: 'Inactive',
+            y: %inactive%,
+            sliced: true,
+            selected: true
+        }, {
+            name: 'Single Join',
+                y: %joinleaver%
+        }, {
+            name: 'Banned',
+                y: %banned%
+        }]
+        };
+        var gmData = %gmdata%;
+        var gmSeries = {
+            name: 'GM Usage',
+            colorByPoint: true,
+            data: [{
+                name: 'Survival',
+                y: gmData[0],
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Creative',
+                y: gmData[1]
+            }, {
+                name: 'Adventure',
+                y: gmData[2]
+            }, {
+                name: 'Spectator',
+                y: gmData[3]
+            }]
+        };
+        var worldSeries = {
+            name: 'World Playtime',
+            colorByPoint: true,
+            data: %worldseries%
+        };
+        var mapSeries = {
+                name: 'Players',
+                type: 'map',
+                mapData: Highcharts.maps['custom/world'],
+                data: %geomapseries%,
+            joinBy: ['iso-a3', 'code']
+        };
+        var sessionLengthSeries = {
+            name: 'Sessions',
+            color: '#89c471',
+            data: %sessionlengthseries%
+        };
+        var punchcardSeries = {
+            name: 'Relative Activity',
+            color: '#222',
+            data: %punchcardseries%
+        };
 
     </script>
     <script>
-		function playersChart() {
-			var myChart = Highcharts.stockChart('playerChartDay', {
-				rangeSelector: {
-					selected: 1,
-					buttons: [{
-						type: 'hour',
-						count: 12,
-						text: '12h'
-					},{
-						type: 'hour',
-						count: 24,
-						text: '24h'
-					},{
-						type: 'day',
-						count: 7,
-						text: '7d'
-					},{
-						type: 'month',
-						count: 1,
-						text: '30d'
-					},{
-						type: 'all',
-						text: 'All'
-					}]
-				},				
-				title: {text: 'Players Online'},
-				plotOptions: {
-					areaspline: {
-						fillOpacity: 0.4
-					}
-				},
-				series: [playersOnlineSeries]
-			});
-		}
-		function playersChart2() {
-			var myChart = Highcharts.stockChart('playerChartMonth', {
-				rangeSelector: {
-					selected: 4,
-					buttons: [{
-						type: 'hour',
-						count: 12,
-						text: '12h'
-					},{
-						type: 'hour',
-						count: 24,
-						text: '24h'
-					},{
-						type: 'day',
-						count: 7,
-						text: '7d'
-					},{
-						type: 'month',
-						count: 1,
-						text: '30d'
-					},{
-						type: 'all',
-						text: 'All'
-					}]
-				},
-				plotOptions: {
-					areaspline: {
-						fillOpacity: 0.4
-					}
-				},
-				title: {text: 'Players Online'},
-				series: [playersOnlineSeries]
-			});
-		}
+        function playersChart() {
+            Highcharts.stockChart('playerChartDay', {
+                rangeSelector: {
+                    selected: 1,
+                    buttons: [{
+                        type: 'hour',
+                        count: 12,
+                        text: '12h'
+                    },{
+                        type: 'hour',
+                        count: 24,
+                        text: '24h'
+                    },{
+                        type: 'day',
+                        count: 7,
+                        text: '7d'
+                    },{
+                        type: 'month',
+                        count: 1,
+                        text: '30d'
+                    },{
+                        type: 'all',
+                        text: 'All'
+                    }]
+                },
+                title: {text: 'Players Online'},
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.4
+                    }
+                },
+                series: [playersOnlineSeries]
+            });
+        }
+        function playersChart2() {
+            var myChart = Highcharts.stockChart('playerChartMonth', {
+                rangeSelector: {
+                    selected: 4,
+                    buttons: [{
+                        type: 'hour',
+                        count: 12,
+                        text: '12h'
+                    },{
+                        type: 'hour',
+                        count: 24,
+                        text: '24h'
+                    },{
+                        type: 'day',
+                        count: 7,
+                        text: '7d'
+                    },{
+                        type: 'month',
+                        count: 1,
+                        text: '30d'
+                    },{
+                        type: 'all',
+                        text: 'All'
+                    }]
+                },
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.4
+                    }
+                },
+                title: {text: 'Players Online'},
+                series: [playersOnlineSeries]
+            });
+        }
 
     </script>
     <script>
-		function tpsChart() {
-			var myChart = Highcharts.stockChart('tpsGraph', {
-				rangeSelector: {
-					selected: 1,
-					buttons: [{
-						type: 'hour',
-						count: 12,
-						text: '12h'
-					},{
-						type: 'hour',
-						count: 24,
-						text: '24h'
-					},{
-						type: 'day',
-						count: 7,
-						text: '7d'
-					},{
-						type: 'month',
-						count: 1,
-						text: '30d'
-					},{
-						type: 'all',
-						text: 'All'
-					}]
-				},
-				yAxis: [{
-				    labels: {
-						align: 'right',
-						x: -3
-					},
-					title: {
-						text: 'Players'
-					},
-					height: '30%',
-				}, {
-					lineWidth: 2,
-					labels: {
-						align: 'right',
-						x: -3
-					},
-					title: {
-						text: 'TPS'
-					},
-					height: '70%',
-					top: '30%',
-					offset: 0,
-					lineWidth: 2
-				}],
-				tooltip: {
+        function tpsChart() {
+            var myChart = Highcharts.stockChart('tpsGraph', {
+                rangeSelector: {
+                    selected: 1,
+                    buttons: [{
+                        type: 'hour',
+                        count: 12,
+                        text: '12h'
+                    },{
+                        type: 'hour',
+                        count: 24,
+                        text: '24h'
+                    },{
+                        type: 'day',
+                        count: 7,
+                        text: '7d'
+                    },{
+                        type: 'month',
+                        count: 1,
+                        text: '30d'
+                    },{
+                        type: 'all',
+                        text: 'All'
+                    }]
+                },
+                yAxis: [{
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'Players'
+                    },
+                    height: '30%',
+                }, {
+                    lineWidth: 2,
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'TPS'
+                    },
+                    height: '70%',
+                    top: '30%',
+                    offset: 0,
+                    lineWidth: 2
+                }],
+                tooltip: {
                     split: true
                 },
-				plotOptions: {
-					areaspline: {
-						fillOpacity: 0.4
-					}
-				},
-				title: {text: 'Ticks Per Second'},
-				series: [tpsSeries, playersOnlineSeries]
-			});
-		}
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.4
+                    }
+                },
+                title: {text: 'Ticks Per Second'},
+                series: [tpsSeries, playersOnlineSeries]
+            });
+        }
 
     </script>
     <script>
-		function resourceChart() {
-			var myChart = Highcharts.stockChart('resourceGraph', {
-				rangeSelector: {
-					selected: 1,
-					buttons: [{
-						type: 'hour',
-						count: 12,
-						text: '12h'
-					},{
-						type: 'hour',
-						count: 24,
-						text: '24h'
-					},{
-						type: 'day',
-						count: 7,
-						text: '7d'
-					},{
-						type: 'month',
-						count: 1,
-						text: '30d'
-					},{
-						type: 'all',
-						text: 'All'
-					}]
-				},
-				yAxis: [{
-					labels: {
-						align: 'right',
-						x: -3
-					},
-					title: {
-						text: 'CPU / %'
-					},
-					height: '55%',
-					lineWidth: 2
-				}, {
-					labels: {
-						align: 'right',
-						x: -3
-					},
-					title: {
-						text: 'RAM / MB'
-					},
-					top: '55%',
-					height: '40%',
-					offset: 0,
-					lineWidth: 2
-				}],
-				tooltip: {
+        function resourceChart() {
+            var myChart = Highcharts.stockChart('resourceGraph', {
+                rangeSelector: {
+                    selected: 1,
+                    buttons: [{
+                        type: 'hour',
+                        count: 12,
+                        text: '12h'
+                    },{
+                        type: 'hour',
+                        count: 24,
+                        text: '24h'
+                    },{
+                        type: 'day',
+                        count: 7,
+                        text: '7d'
+                    },{
+                        type: 'month',
+                        count: 1,
+                        text: '30d'
+                    },{
+                        type: 'all',
+                        text: 'All'
+                    }]
+                },
+                yAxis: [{
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'CPU / %'
+                    },
+                    height: '55%',
+                    lineWidth: 2
+                }, {
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'RAM / MB'
+                    },
+                    top: '55%',
+                    height: '40%',
+                    offset: 0,
+                    lineWidth: 2
+                }],
+                tooltip: {
                     split: true
                 },
-				plotOptions: {
-					areaspline: {
-						fillOpacity: 0.4
-					}
-				},
-				title: {text: 'Resource Usage'},
-				series: [cpuSeries, ramSeries]
-			});
-		}
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.4
+                    }
+                },
+                title: {text: 'Resource Usage'},
+                series: [cpuSeries, ramSeries]
+            });
+        }
 
     </script>
     <script>
-		function worldChart() {
-			var myChart = Highcharts.stockChart('worldGraph', {
-				rangeSelector: {
-					selected: 1,
-					buttons: [{
-						type: 'hour',
-						count: 12,
-						text: '12h'
-					},{
-						type: 'hour',
-						count: 24,
-						text: '24h'
-					},{
-						type: 'day',
-						count: 7,
-						text: '7d'
-					},{
-						type: 'month',
-						count: 1,
-						text: '30d'
-					},{
-						type: 'all',
-						text: 'All'
-					}]
-				},	
-				yAxis: [{
-					labels: {
-						align: 'right',
-						x: -3
-					},
-					title: {
-						text: 'Chunks'
-					},
-					height: '50%',
-					lineWidth: 2
-				}, {
-					labels: {
-						align: 'right',
-						x: -3
-					},
-					title: {
-						text: 'Entities'
-					},
-					top: '50%',
-					height: '40%',
-					offset: 0,
-					lineWidth: 2
-				}],
-				tooltip: {
+        function worldChart() {
+            var myChart = Highcharts.stockChart('worldGraph', {
+                rangeSelector: {
+                    selected: 1,
+                    buttons: [{
+                        type: 'hour',
+                        count: 12,
+                        text: '12h'
+                    },{
+                        type: 'hour',
+                        count: 24,
+                        text: '24h'
+                    },{
+                        type: 'day',
+                        count: 7,
+                        text: '7d'
+                    },{
+                        type: 'month',
+                        count: 1,
+                        text: '30d'
+                    },{
+                        type: 'all',
+                        text: 'All'
+                    }]
+                },
+                yAxis: [{
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'Chunks'
+                    },
+                    height: '50%',
+                    lineWidth: 2
+                }, {
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'Entities'
+                    },
+                    top: '50%',
+                    height: '40%',
+                    offset: 0,
+                    lineWidth: 2
+                }],
+                tooltip: {
                     split: true
                 },
-				plotOptions: {
-					areaspline: {
-						fillOpacity: 0.4
-					}
-				},
-				title: {text: 'World Load'},
-				series: [entitySeries, chunkSeries]
-			});
-		}
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.4
+                    }
+                },
+                title: {text: 'World Load'},
+                series: [entitySeries, chunkSeries]
+            });
+        }
 
     </script>
     <script>
         function activityPie() {
             var myChart = Highcharts.chart('activityPie', {
                 chart: {
-                    plotBackgroundColor: null, 
-					plotBorderWidth: null, 
-					plotShadow: false,
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
                     type: 'pie'
                 },
                 title: {text: 'Playerbase Composition'},
-				subtitle: {text: 'Total Players: %activitytotal%'},
+                subtitle: {text: 'Total Players: %activitytotal%'},
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y}</b>'
                 },
@@ -1081,12 +1076,12 @@
                         dataLabels: {
                             enabled: false
                         },
-						colors: [%activitycolors%],
-                        showInLegend: true
-                    }
-                },
-                series: [activitySeries]
-            });
+                        colors: [%activitycolors%],
+            showInLegend: true
+        }
+        },
+            series: [activitySeries]
+        });
         };
 
     </script>
@@ -1095,12 +1090,12 @@
             var myChart = Highcharts.chart('worldPie', {
                 chart: {
                     plotBackgroundColor: null,
-					plotBorderWidth: null,
-					plotShadow: false,
+                    plotBorderWidth: null,
+                    plotShadow: false,
                     type: 'pie'
                 },
                 title: {text: 'World Playtime'},
-				subtitle: {text: '%worldtotal%'},
+                subtitle: {text: '%worldtotal%'},
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
                 },
@@ -1120,14 +1115,14 @@
 
     </script>
     <script>
-        function gmPie() {			
+        function gmPie() {
             Highcharts.chart('gmPie', {
                 chart: {
                     plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false,
                     type: 'pie'
                 },
                 title: {text: 'Gamemode Usage'},
-				subtitle: {text: '%gmtotal%'},
+                subtitle: {text: '%gmtotal%'},
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
                 },
@@ -1138,95 +1133,95 @@
                         dataLabels: {
                             enabled: false
                         },
-						colors: [%gmcolors%],
-                        showInLegend: true
+                        colors: [%gmcolors%],
+            showInLegend: true
+        }
+        },
+            series: [gmSeries]
+        });
+        };
+
+    </script>
+    <script>
+        function punchCard() {
+            Highcharts.chart('punchcard' , {
+                chart: {
+                    defaultSeriesType: 'scatter'
+                },
+                title: {
+                    text: 'Player Join PunchCard'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        hour: '%I %P'
+                    },
+                    tickInterval: 3600000
+                },
+                yAxis: {
+                    categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+                },
+                tooltip: {
+                    pointFormat: 'Activity: {point.z}'
+                },
+                series: [punchcardSeries]
+            });
+        }
+
+    </script>
+    <script>
+        function sessionDistributionChart() {
+            Highcharts.chart('sessionDistribution', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Session Length Distribution'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45
                     }
                 },
-                series: [gmSeries]
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Sessions'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        groupPadding: 0
+                    },
+                    pointPadding: 0
+                },
+                series: [sessionLengthSeries]
             });
         };
 
     </script>
     <script>
-		function punchCard() {
-			Highcharts.chart('punchcard' , {
-				chart: {
-					defaultSeriesType: 'scatter'
-				},
-				title: {
-					text: 'Player Join PunchCard'
-				},
-				xAxis: {
-					type: 'datetime',
-					dateTimeLabelFormats: {
-						hour: '%I %P'
-					},
-					tickInterval: 3600000
-				},
-				yAxis: {
-				  categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-				},
-				tooltip: {
-					pointFormat: 'Activity: {point.z}'
-				},
-				series: [punchcardSeries]
-			});
-		}
-
-    </script>
-    <script>
-        function sessionDistributionChart() {
-			Highcharts.chart('sessionDistribution', {
-				chart: {
-					type: 'column'
-				},
-				title: {
-					text: 'Session Length Distribution'
-				},
-				xAxis: {
-					type: 'category',
-					labels: {
-						rotation: -45
-					}
-				},
-				 yAxis: {
-					min: 0,
-					title: {
-						text: 'Sessions'
-					}
-				},
-				legend: {
-					enabled: false
-				},
-				plotOptions: {
-					series: {
-						groupPadding: 0
-					},
-					pointPadding: 0
-				},
-				series: [sessionLengthSeries]
-			});
-		};
-
-    </script>
-    <script>	
         function worldMap() {
-			var myChart = Highcharts.mapChart('choropleth', {
-				title: {
-					text: 'Geolocation Map'
-				},
-				chart: {
-					animation: true
-				},
-				colorAxis: {
-					min: 1,
-					type: 'logarithmic',
-					minColor: '#EEFFEE',
-					maxColor: '#267f00'
-				},
-				series: [mapSeries]
-			});
-		}
+            var myChart = Highcharts.mapChart('choropleth', {
+                title: {
+                    text: 'Geolocation Map'
+                },
+                chart: {
+                    animation: true
+                },
+                colorAxis: {
+                    min: 1,
+                    type: 'logarithmic',
+                    minColor: '#EEFFEE',
+                    maxColor: '#267f00'
+                },
+                series: [mapSeries]
+            });
+        }
 
     </script>
     <script>
@@ -1244,39 +1239,39 @@
         var navButtons = document.getElementsByClassName("nav-button");
         var tabs = document.getElementsByClassName("tab");
         var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
-        if (slideIndex == null) {
+        if (slideIndex === null) {
             slideIndex = 0;
         }
         var x = document.getElementById("main");
         x.style.transform = "translate3d(0px,0px,0)";
         x.style.width = "" + navButtons.length * 100 + "%";
-        for (i = 0; i < navButtons.length; i++) {
+        for (var i = 0; i < navButtons.length; i++) {
             navButtons[i].onclick = openFunc(i)
             tabs[i].style.width = "" + 100 / navButtons.length + "%";
         }
         x.style.opacity = "1";
         openFunc(slideIndex)();
         gmPie();
-		activityPie();
-		worldPie();
-		playersChart();
-		playersChart2();
-		tpsChart();
-		resourceChart();
-		worldChart();
-		worldMap();
-		sessionDistributionChart();
-		punchCard();
+        activityPie();
+        worldPie();
+        playersChart();
+        playersChart2();
+        tpsChart();
+        resourceChart();
+        worldChart();
+        worldMap();
+        sessionDistributionChart();
+        punchCard();
         countUpTimer();
 
         function openFunc(i) {
             return function() {
-                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') === "inline") {
                     closeNav();
                 }
                 var max = navButtons.length;
                 for (var j = 0; j < max; j++) {
-                    if (j == i) {
+                    if (j === i) {
                         navButtons[j].classList.add('active');
                         continue;
                     }

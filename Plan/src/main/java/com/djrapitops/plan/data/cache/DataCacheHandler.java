@@ -159,7 +159,7 @@ public class DataCacheHandler extends SessionCache {
                     periodicTaskIsSaving = false;
                 }
             }
-        }).runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
+        }).runTaskTimerAsynchronously(60L * 20L * minutes, 60L * 20L * minutes);
     }
 
     /**

@@ -130,7 +130,7 @@ public abstract class Importer {
                 handler.addToPool(importData(uuid, args));
             }
 
-            plan.processStatus().finishExecution(processName);
+            processStatus.finishExecution(processName);
         } finally {
             plan.getAnalysisCache().enableAnalysis();
         }

@@ -220,7 +220,7 @@ public class SessionsTable extends Table {
             try {
                 saveSessionBatch(batch);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.toLog("SessionsTable.saveSessionData", e);
             }
         });
 
@@ -263,10 +263,7 @@ public class SessionsTable extends Table {
         }
     }
 
-    /**
-     * @throws SQLException
-     */
-    public void clean() throws SQLException {
+    public void clean() {
         // TODO Clean sessions before Configurable time span
     }
 }

@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
  * Class for creating scatter graph data from RAM Usage snapshots with TPS task.
  *
  * @author Rsl1122
- * @since 3.6.0
  * @see main.java.com.djrapitops.plan.data.listeners.TPSCountTimer
+ * @since 3.6.0
  */
 public class RamGraphCreator {
 

@@ -18,15 +18,15 @@ import main.java.com.djrapitops.plan.ui.webserver.response.Response;
  */
 public class PageCacheHandler {
 
+    private static final Cache<String, Response> pageCache = CacheBuilder.newBuilder()
+            .build();
+
     /**
      * Constructor used to hide the public constructor
      */
     private PageCacheHandler() {
         throw new IllegalStateException("Utility class");
     }
-
-    private static final Cache<String, Response> pageCache = CacheBuilder.newBuilder()
-            .build();
 
     /**
      * Loads the page from the page cache.

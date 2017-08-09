@@ -281,7 +281,7 @@ public class GMTimesTable extends Table {
         }
     }
 
-    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
+    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
@@ -302,7 +302,7 @@ public class GMTimesTable extends Table {
             try {
                 addNewGMTimesBatch(batch);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.toLog("GMTimesTable.addNewGMTimesRows", e);
             }
         });
 

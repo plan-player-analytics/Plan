@@ -108,6 +108,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
+
         Log.debug(uuid + ": PlayerQuitEvent");
         long time = MiscUtils.getTime();
         boolean banned = player.isBanned();
@@ -116,6 +117,7 @@ public class PlanPlayerListener implements Listener {
 
         handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.saveCachedData(uuid);
+
         Log.debug(uuid + ": PlayerQuitEvent_END");
     }
 
@@ -131,10 +133,13 @@ public class PlanPlayerListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
+
         handler.endSession(uuid);
         Log.debug(uuid + ": PlayerKickEvent");
+
         long time = MiscUtils.getTime();
         boolean banned = player.isBanned();
         Gamemode gm = Gamemode.wrap(player.getGameMode());
@@ -143,6 +148,7 @@ public class PlanPlayerListener implements Listener {
         handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
+
         Log.debug(uuid + ": PlayerKickEvent_END");
     }
 }

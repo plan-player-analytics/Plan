@@ -1,6 +1,8 @@
 ![Player Analytics](https://puu.sh/t8vin.png)
 
+
 # HTTPS Configuration
+
 
 ## How to configure Plan to use SSL Encryption:
 - Obtain a Java Keystore file (More below)

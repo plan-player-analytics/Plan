@@ -58,5 +58,6 @@ public class ManageCommand extends TreeCommand<Plan> {
         commands.add(new ManageRemoveCommand(plugin));
 //        commands.add(new ManageCleanCommand(plugin));
         commands.add(new ManageClearCommand(plugin));
+        commands.add(new ManageDumpCommand(plugin));
     }
 }
