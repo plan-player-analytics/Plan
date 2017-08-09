@@ -51,6 +51,7 @@ public class VersionTable extends Table {
             if (set.next()) {
                 version = set.getInt("version");
             }
+            Log.debug("Database", "DB Schema version: " + version);
             return version;
         } finally {
             close(set);

@@ -35,11 +35,12 @@ public class RegisterCommand extends SubCommand {
     public RegisterCommand(Plan plugin) {
         super("register", CommandType.CONSOLE_WITH_ARGUMENTS, "", "Register a user for the webserver", "<password> [name] [access lvl]");
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -52,7 +53,7 @@ public class RegisterCommand extends SubCommand {
                 sCol + "  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

@@ -36,11 +36,12 @@ public class ManageRemoveCommand extends SubCommand {
         super("remove", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_REMOVE.toString(), Phrase.ARG_PLAYER + " [-a]");
 
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String tCol = colorScheme.getTertiaryColor();
@@ -50,7 +51,7 @@ public class ManageRemoveCommand extends SubCommand {
                 tCol + "  Used to Remove user's data from the active database."
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

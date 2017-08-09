@@ -33,11 +33,12 @@ public class ManageHotswapCommand extends SubCommand {
         super("hotswap", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_HOTSWAP.toString(), "<DB>");
 
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -49,7 +50,7 @@ public class ManageHotswapCommand extends SubCommand {
                 sCol + "  Does not change database if connection fails"
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

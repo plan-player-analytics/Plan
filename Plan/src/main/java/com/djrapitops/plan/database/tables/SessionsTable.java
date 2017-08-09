@@ -58,7 +58,7 @@ public class SessionsTable extends Table {
      * @throws SQLException
      */
     public List<SessionData> getSessionData(int userId) throws SQLException {
-        Benchmark.start("Database: Get Sessions");
+        Benchmark.start("Get Sessions");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -75,7 +75,7 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get Sessions");
+            Benchmark.stop("Database", "Get Sessions");
         }
     }
 
@@ -108,16 +108,14 @@ public class SessionsTable extends Table {
             return;
         }
 
-        Benchmark.start("Database: Save Sessions");
         sessions.removeAll(getSessionData(userId));
 
         if (sessions.isEmpty()) {
-            Benchmark.stop("Database: Save Sessions");
             return;
         }
 
+        Benchmark.start("Save Sessions");
         PreparedStatement statement = null;
-
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "
@@ -141,7 +139,7 @@ public class SessionsTable extends Table {
             statement.executeBatch();
         } finally {
             close(statement);
-            Benchmark.stop("Database: Save Sessions");
+            Benchmark.stop("Database", "Save Sessions");
         }
     }
 
@@ -155,7 +153,7 @@ public class SessionsTable extends Table {
             return new HashMap<>();
         }
 
-        Benchmark.start("Database: Get Sessions multiple");
+        Benchmark.start("Get Sessions multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
 
@@ -184,7 +182,7 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get Sessions multiple");
+            Benchmark.stop("Database", "Get Sessions multiple");
         }
     }
 
@@ -197,7 +195,7 @@ public class SessionsTable extends Table {
             return;
         }
 
-        Benchmark.start("Database: Save Sessions multiple");
+        Benchmark.start("Save Sessions multiple");
 
         Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
         for (Map.Entry<Integer, List<SessionData>> entrySet : sessions.entrySet()) {
@@ -226,7 +224,7 @@ public class SessionsTable extends Table {
             }
         });
 
-        Benchmark.stop("Database: Save Sessions multiple");
+        Benchmark.stop("Database", "Save Sessions multiple");
     }
 
     private void saveSessionBatch(List<Container<SessionData>> batch) throws SQLException {
@@ -235,7 +233,7 @@ public class SessionsTable extends Table {
         }
 
         int batchSize = batch.size();
-        Log.debug("Preparing insertion of sessions... Batch Size: " + batchSize);
+        Log.debug("Database", "Preparing insertion of sessions - Batch Size: " + batchSize);
 
         PreparedStatement statement = null;
         try {
@@ -258,7 +256,7 @@ public class SessionsTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Executing session batch: " + batchSize);
+            Log.debug("Database", "Executing session batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);

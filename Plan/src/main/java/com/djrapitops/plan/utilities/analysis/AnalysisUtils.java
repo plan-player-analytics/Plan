@@ -201,8 +201,7 @@ public class AnalysisUtils {
 
     private static String logPluginDataCausedError(PluginData source, Throwable e) {
         Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
-        Log.toLog("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""), Log.getErrorsFilename());
-        Log.toLog("com.djrapitops.plan.utilities.AnalysisUtils", e);
+        Log.toLog("PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""), e);
         return source.parseContainer("", "Exception during calculation.");
     }
 

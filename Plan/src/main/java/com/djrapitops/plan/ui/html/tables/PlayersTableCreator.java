@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.ui.html.tables;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.html.Html;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -28,7 +27,6 @@ public class PlayersTableCreator {
      * @return
      */
     public static String createSortablePlayersTable(List<UserData> data) {
-        Benchmark.start("Create Players table");
         StringBuilder html = new StringBuilder();
 
         long now = MiscUtils.getTime();
@@ -62,11 +60,9 @@ public class PlayersTableCreator {
                 ));
             } catch (NullPointerException ignored) {
             }
-
             i++;
         }
 
-        Benchmark.stop("Create Players table");
         return html.toString();
     }
 }

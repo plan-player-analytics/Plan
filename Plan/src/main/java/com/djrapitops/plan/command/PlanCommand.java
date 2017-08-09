@@ -28,11 +28,11 @@ public class PlanCommand extends TreeCommand<Plan> {
     public PlanCommand(Plan plugin) {
         super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
         super.setDefaultCommand("inspect");
-        setHelp(plugin);
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -44,8 +44,7 @@ public class PlanCommand extends TreeCommand<Plan> {
                 sCol + "  /plan - List subcommands",
                 sCol + "  /plan <subcommand> ? - in depth help"
         };
-
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class WebDeleteCommand extends SubCommand {
     private final Plan plugin;
 
     public WebDeleteCommand(Plan plugin) {
-        super("delete", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE_WEB.getPerm(), "Delete a webuser", "<username>");
+        super("delete, remove", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE_WEB.getPerm(), "Delete a webuser", "<username>");
         this.plugin = plugin;
     }
 

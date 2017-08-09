@@ -142,9 +142,9 @@ public class AnalysisData extends RawData {
         final List<RawData> parts = getAllParts();
         parts.forEach(part -> {
             try {
-                Benchmark.start("Analysis Phase: " + part.getClass().getSimpleName());
+                Benchmark.start(part.getClass().getSimpleName());
                 part.analyseData();
-                Benchmark.stop("Analysis Phase: " + part.getClass().getSimpleName());
+                Benchmark.stop("Analysis", part.getClass().getSimpleName());
                 if (part.isAnalysed()) {
                     addValues(part.getReplaceMap());
                 }

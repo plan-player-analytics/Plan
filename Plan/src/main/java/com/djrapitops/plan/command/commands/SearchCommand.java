@@ -33,11 +33,12 @@ public class SearchCommand extends SubCommand {
     public SearchCommand(Plan plugin) {
         super("search", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.SEARCH.getPermission(), Phrase.CMD_USG_SEARCH.toString(), Phrase.ARG_SEARCH.toString());
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
+    @Override
+    public String[] addHelp() {
+        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String sCol = colorScheme.getSecondaryColor();
@@ -49,7 +50,7 @@ public class SearchCommand extends SubCommand {
                 sCol + "  Example: /plan search 123 - Finds all users with 123 in their name."
         };
 
-        setInDepthHelp(help);
+        return help;
     }
 
     @Override
