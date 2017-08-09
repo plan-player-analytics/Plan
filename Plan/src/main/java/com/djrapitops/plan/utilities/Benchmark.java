@@ -42,7 +42,6 @@ public class Benchmark {
      * @return Execution time in ms.
      */
     public static long stop(String task, String source) {
-        long ms = Plan.getInstance().benchmark().stop(task, source);
-        return ms;
+        return Plan.getInstance().benchmark().stop(task, source);
     }
 }

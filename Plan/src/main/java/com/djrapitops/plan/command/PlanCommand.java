@@ -38,13 +38,12 @@ public class PlanCommand extends TreeCommand<Plan> {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "/plan - Main Command",
                 tCol + "  Used to access all SubCommands & help",
                 sCol + "  /plan - List subcommands",
                 sCol + "  /plan <subcommand> ? - in depth help"
         };
-        return help;
     }
 
     @Override

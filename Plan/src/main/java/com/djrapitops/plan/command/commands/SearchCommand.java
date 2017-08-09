@@ -44,13 +44,11 @@ public class SearchCommand extends SubCommand {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Search command",
                 tCol + "  Used to get a list of Player names that match the given argument.",
                 sCol + "  Example: /plan search 123 - Finds all users with 123 in their name."
         };
-
-        return help;
     }
 
     @Override

@@ -32,7 +32,7 @@ public class WebUserCommand extends TreeCommand<Plan> {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Web User Manage command",
                 tCol + "  Used to manage web users of the plugin",
                 sCol + "  Users have a permission level:",
@@ -41,8 +41,6 @@ public class WebUserCommand extends TreeCommand<Plan> {
                 tCol + "   2 - Access to own inspect page",
                 sCol + "  Alias: /plan web"
         };
-
-        return help;
     }
 
     @Override

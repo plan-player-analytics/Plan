@@ -53,14 +53,12 @@ public class QuickInspectCommand extends SubCommand {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Quick Inspect command",
                 tCol + "  Used to get some inspect info in game.",
                 sCol + "  Has less info than full Inspect web page.",
                 sCol + "  Alias: /plan qi"
         };
-
-        return help;
     }
 
     @Override

@@ -52,14 +52,12 @@ public class ManageImportCommand extends SubCommand {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Manage Import command",
-                tCol + "  Used to import data from other sources",
+                tCol + "Used to import data from other sources",
                 sCol + "  Analysis will be disabled during import.",
                 sCol + "  If a lot of users are not in the database, saving may take a long time."
         };
-
-        return help;
     }
 
     @Override

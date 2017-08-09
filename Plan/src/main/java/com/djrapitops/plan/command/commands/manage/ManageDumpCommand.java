@@ -30,21 +30,19 @@ public class ManageDumpCommand extends SubCommand {
         super("dump", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAR.toString());
 
         this.plugin = plugin;
-        setHelp(plugin);
     }
 
-    private void setHelp(Plan plugin) {
+    @Override
+    public String[] addHelp() {
         ColorScheme colorScheme = plugin.getColorScheme();
 
         String mCol = colorScheme.getMainColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Manage Dump command",
                 tCol + "  Used to dump important data for bug reporting to hastebin.",
         };
-
-        setInDepthHelp(help);
     }
 
     @Override

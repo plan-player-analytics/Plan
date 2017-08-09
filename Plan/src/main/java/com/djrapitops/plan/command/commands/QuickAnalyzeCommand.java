@@ -48,14 +48,12 @@ public class QuickAnalyzeCommand extends SubCommand {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Quick Analysis command",
                 tCol + "  Used to get in game info about analysis.",
                 sCol + "  Has less info than full Analysis web page.",
                 sCol + "  Aliases: qanalyze, ganalyse, qanalysis, qa"
         };
-
-        return help;
     }
 
     @Override

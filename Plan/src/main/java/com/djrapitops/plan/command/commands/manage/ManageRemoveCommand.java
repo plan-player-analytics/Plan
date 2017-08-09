@@ -46,12 +46,10 @@ public class ManageRemoveCommand extends SubCommand {
         String mCol = colorScheme.getMainColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Manage Remove command",
                 tCol + "  Used to Remove user's data from the active database."
         };
-
-        return help;
     }
 
     @Override

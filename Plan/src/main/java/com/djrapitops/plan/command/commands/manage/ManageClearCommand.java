@@ -44,14 +44,12 @@ public class ManageClearCommand extends SubCommand {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Manage Clear command",
                 tCol + "  Used to delete ALL data in the active database.",
                 sCol + "  Plugin should be reloaded after successful clear.",
                 sCol + "  Alias: /plan pl"
         };
-
-        return help;
     }
 
     @Override

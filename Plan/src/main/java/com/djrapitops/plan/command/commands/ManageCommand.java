@@ -36,15 +36,13 @@ public class ManageCommand extends TreeCommand<Plan> {
         String sCol = colorScheme.getSecondaryColor();
         String tCol = colorScheme.getTertiaryColor();
 
-        String[] help = new String[]{
+        return new String[]{
                 mCol + "Manage command",
                 tCol + "  Used to Manage Database of the plugin.",
                 sCol + "  Alias: /plan m",
                 sCol + "  /plan m - List subcommands",
                 sCol + "  /plan m <subcommand> ? - in depth help"
         };
-
-        return help;
     }
 
     @Override
