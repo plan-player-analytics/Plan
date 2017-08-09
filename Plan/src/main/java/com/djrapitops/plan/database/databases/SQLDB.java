@@ -184,7 +184,7 @@ public abstract class SQLDB extends Database {
                     Set<UUID> uuids = usersTable.getSavedUUIDs();
                     uuids.removeAll(usersTable.getContainsBukkitData(uuids));
                     if (uuids.isEmpty()) {
-                        Log.debug("No conversion necessary.");
+                        Log.debug("Database", "No conversion necessary.");
                         return;
                     }
                     setStatus("Bukkit Data Conversion");
