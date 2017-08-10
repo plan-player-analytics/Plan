@@ -17,6 +17,7 @@ import org.bukkit.ChatColor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -42,20 +43,25 @@ public class Locale {
         messages = new HashMap<>();
     }
 
-    public void loadLocale() throws IOException {
+    public void loadLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
         Benchmark.start("Initializing locale");
         loadDefault();
-        if (Settings.WRITE_NEW_LOCALE.isTrue()) {
-            writeNewDefaultLocale();
-        }
-        File localeFile = new File(plugin.getDataFolder(), "locale.txt");
-        if (localeFile.exists()) {
-            loadFromFile(localeFile);
-        } else if (locale.equals("DEFAULT")) {
-            Log.info("Using Locale: Default (EN)");
-        } else {
-            loadFromResource("locale_" + locale + ".txt");
+        try {
+            if (Settings.WRITE_NEW_LOCALE.isTrue()) {
+                writeNewDefaultLocale();
+            }
+            File localeFile = new File(plugin.getDataFolder(), "locale.txt");
+            if (localeFile.exists()) {
+                loadFromFile(localeFile);
+            } else if (locale.equals("DEFAULT")) {
+                Log.info("Using Locale: Default (EN)");
+            } else {
+                loadFromResource("locale_" + locale + ".txt");
+            }
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+
         }
         Benchmark.stop("Enable", "Initializing locale");
     }
@@ -68,9 +74,9 @@ public class Locale {
                 .get().length() + 2;
         List<String> lines = messages.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
-                .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "| " + entry.getValue().toString())
+                .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
                 .collect(Collectors.toList());
-        Files.write(new File(plugin.getDataFolder(), "locale.txt").toPath(), lines);
+        Files.write(new File(plugin.getDataFolder(), "locale.txt").toPath(), lines, StandardCharsets.UTF_8);
         plugin.getConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
     }
 
@@ -278,7 +284,7 @@ public class Locale {
     }
 
     private void loadFromFile(File localeFile) throws IOException {
-        loadFromContents(Files.lines(localeFile.toPath()).collect(Collectors.toList()), "Custom File");
+        loadFromContents(Files.lines(localeFile.toPath(), StandardCharsets.UTF_8).collect(Collectors.toList()), "Custom File");
     }
 
     private void loadFromResource(String fileName) {
@@ -297,7 +303,7 @@ public class Locale {
         Log.info("Using Locale: " + name);
         Map<String, Msg> identifiers = Msg.getIdentifiers();
         locale.forEach(line -> {
-            String[] split = line.split(" \\| ");
+            String[] split = line.split(" \\|\\| ");
             if (split.length == 2) {
                 String identifier = split[0].trim();
                 Msg msg = identifiers.get(identifier);
