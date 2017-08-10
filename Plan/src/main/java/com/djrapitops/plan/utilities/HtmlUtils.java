@@ -100,7 +100,7 @@ public class HtmlUtils {
      */
     public static String getInspectUrl(String playerName) {
         String ip = getIP();
-        return "//" + ip + "/player/" + playerName;
+        return "//" + ip + "/player/" + playerName.replace(" ", "%20").replace(".", "%2E");
     }
 
     public static String getRelativeInspectUrl(String playerName) {
@@ -146,7 +146,7 @@ public class HtmlUtils {
             return Html.COLUMNS_DIV_WRAPPER.parse(
                     Html.COLUMN_DIV_WRAPPER.parse(
                             Html.PLUGIN_DATA_WRAPPER.parse(
-                                    Locale.get(Msg.HTML_TABLE_NO_KILLS).parse()
+                                    Locale.get(Msg.HTML_NO_PLUGINS).toString()
                             )
                     )
             );

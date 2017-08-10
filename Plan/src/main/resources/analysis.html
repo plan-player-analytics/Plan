@@ -274,6 +274,8 @@
 
 
 
+
+
     </style>
 </head>
 <body onload="countUpTimer()">
@@ -576,22 +578,24 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="sortable table" style="height: 100%; max-height: 800px; overflow: auto;">
-                            <thead>
-                            <tr>
-                                <th><i class="fa fa-user" aria-hidden="true"></i> Player</th>
-                                <th><i class="fa fa-check" aria-hidden="true"></i> Active</th>
-                                <th><i class="fa fa-clock-o" aria-hidden="true"></i> Playtime</th>
-                                <th><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times</th>
-                                <th><i class="fa fa-user-plus" aria-hidden="true"></i> Registered</th>
-                                <th><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Last seen</th>
-                                <th><i class="fa fa-globe" aria-hidden="true"></i> Geolocation</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            %sortabletable%
-                            </tbody>
-                        </table>
+                        <div style="max-height: 800px; overflow: scroll;">
+                            <table class="sortable table">
+                                <thead>
+                                <tr>
+                                    <th><i class="fa fa-user" aria-hidden="true"></i> Player</th>
+                                    <th><i class="fa fa-check" aria-hidden="true"></i> Active</th>
+                                    <th><i class="fa fa-clock-o" aria-hidden="true"></i> Playtime</th>
+                                    <th><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times</th>
+                                    <th><i class="fa fa-user-plus" aria-hidden="true"></i> Registered</th>
+                                    <th><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Last seen</th>
+                                    <th><i class="fa fa-globe" aria-hidden="true"></i> Geolocation</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                %sortabletable%
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -617,17 +621,19 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="sortable table" style="height: 100%; max-height: 800px; overflow: auto;">
-                            <thead>
-                            <tr>
-                                <th><i class="fa fa-chevron-right" aria-hidden="true"></i> Command</th>
-                                <th><i class="fa fa-list-ol" aria-hidden="true"></i> Times used</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            %commanduse%
-                            </tbody>
-                        </table>
+                        <div style="max-height: 800px; overflow: scroll;">
+                            <table class="sortable table">
+                                <thead>
+                                <tr>
+                                    <th><i class="fa fa-chevron-right" aria-hidden="true"></i> Command</th>
+                                    <th><i class="fa fa-list-ol" aria-hidden="true"></i> Times used</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                %commanduse%
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -794,6 +800,8 @@
             data: %punchcardseries%
         };
 
+
+
     </script>
     <script>
         function playersChart() {
@@ -865,6 +873,8 @@
             });
         }
 
+
+
     </script>
     <script>
         function tpsChart() {
@@ -927,6 +937,8 @@
                 series: [tpsSeries, playersOnlineSeries]
             });
         }
+
+
 
     </script>
     <script>
@@ -991,6 +1003,8 @@
             });
         }
 
+
+
     </script>
     <script>
         function worldChart() {
@@ -1054,6 +1068,8 @@
             });
         }
 
+
+
     </script>
     <script>
         function activityPie() {
@@ -1084,6 +1100,8 @@
         });
         };
 
+
+
     </script>
     <script>
         function worldPie() {
@@ -1113,6 +1131,8 @@
             });
         };
 
+
+
     </script>
     <script>
         function gmPie() {
@@ -1141,6 +1161,8 @@
         });
         };
 
+
+
     </script>
     <script>
         function punchCard() {
@@ -1167,6 +1189,8 @@
                 series: [punchcardSeries]
             });
         }
+
+
 
     </script>
     <script>
@@ -1203,6 +1227,8 @@
             });
         };
 
+
+
     </script>
     <script>
         function worldMap() {
@@ -1222,6 +1248,8 @@
                 series: [mapSeries]
             });
         }
+
+
 
     </script>
     <script>
@@ -1315,6 +1343,8 @@
             document.getElementById('divTime').innerHTML = out;
             setTimeout('countUpTimer()', 1000);
         }
+
+
 
     </script>
 </div>

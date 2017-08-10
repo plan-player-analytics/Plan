@@ -62,16 +62,14 @@ public class AnalyzeCommand extends SubCommand {
         }
 
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
-        if (plugin.getUiServer().isAuthRequired()) {
+        if (plugin.getUiServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
             plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
                 @Override
                 public void run() {
                     try {
-                        if (CommandUtils.isPlayer(sender)) {
-                            boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
-                            if (!senderHasWebUser) {
-                                sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
-                            }
+                        boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
+                        if (!senderHasWebUser) {
+                            sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName() + getName(), e);

@@ -165,9 +165,9 @@ public class Analysis {
                 Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
 
-            ExportUtility.export(plugin, analysisData, rawData);
             PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
             PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
+            ExportUtility.export(plugin, analysisData, rawData);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             plugin.processStatus().setStatus("Analysis", "Error: " + e);

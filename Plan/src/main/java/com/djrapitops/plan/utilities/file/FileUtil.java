@@ -43,10 +43,12 @@ public class FileUtil {
         List<String> lines = new ArrayList<>();
         Scanner scanner = null;
         try (InputStream inputStream = plugin.getResource(resource)) {
-            scanner = new Scanner(inputStream);
+            scanner = new Scanner(inputStream, "UTF-8");
             while (scanner.hasNextLine()) {
                 lines.add(scanner.nextLine());
             }
+        } catch (NullPointerException e) {
+            throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
             MiscUtils.close(scanner);
         }

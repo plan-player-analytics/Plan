@@ -110,7 +110,7 @@ public class Locale {
         add(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO, analysis + "Starting Boot Analysis..");
 
         add(Msg.ENABLE_NOTIFY_EMPTY_IP, yellow + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!");
-        add(Msg.ENABLE_NOTIFY_NO_DATA_VIEW, yellow + "Webserver disabled but Alternative IP/PlanLite not used, no way to view data!");
+        add(Msg.ENABLE_NOTIFY_NO_DATA_VIEW, yellow + "Webserver disabled but Alternative IP/TextUI not used, no way to view data!");
         add(Msg.ENABLE_NOTIFY_DISABLED_CHATLISTENER, yellow + "Chat listener disabled, nickname info inaccurate.");
         add(Msg.ENABLE_NOTIFY_DISABLED_COMMANDLISTENER, yellow + "Command usage listener disabled.");
         add(Msg.ENABLE_NOTIFY_DISABLED_DEATHLISTENER, yellow + "Death listener disabled, player & mob kills not recorded.");
@@ -262,7 +262,7 @@ public class Locale {
 
         add(Msg.CMD_HEADER_ANALYZE, cmdFooter + mCol + " Player Analytics - Analysis results");
         add(Msg.CMD_HEADER_INSPECT, cmdFooter + mCol + " Player Analytics - Inspect results");
-        add(Msg.CMD_HEADER_INFO, cmdFooter + mCol + " Player Analytics - Info results");
+        add(Msg.CMD_HEADER_INFO, cmdFooter + mCol + " Player Analytics - Info");
         add(Msg.CMD_HEADER_SEARCH, cmdFooter + mCol + " Player Analytics - Search results: ");
 
         add(Msg.CMD_CONSTANT_FOOTER, tCol + arrowsRight);

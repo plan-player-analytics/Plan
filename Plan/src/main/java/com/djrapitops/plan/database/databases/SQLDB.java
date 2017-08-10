@@ -392,7 +392,7 @@ public abstract class SQLDB extends Database {
                 .filter(uuid -> !userIds.containsKey(uuid))
                 .collect(Collectors.toSet());
         List<UUID> uuids = new ArrayList<>(uuidsCol);
-        Log.debug("Data not found for: " + remove.size());
+        Log.debug("Database", "Data not found for: " + remove.size());
         uuids.removeAll(remove);
         Benchmark.start("Create UserData objects for " + userIds.size());
         List<UserData> data = usersTable.getUserData(new ArrayList<>(uuids));

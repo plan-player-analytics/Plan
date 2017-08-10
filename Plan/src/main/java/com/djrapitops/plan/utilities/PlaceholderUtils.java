@@ -40,7 +40,6 @@ public class PlaceholderUtils {
      * @return HashMap that contains string for each placeholder.
      */
     public static Map<String, Serializable> getAnalysisReplaceRules(AnalysisData data) {
-        Benchmark.start("Replace Placeholders Analysis");
         HashMap<String, Serializable> replaceMap = new HashMap<>();
         replaceMap.putAll(data.getReplaceMap());
         replaceMap.put("%plugins%", data.replacePluginsTabLayout());
@@ -60,7 +59,6 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        Benchmark.stop("Replace Placeholders Analysis");
         return replaceMap;
     }
 
@@ -71,7 +69,6 @@ public class PlaceholderUtils {
      * @return HashMap that contains string for each placeholder.
      */
     public static Map<String, Serializable> getInspectReplaceRules(UserData data) {
-        Benchmark.start("Replace Placeholders Inspect");
 
         HashMap<String, Serializable> replaceMap = new HashMap<>();
         replaceMap.put("%timezone%", MiscUtils.getTimeZoneOffsetHours());
@@ -139,7 +136,6 @@ public class PlaceholderUtils {
         Map<String, Serializable> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);
         replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
-        Benchmark.stop("Replace Placeholders Inspect");
         return replaceMap;
     }
 }
