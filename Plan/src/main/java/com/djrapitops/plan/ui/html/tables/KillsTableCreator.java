@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.ui.html.tables;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -31,7 +33,7 @@ public class KillsTableCreator {
         StringBuilder html = new StringBuilder(Html.TABLE_KILLS_START.parse());
 
         if (killData.isEmpty()) {
-            html.append(Html.TABLELINE_3.parse(Html.KILLDATA_NONE.parse(), "", ""));
+            html.append(Html.TABLELINE_3.parse(Locale.get(Msg.HTML_TABLE_NO_KILLS).parse(), "", ""));
         } else {
             int i = 0;
 

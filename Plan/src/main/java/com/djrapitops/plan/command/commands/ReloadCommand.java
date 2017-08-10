@@ -4,8 +4,9 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 /**
  * This subcommand is used to reload the plugin.
@@ -23,7 +24,10 @@ public class ReloadCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ReloadCommand(Plan plugin) {
-        super("reload", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_RELOAD.toString());
+        super("reload",
+                CommandType.CONSOLE,
+                Permissions.MANAGE.getPermission(),
+                Locale.get(Msg.CMD_USG_RELOAD).toString());
 
         this.plugin = plugin;
     }
@@ -33,7 +37,7 @@ public class ReloadCommand extends SubCommand {
         plugin.onDisable();
         plugin.reloadConfig();
         plugin.onEnable();
-        sender.sendMessage(Phrase.RELOAD_COMPLETE.toString());
+        sender.sendMessage(Locale.get(Msg.CMD_INFO_RELOAD_COMPLETE).toString());
         return true;
     }
 

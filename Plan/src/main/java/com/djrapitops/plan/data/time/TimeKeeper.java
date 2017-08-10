@@ -70,9 +70,9 @@ public abstract class TimeKeeper {
      */
     public void changeState(String newState, long playTime) throws IllegalArgumentException, IllegalStateException {
         Verify.nullCheck(newState);
-        if (playTime < lastStateChange) {
-            throw new IllegalStateException("Given Playtime is lower than last status change time: " + playTime + " / " + lastStateChange);
-        }
+//        if (playTime < lastStateChange) {
+//            throw new IllegalStateException("Given Playtime is lower than last status change time: " + playTime + " / " + lastStateChange);
+//        }
         if (state == null) {
             state = newState;
         }
@@ -81,7 +81,7 @@ public abstract class TimeKeeper {
             currentTime = 0L;
         }
         long diff = playTime - lastStateChange;
-        times.put(state, currentTime + diff);
+        times.put(state, currentTime + Math.abs(diff));
         state = newState;
         lastStateChange = playTime;
     }

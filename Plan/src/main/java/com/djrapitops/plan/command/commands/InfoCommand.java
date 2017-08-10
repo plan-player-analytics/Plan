@@ -3,11 +3,12 @@ package main.java.com.djrapitops.plan.command.commands;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
+import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.Version;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.ChatColor;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 /**
  * This subcommand is used to view the version and the database type in use.
@@ -25,20 +26,26 @@ public class InfoCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InfoCommand(Plan plugin) {
-        super("info", CommandType.CONSOLE, Permissions.INFO.getPermission(), Phrase.CMD_USG_INFO.toString());
+        super("info",
+                CommandType.CONSOLE,
+                Permissions.INFO.getPermission(),
+                Locale.get(Msg.CMD_USG_INFO).toString());
 
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        ChatColor tColor = Phrase.COLOR_SEC.color();
+        ColorScheme cs = plugin.getColorScheme();
+        String mColor = cs.getMainColor();
+        String sColor = cs.getSecondaryColor();
+        String tColor = cs.getTertiaryColor();
         String[] messages = {
-                Phrase.CMD_INFO_HEADER.toString(),
-                Phrase.CMD_INFO_VERSION.parse(plugin.getDescription().getVersion()),
-                Phrase.CMD_BALL.toString() + tColor + " " + Version.checkVersion(plugin),
-                Phrase.CMD_MANAGE_STATUS_ACTIVE_DB.parse(plugin.getDB().getConfigName()),
-                Phrase.CMD_FOOTER.toString()
+                Locale.get(Msg.CMD_HEADER_INFO).toString(),
+                Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString() + mColor + " Version: " + sColor + plugin.getDescription().getVersion(),
+                Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString() + tColor + " " + Version.checkVersion(plugin),
+                Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString() + mColor + " Active Database: " + tColor + plugin.getDB().getConfigName(),
+                Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
         };
         sender.sendMessage(messages);
         return true;

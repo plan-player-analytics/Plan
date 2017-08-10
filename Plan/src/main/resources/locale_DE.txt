@@ -1,0 +1,118 @@
+Analysis - Third Party                    || Analysis | Analyzing additional data sources (3rd party)
+Analysis FAIL - Fetch Exception           || Analysis | Failed to fetch data for Analysis, Exception occurred.
+Analysis FAIL - No Data                   || Analyse | Analyse fehlgeschlagen, keine Daten in der Datenbank.
+Analysis FAIL - No Players                || Analyse | Analyse fehlgeschlagen, keine bekannten Spieler.
+Analysis - Fetch Phase                    || Analyse | Hole Daten...
+Analysis - Fetch Phase Start              || Analyse | Suche nach verfügbaren Spieler...
+Analysis - Complete                       || Analyse | Analyse vollständig. (dauerte REPLACE0ms) REPLACE1
+Analysis - Begin Analysis                 || Analyse | Daten geholt (REPLACE0 spieler, dauerte REPLACE1ms), beginne mit der Analyse der Daten...
+Analysis - Start                          || Analyse | Beginne die Analyse der Spieler Daten...
+>Constant - CMD Footer                    || §f»
+>Constant - List Ball                     || §7 •§2
+Cmd FAIL - No Data View                   || §e[Plan] Dieser Befehl kann nur benutzt werden wenn Webserver/TextUI auf dem Server aktiviert ist.
+Cmd FAIL - No Permission                  || §c[Plan] Du hast nicht die benötigte Berechtigung.
+Cmd FAIL - Requires Arguments             || §c[Plan] Dieser Befehl erfordert Argumente. REPLACE0
+Cmd FAIL - Require only one Argument      || §c[Plan] Der Befehl benötigt ein Argument.
+Cmd FAIL - Timeout                        || §c[Plan] REPLACE0 Befehl ausgetimed! Ansehen '/plan status' & Serverkonsole.
+Cmd FAIL - Unknown Username               || §c[Plan] Der Spielername konnte in der Datenbank nicht gefunden werden.
+Cmd FAIL - Unseen Username                || §c[Plan] Dieser Spieler war noch nie auf diesem Server.
+Cmd FAIL - Invalid Username               || §c[Plan] Dieser Spieler existiert nicht.
+Cmd Header - Analysis                     || §f»§2 Player Analytics - Analyse Ergebnisse
+Cmd Header - Info                         || §f»§2 Player Analytics - Info
+Cmd Header - Inspect                      || §f»§2 Player Analytics - Überprüfe die Ergebnisse: 
+Cmd Header - Search                       || §f»§2 Player Analytics - Suchergebnisse für: 
+In Depth Help - /plan analyze ?           || §2Analysis Command\§f  Used to Refresh analysis cache & Access the result page\§7  /plan status can be used to check status of analysis while it is running.\§7  Aliases: analyze, analyse, analysis, a
+In Depth Help - /plan inspect ?           || §2Inspect command\§f  Used to get a link to User's inspect page.\§7  Own inspect page can be accessed with /plan inspect\§7  Alias: /plan <name>
+In Depth Help - /plan list ?              || §2List command\§f  Used to get a link to players page.\§7  Players page contains links to all cached inspect pages.\§7  Alias: /plan pl
+In Depth Help - /plan manage ?            || §2Manage command\§f  Used to Manage Database of the plugin.\§7  Alias: /plan m\§7  /plan m - List subcommands\§7  /plan m <subcommand> ? - in depth help
+In Depth Help - /plan manage clear ?      || §2Manage Clear command\§f  Used to delete ALL data in the active database.\§7  Plugin should be reloaded after successful clear.\§7  Alias: /plan pl
+In Depth Help - /plan manage dump ?       || §2Manage Dump command\§f  Used to dump important data for bug reporting to hastebin.
+In Depth Help - /plan manage hotswap ?    || §2Manage Hotswap command\§f  Used to change database in use on the fly.\§7  Does not change database if connection fails
+In Depth Help - /plan manage import ?     || §2Manage Import command\§f  Used to import data from other sources\§7  Analysis will be disabled during import.
+In Depth Help - /plan manage remove ?     || §2Manage Remove command\§f  Used to Remove user's data from the active database.
+In Depth Help - /plan ?                   || §2/plan - Main Command\§f  Used to access all SubCommands & help\§7  /plan - List subcommands\§7  /plan <subcommand> ? - in depth help
+In Depth Help - /plan qanalyze ?          || §2Quick Analysis command\§f  Used to get in game info about analysis.\§7  Has less info than full Analysis web page.\§7  Aliases: qanalyze, ganalyse, qanalysis, qa
+In Depth Help - /plan qinspect ?          || §2Quick Inspect command\§f  Used to get some inspect info in game.\§7  Has less info than full Inspect web page.\§7  Alias: /plan qi
+In Depth Help - /plan search ?            || §2Search command\§f  Used to get a list of Player names that match the given argument.\§7  Example: /plan search 123 - Finds all users with 123 in their name.
+In Depth Help - /plan webuser ?           || §2Web User Manage command\§f  Used to manage web users of the plugin\§7  Users have a permission level:\§f   0 - Access to all pages\§f   1 - Access to /players & all inspect pages\§f   2 - Access to own inspect page\§7  Alias: /plan web
+In Depth Help - /plan webuser register ?  || §2Web Register command\§f  Used to register a new user for the webserver.\§7  Registering a user for another player requires plan.webmanage permission.\§7  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt.
+Analysis NOTIFY - Temporary Disable       || §eAnalysis has been temporarily disabled due to expensive task, use /plan status for info.
+Cmd - Click Me                            || Klick Mich
+Cmd - Fetch Data                          || §f»§2 Hole Daten ins Cache...
+Cmd - Link                                || §7 •§2 Link: §f
+Cmd - No Results                          || §7 •§2 Keine Ergebnisse für §7REPLACE0§2.
+Cmd - Reload Success                      || §a[Plan] Reload abgeschlossen.
+Cmd - Results                             || §7 Übereinstimmender Spieler: §f
+Cmd - Searching                           || §f»§2Searching..
+Cmd - Usage /plan analyze                 || Zeige die Server Analyse
+Cmd - Usage /plan help                    || Show command list.
+Cmd - Usage /plan info                    || Zeige die Version von Plan
+Cmd - Usage /plan inspect                 || Prüfe Spieler Daten
+Cmd - Usage /plan list                    || List to all cached players
+Cmd - Usage /plan manage                  || Datenbank Management Befehl
+Cmd - Usage /plan manage backup           || Erstelle eine Sicherheitskopie der Datenbank als .db Datei
+Cmd - Usage /plan manage clean            || Clear old data from the database
+Cmd - Usage /plan manage clear            || Leere Daten aus einer Datenbank
+Cmd - Usage /plan manage dump             || Create a Hastebin log for Dev for easier Issue reporting.
+Cmd - Usage /plan manage hotswap          || Wechsle zu einer anderen Datenbank & starte das Plugin neu
+Cmd - Usage /plan manage import           || Importiere Daten von unterstützten Plugins zur aktiven Datenbank.
+Cmd - Usage /plan manage move             || Kopiere Daten von einer Datenbank zur anderen & überschreibe die Werte
+Cmd - Usage /plan manage remove           || Entferne die Spieler Daten aus der aktiven Datenbank.
+Cmd - Usage /plan manage restore          || Stelle eine Sicherheitskopie einer Datenbank aus einer Datei wieder her.
+Cmd - Usage /plan qanalyze                || View the Server Analysis as Text
+Cmd - Usage /plan qinspect                || Inspect Player's Data as Text
+Cmd - Usage /plan reload                  || Lade die Plugin Konfiguration neu.
+Cmd - Usage /plan search                  || Suche nach einem Spieler
+Cmd - Usage /plan webuser                 || Manage Webusers
+Cmd - Usage /plan webuser check           || Check a webuser and their permission level.
+Cmd - Usage /plan webuser delete          || Delete a webuser
+Cmd - Usage /plan webuser level           || Info about permission levels.
+Cmd - Usage /plan webuser register        || Register a user for the webserver
+Disable                                   || Player Analytics deaktiviert.
+Disable - Save                            || Daten im Cache werden gespeichert...
+Disable - WebServer                       || Webserver wird heruntergefahren...
+Enable                                    || Player Analytics aktiviert.
+Enable - Boot Analysis 30s Notify         || Analyse | Boot Analyse in 30 Sekunden...
+Enable - Boot Analysis Notify             || Analyse | Starte Boot Analyse...
+Enable Db FAIL - Disable Info             || Datenbank Initialisierung fehlgeschlagen, deaktiviere Plan.
+Enable - Db Info                          || REPLACE0-Datenbank Verbindung hergestellt.
+Enable - Db                               || Datenbank Initialisierung...
+Enable FAIL-Db                            || REPLACE0-Datenbank Verbindung fehlgeschlagen: REPLACE1
+Enable FAIL - Wrong Db Type               || Dieser Datenbank Typ existiert nicht.
+Enable Notify - ChatListener              || §eChat listener disabled, nickname info inaccurate.
+Enable Notify - Disabled CommandListener  || §eCommand usage listener disabled.
+Enable Notify - Disabled DeathListener    || §eDeath listener disabled, player & mob kills not recorded.
+Enable Notify-Empty IP                    || §e[Plan] IP in server.properties ist leer & Alternative ServerIP wird nicht benutzt, fehlerhafte Links werden ausgegeben!
+Enable Notify - No data view              || §eWebserver deaktiviert aber Alternative IP/PlanLite wird nicht benutzt, Daten können nicht angezeigt werden!
+Enable - WebServer                        || Initialisiere Webserver...
+Enable - WebServer Info                   || Webserver läuft auf PORT REPLACE0
+Html - Active                             || Spieler ist aktiv
+Html - Banned                             || | <span class="darkred">Gesperrt</span>
+Html - Inactive                           || Spieler ist inaktiv
+Html - No Extra Plugins                   || <p>No extra plugins registered.</p>
+Html - Offline                            || | <span class="darkred">Offline</span>
+Html - Online                             || | <span class="darkgreen">Online</span>
+Html - OP                                 || , Operator (Op)
+Html - Table No Kills                     || No Kills
+Manage FAIL - Confirm Action              || §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! REPLACE0
+Manage FAIL - Faulty DB Connection        || §c[Plan] Eine der Datenbanken wurde nicht richtig initialisiert.
+Manage FAIL - Backup File Not Found       || §c[Plan] Sicherheitskopie existiert nicht!
+Manage FAIL - Incorrect DB                || §c[Plan] Falsche Datenbank! (SQlite/MySQL wird unterstützt): 
+Manage FAIL - Incorrect Plugin            || §c[Plan] Plugin nicht unterstützt: 
+Manage FAIL - Empty DB                    || §c[Plan] Datenbank hat keine Spieler Daten!
+Manage FAIL - Unenabled Plugin            || §c[Plan] Plugin ist nicht aktiviert: 
+Manage FAIL - Same DB                     || §c[Plan] Kann nicht zur selben Datenbank bewegen!
+Manage - Clear Success                    || §a[Plan] Alle Daten wurden erfolgreich gesäubert!
+Manage - Remind Config Change             || §e[Plan] Vergiss nicht zur neuen Datenbank zu wechseln und das Plugin neu zu laden
+Manage - Copy Success                     || §a[Plan] Alle Daten wurden erfolgreich kopiert!
+Manage - Process Fail                     || §c[Plan] Irgendwas lief schief während die Daten verarbeitet wurden!
+Manage - Import                           || §f» §2 Importiere Daten...
+Manage - Move Success                     || §a[Plan] Alle Daten wurden erfolgreich verschoben!
+Manage - Remove Success                   || §f» §2Daten von §fREPLACE0§2 wurden aus dieser Datenbank entfernt §fREPLACE1§2.
+Manage - Start                            || »§7 Verarbeite Daten...
+Manage - Success                          || §f» §2 Erfolgreich!
+Manage NOTIFY - Overwrite                 || Daten in REPLACE0-Datenbank werden überschrieben!
+Manage NOTIFY - Partial Overwrite         || Einige Daten in REPLACE0-Datenbank werden überschrieben!
+Manage NOTIFY - Remove                    || Daten in REPLACE0-Datenbank werden entfernt!
+Manage NOTIFY - Rewrite                   || Daten in REPLACE0-Datenbank werden neu geschrieben!
+WARN - Too Small Queue Size               || Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)

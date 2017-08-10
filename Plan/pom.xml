@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.6.1</version>
+    <version>3.6.2</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -109,6 +109,7 @@
                     <include>*.js</include>
                     <include>*.yml</include>
                     <include>*.html</include>
+                    <include>*.txt</include>
                 </includes>
             </resource>
         </resources>

@@ -5,12 +5,16 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.*;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Permissions;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -38,7 +42,11 @@ public class InspectCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public InspectCommand(Plan plugin) {
-        super("inspect", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.INSPECT.getPermission(), Phrase.CMD_USG_INSPECT.toString(), Phrase.ARG_PLAYER.toString());
+        super("inspect",
+                CommandType.CONSOLE_WITH_ARGUMENTS,
+                Permissions.INSPECT.getPermission(),
+                Locale.get(Msg.CMD_USG_INSPECT).toString(),
+                "<player>");
 
         this.plugin = plugin;
         inspectCache = plugin.getInspectCache();
@@ -47,23 +55,12 @@ public class InspectCommand extends SubCommand {
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        return new String[]{
-                mCol + "Inspect command",
-                tCol + "  Used to get a link to User's inspect page.",
-                sCol + "  Own inspect page can be accessed with /plan inspect",
-                sCol + "  Alias: /plan <name>"
-        };
+        return Locale.get(Msg.CMD_HELP_INSPECT).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_INSPECT.toString(), sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW).toString(), sender)) {
             return true;
         }
 
@@ -79,16 +76,16 @@ public class InspectCommand extends SubCommand {
             public void run() {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
-                    if (!Check.isTrue(Verify.notNull(uuid), Phrase.USERNAME_NOT_VALID.toString(), sender)) {
+                    if (!Check.isTrue(Verify.notNull(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString(), sender)) {
                         return;
                     }
-                    if (!Check.isTrue(ConditionUtils.playerHasPlayed(uuid), Phrase.USERNAME_NOT_SEEN.toString(), sender)) {
+                    if (!Check.isTrue(ConditionUtils.playerHasPlayed(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_SEEN).toString(), sender)) {
                         return;
                     }
-                    if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Phrase.USERNAME_NOT_KNOWN.toString(), sender)) {
+                    if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
-                    sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE.toString());
+                    sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
                     if (CommandUtils.isPlayer(sender) && plugin.getUiServer().isAuthRequired()) {
                         boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
                         if (!senderHasWebUser) {
@@ -120,7 +117,7 @@ public class InspectCommand extends SubCommand {
                 }
                 if (timesrun > 10) {
                     Log.debug("Command Timeout Message, Inspect.");
-                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Inspect"));
+                    sender.sendMessage(Locale.get(Msg.CMD_FAIL_TIMEOUT).parse("Inspect"));
                     this.cancel();
                 }
             }
@@ -132,23 +129,23 @@ public class InspectCommand extends SubCommand {
 
         boolean usingTextUI = Settings.USE_ALTERNATIVE_UI.isTrue();
 
-        sender.sendMessage(Phrase.CMD_INSPECT_HEADER + playerName);
+        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + playerName);
 
         if (usingTextUI) {
             sender.sendMessage(TextUI.getInspectMessages(uuid));
         } else {
             // Link
             String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
-            String message = Phrase.CMD_LINK.toString();
+            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
             boolean console = !CommandUtils.isPlayer(sender);
             if (console) {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
+                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
             }
         }
 
-        sender.sendMessage(Phrase.CMD_FOOTER.toString());
+        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 }

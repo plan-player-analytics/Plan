@@ -15,6 +15,7 @@ Config.Point | Version introduced | Type | Default | Description
 --- | ---- | ------ | --- | ---------------------------------
 Debug | 3.0.0 | boolean | false | Enables debug messages on console.
 Locale | 2.5.0 | String | default | Two letter Locale combination. Can be set to one of the Available locales. If a faulty combination is used, default locale will be used. [Available locales](https://github.com/Rsl1122/Plan-PlayerAnalytics/tree/master/Plan/localization)
+WriteNewLocaleFileOnStart | 3.6.2 | boolean | false | Setting this to true & reloading the plugin will generate a new locale.txt & it will be set back to false. [Localization](/documentation/Localization.md)
 UseTextUI | 3.0.0 | boolean | false | Redirects */plan inspect* and */plan analyze* commands to display same messages as */plan qinspect* & */plan qanalyze*
 Data.ChatListener | 3.4.2 | boolean | true | Enables Chat listener
 Data.GatherKillData | 3.4.2 | boolean | true | Enables Death listener

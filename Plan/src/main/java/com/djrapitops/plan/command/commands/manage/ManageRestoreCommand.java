@@ -7,10 +7,11 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
@@ -34,31 +35,35 @@ public class ManageRestoreCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRestoreCommand(Plan plugin) {
-        super("restore", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_RESTORE.toString(), Phrase.ARG_RESTORE.toString());
+        super("restore",
+                CommandType.CONSOLE,
+                Permissions.MANAGE.getPermission(),
+                Locale.get(Msg.CMD_USG_MANAGE_RESTORE).toString(),
+                "<Filename.db> <dbTo> [-a]");
 
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 2, Phrase.COMMAND_REQUIRES_ARGUMENTS.parse(Phrase.USE_RESTORE.toString()), sender)) {
+        if (!Check.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
             return true;
         }
 
         String db = args[1].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(db) || "mysql".equals(db);
 
-        if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + db, sender)) {
+        if (!Check.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + db, sender)) {
             return true;
         }
 
-        if (!Check.isTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REWRITE.parse(args[1])), sender)) {
+        if (!Check.isTrue(Verify.contains("-a", args), Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REWRITE).parse(args[1])), sender)) {
             return true;
         }
 
         final Database database = ManageUtils.getDB(plugin, db);
 
-        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
             Log.error(db + " was null!");
             return true;
         }
@@ -76,7 +81,7 @@ public class ManageRestoreCommand extends SubCommand {
                     boolean containsDBFileExtension = backupDBName.endsWith(".db");
 
                     File backupDBFile = new File(plugin.getDataFolder(), backupDBName + (containsDBFileExtension ? "" : ".db"));
-                    if (!Check.isTrue(Verify.exists(backupDBFile), Phrase.MANAGE_ERROR_BACKUP_FILE_NOT_FOUND + " " + args[0], sender)) {
+                    if (!Check.isTrue(Verify.exists(backupDBFile), Locale.get(Msg.MANAGE_FAIL_FILE_NOT_FOUND) + " " + args[0], sender)) {
                         return;
                     }
 
@@ -86,14 +91,14 @@ public class ManageRestoreCommand extends SubCommand {
 
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
                     if (!backupDB.init()) {
-                        sender.sendMessage(Phrase.MANAGE_DATABASE_FAILURE.toString());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
                         return;
                     }
 
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
                     final Collection<UUID> uuids = ManageUtils.getUUIDS(backupDB);
-                    if (!Check.isTrue(!Verify.isEmpty(uuids), Phrase.MANAGE_ERROR_NO_PLAYERS + " (" + backupDBName + ")", sender)) {
+                    if (!Check.isTrue(!Verify.isEmpty(uuids), Locale.get(Msg.MANAGE_FAIL_NO_PLAYERS) + " (" + backupDBName + ")", sender)) {
                         return;
                     }
 
@@ -102,13 +107,13 @@ public class ManageRestoreCommand extends SubCommand {
                             plugin.getHandler().getCommandUseFromDb();
                         }
 
-                        sender.sendMessage(Phrase.MANAGE_COPY_SUCCESS.toString());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                     } else {
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                     }
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                 } finally {
                     this.cancel();
                 }

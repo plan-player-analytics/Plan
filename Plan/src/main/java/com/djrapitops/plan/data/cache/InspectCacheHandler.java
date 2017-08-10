@@ -5,10 +5,11 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.ExportUtility;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -48,10 +49,11 @@ public class InspectCacheHandler {
             cache.put(uuid, new UserData(data));
             cacheTimes.put(uuid, MiscUtils.getTime());
             PageCacheHandler.cachePage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(Plan.getInstance().getUiServer().getDataReqHandler(), uuid));
+
             try {
-                ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()));
-            } catch (IOException ex) {
-                Log.toLog(this.getClass().getName(), ex);
+                ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()), HtmlUtils.getStringFromResource("player.html"));
+            } catch (FileNotFoundException e) {
+                Log.toLog(this.getClass().getName(), e);
             }
         };
 

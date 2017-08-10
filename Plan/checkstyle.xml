@@ -3,7 +3,6 @@
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name='Checker'>
 
-    <!-- asetetaan kieliasetukset englanniksi. -->
     <property name="localeCountry" value="EN"/>
     <property name="localeLanguage" value="en"/>
 

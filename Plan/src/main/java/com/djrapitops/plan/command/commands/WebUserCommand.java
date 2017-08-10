@@ -2,13 +2,14 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.commands.webuser.WebCheckCommand;
 import main.java.com.djrapitops.plan.command.commands.webuser.WebDeleteCommand;
 import main.java.com.djrapitops.plan.command.commands.webuser.WebLevelCommand;
 import main.java.com.djrapitops.plan.command.commands.webuser.WebListUsersCommand;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 /**
  * Web subcommand used to manage Web users.
@@ -19,28 +20,18 @@ import main.java.com.djrapitops.plan.command.commands.webuser.WebListUsersComman
 public class WebUserCommand extends TreeCommand<Plan> {
 
     public WebUserCommand(Plan plugin, RegisterCommand register) {
-        super(plugin, "webuser, web", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "Manage Webusers", "plan web");
+        super(plugin, "webuser, web",
+                CommandType.CONSOLE,
+                Permissions.MANAGE_WEB.getPerm(),
+                Locale.get(Msg.CMD_USG_WEB).toString(),
+                "plan web");
         commands.add(register);
 
     }
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        return new String[]{
-                mCol + "Web User Manage command",
-                tCol + "  Used to manage web users of the plugin",
-                sCol + "  Users have a permission level:",
-                tCol + "   0 - Access to all pages",
-                tCol + "   1 - Access to /players & all inspect pages",
-                tCol + "   2 - Access to own inspect page",
-                sCol + "  Alias: /plan web"
-        };
+        return Locale.get(Msg.CMD_HELP_WEB).toArray();
     }
 
     @Override

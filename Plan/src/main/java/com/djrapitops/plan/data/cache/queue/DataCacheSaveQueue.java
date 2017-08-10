@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -45,7 +46,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.add(data);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
+            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
         }
     }
 
@@ -59,7 +60,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.addAll(data);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
+            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
         }
     }
 
@@ -73,7 +74,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.add(data);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
+            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
         }
     }
 

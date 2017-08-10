@@ -42,10 +42,10 @@ public class PlayersTableCreator {
                 boolean isUnknown = uData.getLoginTimes() == 1;
                 boolean isActive = AnalysisUtils.isActive(now, uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes());
 
-                String activityString = isBanned ? Html.GRAPH_BANNED.parse()
-                        : isUnknown ? Html.GRAPH_UNKNOWN.parse()
-                        : isActive ? Html.GRAPH_ACTIVE.parse()
-                        : Html.GRAPH_INACTIVE.parse();
+                String activityString = isBanned ? "Banned"
+                        : isUnknown ? "Unknown"
+                        : isActive ? "Active"
+                        : "Inactive";
 
                 String img = showImages ? Html.MINOTAR_SMALL_IMG.parse(uData.getName()) : "";
 

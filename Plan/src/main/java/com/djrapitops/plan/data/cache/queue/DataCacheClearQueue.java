@@ -1,9 +1,10 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
         try {
             queue.addAll(uuids);
         } catch (IllegalStateException e) {
-            Log.error(Phrase.ERROR_TOO_SMALL_QUEUE.parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber()));
+            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber()));
         }
     }
 }
