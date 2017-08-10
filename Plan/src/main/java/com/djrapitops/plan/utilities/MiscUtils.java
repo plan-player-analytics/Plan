@@ -6,7 +6,8 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class MiscUtils {
             } else if (args[0].equalsIgnoreCase(sender.getName())) {
                 playerName = sender.getName();
             } else {
-                sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
+                sender.sendMessage(Locale.get(Msg.CMD_FAIL_NO_PERMISSION).toString());
             }
         } else {
             playerName = sender.getName();

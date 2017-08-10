@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.utilities.dump;
+package main.java.com.djrapitops.plan.utilities.file.dump;
 
 import main.java.com.djrapitops.plan.Log;
 import org.json.simple.JSONObject;

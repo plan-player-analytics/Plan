@@ -2,16 +2,16 @@ package main.java.com.djrapitops.plan.utilities;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * @author Rsl1122
@@ -31,28 +31,7 @@ public class HtmlUtils {
      * @throws FileNotFoundException
      */
     public static String getStringFromResource(String fileName) throws FileNotFoundException {
-        InputStream resourceStream = null;
-        Scanner scanner = null;
-        try {
-            Plan plugin = Plan.getInstance();
-            File localFile = new File(plugin.getDataFolder(), fileName);
-
-            if (localFile.exists()) {
-                scanner = new Scanner(localFile, "UTF-8");
-            } else {
-                resourceStream = plugin.getResource(fileName);
-                scanner = new Scanner(resourceStream);
-            }
-
-            StringBuilder html = new StringBuilder();
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                html.append(line).append("\r\n");
-            }
-            return html.toString();
-        } finally {
-            MiscUtils.close(resourceStream, scanner);
-        }
+        return FileUtil.getStringFromResource(fileName);
     }
 
     /**
@@ -167,7 +146,7 @@ public class HtmlUtils {
             return Html.COLUMNS_DIV_WRAPPER.parse(
                     Html.COLUMN_DIV_WRAPPER.parse(
                             Html.PLUGIN_DATA_WRAPPER.parse(
-                                    Html.NO_PLUGINS.parse()
+                                    Locale.get(Msg.HTML_TABLE_NO_KILLS).parse()
                             )
                     )
             );

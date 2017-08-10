@@ -3,16 +3,16 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.dump.DumpUtils;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.utilities.file.dump.DumpUtils;
 
 /**
- * This manage subcommand is used to dump important data to pastebin,
- * so it's easier to write an issue.
+ * This manage subcommand is used to dump important data to pastebin, so it's
+ * easier to write an issue.
  *
  * @author Fuzzlemann
  * @since 3.7.0
@@ -27,24 +27,17 @@ public class ManageDumpCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageDumpCommand(Plan plugin) {
-        super("dump", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAR.toString());
+        super("dump",
+                CommandType.CONSOLE,
+                Permissions.MANAGE.getPermission(),
+                Locale.get(Msg.CMD_USG_MANAGE_DUMP).toString());
 
         this.plugin = plugin;
-        setHelp(plugin);
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Manage Dump command",
-                tCol + "  Used to dump important data for bug reporting to hastebin.",
-        };
-
-        setInDepthHelp(help);
+    @Override
+    public String[] addHelp() {
+        return Locale.get(Msg.CMD_HELP_MANAGE_DUMP).toArray();
     }
 
     @Override

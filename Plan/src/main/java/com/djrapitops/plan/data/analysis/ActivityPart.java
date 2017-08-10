@@ -5,7 +5,6 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.html.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
@@ -104,8 +103,7 @@ public class ActivityPart extends RawData {
         addValue("%activitycolors%", activityColors);
 
         String activityLabels = "[" + HtmlUtils.separateWithQuotes(
-                Html.GRAPH_ACTIVE.parse(), Html.GRAPH_INACTIVE.parse(),
-                Html.GRAPH_UNKNOWN.parse(), Html.GRAPH_BANNED.parse()) + "]";
+                "Active", "Inactive", "Unknown", "Banned") + "]";
         addValue("%labelsactivity%", activityLabels);
 
         addValue("activitydata", Arrays.toString(counts));

@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.utilities.analysis;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
@@ -16,6 +15,8 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
 import main.java.com.djrapitops.plan.ui.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
@@ -62,7 +63,7 @@ public class Analysis {
         }
 
         Benchmark.start("Analysis");
-        log(Phrase.ANALYSIS_START.toString());
+        log(Locale.get(Msg.ANALYSIS_START).toString());
         // Async task for Analysis
         plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
             @Override
@@ -84,7 +85,7 @@ public class Analysis {
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
-        log(Phrase.ANALYSIS_FETCH_DATA.toString());
+        log(Locale.get(Msg.ANALYSIS_FETCH).toString());
         Benchmark.start("Fetch Phase");
         Log.debug("Database", "Analysis Fetch");
         plugin.processStatus().setStatus("Analysis", "Analysis Fetch Phase");
@@ -92,12 +93,12 @@ public class Analysis {
             inspectCache.cacheAllUserData(db);
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
-            Log.error(Phrase.ERROR_ANALYSIS_FETCH_FAIL.toString());
+            Log.error(Locale.get(Msg.ANALYSIS_FAIL_FETCH_EXCEPTION).toString());
         }
 
         List<UserData> rawData = inspectCache.getCachedUserData();
         if (rawData.isEmpty()) {
-            Log.info(Phrase.ANALYSIS_FAIL_NO_DATA.toString());
+            Log.info(Locale.get(Msg.ANALYSIS_FAIL_NO_DATA).toString());
             return false;
         }
 
@@ -141,7 +142,7 @@ public class Analysis {
 
             Benchmark.start("Analysis Phase");
             plugin.processStatus().setStatus("Analysis", "Analysis Phase");
-            log(Phrase.ANALYSIS_BEGIN_ANALYSIS.parse(String.valueOf(rawData.size()), String.valueOf(fetchPhaseLength)));
+            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(rawData.size(), fetchPhaseLength));
 
             String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
             analysisData.setPlayersTable(playersTable);
@@ -151,7 +152,7 @@ public class Analysis {
             analysisData.analyseData();
             Benchmark.stop("Analysis", "Analysis Phase");
 
-            log(Phrase.ANALYSIS_THIRD_PARTY.toString());
+            log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             plugin.processStatus().setStatus("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
@@ -161,7 +162,7 @@ public class Analysis {
             Log.logDebug("Analysis", time);
 
             if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
-                Log.info(Phrase.ANALYSIS_COMPLETE.parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
+                Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
 
             ExportUtility.export(plugin, analysisData, rawData);

@@ -5,11 +5,15 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.*;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Permissions;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -33,40 +37,31 @@ public class AnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public AnalyzeCommand(Plan plugin) {
-        super("analyze, analyse, analysis, a", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Phrase.CMD_USG_ANALYZE.parse());
+        super("analyze, analyse, analysis, a",
+                CommandType.CONSOLE,
+                Permissions.ANALYZE.getPermission(),
+                Locale.get(Msg.CMD_USG_ANALYZE).parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
     }
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Analysis Command",
-                tCol + "  Used to Refresh analysis cache & Access the result page",
-                sCol + "  /plan status can be used to check status of analysis while it is running.",
-                sCol + "  Aliases: analyze, analyse, analysis, a"
-        };
-        return help;
+        return Locale.get(Msg.CMD_HELP_ANALYZE).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString(), sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW).toString(), sender)) {
             return true;
         }
 
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Locale.get(Msg.CMD_INFO_ANALYSIS_TEMP_DISABLE).toString(), sender)
                 && !analysisCache.isCached()) {
             return true;
         }
 
-        sender.sendMessage(Phrase.GRABBING_DATA_MESSAGE + "");
+        sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
         if (plugin.getUiServer().isAuthRequired()) {
             plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
                 @Override
@@ -115,7 +110,7 @@ public class AnalyzeCommand extends SubCommand {
                 }
                 if (timesRun > 10) {
                     Log.debug("Command Timeout Message, Analysis.");
-                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
+                    sender.sendMessage(Locale.get(Msg.CMD_FAIL_TIMEOUT).parse("Analysis"));
                     this.cancel();
                 }
             }
@@ -131,21 +126,21 @@ public class AnalyzeCommand extends SubCommand {
      */
     private void sendAnalysisMessage(ISender sender) {
         boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-        sender.sendMessage(Phrase.CMD_ANALYZE_HEADER.toString());
+        sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
         if (textUI) {
             sender.sendMessage(TextUI.getAnalysisMessages());
         } else {
             // Link
             String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
-            String message = Phrase.CMD_LINK.toString();
+            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
             boolean console = !CommandUtils.isPlayer(sender);
             if (console) {
                 sender.sendMessage(message + url);
             } else {
                 sender.sendMessage(message);
-                sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
+                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
             }
         }
-        sender.sendMessage(Phrase.CMD_FOOTER.toString());
+        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 }

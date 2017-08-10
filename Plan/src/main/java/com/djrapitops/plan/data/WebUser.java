@@ -37,9 +37,9 @@ public class WebUser {
 
         WebUser webUser = (WebUser) o;
 
-        if (permLevel != webUser.permLevel) return false;
-        if (!user.equals(webUser.user)) return false;
-        return saltedPassHash.equals(webUser.saltedPassHash);
+        return permLevel == webUser.permLevel
+                && user.equals(webUser.user)
+                && saltedPassHash.equals(webUser.saltedPassHash);
     }
 
     @Override

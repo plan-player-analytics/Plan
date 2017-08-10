@@ -3,12 +3,13 @@ package main.java.com.djrapitops.plan.ui.webserver;
 import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -68,7 +69,7 @@ public class WebServer {
             return;
         }
 
-        Log.info(Phrase.WEBSERVER_INIT.toString());
+        Log.info(Locale.get(Msg.ENABLE_WEBSERVER).toString());
         try {
             usingHttps = startHttpsServer();
 
@@ -128,7 +129,7 @@ public class WebServer {
 
             enabled = true;
 
-            Log.info(Phrase.WEBSERVER_RUNNING.parse(String.valueOf(server.getAddress().getPort())));
+            Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()));
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             enabled = false;
@@ -359,7 +360,7 @@ public class WebServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        Log.info(Phrase.WEBSERVER_CLOSE.toString());
+        Log.info(Locale.get(Msg.DISABLE_WEBSERVER).toString());
         if (server != null) {
             server.stop(0);
         }

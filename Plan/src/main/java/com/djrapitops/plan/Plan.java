@@ -37,17 +37,16 @@ import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.apache.logging.log4j.LogManager;
+import org.bukkit.ChatColor;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -115,7 +114,15 @@ public class Plan extends BukkitPlugin<Plan> {
             // Sets the Required variables for BukkitPlugin instance to function correctly
             setInstance(this);
             super.setDebugMode(Settings.DEBUG.toString());
-            super.setColorScheme(new ColorScheme(Phrase.COLOR_MAIN.color(), Phrase.COLOR_SEC.color(), Phrase.COLOR_TER.color()));
+            try {
+                ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
+                ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
+                ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
+                super.setColorScheme(new ColorScheme(mainColor, secColor, terColor));
+            } catch (Exception e) {
+                Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
+                super.setColorScheme(new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE));
+            }
             super.setLogPrefix("[Plan]");
             super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
             super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
@@ -125,21 +132,23 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Enable");
 
-            initLocale();
+            // Initialize Locale
+            new Locale(this).loadLocale();
+
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
 
             Benchmark.start("Copy default config");
             getConfig().options().copyDefaults(true);
-            getConfig().options().header(Phrase.CONFIG_HEADER.toString());
+            getConfig().options().header("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/");
             saveConfig();
             Benchmark.stop("Enable", "Copy default config");
 
             Benchmark.start("Init Database");
-            Log.info(Phrase.DB_INIT.toString());
-            if (Check.ErrorIfFalse(initDatabase(), Phrase.DB_FAILURE_DISABLE.toString())) {
-                Log.info(Phrase.DB_ESTABLISHED.parse(db.getConfigName()));
+            Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
+            if (Check.ErrorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
+                Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             } else {
                 disablePlugin();
                 return;
@@ -192,10 +201,10 @@ public class Plan extends BukkitPlugin<Plan> {
 
                 setupFilter();
             } else if (!hasDataViewCapability) {
-                Log.infoColor(Phrase.ERROR_NO_DATA_VIEW.toString());
+                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
             }
             if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
-                Log.infoColor(Phrase.NOTIFY_EMPTY_IP.toString());
+                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
             }
             Benchmark.stop("Enable", "WebServer Initialization");
 
@@ -210,7 +219,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
-            Log.info(Phrase.ENABLED.toString());
+            Log.info(Locale.get(Msg.ENABLED).toString());
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
@@ -238,7 +247,7 @@ public class Plan extends BukkitPlugin<Plan> {
         if (Verify.notNull(handler, db)) {
             Benchmark.start("Disable: DataCache Save");
             // Saves the DataCache to the database without Bukkit's Schedulers.
-            Log.info(Phrase.CACHE_SAVE.toString());
+            Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
 
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.execute(() -> {
@@ -250,15 +259,15 @@ public class Plan extends BukkitPlugin<Plan> {
             scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
         }
 
-        Log.info(Phrase.DISABLED.toString());
+        Log.info(Locale.get(Msg.DISABLED).toString());
     }
 
     private void registerListeners() {
         Benchmark.start("Register Listeners");
         registerListener(new PlanPlayerListener(this));
-        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Phrase.NOTIFY_DISABLED_CHATLISTENER.toString());
-        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Phrase.NOTIFY_DISABLED_COMMANDLISTENER.toString());
-        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Phrase.NOTIFY_DISABLED_DEATHLISTENER.toString());
+        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_CHATLISTENER).toString());
+        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_COMMANDLISTENER).toString());
+        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_DEATHLISTENER).toString());
 
         if (chatListenerIsEnabled) {
             registerListener(new PlanChatListener(this));
@@ -301,11 +310,11 @@ public class Plan extends BukkitPlugin<Plan> {
         }
 
         if (!Verify.notNull(db)) {
-            Log.info(Phrase.DB_TYPE_DOES_NOT_EXIST.toString() + " " + dbType);
+            Log.info(Locale.get(Msg.ENABLE_FAIL_WRONG_DB).toString() + " " + dbType);
             return false;
         }
 
-        return Check.ErrorIfFalse(db.init(), Phrase.DB_FAILURE_DISABLE.toString());
+        return Check.ErrorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
@@ -327,12 +336,17 @@ public class Plan extends BukkitPlugin<Plan> {
 
     private void startBootAnalysisTask() throws IllegalStateException {
         Benchmark.start("Schedule boot analysis task");
-        Log.info(Phrase.ANALYSIS_BOOT_NOTIFY + "");
+        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
+        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
+
+        Log.info(bootAnalysisMsg);
+
         ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new AbsRunnable() {
             @Override
             public void run() {
                 Log.debug("Running BootAnalysisTask");
-                Log.info(Phrase.ANALYSIS_BOOT + "");
+                Log.info(bootAnalysisRunMsg);
+
                 analysisCache.updateCache();
                 this.cancel();
             }
@@ -342,112 +356,11 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     /**
-     * Used to write a new Locale file in the plugin's datafolder.
-     */
-    public void writeNewLocaleFile() {
-        File genLocale = new File(getDataFolder(), "locale_EN.txt");
-        try (
-                FileWriter fw = new FileWriter(genLocale, true);
-                PrintWriter pw = new PrintWriter(fw)
-        ) {
-            if (genLocale.createNewFile()) {
-                Log.debug(genLocale.getAbsoluteFile() + " created");
-            }
-
-            for (Phrase p : Phrase.values()) {
-                pw.println(p.name() + " <> " + p.parse());
-                pw.flush();
-            }
-            pw.println("<<<<<<HTML>>>>>>");
-            for (Html h : Html.values()) {
-                pw.println(h.name() + " <> " + h.parse());
-                pw.flush();
-            }
-        } catch (IOException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-        }
-    }
-
-    private void initLocale() {
-        String defaultLocale = "Default: EN";
-
-        String locale = Settings.LOCALE.toString().toUpperCase();
-        Benchmark.start("Initializing locale");
-        File localeFile = new File(getDataFolder(), "locale.txt");
-
-        String usingLocale;
-
-        if (localeFile.exists()) {
-            Phrase.loadLocale(localeFile);
-            Html.loadLocale(localeFile);
-
-            stopInitLocale(defaultLocale);
-            return;
-        }
-
-        if (locale.equals("DEFAULT")) {
-            stopInitLocale(defaultLocale);
-            return;
-        }
-
-        String urlString = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/localization/locale_" + locale + ".txt";
-
-        URL localeURL;
-        try {
-            localeURL = new URL(urlString);
-        } catch (MalformedURLException e) {
-            Log.error("Error at parsing \"" + urlString + "\" to an URL"); //Shouldn't ever happen
-
-            stopInitLocale(defaultLocale);
-            return;
-        }
-
-        try (InputStream inputStream = localeURL.openStream();
-             OutputStream outputStream = new FileOutputStream(localeFile)) {
-
-            int read;
-            byte[] bytes = new byte[1024];
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-
-            Phrase.loadLocale(localeFile);
-            Html.loadLocale(localeFile);
-            usingLocale = locale;
-
-            if (localeFile.delete()) {
-                Log.debug(localeFile.getAbsoluteFile() + " (Locale File) deleted");
-            }
-
-            stopInitLocale(usingLocale);
-        } catch (FileNotFoundException ex) {
-            Log.error("Attempted using locale that doesn't exist.");
-
-            stopInitLocale(defaultLocale);
-        } catch (IOException e) {
-            Log.error("Error at loading locale from GitHub, using default locale.");
-
-            stopInitLocale(defaultLocale);
-        }
-    }
-
-    /**
      * Setups the command console output filter
      */
     private void setupFilter() {
         org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
         logger.addFilter(new RegisterCommandFilter());
-    }
-
-    /**
-     * Stops initializing the locale
-     *
-     * @param usingLocale The locale that's used
-     * @implNote Removes clutter in the method
-     */
-    private void stopInitLocale(String usingLocale) {
-        Benchmark.stop("Enable", "Initializing locale");
-        Log.info("Using locale: " + usingLocale);
     }
 
     /**

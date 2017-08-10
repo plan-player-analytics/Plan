@@ -4,14 +4,14 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -34,7 +34,10 @@ public class QuickAnalyzeCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public QuickAnalyzeCommand(Plan plugin) {
-        super("qanalyze, qanalyse, qanalysis, qa", CommandType.CONSOLE, Permissions.QUICK_ANALYZE.getPermission(), Phrase.CMD_USG_QANALYZE.parse());
+        super("qanalyze, qanalyse, qanalysis, qa",
+                CommandType.CONSOLE,
+                Permissions.QUICK_ANALYZE.getPermission(),
+                Locale.get(Msg.CMD_USG_QANALYZE).parse());
         this.plugin = plugin;
         analysisCache = plugin.getAnalysisCache();
 
@@ -42,28 +45,15 @@ public class QuickAnalyzeCommand extends SubCommand {
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Quick Analysis command",
-                tCol + "  Used to get in game info about analysis.",
-                sCol + "  Has less info than full Analysis web page.",
-                sCol + "  Aliases: qanalyze, ganalyse, qanalysis, qa"
-        };
-
-        return help;
+        return Locale.get(Msg.CMD_HELP_PLAN).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_ANALYSIS.toString(), sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW).toString(), sender)) {
             return true;
         }
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Phrase.ERROR_ANALYSIS_DISABLED_TEMPORARILY.toString(), sender)
+        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Locale.get(Msg.CMD_INFO_ANALYSIS_TEMP_DISABLE).toString(), sender)
                 && !analysisCache.isCached()) {
             return true;
         }
@@ -92,14 +82,14 @@ public class QuickAnalyzeCommand extends SubCommand {
             public void run() {
                 timesRun++;
                 if (analysisCache.isCached() && (!analysisCache.isAnalysisBeingRun() || !analysisCache.isAnalysisEnabled())) {
-                    sender.sendMessage(Phrase.CMD_ANALYZE_HEADER + "");
+                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE) + "");
                     sender.sendMessage(TextUI.getAnalysisMessages());
-                    sender.sendMessage(Phrase.CMD_FOOTER + "");
+                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER) + "");
                     this.cancel();
                 }
                 if (timesRun > 10) {
                     Log.debug("Command Timeout Message, QuickAnalyze.");
-                    sender.sendMessage(Phrase.COMMAND_TIMEOUT.parse("Analysis"));
+                    sender.sendMessage(Locale.get(Msg.CMD_FAIL_TIMEOUT).parse("Analysis"));
                     this.cancel();
                 }
             }

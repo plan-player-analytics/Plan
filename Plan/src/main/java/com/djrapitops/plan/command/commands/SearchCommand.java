@@ -3,12 +3,12 @@ package main.java.com.djrapitops.plan.command.commands;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
@@ -31,34 +31,26 @@ public class SearchCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public SearchCommand(Plan plugin) {
-        super("search", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.SEARCH.getPermission(), Phrase.CMD_USG_SEARCH.toString(), Phrase.ARG_SEARCH.toString());
+        super("search",
+                CommandType.CONSOLE_WITH_ARGUMENTS,
+                Permissions.SEARCH.getPermission(),
+                Locale.get(Msg.CMD_USG_SEARCH).toString(),
+                "<part of playername>");
         this.plugin = plugin;
 
     }
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Search command",
-                tCol + "  Used to get a list of Player names that match the given argument.",
-                sCol + "  Example: /plan search 123 - Finds all users with 123 in their name."
-        };
-
-        return help;
+        return Locale.get(Msg.CMD_HELP_SEARCH).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
+        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
-        sender.sendMessage(Phrase.CMD_SEARCH_SEARCHING.toString());
+        sender.sendMessage(Locale.get(Msg.CMD_INFO_SEARCHING).toString());
 
         runSearchTask(args, sender);
         return true;
@@ -70,15 +62,15 @@ public class SearchCommand extends SubCommand {
             public void run() {
                 try {
                     List<String> names = MiscUtils.getMatchingPlayerNames(args[0]);
-                    sender.sendMessage(Phrase.CMD_SEARCH_HEADER + args[0] + " (" + names.size() + ")");
+                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_SEARCH) + args[0] + " (" + names.size() + ")");
                     // Results
                     if (names.isEmpty()) {
-                        sender.sendMessage(Phrase.CMD_NO_RESULTS.parse(Arrays.toString(args)));
+                        sender.sendMessage(Locale.get(Msg.CMD_INFO_NO_RESULTS).parse(Arrays.toString(args)));
                     } else {
-                        sender.sendMessage(Phrase.CMD_MATCH.toString() + FormattingUtils.collectionToStringNoBrackets(names));
+                        sender.sendMessage(Locale.get(Msg.CMD_INFO_RESULTS).toString() + FormattingUtils.collectionToStringNoBrackets(names));
                     }
 
-                    sender.sendMessage(Phrase.CMD_FOOTER.toString());
+                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
                 } finally {
                     this.cancel();
                 }

@@ -3,10 +3,11 @@ package main.java.com.djrapitops.plan.command;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.commands.*;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 /**
  * TreeCommand for the /plan command, and all subcommands.
@@ -32,19 +33,7 @@ public class PlanCommand extends TreeCommand<Plan> {
 
     @Override
     public String[] addHelp() {
-        ColorScheme colorScheme = Plan.getInstance().getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "/plan - Main Command",
-                tCol + "  Used to access all SubCommands & help",
-                sCol + "  /plan - List subcommands",
-                sCol + "  /plan <subcommand> ? - in depth help"
-        };
-        return help;
+        return Locale.get(Msg.CMD_HELP_PLAN).toArray();
     }
 
     @Override
