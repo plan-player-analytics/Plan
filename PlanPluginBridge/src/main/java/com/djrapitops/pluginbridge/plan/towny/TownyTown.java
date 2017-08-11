@@ -3,12 +3,12 @@ package com.djrapitops.pluginbridge.plan.towny;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
-import java.io.Serializable;
-import java.util.UUID;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * PluginData class for Towny-plugin.
@@ -37,7 +37,7 @@ public class TownyTown extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
         if (data == null) {
-            return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
+            return parseContainer(modifierPrefix, "Not in a Town");
         }
         String name = data.getName();
         try {
@@ -46,11 +46,11 @@ public class TownyTown extends PluginData {
             if (res.hasTown()) {
                 town = res.getTown().getName();
             } else {
-                town = Phrase.NOT_IN_TOWN + "";
+                town = "Not in a Town";
             }
             return parseContainer("", town);
         } catch (NotRegisteredException ex) {
-            return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
+            return parseContainer(modifierPrefix, "Not in a Town");
         }
     }
 
@@ -58,7 +58,7 @@ public class TownyTown extends PluginData {
     public Serializable getValue(UUID uuid) {
         UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
         if (data == null) {
-            return Phrase.NOT_IN_TOWN + "";
+            return "Not in a Town";
         }
         String name = data.getName();
         try {
@@ -67,7 +67,7 @@ public class TownyTown extends PluginData {
             if (res.hasTown()) {
                 town = res.getTown().getName();
             } else {
-                town = Phrase.NOT_IN_TOWN + "";
+                town = "Not in a Town";
             }
             return town;
         } catch (NotRegisteredException ex) {

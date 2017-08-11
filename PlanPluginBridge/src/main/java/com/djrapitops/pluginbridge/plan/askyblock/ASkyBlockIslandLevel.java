@@ -1,10 +1,11 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
-import java.io.Serializable;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * PluginData class for ASkyBlock-plugin.
