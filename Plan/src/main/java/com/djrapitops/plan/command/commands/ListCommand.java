@@ -42,6 +42,7 @@ public class ListCommand extends SubCommand {
         if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW) + "", sender)) {
             return true;
         }
+
         sendListMsg(sender);
         return true;
     }
