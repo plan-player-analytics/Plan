@@ -165,6 +165,11 @@ public class DumpLog {
         }
     }
 
+    /**
+     * Splits the content of the DumpLog into parts
+     *
+     * @return The splitted content
+     */
     private Iterable<String> split() {
         return Splitter.fixedLength(390000).split(this.toString());
     }
