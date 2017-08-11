@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparato
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.ChatColor;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.6.2
  */
-public class Locale {
+public class Locale implements Closeable {
 
     private final Plan plugin;
     private final Map<Msg, Message> messages;
@@ -319,8 +320,25 @@ public class Locale {
         return message != null ? message : new Message("");
     }
 
+    @Override
+    public void close() {
+        messages.clear();
+        LocaleHolder.LOCALE = null;
+    }
+
+    public static void unload() {
+        Locale locale = LocaleHolder.getLOCALE();
+        if (locale != null) {
+            locale.close();
+        }
+    }
+
     public static Message get(Msg msg) {
-        return LocaleHolder.getLOCALE().getMessage(msg);
+        Locale locale = LocaleHolder.getLOCALE();
+        if (locale == null) {
+            throw new IllegalStateException("Locale has not been initialized.");
+        }
+        return locale.getMessage(msg);
     }
 
     private static class LocaleHolder {

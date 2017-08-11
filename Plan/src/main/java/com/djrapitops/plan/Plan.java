@@ -260,6 +260,7 @@ public class Plan extends BukkitPlugin<Plan> {
         }
 
         Log.info(Locale.get(Msg.DISABLED).toString());
+        Locale.unload();
     }
 
     private void registerListeners() {
