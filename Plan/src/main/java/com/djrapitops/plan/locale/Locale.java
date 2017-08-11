@@ -316,8 +316,7 @@ public class Locale implements Closeable {
     }
 
     public Message getMessage(Msg msg) {
-        Message message = messages.get(msg);
-        return message != null ? message : new Message("");
+        return messages.getOrDefault(msg, new Message(""));
     }
 
     @Override
