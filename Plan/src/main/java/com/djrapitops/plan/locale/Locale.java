@@ -62,9 +62,9 @@ public class Locale implements Closeable {
             }
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
-
+        } finally {
+            Benchmark.stop("Enable", "Initializing locale");
         }
-        Benchmark.stop("Enable", "Initializing locale");
     }
 
     private void writeNewDefaultLocale() throws IOException {
