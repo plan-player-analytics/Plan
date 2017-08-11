@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.utilities.file.dump;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import main.java.com.djrapitops.plan.Log;
-import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -107,17 +106,13 @@ public class DumpLog {
     String upload() {
         List<String> parts = ImmutableList.copyOf(split()).reverse();
 
-        Bukkit.broadcast(parts.size() + "", "asdasd");
-
         String lastLink = null;
         for (String part : parts) {
             if (lastLink != null) {
                 part += "\n" + lastLink;
-                Bukkit.broadcast("link not null " + lastLink, "asdasd");
             }
 
             lastLink = upload(part);
-            Bukkit.broadcast(lastLink, "asdasd");
         }
 
         return lastLink;
