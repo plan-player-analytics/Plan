@@ -39,7 +39,7 @@ public class Locale implements Closeable {
     private final Map<Msg, Message> messages;
 
     public Locale(Plan plugin) {
-        LocaleHolder.setLOCALE(this);
+        LocaleHolder.setLocale(this);
         this.plugin = plugin;
         messages = new HashMap<>();
     }
@@ -322,18 +322,18 @@ public class Locale implements Closeable {
     @Override
     public void close() {
         messages.clear();
-        LocaleHolder.LOCALE = null;
+        LocaleHolder.locale = null;
     }
 
     public static void unload() {
-        Locale locale = LocaleHolder.getLOCALE();
+        Locale locale = LocaleHolder.getLocale();
         if (locale != null) {
             locale.close();
         }
     }
 
     public static Message get(Msg msg) {
-        Locale locale = LocaleHolder.getLOCALE();
+        Locale locale = LocaleHolder.getLocale();
         if (locale == null) {
             throw new IllegalStateException("Locale has not been initialized.");
         }
@@ -342,14 +342,14 @@ public class Locale implements Closeable {
 
     private static class LocaleHolder {
 
-        private static Locale LOCALE;
+        private static Locale locale;
 
-        public static void setLOCALE(Locale LOCALE) {
-            LocaleHolder.LOCALE = LOCALE;
+        public static void setLocale(Locale locale) {
+            LocaleHolder.locale = locale;
         }
 
-        public static Locale getLOCALE() {
-            return LOCALE;
+        public static Locale getLocale() {
+            return locale;
         }
     }
 }
