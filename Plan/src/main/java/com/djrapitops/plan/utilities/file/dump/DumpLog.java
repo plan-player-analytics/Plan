@@ -88,6 +88,11 @@ public class DumpLog {
      * @param line The content of the line
      */
     private void addLine(CharSequence line) {
+        if (line == null) {
+            lines.add("\n");
+            return;
+        }
+
         lines.add(line.toString());
     }
 
