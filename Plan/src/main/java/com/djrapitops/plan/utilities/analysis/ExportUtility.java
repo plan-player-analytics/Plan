@@ -72,9 +72,7 @@ public class ExportUtility {
             Log.debug("Export", "Player html files.");
             Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
             String playerHtml = HtmlUtils.getStringFromResource("player.html");
-            rawData.forEach(userData -> {
-                writeInspectHtml(userData, playersFolder, playerHtml);
-            });
+            rawData.forEach(userData -> writeInspectHtml(userData, playersFolder, playerHtml));
         } catch (IOException ex) {
             Log.toLog("ExportUtils.export", ex);
         } finally {
