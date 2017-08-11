@@ -770,9 +770,7 @@
             var begin = new Date(%refreshlong%);
             var seconds = now.getTime() - begin.getTime();
 
-            var out = formatTime(seconds);
-
-            document.getElementById('divTime').innerHTML = out;
+            document.getElementById('divTime').innerHTML = formatTime(seconds);
             setTimeout('countUpTimer()', 1000);
         }
     </script>
