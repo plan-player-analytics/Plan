@@ -1,6 +1,7 @@
 Settings:
   Debug: false
   Locale: default
+  WriteNewLocaleFileOnStart: false
   UseTextUI: false
   Data:
     ChatListener: true

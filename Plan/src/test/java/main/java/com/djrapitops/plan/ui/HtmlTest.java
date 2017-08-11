@@ -27,8 +27,8 @@ public class HtmlTest {
      */
     @Test
     public void testParseWithZeroArgs() {
-        Html instance = Html.REPLACE0;
-        String expResult = "REPLACE0";
+        Html instance = Html.SPAN;
+        String expResult = "REPLACE0</span>";
         String result = instance.parse();
         assertEquals(expResult, result);
     }
@@ -38,9 +38,9 @@ public class HtmlTest {
      */
     @Test
     public void testParseStringArr() {
-        Html instance = Html.REPLACE0;
-        String expResult = "Test";
-        String result = instance.parse(expResult);
+        Html instance = Html.SPAN;
+        String expResult = "Test</span>";
+        String result = instance.parse("Test");
         assertEquals(expResult, result);
     }
 
@@ -49,8 +49,8 @@ public class HtmlTest {
      */
     @Test
     public void testSetHtml() {
-        Html instance = Html.REPLACE0;
-        String expResult = "Test";
+        Html instance = Html.SPAN;
+        String expResult = "Test</span>";
         instance.setHtml(expResult);
         String result = instance.parse();
         assertEquals(expResult, result);

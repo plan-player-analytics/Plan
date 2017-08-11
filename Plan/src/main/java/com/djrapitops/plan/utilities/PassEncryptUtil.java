@@ -17,13 +17,6 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class PassEncryptUtil {
 
-    /**
-     * Constructor used to hide the public constructor
-     */
-    private PassEncryptUtil() {
-        throw new IllegalStateException("Utility class");
-    }
-
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
     // These constants may be changed without breaking existing hashes.
     public static final int SALT_BYTE_SIZE = 24;
@@ -36,6 +29,12 @@ public class PassEncryptUtil {
     public static final int HASH_SIZE_INDEX = 2;
     public static final int SALT_INDEX = 3;
     public static final int PBKDF2_INDEX = 4;
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private PassEncryptUtil() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String createHash(String password) throws CannotPerformOperationException {
         return createHash(password.toCharArray());
@@ -149,7 +148,7 @@ public class PassEncryptUtil {
             return skf.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException ex) {
             throw new CannotPerformOperationException(
-                    "Hash algorithm not supported.", ex
+                    "Hash algorithm not supported: " + PBKDF2_ALGORITHM, ex
             );
         } catch (InvalidKeySpecException ex) {
             throw new CannotPerformOperationException(

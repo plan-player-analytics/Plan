@@ -17,6 +17,13 @@ import static org.bukkit.Bukkit.getPluginManager;
 public class ImportUtils {
 
     /**
+     * Constructor used to hide the public constructor
+     */
+    private ImportUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Checks if a plugin is enabled.
      *
      * @param pluginName Name of the plugin

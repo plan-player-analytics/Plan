@@ -18,7 +18,7 @@ public class InfoUuidCorrectionTest {
     public void testAllInfoBooleanReturn() {
         long now = MiscUtils.getTime();
         HandlingInfo[] h = new HandlingInfo[]{
-            new ChatInfo(test, ""),
+                new ChatInfo(test, ""),
                 new DeathInfo(test),
                 new KickInfo(test),
                 new KillInfo(test, now, null, ""),

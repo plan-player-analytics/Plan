@@ -57,7 +57,6 @@ public class Check {
     public static boolean ErrorIfFalse(boolean condition, String message) {
         if (!condition) {
             Log.error(message);
-            Log.toLog(message, Log.getErrorsFilename());
         }
         return condition;
     }

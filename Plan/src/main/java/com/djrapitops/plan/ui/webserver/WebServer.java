@@ -3,14 +3,16 @@ package main.java.com.djrapitops.plan.ui.webserver;
 import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -30,6 +32,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Rsl1122
@@ -38,11 +41,11 @@ public class WebServer {
 
     private final Plan plugin;
     private final DataRequestHandler dataReqHandler;
+    private final int port;
     private boolean enabled = false;
     private HttpServer server;
-    private final int port;
 
-    private boolean usingHttps;
+    private boolean usingHttps = false;
 
     /**
      * Class Constructor.
@@ -65,7 +68,8 @@ public class WebServer {
         if (enabled) {
             return;
         }
-        Log.info(Phrase.WEBSERVER_INIT.toString());
+
+        Log.info(Locale.get(Msg.ENABLE_WEBSERVER).toString());
         try {
             usingHttps = startHttpsServer();
 
@@ -82,24 +86,28 @@ public class WebServer {
                     try {
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
+
                         Headers responseHeaders = exchange.getResponseHeaders();
                         responseHeaders.set("Content-Type", "text/html;");
                         WebUser user = null;
+
                         if (usingHttps) {
                             user = getUser(exchange.getRequestHeaders());
 
                             // Prompt authorization
                             if (user == null) {
-
                                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
                             }
                         }
+
+                        responseHeaders.set("Content-Encoding", "gzip");
+
                         Response response = getResponse(target, user);
 
                         String content = response.getContent();
                         exchange.sendResponseHeaders(response.getCode(), 0);
 
-                        try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody());
+                        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
                              ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
                             byte[] buffer = new byte[2048];
                             int count;
@@ -115,12 +123,13 @@ public class WebServer {
                     }
                 }
             });
+
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
             server.start();
 
             enabled = true;
 
-            Log.info(Phrase.WEBSERVER_RUNNING.parse(String.valueOf(server.getAddress().getPort())));
+            Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()));
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             enabled = false;
@@ -128,23 +137,27 @@ public class WebServer {
     }
 
     private WebUser getUser(Headers requestHeaders) {
+        Benchmark.start("getUser");
         try {
             List<String> authorization = requestHeaders.get("Authorization");
             if (Verify.isEmpty(authorization)) {
                 return null;
             }
+
             String auth = authorization.get(0);
             if (auth.contains("Basic ")) {
                 auth = auth.split(" ")[1];
             } else {
                 throw new IllegalArgumentException("Wrong format of Auth");
             }
+
             Base64.Decoder decoder = Base64.getDecoder();
             byte[] decoded = decoder.decode(auth);
             String[] userInfo = new String(decoded).split(":");
             if (userInfo.length != 2) {
                 throw new IllegalArgumentException("User and Password not specified");
             }
+
             String user = userInfo[0];
             String passwordRaw = userInfo[1];
 
@@ -153,12 +166,14 @@ public class WebServer {
                 throw new IllegalArgumentException("User Doesn't exist");
             }
 
-            WebUser webUser = securityTable.getSecurityInfo(user);
+            WebUser webUser = securityTable.getWebUser(user);
 
             boolean correctPass = PassEncryptUtil.verifyPassword(passwordRaw, webUser.getSaltedPassHash());
             if (!correctPass) {
                 throw new IllegalArgumentException("User and Password do not match");
             }
+
+            Benchmark.stop("getUser: " + requestHeaders);
             return webUser;
         } catch (IllegalArgumentException e) {
             Log.debug("WebServer: " + e.getMessage());
@@ -169,11 +184,12 @@ public class WebServer {
         }
     }
 
-    private boolean startHttpsServer() throws IOException {
+    private boolean startHttpsServer() {
         String keyStorePath = Settings.WEBSERVER_CERTIFICATE_PATH.toString();
         if (!Paths.get(keyStorePath).isAbsolute()) {
             keyStorePath = plugin.getDataFolder() + File.separator + keyStorePath;
         }
+
         char[] storepass = Settings.WEBSERVER_CERTIFICATE_STOREPASS.toString().toCharArray();
         char[] keypass = Settings.WEBSERVER_CERTIFICATE_KEYPASS.toString().toCharArray();
         String alias = Settings.WEBSERVER_CERTIFICATE_ALIAS.toString();
@@ -231,6 +247,7 @@ public class WebServer {
         if ("/favicon.ico".equals(target)) {
             return PageCacheHandler.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
+
         if (usingHttps) {
             if (user == null) {
                 return PageCacheHandler.loadPage("promptAuthorization", PromptAuthorizationResponse::new);
@@ -343,7 +360,7 @@ public class WebServer {
      * Shuts down the server - Async thread is closed with shutdown boolean.
      */
     public void stop() {
-        Log.info(Phrase.WEBSERVER_CLOSE.toString());
+        Log.info(Locale.get(Msg.DISABLE_WEBSERVER).toString());
         if (server != null) {
             server.stop(0);
         }

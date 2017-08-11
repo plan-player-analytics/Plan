@@ -201,7 +201,7 @@ public class GMTimesTable extends Table {
             return;
         }
 
-        Benchmark.start("Database: Save GMTimes");
+        Benchmark.start("Save GMTimes");
 
         Set<Integer> savedIDs = getSavedIDs();
 
@@ -220,7 +220,7 @@ public class GMTimesTable extends Table {
 
         List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
 
-        batches.stream().forEach(batch -> {
+        batches.forEach(batch -> {
             try {
                 saveGMTimesBatch(batch);
             } catch (SQLException e) {
@@ -231,7 +231,7 @@ public class GMTimesTable extends Table {
         gamemodeTimes.keySet().removeAll(savedIDs);
 
         addNewGMTimesRows(gamemodeTimes);
-        Benchmark.stop("Database: Save GMTimes");
+        Benchmark.stop("Database", "Save GMTimes");
     }
 
     private void saveGMTimesBatch(List<Container<GMTimes>> batch) throws SQLException {
@@ -240,7 +240,7 @@ public class GMTimesTable extends Table {
         }
 
         int batchSize = batch.size();
-        Log.debug("Preparing insertion of GM Times... Batch Size: " + batchSize);
+        Log.debug("Database", "Preparing update of GM Times - Batch Size: " + batchSize);
 
         String[] gms = getGMKeyArray();
         Set<Integer> savedIDs = getSavedIDs();
@@ -274,19 +274,19 @@ public class GMTimesTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Executing GM Times batch: " + batchSize);
+            Log.debug("Database", "Executing GM Times batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);
         }
     }
 
-    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) throws SQLException {
+    private void addNewGMTimesRows(Map<Integer, Map<String, Long>> gamemodeTimes) {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
 
-        Benchmark.start("Database: Add GMTimes Rows");
+        Benchmark.start("Add GMTimes Rows");
 
         Map<Integer, GMTimes> gmTimes = new HashMap<>();
 
@@ -298,15 +298,15 @@ public class GMTimesTable extends Table {
 
         List<List<Container<GMTimes>>> batches = DBUtils.splitIntoBatchesWithID(gmTimes);
 
-        batches.stream().forEach(batch -> {
+        batches.forEach(batch -> {
             try {
                 addNewGMTimesBatch(batch);
             } catch (SQLException e) {
-                e.printStackTrace();
+                Log.toLog("GMTimesTable.addNewGMTimesRows", e);
             }
         });
 
-        Benchmark.stop("Database: Add GMTimes Rows");
+        Benchmark.stop("Database", "Add GMTimes Rows");
     }
 
     private void addNewGMTimesBatch(List<Container<GMTimes>> batch) throws SQLException {
@@ -315,7 +315,7 @@ public class GMTimesTable extends Table {
         }
 
         int batchSize = batch.size();
-        Log.debug("Preparing insertion of GM Times... Batch Size: " + batchSize);
+        Log.debug("Database", "Preparing insertion of GM Times - Batch Size: " + batchSize);
 
         String[] gms = getGMKeyArray();
 
@@ -343,7 +343,7 @@ public class GMTimesTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Executing GM Times batch: " + batchSize);
+            Log.debug("Database", "Executing GM Times batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);

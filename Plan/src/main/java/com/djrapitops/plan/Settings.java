@@ -25,6 +25,7 @@ public enum Settings {
     COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND("Customization.Data.CombineCommandAliasesToMainCommand"),
     SECURITY_IP_UUID("Settings.WebServer.Security.DisplayIPsAndUUIDs"),
     PLAYERLIST_SHOW_IMAGES("Customization.SmallHeadImagesOnAnalysisPlayerlist"),
+    WRITE_NEW_LOCALE("Settings.WriteNewLocaleFileOnStart"),
     // Integer
     ANALYSIS_MINUTES_FOR_ACTIVE("Settings.Analysis.MinutesPlayedUntilConsidiredActive"),
     SAVE_CACHE_MIN("Settings.Cache.DataCache.SaveEveryXMinutes"),

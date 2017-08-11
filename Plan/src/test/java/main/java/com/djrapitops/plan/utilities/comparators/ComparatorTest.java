@@ -5,15 +5,15 @@ import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+import main.java.com.djrapitops.plan.locale.Message;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.comparators.*;
 import org.junit.Test;
 import test.java.utils.RandomData;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -94,5 +94,40 @@ public class ComparatorTest {
         test.sort(new WebUserComparator());
         List<Integer> afterSort = test.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
         assertEquals(intValues, afterSort);
+    }
+
+    @Test
+    public void testStringLengthComparator() {
+        List<String> test = new ArrayList<>();
+        test.add(RandomData.randomString(10));
+        test.add(RandomData.randomString(3));
+        test.add(RandomData.randomString(20));
+        test.add(RandomData.randomString(7));
+        test.add(RandomData.randomString(4));
+        test.add(RandomData.randomString(86));
+        test.add(RandomData.randomString(6));
+
+        test.sort(new StringLengthComparator());
+
+        assertEquals(86, test.get(0).length());
+        assertEquals(20, test.get(1).length());
+        assertEquals(3, test.get(test.size() - 1).length());
+    }
+
+    @Test
+    public void testLocaleEntryComparator() {
+        Map<Msg, Message> test = new HashMap<>();
+        test.put(Msg.CMD_CONSTANT_FOOTER, new Message(""));
+        test.put(Msg.ANALYSIS_3RD_PARTY, new Message(""));
+        test.put(Msg.MANAGE_FAIL_NO_PLAYERS, new Message(""));
+
+        List<String> sorted = test.entrySet().stream()
+                .sorted(new LocaleEntryComparator())
+                .map(entry -> entry.getKey().name())
+                .collect(Collectors.toList());
+
+        assertEquals("ANALYSIS_3RD_PARTY", sorted.get(0));
+        assertEquals("CMD_CONSTANT_FOOTER", sorted.get(1));
+        assertEquals("MANAGE_FAIL_NO_PLAYERS", sorted.get(2));
     }
 }

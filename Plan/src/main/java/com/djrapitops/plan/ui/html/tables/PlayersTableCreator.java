@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.ui.html.tables;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.html.Html;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -28,7 +27,6 @@ public class PlayersTableCreator {
      * @return
      */
     public static String createSortablePlayersTable(List<UserData> data) {
-        Benchmark.start("Create Players table");
         StringBuilder html = new StringBuilder();
 
         long now = MiscUtils.getTime();
@@ -44,10 +42,10 @@ public class PlayersTableCreator {
                 boolean isUnknown = uData.getLoginTimes() == 1;
                 boolean isActive = AnalysisUtils.isActive(now, uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes());
 
-                String activityString = isBanned ? Html.GRAPH_BANNED.parse()
-                        : isUnknown ? Html.GRAPH_UNKNOWN.parse()
-                        : isActive ? Html.GRAPH_ACTIVE.parse()
-                        : Html.GRAPH_INACTIVE.parse();
+                String activityString = isBanned ? "Banned"
+                        : isUnknown ? "Unknown"
+                        : isActive ? "Active"
+                        : "Inactive";
 
                 String img = showImages ? Html.MINOTAR_SMALL_IMG.parse(uData.getName()) : "";
 
@@ -62,11 +60,9 @@ public class PlayersTableCreator {
                 ));
             } catch (NullPointerException ignored) {
             }
-
             i++;
         }
 
-        Benchmark.stop("Create Players table");
         return html.toString();
     }
 }

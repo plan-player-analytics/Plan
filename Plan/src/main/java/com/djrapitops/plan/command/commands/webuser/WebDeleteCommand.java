@@ -6,9 +6,10 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import net.md_5.bungee.api.ChatColor;
 
@@ -23,13 +24,17 @@ public class WebDeleteCommand extends SubCommand {
     private final Plan plugin;
 
     public WebDeleteCommand(Plan plugin) {
-        super("delete", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE_WEB.getPerm(), "Delete a webuser", "<username>");
+        super("delete, remove",
+                CommandType.CONSOLE_WITH_ARGUMENTS,
+                Permissions.MANAGE_WEB.getPerm(),
+                Locale.get(Msg.CMD_USG_WEB_DELETE).toString(),
+                "<username>");
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.parse() + " <username>", sender)) {
+        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).parse() + " <username>", sender)) {
             return true;
         }
         SecurityTable table = plugin.getDB().getSecurityTable();
@@ -43,13 +48,13 @@ public class WebDeleteCommand extends SubCommand {
                         return;
                     }
                     if (table.removeUser(user)) {
-                        sender.sendMessage(Phrase.MANAGE_SUCCESS.parse());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_SUCCESS).parse());
                     } else {
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.parse());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                     }
                 } catch (Exception ex) {
                     Log.toLog(this.getClass().getName(), ex);
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.parse());
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();
                 }

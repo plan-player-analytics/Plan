@@ -23,13 +23,17 @@ public class PlanWorldChangeListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
         Player p = event.getPlayer();
+
         String previousWorld = event.getFrom().getName();
         String worldName = p.getWorld().getName();
         if (previousWorld.equals(worldName)) {
             return;
         }
+
         UUID uuid = p.getUniqueId();
+        String gameMode = p.getGameMode().name();
         long time = MiscUtils.getTime();
-        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.WORLD, time, p.getGameMode().name(), p.getWorld().getName()));
+
+        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.WORLD, time, gameMode, worldName));
     }
 }

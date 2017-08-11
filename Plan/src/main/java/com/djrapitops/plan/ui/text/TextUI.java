@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.ui.text;
 
-import main.java.com.djrapitops.plan.Phrase;
+import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.settings.DefaultMessages;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -38,15 +39,18 @@ public class TextUI {
             return new String[]{"Error has occurred, please retry."};
         }
         UserData d = inspectCache.getFromCache(uuid);
-        ChatColor main = Phrase.COLOR_MAIN.color();
-        ChatColor sec = Phrase.COLOR_SEC.color();
-        ChatColor ter = Phrase.COLOR_TER.color();
+
+        ColorScheme cs = Plan.getInstance().getColorScheme();
+        String main = cs.getMainColor();
+        String sec = cs.getSecondaryColor();
+        String ter = cs.getTertiaryColor();
+
         boolean active = AnalysisUtils.isActive(now, d.getLastPlayed(), d.getPlayTime(), d.getLoginTimes());
         boolean banned = d.isBanned();
         boolean online = d.isOnline();
-        String ball = sec + " " + Phrase.BALL + main;
+        String ball = sec + " " + DefaultMessages.BALL + main;
         return new String[]{
-                sec + " " + Phrase.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
+                sec + " " + DefaultMessages.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
                 ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
                 ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
                 ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),
@@ -66,9 +70,12 @@ public class TextUI {
             return new String[]{"Error has occurred, please retry."};
         }
         AnalysisData d = analysisCache.getData();
-        ChatColor main = Phrase.COLOR_MAIN.color();
-        ChatColor sec = Phrase.COLOR_SEC.color();
-        String ball = sec + " " + Phrase.BALL + main;
+
+        ColorScheme cs = Plan.getInstance().getColorScheme();
+        String main = cs.getMainColor();
+        String sec = cs.getSecondaryColor();
+
+        String ball = sec + " " + DefaultMessages.BALL + main;
         final ActivityPart activity = d.getActivityPart();
         final JoinInfoPart join = d.getJoinInfoPart();
         final KillPart kills = d.getKillPart();

@@ -169,9 +169,8 @@ public class UserDataTest {
      */
     @Test
     public void testAddSessionNull() {
-        SessionData incorrect = null;
-        test.addSession(incorrect);
-        assertTrue("Added null", !test.getSessions().contains(incorrect));
+        test.addSession(null);
+        assertTrue("Added null", !test.getSessions().contains(null));
     }
 
     /**

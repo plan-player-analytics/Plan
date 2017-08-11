@@ -3,13 +3,13 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -33,29 +33,24 @@ public class ManageRemoveCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageRemoveCommand(Plan plugin) {
-        super("remove", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_REMOVE.toString(), Phrase.ARG_PLAYER + " [-a]");
+        super("remove",
+                CommandType.CONSOLE_WITH_ARGUMENTS,
+                Permissions.MANAGE.getPermission(),
+                Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString(),
+                "<player> [-a]");
 
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Manage Remove command",
-                tCol + "  Used to Remove user's data from the active database."
-        };
-
-        setInDepthHelp(help);
+    @Override
+    public String[] addHelp() {
+        return Locale.get(Msg.CMD_HELP_MANAGE_REMOVE).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
+        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
 
@@ -71,33 +66,33 @@ public class ManageRemoveCommand extends SubCommand {
             public void run() {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
-                    String message = Phrase.USERNAME_NOT_VALID.toString();
+                    String message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString();
 
                     if (!Check.isTrue(Verify.notNull(uuid), message, sender)) {
                         return;
                     }
 
-                    message = Phrase.USERNAME_NOT_KNOWN.toString();
+                    message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString();
                     if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
                         return;
                     }
 
-                    message = Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(plugin.getDB().getConfigName()));
+                    message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(plugin.getDB().getConfigName()));
                     if (!Check.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;
                     }
 
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
                     try {
                         plugin.getHandler().getDataCache().remove(uuid);
                         if (plugin.getDB().removeAccount(uuid.toString())) {
-                            sender.sendMessage(Phrase.MANAGE_REMOVE_SUCCESS.parse(playerName, plugin.getDB().getConfigName()));
+                            sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, plugin.getDB().getConfigName()));
                         } else {
-                            sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                            sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                         }
                     } catch (SQLException e) {
                         Log.toLog(this.getClass().getName(), e);
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                     }
                 } finally {
                     this.cancel();

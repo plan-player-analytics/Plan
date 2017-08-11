@@ -5,8 +5,9 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 /**
  * Subcommand for info about permission levels.
@@ -19,7 +20,10 @@ public class WebLevelCommand extends SubCommand {
     private final Plan plugin;
 
     public WebLevelCommand(Plan plugin) {
-        super("check", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "Info about permission levels.");
+        super("level",
+                CommandType.CONSOLE,
+                Permissions.MANAGE_WEB.getPerm(),
+                Locale.get(Msg.CMD_USG_WEB_LEVEL).toString());
         this.plugin = plugin;
     }
 
@@ -27,14 +31,14 @@ public class WebLevelCommand extends SubCommand {
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         ColorScheme cs = plugin.getColorScheme();
         String sCol = cs.getSecondaryColor();
-        String cmdBall = Phrase.CMD_BALL.parse();
+        String cmdBall = Locale.get(Msg.CMD_CONSTANT_LIST_BALL).parse();
         String[] messages = new String[]{
-                Phrase.CMD_FOOTER.parse(),
-                cmdBall + sCol + "0: Access all pages",
-                cmdBall + sCol + "1: Access '/players' and all inspect pages",
-                cmdBall + sCol + "2: Access inspect page with the same username as the webuser",
-                cmdBall + sCol + "3+: No permissions",
-                Phrase.CMD_FOOTER.parse()
+            Locale.get(Msg.CMD_CONSTANT_FOOTER).parse(),
+            cmdBall + sCol + "0: Access all pages",
+            cmdBall + sCol + "1: Access '/players' and all inspect pages",
+            cmdBall + sCol + "2: Access inspect page with the same username as the webuser",
+            cmdBall + sCol + "3+: No permissions",
+            Locale.get(Msg.CMD_CONSTANT_FOOTER).parse()
         };
         sender.sendMessage(messages);
         return true;

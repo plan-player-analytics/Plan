@@ -3,14 +3,14 @@ package main.java.com.djrapitops.plan.command.commands.manage;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
@@ -30,50 +30,42 @@ public class ManageClearCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ManageClearCommand(Plan plugin) {
-        super("clear", CommandType.CONSOLE_WITH_ARGUMENTS, Permissions.MANAGE.getPermission(), Phrase.CMD_USG_MANAGE_CLEAR + "", "<DB> [-a]");
+        super("clear",
+                CommandType.CONSOLE_WITH_ARGUMENTS,
+                Permissions.MANAGE.getPermission(),
+                Locale.get(Msg.CMD_USG_MANAGE_CLEAR).toString(),
+                "<DB> [-a]");
 
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Manage Clear command",
-                tCol + "  Used to delete ALL data in the active database.",
-                sCol + "  Plugin should be reloaded after successful clear.",
-                sCol + "  Alias: /plan pl"
-        };
-
-        setInDepthHelp(help);
+    @Override
+    public String[] addHelp() {
+        return Locale.get(Msg.CMD_HELP_MANAGE_CLEAR).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Phrase.COMMAND_REQUIRES_ARGUMENTS_ONE.toString(), sender)) {
+        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
 
         String dbName = args[0].toLowerCase();
         boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
 
-        if (!Check.isTrue(isCorrectDB, Phrase.MANAGE_ERROR_INCORRECT_DB + dbName, sender)) {
+        if (!Check.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
             return true;
         }
 
-        if (!Check.isTrue(Verify.contains("-a", args), Phrase.COMMAND_ADD_CONFIRMATION_ARGUMENT.parse(Phrase.WARN_REMOVE.parse(args[0])), sender)) {
+        if (!Check.isTrue(Verify.contains("-a", args), Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(args[0])), sender)) {
             return true;
         }
 
         final Database database = ManageUtils.getDB(plugin, dbName);
 
         // If DB is null return
-        if (!Check.isTrue(Verify.notNull(database), Phrase.MANAGE_DATABASE_FAILURE.toString(), sender)) {
+        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
             Log.error(dbName + " was null!");
             return true;
         }
@@ -87,13 +79,13 @@ public class ManageClearCommand extends SubCommand {
             @Override
             public void run() {
                 try {
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_START.parse());
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
                     if (database.removeAllData()) {
                         plugin.getHandler().getDataCache().clear();
-                        sender.sendMessage(Phrase.MANAGE_CLEAR_SUCCESS.toString());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
                     } else {
-                        sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.toString());
+                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
                     }
                 } finally {
                     this.cancel();

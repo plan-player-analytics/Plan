@@ -31,7 +31,7 @@ public abstract class PluginData {
      * <p>
      * Second parameter of any super constructor.
      */
-    protected String placeholder;
+    protected final String placeholder;
     /**
      * Name of the plugin the data is coming from.
      * <p>
@@ -43,7 +43,7 @@ public abstract class PluginData {
      * <p>
      * First parameter of any super constructor.
      */
-    protected String sourcePlugin;
+    protected final String sourcePlugin;
     /**
      * Determines if the datapoint should only be used for the analysis page.
      * <p>
@@ -203,6 +203,10 @@ public abstract class PluginData {
      */
     public abstract Serializable getValue(UUID uuid);
 
+    public Map<UUID, Serializable> getValues(Collection<UUID> uuids) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not overridden.");
+    }
+
     /**
      * Used to set the Font Awesome icon.
      *
@@ -267,6 +271,11 @@ public abstract class PluginData {
      */
     public final void setSuffix(String suffix) {
         this.suffix = suffix;
+    }
+
+    public final boolean isBanData() {
+        return placeholder.contains("banned")
+                && analysisTypes.contains(AnalysisType.BOOLEAN_TOTAL);
     }
 
     /**

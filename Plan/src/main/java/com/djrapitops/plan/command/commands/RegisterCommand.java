@@ -4,14 +4,14 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.bukkit.ChatColor;
@@ -33,31 +33,23 @@ public class RegisterCommand extends SubCommand {
     private final Plan plugin;
 
     public RegisterCommand(Plan plugin) {
-        super("register", CommandType.CONSOLE_WITH_ARGUMENTS, "", "Register a user for the webserver", "<password> [name] [access lvl]");
+        super("register",
+                CommandType.CONSOLE_WITH_ARGUMENTS,
+                "", // No Permission Requirement
+                Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
+                "<password> [name] [access lvl]");
         this.plugin = plugin;
-        setHelp(plugin);
+
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "Web Register command",
-                tCol + "  Used to register a new user for the webserver.",
-                sCol + "  Registering a user for another player requires " + Permissions.MANAGE_WEB.getPerm() + " permission.",
-                sCol + "  Passwords are hashed with PBKDF2 (64,000 iterations of SHA1) using a cryptographically-random salt."
-        };
-
-        setInDepthHelp(help);
+    @Override
+    public String[] addHelp() {
+        return Locale.get(Msg.CMD_HELP_WEB_REGISTER).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        String notEnoughArgsMsg = Phrase.COMMAND_REQUIRES_ARGUMENTS.parse("(3) " + super.getArguments());
+        String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + super.getArguments());
         String hashErrorMsg = ChatColor.RED + "Password hash error.";
         String permLvlErrorMsg = ChatColor.RED + "Incorrect perm level, not a number: ";
         try {
@@ -88,7 +80,7 @@ public class RegisterCommand extends SubCommand {
     }
 
     private void playerRegister(String[] args, ISender sender) throws PassEncryptUtil.CannotPerformOperationException {
-        final String notEnoughArgsMsg = Phrase.COMMAND_REQUIRES_ARGUMENTS.parse("(1 or 3) " + super.getArguments());
+        final String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(1 or 3) " + super.getArguments());
         boolean registerSenderAsUser = args.length == 1;
         if (registerSenderAsUser) {
             String user = sender.getName();
@@ -98,7 +90,7 @@ public class RegisterCommand extends SubCommand {
         } else if (sender.hasPermission(Permissions.MANAGE_WEB.getPermission())) {
             consoleRegister(args, sender, notEnoughArgsMsg);
         } else {
-            sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.parse());
+            sender.sendMessage(Locale.get(Msg.CMD_FAIL_NO_PERMISSION).parse());
         }
     }
 

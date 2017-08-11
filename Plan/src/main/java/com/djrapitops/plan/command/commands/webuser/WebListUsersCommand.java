@@ -7,9 +7,10 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.comparators.WebUserComparator;
 
 import java.util.List;
@@ -39,14 +40,14 @@ public class WebListUsersCommand extends SubCommand {
                     String mCol = cs.getMainColor();
                     List<WebUser> users = plugin.getDB().getSecurityTable().getUsers();
                     users.sort(new WebUserComparator());
-                    sender.sendMessage(Phrase.CMD_FOOTER.parse() + mCol + " WebUsers (" + users.size() + ")");
+                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse() + mCol + " WebUsers (" + users.size() + ")");
                     for (WebUser user : users) {
                         sender.sendMessage("  " + user.getPermLevel() + " : " + user.getName());
                     }
-                    sender.sendMessage(Phrase.CMD_FOOTER.parse());
+                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
                 } catch (Exception ex) {
                     Log.toLog(this.getClass().getName(), ex);
-                    sender.sendMessage(Phrase.MANAGE_PROCESS_FAIL.parse());
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
                 } finally {
                     this.cancel();
                 }

@@ -8,7 +8,8 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
@@ -17,6 +18,7 @@ import main.java.com.djrapitops.plan.ui.html.tables.KillsTableCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -32,14 +34,13 @@ public class PlaceholderUtils {
     }
 
     /**
-     * Gets the HashMap that is used to replace placeholders in Analysis.
+     * Gets the Map that is used to replace placeholders in Analysis.
      *
      * @param data AnalysisData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
      */
-    public static Map<String, String> getAnalysisReplaceRules(AnalysisData data) {
-        Benchmark.start("Replace Placeholders Analysis");
-        HashMap<String, String> replaceMap = new HashMap<>();
+    public static Map<String, Serializable> getAnalysisReplaceRules(AnalysisData data) {
+        HashMap<String, Serializable> replaceMap = new HashMap<>();
         replaceMap.putAll(data.getReplaceMap());
         replaceMap.put("%plugins%", data.replacePluginsTabLayout());
 
@@ -47,6 +48,8 @@ public class PlaceholderUtils {
         replaceMap.put("%refreshlong%", data.getRefreshDate() + "");
 
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
+
+        replaceMap.put("%timezone%", MiscUtils.getTimeZoneOffsetHours());
 
         // Html Theme colors
         String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
@@ -56,29 +59,29 @@ public class PlaceholderUtils {
                 replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
             }
         }
-        Benchmark.stop("Replace Placeholders Analysis");
         return replaceMap;
     }
 
     /**
-     * Gets the HashMap that is used to replace placeholders.
+     * Gets the Map that is used to replace placeholders.
      *
      * @param data UserData used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
      */
-    public static Map<String, String> getInspectReplaceRules(UserData data) {
-        Benchmark.start("Replace Placeholders Inspect");
+    public static Map<String, Serializable> getInspectReplaceRules(UserData data) {
 
-        HashMap<String, String> replaceMap = new HashMap<>();
+        HashMap<String, Serializable> replaceMap = new HashMap<>();
+        replaceMap.put("%timezone%", MiscUtils.getTimeZoneOffsetHours());
+
         boolean showIPandUUID = Settings.SECURITY_IP_UUID.isTrue();
         UUID uuid = data.getUuid();
-        replaceMap.put("%uuid%", (showIPandUUID ? String.valueOf(uuid) : Html.HIDDEN.parse()));
+        replaceMap.put("%uuid%", (showIPandUUID ? uuid.toString() : "Hidden (Config)"));
         replaceMap.put("%lastseen%", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
-        replaceMap.put("%logintimes%", String.valueOf(data.getLoginTimes()));
+        replaceMap.put("%logintimes%", data.getLoginTimes());
         replaceMap.put("%geoloc%", data.getGeolocation());
         long now = MiscUtils.getTime();
         boolean isActive = AnalysisUtils.isActive(now, data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
-        replaceMap.put("%active%", isActive ? Html.ACTIVE.parse() : Html.INACTIVE.parse());
+        replaceMap.put("%active%", isActive ? Locale.get(Msg.HTML_ACTIVE).parse() : Locale.get(Msg.HTML_INACTIVE).parse());
         GamemodePart gmPart = new GamemodePart();
         Map<String, Long> gmTimes = data.getGmTimes().getTimes();
         String[] gms = GMTimesTable.getGMKeyArray();
@@ -91,18 +94,18 @@ public class PlaceholderUtils {
         gmPart.analyse();
         replaceMap.putAll(gmPart.getReplaceMap());
 
-        replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : Html.HIDDEN.parse()));
+        replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : "Hidden (Config)"));
         replaceMap.put("%nicknames%", HtmlUtils.removeXSS(HtmlUtils.swapColorsToSpan(data.getNicknames().toString())));
         replaceMap.put("%name%", data.getName());
         replaceMap.put("%registered%", FormatUtils.formatTimeStampYear(data.getRegistered()));
         replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount(data.getPlayTime()));
-        replaceMap.put("%banned%", data.isBanned() ? Html.BANNED.parse() : "");
-        replaceMap.put("%op%", data.isOp() ? Html.OPERATOR.parse() : "");
-        replaceMap.put("%isonline%", (data.isOnline()) ? Html.ONLINE.parse() : Html.OFFLINE.parse());
-        replaceMap.put("%deaths%", String.valueOf(data.getDeaths()));
-        replaceMap.put("%playerkills%", String.valueOf(data.getPlayerKills().size()));
-        replaceMap.put("%mobkills%", String.valueOf(data.getMobKills()));
+        replaceMap.put("%banned%", data.isBanned() ? Locale.get(Msg.HTML_BANNED).parse() : "");
+        replaceMap.put("%op%", data.isOp() ? Locale.get(Msg.HTML_OP).parse() : "");
+        replaceMap.put("%isonline%", (data.isOnline()) ? Locale.get(Msg.HTML_ONLINE).parse() : Locale.get(Msg.HTML_OFFLINE).parse());
+        replaceMap.put("%deaths%", data.getDeaths());
+        replaceMap.put("%playerkills%", data.getPlayerKills().size());
+        replaceMap.put("%mobkills%", data.getMobKills());
         replaceMap.put("%sessionaverage%", FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(data.getSessions()))));
         replaceMap.put("%killstable%", KillsTableCreator.createKillsTable(data.getPlayerKills()));
         Plan plugin = Plan.getInstance();
@@ -127,13 +130,12 @@ public class PlaceholderUtils {
         }
         long cacheTime = plugin.getInspectCache().getCacheTime(uuid);
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountDifference(cacheTime, now));
-        replaceMap.put("%refreshlong%", String.valueOf(cacheTime));
+        replaceMap.put("%refreshlong%", cacheTime);
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
-        Map<String, String> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
+        Map<String, Serializable> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);
         replaceMap.put("%plugins%", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
-        Benchmark.stop("Replace Placeholders Inspect");
         return replaceMap;
     }
 }

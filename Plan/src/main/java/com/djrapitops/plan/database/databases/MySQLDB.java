@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
@@ -41,7 +42,7 @@ public class MySQLDB extends SQLDB {
 
             return DriverManager.getConnection(url, config.getString("mysql.user"), config.getString("mysql.password"));
         } catch (ClassNotFoundException | SQLException e) {
-            Log.error(Phrase.DB_CONNECTION_FAIL.parse(getConfigName(), e.getMessage()));
+            Log.error(Locale.get(Msg.ENABLE_FAIL_DB).parse(getConfigName(), e.getMessage()));
             return null;
         }
     }

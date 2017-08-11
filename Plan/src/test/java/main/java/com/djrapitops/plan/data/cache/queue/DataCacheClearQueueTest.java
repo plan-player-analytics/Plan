@@ -37,7 +37,7 @@ public class DataCacheClearQueueTest {
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         Plan plan = t.getPlanMock();
-        DataCacheHandler handler = new DataCacheHandler(plan) {
+        new DataCacheHandler(plan) {
             @Override
             public boolean getCommandUseFromDb() {
                 return true;

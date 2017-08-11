@@ -50,7 +50,7 @@ public class CommandUseTable extends Table {
      * @return @throws SQLException
      */
     public Map<String, Integer> getCommandUse() throws SQLException {
-        Benchmark.start("Database: Get CommandUse");
+        Benchmark.start("Get CommandUse");
         Map<String, Integer> commandUse = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -70,7 +70,7 @@ public class CommandUseTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get CommandUse");
+            Benchmark.stop("Database", "Get CommandUse");
         }
     }
 
@@ -84,7 +84,7 @@ public class CommandUseTable extends Table {
             return;
         }
 
-        Benchmark.start("Database: Save Commanduse");
+        Benchmark.start("Save Commanduse");
         Map<String, Integer> newData = new HashMap<>(data);
         Map<String, Integer> saved = getCommandUse();
         newData.keySet().removeAll(saved.keySet());
@@ -105,7 +105,9 @@ public class CommandUseTable extends Table {
         }
 
         updateCommands(updateData);
-        Benchmark.stop("Database: Save Commanduse");
+        commit();
+        Benchmark.stop("Database", "Save Commanduse");
+        db.setAvailable();
     }
 
     private void updateCommands(Map<String, Integer> data) throws SQLException {

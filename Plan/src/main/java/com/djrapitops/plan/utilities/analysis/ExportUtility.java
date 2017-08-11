@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
@@ -35,13 +36,15 @@ public class ExportUtility {
      */
     public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
-        if (Paths.get(path).isAbsolute()) {
+
+        Log.debug("Export", "Path: " + path);
+        boolean isAbsolute = Paths.get(path).isAbsolute();
+        Log.debug("Export", "Absolute: " + (isAbsolute ? "Yes" : "No"));
+        if (isAbsolute) {
             File folder = new File(path);
-            if (folder.exists()
-                    && folder.isDirectory()) {
-                return folder;
+            if (!folder.exists() || !folder.isDirectory()) {
+                folder.mkdirs();
             }
-            folder.mkdirs();
             return folder;
         }
         File dataFolder = Plan.getInstance().getDataFolder();
@@ -59,21 +62,24 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
-        String processName = "Exporting Html pages";
-        plugin.processStatus().startExecution(processName);
+        Benchmark.start("Exporting Html pages");
         try {
             File folder = getFolder();
+            Log.debug("Export", "Folder: " + folder.getAbsolutePath());
             writePlayersPageHtml(rawData, new File(folder, "players"));
             writeAnalysisHtml(analysisData, new File(folder, "server"));
             File playersFolder = getPlayersFolder(folder);
-            plugin.processStatus().setStatus(processName, "Player html files.");
-            for (UserData userData : rawData) {
-                writeInspectHtml(userData, playersFolder);
-            }
+            Log.debug("Export", "Player html files.");
+            Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
+            String playerHtml = HtmlUtils.getStringFromResource("player.html");
+            rawData.forEach(userData -> {
+                writeInspectHtml(userData, playersFolder, playerHtml);
+            });
         } catch (IOException ex) {
             Log.toLog("ExportUtils.export", ex);
         } finally {
-            plugin.processStatus().finishExecution(processName);
+            Benchmark.stop("Export", "Exporting Html pages");
+            Log.logDebug("Export");
         }
     }
 
@@ -93,17 +99,31 @@ public class ExportUtility {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void writeInspectHtml(UserData userData, File playersFolder) throws IOException {
+    public static boolean writeInspectHtml(UserData userData, File playersFolder, String playerHtml) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
-            return;
+            return false;
         }
-        String inspectHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("player.html"),
-                PlaceholderUtils.getInspectReplaceRules(userData));
-        File playerFolder = new File(playersFolder, userData.getName());
-        playerFolder.mkdir();
-        File inspectHtmlFile = new File(playerFolder, "index.html");
-        inspectHtmlFile.delete();
-        Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
+        String name = userData.getName();
+        if (name.endsWith(".")) {
+            name = name.replace(".", "%2E");
+        }
+        if (name.endsWith(" ")) {
+            name = name.replace(" ", "%20");
+        }
+
+        try {
+            String inspectHtml = HtmlUtils.replacePlaceholders(playerHtml,
+                    PlaceholderUtils.getInspectReplaceRules(userData));
+            File playerFolder = new File(playersFolder, name);
+            playerFolder.mkdirs();
+            File inspectHtmlFile = new File(playerFolder, "index.html");
+            inspectHtmlFile.createNewFile();
+            Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
+        } catch (IOException e) {
+            Log.toLog("Export.inspectPage: " + name, e);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -116,12 +136,13 @@ public class ExportUtility {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
+        serverFolder.mkdirs();
         String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("analysis.html"),
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");
-        analysisHtmlFile.delete();
-
+        Log.debug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
+        analysisHtmlFile.createNewFile();
         Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
@@ -129,6 +150,8 @@ public class ExportUtility {
         String playersHtml = PlayersPageResponse.buildContent(rawData);
         playersFolder.mkdirs();
         File playersHtmlFile = new File(playersFolder, "index.html");
+        Log.debug("Export", "Players Page File: " + playersHtmlFile.getAbsolutePath());
+        playersHtmlFile.createNewFile();
         Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
     }
 

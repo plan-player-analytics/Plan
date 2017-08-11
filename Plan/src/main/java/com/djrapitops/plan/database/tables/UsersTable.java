@@ -223,7 +223,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
-        Benchmark.start("Database: Get Saved UUIDS");
+        Benchmark.start("Get Saved UUIDS");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -238,7 +238,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get Saved UUIDS");
+            Benchmark.stop("Database", "Get Saved UUIDS");
         }
     }
 
@@ -274,7 +274,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public UserData getUserData(UUID uuid) throws SQLException {
-        Benchmark.start("Database: Get UserData");
+        Benchmark.start("Get UserData");
         boolean containsBukkitData = getContainsBukkitData(uuid);
         UserData data = null;
         if (containsBukkitData) {
@@ -284,7 +284,7 @@ public class UsersTable extends Table {
             data = new UserData(Fetch.getIOfflinePlayer(uuid));
             addUserInformationToUserData(data);
         }
-        Benchmark.stop("Database: Get UserData");
+        Benchmark.stop("Database", "Get UserData");
         return data;
     }
 
@@ -312,7 +312,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public List<UserData> getUserData(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("Database: Get UserData Multiple");
+        Benchmark.start("Get UserData Multiple");
         List<UUID> containsBukkitData = getContainsBukkitData(uuids);
         List<UserData> datas = new ArrayList<>();
         datas.addAll(getUserDataForKnown(containsBukkitData));
@@ -320,17 +320,17 @@ public class UsersTable extends Table {
         uuids.removeAll(containsBukkitData);
         if (!uuids.isEmpty()) {
             List<UserData> noBukkitData = new ArrayList<>();
-            Benchmark.start("Database: Create UserData objects for No BukkitData players");
+            Benchmark.start("Create UserData objects for No BukkitData players");
             for (UUID uuid : uuids) {
                 UserData uData = new UserData(Fetch.getIOfflinePlayer(uuid));
                 noBukkitData.add(uData);
             }
-            Benchmark.stop("Database: Create UserData objects for No BukkitData players");
+            Benchmark.stop("Database", "Create UserData objects for No BukkitData players");
             addUserInformationToUserData(noBukkitData);
             datas.addAll(noBukkitData);
         }
 
-        Benchmark.stop("Database: Get UserData Multiple");
+        Benchmark.stop("Database", "Get UserData Multiple");
         return datas;
     }
 
@@ -365,7 +365,7 @@ public class UsersTable extends Table {
     }
 
     private UserData getUserDataForKnown(UUID uuid) throws SQLException {
-        Benchmark.start("Database: getUserDataForKnown UserData");
+        Benchmark.start("getUserDataForKnown UserData");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -401,13 +401,13 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: getUserDataForKnown UserData");
+            Benchmark.stop("Database", "getUserDataForKnown UserData");
         }
         return null;
     }
 
     private List<UserData> getUserDataForKnown(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("Database: getUserDataForKnown Multiple");
+        Benchmark.start("getUserDataForKnown Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         List<UserData> datas = new ArrayList<>();
@@ -448,7 +448,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: getUserDataForKnown Multiple");
+            Benchmark.stop("Database", "getUserDataForKnown Multiple");
         }
         return datas;
     }
@@ -458,7 +458,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void addUserInformationToUserData(UserData data) throws SQLException {
-        Benchmark.start("Database: addUserInformationToUserData");
+        Benchmark.start("addUserInformationToUserData");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -488,7 +488,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: addUserInformationToUserData");
+            Benchmark.stop("Database", "addUserInformationToUserData");
         }
     }
 
@@ -497,7 +497,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void addUserInformationToUserData(List<UserData> data) throws SQLException {
-        Benchmark.start("Database: addUserInformationToUserData Multiple");
+        Benchmark.start("addUserInformationToUserData Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -533,7 +533,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: addUserInformationToUserData Multiple");
+            Benchmark.stop("Database", "addUserInformationToUserData Multiple");
         }
     }
 
@@ -542,7 +542,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void saveUserDataInformation(UserData data) throws SQLException {
-        Benchmark.start("Database: Save UserInfo");
+        Benchmark.start("Save UserInfo");
         PreparedStatement statement = null;
         try {
             UUID uuid = data.getUuid();
@@ -598,7 +598,7 @@ public class UsersTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Database: Save UserInfo");
+            Benchmark.stop("Database", "Save UserInfo");
         }
     }
 
@@ -612,7 +612,7 @@ public class UsersTable extends Table {
                 try {
                     statement = prepareStatement("SELECT age FROM " + tableName + " LIMIT 1");
                     set = statement.executeQuery();
-                    Log.debug("UsersTable has V4 columns.");
+                    Log.debug("Database", "UsersTable has V4 columns.");
                     return true;
                 } catch (SQLException e) {
                     return false;
@@ -676,14 +676,14 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public void saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
-        Benchmark.start("Database: Save UserInfo multiple");
+        Benchmark.start("Save UserInfo multiple");
         try {
             List<UserData> newUserdata = updateExistingUserData(data);
-            Benchmark.start("Database: Insert new UserInfo multiple");
+            Benchmark.start("Insert new UserInfo multiple");
 
             List<List<UserData>> batches = DBUtils.splitIntoBatches(newUserdata);
 
-            batches.stream()
+            batches
                     .forEach(batch -> {
                         try {
                             insertNewUserData(batch);
@@ -692,9 +692,9 @@ public class UsersTable extends Table {
                         }
                     });
 
-            Benchmark.stop("Database: Insert new UserInfo multiple");
+            Benchmark.stop("Database", "Insert new UserInfo multiple");
         } finally {
-            Benchmark.stop("Database: Save UserInfo multiple");
+            Benchmark.stop("Database", "Save UserInfo multiple");
         }
     }
 
@@ -704,7 +704,7 @@ public class UsersTable extends Table {
         }
 
         int batchSize = data.size();
-        Log.debug("Preparing insertion of new users... Batch Size: " + batchSize);
+        Log.debug("Database", "Preparing insertion of new users - Batch Size: " + batchSize);
 
         PreparedStatement statement = null;
         try {
@@ -738,7 +738,7 @@ public class UsersTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Executing users batch: " + batchSize);
+            Log.debug("Database", "Executing users batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);
@@ -801,7 +801,7 @@ public class UsersTable extends Table {
                 i++;
             }
             if (commitRequired) {
-                Log.debug("Executing userinfo batch update: " + i);
+                Log.debug("Database", "Executing userinfo batch update: " + i);
                 statement.executeBatch();
             }
             return saveLast;
@@ -816,7 +816,7 @@ public class UsersTable extends Table {
      * @throws SQLException
      */
     public Map<UUID, Integer> getUserIds(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("Database: Get User IDS Multiple");
+        Benchmark.start("Get User IDS Multiple");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -835,7 +835,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get User IDS Multiple");
+            Benchmark.stop("Database", "Get User IDS Multiple");
         }
     }
 
@@ -843,7 +843,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Map<UUID, Integer> getAllUserIds() throws SQLException {
-        Benchmark.start("Database: Get User IDS ALL");
+        Benchmark.start("Get User IDS ALL");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -859,7 +859,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get User IDS ALL");
+            Benchmark.stop("Database", "Get User IDS ALL");
         }
     }
 
@@ -867,7 +867,7 @@ public class UsersTable extends Table {
      * @return @throws SQLException
      */
     public Map<Integer, Integer> getLoginTimes() throws SQLException {
-        Benchmark.start("Database: Get Logintimes");
+        Benchmark.start("Get Logintimes");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -882,7 +882,7 @@ public class UsersTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database: Get Logintimes");
+            Benchmark.stop("Database", "Get Logintimes");
         }
     }
 

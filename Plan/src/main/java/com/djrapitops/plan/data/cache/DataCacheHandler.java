@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.data.cache;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
@@ -16,6 +15,8 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
@@ -81,7 +82,7 @@ public class DataCacheHandler extends SessionCache {
 
         commandUse = new HashMap<>();
         if (!getCommandUseFromDb()) {
-            Log.error(Phrase.DB_FAILURE_DISABLE + "");
+            Log.error(Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
             plugin.disablePlugin();
             return;
         }
@@ -144,6 +145,7 @@ public class DataCacheHandler extends SessionCache {
                 }
                 try {
                     periodicTaskIsSaving = true;
+                    Log.debug("Database", "Periodic Cache Save");
                     handler.saveHandlerDataToCache();
                     handler.saveCachedUserData();
                     if (timesSaved % clearAfterXsaves == 0) {
@@ -158,7 +160,7 @@ public class DataCacheHandler extends SessionCache {
                     periodicTaskIsSaving = false;
                 }
             }
-        }).runTaskTimerAsynchronously(60 * 20 * minutes, 60 * 20 * minutes);
+        }).runTaskTimerAsynchronously(60L * 20L * minutes, 60L * 20L * minutes);
     }
 
     /**
@@ -197,7 +199,7 @@ public class DataCacheHandler extends SessionCache {
     public void cache(UserData data) {
         data.setOnline(true);
         dataCache.put(data.getUuid(), data);
-        Log.debug(Phrase.CACHE_ADD.parse(data.getUuid().toString()));
+        Log.debug("Added " + data.getUuid().toString() + " to Cache.");
     }
 
     /**
@@ -340,6 +342,7 @@ public class DataCacheHandler extends SessionCache {
             return;
         }
         try {
+            Log.debug("Database", "Periodic TPS Save");
             db.getTpsTable().saveTPSData(averages);
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -413,7 +416,7 @@ public class DataCacheHandler extends SessionCache {
             }
         } else {
             dataCache.remove(uuid);
-            Log.debug(Phrase.CACHE_REMOVE.parse(uuid.toString()));
+            Log.debug("Cleared " + uuid.toString() + " from Cache.");
         }
     }
 

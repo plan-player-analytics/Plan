@@ -4,11 +4,11 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
@@ -28,50 +28,38 @@ public class ListCommand extends SubCommand {
      * @param plugin Current instance of Plan
      */
     public ListCommand(Plan plugin) {
-        super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), "List to all cached players", "");
+        super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
 
-        setHelp(plugin);
     }
 
-    private void setHelp(Plan plugin) {
-        ColorScheme colorScheme = plugin.getColorScheme();
-
-        String mCol = colorScheme.getMainColor();
-        String sCol = colorScheme.getSecondaryColor();
-        String tCol = colorScheme.getTertiaryColor();
-
-        String[] help = new String[]{
-                mCol + "List command",
-                tCol + "  Used to get a link to players page.",
-                sCol + "  Players page contains links to all cached inspect pages.",
-                sCol + "  Alias: /plan pl"
-        };
-
-        setInDepthHelp(help);
+    @Override
+    public String[] addHelp() {
+        return Locale.get(Msg.CMD_HELP_LIST).toArray();
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Phrase.ERROR_WEBSERVER_OFF_INSPECT + "", sender)) {
+        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW) + "", sender)) {
             return true;
         }
+
         sendListMsg(sender);
         return true;
     }
 
     private void sendListMsg(ISender sender) {
-        sender.sendMessage(Phrase.CMD_FOOTER.parse());
+        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
 
         // Link
         String url = HtmlUtils.getServerAnalysisUrlWithProtocol().replace("server", "players");
-        String message = Phrase.CMD_LINK.toString();
+        String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
             sender.sendMessage(message + url);
         } else {
             sender.sendMessage(message);
-            sender.sendLink("   ", Phrase.CMD_CLICK_ME.toString(), url);
+            sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
         }
-        sender.sendMessage(Phrase.CMD_FOOTER.toString());
+        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 }

@@ -107,7 +107,7 @@ public abstract class Table {
      * @throws SQLException
      */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
-        Log.debug(sql);
+        Log.debug("Database", sql);
         return getConnection().prepareStatement(sql);
     }
 
@@ -171,5 +171,16 @@ public abstract class Table {
     @Override
     public String toString() {
         return tableName;
+    }
+
+    /**
+     * Commits changes to .db file when using SQLite databse.
+     * <p>
+     * Auto Commit enabled when using MySQL
+     *
+     * @throws SQLException If commit fails or there is nothing to commit.
+     */
+    protected void commit() throws SQLException {
+        db.commit();
     }
 }

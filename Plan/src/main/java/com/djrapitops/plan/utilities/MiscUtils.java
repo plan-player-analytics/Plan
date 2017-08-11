@@ -1,17 +1,20 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
-import com.djrapitops.plugin.utilities.player.Fetch;
-import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Phrase;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +39,10 @@ public class MiscUtils {
      */
     public static long getTime() {
         return System.currentTimeMillis();
+    }
+
+    public static int getTimeZoneOffsetHours() {
+        return -TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
     }
 
     /**
@@ -66,7 +73,7 @@ public class MiscUtils {
             } else if (args[0].equalsIgnoreCase(sender.getName())) {
                 playerName = sender.getName();
             } else {
-                sender.sendMessage(Phrase.COMMAND_NO_PERMISSION.toString());
+                sender.sendMessage(Locale.get(Msg.CMD_FAIL_NO_PERMISSION).toString());
             }
         } else {
             playerName = sender.getName();
@@ -82,10 +89,17 @@ public class MiscUtils {
      */
     public static List<String> getMatchingPlayerNames(String search) {
         final String searchFor = search.toLowerCase();
-        List<String> matches = Fetch.getIOfflinePlayers().stream()
-                .map(IOfflinePlayer::getName)
-                .filter(name -> name.toLowerCase().contains(searchFor))
-                .collect(Collectors.toList());
+        Database db = Plan.getInstance().getDB();
+        List<String> matches = new ArrayList<>();
+        try {
+            List<UserData> data = db.getUserDataForUUIDS(db.getSavedUUIDs());
+            matches = data.stream()
+                    .map(UserData::getName)
+                    .filter(name -> name.toLowerCase().contains(searchFor))
+                    .collect(Collectors.toList());
+        } catch (SQLException e) {
+            Log.toLog("MiscUtils.getMatchingPlayerNames", e);
+        }
         Collections.sort(matches);
         return matches;
     }

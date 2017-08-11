@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.6.1</version>
+    <version>3.6.2</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>abstract-plugin-framework</artifactId>
-            <version>2.0.1</version>
+            <version>2.0.2</version>
             <scope>compile</scope>
         </dependency>
         <!--        SoftDepended Plugins-->
@@ -109,6 +109,7 @@
                     <include>*.js</include>
                     <include>*.yml</include>
                     <include>*.html</include>
+                    <include>*.txt</include>
                 </includes>
             </resource>
         </resources>
