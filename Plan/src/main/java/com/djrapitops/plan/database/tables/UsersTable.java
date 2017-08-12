@@ -691,9 +691,6 @@ public class UsersTable extends Table {
             return;
         }
 
-        int batchSize = data.size();
-        Log.debug("Database", "Preparing insertion of new users - Batch Size: " + batchSize);
-
         PreparedStatement statement = null;
         try {
             statement = prepareStatement(getInsertStatement());

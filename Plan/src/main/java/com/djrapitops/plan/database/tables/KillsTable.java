@@ -82,7 +82,6 @@ public class KillsTable extends Table {
      * @throws SQLException
      */
     public List<KillData> getPlayerKills(int userId) throws SQLException {
-        Benchmark.start("Get Kills");
         UsersTable usersTable = db.getUsersTable();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -100,7 +99,6 @@ public class KillsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database", "Get Kills");
         }
     }
 

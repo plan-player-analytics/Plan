@@ -135,9 +135,6 @@ public class TPSTable extends Table {
             return;
         }
 
-        int batchSize = batch.size();
-        Log.debug("Database", "Preparing insertion of TPS - Batch Size: " + batchSize);
-
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("

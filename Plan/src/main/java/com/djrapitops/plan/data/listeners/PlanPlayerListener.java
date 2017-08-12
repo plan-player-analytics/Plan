@@ -4,7 +4,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.Gamemode;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -65,8 +64,6 @@ public class PlanPlayerListener implements Listener {
 
         UUID uuid = player.getUniqueId();
         handler.startSession(uuid);
-        Log.debug(uuid + ": PlayerJoinEvent");
-
         plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
             @Override
             public void run() {
@@ -87,13 +84,9 @@ public class PlanPlayerListener implements Listener {
                 } else {
                     handler.addToPool(loginInfo);
                 }
-
-                Log.debug(uuid + ": PlayerJoinEvent_AsyncTask_END, New:" + isNewPlayer);
                 this.cancel();
             }
         }).runTaskAsynchronously();
-
-        Log.debug(uuid + ": PlayerJoinEvent_END");
     }
 
     /**
@@ -109,7 +102,6 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
 
-        Log.debug(uuid + ": PlayerQuitEvent");
         long time = MiscUtils.getTime();
         boolean banned = player.isBanned();
         Gamemode gm = Gamemode.wrap(player.getGameMode());
@@ -117,8 +109,6 @@ public class PlanPlayerListener implements Listener {
 
         handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.saveCachedData(uuid);
-
-        Log.debug(uuid + ": PlayerQuitEvent_END");
     }
 
     /**
@@ -138,7 +128,6 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         handler.endSession(uuid);
-        Log.debug(uuid + ": PlayerKickEvent");
 
         long time = MiscUtils.getTime();
         boolean banned = player.isBanned();
@@ -148,7 +137,5 @@ public class PlanPlayerListener implements Listener {
         handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
         handler.addToPool(new KickInfo(uuid));
         handler.saveCachedData(uuid);
-
-        Log.debug(uuid + ": PlayerKickEvent_END");
     }
 }

@@ -78,7 +78,7 @@ public class ExportUtility {
 
             Benchmark.start("Exporting Player pages");
             rawData.forEach(userData -> writeInspectHtml(userData, playersFolder, playerHtml));
-            Benchmark.stop("Exporting Player pages");
+            Benchmark.stop("Export", "Exporting Player pages");
         } catch (IOException ex) {
             Log.toLog("ExportUtils.export", ex);
         } finally {
