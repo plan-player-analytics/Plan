@@ -538,6 +538,7 @@ public abstract class SQLDB extends Database {
             return;
         }
         Log.debug("Database", "Save userdata: " + uuid);
+        Benchmark.start("Save Single UserData");
         checkConnection();
         data.access();
         usersTable.saveUserDataInformation(data);
@@ -551,6 +552,7 @@ public abstract class SQLDB extends Database {
         worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
         data.stopAccessing();
         commit();
+        Benchmark.stop("Database", "Save Single UserData");
         setAvailable();
     }
 
