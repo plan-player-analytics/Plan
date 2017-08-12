@@ -27,7 +27,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param handler current instance of DataCacheHandler.
      */
     public DataCacheClearQueue(DataCacheHandler handler) {
-        super(new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
         setup = new ClearSetup(queue, handler);
         setup.go();
     }
@@ -65,7 +65,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 
     private DataCacheHandler handler;
 
-    ClearConsumer(BlockingQueue q, DataCacheHandler handler) {
+    ClearConsumer(BlockingQueue<UUID> q, DataCacheHandler handler) {
         super(q, "ClearQueueConsumer");
         this.handler = handler;
     }
@@ -97,7 +97,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 
 class ClearSetup extends Setup<UUID> {
 
-    public ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
+    ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
         super(new ClearConsumer(q, handler));
     }
 }
