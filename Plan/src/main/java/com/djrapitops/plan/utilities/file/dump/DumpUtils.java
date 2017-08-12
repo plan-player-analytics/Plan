@@ -1,19 +1,19 @@
 package main.java.com.djrapitops.plan.utilities.file.dump;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.nio.charset.Charset;
 import java.nio.charset.MalformedInputException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -247,9 +247,9 @@ public class DumpUtils {
      * @throws IOException when an error while reading occurred
      */
     private static void addErrorLog(DumpLog log, Plan plan) throws IOException {
-        Path errorFile = FileSystems.getDefault().getPath(plan.getDataFolder().getAbsolutePath(), Log.getErrorsFilename());
+        File errorFile = new File(plan.getDataFolder(), plan.getPluginLogger().getErrorsFilename());
 
-        if (Files.notExists(errorFile)) {
+        if (!Verify.exists(errorFile)) {
             return;
         }
 
@@ -267,12 +267,11 @@ public class DumpUtils {
      * @throws IOException when an error while reading occurred
      */
     private static void addDebugLog(DumpLog log, Plan plan) throws IOException {
-        Path debugFile = FileSystems.getDefault().getPath(plan.getDataFolder().getAbsolutePath(), "DebugLog.txt");
+        File debugFile = new File(plan.getDataFolder(), plan.getPluginLogger().getDebugFilename());
 
-        if (Files.notExists(debugFile)) {
+        if (!Verify.exists(debugFile)) {
             return;
         }
-
         List<String> lines = readLines(debugFile);
 
         log.addHeader("Debug Log");
@@ -286,7 +285,7 @@ public class DumpUtils {
      * @return The lines
      * @throws IOException when an error while reading occurred
      */
-    private static List<String> readLines(Path file) throws IOException {
+    private static List<String> readLines(File file) throws IOException {
         for (Charset charset : Charset.availableCharsets().values()) {
             try {
                 return readLines(file, charset);
@@ -306,7 +305,7 @@ public class DumpUtils {
      * @return The lines
      * @throws IOException when an error while reading occurred
      */
-    private static List<String> readLines(Path file, Charset charset) throws IOException {
-        return Files.lines(file, charset).collect(Collectors.toList());
+    private static List<String> readLines(File file, Charset charset) throws IOException {
+        return FileUtil.lines(file, charset);
     }
 }

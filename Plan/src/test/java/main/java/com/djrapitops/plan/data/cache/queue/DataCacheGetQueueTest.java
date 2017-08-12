@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.data.cache.queue.DataCacheGetQueue;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -26,11 +27,9 @@ import test.java.utils.TestInit;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -82,10 +81,7 @@ public class DataCacheGetQueueTest {
             }
         };
         File f = new File(plan.getDataFolder(), "Errors.txt");
-        rows = 0;
-        if (f.exists()) {
-            rows = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList()).size();
-        }
+        rows = FileUtil.lines(f).size();
     }
 
     /**
@@ -96,9 +92,12 @@ public class DataCacheGetQueueTest {
     public void tearDown() throws IOException, SQLException {
         db.close();
         File f = new File(plan.getDataFolder(), "Errors.txt");
-        int rowsAgain = 0;
-        if (f.exists()) {
-            rowsAgain = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList()).size();
+        List<String> lines = FileUtil.lines(f);
+        int rowsAgain = lines.size();
+        if (rowsAgain > 0) {
+            for (String line : lines) {
+                System.out.println(line);
+            }
         }
         assertTrue("Errors were caught.", rows == rowsAgain);
     }

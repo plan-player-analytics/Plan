@@ -20,6 +20,7 @@ import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
@@ -37,11 +38,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -84,10 +82,7 @@ public class DatabaseTest {
             }
         };
         File f = new File(plan.getDataFolder(), "Errors.txt");
-        rows = 0;
-        if (f.exists()) {
-            rows = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList()).size();
-        }
+        rows = FileUtil.lines(f).size();
     }
 
     /**
@@ -101,10 +96,10 @@ public class DatabaseTest {
             backup.close();
         }
         File f = new File(plan.getDataFolder(), "Errors.txt");
-        int rowsAgain = 0;
-        if (f.exists()) {
-            List<String> lines = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList());
-            rowsAgain = lines.size();
+
+        List<String> lines = FileUtil.lines(f);
+        int rowsAgain = lines.size();
+        if (rowsAgain > 0) {
             for (String line : lines) {
                 System.out.println(line);
             }

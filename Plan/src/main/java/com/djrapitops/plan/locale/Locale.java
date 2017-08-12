@@ -285,7 +285,7 @@ public class Locale implements Closeable {
     }
 
     private void loadFromFile(File localeFile) throws IOException {
-        loadFromContents(Files.lines(localeFile.toPath(), StandardCharsets.UTF_8).collect(Collectors.toList()), "Custom File");
+        loadFromContents(FileUtil.lines(localeFile), "Custom File");
     }
 
     private void loadFromResource(String fileName) {

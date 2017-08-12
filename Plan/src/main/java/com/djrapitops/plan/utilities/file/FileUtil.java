@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.file;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -8,9 +9,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileUtil {
 
@@ -51,6 +57,20 @@ public class FileUtil {
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
             MiscUtils.close(scanner);
+        }
+        return lines;
+    }
+
+    public static List<String> lines(File file) throws IOException {
+        return lines(file, StandardCharsets.UTF_8);
+    }
+
+    public static List<String> lines(File file, Charset charset) throws IOException {
+        List<String> lines = new ArrayList<>();
+        if (Verify.exists(file)) {
+            try (Stream<String> linesStream = Files.lines(file.toPath(), charset)) {
+                lines = linesStream.collect(Collectors.toList());
+            }
         }
         return lines;
     }

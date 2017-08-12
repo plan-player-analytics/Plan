@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
@@ -21,8 +22,6 @@ import test.java.utils.TestInit;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,10 +57,7 @@ public class DatabaseCommitTest {
             }
         };
         File f = new File(plan.getDataFolder(), "Errors.txt");
-        rows = 0;
-        if (f.exists()) {
-            rows = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList()).size();
-        }
+        rows = FileUtil.lines(f).size();
     }
 
     /**
@@ -72,10 +68,9 @@ public class DatabaseCommitTest {
     public void tearDown() throws IOException, SQLException {
         db.close();
         File f = new File(plan.getDataFolder(), "Errors.txt");
-        int rowsAgain = 0;
-        if (f.exists()) {
-            List<String> lines = Files.lines(f.toPath(), Charset.defaultCharset()).collect(Collectors.toList());
-            rowsAgain = lines.size();
+        List<String> lines = FileUtil.lines(f);
+        int rowsAgain = lines.size();
+        if (rowsAgain > 0) {
             for (String line : lines) {
                 System.out.println(line);
             }

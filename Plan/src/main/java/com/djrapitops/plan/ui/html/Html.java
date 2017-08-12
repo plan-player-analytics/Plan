@@ -96,7 +96,7 @@ public enum Html {
                     String[] split = localeRow.split(" <> ");
                     Html.valueOf(split[0]).setHtml(split[1]);
                 } catch (IllegalArgumentException e) {
-                    Log.error("There is a miswritten line in locale on line " + localeRows.indexOf(localeRow));
+                    Log.error("There is a miswritten lines in locale on lines " + localeRows.indexOf(localeRow));
                 }
             }
         } catch (IOException e) {
