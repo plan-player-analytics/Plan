@@ -163,7 +163,7 @@ AnalysisType.HTML is for all other elements you might want to add - parseContain
 
 **If you want this same datapoint to show data on the inspect page call super.analysisOnly(false);**
 
-Good example is the [FactionsPower](/Plan/src/main/java/com/djrapitops/plan/data/additional/factions/FactionsPower.java)
+Good example is the [FactionsPower](/PlanPluginBridge/src/main/java/com/djrapitops/pluginbridge/plan/factions/FactionsPower.java)
 
 ## Table Example
 
