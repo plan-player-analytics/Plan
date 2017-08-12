@@ -38,7 +38,6 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param uuid UUID of the UserData object (Player's UUID)
      */
     public void scheduleForClear(UUID uuid) {
-        Log.debug(uuid + ": Scheduling for clear");
         queue.add(uuid);
     }
 
@@ -52,7 +51,6 @@ public class DataCacheClearQueue extends Queue<UUID> {
             return;
         }
         uuids = uuids.stream().filter(Objects::nonNull).collect(Collectors.toList());
-        Log.debug("Scheduling for clear: " + uuids);
         try {
             queue.addAll(uuids);
         } catch (IllegalStateException e) {

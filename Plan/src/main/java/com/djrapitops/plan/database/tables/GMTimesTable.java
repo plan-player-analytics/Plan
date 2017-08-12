@@ -235,9 +235,6 @@ public class GMTimesTable extends Table {
             return;
         }
 
-        int batchSize = batch.size();
-        Log.debug("Database", "Preparing update of GM Times - Batch Size: " + batchSize);
-
         String[] gms = getGMKeyArray();
         Set<Integer> savedIDs = getSavedIDs();
 
@@ -304,9 +301,6 @@ public class GMTimesTable extends Table {
         if (batch.isEmpty()) {
             return;
         }
-
-        int batchSize = batch.size();
-        Log.debug("Database", "Preparing insertion of GM Times - Batch Size: " + batchSize);
 
         String[] gms = getGMKeyArray();
 

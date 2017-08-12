@@ -175,7 +175,6 @@ public class DataCacheHandler extends SessionCache {
      *                  of DataCacheHandler after it has been fetched (if not already fetched)
      */
     public void getUserDataForProcessing(DBCallableProcessor processor, UUID uuid, boolean cache) {
-        Log.debug(uuid + ": HANDLER getForProcess," + " Cache:" + cache);
         UserData uData = dataCache.get(uuid);
         if (uData == null) {
             if (cache) {
@@ -241,7 +240,6 @@ public class DataCacheHandler extends SessionCache {
         if (i == null) {
             return;
         }
-        Log.debug(i.getUuid() + ": Adding to pool, type:" + i.getType().name());
         processTask.addToPool(i);
     }
 
@@ -407,9 +405,7 @@ public class DataCacheHandler extends SessionCache {
      * @param uuid Player's UUID
      */
     public void clearFromCache(UUID uuid) {
-        Log.debug(uuid + ": Clear");
         if (plugin.fetch().isOnline(uuid)) {
-            Log.debug(uuid + ": Online, did not clear");
             UserData data = dataCache.get(uuid);
             if (data != null) {
                 data.setClearAfterSave(false);

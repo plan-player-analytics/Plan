@@ -40,7 +40,6 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
      *                   fetch is complete, with the UserData object.
      */
     public void scheduleForGet(UUID uuid, DBCallableProcessor... processors) {
-        Log.debug(uuid + ": Scheduling for get");
         try {
             Map<UUID, List<DBCallableProcessor>> map = new HashMap<>();
             map.put(uuid, Arrays.asList(processors));
@@ -85,7 +84,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
                 List<DBCallableProcessor> processorsList = entrySet.getValue();
 
                 if (processorsList != null) {
-                    Log.debug(uuid + ": Get, For:" + processorsList.size());
+                    Log.debug("Database", uuid + ": Get, For:" + processorsList.size());
                     try {
                         db.giveUserDataToProcessors(uuid, processorsList);
                     } catch (SQLException e) {

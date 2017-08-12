@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.stream.Collectors;
 
 /**
  * This Class is starts the Save Queue Thread, that saves data to the Database.
@@ -42,7 +41,6 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @param data UserData object.
      */
     public void scheduleForSave(UserData data) {
-        Log.debug(data.getUuid() + ": Scheduling for save");
         try {
             queue.add(data);
         } catch (IllegalStateException e) {
@@ -56,7 +54,6 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @param data Collection of UserData objects.
      */
     public void scheduleForSave(Collection<UserData> data) {
-        Log.debug("Scheduling for save: " + data.stream().map(UserData::getUuid).collect(Collectors.toList()));
         try {
             queue.addAll(data);
         } catch (IllegalStateException e) {
@@ -113,11 +110,9 @@ class SaveConsumer extends Consumer<UserData> {
             return;
         }
 
-        Log.debug(uuid + ": Saving: " + uuid);
         try {
             db.saveUserData(data);
             data.stopAccessing();
-            Log.debug(uuid + ": Saved!");
             if (data.shouldClearAfterSave()) {
                 handler.getClearTask().scheduleForClear(uuid);
             }

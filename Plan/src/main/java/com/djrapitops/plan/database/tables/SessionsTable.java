@@ -230,9 +230,6 @@ public class SessionsTable extends Table {
             return;
         }
 
-        int batchSize = batch.size();
-        Log.debug("Database", "Preparing insertion of sessions - Batch Size: " + batchSize);
-
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
