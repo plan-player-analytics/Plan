@@ -58,7 +58,6 @@ public class SessionsTable extends Table {
      * @throws SQLException
      */
     public List<SessionData> getSessionData(int userId) throws SQLException {
-        Benchmark.start("Get Sessions");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -75,7 +74,6 @@ public class SessionsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database", "Get Sessions");
         }
     }
 
@@ -255,8 +253,6 @@ public class SessionsTable extends Table {
                 statement.setLong(3, session.getSessionEnd());
                 statement.addBatch();
             }
-
-            Log.debug("Database", "Executing session batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);

@@ -258,7 +258,6 @@ public class KillsTable extends Table {
                 }
 
                 if (commitRequired) {
-                    Log.debug("Database", "Executing kills batch: " + i);
                     statement.executeBatch();
                 }
             }

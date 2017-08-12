@@ -160,8 +160,6 @@ public class TPSTable extends Table {
                 statement.setDouble(7, tps.getChunksLoaded());
                 statement.addBatch();
             }
-
-            Log.debug("Database", "Executing tps batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);

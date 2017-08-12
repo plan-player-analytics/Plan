@@ -537,10 +537,8 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return;
         }
-        setStatus("Save userdata: " + uuid);
+        Log.debug("Database", "Save userdata: " + uuid);
         checkConnection();
-        Log.debug("Database", "DB_Save:");
-        Log.debug("Database", data.toString());
         data.access();
         usersTable.saveUserDataInformation(data);
         int userId = usersTable.getUserId(uuid.toString());

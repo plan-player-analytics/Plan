@@ -82,7 +82,6 @@ public class NicknamesTable extends Table {
      * @throws SQLException
      */
     public List<String> getNicknames(int userId) throws SQLException {
-        Benchmark.start("Get Nicknames");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -109,7 +108,6 @@ public class NicknamesTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database", "Get Nicknames");
         }
     }
 
@@ -123,7 +121,6 @@ public class NicknamesTable extends Table {
         if (names == null || names.isEmpty()) {
             return;
         }
-        Benchmark.start("Save Nicknames");
         names.removeAll(getNicknames(userId));
         if (names.isEmpty()) {
             return;
@@ -136,23 +133,19 @@ public class NicknamesTable extends Table {
                     + columnNick
                     + ") VALUES (?, ?, ?)");
             boolean commitRequired = false;
-            int i = 0;
             for (String name : names) {
                 statement.setInt(1, userId);
                 statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
                 statement.setString(3, name);
                 statement.addBatch();
                 commitRequired = true;
-                i++;
             }
             if (commitRequired) {
-                Log.debug("Database", "Executing nicknames batch: " + i);
                 statement.executeBatch();
 
             }
         } finally {
             close(statement);
-            Benchmark.stop("Database", "Save Nicknames");
         }
     }
 

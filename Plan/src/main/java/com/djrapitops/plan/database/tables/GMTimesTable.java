@@ -6,7 +6,6 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -201,8 +200,6 @@ public class GMTimesTable extends Table {
             return;
         }
 
-        Benchmark.start("Save GMTimes");
-
         Set<Integer> savedIDs = getSavedIDs();
 
         Map<Integer, GMTimes> gmTimes = new HashMap<>();
@@ -231,7 +228,6 @@ public class GMTimesTable extends Table {
         gamemodeTimes.keySet().removeAll(savedIDs);
 
         addNewGMTimesRows(gamemodeTimes);
-        Benchmark.stop("Database", "Save GMTimes");
     }
 
     private void saveGMTimesBatch(List<Container<GMTimes>> batch) throws SQLException {
@@ -274,7 +270,6 @@ public class GMTimesTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Database", "Executing GM Times batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);
@@ -285,8 +280,6 @@ public class GMTimesTable extends Table {
         if (Verify.isEmpty(gamemodeTimes)) {
             return;
         }
-
-        Benchmark.start("Add GMTimes Rows");
 
         Map<Integer, GMTimes> gmTimes = new HashMap<>();
 
@@ -305,8 +298,6 @@ public class GMTimesTable extends Table {
                 Log.toLog("GMTimesTable.addNewGMTimesRows", e);
             }
         });
-
-        Benchmark.stop("Database", "Add GMTimes Rows");
     }
 
     private void addNewGMTimesBatch(List<Container<GMTimes>> batch) throws SQLException {
@@ -343,7 +334,6 @@ public class GMTimesTable extends Table {
                 statement.addBatch();
             }
 
-            Log.debug("Database", "Executing GM Times batch: " + batchSize);
             statement.executeBatch();
         } finally {
             close(statement);

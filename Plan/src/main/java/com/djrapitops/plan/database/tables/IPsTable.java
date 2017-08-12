@@ -74,7 +74,6 @@ public class IPsTable extends Table {
      * @throws SQLException
      */
     public List<InetAddress> getIPAddresses(int userId) throws SQLException {
-        Benchmark.start("Get Ips");
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -95,7 +94,6 @@ public class IPsTable extends Table {
         } finally {
             close(set);
             close(statement);
-            Benchmark.stop("Database", "Get Ips");
         }
     }
 
@@ -109,7 +107,6 @@ public class IPsTable extends Table {
             return;
         }
 
-        Benchmark.start("Save Ips");
         ips.removeAll(getIPAddresses(userId));
 
         if (ips.isEmpty()) {
@@ -141,7 +138,6 @@ public class IPsTable extends Table {
             }
         } finally {
             close(statement);
-            Benchmark.stop("Database", "Save Ips");
         }
     }
 
@@ -238,7 +234,6 @@ public class IPsTable extends Table {
             }
 
             if (commitRequired) {
-                Log.debug("Database", "Executing ips batch: " + batchSize);
                 statement.executeBatch();
             }
         } finally {

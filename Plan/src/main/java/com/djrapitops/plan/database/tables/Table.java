@@ -107,7 +107,6 @@ public abstract class Table {
      * @throws SQLException
      */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
-        Log.debug("Database", sql);
         return getConnection().prepareStatement(sql);
     }
 
