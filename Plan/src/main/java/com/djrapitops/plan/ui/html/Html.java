@@ -1,13 +1,6 @@
 package main.java.com.djrapitops.plan.ui.html;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * @author Rsl1122
@@ -67,41 +60,6 @@ public enum Html {
 
     Html(String html) {
         this.html = html;
-    }
-
-    /**
-     * @param localeFile
-     */
-    public static void loadLocale(File localeFile) {
-        try (Scanner localeScanner = new Scanner(localeFile, "UTF-8")) {
-            List<String> localeRows = new ArrayList<>();
-            boolean html = false;
-
-            while (localeScanner.hasNextLine()) {
-                String line = localeScanner.nextLine();
-                if (line.equals("<<<<<<HTML>>>>>>")) {
-                    html = true;
-                    continue;
-                }
-
-                if (!html) {
-                    continue;
-                }
-
-                localeRows.add(line);
-            }
-
-            for (String localeRow : localeRows) {
-                try {
-                    String[] split = localeRow.split(" <> ");
-                    Html.valueOf(split[0]).setHtml(split[1]);
-                } catch (IllegalArgumentException e) {
-                    Log.error("There is a miswritten lines in locale on lines " + localeRows.indexOf(localeRow));
-                }
-            }
-        } catch (IOException e) {
-            Log.error("Something went wrong at loading locale " + localeFile.getAbsoluteFile() + ": " + e.getCause());
-        }
     }
 
     /**
