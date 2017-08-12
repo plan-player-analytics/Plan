@@ -1,13 +1,6 @@
 package main.java.com.djrapitops.plan.ui.html;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * @author Rsl1122
@@ -60,8 +53,7 @@ public enum Html {
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td sorttable_customkey=\"REPLACE2\">REPLACE3</td><td sorttable_customkey=\"REPLACE4\">REPLACE5</td></tr>"),
     TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td>REPLACE2</td><td>REPLACE3</td></tr>"),
     ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
-    TABLE_END("</tbody></table>"), //    KILLDATA_NONE("No Kills"),
-    ;
+    TABLE_END("</tbody></table>"); //    KILLDATA_NONE("No Kills"),
 
     private String html;
 
@@ -70,50 +62,15 @@ public enum Html {
     }
 
     /**
-     * @param localeFile
-     */
-    public static void loadLocale(File localeFile) {
-        try (Scanner localeScanner = new Scanner(localeFile, "UTF-8")) {
-            List<String> localeRows = new ArrayList<>();
-            boolean html = false;
-
-            while (localeScanner.hasNextLine()) {
-                String line = localeScanner.nextLine();
-                if (line.equals("<<<<<<HTML>>>>>>")) {
-                    html = true;
-                    continue;
-                }
-
-                if (!html) {
-                    continue;
-                }
-
-                localeRows.add(line);
-            }
-
-            for (String localeRow : localeRows) {
-                try {
-                    String[] split = localeRow.split(" <> ");
-                    Html.valueOf(split[0]).setHtml(split[1]);
-                } catch (IllegalArgumentException e) {
-                    Log.error("There is a miswritten lines in locale on lines " + localeRows.indexOf(localeRow));
-                }
-            }
-        } catch (IOException e) {
-            Log.error("Something went wrong at loading locale " + localeFile.getAbsoluteFile() + ": " + e.getCause());
-        }
-    }
-
-    /**
-     * @return
+     * @return The HTML String
      */
     public String parse() {
         return html;
     }
 
     /**
-     * @param p
-     * @return
+     * @param p The replacement Strings
+     * @return The parsed HTML String
      */
     public String parse(String... p) {
         Verify.nullCheck(p);
@@ -125,7 +82,7 @@ public enum Html {
     }
 
     /**
-     * @param html
+     * @param html Sets the HTML String
      */
     public void setHtml(String html) {
         this.html = html;

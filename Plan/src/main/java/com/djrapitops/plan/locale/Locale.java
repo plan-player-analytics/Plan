@@ -39,9 +39,24 @@ public class Locale implements Closeable {
     private final Map<Msg, Message> messages;
 
     public Locale(Plan plugin) {
-        LocaleHolder.setLOCALE(this);
+        LocaleHolder.setLocale(this);
         this.plugin = plugin;
         messages = new HashMap<>();
+    }
+
+    public static void unload() {
+        Locale locale = LocaleHolder.getLocale();
+        if (locale != null) {
+            locale.close();
+        }
+    }
+
+    public static Message get(Msg msg) {
+        Locale locale = LocaleHolder.getLocale();
+        if (locale == null) {
+            throw new IllegalStateException("Locale has not been initialized.");
+        }
+        return locale.getMessage(msg);
     }
 
     public void loadLocale() {
@@ -62,9 +77,9 @@ public class Locale implements Closeable {
             }
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
-
+        } finally {
+            Benchmark.stop("Enable", "Initializing locale");
         }
-        Benchmark.stop("Enable", "Initializing locale");
     }
 
     private void writeNewDefaultLocale() throws IOException {
@@ -316,41 +331,25 @@ public class Locale implements Closeable {
     }
 
     public Message getMessage(Msg msg) {
-        Message message = messages.get(msg);
-        return message != null ? message : new Message("");
+        return messages.getOrDefault(msg, new Message(""));
     }
 
     @Override
     public void close() {
         messages.clear();
-        LocaleHolder.LOCALE = null;
-    }
-
-    public static void unload() {
-        Locale locale = LocaleHolder.getLOCALE();
-        if (locale != null) {
-            locale.close();
-        }
-    }
-
-    public static Message get(Msg msg) {
-        Locale locale = LocaleHolder.getLOCALE();
-        if (locale == null) {
-            throw new IllegalStateException("Locale has not been initialized.");
-        }
-        return locale.getMessage(msg);
+        LocaleHolder.locale = null;
     }
 
     private static class LocaleHolder {
 
-        private static Locale LOCALE;
+        private static Locale locale;
 
-        public static void setLOCALE(Locale LOCALE) {
-            LocaleHolder.LOCALE = LOCALE;
+        public static Locale getLocale() {
+            return locale;
         }
 
-        public static Locale getLOCALE() {
-            return LOCALE;
+        public static void setLocale(Locale locale) {
+            LocaleHolder.locale = locale;
         }
     }
 }

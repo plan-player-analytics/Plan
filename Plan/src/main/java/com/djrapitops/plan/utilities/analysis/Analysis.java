@@ -267,7 +267,7 @@ public class Analysis {
         long now = MiscUtils.getTime();
 
         Benchmark.start("Fill Dataset");
-        List<PluginData> banSources  = plugin.getHookHandler().getAdditionalDataSources()
+        List<PluginData> banSources = plugin.getHookHandler().getAdditionalDataSources()
                 .stream().filter(PluginData::isBanData).collect(Collectors.toList());
         rawData.forEach(uData -> {
             uData.access();

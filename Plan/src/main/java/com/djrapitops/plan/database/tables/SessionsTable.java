@@ -112,7 +112,7 @@ public class SessionsTable extends Table {
             return;
         }
 
-        Benchmark.start("Save Sessions");
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -120,7 +120,6 @@ public class SessionsTable extends Table {
                     + columnSessionStart + ", "
                     + columnSessionEnd
                     + ") VALUES (?, ?, ?)");
-
             for (SessionData session : sessions) {
                 long end = session.getSessionEnd();
                 long start = session.getSessionStart();
@@ -137,7 +136,6 @@ public class SessionsTable extends Table {
             statement.executeBatch();
         } finally {
             close(statement);
-            Benchmark.stop("Database", "Save Sessions");
         }
     }
 

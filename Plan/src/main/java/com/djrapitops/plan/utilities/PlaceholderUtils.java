@@ -45,7 +45,7 @@ public class PlaceholderUtils {
         replaceMap.put("%plugins%", data.replacePluginsTabLayout());
 
         replaceMap.put("%refresh%", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getTime()));
-        replaceMap.put("%refreshlong%", data.getRefreshDate() + "");
+        replaceMap.put("%refreshlong%", String.valueOf(data.getRefreshDate()));
 
         replaceMap.put("%servername%", Settings.SERVER_NAME.toString());
 
@@ -94,7 +94,7 @@ public class PlaceholderUtils {
         gmPart.analyse();
         replaceMap.putAll(gmPart.getReplaceMap());
 
-        replaceMap.put("%ips%", (showIPandUUID ? data.getIps().toString() : "Hidden (Config)"));
+        replaceMap.put("%ips%", showIPandUUID ? data.getIps().toString() : "Hidden (Config)");
         replaceMap.put("%nicknames%", HtmlUtils.removeXSS(HtmlUtils.swapColorsToSpan(data.getNicknames().toString())));
         replaceMap.put("%name%", data.getName());
         replaceMap.put("%registered%", FormatUtils.formatTimeStampYear(data.getRegistered()));
@@ -102,7 +102,7 @@ public class PlaceholderUtils {
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount(data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? Locale.get(Msg.HTML_BANNED).parse() : "");
         replaceMap.put("%op%", data.isOp() ? Locale.get(Msg.HTML_OP).parse() : "");
-        replaceMap.put("%isonline%", (data.isOnline()) ? Locale.get(Msg.HTML_ONLINE).parse() : Locale.get(Msg.HTML_OFFLINE).parse());
+        replaceMap.put("%isonline%", data.isOnline() ? Locale.get(Msg.HTML_ONLINE).parse() : Locale.get(Msg.HTML_OFFLINE).parse());
         replaceMap.put("%deaths%", data.getDeaths());
         replaceMap.put("%playerkills%", data.getPlayerKills().size());
         replaceMap.put("%mobkills%", data.getMobKills());

@@ -88,7 +88,6 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
             return;
         }
 
-        Log.debug(info.getUuid() + ": Processing type: " + info.getType().name());
         DBCallableProcessor p = data -> {
             if (!info.process(data)) {
                 Log.error("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());

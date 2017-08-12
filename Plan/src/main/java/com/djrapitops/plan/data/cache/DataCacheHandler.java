@@ -312,7 +312,6 @@ public class DataCacheHandler extends SessionCache {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        Log.debug(uuid + ": SaveCachedData");
         DBCallableProcessor saveProcessor = data -> {
             data.access();
             data.setClearAfterSave(true);
@@ -517,28 +516,28 @@ public class DataCacheHandler extends SessionCache {
     }
 
     /**
-     * @return
+     * @return The SaveTask
      */
     public DataCacheSaveQueue getSaveTask() {
         return saveTask;
     }
 
     /**
-     * @return
+     * @return The ClearTask
      */
     public DataCacheClearQueue getClearTask() {
         return clearTask;
     }
 
     /**
-     * @return
+     * @return The ProcessTask
      */
     public DataCacheProcessQueue getProcessTask() {
         return processTask;
     }
 
     /**
-     * @return
+     * @return The GetTask
      */
     public DataCacheGetQueue getGetTask() {
         return getTask;

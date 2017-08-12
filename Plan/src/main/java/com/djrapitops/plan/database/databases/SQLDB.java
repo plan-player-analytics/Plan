@@ -306,7 +306,7 @@ public abstract class SQLDB extends Database {
             int userId = usersTable.getUserId(uuid);
             boolean success = userId != -1
                     && locationsTable.removeUserLocations(userId)
-                    && ipsTable.removeUserIps(userId)
+                    && ipsTable.removeUserIPs(userId)
                     && nicknamesTable.removeUserNicknames(userId)
                     && gmTimesTable.removeUserGMTimes(userId)
                     && sessionsTable.removeUserSessions(userId)
@@ -538,6 +538,7 @@ public abstract class SQLDB extends Database {
             return;
         }
         Log.debug("Database", "Save userdata: " + uuid);
+        Benchmark.start("Save Single UserData");
         checkConnection();
         data.access();
         usersTable.saveUserDataInformation(data);
@@ -551,6 +552,7 @@ public abstract class SQLDB extends Database {
         worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
         data.stopAccessing();
         commit();
+        Benchmark.stop("Database", "Save Single UserData");
         setAvailable();
     }
 

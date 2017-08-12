@@ -350,7 +350,7 @@ public class WebServer {
     }
 
     /**
-     * @return
+     * @return if the WebServer is enabled
      */
     public boolean isEnabled() {
         return enabled;
