@@ -103,7 +103,8 @@ public class Request implements Closeable {
         if (reqLine.length >= 2) {
             request = reqLine[0];
             target = reqLine[1].replace("%20", " ")
-                    .replace("%2E", ".");;
+                    .replace("%2E", ".");
+            ;
         } else {
             request = "GET";
             target = "/";

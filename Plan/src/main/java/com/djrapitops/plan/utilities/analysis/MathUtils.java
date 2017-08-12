@@ -13,6 +13,7 @@ public class MathUtils {
 
     private static final DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.##", decimalFormatSymbols);
+
     /**
      * Constructor used to hide the public constructor
      */

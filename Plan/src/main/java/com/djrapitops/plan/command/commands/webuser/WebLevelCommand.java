@@ -32,14 +32,17 @@ public class WebLevelCommand extends SubCommand {
         ColorScheme cs = plugin.getColorScheme();
         String sCol = cs.getSecondaryColor();
         String cmdBall = Locale.get(Msg.CMD_CONSTANT_LIST_BALL).parse();
+        String cmdFooter = Locale.get(Msg.CMD_CONSTANT_FOOTER).parse();
+
         String[] messages = new String[]{
-            Locale.get(Msg.CMD_CONSTANT_FOOTER).parse(),
-            cmdBall + sCol + "0: Access all pages",
-            cmdBall + sCol + "1: Access '/players' and all inspect pages",
-            cmdBall + sCol + "2: Access inspect page with the same username as the webuser",
-            cmdBall + sCol + "3+: No permissions",
-            Locale.get(Msg.CMD_CONSTANT_FOOTER).parse()
+                cmdFooter,
+                cmdBall + sCol + "0: Access all pages",
+                cmdBall + sCol + "1: Access '/players' and all inspect pages",
+                cmdBall + sCol + "2: Access inspect page with the same username as the webuser",
+                cmdBall + sCol + "3+: No permissions",
+                cmdFooter
         };
+
         sender.sendMessage(messages);
         return true;
     }

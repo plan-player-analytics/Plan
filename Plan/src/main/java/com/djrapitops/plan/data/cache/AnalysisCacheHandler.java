@@ -64,7 +64,7 @@ public class AnalysisCacheHandler {
     }
 
     /**
-     * @return
+     * @return if currently an analysis is being run
      */
     public boolean isAnalysisBeingRun() {
         return analysis.isAnalysisBeingRun();

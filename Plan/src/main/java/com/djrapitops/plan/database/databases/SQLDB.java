@@ -306,7 +306,7 @@ public abstract class SQLDB extends Database {
             int userId = usersTable.getUserId(uuid);
             boolean success = userId != -1
                     && locationsTable.removeUserLocations(userId)
-                    && ipsTable.removeUserIps(userId)
+                    && ipsTable.removeUserIPs(userId)
                     && nicknamesTable.removeUserNicknames(userId)
                     && gmTimesTable.removeUserGMTimes(userId)
                     && sessionsTable.removeUserSessions(userId)

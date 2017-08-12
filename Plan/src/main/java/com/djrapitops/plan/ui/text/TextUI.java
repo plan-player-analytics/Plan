@@ -29,15 +29,17 @@ public class TextUI {
     }
 
     /**
-     * @param uuid
-     * @return
+     * @param uuid The UUID for which the inspect messages should be get for
+     * @return The inspect messages
      */
     public static String[] getInspectMessages(UUID uuid) {
         InspectCacheHandler inspectCache = Plan.getInstance().getInspectCache();
+
         long now = MiscUtils.getTime();
         if (!inspectCache.isCached(uuid)) {
             return new String[]{"Error has occurred, please retry."};
         }
+
         UserData d = inspectCache.getFromCache(uuid);
 
         ColorScheme cs = Plan.getInstance().getColorScheme();
@@ -49,6 +51,7 @@ public class TextUI {
         boolean banned = d.isBanned();
         boolean online = d.isOnline();
         String ball = sec + " " + DefaultMessages.BALL + main;
+
         return new String[]{
                 sec + " " + DefaultMessages.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
                 ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
@@ -62,26 +65,31 @@ public class TextUI {
     }
 
     /**
-     * @return
+     * Gets the analysis messages
+     *
+     * @return The analysis messages
      */
     public static String[] getAnalysisMessages() {
         AnalysisCacheHandler analysisCache = Plan.getInstance().getAnalysisCache();
+
         if (!analysisCache.isCached()) {
             return new String[]{"Error has occurred, please retry."};
         }
+
         AnalysisData d = analysisCache.getData();
 
         ColorScheme cs = Plan.getInstance().getColorScheme();
         String main = cs.getMainColor();
         String sec = cs.getSecondaryColor();
-
         String ball = sec + " " + DefaultMessages.BALL + main;
+
         final ActivityPart activity = d.getActivityPart();
         final JoinInfoPart join = d.getJoinInfoPart();
         final KillPart kills = d.getKillPart();
         final PlaytimePart playtime = d.getPlaytimePart();
         final PlayerCountPart count = d.getPlayerCountPart();
         final TPSPart tps = d.getTpsPart();
+
         return new String[]{
                 ball + " Total Players: " + sec + count.getPlayerCount(),
 

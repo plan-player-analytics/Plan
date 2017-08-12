@@ -10,8 +10,8 @@ import java.util.Map;
 /**
  * Compares Locale Map Entries and sorts them alphabetically according to the Enum Names.
  *
- * @since 3.6.2
  * @author Rsl1122
+ * @since 3.6.2
  */
 public class LocaleEntryComparator implements Comparator<Map.Entry<Msg, Message>> {
 

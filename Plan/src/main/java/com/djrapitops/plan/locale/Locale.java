@@ -44,6 +44,21 @@ public class Locale implements Closeable {
         messages = new HashMap<>();
     }
 
+    public static void unload() {
+        Locale locale = LocaleHolder.getLocale();
+        if (locale != null) {
+            locale.close();
+        }
+    }
+
+    public static Message get(Msg msg) {
+        Locale locale = LocaleHolder.getLocale();
+        if (locale == null) {
+            throw new IllegalStateException("Locale has not been initialized.");
+        }
+        return locale.getMessage(msg);
+    }
+
     public void loadLocale() {
         String locale = Settings.LOCALE.toString().toUpperCase();
         Benchmark.start("Initializing locale");
@@ -325,31 +340,16 @@ public class Locale implements Closeable {
         LocaleHolder.locale = null;
     }
 
-    public static void unload() {
-        Locale locale = LocaleHolder.getLocale();
-        if (locale != null) {
-            locale.close();
-        }
-    }
-
-    public static Message get(Msg msg) {
-        Locale locale = LocaleHolder.getLocale();
-        if (locale == null) {
-            throw new IllegalStateException("Locale has not been initialized.");
-        }
-        return locale.getMessage(msg);
-    }
-
     private static class LocaleHolder {
 
         private static Locale locale;
 
-        public static void setLocale(Locale locale) {
-            LocaleHolder.locale = locale;
-        }
-
         public static Locale getLocale() {
             return locale;
+        }
+
+        public static void setLocale(Locale locale) {
+            LocaleHolder.locale = locale;
         }
     }
 }
