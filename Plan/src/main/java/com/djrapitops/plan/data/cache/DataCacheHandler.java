@@ -312,7 +312,6 @@ public class DataCacheHandler extends SessionCache {
      * @param uuid Player's UUID
      */
     public void saveCachedData(UUID uuid) {
-        Log.debug(uuid + ": SaveCachedData");
         DBCallableProcessor saveProcessor = data -> {
             data.access();
             data.setClearAfterSave(true);
