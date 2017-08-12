@@ -259,6 +259,7 @@ public class Plan extends BukkitPlugin<Plan> {
             scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
         }
 
+        getPluginLogger().endAllDebugs();
         Log.info(Locale.get(Msg.DISABLED).toString());
         Locale.unload();
     }
