@@ -247,7 +247,7 @@ public class DumpUtils {
      * @throws IOException when an error while reading occurred
      */
     private static void addErrorLog(DumpLog log, Plan plan) throws IOException {
-        Path errorFile = FileSystems.getDefault().getPath(plan.getDataFolder().getAbsolutePath(), "Errors.txt");
+        Path errorFile = FileSystems.getDefault().getPath(plan.getDataFolder().getAbsolutePath(), Log.getErrorsFilename());
 
         if (Files.notExists(errorFile)) {
             return;

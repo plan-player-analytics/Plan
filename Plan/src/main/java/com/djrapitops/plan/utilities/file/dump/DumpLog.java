@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan.utilities.file.dump;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import main.java.com.djrapitops.plan.Log;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,7 +21,7 @@ import java.util.List;
  */
 public class DumpLog {
 
-    private final List<CharSequence> lines = new ArrayList<>();
+    private List<CharSequence> lines = new ArrayList<>();
 
     /**
      * Writes a header
@@ -90,11 +88,6 @@ public class DumpLog {
      * @param line The content of the line
      */
     private void addLine(CharSequence line) {
-        if (line == null) {
-            lines.add("\n");
-            return;
-        }
-
         lines.add(line.toString());
     }
 
@@ -104,27 +97,7 @@ public class DumpLog {
      * @return The link to the Dump Log
      */
     String upload() {
-        List<String> parts = ImmutableList.copyOf(split()).reverse();
-
-        String lastLink = null;
-        for (String part : parts) {
-            if (lastLink != null) {
-                part += "\n" + lastLink;
-            }
-
-            lastLink = upload(part);
-        }
-
-        return lastLink;
-    }
-
-    /**
-     * Uploads the content to Hastebin using HTTPS and POST
-     *
-     * @param content The content
-     * @return The link to the content
-     */
-    private String upload(String content) {
+        String content = this.toString();
         HttpsURLConnection connection = null;
         try {
             URL url = new URL("https://hastebin.com/documents");
@@ -138,16 +111,13 @@ public class DumpLog {
             connection.setDoOutput(true);
 
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(content);
+            wr.writeBytes(this.toString());
             wr.flush();
             wr.close();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String response = reader.readLine();
-
+            BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(response);
+            JSONObject json = (JSONObject) parser.parse(rd.readLine());
 
             return "https://hastebin.com/" + json.get("key");
         } catch (IOException | ParseException e) {
@@ -158,15 +128,6 @@ public class DumpLog {
                 connection.disconnect();
             }
         }
-    }
-
-    /**
-     * Splits the content of the DumpLog into parts
-     *
-     * @return The splitted content
-     */
-    private Iterable<String> split() {
-        return Splitter.fixedLength(390000).split(this.toString());
     }
 
     @Override
