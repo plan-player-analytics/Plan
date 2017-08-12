@@ -33,9 +33,8 @@ public class DBUtils {
      * BATCH_SIZE.
      *
      * @param <T>     Object type
-     * @param objects Collection of the objects. // * @return Lists with max
-     *                size of BATCH_SIZE.
-     * @return
+     * @param objects Collection of the objects
+     * @return Lists with max size of BATCH_SIZE
      */
     public static <T> List<List<T>> splitIntoBatches(Collection<T> objects) {
         List<List<T>> batches = new ArrayList<>();
@@ -57,9 +56,9 @@ public class DBUtils {
     }
 
     /**
-     * @param <T>
-     * @param objects
-     * @return
+     * @param <T> Object type
+     * @param objects Collection of the objects
+     * @return Lists with max size of BATCH_SIZE
      */
     public static <T> List<List<Container<T>>> splitIntoBatchesId(Map<Integer, List<T>> objects) {
         List<List<Container<T>>> wrappedBatches = new ArrayList<>();
@@ -83,6 +82,11 @@ public class DBUtils {
         return wrappedBatches;
     }
 
+    /**
+     * @param <T> Object type
+     * @param objects Collection of the objects
+     * @return Lists with max size of BATCH_SIZE
+     */
     public static <T> List<List<Container<T>>> splitIntoBatchesWithID(Map<Integer, T> objects) {
         List<List<Container<T>>> wrappedBatches = new ArrayList<>();
 

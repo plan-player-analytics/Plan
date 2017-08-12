@@ -21,11 +21,12 @@ public class CommandUseTableCreator {
     }
 
     /**
-     * @param commandUse
-     * @return
+     * @param commandUse The commands and the amount of times casted
+     * @return The created command use table
      */
     public static String createSortedCommandUseTable(Map<String, Integer> commandUse) {
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
+
         StringBuilder html = new StringBuilder();
         if (sorted.isEmpty()) {
             html.append(Html.ERROR_TABLE_2.parse());
@@ -47,6 +48,7 @@ public class CommandUseTableCreator {
                 i++;
             }
         }
+
         return html.toString();
     }
 }

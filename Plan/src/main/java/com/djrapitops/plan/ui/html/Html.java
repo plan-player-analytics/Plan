@@ -53,8 +53,7 @@ public enum Html {
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td sorttable_customkey=\"REPLACE2\">REPLACE3</td><td sorttable_customkey=\"REPLACE4\">REPLACE5</td></tr>"),
     TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td>REPLACE2</td><td>REPLACE3</td></tr>"),
     ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
-    TABLE_END("</tbody></table>"), //    KILLDATA_NONE("No Kills"),
-    ;
+    TABLE_END("</tbody></table>"); //    KILLDATA_NONE("No Kills"),
 
     private String html;
 
@@ -63,15 +62,15 @@ public enum Html {
     }
 
     /**
-     * @return
+     * @return The HTML String
      */
     public String parse() {
         return html;
     }
 
     /**
-     * @param p
-     * @return
+     * @param p The replacement Strings
+     * @return The parsed HTML String
      */
     public String parse(String... p) {
         Verify.nullCheck(p);
@@ -83,7 +82,7 @@ public enum Html {
     }
 
     /**
-     * @param html
+     * @param html Sets the HTML String
      */
     public void setHtml(String html) {
         this.html = html;

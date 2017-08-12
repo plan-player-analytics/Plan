@@ -23,8 +23,8 @@ public class PlayersTableCreator {
     }
 
     /**
-     * @param data
-     * @return
+     * @param data The list of the {@link UserData} Objects from which the players table should be created
+     * @return The created players table
      */
     public static String createSortablePlayersTable(List<UserData> data) {
         StringBuilder html = new StringBuilder();
@@ -37,6 +37,7 @@ public class PlayersTableCreator {
             if (i >= 750) {
                 break;
             }
+
             try {
                 boolean isBanned = uData.isBanned();
                 boolean isUnknown = uData.getLoginTimes() == 1;
@@ -59,7 +60,9 @@ public class PlayersTableCreator {
                         String.valueOf(uData.getGeolocation())
                 ));
             } catch (NullPointerException ignored) {
+                /* ignored */
             }
+
             i++;
         }
 
