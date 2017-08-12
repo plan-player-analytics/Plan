@@ -116,8 +116,8 @@ public class NicknamesTable extends Table {
     }
 
     /**
-     * @param userId The User ID for which the nicknames should be saved for
-     * @param names The nicknames
+     * @param userId   The User ID for which the nicknames should be saved for
+     * @param names    The nicknames
      * @param lastNick The latest nickname
      * @throws SQLException when an error at saving happens
      */

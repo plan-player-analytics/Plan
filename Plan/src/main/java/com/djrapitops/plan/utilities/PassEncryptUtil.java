@@ -29,6 +29,7 @@ public class PassEncryptUtil {
     public static final int HASH_SIZE_INDEX = 2;
     public static final int SALT_INDEX = 3;
     public static final int PBKDF2_INDEX = 4;
+
     /**
      * Constructor used to hide the public constructor
      */

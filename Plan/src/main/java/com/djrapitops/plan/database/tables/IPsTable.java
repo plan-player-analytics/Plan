@@ -100,7 +100,7 @@ public class IPsTable extends Table {
 
     /**
      * @param userId The User ID for which the IPs should be saved for
-     * @param ips The IPs
+     * @param ips    The IPs
      * @throws SQLException when an error at saving happens
      */
     public void saveIPList(int userId, Set<InetAddress> ips) throws SQLException {

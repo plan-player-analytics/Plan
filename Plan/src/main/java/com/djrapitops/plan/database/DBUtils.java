@@ -56,7 +56,7 @@ public class DBUtils {
     }
 
     /**
-     * @param <T> Object type
+     * @param <T>     Object type
      * @param objects Collection of the objects
      * @return Lists with max size of BATCH_SIZE
      */
@@ -83,7 +83,7 @@ public class DBUtils {
     }
 
     /**
-     * @param <T> Object type
+     * @param <T>     Object type
      * @param objects Collection of the objects
      * @return Lists with max size of BATCH_SIZE
      */

@@ -484,14 +484,6 @@ public class UserData {
         return gmTimes;
     }
 
-    public void setGmTimes(Map<String, Long> times) {
-        if (Verify.notNull(times)) {
-            for (Map.Entry<String, Long> entry : times.entrySet()) {
-                gmTimes.setTime(entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
     /**
      * Set the GM Times object containing playtime in each gamemode.
      *
@@ -500,6 +492,14 @@ public class UserData {
     public void setGmTimes(GMTimes gmTimes) {
         if (Verify.notNull(gmTimes)) {
             this.gmTimes = gmTimes;
+        }
+    }
+
+    public void setGmTimes(Map<String, Long> times) {
+        if (Verify.notNull(times)) {
+            for (Map.Entry<String, Long> entry : times.entrySet()) {
+                gmTimes.setTime(entry.getKey(), entry.getValue());
+            }
         }
     }
 

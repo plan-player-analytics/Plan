@@ -147,11 +147,11 @@ public enum Msg {
         this.identifier = identifier;
     }
 
-    public String getIdentifier() {
-        return identifier;
-    }
-
     public static Map<String, Msg> getIdentifiers() {
         return Arrays.stream(values()).collect(Collectors.toMap(Msg::getIdentifier, Function.identity()));
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 }
