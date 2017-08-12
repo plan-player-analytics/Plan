@@ -2,12 +2,15 @@ package com.djrapitops.pluginbridge.plan.essentials;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Warps;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
-
-import java.io.Serializable;
-import java.util.*;
 
 /**
  * PluginData class for Essentials-plugin.
@@ -53,7 +56,7 @@ public class EssentialsWarps extends PluginData {
         Collections.sort(warps);
         StringBuilder html = new StringBuilder();
         if (warps.isEmpty()) {
-            html.append(Html.TABLELINE_4.parse("No Factions", "", "", ""));
+            html.append(Html.TABLELINE_4.parse(Html.FACTION_NO_FACTIONS.parse(), "", "", ""));
         } else {
             for (String warp : warps) {
                 html.append(Html.TABLELINE_2.parse(warp, "/warp " + warp));
@@ -64,7 +67,11 @@ public class EssentialsWarps extends PluginData {
 
     @Override
     public Serializable getValue(UUID uuid) {
-        return -1;
+        Warps warps = essentials.getWarps();
+        if (!warps.isEmpty()) {
+            return warps.getList().toString();
+        }
+        return "No Warps.";
     }
 
 }

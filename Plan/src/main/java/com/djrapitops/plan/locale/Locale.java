@@ -39,7 +39,7 @@ public class Locale implements Closeable {
     private final Map<Msg, Message> messages;
 
     public Locale(Plan plugin) {
-        LocaleHolder.setLocale(this);
+        LocaleHolder.setLOCALE(this);
         this.plugin = plugin;
         messages = new HashMap<>();
     }
@@ -62,9 +62,9 @@ public class Locale implements Closeable {
             }
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
-        } finally {
-            Benchmark.stop("Enable", "Initializing locale");
+
         }
+        Benchmark.stop("Enable", "Initializing locale");
     }
 
     private void writeNewDefaultLocale() throws IOException {
@@ -316,24 +316,25 @@ public class Locale implements Closeable {
     }
 
     public Message getMessage(Msg msg) {
-        return messages.getOrDefault(msg, new Message(""));
+        Message message = messages.get(msg);
+        return message != null ? message : new Message("");
     }
 
     @Override
     public void close() {
         messages.clear();
-        LocaleHolder.locale = null;
+        LocaleHolder.LOCALE = null;
     }
 
     public static void unload() {
-        Locale locale = LocaleHolder.getLocale();
+        Locale locale = LocaleHolder.getLOCALE();
         if (locale != null) {
             locale.close();
         }
     }
 
     public static Message get(Msg msg) {
-        Locale locale = LocaleHolder.getLocale();
+        Locale locale = LocaleHolder.getLOCALE();
         if (locale == null) {
             throw new IllegalStateException("Locale has not been initialized.");
         }
@@ -342,14 +343,14 @@ public class Locale implements Closeable {
 
     private static class LocaleHolder {
 
-        private static Locale locale;
+        private static Locale LOCALE;
 
-        public static void setLocale(Locale locale) {
-            LocaleHolder.locale = locale;
+        public static void setLOCALE(Locale LOCALE) {
+            LocaleHolder.LOCALE = LOCALE;
         }
 
-        public static Locale getLocale() {
-            return locale;
+        public static Locale getLOCALE() {
+            return LOCALE;
         }
     }
 }
