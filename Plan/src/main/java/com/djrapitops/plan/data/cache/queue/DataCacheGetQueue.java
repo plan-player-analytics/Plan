@@ -27,7 +27,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
      * @param plugin current instance of Plan
      */
     public DataCacheGetQueue(Plan plugin) {
-        super(new ArrayBlockingQueue(Settings.PROCESS_GET_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(Settings.PROCESS_GET_LIMIT.getNumber()));
         setup = new GetSetup(queue, plugin.getDB());
         setup.go();
     }
@@ -50,8 +50,12 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
         }
     }
 
-    public boolean containsUUIDtoBeCached(UUID uuid) {
-        return uuid != null && new ArrayList<>(queue).stream().anyMatch(map -> (map.get(uuid) != null && map.get(uuid).size() >= 2));
+    boolean containsUUIDtoBeCached(UUID uuid) {
+        return uuid != null
+                && queue.stream()
+                .map(map -> map.get(uuid))
+                .filter(Objects::nonNull)
+                .anyMatch(list -> list.size() >= 2);
     }
 }
 
@@ -59,7 +63,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
 
     private Database db;
 
-    GetConsumer(BlockingQueue q, Database db) {
+    GetConsumer(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
         super(q, "GetQueueConsumer");
         this.db = db;
     }

@@ -1,13 +1,9 @@
 <component name="libraryTable">
   <library name="Maven: com.djrapitops:abstract-plugin-framework:2.0.2">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/abstract-plugin-framework/2.0.2/abstract-plugin-framework-2.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Abstract-Plugin-Framework/AbstractPluginFramework/target/AbstractPluginFramework.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/abstract-plugin-framework/2.0.2/abstract-plugin-framework-2.0.2-javadoc.jar!/" />
-    </JAVADOC>
-    <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/djrapitops/abstract-plugin-framework/2.0.2/abstract-plugin-framework-2.0.2-sources.jar!/" />
-    </SOURCES>
+    <JAVADOC />
+    <SOURCES />
   </library>
 </component>
