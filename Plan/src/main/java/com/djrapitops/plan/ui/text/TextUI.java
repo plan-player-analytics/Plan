@@ -84,12 +84,12 @@ public class TextUI {
         final TPSPart tps = d.getTpsPart();
         return new String[]{
                 ball + " Total Players: " + sec + count.getPlayerCount(),
-                //
+
                 ball + " Active: " + sec + activity.getActive().size()
                         + main + " Inactive: " + sec + activity.getInactive().size()
                         + main + " Single Join: " + sec + activity.getJoinedOnce().size()
                         + main + " Banned: " + sec + activity.getBans().size(),
-                //
+
                 ball + " New Players 24h: " + sec + join.get("npday") + main + " 7d: " + sec + d.get("npweek") + main + " 30d: " + sec + d.get("npmonth"),
                 "",
                 ball + " Total Playtime: " + sec + playtime.get("totalplaytime") + main + " Player Avg: " + sec + playtime.get("avgplaytime"),

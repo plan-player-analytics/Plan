@@ -54,27 +54,31 @@ public class ExportUtility {
     }
 
     /**
-     * @param plugin
      * @param analysisData
      * @param rawData
      */
-    public static void export(Plan plugin, AnalysisData analysisData, List<UserData> rawData) {
+    public static void export(AnalysisData analysisData, List<UserData> rawData) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
+
         Benchmark.start("Exporting Html pages");
         try {
             File folder = getFolder();
             Log.debug("Export", "Folder: " + folder.getAbsolutePath());
+
             writePlayersPageHtml(rawData, new File(folder, "players"));
             writeAnalysisHtml(analysisData, new File(folder, "server"));
+
             File playersFolder = getPlayersFolder(folder);
             Log.debug("Export", "Player html files.");
             Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
+
             String playerHtml = HtmlUtils.getStringFromResource("player.html");
-            rawData.forEach(userData -> {
-                writeInspectHtml(userData, playersFolder, playerHtml);
-            });
+
+            Benchmark.start("Exporting Player pages");
+            rawData.forEach(userData -> writeInspectHtml(userData, playersFolder, playerHtml));
+            Benchmark.stop("Exporting Player pages");
         } catch (IOException ex) {
             Log.toLog("ExportUtils.export", ex);
         } finally {
@@ -96,17 +100,18 @@ public class ExportUtility {
     /**
      * @param userData
      * @param playersFolder
-     * @throws FileNotFoundException
-     * @throws IOException
      */
-    public static boolean writeInspectHtml(UserData userData, File playersFolder, String playerHtml) {
+    public static void writeInspectHtml(UserData userData, File playersFolder, String playerHtml) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
-            return false;
+            return;
         }
+
         String name = userData.getName();
+
         if (name.endsWith(".")) {
             name = name.replace(".", "%2E");
         }
+
         if (name.endsWith(" ")) {
             name = name.replace(" ", "%20");
         }
@@ -114,16 +119,17 @@ public class ExportUtility {
         try {
             String inspectHtml = HtmlUtils.replacePlaceholders(playerHtml,
                     PlaceholderUtils.getInspectReplaceRules(userData));
+
             File playerFolder = new File(playersFolder, name);
             playerFolder.mkdirs();
+
             File inspectHtmlFile = new File(playerFolder, "index.html");
             inspectHtmlFile.createNewFile();
+
             Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
         } catch (IOException e) {
-            Log.toLog("Export.inspectPage: " + name, e);
-            return false;
+            Log.toLog("Export.writeInspectHtml: " + name, e);
         }
-        return true;
     }
 
     /**
