@@ -24,7 +24,7 @@ public class ManageCommand extends TreeCommand<Plan> {
      * @param plugin Current instance of Plan
      */
     public ManageCommand(Plan plugin) {
-        super(plugin, "manage,m", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Locale.get(Msg.CMD_USG_MANAGE).toString(), "plan m");
+        super(plugin, "manage,m", CommandType.CONSOLE, Permissions.MANAGE.getPermission(), Locale.get(Msg.CMD_USG_MANAGE) + "", "plan m");
 
     }
 

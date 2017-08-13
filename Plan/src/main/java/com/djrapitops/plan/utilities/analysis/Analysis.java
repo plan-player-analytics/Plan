@@ -167,7 +167,7 @@ public class Analysis {
 
             PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
             PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
-            ExportUtility.export(analysisData, rawData);
+            ExportUtility.export(plugin, analysisData, rawData);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             plugin.processStatus().setStatus("Analysis", "Error: " + e);

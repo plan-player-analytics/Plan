@@ -50,12 +50,8 @@ public class ManageDumpCommand extends SubCommand {
         plugin.getRunnableFactory().createNew(new AbsRunnable("DumpTask") {
             @Override
             public void run() {
-                try {
-                    sender.sendLink("Link to the Dump", DumpUtils.dump(plugin));
-                    sender.sendLink("Report Issues here", "https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new");
-                } finally {
-                    this.cancel();
-                }
+                sender.sendLink("Link to the Dump", DumpUtils.dump(plugin));
+                sender.sendLink("Report Issues here", "https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new");
             }
         }).runTaskAsynchronously();
     }
