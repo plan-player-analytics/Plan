@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
@@ -153,7 +154,7 @@ public class MockUtils {
         return PowerMockito.mock(CommandSender.class);
     }
 
-    public static HttpServer mockHTTPServer() {
+    public static HttpServer mockHTTPServer() throws IOException {
         HttpServer httpServer = PowerMockito.mock(HttpServer.class);
         when(httpServer.getAddress()).thenReturn(new InetSocketAddress(80));
         when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));

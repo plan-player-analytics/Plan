@@ -1,26 +1,23 @@
 package com.djrapitops.pluginbridge.plan.advancedachievements;
 
 import com.hm.achievement.api.AdvancedAchievementsAPI;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 /**
  * PluginData class for AdvancedAchievements-plugin.
- * <p>
+ *
  * Registered to the plugin by AdvancedAchievementsHook.
- * <p>
+ *
  * Gives the amount of achievements as value.
  *
  * @author Rsl1122
- * @see AdvancedAchievementsHook
  * @since 3.1.0
+ * @see AdvancedAchievementsHook
  */
 public class AdvancedAchievementsAchievements extends PluginData {
 
@@ -58,14 +55,6 @@ public class AdvancedAchievementsAchievements extends PluginData {
     private void refreshTotalAchievements() {
         totalAchievements = aaAPI.getPlayersTotalAchievements();
         lastRefresh = MiscUtils.getTime();
-    }
-
-    @Override
-    public Map<UUID, Serializable> getValues(Collection<UUID> uuid) {
-        if (MiscUtils.getTime() - lastRefresh > 60000) {
-            refreshTotalAchievements();
-        }
-        return new HashMap<>(totalAchievements);
     }
 
     @Override
