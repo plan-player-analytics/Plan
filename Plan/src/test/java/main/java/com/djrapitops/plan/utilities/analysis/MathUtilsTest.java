@@ -56,7 +56,7 @@ public class MathUtilsTest {
      *
      */
     @Test
-    public void testAverageLong_Collection() {
+    public void testAverageLongCollection() {
         List<Long> l = new ArrayList<>();
         double exp = 10;
         l.add(0L);
@@ -153,5 +153,13 @@ public class MathUtilsTest {
         l.add(5.0531541);
         double result = MathUtils.sumDouble(l.stream());
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
+    }
+
+    @Test
+    public void testRoundDouble() {
+        double exp = 412.5123125123;
+        double roundedExp = MathUtils.round(exp);
+
+        assertTrue("", Double.compare(412.51, roundedExp) == 0);
     }
 }
