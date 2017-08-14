@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -132,4 +133,13 @@ public class KillHandlingTest {
         assertEquals(exp, result);
     }
 
+    @Test
+    public void testNormalizeMaterialName() {
+        Material material = Material.GOLD_SWORD;
+        String name = material.name();
+        String normalizedName = KillHandling.normalizeMaterialName(material);
+
+        assertEquals(name, "GOLD_SWORD");
+        assertEquals(normalizedName, "Gold Sword");
+    }
 }

@@ -29,7 +29,6 @@ public class PlanGamemodeChangeListener implements Listener {
      */
     public PlanGamemodeChangeListener(Plan plugin) {
         handler = plugin.getHandler();
-
     }
 
     /**
