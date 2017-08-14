@@ -68,6 +68,16 @@ public class PageCacheHandler {
     }
 
     /**
+     * Checks if the page is cached.
+     *
+     * @param identifier The identifier of the page
+     * @return true if the page is cached
+     */
+    public static boolean isCached(String identifier) {
+        return pageCache.asMap().containsKey(identifier);
+    }
+
+    /**
      * Clears the cache from all its contents.
      */
     public static void clearCache() {
