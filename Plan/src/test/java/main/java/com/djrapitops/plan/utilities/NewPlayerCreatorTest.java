@@ -55,7 +55,7 @@ public class NewPlayerCreatorTest {
      *
      */
     @Test
-    public void testCreateNewPlayer_Player() {
+    public void testCreateNewPlayer() {
         IOfflinePlayer p = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer2());
         UserData result = NewPlayerCreator.createNewOfflinePlayer(p);
         UserData exp = new UserData(p);
@@ -73,7 +73,7 @@ public class NewPlayerCreatorTest {
      *
      */
     @Test
-    public void testCreateNewPlayer_OfflinePlayer() {
+    public void testCreateNewOfflinePlayer() {
         IPlayer p = BukkitPlayer.wrap(MockUtils.mockPlayer2());
         UserData result = NewPlayerCreator.createNewPlayer(p);
         UserData exp = new UserData(p);
@@ -91,7 +91,7 @@ public class NewPlayerCreatorTest {
      *
      */
     @Test
-    public void testCreateNewPlayer_OfflinePlayer_Gamemode() {
+    public void testCreateNewPlayerWithGameMode() {
         IOfflinePlayer p = BukkitOfflinePlayer.wrap(MockUtils.mockPlayer());
         UserData result = NewPlayerCreator.createNewPlayer(p, Gamemode.CREATIVE);
         UserData exp = new UserData(p);
