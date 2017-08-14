@@ -56,7 +56,10 @@ public class GeolocationCacheTest {
     public void testCaching() throws Exception {
         TestInit.init();
 
-        for (String ip : ipsToCountries.keySet()) {
+        for (Map.Entry<String, String> entry : ipsToCountries.entrySet()) {
+            String ip = entry.getKey();
+            String expIp = entry.getValue();
+
             String countryFirstCall = GeolocationCacheHandler.getUncachedCountry(ip);
             assertFalse(GeolocationCacheHandler.isCached(ip));
 
@@ -64,7 +67,10 @@ public class GeolocationCacheTest {
             assertTrue(GeolocationCacheHandler.isCached(ip));
 
             String countryThirdCall = GeolocationCacheHandler.getCachedCountry(ip);
-            assertEquals(countryFirstCall, countrySecondCall, countryThirdCall);
+
+            assertEquals(countryFirstCall, countrySecondCall);
+            assertEquals(countrySecondCall, countryThirdCall);
+            assertEquals(countryThirdCall, expIp);
         }
     }
 }
