@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * This class contains the geolocation cache.
@@ -48,12 +47,10 @@ public class GeolocationCacheHandler {
     public static String getCountry(String ipAddress) {
         Log.debug("Started country retrieval from IP Address " + ipAddress);
 
-        Map<String, String> geolocationMap = geolocationCache.asMap();
-        String country = geolocationMap.get(ipAddress);
-
-        Log.debug("Got country from " + ipAddress + " out of cache: " + country + " (if null, country wasn't cached)");
+        String country = getCachedCountry(ipAddress);
 
         if (country != null) {
+            Log.debug("Got cached country from IP Address " + ipAddress + ": " + country);
             return country;
         } else {
             country = getUncachedCountry(ipAddress);
@@ -77,7 +74,7 @@ public class GeolocationCacheHandler {
      * @see <a href="http://freegeoip.net">http://freegeoip.net</a>
      * @see #getCountry(String)
      */
-    private static String getUncachedCountry(String ipAddress) {
+    public static String getUncachedCountry(String ipAddress) {
         Benchmark.start("getUncachedCountry");
 
         URL url;
@@ -103,5 +100,25 @@ public class GeolocationCacheHandler {
         } finally {
             Benchmark.stop("getUncachedCountry");
         }
+    }
+
+    /**
+     * Returns the cached country
+     *
+     * @param ipAddress The IP Address which is retrieved out of the cache
+     * @return The cached country, {@code null} if the country is not cached
+     */
+    public static String getCachedCountry(String ipAddress) {
+        return geolocationCache.getIfPresent(ipAddress);
+    }
+
+    /**
+     * Checks if the IP Address is cached
+     *
+     * @param ipAddress The IP Address which is checked
+     * @return true if the IP Address is cached
+     */
+    public static boolean isCached(String ipAddress) {
+        return geolocationCache.asMap().containsKey(ipAddress);
     }
 }

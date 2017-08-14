@@ -31,9 +31,6 @@ public class RandomData {
         return test;
     }
 
-    /**
-     * Random enough.
-     */
     public static String randomString(int size) {
         return RandomStringUtils.random(size);
     }
