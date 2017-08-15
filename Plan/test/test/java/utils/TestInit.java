@@ -47,26 +47,7 @@ public class TestInit {
         return t;
     }
 
-    private static File getTestFolder() {
-        File testFolder = new File("temporaryTestFolder");
-        testFolder.mkdir();
-        return testFolder;
-    }
-
-    public static void clean() throws IOException {
-        clean(getTestFolder());
-    }
-
-    public static void clean(File testFolder) throws IOException {
-        if (testFolder.exists() && testFolder.isDirectory()) {
-            for (File f : testFolder.listFiles()) {
-                Files.deleteIfExists(f.toPath());
-            }
-        }
-    }
-
-    @Deprecated // Use Test.init instead.
-    public void setUp(boolean clearOnStart) throws Exception {
+    private void setUp(boolean clearOnStart) throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -106,6 +87,24 @@ public class TestInit {
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.processStatus()).thenReturn(process);
         when(planMock.fetch()).thenReturn(fetch);
+    }
+
+    private static File getTestFolder() {
+        File testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
+    }
+
+    public static void clean() throws IOException {
+        clean(getTestFolder());
+    }
+
+    public static void clean(File testFolder) throws IOException {
+        if (testFolder.exists() && testFolder.isDirectory()) {
+            for (File f : testFolder.listFiles()) {
+                Files.deleteIfExists(f.toPath());
+            }
+        }
     }
 
     private Server mockServer() {
