@@ -589,7 +589,7 @@ public abstract class SQLDB extends Database {
             if (success) {
                 commit();
             } else {
-                rollback();
+                rollback(); // TODO Tests for this case
             }
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
