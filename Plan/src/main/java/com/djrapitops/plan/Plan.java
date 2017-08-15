@@ -147,7 +147,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            if (Check.ErrorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
+            if (Check.errorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
                 Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             } else {
                 disablePlugin();
@@ -316,7 +316,7 @@ public class Plan extends BukkitPlugin<Plan> {
             return false;
         }
 
-        return Check.ErrorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
+        return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
     }
 
     private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {

@@ -19,21 +19,21 @@ import static org.junit.Assert.assertTrue;
  */
 public class PassEncryptTest {
 
-    private final List<String> passwords = new ArrayList<>();
-    private final Map<String, String> passwordMap = new HashMap<>();
+    private final List<String> PASSWORDS = new ArrayList<>();
+    private final Map<String, String> PASSWORD_MAP = new HashMap<>();
 
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, 50).forEach(i -> passwords.add(RandomData.randomString(RandomData.randomInt(1, 100))));
+        IntStream.range(0, 50).forEach(i -> PASSWORDS.add(RandomData.randomString(RandomData.randomInt(1, 100))));
 
-        for (String password : passwords) {
-            passwordMap.put(password, PassEncryptUtil.createHash(password));
+        for (String password : PASSWORDS) {
+            PASSWORD_MAP.put(password, PassEncryptUtil.createHash(password));
         }
     }
 
     @Test
     public void testVerification() throws Exception {
-        for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
+        for (Map.Entry<String, String> entry : PASSWORD_MAP.entrySet()) {
             String password = entry.getKey();
             String hash = entry.getValue();
 

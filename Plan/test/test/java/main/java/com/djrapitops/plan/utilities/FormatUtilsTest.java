@@ -9,11 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -26,40 +25,24 @@ import static org.junit.Assert.*;
 @PrepareForTest(JavaPlugin.class)
 public class FormatUtilsTest {
 
-    /**
-     *
-     */
-    public FormatUtilsTest() {
-    }
-
-    /**
-     *
-     */
     @Before
     public void setUp() throws Exception {
         TestInit.init();
     }
 
-    /**
-     *
-     */
     @Test
-    public void testFormatTimeAmount() throws Exception {
-        TestInit.init();
-        long second = 1000L;
+    public void testFormatTimeAmount() {
+        long ms = 1000L;
         String expResult = "1s";
-        String result = FormatUtils.formatTimeAmount(second);
+        String result = FormatUtils.formatTimeAmount(ms);
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
-    public void testFormatTimeAmountSinceDate() throws Exception {
-        TestInit.init();
+    public void testFormatTimeAmountSinceDate() {
         Date before = new Date(300000L);
         Date now = new Date(310000L);
+
         String expResult = "10s";
         String result = FormatUtils.formatTimeAmountDifference(before.getTime(), now.getTime());
         assertEquals(expResult, result);
@@ -67,8 +50,7 @@ public class FormatUtilsTest {
 
     @Test
     public void testFormatTimeStamp() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd',' HH':'mm");
-        dateFormat.setCalendar(Calendar.getInstance(Locale.ENGLISH));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, HH:mm", Locale.ENGLISH);
 
         Date date = new Date();
         date.setTime(0);
@@ -82,8 +64,7 @@ public class FormatUtilsTest {
 
     @Test
     public void testFormatTimeStampYear() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd YYYY',' HH':'mm");
-        dateFormat.setCalendar(Calendar.getInstance(Locale.ENGLISH));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd YYYY, HH:mm", Locale.ENGLISH);
 
         Date date = new Date();
         date.setTime(0);
@@ -95,9 +76,20 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
+    @Test
+    public void testFormatTimeStampSecond() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, HH:mm:ss", Locale.ENGLISH);
+
+        Date date = new Date();
+        date.setTime(0);
+
+        String expResult = dateFormat.format(date);
+
+        long epochZero = 0L;
+        String result = FormatUtils.formatTimeStampSecond(epochZero);
+        assertEquals(expResult, result);
+    }
+
     @Test
     public void testRemoveLetters() {
         String dataPoint = "435729847jirggu.eiwb¤#¤%¤#";
@@ -106,9 +98,6 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testRemoveNumbers() {
         String dataPoint = "34532453.5 $";
@@ -117,9 +106,6 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testRemoveNumbers2() {
         String dataPoint = "l43r4545tl43  4.5";
@@ -128,9 +114,6 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testParseVersionNumber() {
         String versionString = "2.10.2";
@@ -139,9 +122,6 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testVersionNumber() {
         String versionString = "2.10.2";
@@ -151,9 +131,6 @@ public class FormatUtilsTest {
         assertTrue("Higher version not higher", result > result2);
     }
 
-    /**
-     *
-     */
     @Test
     public void testMergeArrays() {
         String[][] arrays = new String[][]{new String[]{"Test", "One"}, new String[]{"Test", "Two"}};
@@ -162,9 +139,6 @@ public class FormatUtilsTest {
         assertArrayEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testFormatLocation() {
         World mockWorld = MockUtils.mockWorld();
@@ -174,24 +148,16 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testCutDecimals() throws Exception {
-        TestInit.init();
         double d = 0.05234;
         String expResult = "0,05";
         String result = FormatUtils.cutDecimals(d);
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testCutDecimals2() throws Exception {
-        TestInit.init();
         double d = 0.05634;
         String expResult = "0,06";
         String result = FormatUtils.cutDecimals(d);

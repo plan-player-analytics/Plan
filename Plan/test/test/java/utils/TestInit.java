@@ -109,10 +109,12 @@ public class TestInit {
 
     private Server mockServer() {
         Server mockServer = PowerMockito.mock(Server.class);
+
+        OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
+
         when(mockServer.getIp()).thenReturn("0.0.0.0");
         when(mockServer.getMaxPlayers()).thenReturn(20);
         when(mockServer.getName()).thenReturn("Bukkit");
-        OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
         when(mockServer.getOfflinePlayers()).thenReturn(ops);
         return mockServer;
     }
