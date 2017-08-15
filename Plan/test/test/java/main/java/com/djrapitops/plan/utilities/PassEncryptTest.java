@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -23,27 +23,11 @@ public class PassEncryptTest {
     private final Map<String, String> passwordMap = new HashMap<>();
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         IntStream.range(0, 50).forEach(i -> passwords.add(RandomData.randomString(RandomData.randomInt(1, 100))));
-    }
 
-    @Before
-    @Test
-    public void testHashing() throws Exception {
         for (String password : passwords) {
             passwordMap.put(password, PassEncryptUtil.createHash(password));
-        }
-    }
-
-    @Test
-    public void testConsistency() throws Exception {
-        for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
-            String password = entry.getKey();
-            String expHash = entry.getValue();
-
-            String secondHashRun = PassEncryptUtil.createHash(password);
-
-            assertEquals(expHash, secondHashRun);
         }
     }
 
@@ -54,6 +38,7 @@ public class PassEncryptTest {
             String hash = entry.getValue();
 
             assertTrue(PassEncryptUtil.verifyPassword(password, hash));
+            assertFalse(PassEncryptUtil.verifyPassword(RandomData.randomString(RandomData.randomInt(1, 100)), hash));
         }
     }
 }
