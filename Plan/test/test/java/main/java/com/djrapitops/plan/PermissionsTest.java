@@ -26,7 +26,7 @@ public class PermissionsTest {
      */
     @Test
     public void testGetPermission() {
-        assertEquals("plan.inspect.other", Permissions.INSPECT_OTHER.getPermission());
+        assertEquals("plan.inspect.other", Permissions.INSPECT_OTHER.getPerm());
     }
 
 }
