@@ -133,7 +133,7 @@ public class DumpLog {
             connection.setDoOutput(true);
 
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(this.toString());
+            wr.writeBytes(content);
             wr.flush();
             wr.close();
 

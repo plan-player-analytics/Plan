@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>PlanPluginBridge</artifactId>
-    <version>3.6.0</version>
+    <version>3.6.3</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>Plan</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
