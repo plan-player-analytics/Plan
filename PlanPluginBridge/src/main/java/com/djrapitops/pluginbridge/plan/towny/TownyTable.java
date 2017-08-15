@@ -4,16 +4,16 @@ import com.massivecraft.factions.entity.MPlayer;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * PluginData class for Towny-plugin.
@@ -45,7 +45,7 @@ public class TownyTable extends PluginData {
         StringBuilder html = new StringBuilder();
         List<Town> towns = getTopTowns();
         if (towns.isEmpty()) {
-            html.append(Html.TABLELINE_4.parse(Html.TOWN_NO_TOWNS.parse(), "", "", ""));
+            html.append(Html.TABLELINE_4.parse("No Towns", "", "", ""));
         } else {
             for (Town t : towns) {
                 if (t == null) {
