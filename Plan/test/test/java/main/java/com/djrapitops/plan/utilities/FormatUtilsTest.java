@@ -13,7 +13,9 @@ import test.java.utils.TestInit;
 import test.java.utils.MockUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -66,6 +68,7 @@ public class FormatUtilsTest {
     @Test
     public void testFormatTimeStamp() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd',' HH':'mm");
+        dateFormat.setCalendar(Calendar.getInstance(Locale.ENGLISH));
 
         Date date = new Date();
         date.setTime(0);
@@ -80,6 +83,7 @@ public class FormatUtilsTest {
     @Test
     public void testFormatTimeStampYear() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd YYYY',' HH':'mm");
+        dateFormat.setCalendar(Calendar.getInstance(Locale.ENGLISH));
 
         Date date = new Date();
         date.setTime(0);
