@@ -6,6 +6,7 @@
   <version>3.6.3</version>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
+    <testSourceDirectory>${basedir}/test</testSourceDirectory>
     <defaultGoal>clean package install</defaultGoal>
     <resources>
       <resource>
@@ -20,11 +21,6 @@
         </includes>
       </resource>
     </resources>
-    <testResources>
-      <testResource>
-        <directory>${baseDir}/test</directory>
-      </testResource>
-    </testResources>
     <finalName>${project.name}</finalName>
     <plugins>
       <plugin>
@@ -178,6 +174,9 @@
   </dependencies>
   <properties>
     <sonar.language>java</sonar.language>
+    <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
