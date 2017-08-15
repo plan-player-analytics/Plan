@@ -50,4 +50,13 @@ public class PageCacheHandlerTest {
         PageCacheHandler.clearCache();
         assertFalse(PageCacheHandler.isCached(IDENTIFIER));
     }
+
+    @Test
+    public void testRemoveIf() {
+        PageCacheHandler.cachePage(IDENTIFIER, LOADER);
+        assertTrue(PageCacheHandler.isCached(IDENTIFIER));
+
+        PageCacheHandler.removeIf(identifier -> identifier.equals(IDENTIFIER));
+        assertFalse(PageCacheHandler.isCached(IDENTIFIER));
+    }
 }

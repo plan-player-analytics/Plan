@@ -4,6 +4,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import main.java.com.djrapitops.plan.ui.webserver.response.Response;
 
+import java.util.Map;
+import java.util.function.Predicate;
+
 /**
  * This class contains the page cache.
  * <p>
@@ -78,9 +81,24 @@ public class PageCacheHandler {
     }
 
     /**
+     * Removes all of the elements of this cache that satisfy the given predicate.
+     *
+     * @param filter a predicate which returns true for entries to be removed
+     */
+    public static void removeIf(Predicate<String> filter) {
+        Map<String, Response> pageCacheMap = pageCache.asMap();
+
+        for (String identifier : pageCacheMap.keySet()) {
+            if (filter.test(identifier)) {
+                pageCache.invalidate(identifier);
+            }
+        }
+    }
+
+    /**
      * Clears the cache from all its contents.
      */
     public static void clearCache() {
-        pageCache.asMap().clear();
+        pageCache.invalidateAll();
     }
 }
