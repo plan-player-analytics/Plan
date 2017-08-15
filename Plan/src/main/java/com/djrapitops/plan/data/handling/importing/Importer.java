@@ -33,20 +33,8 @@ public abstract class Importer {
     /**
      * Constructor.
      */
-    public Importer() {
+    Importer() {
         info = "No info specified";
-    }
-
-    /**
-     * Import data from users.
-     *
-     * @param uuids UUIDs of players to import
-     * @return Success of import
-     * @deprecated Use importData(Collection, String...) instead (new system)
-     */
-    @Deprecated
-    public boolean importData(Collection<UUID> uuids) {
-        return importData(uuids, new String[0]);
     }
 
     /**
@@ -155,19 +143,6 @@ public abstract class Importer {
      */
     public final void setInfo(String info) {
         this.info = info;
-    }
-
-    /**
-     * Import data of a single player.
-     *
-     * @param uuid UUID of the player
-     * @return HandlingInfo used to modify saved userdata.
-     * @deprecated Deprecated (new system), use importData(UUID, String...)
-     * instead
-     */
-    @Deprecated
-    public HandlingInfo importData(UUID uuid) {
-        return importData(uuid, new String[0]);
     }
 
     /**
