@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -13,6 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -63,26 +63,30 @@ public class FormatUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
-    @Ignore
     public void testFormatTimeStamp() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd',' HH':'mm");
+
+        Date date = new Date();
+        date.setTime(0);
+
+        String expResult = dateFormat.format(date);
+
         long epochZero = 0L;
-        String expResult = "Jan 01, 01:00";
         String result = FormatUtils.formatTimeStamp(epochZero);
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
-    @Ignore
     public void testFormatTimeStampYear() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd YYYY',' HH':'mm");
+
+        Date date = new Date();
+        date.setTime(0);
+
+        String expResult = dateFormat.format(date);
+
         long epochZero = 0L;
-        String expResult = "Jan 01 1970, 01:00";
         String result = FormatUtils.formatTimeStampYear(epochZero);
         assertEquals(expResult, result);
     }
