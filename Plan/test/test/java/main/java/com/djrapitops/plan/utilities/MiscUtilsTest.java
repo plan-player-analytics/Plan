@@ -43,9 +43,6 @@ public class MiscUtilsTest {
     public void setUp() throws Exception {
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPlayerDisplaynameArgsPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
@@ -55,9 +52,6 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPlayerDisplaynameArgsNoPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
@@ -67,9 +61,6 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPlayerDisplaynameNoArgsPerm() {
         String[] args = new String[]{};
@@ -79,9 +70,6 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPlayerDisplaynameNoArgsNoPerm() {
         String[] args = new String[]{};
@@ -91,9 +79,6 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPlayerDisplaynameOwnNameNoPerm() {
         String[] args = new String[]{"testname2"};
@@ -103,9 +88,6 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPlayerDisplaynameConsole() {
         String[] args = new String[]{"TestConsoleSender"};
@@ -115,9 +97,6 @@ public class MiscUtilsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     *
-     */
     @Test
     @Ignore("DB mock")
     public void testGetMatchingDisplaynames() throws Exception {
@@ -131,9 +110,6 @@ public class MiscUtilsTest {
         assertEquals(exp2, result.get(1));
     }
 
-    /**
-     *
-     */
     @Test
     @Ignore("DB mock")
     public void testGetMatchingDisplaynames2() throws Exception {

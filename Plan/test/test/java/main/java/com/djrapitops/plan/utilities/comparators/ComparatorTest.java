@@ -20,8 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 public class ComparatorTest {
 
-    private Random r = new Random();
-
     @Test
     public void testHandlingInfoComparator() {
         List<HandlingInfo> test = RandomData.randomHandlingInfo();

@@ -60,7 +60,7 @@ public class AnalysisCacheHandler {
      * @return true if there is data in the cache.
      */
     public boolean isCached() {
-        return (cache != null);
+        return cache != null;
     }
 
     /**

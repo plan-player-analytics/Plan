@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
+import test.java.utils.MockUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

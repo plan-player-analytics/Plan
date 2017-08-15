@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.handling.KillHandling;
 import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -68,7 +69,7 @@ public class PlanDeathEventListener implements Listener {
                 }
             }
 
-            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, itemInHand.name()));
+            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, KillHandling.normalizeMaterialName(itemInHand)));
             return;
         }
 

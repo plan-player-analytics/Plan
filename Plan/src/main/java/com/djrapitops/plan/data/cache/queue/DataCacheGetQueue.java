@@ -50,8 +50,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
     }
 
     boolean containsUUIDtoBeCached(UUID uuid) {
-        return uuid != null
-                && queue.stream()
+        return uuid != null && queue.stream()
                 .map(map -> map.get(uuid))
                 .filter(Objects::nonNull)
                 .anyMatch(list -> list.size() >= 2);

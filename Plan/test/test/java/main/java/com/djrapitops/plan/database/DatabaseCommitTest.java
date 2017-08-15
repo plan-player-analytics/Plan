@@ -29,17 +29,17 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class DatabaseCommitTest {
 
-
     private Plan plan;
     private Database db;
     private int rows;
-
 
     @Before
     public void setUp() throws Exception {
@@ -89,7 +89,7 @@ public class DatabaseCommitTest {
         db.saveCommandUse(c);
         db.close();
         db.init();
-        assertTrue(!db.getCommandUse().isEmpty());
+        assertFalse(db.getCommandUse().isEmpty());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class DatabaseCommitTest {
         db.getTpsTable().saveTPSData(tps);
         db.close();
         db.init();
-        assertTrue(!db.getTpsTable().getTPSData().isEmpty());
+        assertFalse(db.getTpsTable().getTPSData().isEmpty());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class DatabaseCommitTest {
         db.saveUserData(userData);
         db.close();
         db.init();
-        assertTrue(!db.getUserDataForUUIDS(Collections.singletonList(MockUtils.getPlayerUUID())).isEmpty());
+        assertFalse(db.getUserDataForUUIDS(Collections.singletonList(MockUtils.getPlayerUUID())).isEmpty());
     }
 
     @Test
@@ -120,17 +120,16 @@ public class DatabaseCommitTest {
         db.saveMultipleUserData(data);
         db.close();
         db.init();
-        assertTrue(!db.getUserDataForUUIDS(uuids).isEmpty());
+        assertFalse(db.getUserDataForUUIDS(uuids).isEmpty());
     }
 
     @Test
     public void testCommitToDBFile5() throws SQLException, PassEncryptUtil.CannotPerformOperationException {
         db.init();
-        List<UserData> data = RandomData.randomUserData();
         WebUser webUser = new WebUser("Test", "SHA1:rioegnorgiengoieng:oiegnoeigneo:352", 0);
         db.getSecurityTable().addNewUser(webUser);
         db.close();
         db.init();
-        assertTrue(webUser.equals(db.getSecurityTable().getWebUser("Test")));
+        assertEquals(webUser, db.getSecurityTable().getWebUser("Test"));
     }
 }

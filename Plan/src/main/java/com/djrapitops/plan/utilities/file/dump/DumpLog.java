@@ -90,12 +90,7 @@ public class DumpLog {
      * @param line The content of the line
      */
     private void addLine(CharSequence line) {
-        if (line == null) {
-            lines.add("\n");
-            return;
-        }
-
-        lines.add(line.toString());
+        lines.add(line == null ? "\n" : line.toString());
     }
 
     /**
@@ -138,16 +133,13 @@ public class DumpLog {
             connection.setDoOutput(true);
 
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(content);
+            wr.writeBytes(this.toString());
             wr.flush();
             wr.close();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String response = reader.readLine();
-
             JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(response);
+            JSONObject json = (JSONObject) parser.parse(reader.readLine());
 
             return "https://hastebin.com/" + json.get("key");
         } catch (IOException | ParseException e) {

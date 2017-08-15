@@ -36,18 +36,12 @@ public class SessionCacheTest {
     public SessionCacheTest() {
     }
 
-    /**
-     *
-     */
     @Before
     public void setUp() throws Exception {
         TestInit.init();
         test = new SessionCache();
     }
 
-    /**
-     *
-     */
     @Test
     public void testStartSession() {
         UUID uuid = MockUtils.getPlayerUUID();
@@ -55,9 +49,6 @@ public class SessionCacheTest {
         assertTrue("Didn't contain new session", test.getActiveSessions().containsKey(uuid));
     }
 
-    /**
-     *
-     */
     @Test
     public void testEndSession() {
         UUID uuid = MockUtils.getPlayerUUID();
@@ -69,9 +60,6 @@ public class SessionCacheTest {
         assertTrue("Session not valid", testSession.isValid());
     }
 
-    /**
-     *
-     */
     @Test
     public void testAddSession() {
         UUID uuid = MockUtils.getPlayerUUID();

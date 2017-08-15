@@ -54,8 +54,8 @@ public class PluginConfigSectionHandler {
         String pluginName = dataSource.getSourcePlugin();
         if (!section.getBoolean(pluginName + ".Enabled")) {
             return false;
-
         }
+
         String source = dataSource.placeholder;
         return section.getBoolean(pluginName + ".Data." + source);
     }
