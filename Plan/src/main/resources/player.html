@@ -741,12 +741,12 @@
 
         function openFunc(i) {
             return function() {
-                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') == "inline") {
+                if (window.getComputedStyle(document.getElementById("navbutton")).getPropertyValue('display') === "inline") {
                     closeNav();
                 }
                 var max = navButtons.length;
                 for (var j = 0; j < max; j++) {
-                    if (j == i) {
+                    if (j === i) {
                         navButtons[j].classList.add('active');
                         continue;
                     }
@@ -770,9 +770,7 @@
             var begin = new Date(%refreshlong%);
             var seconds = now.getTime() - begin.getTime();
 
-            var out = formatTime(seconds);
-
-            document.getElementById('divTime').innerHTML = out;
+            document.getElementById('divTime').innerHTML = formatTime(seconds);
             setTimeout('countUpTimer()', 1000);
         }
     </script>

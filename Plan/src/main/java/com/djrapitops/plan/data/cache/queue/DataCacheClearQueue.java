@@ -95,7 +95,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 
 class ClearSetup extends Setup<UUID> {
 
-    public ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
+    ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
         super(new ClearConsumer(q, handler));
     }
 }
