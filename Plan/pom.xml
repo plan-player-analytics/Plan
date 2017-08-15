@@ -113,6 +113,11 @@
                 </includes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>${baseDir}/test</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -165,18 +170,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.1.8</version>
-                <configuration>
-                    <targetClasses>
-                        <param>main.java.com.djrapitops.plan.*</param>
-                    </targetClasses>
-                    <targetTests>
-                        <param>test.java.main.java.com.djrapitops.plan.*</param>
-                    </targetTests>
-                    <timeoutConstant>1000</timeoutConstant>
-                </configuration>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

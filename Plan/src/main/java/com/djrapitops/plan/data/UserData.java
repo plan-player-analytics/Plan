@@ -212,8 +212,8 @@ public class UserData {
         if (addIps.isEmpty()) {
             return;
         }
-        ips.addAll(addIps.stream().filter(Verify::notNull).collect(Collectors.toList()));
 
+        ips.addAll(addIps.stream().filter(Verify::notNull).collect(Collectors.toList()));
     }
 
     /**
