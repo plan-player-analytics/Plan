@@ -27,6 +27,10 @@ import java.util.stream.Collectors;
  */
 public class DumpUtils {
 
+    private DumpUtils() {
+        throw new IllegalStateException("Utility Class");
+    }
+
     /**
      * Dumps the following things to Hastebin
      * <ul>
