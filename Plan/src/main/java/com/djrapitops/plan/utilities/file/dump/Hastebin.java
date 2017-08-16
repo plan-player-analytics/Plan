@@ -66,7 +66,7 @@ public class Hastebin {
      * @param content The content
      * @return The link to the content
      */
-    private static String upload(String content) throws IOException, ParseException {
+    public static String upload(String content) throws IOException, ParseException {
         HttpsURLConnection connection = null;
         try {
             URL url = new URL("https://hastebin.com/documents");
