@@ -44,7 +44,13 @@ public abstract class TimeKeeper {
         this(new HashMap<>());
     }
 
-    public void setTime(String state, long time) throws IllegalArgumentException {
+    /**
+     * Sets a specific time for a state.
+     * @param state State to set
+     * @param time Time in ms the state has been active for
+     * @throws IllegalArgumentException If given state is null
+     */
+    public void setTime(String state, long time) {
         times.put(Verify.nullCheck(state), time);
     }
 

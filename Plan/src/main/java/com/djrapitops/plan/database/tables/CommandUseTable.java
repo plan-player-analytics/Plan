@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -77,10 +78,9 @@ public class CommandUseTable extends Table {
     /**
      * @param data
      * @throws SQLException
-     * @throws NullPointerException
      */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException, NullPointerException {
-        if (data.isEmpty()) {
+    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
+        if (Verify.isEmpty(data)) {
             return;
         }
 

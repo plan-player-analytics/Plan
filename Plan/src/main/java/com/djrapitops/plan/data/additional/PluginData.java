@@ -200,10 +200,11 @@ public abstract class PluginData {
      * @param uuid UUID of the player the value belongs to.
      * @return Long, Integer, Double, Boolean or String, return -1 if the player
      * has no value.
+     * @throws UnsupportedOperationException if implementing class has not overridden the method.
      */
     public abstract Serializable getValue(UUID uuid);
 
-    public Map<UUID, Serializable> getValues(Collection<UUID> uuids) throws UnsupportedOperationException {
+    public Map<UUID, Serializable> getValues(Collection<UUID> uuids) {
         throw new UnsupportedOperationException("Not overridden.");
     }
 

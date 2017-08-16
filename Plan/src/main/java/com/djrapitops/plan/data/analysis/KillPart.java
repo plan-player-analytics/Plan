@@ -48,7 +48,14 @@ public class KillPart extends RawData {
         addValue("avgplayerkills", MathUtils.averageLong(playerKillAmount, playerCount));
     }
 
-    public void addKills(UUID uuid, List<KillData> kills) throws IllegalArgumentException {
+    /**
+     * Adds kills to the dataset.
+     *
+     * @param uuid  Player whose kills are being added
+     * @param kills all kills of a player
+     * @throws IllegalArgumentException if kills is null
+     */
+    public void addKills(UUID uuid, List<KillData> kills) {
         Verify.nullCheck(kills);
         playerKills.put(uuid, kills);
     }

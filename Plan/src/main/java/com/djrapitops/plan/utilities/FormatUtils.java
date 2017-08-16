@@ -150,7 +150,7 @@ public class FormatUtils {
      * @return parsed double - for example 1,11
      * @throws NumberFormatException When wrong format
      */
-    public static int parseVersionNumber(String versionString) throws NumberFormatException {
+    public static int parseVersionNumber(String versionString) {
         return FormattingUtils.parseVersionNumber(versionString);
     }
 

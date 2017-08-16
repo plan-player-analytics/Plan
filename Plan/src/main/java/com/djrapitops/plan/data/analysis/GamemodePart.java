@@ -83,7 +83,13 @@ public class GamemodePart extends RawData {
         }
     }
 
-    public void addTo(String gm, long amount) throws IllegalArgumentException {
+    /**
+     * Adds time to a gamemode.
+     * @param gm Name of Gamemode
+     * @param amount milliseconds to add
+     * @throws IllegalArgumentException if gm is null
+     */
+    public void addTo(String gm, long amount) {
         Verify.nullCheck(gm);
         switch (gm) {
             case "SURVIVAL":

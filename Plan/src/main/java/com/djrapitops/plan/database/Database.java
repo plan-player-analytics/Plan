@@ -255,7 +255,7 @@ public abstract class Database {
      * @throws SQLException         If a database error occurs.
      * @throws NullPointerException If the database has not initialized tables.
      */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException, NullPointerException {
+    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
         commandUseTable.saveCommandUse(data);
     }
 

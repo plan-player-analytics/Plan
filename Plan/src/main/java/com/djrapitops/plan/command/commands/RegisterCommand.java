@@ -70,7 +70,7 @@ public class RegisterCommand extends SubCommand {
         return true;
     }
 
-    private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws NumberFormatException, PassEncryptUtil.CannotPerformOperationException {
+    private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
         if (Check.isTrue(args.length >= 3, notEnoughArgsMsg, sender)) {
             int permLevel;
             permLevel = Integer.parseInt(args[2]);
