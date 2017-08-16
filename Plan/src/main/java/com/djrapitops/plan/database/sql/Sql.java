@@ -6,7 +6,11 @@ public class Sql {
     public static final String LONG = "bigint";
     public static final String BOOL = "boolean";
 
-    public static String VARCHAR(int length) {
-        return "varchar(" + length + ")";
+    private Sql() {
+        throw new IllegalStateException("Variable Class");
+    }
+
+    public static String varchar(int length) {
+        return "varchar("+length+")";
     }
 }

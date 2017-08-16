@@ -38,7 +38,7 @@ public class CommandUseTable extends Table {
     public boolean createTable() {
         try {
             execute(TableSqlParser.createTable(tableName)
-                    .column(columnCommand, Sql.VARCHAR(20)).notNull()
+                    .column(columnCommand, Sql.varchar(20)).notNull()
                     .column(columnTimesUsed, Sql.INT).notNull()
                     .toString()
             );

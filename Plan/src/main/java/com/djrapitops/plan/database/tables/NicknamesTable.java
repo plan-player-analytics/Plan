@@ -40,7 +40,7 @@ public class NicknamesTable extends UserIDTable {
         try {
             execute(TableSqlParser.createTable(tableName)
                     .column(columnUserID, Sql.INT).notNull()
-                    .column(columnNick, Sql.VARCHAR(75)).notNull()
+                    .column(columnNick, Sql.varchar(75)).notNull()
                     .column(columnCurrent, Sql.BOOL).notNull().defaultValue(false)
                     .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
                     .toString()
