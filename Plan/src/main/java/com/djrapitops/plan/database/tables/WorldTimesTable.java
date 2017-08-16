@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,13 +52,13 @@ public class WorldTimesTable extends UserIDTable {
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnWorldId + " integer NOT NULL, "
-                    + columnPlaytime + " bigint NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + "), "
-                    + "FOREIGN KEY(" + columnWorldId + ") REFERENCES " + worldTable.getTableName() + "(" + worldTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnWorldId, Sql.INT).notNull()
+                    .column(columnPlaytime, Sql.LONG).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {

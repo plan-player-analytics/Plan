@@ -5,6 +5,8 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
@@ -48,15 +50,15 @@ public class TPSTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnDate + " bigint NOT NULL, "
-                    + columnTPS + " double NOT NULL, "
-                    + columnPlayers + " integer NOT NULL, "
-                    + columnCPUUsage + " double NOT NULL, "
-                    + columnRAMUsage + " bigint NOT NULL, "
-                    + columnEntities + " integer NOT NULL, "
-                    + columnChunksLoaded + " integer NOT NULL"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnDate, Sql.LONG).notNull()
+                    .column(columnTPS, Sql.DOUBLE).notNull()
+                    .column(columnPlayers, Sql.INT).notNull()
+                    .column(columnCPUUsage, Sql.DOUBLE).notNull()
+                    .column(columnRAMUsage, Sql.LONG).notNull()
+                    .column(columnEntities, Sql.INT).notNull()
+                    .column(columnChunksLoaded, Sql.INT).notNull()
+                    .toString()
             );
             int version = getVersion();
             if (version < 6) {

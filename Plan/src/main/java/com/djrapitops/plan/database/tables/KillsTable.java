@@ -4,6 +4,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
@@ -40,14 +42,14 @@ public class KillsTable extends Table {
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnKillerUserID + " integer NOT NULL, "
-                    + columnVictimUserID + " integer NOT NULL, "
-                    + columnWeapon + " varchar(30) NOT NULL, "
-                    + columnDate + " bigint NOT NULL, "
-                    + "FOREIGN KEY(" + columnKillerUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + "), "
-                    + "FOREIGN KEY(" + columnVictimUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnKillerUserID, Sql.INT).notNull()
+                    .column(columnVictimUserID, Sql.INT).notNull()
+                    .column(columnWeapon, Sql.VARCHAR(30)).notNull()
+                    .column(columnDate, Sql.LONG).notNull()
+                    .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {

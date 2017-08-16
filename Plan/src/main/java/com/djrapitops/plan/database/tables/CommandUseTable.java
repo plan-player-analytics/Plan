@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
@@ -35,10 +37,10 @@ public class CommandUseTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnCommand + " varchar(20) NOT NULL, "
-                    + columnTimesUsed + " integer NOT NULL"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnCommand, Sql.VARCHAR(20)).notNull()
+                    .column(columnTimesUsed, Sql.INT).notNull()
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {
