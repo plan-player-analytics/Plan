@@ -45,7 +45,7 @@ public class KillsTable extends Table {
             execute(TableSqlParser.createTable(tableName)
                     .column(columnKillerUserID, Sql.INT).notNull()
                     .column(columnVictimUserID, Sql.INT).notNull()
-                    .column(columnWeapon, Sql.VARCHAR(30)).notNull()
+                    .column(columnWeapon, Sql.varchar(30)).notNull()
                     .column(columnDate, Sql.LONG).notNull()
                     .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
                     .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())

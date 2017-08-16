@@ -93,6 +93,16 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
+    /**
+     * Used for ALTER TABLE sql statements.
+     *
+     * @param column column to modify
+     * @return TableSqlParser object
+     */
+    public static TableSqlParser newColumn(String column, String type) {
+        return new TableSqlParser("").column(column, type);
+    }
+
     @Override
     public String toString() {
         append(")");

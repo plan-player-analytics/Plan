@@ -40,7 +40,7 @@ public class IPsTable extends UserIDTable {
         try {
             execute(TableSqlParser.createTable(tableName)
                     .column(columnUserID, Sql.INT).notNull()
-                    .column(columnIP, Sql.VARCHAR(20)).notNull()
+                    .column(columnIP, Sql.varchar(20)).notNull()
                     .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
                     .toString()
             );

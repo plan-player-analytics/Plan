@@ -37,8 +37,8 @@ public class SecurityTable extends Table {
     public boolean createTable() {
         try {
             execute(TableSqlParser.createTable(tableName)
-                    .column(columnUser, Sql.VARCHAR(100)).notNull().unique()
-                    .column(columnSaltedHash, Sql.VARCHAR(100)).notNull().unique()
+                    .column(columnUser, Sql.varchar(100)).notNull().unique()
+                    .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()
                     .column(columnPermLevel, Sql.INT).notNull()
                     .toString()
             );
