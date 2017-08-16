@@ -48,7 +48,7 @@ public class DataCacheClearQueueTest {
             }
 
             @Override
-            public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
+            public void startAsyncPeriodicSaveTask() {
             }
         };
     }

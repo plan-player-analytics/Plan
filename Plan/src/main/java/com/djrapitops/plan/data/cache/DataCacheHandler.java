@@ -122,7 +122,7 @@ public class DataCacheHandler extends SessionCache {
      *                                  parameters.
      * @throws IllegalStateException    BukkitScheduler is in a wrong state.
      */
-    public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
+    public void startAsyncPeriodicSaveTask() {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
             minutes = 5;

@@ -110,7 +110,7 @@ public class DataCacheHandlerTest {
         when(plan.getDB()).thenReturn(db);
         handler = new DataCacheHandler(plan) {
             @Override
-            public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
+            public void startAsyncPeriodicSaveTask() {
             }
         };
     }

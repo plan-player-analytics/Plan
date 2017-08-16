@@ -68,7 +68,7 @@ public abstract class TimeKeeper {
      * @throws IllegalArgumentException If new state is null.
      * @throws IllegalStateException    If lastStateChange time is higher than playtime.
      */
-    public void changeState(String newState, long playTime) throws IllegalArgumentException, IllegalStateException {
+    public void changeState(String newState, long playTime) {
         Verify.nullCheck(newState);
 //        if (playTime < lastStateChange) {
 //            throw new IllegalStateException("Given Playtime is lower than last status change time: " + playTime + " / " + lastStateChange);

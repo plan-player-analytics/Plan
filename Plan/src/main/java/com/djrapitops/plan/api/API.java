@@ -237,7 +237,7 @@ public class API {
      * @throws IllegalStateException    If the player has not played on the server
      *                                  before.
      */
-    public String getPlayerName(UUID uuid) throws IllegalStateException, IllegalArgumentException {
+    public String getPlayerName(UUID uuid) {
         Verify.nullCheck(uuid);
         IOfflinePlayer offlinePlayer = Fetch.getIOfflinePlayer(uuid);
         if (Verify.notNull(offlinePlayer)) {
