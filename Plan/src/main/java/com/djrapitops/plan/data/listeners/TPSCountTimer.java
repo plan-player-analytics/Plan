@@ -89,8 +89,9 @@ public class TPSCountTimer extends AbsRunnable {
         } else {
             entityCount = getEntityCount();
 
-            diff -= TimeAmount.MILLISECOND.ns() * 40L; // 40ms removed because the run appears to take 40-50ms, screwing the tps.
-            return getTPS(diff, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
+            // 40ms removed because the run appears to take 40-50ms, screwing the tps.
+            long fourtyMsAsNs = TimeAmount.MILLISECOND.ns() * 40L;
+            return getTPS(diff - fourtyMsAsNs, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
         }
     }
 
@@ -104,17 +105,18 @@ public class TPSCountTimer extends AbsRunnable {
      * @return the TPS
      */
     private TPS getTPS(long diff, long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
-        if (diff < TimeAmount.SECOND.ns()) { // No tick count above 20
-            diff = TimeAmount.SECOND.ns();
+        long difference = diff;
+        if (difference < TimeAmount.SECOND.ns()) { // No tick count above 20
+            difference = TimeAmount.SECOND.ns();
         }
 
         long twentySeconds = 20L * TimeAmount.SECOND.ns();
-        while (diff > twentySeconds) {
+        while (difference > twentySeconds) {
             history.add(new TPS(now, 0, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded));
-            diff -= twentySeconds;
+            difference -= twentySeconds;
         }
 
-        double tpsN = twentySeconds * 1.0 / diff;
+        double tpsN = twentySeconds * 1.0 / difference;
 
         return new TPS(now, tpsN, playersOnline, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }

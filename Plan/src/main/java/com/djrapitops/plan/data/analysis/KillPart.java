@@ -24,13 +24,13 @@ import java.util.UUID;
  */
 public class KillPart extends RawData {
 
-    private final PlayerCountPart playerCount;
+    private final PlayerCountPart playerCountPart;
     private final Map<UUID, List<KillData>> playerKills;
     private long mobKills;
     private long deaths;
 
-    public KillPart(PlayerCountPart playerCount) {
-        this.playerCount = playerCount;
+    public KillPart(PlayerCountPart playerCountPart) {
+        this.playerCountPart = playerCountPart;
         playerKills = new HashMap<>();
         mobKills = 0;
         deaths = 0;
@@ -42,7 +42,7 @@ public class KillPart extends RawData {
         addValue("mobkills", mobKills);
         int playerKillAmount = getAllPlayerKills().size();
         addValue("playerkills", playerKillAmount);
-        int playerCount = this.playerCount.getPlayerCount();
+        int playerCount = playerCountPart.getPlayerCount();
         addValue("avgdeaths", MathUtils.averageLong(deaths, playerCount));
         addValue("avgmobkills", MathUtils.averageLong(mobKills, playerCount));
         addValue("avgplayerkills", MathUtils.averageLong(playerKillAmount, playerCount));

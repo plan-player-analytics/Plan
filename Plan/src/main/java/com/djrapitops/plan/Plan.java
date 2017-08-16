@@ -86,7 +86,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *                               Plan and the instance is null.
      * @throws NoClassDefFoundError  If Plan is not installed.
      */
-    public static API getPlanAPI() throws IllegalStateException, NoClassDefFoundError {
+    public static API getPlanAPI() throws NoClassDefFoundError {
         Plan instance = getInstance();
         if (instance == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
@@ -323,7 +323,7 @@ public class Plan extends BukkitPlugin<Plan> {
         return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
     }
 
-    private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
+    private void startAnalysisRefreshTask(int everyXMinutes) {
         Benchmark.start("Schedule PeriodicAnalysisTask");
         if (everyXMinutes <= 0) {
             return;
@@ -340,7 +340,7 @@ public class Plan extends BukkitPlugin<Plan> {
         Benchmark.stop("Schedule PeriodicAnalysisTask");
     }
 
-    private void startBootAnalysisTask() throws IllegalStateException {
+    private void startBootAnalysisTask() {
         Benchmark.start("Schedule boot analysis task");
         String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
         String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();

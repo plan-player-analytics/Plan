@@ -17,14 +17,13 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.6.0 / Database version 7
  */
-public class WorldTimesTable extends Table {
+public class WorldTimesTable extends UserIDTable {
 
     private final WorldTable worldTable;
     private final String worldIDColumn;
     private final String worldNameColumn;
 
     private final String columnWorldId;
-    private final String columnUserID;
     private final String columnPlaytime;
 
     private final String selectWorldIDsql;
@@ -67,18 +66,7 @@ public class WorldTimesTable extends Table {
     }
 
     public boolean removeUserWorldTimes(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**

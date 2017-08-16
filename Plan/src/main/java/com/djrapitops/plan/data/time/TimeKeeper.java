@@ -46,8 +46,9 @@ public abstract class TimeKeeper {
 
     /**
      * Sets a specific time for a state.
+     *
      * @param state State to set
-     * @param time Time in ms the state has been active for
+     * @param time  Time in ms the state has been active for
      * @throws IllegalArgumentException If given state is null
      */
     public void setTime(String state, long time) {
@@ -71,14 +72,10 @@ public abstract class TimeKeeper {
      *
      * @param newState New State seen in.
      * @param playTime Current Playtime.
-     * @throws IllegalArgumentException If new state is null.
-     * @throws IllegalStateException    If lastStateChange time is higher than playtime.
+     * @throws IllegalArgumentException If newState is null.
      */
     public void changeState(String newState, long playTime) {
         Verify.nullCheck(newState);
-//        if (playTime < lastStateChange) {
-//            throw new IllegalStateException("Given Playtime is lower than last status change time: " + playTime + " / " + lastStateChange);
-//        }
         if (state == null) {
             state = newState;
         }
@@ -146,9 +143,9 @@ public abstract class TimeKeeper {
 
         TimeKeeper that = (TimeKeeper) o;
 
-        return lastStateChange == that.lastStateChange &&
-                times != null ? times.equals(that.times) : that.times == null
-                && state != null ? state.equals(that.state) : that.state == null;
+        return lastStateChange == that.lastStateChange
+                && (times != null ? times.equals(that.times) : that.times == null)
+                && (state != null ? state.equals(that.state) : that.state == null);
     }
 
     @Override

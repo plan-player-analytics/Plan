@@ -64,7 +64,7 @@ public class PlanDeathEventListener implements Listener {
             } catch (NoSuchMethodError e) {
                 try {
                     itemInHand = killer.getInventory().getItemInHand().getType(); // Support for non dual wielding versions.
-                } catch (Error e2) {
+                } catch (Exception | NoSuchMethodError | NoSuchFieldError e2) {
                     itemInHand = Material.AIR;
                 }
             }

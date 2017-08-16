@@ -15,9 +15,8 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class IPsTable extends Table {
+public class IPsTable extends UserIDTable {
 
-    private final String columnUserID;
     private final String columnIP;
 
     /**
@@ -55,18 +54,7 @@ public class IPsTable extends Table {
      * @return if the IPs were removed successfully
      */
     public boolean removeUserIPs(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**

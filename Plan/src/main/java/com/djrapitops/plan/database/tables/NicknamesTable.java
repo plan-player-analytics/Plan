@@ -13,9 +13,8 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class NicknamesTable extends Table {
+public class NicknamesTable extends UserIDTable {
 
-    private final String columnUserID;
     private final String columnNick;
     private final String columnCurrent;
 
@@ -64,18 +63,7 @@ public class NicknamesTable extends Table {
      * @return if the removal was successful
      */
     public boolean removeUserNicknames(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**

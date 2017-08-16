@@ -77,13 +77,20 @@ public abstract class RawData {
     }
 
     private String addPlaceholderSigns(String placeholder) {
+        StringBuilder newPlaceholder = new StringBuilder();
+
         if (placeholder.charAt(0) != '%') {
-            placeholder = "%" + placeholder;
+            newPlaceholder.append("%");
         }
-        if (placeholder.charAt(placeholder.length() - 1) != '%') {
-            placeholder += "%";
+
+        newPlaceholder.append(placeholder);
+        int lastIndex = placeholder.length() - 1;
+
+        if (placeholder.charAt(lastIndex) != '%') {
+            newPlaceholder.append("%");
         }
-        return placeholder;
+
+        return newPlaceholder.toString();
     }
 
     /**

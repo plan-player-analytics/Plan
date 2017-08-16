@@ -264,12 +264,12 @@ public class API {
      *
      * @param playerName Player's name
      * @return UUID of the Player
-     * @throws Exception if player's name is not registered at Mojang
+     * @throws IllegalArgumentException if player's name is not registered at Mojang
      */
-    public UUID playerNameToUUID(String playerName) throws Exception {
+    public UUID playerNameToUUID(String playerName) {
         UUID uuid = UUIDUtility.getUUIDOf(playerName);
         if (uuid == null) {
-            throw new Exception("UUID did not get a match");
+            throw new IllegalArgumentException("UUID did not get a match");
         }
         return uuid;
     }

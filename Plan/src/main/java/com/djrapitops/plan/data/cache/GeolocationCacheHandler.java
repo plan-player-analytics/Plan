@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.data.cache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -45,18 +44,14 @@ public class GeolocationCacheHandler {
      * @see #getUncachedCountry(String)
      */
     public static String getCountry(String ipAddress) {
-        Log.debug("Started country retrieval from IP Address " + ipAddress);
-
         String country = getCachedCountry(ipAddress);
 
         if (country != null) {
-            Log.debug("Got cached country from IP Address " + ipAddress + ": " + country);
             return country;
         } else {
             country = getUncachedCountry(ipAddress);
             geolocationCache.put(ipAddress, country);
 
-            Log.debug("Got uncached country from IP Address " + ipAddress + ": " + country);
             return country;
         }
     }
@@ -75,16 +70,16 @@ public class GeolocationCacheHandler {
      * @see #getCountry(String)
      */
     public static String getUncachedCountry(String ipAddress) {
-        Benchmark.start("getUncachedCountry");
-
         URL url;
 
         String urlString = "http://freegeoip.net/csv/" + ipAddress;
+        String unknownString = "Not Known";
+
         try {
             url = new URL(urlString);
         } catch (MalformedURLException e) {
             Log.error("The URL \"" + urlString + "\" couldn't be converted to URL: " + e.getCause()); //Shouldn't ever happen
-            return "Not Known";
+            return unknownString;
         }
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -94,11 +89,9 @@ public class GeolocationCacheHandler {
             String[] results = resultLine.split(",");
             String result = results[2];
 
-            return result.isEmpty() ? "Not Known" : result;
+            return result.isEmpty() ? unknownString : result;
         } catch (Exception exc) {
-            return "Not Known";
-        } finally {
-            Benchmark.stop("getUncachedCountry");
+            return unknownString;
         }
     }
 

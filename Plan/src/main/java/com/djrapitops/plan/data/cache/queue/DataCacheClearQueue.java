@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -47,12 +48,11 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param uuids UUIDs of the UserData object (Players' UUIDs)
      */
     public void scheduleForClear(Collection<UUID> uuids) {
-        if (uuids.isEmpty()) {
+        if (Verify.isEmpty(uuids)) {
             return;
         }
-        uuids = uuids.stream().filter(Objects::nonNull).collect(Collectors.toList());
         try {
-            queue.addAll(uuids);
+            queue.addAll(uuids.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         } catch (IllegalStateException e) {
             Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber()));
         }
