@@ -410,16 +410,18 @@ public abstract class SQLDB extends Database {
         Map<Integer, Map<String, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
 
-        Log.debug("Database", "Data found for:");
-        Log.debug("Database", "  UUIDs: " + uuids.size());
-        Log.debug("Database", "  IDs: " + userIds.size());
-        Log.debug("Database", "  UserData: " + data.size());
-        Log.debug("Database", "    Nicknames: " + nicknames.size());
-        Log.debug("Database", "    IPs: " + ipList.size());
-        Log.debug("Database", "    Kills: " + playerKills.size());
-        Log.debug("Database", "    Sessions: " + sessionData.size());
-        Log.debug("Database", "    GM Times: " + gmTimes.size());
-        Log.debug("Database", "    World Times: " + worldTimes.size());
+        Log.debug("Database",
+                "Data found for:",
+                "  UUIDs: " + uuids.size(),
+                "  IDs: " + userIds.size(),
+                "  UserData: " + data.size(),
+                "    Nicknames: " + nicknames.size(),
+                "    IPs: " + ipList.size(),
+                "    Kills: " + playerKills.size(),
+                "    Sessions: " + sessionData.size(),
+                "    GM Times: " + gmTimes.size(),
+                "    World Times: " + worldTimes.size()
+        );
 
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();

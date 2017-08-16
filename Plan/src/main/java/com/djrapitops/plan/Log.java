@@ -58,16 +58,32 @@ public class Log {
         Plan.getInstance().getPluginLogger().debug(message);
     }
 
+
     /**
      * Used for logging larger debug complexes.
      *
      * @param task    complex this debug message is a part of.
-     * @param message message
+     * @param message Single message to add to the debug log.
      * @return full debug complex so far.
      */
     public static DebugInfo debug(String task, String message) {
+        return getDebug(task).addLine(message, MiscUtils.getTime());
+    }
+
+    /**
+     * Used for logging larger debug complexes.
+     *
+     * @param task     complex this debug message is a part of.
+     * @param messages All messages to add to the debug log.
+     * @return full debug complex so far.
+     */
+    @SafeVarargs
+    public static DebugInfo debug(String task, String... messages) {
         DebugInfo debug = getDebug(task);
-        debug.addLine(message, MiscUtils.getTime());
+        long time = MiscUtils.getTime();
+        for (String message : messages) {
+            debug.addLine(message, time);
+        }
         return debug;
     }
 

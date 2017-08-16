@@ -5,11 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.RandomData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,16 +16,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class PassEncryptTest {
 
-    private final List<String> PASSWORDS = new ArrayList<>();
     private final Map<String, String> PASSWORD_MAP = new HashMap<>();
 
     @Before
     public void setUp() throws Exception {
-        IntStream.range(0, 50).forEach(i -> PASSWORDS.add(RandomData.randomString(RandomData.randomInt(1, 100))));
-
-        for (String password : PASSWORDS) {
+        for (int i = 0; i < 20; i++) {
+            String password = RandomData.randomString(RandomData.randomInt(1, 50));
             PASSWORD_MAP.put(password, PassEncryptUtil.createHash(password));
-        }
+        };
     }
 
     @Test
@@ -38,7 +33,7 @@ public class PassEncryptTest {
             String hash = entry.getValue();
 
             assertTrue(PassEncryptUtil.verifyPassword(password, hash));
-            assertFalse(PassEncryptUtil.verifyPassword(RandomData.randomString(RandomData.randomInt(1, 100)), hash));
+            assertFalse(PassEncryptUtil.verifyPassword("WrongPassword", hash));
         }
     }
 }
