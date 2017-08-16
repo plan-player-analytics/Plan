@@ -41,8 +41,8 @@ public class DataCacheQueueTest {
     private final UserData data1 = MockUtils.mockUserWithMoreData();
     private final UserData data2 = new UserData(MockUtils.mockIPlayer2());
 
-    private int calledSaveUserData;
-    private int calledGetUserData;
+    private int callsToSaveUserData;
+    private int callsToGetUserData;
 
     private DataCacheHandler handler;
     private Database db;
@@ -52,8 +52,8 @@ public class DataCacheQueueTest {
 
     @Before
     public void setUp() throws Exception {
-        calledSaveUserData = 0;
-        calledGetUserData = 0;
+        callsToSaveUserData = 0;
+        callsToGetUserData = 0;
         TestInit t = TestInit.init();
         Plan plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
@@ -77,14 +77,14 @@ public class DataCacheQueueTest {
 
             @Override
             public void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException {
-                calledGetUserData++;
+                callsToGetUserData++;
                 UserData data = getData(uuid);
                 processors.forEach(processor -> processor.process(data));
             }
 
             @Override
             public void saveUserData(UserData data) throws SQLException {
-                calledSaveUserData++;
+                callsToSaveUserData++;
             }
         };
         db.init();
@@ -123,7 +123,7 @@ public class DataCacheQueueTest {
         }
         assertEquals(1, calls.size());
         assertEquals(0, errors.size());
-        assertEquals(1, calledGetUserData);
+        assertEquals(1, callsToGetUserData);
         assertTrue(handler.getDataCache().containsKey(uuid1));
     }
 
@@ -148,7 +148,7 @@ public class DataCacheQueueTest {
         }
         assertEquals(1, getCalls.size());
         assertEquals(0, errors.size());
-        assertEquals(1, calledGetUserData);
+        assertEquals(1, callsToGetUserData);
         assertTrue(!handler.getDataCache().containsKey(uuid1));
     }
 
@@ -175,7 +175,7 @@ public class DataCacheQueueTest {
         }
         assertEquals(1, processCalls.size());
         assertEquals(0, errors.size());
-        assertEquals(1, calledGetUserData);
+        assertEquals(1, callsToGetUserData);
         assertTrue(handler.getDataCache().containsKey(uuid1));
         assertEquals("TestSuccessful", handler.getDataCache().get(uuid1).getName());
     }
