@@ -8,6 +8,7 @@ import com.djrapitops.plugin.utilities.status.ProcessStatus;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.locale.Locale;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -33,6 +34,26 @@ public class TestInit {
      *
      */
     public TestInit() {
+    }
+
+    /**
+     * Init locale with empty messages.
+     * <p>
+     * Does not load any messages from anywhere because that would cause exceptions.
+     */
+    public static void initEmptyLocale() {
+        new Locale(null);
+    }
+
+    /**
+     * Init locale with mocked Plan.
+     * <p>
+     * requires getDataFolder mock.
+     *
+     * @param plan Mocked Plan
+     */
+    public static void initLocale(Plan plan) {
+        new Locale(plan).loadLocale();
     }
 
     public static TestInit init() throws Exception {
@@ -87,6 +108,7 @@ public class TestInit {
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.processStatus()).thenReturn(process);
         when(planMock.fetch()).thenReturn(fetch);
+        initLocale(planMock);
     }
 
     private static File getTestFolder() {
