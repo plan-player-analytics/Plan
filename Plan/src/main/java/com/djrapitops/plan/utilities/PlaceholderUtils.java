@@ -98,7 +98,7 @@ public class PlaceholderUtils {
         replaceMap.put("%nicknames%", HtmlUtils.removeXSS(HtmlUtils.swapColorsToSpan(data.getNicknames().toString())));
         replaceMap.put("%name%", data.getName());
         replaceMap.put("%registered%", FormatUtils.formatTimeStampYear(data.getRegistered()));
-        replaceMap.put("%timeskicked%", "" + data.getTimesKicked());
+        replaceMap.put("%timeskicked%", data.getTimesKicked());
         replaceMap.put("%playtime%", FormatUtils.formatTimeAmount(data.getPlayTime()));
         replaceMap.put("%banned%", data.isBanned() ? Locale.get(Msg.HTML_BANNED).parse() : "");
         replaceMap.put("%op%", data.isOp() ? Locale.get(Msg.HTML_OP).parse() : "");

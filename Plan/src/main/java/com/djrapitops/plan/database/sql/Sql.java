@@ -7,6 +7,6 @@ public class Sql {
     public static final String BOOL = "boolean";
 
     public static String VARCHAR(int length) {
-        return "varchar("+length+")";
+        return "varchar(" + length + ")";
     }
 }
