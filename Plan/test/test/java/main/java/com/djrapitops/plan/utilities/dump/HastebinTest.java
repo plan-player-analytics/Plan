@@ -13,11 +13,12 @@ import test.java.utils.RandomData;
 import test.java.utils.TestInit;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 /**
  * @author Fuzzlemann
  */
-@PowerMockIgnore({"javax.net.ssl.*"})
+@PowerMockIgnore("javax.net.ssl.*")
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class HastebinTest {
@@ -39,6 +40,9 @@ public class HastebinTest {
         TestInit.init();
 
         String link = Hastebin.safeUpload(content);
+
+        assertNotNull(link);
+
         Log.info("Hastebin Link: " + link);
     }
 }

@@ -47,7 +47,13 @@ public class Hastebin {
 
                 lastLink = upload(part);
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
+            if (e.getMessage().contains("503")) {
+                return "Hastebin unavailable";
+            }
+
+            Log.toLog("DumpLog.upload", e);
+        } catch (ParseException e) {
             Log.toLog("DumpLog.upload", e);
         }
 
