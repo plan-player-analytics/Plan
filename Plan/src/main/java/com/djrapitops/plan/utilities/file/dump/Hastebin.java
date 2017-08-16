@@ -16,7 +16,7 @@ import java.util.List;
  * @author Fuzzlemann
  * @since 3.6.4
  */
-class Hastebin {
+public class Hastebin {
 
     /**
      * Constructor used to hide the public constructor
@@ -35,7 +35,7 @@ class Hastebin {
      * at each end of the following part, that's why the redundancy of 10.000 chars exists.
      * @see #split(String)
      */
-    static String safeUpload(String content) {
+    public static String safeUpload(String content) {
         List<String> parts = ImmutableList.copyOf(split(content)).reverse();
 
         String lastLink = null;
@@ -121,7 +121,7 @@ class Hastebin {
      *
      * @return The content that was splitted
      */
-    private static Iterable<String> split(String content) {
+    public static Iterable<String> split(String content) {
         return Splitter.fixedLength(390000).split(content);
     }
 }
