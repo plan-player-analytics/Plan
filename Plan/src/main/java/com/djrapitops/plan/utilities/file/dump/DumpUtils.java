@@ -23,10 +23,13 @@ import java.util.stream.Collectors;
 
 /**
  * @author Fuzzlemann
- * @since 3.7.0
+ * @since 3.6.2
  */
 public class DumpUtils {
 
+    /**
+     * Constructor used to hide the public constructor
+     */
     private DumpUtils() {
         throw new IllegalStateException("Utility Class");
     }
