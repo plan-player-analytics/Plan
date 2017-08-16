@@ -150,7 +150,10 @@ public abstract class SQLDB extends Database {
             if (!newDatabase && getVersion() < 8) {
                 setVersion(8);
             }
-            connection.prepareStatement("DROP TABLE IF EXISTS plan_locations").execute();
+
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("DROP TABLE IF EXISTS plan_locations");
+            }
         }
         return true;
     }
