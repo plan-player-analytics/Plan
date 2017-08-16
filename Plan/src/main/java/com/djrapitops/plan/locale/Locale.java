@@ -19,7 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class Locale {
     public Locale(Plan plugin) {
         LocaleHolder.setLocale(this);
         this.plugin = plugin;
-        messages = new HashMap<>();
+        messages = new EnumMap<>(Msg.class);
     }
 
     public static void unload() {
