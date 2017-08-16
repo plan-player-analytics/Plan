@@ -111,7 +111,7 @@ public class DataCacheGetQueueTest {
         UserData exp = MockUtils.mockUser2();
 
         DataCacheGetQueue instance = new DataCacheGetQueue(plan);
-        instance.scheduleForGet(exp.getUuid(), (DBCallableProcessor) data -> assertTrue(data.equals(exp)));
+        instance.scheduleForGet(exp.getUuid(), data -> assertTrue(data.equals(exp)));
     }
 
     /**
@@ -122,6 +122,6 @@ public class DataCacheGetQueueTest {
     public void testStop() {
         DataCacheGetQueue instance = new DataCacheGetQueue(plan);
         instance.stop();
-        instance.scheduleForGet(MockUtils.getPlayerUUID(), (DBCallableProcessor) data -> fail("Called get process after stop."));
+        instance.scheduleForGet(MockUtils.getPlayerUUID(), data -> fail("Called get process after stop."));
     }
 }

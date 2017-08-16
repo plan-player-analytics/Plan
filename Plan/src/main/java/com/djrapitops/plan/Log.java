@@ -119,28 +119,4 @@ public class Log {
     public static void toLog(String source, Collection<Throwable> e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);
     }
-
-    /**
-     * Logs a message to the a given file with a timestamp.
-     *
-     * @param message  Message to log to Errors.txt [timestamp] Message
-     * @param filename Name of the file to write to.
-     * @deprecated Should no longer be used, may break other log handling mechanisms.
-     * If exception requires additional information it should be placed in the source string.
-     */
-    @Deprecated
-    public static void toLog(String message, String filename) {
-        Plan.getInstance().getPluginLogger().toLog(message, filename);
-    }
-
-    /**
-     * Used to get the name for the error log file.
-     *
-     * @return Name of the error log file.
-     * @deprecated Should no longer be used, Errors.txt is handled by a separate class.
-     */
-    @Deprecated
-    public static String getErrorsFilename() {
-        return Plan.getInstance().getPluginLogger().getErrorsFilename();
-    }
 }

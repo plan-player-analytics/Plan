@@ -54,7 +54,7 @@ public class Check {
      * @param message   Message to send if Condition is false
      * @return Condition
      */
-    public static boolean ErrorIfFalse(boolean condition, String message) {
+    public static boolean errorIfFalse(boolean condition, String message) {
         if (!condition) {
             Log.error(message);
         }

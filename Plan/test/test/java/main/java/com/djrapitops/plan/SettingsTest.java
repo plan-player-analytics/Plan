@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -27,47 +28,40 @@ import static org.junit.Assert.assertTrue;
 @PrepareForTest(JavaPlugin.class)
 public class SettingsTest {
 
-    /**
-     *
-     */
     public SettingsTest() {
     }
 
-    /**
-     *
-     */
     @Before
     public void setUp() throws Exception {
         TestInit.init();
     }
 
-    /**
-     *
-     */
     @Test
     public void testIsTrue() {
         assertTrue("Webserver supposed to be enabled by default", Settings.WEBSERVER_ENABLED.isTrue());
     }
 
-    /**
-     *
-     */
+    @Test
+    public void testIsTrue2() {
+        Settings gatherCommands = Settings.GATHERCOMMANDS;
+
+        gatherCommands.setValue(false);
+        assertFalse(gatherCommands.isTrue());
+
+        gatherCommands.setValue(true);
+        assertTrue(gatherCommands.isTrue());
+    }
+
     @Test
     public void testToString() {
         assertEquals("sqlite", Settings.DB_TYPE.toString());
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetNumber() {
         assertEquals(8804, Settings.WEBSERVER_PORT.getNumber());
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetStringList() {
         List<String> exp = new ArrayList<>();
@@ -76,9 +70,6 @@ public class SettingsTest {
         assertEquals(exp, result);
     }
 
-    /**
-     *
-     */
     @Test
     public void testGetPath() {
         assertEquals("Settings.WebServer.Enabled", Settings.WEBSERVER_ENABLED.getPath());

@@ -47,26 +47,7 @@ public class TestInit {
         return t;
     }
 
-    private static File getTestFolder() {
-        File testFolder = new File("temporaryTestFolder");
-        testFolder.mkdir();
-        return testFolder;
-    }
-
-    public static void clean() throws IOException {
-        clean(getTestFolder());
-    }
-
-    public static void clean(File testFolder) throws IOException {
-        if (testFolder.exists() && testFolder.isDirectory()) {
-            for (File f : testFolder.listFiles()) {
-                Files.deleteIfExists(f.toPath());
-            }
-        }
-    }
-
-    @Deprecated // Use Test.init instead.
-    public void setUp(boolean clearOnStart) throws Exception {
+    private void setUp(boolean clearOnStart) throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -108,12 +89,32 @@ public class TestInit {
         when(planMock.fetch()).thenReturn(fetch);
     }
 
+    private static File getTestFolder() {
+        File testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
+    }
+
+    public static void clean() throws IOException {
+        clean(getTestFolder());
+    }
+
+    public static void clean(File testFolder) throws IOException {
+        if (testFolder.exists() && testFolder.isDirectory()) {
+            for (File f : testFolder.listFiles()) {
+                Files.deleteIfExists(f.toPath());
+            }
+        }
+    }
+
     private Server mockServer() {
         Server mockServer = PowerMockito.mock(Server.class);
+
+        OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
+
         when(mockServer.getIp()).thenReturn("0.0.0.0");
         when(mockServer.getMaxPlayers()).thenReturn(20);
         when(mockServer.getName()).thenReturn("Bukkit");
-        OfflinePlayer[] ops = new OfflinePlayer[]{MockUtils.mockPlayer(), MockUtils.mockPlayer2()};
         when(mockServer.getOfflinePlayers()).thenReturn(ops);
         return mockServer;
     }

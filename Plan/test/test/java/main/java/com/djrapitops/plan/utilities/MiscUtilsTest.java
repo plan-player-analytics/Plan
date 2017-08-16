@@ -10,7 +10,6 @@ import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,19 +28,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class, Bukkit.class})
 public class MiscUtilsTest {
-
-    /**
-     *
-     */
-    public MiscUtilsTest() {
-    }
-
-    /**
-     *
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
 
     @Test
     public void testGetPlayerDisplaynameArgsPerm() {

@@ -15,10 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomData {
 
     private static final Random r = new Random();
+
+    public static int randomInt(int rangeStart, int rangeEnd) {
+        return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
+    }
 
     public static List<UserData> randomUserData() {
         List<UserData> test = new ArrayList<>();
