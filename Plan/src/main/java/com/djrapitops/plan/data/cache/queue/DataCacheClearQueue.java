@@ -70,9 +70,10 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 
     @Override
     void consume(UUID uuid) {
-        if (handler == null) {
+        if (!Verify.notNull(handler, uuid)) {
             return;
         }
+
         try {
             if (handler.isDataAccessed(uuid)) {
                 queue.add(uuid);
