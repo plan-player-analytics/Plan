@@ -39,14 +39,6 @@ public abstract class Database {
     protected KillsTable killsTable;
 
     /**
-     * Table representing plan_locations in the database.
-     *
-     * @deprecated Removed in 3.5.2
-     */
-    @Deprecated
-    protected LocationsTable locationsTable;
-
-    /**
      * Table representing plan_nicknames in the database.
      */
     protected NicknamesTable nicknamesTable;
@@ -313,17 +305,6 @@ public abstract class Database {
      */
     public KillsTable getKillsTable() {
         return killsTable;
-    }
-
-    /**
-     * Used to get the locations table.
-     *
-     * @return Table representing plan_locations
-     * @deprecated Removed in 3.5.2
-     */
-    @Deprecated
-    public LocationsTable getLocationsTable() {
-        return locationsTable;
     }
 
     /**

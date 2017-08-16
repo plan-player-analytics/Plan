@@ -48,7 +48,6 @@ public abstract class SQLDB extends Database {
         gmTimesTable = new GMTimesTable(this, usingMySQL);
         sessionsTable = new SessionsTable(this, usingMySQL);
         killsTable = new KillsTable(this, usingMySQL);
-        locationsTable = new LocationsTable(this, usingMySQL);
         ipsTable = new IPsTable(this, usingMySQL);
         nicknamesTable = new NicknamesTable(this, usingMySQL);
         commandUseTable = new CommandUseTable(this, usingMySQL);
@@ -132,13 +131,8 @@ public abstract class SQLDB extends Database {
                 return false;
             }
 
-            boolean newDatabase = true;
-            try {
-                getVersion();
-                newDatabase = false;
-            } catch (Exception ignored) {
+            boolean newDatabase = isNewDatabase();
 
-            }
             if (!versionTable.createTable()) {
                 Log.error("Failed to create table: " + versionTable.getTableName());
                 return false;
@@ -149,26 +143,44 @@ public abstract class SQLDB extends Database {
                 setVersion(8);
             }
 
-            Benchmark.start("DCreate tables");
-
-            for (Table table : getAllTables()) {
-                if (!table.createTable()) {
-                    Log.error("Failed to create table: " + table.getTableName());
-                    return false;
-                }
-            }
-
-            if (!securityTable.createTable()) {
-                Log.error("Failed to create table: " + securityTable.getTableName());
+            if (!createTables()) {
                 return false;
             }
-            Benchmark.stop("Database", "Create tables");
 
             if (!newDatabase && getVersion() < 8) {
                 setVersion(8);
             }
+            connection.prepareStatement("DROP TABLE IF EXISTS plan_locations").execute();
         }
         return true;
+    }
+
+    /**
+     * Creates the tables that contain data.
+     *
+     * Updates table columns to latest schema.
+     *
+     * @return true if successful.
+     */
+    private boolean createTables() {
+        Benchmark.start("Create tables");
+        for (Table table : getAllTables()) {
+            if (!table.createTable()) {
+                Log.error("Failed to create table: " + table.getTableName());
+                return false;
+            }
+        }
+        Benchmark.stop("Database", "Create tables");
+        return true;
+    }
+
+    private boolean isNewDatabase() {
+        try {
+            getVersion();
+            return false;
+        } catch (Exception ignored) {
+            return true;
+        }
     }
 
     /**
@@ -214,7 +226,7 @@ public abstract class SQLDB extends Database {
                 usersTable, gmTimesTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, tpsTable, worldTable,
-                worldTimesTable};
+                worldTimesTable, securityTable};
     }
 
     /**
@@ -222,7 +234,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                locationsTable, gmTimesTable, ipsTable,
+                gmTimesTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 worldTimesTable, worldTable, usersTable,
                 commandUseTable, tpsTable};
@@ -305,7 +317,6 @@ public abstract class SQLDB extends Database {
             }
             int userId = usersTable.getUserId(uuid);
             boolean success = userId != -1
-                    && locationsTable.removeUserLocations(userId)
                     && ipsTable.removeUserIPs(userId)
                     && nicknamesTable.removeUserNicknames(userId)
                     && gmTimesTable.removeUserGMTimes(userId)
@@ -567,7 +578,6 @@ public abstract class SQLDB extends Database {
         try {
             checkConnection();
             tpsTable.clean();
-            locationsTable.removeAllData();
             Log.info("Clean complete.");
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);

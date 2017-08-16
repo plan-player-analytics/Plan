@@ -72,8 +72,7 @@ public abstract class RawData {
      * @param value       Any value the placeholder should be replaced with.
      */
     public void addValue(String placeholder, Serializable value) {
-        placeholder = addPlaceholderSigns(placeholder);
-        replaceMap.put(placeholder, value.toString());
+        replaceMap.put(addPlaceholderSigns(placeholder), value.toString());
     }
 
     private String addPlaceholderSigns(String placeholder) {
