@@ -8,6 +8,8 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
@@ -95,26 +97,26 @@ public class UsersTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
-                    + columnUUID + " varchar(36) NOT NULL UNIQUE, "
-                    + columnGeolocation + " varchar(50) NOT NULL, "
-                    + columnLastGM + " varchar(15) NOT NULL, "
-                    + columnLastGMSwapTime + " bigint NOT NULL, "
-                    + columnPlayTime + " bigint NOT NULL, "
-                    + columnLoginTimes + " integer NOT NULL, "
-                    + columnLastPlayed + " bigint NOT NULL, "
-                    + columnDeaths + " int NOT NULL, "
-                    + columnMobKills + " int NOT NULL, "
-                    + columnRegistered + " bigint NOT NULL, "
-                    + columnOP + " boolean NOT NULL DEFAULT 0, "
-                    + columnName + " varchar(16) NOT NULL, "
-                    + columnBanned + " boolean NOT NULL DEFAULT 0, "
-                    + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0, "
-                    + columnLastWorld + " varchar(255) NOT NULL, "
-                    + columnLastWorldSwapTime + " bigint NOT NULL"
-                    + (usingMySQL ? ", PRIMARY KEY (" + columnID + ")" : "")
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .primaryKeyIDColumn(usingMySQL, columnID, Sql.INT)
+                    .column(columnUUID, Sql.VARCHAR(36)).notNull().unique()
+                    .column(columnGeolocation, Sql.VARCHAR(50)).notNull()
+                    .column(columnLastGM, Sql.VARCHAR(15)).notNull()
+                    .column(columnLastGMSwapTime, Sql.LONG).notNull()
+                    .column(columnPlayTime, Sql.LONG).notNull()
+                    .column(columnLoginTimes, Sql.INT).notNull()
+                    .column(columnLastPlayed, Sql.LONG).notNull()
+                    .column(columnDeaths, Sql.INT).notNull()
+                    .column(columnMobKills, Sql.INT).notNull()
+                    .column(columnRegistered, Sql.LONG).notNull()
+                    .column(columnOP, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnName, Sql.VARCHAR(16)).notNull()
+                    .column(columnBanned, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnContainsBukkitData, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnLastWorld, Sql.VARCHAR(255)).notNull()
+                    .column(columnLastWorldSwapTime, Sql.LONG).notNull()
+                    .primaryKey(usingMySQL, columnID)
+                    .toString()
             );
             int version = getVersion();
             if (version < 3) {

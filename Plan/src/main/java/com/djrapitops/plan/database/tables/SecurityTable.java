@@ -8,6 +8,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,10 +36,11 @@ public class SecurityTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUser + " varchar(100) NOT NULL UNIQUE, "
-                    + columnSaltedHash + " varchar(100) NOT NULL UNIQUE, "
-                    + columnPermLevel + " integer NOT NULL)"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUser, Sql.VARCHAR(100)).notNull().unique()
+                    .column(columnSaltedHash, Sql.VARCHAR(100)).notNull().unique()
+                    .column(columnPermLevel, Sql.INT).notNull()
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {

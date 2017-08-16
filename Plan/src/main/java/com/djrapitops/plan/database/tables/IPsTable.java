@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.net.InetAddress;
@@ -36,11 +38,11 @@ public class IPsTable extends UserIDTable {
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnIP + " varchar(20) NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnIP, Sql.VARCHAR(20)).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {

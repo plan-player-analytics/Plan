@@ -4,6 +4,8 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
@@ -37,12 +39,12 @@ public class SessionsTable extends UserIDTable {
     public boolean createTable() {
         try {
             UsersTable usersTable = db.getUsersTable();
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnSessionStart + " bigint NOT NULL, "
-                    + columnSessionEnd + " bigint NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnSessionStart, Sql.LONG).notNull()
+                    .column(columnSessionEnd, Sql.LONG).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {
