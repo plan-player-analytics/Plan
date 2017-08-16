@@ -18,6 +18,7 @@ import org.powermock.api.mockito.PowerMockito;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -42,9 +43,12 @@ public class MockUtils {
         return NewPlayerCreator.createNewPlayer(mockIPlayer());
     }
 
-    public static UserData mockUserWithMoreData() throws Exception {
+    public static UserData mockUserWithMoreData() {
         UserData mock = mockUser();
-        mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
+        try {
+            mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
+        } catch (UnknownHostException ignored) {
+        }
         mock.addNickname("MoreNicks");
         mock.addPlayerKill(new KillData(getPlayer2UUID(), 1, "WEP", 126873643232L));
         mock.addSession(new SessionData(12345L, 23456L));

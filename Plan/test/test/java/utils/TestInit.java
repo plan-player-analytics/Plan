@@ -1,6 +1,10 @@
 package test.java.utils;
 
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.IRunnable;
+import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.BenchUtil;
 import com.djrapitops.plugin.utilities.log.BukkitLog;
 import com.djrapitops.plugin.utilities.player.Fetch;
@@ -108,7 +112,64 @@ public class TestInit {
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.processStatus()).thenReturn(process);
         when(planMock.fetch()).thenReturn(fetch);
+        RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
+        when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
         initLocale(planMock);
+    }
+
+    private RunnableFactory<Plan> mockRunnableFactory() {
+        RunnableFactory<Plan> runnableFactory = new RunnableFactory<Plan>(planMock) {
+            @Override
+            public IRunnable createNew(String name, final AbsRunnable runnable) {
+                return new IRunnable() {
+                    @Override
+                    public String getTaskName() {
+                        return "Test";
+                    }
+
+                    @Override
+                    public void cancel() {
+                    }
+
+                    @Override
+                    public int getTaskId() {
+                        return 0;
+                    }
+
+                    @Override
+                    public ITask runTask() {
+                        new Thread(() -> runnable.run()).start();
+                        return null;
+                    }
+
+                    @Override
+                    public ITask runTaskAsynchronously() {
+                        return runTask();
+                    }
+
+                    @Override
+                    public ITask runTaskLater(long l) {
+                        return runTask();
+                    }
+
+                    @Override
+                    public ITask runTaskLaterAsynchronously(long l) {
+                        return runTask();
+                    }
+
+                    @Override
+                    public ITask runTaskTimer(long l, long l1) {
+                        return runTask();
+                    }
+
+                    @Override
+                    public ITask runTaskTimerAsynchronously(long l, long l1) {
+                        return runTask();
+                    }
+                };
+            }
+        };
+        return runnableFactory;
     }
 
     private static File getTestFolder() {
