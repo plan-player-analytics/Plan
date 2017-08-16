@@ -48,6 +48,7 @@ public class MockUtils {
         try {
             mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
         } catch (UnknownHostException ignored) {
+            /* Ignored */
         }
         mock.addNickname("MoreNicks");
         mock.addPlayerKill(new KillData(getPlayer2UUID(), 1, "WEP", 126873643232L));

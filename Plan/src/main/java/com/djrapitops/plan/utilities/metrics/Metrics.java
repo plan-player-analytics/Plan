@@ -95,6 +95,7 @@ public class Metrics {
             try {
                 config.save(configFile);
             } catch (IOException ignored) {
+                /* Ignored */
             }
         }
 
@@ -110,6 +111,7 @@ public class Metrics {
                     found = true; // We aren't the first
                     break;
                 } catch (NoSuchFieldException ignored) {
+                    /* Ignored */
                 }
             }
             // Register our service
@@ -300,9 +302,11 @@ public class Metrics {
                     try {
                         pluginData.add(provider.getService().getMethod("getPluginData").invoke(provider.getProvider()));
                     } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+                        /* Ignored */
                     }
                 }
             } catch (NoSuchFieldException ignored) {
+                /* Ignored */
             }
         }
 
@@ -325,7 +329,7 @@ public class Metrics {
     /**
      * Represents a custom chart.
      */
-    public static abstract class CustomChart {
+    public abstract static class CustomChart {
 
         // The id of the chart
         final String chartId;

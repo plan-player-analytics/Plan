@@ -54,6 +54,7 @@ public class UUIDUtility {
                 uuid = UUIDFetcher.getUUIDOf(playername);
             }
         } catch (Exception ignored) {
+            /* Ignored */
         }
         return uuid;
     }
