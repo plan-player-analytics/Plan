@@ -12,7 +12,7 @@ import java.util.UUID;
 public class KillData {
 
     private final UUID victim;
-    private final int victimUserID;
+    private int victimUserID;
     private final long date;
     private final String weapon;
 
@@ -98,4 +98,7 @@ public class KillData {
         return hash;
     }
 
+    public void setVictimUserID(int victimUserID) {
+        this.victimUserID = victimUserID;
+    }
 }

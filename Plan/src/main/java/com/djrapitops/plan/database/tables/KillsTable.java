@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -9,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -108,14 +108,11 @@ public class KillsTable extends Table {
      * @throws SQLException
      */
     public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
-        if (kills == null) {
+        if (Verify.isEmpty(kills)) {
             return;
         }
         Benchmark.start("Save Kills");
         kills.removeAll(getPlayerKills(userId));
-        if (kills.isEmpty()) {
-            return;
-        }
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -125,22 +122,24 @@ public class KillsTable extends Table {
                     + columnDate
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
-            for (KillData kill : kills) {
-                if (kill == null) {
-                    continue;
-                }
-
-                statement.setInt(1, userId);
-                int victimUserID = kill.getVictimUserID();
-
+            kills.stream().filter(Objects::nonNull).forEach(killData -> {
+                int victimUserID = killData.getVictimUserID();
                 if (victimUserID == -1) {
-                    victimUserID = db.getUsersTable().getUserId(kill.getVictim());
-                    if (victimUserID == -1) {
-                        continue;
+                    try {
+                        int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
+                        killData.setVictimUserID(newVictimID);
+                    } catch (SQLException e) {
+                        Log.toLog(this.getClass().getName(), e);
+                        return;
                     }
                 }
-
-                statement.setInt(2, victimUserID);
+            });
+            for (KillData kill : kills) {
+                if (kill == null || kill.getVictimUserID() == -1) {
+                    continue;
+                }
+                statement.setInt(1, userId);
+                statement.setInt(2, kill.getVictimUserID());
                 statement.setString(3, kill.getWeapon());
                 statement.setLong(4, kill.getDate());
                 statement.addBatch();
@@ -215,8 +214,6 @@ public class KillsTable extends Table {
                     + columnDate
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
-            int i = 0;
-
             for (Map.Entry<Integer, List<KillData>> entrySet : kills.entrySet()) {
                 Integer id = entrySet.getKey();
                 List<KillData> playerKills = entrySet.getValue();
@@ -227,32 +224,28 @@ public class KillsTable extends Table {
                     playerKills.removeAll(s);
                 }
 
+                playerKills.stream().filter(Objects::nonNull).forEach(killData -> {
+                    int victimUserID = killData.getVictimUserID();
+                    if (victimUserID == -1) {
+                        try {
+                            int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
+                            killData.setVictimUserID(newVictimID);
+                        } catch (SQLException e) {
+                            Log.toLog(this.getClass().getName(), e);
+                            return;
+                        }
+                    }
+                });
                 for (KillData kill : playerKills) {
-                    if (kill == null) {
+                    if (kill == null || kill.getVictimUserID() == -1) {
                         continue;
                     }
-
                     statement.setInt(1, id);
-                    int victimUserID = kill.getVictimUserID();
-                    if (victimUserID == -1) {
-                        List<Integer> matchingIds = uuids.entrySet()
-                                .stream().filter(e -> e.getValue().equals(kill.getVictim()))
-                                .map(Map.Entry::getKey)
-                                .collect(Collectors.toList());
-
-                        if (matchingIds.isEmpty()) {
-                            continue;
-                        }
-
-                        victimUserID = matchingIds.get(0);
-                    }
-
-                    statement.setInt(2, victimUserID);
+                    statement.setInt(2, kill.getVictimUserID());
                     statement.setString(3, kill.getWeapon());
                     statement.setLong(4, kill.getDate());
                     statement.addBatch();
                     commitRequired = true;
-                    i++;
                 }
 
                 if (commitRequired) {

@@ -166,12 +166,9 @@ public class NicknamesTable extends UserIDTable {
             set = statement.executeQuery();
             while (set.next()) {
                 Integer id = set.getInt(columnUserID);
-                if (!ids.contains(id)) {
-                    continue;
-                }
-
                 String nickname = set.getString(columnNick);
-                if (nickname.isEmpty()) {
+
+                if (!ids.contains(id) || nickname.isEmpty()) {
                     continue;
                 }
 

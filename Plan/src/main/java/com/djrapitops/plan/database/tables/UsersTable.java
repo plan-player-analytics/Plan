@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -732,34 +733,33 @@ public class UsersTable extends Table {
     private List<UserData> updateExistingUserData(Collection<UserData> data) throws SQLException {
         PreparedStatement statement = null;
         try {
-            List<UserData> saveLast = new ArrayList<>();
+            List<UserData> newUserData = new ArrayList<>();
             String sql = getUpdateStatement();
             statement = prepareStatement(sql);
             boolean commitRequired = false;
             Set<UUID> savedUUIDs = getSavedUUIDs();
-            int i = 0;
             for (UserData uData : data) {
-                if (uData == null) {
-                    continue;
-                }
-                UUID uuid = uData.getUuid();
-                if (uuid == null) {
-                    try {
-                        uData.setUuid(UUIDUtility.getUUIDOf(uData.getName(), db));
-                    } catch (Exception ex) {
-                        continue;
+                UUID uuid = null;
+
+                // Get new UUID if uuid == null
+                if (uData != null) {
+                    uuid = uData.getUuid();
+                    if (uuid == null) {
+                        uuid = UUIDUtility.getUUIDOf(uData.getName(), db);
+                        uData.setUuid(uuid);
                     }
                 }
-                uuid = uData.getUuid();
-                if (uuid == null) {
+
+                boolean isNew = !savedUUIDs.contains(uuid) && !newUserData.contains(uData);
+
+                if (isNew) {
+                    newUserData.add(uData);
+                }
+
+                if (!Verify.notNull(uData, uuid) || isNew) {
                     continue;
                 }
-                if (!savedUUIDs.contains(uuid)) {
-                    if (!saveLast.contains(uData)) {
-                        saveLast.add(uData);
-                    }
-                    continue;
-                }
+
                 uData.access();
                 statement.setString(1, uData.getGeolocation());
                 GMTimes gmTimes = uData.getGmTimes();
@@ -782,12 +782,11 @@ public class UsersTable extends Table {
                 statement.addBatch();
                 uData.stopAccessing();
                 commitRequired = true;
-                i++;
             }
             if (commitRequired) {
                 statement.executeBatch();
             }
-            return saveLast;
+            return newUserData;
         } finally {
             close(statement);
         }
