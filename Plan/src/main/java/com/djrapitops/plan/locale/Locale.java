@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -83,11 +84,15 @@ public class Locale {
     }
 
     private void writeNewDefaultLocale() throws IOException {
-        final int length = messages.keySet().stream()
+
+        Optional<String> key = messages.keySet().stream()
                 .map(Msg::getIdentifier)
                 .sorted(new StringLengthComparator())
-                .findFirst()
-                .get().length() + 2;
+                .findFirst();
+        if (!key.isPresent()) {
+            throw new IllegalStateException("Locale has not been loaded.");
+        }
+        final int length = key.get().length() + 2;
         List<String> lines = messages.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
                 .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())

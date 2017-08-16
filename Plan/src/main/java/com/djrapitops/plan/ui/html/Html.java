@@ -80,11 +80,4 @@ public enum Html {
         }
         return returnValue;
     }
-
-    /**
-     * @param html Sets the HTML String
-     */
-    public void setHtml(String html) {
-        this.html = html;
-    }
 }

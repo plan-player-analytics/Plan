@@ -124,8 +124,6 @@ public class ExportUtility {
             playerFolder.mkdirs();
 
             File inspectHtmlFile = new File(playerFolder, "index.html");
-            inspectHtmlFile.createNewFile();
-
             Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
         } catch (IOException e) {
             Log.toLog("Export.writeInspectHtml: " + name, e);
@@ -148,7 +146,6 @@ public class ExportUtility {
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");
         Log.debug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
-        analysisHtmlFile.createNewFile();
         Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
@@ -157,7 +154,6 @@ public class ExportUtility {
         playersFolder.mkdirs();
         File playersHtmlFile = new File(playersFolder, "index.html");
         Log.debug("Export", "Players Page File: " + playersHtmlFile.getAbsolutePath());
-        playersHtmlFile.createNewFile();
         Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
     }
 

@@ -48,18 +48,6 @@ public class HtmlTest {
      *
      */
     @Test
-    public void testSetHtml() {
-        Html instance = Html.SPAN;
-        String expResult = "Test</span>";
-        instance.setHtml(expResult);
-        String result = instance.parse();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     *
-     */
-    @Test
     public void testNoBackSlash() {
         assertTrue("Null for some reason", Html.TABLELINE_2.parse("/\\", "0") != null);
     }
