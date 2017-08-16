@@ -43,9 +43,7 @@ public class PlayersTableCreator {
                 boolean isUnknown = uData.getLoginTimes() == 1;
                 boolean isActive = AnalysisUtils.isActive(now, uData.getLastPlayed(), uData.getPlayTime(), uData.getLoginTimes());
 
-                String activityString = isActive ? "Active" : "Inactive";
-                String unknownString = isUnknown ? "Unknown" : activityString;
-                String combinedString = isBanned ? "Banned" : unknownString;
+                String activityString = getActivityString(isBanned, isUnknown, isActive);
 
                 String img = showImages ? Html.MINOTAR_SMALL_IMG.parse(uData.getName()) : "";
 
@@ -59,12 +57,18 @@ public class PlayersTableCreator {
                         String.valueOf(uData.getGeolocation())
                 ));
             } catch (NullPointerException ignored) {
-                /* ignored */
             }
 
             i++;
         }
 
         return html.toString();
+    }
+
+    private static String getActivityString(boolean isBanned, boolean isUnknown, boolean isActive) {
+        return isBanned ? "Banned"
+                : (isUnknown ? "Unknown"
+                : (isActive ? "Active"
+                : "Inactive"));
     }
 }

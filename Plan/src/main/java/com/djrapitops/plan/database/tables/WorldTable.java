@@ -43,7 +43,7 @@ public class WorldTable extends Table {
         try {
             execute(TableSqlParser.createTable(tableName)
                     .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
-                    .column(columnWorldName, Sql.VARCHAR(100)).notNull()
+                    .column(columnWorldName, Sql.varchar(100)).notNull()
                     .primaryKey(usingMySQL, columnWorldId)
                     .toString()
             );

@@ -45,7 +45,7 @@ public class KillsTable extends Table {
             execute(TableSqlParser.createTable(tableName)
                     .column(columnKillerUserID, Sql.INT).notNull()
                     .column(columnVictimUserID, Sql.INT).notNull()
-                    .column(columnWeapon, Sql.VARCHAR(30)).notNull()
+                    .column(columnWeapon, Sql.varchar(30)).notNull()
                     .column(columnDate, Sql.LONG).notNull()
                     .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
                     .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
@@ -200,7 +200,7 @@ public class KillsTable extends Table {
      * @throws SQLException
      */
     public void savePlayerKills(Map<Integer, List<KillData>> kills, Map<Integer, UUID> uuids) throws SQLException {
-        if (kills == null || kills.isEmpty()) {
+        if (Verify.isEmpty(kills)) {
             return;
         }
 
@@ -219,27 +219,17 @@ public class KillsTable extends Table {
             for (Map.Entry<Integer, List<KillData>> entrySet : kills.entrySet()) {
                 Integer id = entrySet.getKey();
                 List<KillData> playerKills = entrySet.getValue();
-
+                playerKills.removeIf(Objects::isNull);
                 List<KillData> s = saved.get(id);
 
                 if (s != null) {
                     playerKills.removeAll(s);
                 }
 
-                playerKills.stream().filter(Objects::nonNull).forEach(killData -> {
-                    int victimUserID = killData.getVictimUserID();
-                    if (victimUserID == -1) {
-                        try {
-                            int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
-                            killData.setVictimUserID(newVictimID);
-                        } catch (SQLException e) {
-                            Log.toLog(this.getClass().getName(), e);
-                            return;
-                        }
-                    }
-                });
+                findMissingIDs(playerKills);
+
                 for (KillData kill : playerKills) {
-                    if (kill == null || kill.getVictimUserID() == -1) {
+                    if (kill.getVictimUserID() == -1) {
                         continue;
                     }
                     statement.setInt(1, id);
@@ -257,6 +247,16 @@ public class KillsTable extends Table {
         } finally {
             close(statement);
             Benchmark.stop("Database", "Save Kills multiple");
+        }
+    }
+
+    private void findMissingIDs(List<KillData> playerKills) throws SQLException {
+        for (KillData killData : playerKills) {
+            int victimUserID = killData.getVictimUserID();
+            if (victimUserID == -1) {
+                int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
+                killData.setVictimUserID(newVictimID);
+            }
         }
     }
 }
