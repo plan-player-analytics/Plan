@@ -14,7 +14,7 @@ package main.java.com.djrapitops.plan.data;
 public class TPS {
 
     private final long date;
-    private final double tps;
+    private final double ticksPerSecond;
     private final int players;
     private final double cpuUsage;
     private final long usedMemory;
@@ -25,16 +25,16 @@ public class TPS {
      * Constructor.
      *
      * @param date         time of the TPS calculation.
-     * @param tps          average tps for the last minute.
+     * @param ticksPerSecond          average ticksPerSecond for the last minute.
      * @param players      players for the minute.
      * @param cpuUsage     CPU usage for the minute
      * @param usedMemory   used memory at the time of fetching
      * @param entityCount  amount of entities at the time of fetching
      * @param chunksLoaded amount of chunks loaded at the time of fetching
      */
-    public TPS(long date, double tps, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
+    public TPS(long date, double ticksPerSecond, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
         this.date = date;
-        this.tps = tps;
+        this.ticksPerSecond = ticksPerSecond;
         this.players = players;
         this.cpuUsage = cpuUsage;
         this.usedMemory = usedMemory;
@@ -52,12 +52,12 @@ public class TPS {
     }
 
     /**
-     * Get the average tps for the minute.
+     * Get the average ticksPerSecond for the minute.
      *
      * @return 0-20 double
      */
-    public double getTps() {
-        return tps;
+    public double getTicksPerSecond() {
+        return ticksPerSecond;
     }
 
     /**
@@ -109,7 +109,7 @@ public class TPS {
     public int hashCode() {
         int hash = 3;
         hash = 97 * hash + (int) (this.date ^ (this.date >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.tps) ^ (Double.doubleToLongBits(this.tps) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.ticksPerSecond) ^ (Double.doubleToLongBits(this.ticksPerSecond) >>> 32));
         hash = 97 * hash + this.players;
         return hash;
     }
@@ -130,13 +130,13 @@ public class TPS {
 
         final TPS other = (TPS) obj;
         return date == other.date
-                && Double.compare(this.tps, other.tps) == 0
+                && Double.compare(this.ticksPerSecond, other.ticksPerSecond) == 0
                 && this.players == other.players
                 && Double.compare(cpuUsage, other.cpuUsage) == 0;
     }
 
     @Override
     public String toString() {
-        return "TPS{" + date + "|" + tps + "|" + players + "|" + cpuUsage + "}";
+        return "TPS{" + date + "|" + ticksPerSecond + "|" + players + "|" + cpuUsage + "}";
     }
 }

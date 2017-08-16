@@ -182,16 +182,6 @@ public class UserData {
         }
     }
 
-    @Deprecated
-    public String getLastGamemode() {
-        return gmTimes.getState();
-    }
-
-    @Deprecated
-    public long getLastGmSwapTime() {
-        return gmTimes.getLastStateChange();
-    }
-
     /**
      * Adds an to the ips Set if it is not null or the set doesn't contain it.
      *

@@ -63,8 +63,7 @@ public class RegisterCommandFilter extends AbstractFilter {
     }
 
     private boolean isSensibleCommand(String message) {
-        message = message.toLowerCase();
-        return message.contains("issued server command:") && isSensible(message);
+        return message.toLowerCase().contains("issued server command:") && isSensible(message);
     }
 
     private boolean isSensible(String message) {

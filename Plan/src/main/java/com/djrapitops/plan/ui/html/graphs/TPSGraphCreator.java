@@ -22,7 +22,7 @@ public class TPSGraphCreator {
 
     public static String buildSeriesDataString(List<TPS> tpsData) {
         List<Point> points = tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getTps()))
+                .map(tps -> new Point(tps.getDate(), tps.getTicksPerSecond()))
                 .collect(Collectors.toList());
         return SeriesCreator.seriesGraph(points, true);
 

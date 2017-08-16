@@ -47,8 +47,8 @@ public class TPSPart extends RawData {
         addValue("entityseries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
         addValue("chunkseries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
 
-        double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
-        double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
+        double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTicksPerSecond));
+        double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTicksPerSecond));
 
         double averageCPUWeek = MathUtils.averageDouble(week.stream().map(TPS::getCPUUsage).filter(i -> i != 0));
         double averageCPUDay = MathUtils.averageDouble(day.stream().map(TPS::getCPUUsage).filter(i -> i != 0));

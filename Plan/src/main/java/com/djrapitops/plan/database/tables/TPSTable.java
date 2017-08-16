@@ -149,7 +149,7 @@ public class TPSTable extends Table {
 
             for (TPS tps : batch) {
                 statement.setLong(1, tps.getDate());
-                statement.setDouble(2, tps.getTps());
+                statement.setDouble(2, tps.getTicksPerSecond());
                 statement.setInt(3, tps.getPlayers());
                 statement.setDouble(4, tps.getCPUUsage());
                 statement.setLong(5, tps.getUsedMemory());

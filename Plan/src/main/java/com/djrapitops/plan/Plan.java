@@ -114,15 +114,7 @@ public class Plan extends BukkitPlugin<Plan> {
             // Sets the Required variables for BukkitPlugin instance to function correctly
             setInstance(this);
             super.setDebugMode(Settings.DEBUG.toString());
-            try {
-                ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
-                ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
-                ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
-                super.setColorScheme(new ColorScheme(mainColor, secColor, terColor));
-            } catch (Exception e) {
-                Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
-                super.setColorScheme(new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE));
-            }
+            initColorScheme();
             super.setLogPrefix("[Plan]");
             super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
             super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
@@ -224,6 +216,18 @@ public class Plan extends BukkitPlugin<Plan> {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.toLog(this.getClass().getName(), e);
             disablePlugin();
+        }
+    }
+
+    private final void initColorScheme() {
+        try {
+            ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
+            ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
+            ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
+            super.setColorScheme(new ColorScheme(mainColor, secColor, terColor));
+        } catch (Exception e) {
+            Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
+            super.setColorScheme(new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE));
         }
     }
 
@@ -448,16 +452,5 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public ServerVariableHolder getVariable() {
         return serverVariableHolder;
-    }
-
-    /**
-     * Old method for getting the API.
-     *
-     * @return the Plan API.
-     * @deprecated Use Plan.getPlanAPI() (static method) instead.
-     */
-    @Deprecated
-    public API getAPI() {
-        return api;
     }
 }
