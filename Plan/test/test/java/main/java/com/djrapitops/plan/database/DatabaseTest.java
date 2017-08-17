@@ -330,7 +330,7 @@ public class DatabaseTest {
             }
         };
         backup.init();
-        ManageUtils.clearAndCopy(backup, db, db.getSavedUUIDs());
+        ManageUtils.clearAndCopy(backup, db);
         Set<UUID> savedUUIDs = backup.getSavedUUIDs();
         assertTrue("Didn't contain 1", savedUUIDs.contains(data.getUuid()));
         assertTrue("Didn't contain 2", savedUUIDs.contains(data2.getUuid()));
@@ -368,8 +368,8 @@ public class DatabaseTest {
             }
         };
         backup.init();
-        ManageUtils.clearAndCopy(backup, db, db.getSavedUUIDs());
-        ManageUtils.clearAndCopy(db, backup, backup.getSavedUUIDs());
+        ManageUtils.clearAndCopy(backup, db);
+        ManageUtils.clearAndCopy(db, backup);
         Set<UUID> savedUUIDs = db.getSavedUUIDs();
         assertTrue("Didn't contain 1", savedUUIDs.contains(data.getUuid()));
         assertTrue("Didn't contain 2", savedUUIDs.contains(data2.getUuid()));
