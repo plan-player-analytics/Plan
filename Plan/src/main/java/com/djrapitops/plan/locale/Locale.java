@@ -341,6 +341,10 @@ public class Locale {
 
     private static class LocaleHolder {
 
+        private LocaleHolder() {
+            throw new IllegalStateException("Static variable holder class");
+        }
+
         private static Locale locale;
 
         public static Locale getLocale() {

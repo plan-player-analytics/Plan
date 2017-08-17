@@ -194,6 +194,8 @@ public class Metrics {
      * Starts the Scheduler which submits our data every 30 minutes.
      */
     private void startSubmitting() {
+        final Metrics metrics = this;
+
         final Timer timer = new Timer(true); // We use a timer cause the Bukkit scheduler is affected by server lags
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -204,7 +206,7 @@ public class Metrics {
                 }
                 // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
                 // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
-                Bukkit.getScheduler().runTask(plugin, () -> submitData());
+                Bukkit.getScheduler().runTask(plugin, metrics::submitData);
             }
         }, TimeAmount.MINUTE.ms() * 5, TimeAmount.MINUTE.ms() * 30);
         // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start

@@ -39,7 +39,7 @@ public class ManageUtils {
             return false;
         }
         backupDB.init();
-        return clearAndCopy(backupDB, copyFromDB, uuids);
+        return clearAndCopy(backupDB, copyFromDB);
     }
 
     /**
@@ -64,10 +64,9 @@ public class ManageUtils {
      * @param clearAndCopyToDB Database that will be cleared data will be copied
      *                         to.
      * @param copyFromDB       Database where data will be copied from
-     * @param fromDBsavedUUIDs UUID collection of saved uuids in the copyFromDB
      * @return success?
      */
-    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB, Collection<UUID> fromDBsavedUUIDs) {
+    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) {
         try {
             clearAndCopyToDB.removeAllData();
             List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());

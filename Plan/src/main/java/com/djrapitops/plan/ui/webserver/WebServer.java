@@ -283,8 +283,8 @@ public class WebServer {
             String content = "<h1>403 Forbidden - Access Denied</h1>"
                     + "<p>Unauthorized User.<br>"
                     + "Make sure your user has the correct access level.<br>"
-                    + "This page requires permission level of " + String.valueOf(required) + ",<br>"
-                    + "This user has permission level of " + String.valueOf(permLevel) + "</p>";
+                    + "This page requires permission level of " + required + ",<br>"
+                    + "This user has permission level of " + permLevel + "</p>";
             response403.setContent(content);
             return response403;
         });
