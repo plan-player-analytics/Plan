@@ -32,7 +32,7 @@ public abstract class Importer {
     /**
      * Constructor.
      */
-    Importer() {
+    public Importer() {
         info = "No info specified";
     }
 

@@ -1,28 +1,25 @@
 package com.djrapitops.pluginbridge.plan.jobs;
 
 import com.gamingmesh.jobs.Jobs;
-import com.gamingmesh.jobs.PlayerManager;
-import com.gamingmesh.jobs.container.JobProgression;
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.gamingmesh.jobs.container.JobsPlayer;
-import main.java.com.djrapitops.plan.Plan;
+import com.gamingmesh.jobs.dao.JobsDAOData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * PluginData class for Jobs-plugin.
- *
+ * <p>
  * Registered to the plugin by JobsHook
  *
  * @author Rsl1122
- * @since 3.2.1
  * @see JobsHook
+ * @since 3.2.1
  */
 public class JobsAnalysisJobTable extends PluginData {
 
@@ -41,33 +38,30 @@ public class JobsAnalysisJobTable extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        PlayerManager pm = Jobs.getPlayerManager();
-        List<List<JobProgression>> players = Plan.getPlanAPI().getInspectCachedUserData().stream()
-                .map(p -> pm.getPlayerInfo(p.getUuid()))
-                .filter(Objects::nonNull)
-                .map(pm::getJobsPlayerOffline)
-                .map(JobsPlayer::getJobProgression)
-                .filter(list -> !list.isEmpty())
+        List<JobsDAOData> allJobs = Jobs.getDBManager().getDB().getAllJobs()
+                .values().stream()
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-        if (players.isEmpty()) {
+
+        if (allJobs.isEmpty()) {
             return parseContainer("", Html.TABLELINE_4.parse("No Players with Jobs", "", "", ""));
         }
+
         Map<String, Integer> workers = new HashMap<>();
         Map<String, Long> totals = new HashMap<>();
-        for (List<JobProgression> jobs : players) {
-            for (JobProgression job : jobs) {
-                String name = job.getJob().getName();
-                int level = job.getLevel();
-                if (!workers.containsKey(name)) {
-                    workers.put(name, 0);
-                }
-                workers.put(name, workers.get(name) + 1);
-                if (!totals.containsKey(name)) {
-                    totals.put(name, 0L);
-                }
-                totals.put(name, totals.get(name) + level);
+        for (JobsDAOData data : allJobs) {
+            String job = data.getJobName();
+            int level = data.getLevel();
+            if (!workers.containsKey(job)) {
+                workers.put(job, 0);
             }
+            workers.put(job, workers.get(job) + 1);
+            if (!totals.containsKey(job)) {
+                totals.put(job, 0L);
+            }
+            totals.put(job, totals.get(job) + level);
         }
+
         StringBuilder html = new StringBuilder();
         for (String job : workers.keySet()) {
             Integer amountOfWorkers = workers.get(job);

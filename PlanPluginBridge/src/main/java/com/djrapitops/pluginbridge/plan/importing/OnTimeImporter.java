@@ -1,13 +1,14 @@
 package com.djrapitops.pluginbridge.plan.importing;
 
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.importing.Importer;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import me.edge209.OnTime.OnTimeAPI;
-import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+
+import java.util.UUID;
+
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
