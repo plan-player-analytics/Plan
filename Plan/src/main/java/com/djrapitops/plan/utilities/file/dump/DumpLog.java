@@ -17,7 +17,7 @@ public class DumpLog {
      *
      * @param header The name of the header
      */
-    void addHeader(String header) {
+    public void addHeader(String header) {
         addLine("");
         addLine("--- " + header + " ---");
     }
@@ -28,7 +28,7 @@ public class DumpLog {
      * @param key   The key
      * @param value The value
      */
-    void add(String key, String value) {
+    public void add(String key, String value) {
         addLine(key + ": " + value);
     }
 
@@ -38,7 +38,7 @@ public class DumpLog {
      * @param key   The key
      * @param value The value
      */
-    void add(String key, boolean value) {
+    public void add(String key, boolean value) {
         addLine(key + ": " + value);
     }
 
@@ -49,7 +49,7 @@ public class DumpLog {
      * @param key   The key
      * @param value The CharSequences stored in an Iterable
      */
-    void add(String key, Iterable<? extends CharSequence> value) {
+    public void add(String key, Iterable<? extends CharSequence> value) {
         addLine(key + ": " + String.join(", ", value));
     }
 
@@ -58,7 +58,7 @@ public class DumpLog {
      *
      * @param lines The CharSequences stored in an Iterable
      */
-    void addLines(Iterable<? extends CharSequence> lines) {
+    public void addLines(Iterable<? extends CharSequence> lines) {
         lines.forEach(this::addLine);
     }
 
@@ -67,7 +67,7 @@ public class DumpLog {
      *
      * @param lines The lines
      */
-    void addLines(CharSequence... lines) {
+    public void addLines(CharSequence... lines) {
         Arrays.stream(lines).forEach(this::addLine);
     }
 
@@ -76,7 +76,7 @@ public class DumpLog {
      *
      * @param line The content of the line
      */
-    private void addLine(CharSequence line) {
+    public void addLine(CharSequence line) {
         lines.add(line == null ? "\n" : line.toString());
     }
 
