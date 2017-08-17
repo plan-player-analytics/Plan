@@ -160,7 +160,7 @@ public abstract class SQLDB extends Database {
 
     /**
      * Creates the tables that contain data.
-     *
+     * <p>
      * Updates table columns to latest schema.
      *
      * @return true if successful.
@@ -202,7 +202,6 @@ public abstract class SQLDB extends Database {
                         Log.debug("Database", "No conversion necessary.");
                         return;
                     }
-                    setStatus("Bukkit Data Conversion");
                     Log.info("Beginning Bukkit Data -> DB Conversion for " + uuids.size() + " players");
                     int id = plugin.getBootAnalysisTaskID();
                     if (id != -1) {
@@ -256,8 +255,8 @@ public abstract class SQLDB extends Database {
         if (connection != null) {
             connection.close();
         }
-        Log.logDebug("Database"); // Log remaining Debug info if present
         setStatus("Closed");
+        Log.logDebug("Database"); // Log remaining Debug info if present
     }
 
     /**
@@ -287,7 +286,6 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return false;
         }
-        setStatus("User exist check");
         try {
             return usersTable.getUserId(uuid.toString()) != -1;
         } catch (SQLException e) {
@@ -309,7 +307,6 @@ public abstract class SQLDB extends Database {
             return false;
         }
         try {
-            setStatus("Remove account " + uuid);
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
             try {
@@ -628,11 +625,10 @@ public abstract class SQLDB extends Database {
     }
 
     private void setStatus(String status) {
-        plugin.processStatus().setStatus("DB-" + getName(), status);
+        Log.debug("Database", status);
     }
 
     public void setAvailable() {
-        setStatus("Running");
         Log.logDebug("Database");
     }
 

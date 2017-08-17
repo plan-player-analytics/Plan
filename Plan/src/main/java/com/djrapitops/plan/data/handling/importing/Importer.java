@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.data.handling.importing;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import com.djrapitops.plugin.utilities.status.ProcessStatus;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -49,23 +48,15 @@ public abstract class Importer {
     public boolean importData(Collection<UUID> uuids, String... args) {
         Plan plan = Plan.getInstance();
         plan.getAnalysisCache().disableAnalysisTemporarily();
-
+        String processName = "Import, " + getClass().getSimpleName();
         try {
-            String processName = "Import, " + getClass().getSimpleName();
-
-            ProcessStatus<Plan> processStatus = plan.processStatus();
             DataCacheHandler handler = plan.getHandler();
             Database db = plan.getDB();
 
-            processStatus.startExecution(processName);
+            Benchmark.start(processName);
 
             Set<UUID> saved;
-            try {
-                saved = db.getSavedUUIDs();
-            } catch (SQLException ex) {
-                Log.toLog(this.getClass().getName(), ex);
-                return false;
-            }
+            saved = db.getSavedUUIDs();
 
             List<UUID> unSaved = new ArrayList<>(uuids);
             unSaved.removeAll(saved);
@@ -73,7 +64,7 @@ public abstract class Importer {
             int amount = unSaved.size();
 
             String createUserObjects = "Creating " + amount + " new UserData objects";
-            processStatus.setStatus(processName, createUserObjects);
+            Log.debug(processName, createUserObjects);
 
             Map<UUID, IOfflinePlayer> offlinePlayers = Fetch.getIOfflinePlayers().stream().collect(Collectors.toMap(IOfflinePlayer::getUuid, Function.identity()));
 
@@ -101,26 +92,24 @@ public abstract class Importer {
                         newPlayer.setLastPlayed(newPlayer.getRegistered());
                         newUsers.add(newPlayer);
                         if (milestones.contains(currentUser.incrementAndGet())) {
-                            processStatus.setStatus(processName, "Creating new UserData objects: " + currentPercent.addAndGet(5) + "%");
+                            Log.debug(processName, "Creating new UserData objects: " + currentPercent.addAndGet(5) + "%");
                         }
                     });
 
-            Benchmark.stop(createUserObjects);
-            processStatus.setStatus(processName, "Save new UserData objects (" + amount + ")");
+            Benchmark.stop(processName, createUserObjects);
+            Log.debug(processName, "Save new UserData objects (" + amount + ")");
 
-            try {
-                plan.getDB().saveMultipleUserData(newUsers);
-            } catch (SQLException ex) {
-                Log.toLog(this.getClass().getName(), ex);
-            }
+            plan.getDB().saveMultipleUserData(newUsers);
 
             for (UUID uuid : uuids) {
                 handler.addToPool(importData(uuid, args));
             }
-
-            processStatus.finishExecution(processName);
+        } catch (SQLException ex) {
+            Log.toLog(this.getClass().getName(), ex);
+            return false;
         } finally {
             plan.getAnalysisCache().enableAnalysis();
+            Log.logDebug(processName, Benchmark.stop(processName, processName));
         }
         return true;
     }
