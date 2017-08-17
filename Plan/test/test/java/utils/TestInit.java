@@ -9,7 +9,6 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.BenchUtil;
 import com.djrapitops.plugin.utilities.log.BukkitLog;
 import com.djrapitops.plugin.utilities.player.Fetch;
-import com.djrapitops.plugin.utilities.status.ProcessStatus;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
@@ -106,13 +105,11 @@ public class TestInit {
         BukkitLog<Plan> log = new BukkitLog<>(planMock, "console", "");
         BenchUtil bench = new BenchUtil(planMock);
         ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
-        ProcessStatus<Plan> process = new ProcessStatus<>(planMock);
         Fetch fetch = new Fetch(planMock);
 
         when(planMock.getPluginLogger()).thenReturn(log);
         when(planMock.benchmark()).thenReturn(bench);
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
-        when(planMock.processStatus()).thenReturn(process);
         when(planMock.fetch()).thenReturn(fetch);
         RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
         when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
