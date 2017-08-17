@@ -1,13 +1,14 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * PluginData class for LiteBans-plugin.
@@ -55,7 +56,7 @@ public class LiteBansInspectBansTable extends PluginData {
                     long expiry = ban.getExpiry();
                     String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                     html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
-                            expiry <= 0 ? "0" : expiry + "",
+                            expiry <= 0 ? "0" : Long.toString(expiry),
                             expires,
                             Html.LINK.parse(HtmlUtils.getInspectUrl(ban.getBannedBy()), ban.getBannedBy()),
                             ban.getReason())

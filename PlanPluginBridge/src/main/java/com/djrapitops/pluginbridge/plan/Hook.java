@@ -1,6 +1,7 @@
 package com.djrapitops.pluginbridge.plan;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -18,7 +19,7 @@ public abstract class Hook {
 
     /**
      * Class constructor.
-     *
+     * <p>
      * Checks if the given plugin (class path) is enabled.
      *
      * @param plugin Class path string of the plugin's main JavaPlugin class.
@@ -29,7 +30,7 @@ public abstract class Hook {
             Class<? extends JavaPlugin> pluginClass = (Class<? extends JavaPlugin>) givenClass;
             JavaPlugin hookedPlugin = getPlugin(pluginClass);
             enabled = hookedPlugin.isEnabled();
-        } catch (Throwable e) {
+        } catch (NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError | Exception e) {
             enabled = false;
         }
     }

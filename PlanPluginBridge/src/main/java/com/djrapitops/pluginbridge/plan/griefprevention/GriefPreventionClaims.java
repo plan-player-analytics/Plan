@@ -42,7 +42,7 @@ public class GriefPreventionClaims extends PluginData {
                 .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .collect(Collectors.toList());
-        return parseContainer(modifierPrefix, claims.size()+"");
+        return parseContainer(modifierPrefix, Integer.toString(claims.size()));
     }
 
     @Override

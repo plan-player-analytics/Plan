@@ -1,10 +1,5 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
@@ -12,6 +7,12 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * PluginData class for LiteBans-plugin.
@@ -68,7 +69,7 @@ public class LiteBansBansTable extends PluginData {
                         .replace("REPLACE0", Html.LINK.parse(HtmlUtils.getInspectUrl(name), name))
                         .replace("REPLACE1", Html.LINK.parse(HtmlUtils.getInspectUrl(ban.getBannedBy()), ban.getBannedBy()))
                         .replace("REPLACE2", ban.getReason())
-                        .replace("REPLACE3", expiry <= 0 ? "0" : expiry + "")
+                        .replace("REPLACE3", expiry <= 0 ? "0" : Long.toString(expiry))
                         .replace("REPLACE4", expires
                         )
                 );

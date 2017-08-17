@@ -1,12 +1,13 @@
 package com.djrapitops.pluginbridge.plan.ontime;
 
-import java.io.Serializable;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import me.edge209.OnTime.OnTimeAPI;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * PluginData class for Ontime-plugin.
@@ -42,7 +43,7 @@ public class OntimeVotes extends PluginData {
         if (votesTotal == -1) {
             return parseContainer(modifierPrefix, "No votes.");
         }
-        return parseContainer(modifierPrefix, votesTotal + "");
+        return parseContainer(modifierPrefix, Long.toString(votesTotal));
     }
 
     @Override

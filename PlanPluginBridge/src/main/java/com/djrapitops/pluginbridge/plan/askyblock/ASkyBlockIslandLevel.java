@@ -34,7 +34,7 @@ public class ASkyBlockIslandLevel extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         if (api.hasIsland(uuid)) {
             int level = api.getIslandLevel(uuid);
-            return parseContainer(modifierPrefix, level + "");
+            return parseContainer(modifierPrefix, Integer.toString(level));
         }
         return parseContainer(modifierPrefix, "No Island");
     }

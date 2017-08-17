@@ -1,27 +1,29 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
-import java.io.Serializable;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import net.milkbowl.vault.economy.Economy;
-import static org.bukkit.Bukkit.getOfflinePlayer;
 import org.bukkit.OfflinePlayer;
+
+import java.io.Serializable;
+import java.util.UUID;
+
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * PluginData class for Vault-plugin.
- *
+ * <p>
  * Registered to the plugin by VaultHook
- *
+ * <p>
  * Gives Total Balance Double as value.
  *
  * @author Rsl1122
- * @since 3.1.0
  * @see VaultHook
+ * @since 3.1.0
  */
 public class EconomyBalance extends PluginData {
 
@@ -49,7 +51,7 @@ public class EconomyBalance extends PluginData {
         }
         OfflinePlayer p = new FakeOfflinePlayer(data);
         if (this.econ.hasAccount(p)) {
-            return parseContainer(modifierPrefix, this.econ.getBalance(p) + "");
+            return parseContainer(modifierPrefix, Double.toString(this.econ.getBalance(p)));
         }
         return parseContainer(modifierPrefix, "0");
     }

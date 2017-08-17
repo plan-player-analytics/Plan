@@ -59,8 +59,8 @@ public class TownyTable extends PluginData {
                 } else {
                     mayor = "None";
                 }
-                String residents = t.getNumResidents() + "";
-                String land = t.getPurchasedBlocks() + "";
+                int residents = t.getNumResidents();
+                int land = t.getPurchasedBlocks();
                 String leaderPage = Html.LINK.parse(HtmlUtils.getInspectUrl(mayor), mayor);
                 html.append(Html.TABLELINE_4.parse(name, residents, land, leaderPage));
             }

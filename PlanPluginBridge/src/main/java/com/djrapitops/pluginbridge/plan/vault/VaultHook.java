@@ -1,10 +1,11 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.pluginbridge.plan.Hook;
-import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+
 import static org.bukkit.Bukkit.getServer;
 
 /**
@@ -17,12 +18,12 @@ public class VaultHook extends Hook {
 
     /**
      * Hooks the plugin and registers it's PluginData objects.
-     *
+     * <p>
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
+     * @see API
      */
     public VaultHook(HookHandler hookH) throws NoClassDefFoundError {
         super("net.milkbowl.vault.Vault");
@@ -34,14 +35,14 @@ public class VaultHook extends Hook {
             Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
             hookH.addPluginDataSource(new PermGroup(permSys));
             hookH.addPluginDataSource(new PermGroupTable(permSys));
-        } catch (Throwable e) {
+        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
         }
-        
+
         try {
             Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
             hookH.addPluginDataSource(new EconomyBalance(econ));
             hookH.addPluginDataSource(new EconomyBalanceTable(econ));
-        } catch (Throwable e) {
+        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
         }
     }
 }

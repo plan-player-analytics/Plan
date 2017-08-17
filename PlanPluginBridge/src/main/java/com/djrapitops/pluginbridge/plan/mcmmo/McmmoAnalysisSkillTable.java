@@ -4,25 +4,27 @@ import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.apache.commons.lang.StringUtils;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static org.bukkit.Bukkit.getOnlinePlayers;
 
 /**
  * PluginData class for McMMO-plugin.
- *
+ * <p>
  * Registered to the plugin by McmmoHook
  *
  * @author Rsl1122
- * @since 3.2.1
  * @see McmmoHook
+ * @since 3.2.1
  */
 public class McmmoAnalysisSkillTable extends PluginData {
 
@@ -57,7 +59,11 @@ public class McmmoAnalysisSkillTable extends PluginData {
         final StringBuilder html = new StringBuilder();
         for (SkillType skill : skills) {
             long total = MathUtils.sumInt(profiles.stream().map(p -> (Serializable) p.getSkillLevel(skill)));
-            html.append(Html.TABLELINE_3.parse(StringUtils.capitalize(skill.getName().toLowerCase()), "" + total, FormatUtils.cutDecimals(MathUtils.average((int) total, profiles.size()))));
+            html.append(Html.TABLELINE_3.parse(
+                    StringUtils.capitalize(skill.getName().toLowerCase()),
+                    Long.toString(total),
+                    FormatUtils.cutDecimals(MathUtils.average((int) total, profiles.size()))
+            ));
         }
         return parseContainer("", html.toString());
     }
