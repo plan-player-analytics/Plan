@@ -1,10 +1,11 @@
 package test.java.main.java.com.djrapitops.plan.utilities.dump;
 
 import main.java.com.djrapitops.plan.utilities.file.dump.DumpLog;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * @author Fuzzlemann
@@ -35,6 +36,6 @@ public class DumpLogTest {
                 "Iterable 2";
         String result = testLog.toString();
 
-        Assert.assertEquals(expResult, result);
+        assertEquals(expResult, result);
     }
 }

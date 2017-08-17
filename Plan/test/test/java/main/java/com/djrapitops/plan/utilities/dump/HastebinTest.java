@@ -53,9 +53,9 @@ public class HastebinTest {
         thread.start();
 
         try {
-            thread.join();
+            thread.join(5000);
         } catch (InterruptedException e) {
-            Log.info("InterruptedException: " + e.getMessage());
+            Log.info("Hastebin timed out");
         }
 
         Log.info("Hastebin Availability Test Link: " + testLink.get());
