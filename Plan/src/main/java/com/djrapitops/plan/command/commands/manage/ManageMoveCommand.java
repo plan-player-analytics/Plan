@@ -102,7 +102,7 @@ public class ManageMoveCommand extends SubCommand {
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    if (ManageUtils.clearAndCopy(toDatabase, fromDatabase, uuids)) {
+                    if (ManageUtils.clearAndCopy(toDatabase, fromDatabase)) {
                         sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
                         boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
 
