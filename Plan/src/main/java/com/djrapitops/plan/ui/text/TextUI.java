@@ -52,8 +52,12 @@ public class TextUI {
         boolean online = d.isOnline();
         String ball = sec + " " + DefaultMessages.BALL + main;
 
+        String onlineString = online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline";
+        String activeString = active ? " Active" : "Inactive";
+        String bannedString = banned ? ChatColor.DARK_RED + " Banned" : ter + activeString;
+
         return new String[]{
-                sec + " " + DefaultMessages.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
+                sec + " " + DefaultMessages.BALL + bannedString + onlineString,
                 ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
                 ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
                 ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),

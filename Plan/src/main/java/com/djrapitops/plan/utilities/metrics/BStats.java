@@ -6,7 +6,7 @@ import main.java.com.djrapitops.plan.Settings;
 
 public class BStats {
     private final Plan plugin;
-    private Metrics bStats;
+    private Metrics metrics;
 
     public BStats(Plan plugin) {
         this.plugin = plugin;
@@ -14,8 +14,8 @@ public class BStats {
 
     public void registerMetrics() {
         Log.debug("Enable", "Enabling bStats Metrics.");
-        if (bStats == null) {
-            bStats = new Metrics(plugin);
+        if (metrics == null) {
+            metrics = new Metrics(plugin);
         }
         registerConfigSettingGraphs();
     }
@@ -40,10 +40,10 @@ public class BStats {
     }
 
     private void addEnabledDisabledPie(String id, boolean setting) {
-        bStats.addCustomChart(new Metrics.SimplePie(id, () -> setting ? "Enabled" : "Disabled"));
+        metrics.addCustomChart(new Metrics.SimplePie(id, () -> setting ? "Enabled" : "Disabled"));
     }
 
     private void addStringSettingPie(String id, String setting) {
-        bStats.addCustomChart(new Metrics.SimplePie(id, () -> setting));
+        metrics.addCustomChart(new Metrics.SimplePie(id, () -> setting));
     }
 }

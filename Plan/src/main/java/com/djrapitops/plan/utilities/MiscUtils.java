@@ -114,6 +114,7 @@ public class MiscUtils {
                 try {
                     c.close();
                 } catch (IOException ignored) {
+                    /* Ignored */
                 }
             }
         }
@@ -125,6 +126,7 @@ public class MiscUtils {
                 try {
                     c.close();
                 } catch (Exception ignored) {
+                    /* Ignored */
                 }
             }
         }

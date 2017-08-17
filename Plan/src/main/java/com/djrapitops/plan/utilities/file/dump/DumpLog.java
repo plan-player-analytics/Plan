@@ -1,25 +1,12 @@
 package main.java.com.djrapitops.plan.utilities.file.dump;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import main.java.com.djrapitops.plan.Log;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Fuzzlemann
- * @since 3.7.0
+ * @since 3.6.2
  */
 public class DumpLog {
 
@@ -99,66 +86,7 @@ public class DumpLog {
      * @return The link to the Dump Log
      */
     String upload() {
-        List<String> parts = ImmutableList.copyOf(split()).reverse();
-
-        String lastLink = null;
-        for (String part : parts) {
-            if (lastLink != null) {
-                part += "\n" + lastLink;
-            }
-
-            lastLink = upload(part);
-        }
-
-        return lastLink;
-    }
-
-    /**
-     * Uploads the content to Hastebin using HTTPS and POST
-     *
-     * @param content The content
-     * @return The link to the content
-     */
-    private String upload(String content) {
-        HttpsURLConnection connection = null;
-        try {
-            URL url = new URL("https://hastebin.com/documents");
-            connection = (HttpsURLConnection) url.openConnection();
-
-            connection.setRequestProperty("Content-length", String.valueOf(content.length()));
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("User-Agent", "Mozilla/4.0");
-            connection.setRequestMethod("POST");
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(this.toString());
-            wr.flush();
-            wr.close();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(reader.readLine());
-
-            return "https://hastebin.com/" + json.get("key");
-        } catch (IOException | ParseException e) {
-            Log.toLog("DumpLog.upload", e);
-            return "Error";
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-    }
-
-    /**
-     * Splits the content of the DumpLog into parts
-     *
-     * @return The splitted content
-     */
-    private Iterable<String> split() {
-        return Splitter.fixedLength(390000).split(this.toString());
+        return Hastebin.safeUpload(this.toString());
     }
 
     @Override
