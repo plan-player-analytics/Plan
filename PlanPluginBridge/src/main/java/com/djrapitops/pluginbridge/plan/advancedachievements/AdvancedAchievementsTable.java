@@ -14,14 +14,14 @@ import java.util.UUID;
 
 /**
  * PluginData class for AdvancedAchievements-plugin.
- *
+ * <p>
  * Registered to the plugin by AdvancedAchievementsHook
- *
+ * <p>
  * Gives a table of players and achievements achievements.
  *
  * @author Rsl1122
- * @since 3.1.0
  * @see AdvancedAchievementsHook
+ * @since 3.1.0
  */
 public class AdvancedAchievementsTable extends PluginData {
 
@@ -29,7 +29,7 @@ public class AdvancedAchievementsTable extends PluginData {
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.
-     *
+     * <p>
      * Uses Html to easily parse Html for the table.
      *
      * @param aaAPI AdvancedAchievementsAPI given by AdvancedAchievementsHook
@@ -60,28 +60,31 @@ public class AdvancedAchievementsTable extends PluginData {
     }
 
     private void appendTableLinesForLessThanV520(Map<UUID, UserData> cachedUserData, StringBuilder html) {
-        cachedUserData.values().forEach((uData) -> {
-            String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
-            String achievements = aaAPI.getPlayerTotalAchievements(uData.getUuid()) + "";
+        cachedUserData.values().forEach(uData -> {
+            String inspectUrl = HtmlUtils.getRelativeInspectUrl(uData.getName());
+            int achievements = aaAPI.getPlayerTotalAchievements(uData.getUuid());
             html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
         });
     }
 
     private void appendTableLinesForV520Plus(Map<UUID, UserData> cachedUserData, StringBuilder html) {
         Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
-        for (UUID uuid : achievementsMap.keySet()) {
+        for (Map.Entry<UUID, Integer> entry : achievementsMap.entrySet()) {
+            UUID uuid = entry.getKey();
+            int achievements = entry.getValue();
+
             UserData uData = cachedUserData.get(uuid);
             if (uData == null) {
                 continue;
             }
+
             String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
-            int achievements = achievementsMap.get(uuid);
-            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements+""));
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
         }
     }
 
     @Override
     public Serializable getValue(UUID uuid) {
-        return "";
+        return -1;
     }
 }

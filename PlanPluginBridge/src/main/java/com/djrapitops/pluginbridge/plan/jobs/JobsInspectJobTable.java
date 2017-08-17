@@ -43,7 +43,7 @@ public class JobsInspectJobTable extends PluginData {
                 }
                 return parseContainer("", html.toString());
             }
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         }
         return parseContainer("", Html.TABLELINE_2.parse("No Jobs.", ""));
     }

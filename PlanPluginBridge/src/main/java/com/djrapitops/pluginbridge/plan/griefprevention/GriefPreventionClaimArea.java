@@ -40,7 +40,7 @@ public class GriefPreventionClaimArea extends PluginData {
                 .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .map(Claim::getArea).mapToInt(i -> i).sum();
-        return parseContainer(modifierPrefix, area + "");
+        return parseContainer(modifierPrefix, Integer.toString(area));
     }
 
     @Override

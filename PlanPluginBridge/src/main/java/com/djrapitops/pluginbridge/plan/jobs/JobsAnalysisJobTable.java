@@ -63,14 +63,15 @@ public class JobsAnalysisJobTable extends PluginData {
         }
 
         StringBuilder html = new StringBuilder();
-        for (String job : workers.keySet()) {
-            Integer amountOfWorkers = workers.get(job);
+        for (Map.Entry<String, Integer> entry : workers.entrySet()) {
+            String job = entry.getKey();
+            Integer amountOfWorkers = entry.getValue();
             Long totalLevel = totals.get(job);
             html.append(Html.TABLELINE_4.parse(
                     job,
-                    "" + amountOfWorkers,
+                    amountOfWorkers,
                     FormatUtils.cutDecimals(MathUtils.average((int) (long) totalLevel, amountOfWorkers)),
-                    "" + totalLevel)
+                    totalLevel)
             );
         }
         return parseContainer("", html.toString());

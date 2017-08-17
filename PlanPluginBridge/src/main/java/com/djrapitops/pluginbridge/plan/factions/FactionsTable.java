@@ -70,24 +70,20 @@ public class FactionsTable extends PluginData {
             html.append(Html.TABLELINE_4.parse("No Factions", "", "", ""));
         } else {
             for (Faction f : factions) {
-                String name;
-                String leader;
-                String power;
-                String land;
                 if (f != null) {
-                    name = f.getName();
                     MPlayer fLeader = f.getLeader();
-                    leader = fLeader != null ? fLeader.getNameAndSomething("", "") : "No Leader";
-                    power = FormatUtils.cutDecimals(f.getPower());
-                    land = f.getLandCount() + "";
+                    String leader = fLeader != null ? fLeader.getNameAndSomething("", "") : "No Leader";
+                    String leaderPage = Html.LINK.parse(HtmlUtils.getInspectUrl(leader), leader);
+                    html.append(Html.TABLELINE_4.parse(
+                            f.getName(),
+                            FormatUtils.cutDecimals(f.getPower()),
+                            f.getLandCount(),
+                            leaderPage
+                    ));
                 } else {
-                    name = "Not Found";
-                    leader = "Not Found";
-                    power = "Not Found";
-                    land = "Not Found";
+                    String notFound = "Not Found";
+                    html.append(Html.TABLELINE_4.parse(notFound, notFound, notFound, notFound));
                 }
-                String leaderPage = Html.LINK.parse(HtmlUtils.getInspectUrl(leader), leader);
-                html.append(Html.TABLELINE_4.parse(name, power, land, leaderPage));
             }
         }
         return parseContainer(modifierPrefix, html.toString());

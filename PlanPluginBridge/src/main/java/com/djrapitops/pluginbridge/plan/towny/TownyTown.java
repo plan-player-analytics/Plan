@@ -12,16 +12,18 @@ import java.util.UUID;
 
 /**
  * PluginData class for Towny-plugin.
- *
+ * <p>
  * Registered to the plugin by TownyHook
- *
+ * <p>
  * Gives Town name as String.
  *
  * @author Rsl1122
- * @since 3.1.0
  * @see TownyHook
+ * @since 3.1.0
  */
 public class TownyTown extends PluginData {
+
+    private final String notInTown = "Not in a Town";
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.
@@ -37,7 +39,7 @@ public class TownyTown extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
         if (data == null) {
-            return parseContainer(modifierPrefix, "Not in a Town");
+            return parseContainer(modifierPrefix, notInTown);
         }
         String name = data.getName();
         try {
@@ -46,11 +48,11 @@ public class TownyTown extends PluginData {
             if (res.hasTown()) {
                 town = res.getTown().getName();
             } else {
-                town = "Not in a Town";
+                town = notInTown;
             }
             return parseContainer("", town);
         } catch (NotRegisteredException ex) {
-            return parseContainer(modifierPrefix, "Not in a Town");
+            return parseContainer(modifierPrefix, notInTown);
         }
     }
 
@@ -58,7 +60,7 @@ public class TownyTown extends PluginData {
     public Serializable getValue(UUID uuid) {
         UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
         if (data == null) {
-            return "Not in a Town";
+            return notInTown;
         }
         String name = data.getName();
         try {
@@ -67,7 +69,7 @@ public class TownyTown extends PluginData {
             if (res.hasTown()) {
                 town = res.getTown().getName();
             } else {
-                town = "Not in a Town";
+                town = notInTown;
             }
             return town;
         } catch (NotRegisteredException ex) {

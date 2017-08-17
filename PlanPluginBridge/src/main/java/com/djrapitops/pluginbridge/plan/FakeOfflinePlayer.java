@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- *
  * @author Rsl1122
  */
 public class FakeOfflinePlayer implements OfflinePlayer {
@@ -57,6 +56,7 @@ public class FakeOfflinePlayer implements OfflinePlayer {
 
     @Override
     public void setWhitelisted(boolean bln) {
+        /* Not used */
     }
 
     @Override
@@ -91,6 +91,7 @@ public class FakeOfflinePlayer implements OfflinePlayer {
 
     @Override
     public void setOp(boolean bln) {
+        /* Not used */
     }
 
     @Override

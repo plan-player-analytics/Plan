@@ -9,16 +9,18 @@ import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.ui.html.Html;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
-import org.apache.commons.lang.StringUtils;
+
 import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
@@ -59,7 +61,7 @@ public class McmmoInspectSkillTable extends PluginData {
         skills.addAll(Arrays.stream(SkillType.values()).distinct().collect(Collectors.toList()));
         final StringBuilder html = new StringBuilder();
         for (SkillType skill : skills) {
-            html.append(Html.TABLELINE_2.parse(StringUtils.capitalize(skill.getName().toLowerCase()), "" + skillProfile.getSkillLevel(skill)));
+            html.append(Html.TABLELINE_2.parse(StringUtils.capitalize(skill.getName().toLowerCase()), skillProfile.getSkillLevel(skill)));
         }
         return parseContainer("", html.toString());
     }

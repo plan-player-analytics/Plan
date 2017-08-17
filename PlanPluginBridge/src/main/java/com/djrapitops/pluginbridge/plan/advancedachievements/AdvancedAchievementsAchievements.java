@@ -52,7 +52,7 @@ public class AdvancedAchievementsAchievements extends PluginData {
         if (total != null) {
             return parseContainer(modifierPrefix, total + "");
         }
-        return parseContainer(modifierPrefix, 0 + "");
+        return parseContainer(modifierPrefix, "0");
     }
 
     private void refreshTotalAchievements() {
