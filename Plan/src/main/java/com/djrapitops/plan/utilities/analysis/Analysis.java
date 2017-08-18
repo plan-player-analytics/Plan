@@ -88,7 +88,7 @@ public class Analysis {
         log(Locale.get(Msg.ANALYSIS_FETCH).toString());
         Benchmark.start("Fetch Phase");
         Log.debug("Database", "Analysis Fetch");
-        plugin.processStatus().setStatus("Analysis", "Analysis Fetch Phase");
+        Log.debug("Analysis", "Analysis Fetch Phase");
         try {
             inspectCache.cacheAllUserData(db);
         } catch (Exception ex) {
@@ -141,7 +141,7 @@ public class Analysis {
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             Benchmark.start("Analysis Phase");
-            plugin.processStatus().setStatus("Analysis", "Analysis Phase");
+            Log.debug("Analysis", "Analysis Phase");
             log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(rawData.size(), fetchPhaseLength));
 
             String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
@@ -153,7 +153,7 @@ public class Analysis {
             Benchmark.stop("Analysis", "Analysis Phase");
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
-            plugin.processStatus().setStatus("Analysis", "Analyzing additional data sources (3rd party)");
+            Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
             analysisCache.cache(analysisData);
@@ -165,12 +165,15 @@ public class Analysis {
                 Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
 
+            PageCacheHandler.removeIf(identifier -> identifier.startsWith("inspectPage: "));
             PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
             PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
-            ExportUtility.export(plugin, analysisData, rawData);
+
+            ExportUtility.export(analysisData, rawData);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
-            plugin.processStatus().setStatus("Analysis", "Error: " + e);
+            Log.debug("Analysis", "Error: " + e);
+            Log.logDebug("Analysis");
             return false;
         }
         return true;
@@ -226,7 +229,7 @@ public class Analysis {
                 if (analysisTypes.contains(boolTot)) {
                     replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
                 Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
 
                 Log.toLog(this.getClass().getName(), e);
@@ -246,11 +249,6 @@ public class Analysis {
     }
 
     public void setTaskId(int id) {
-        if (id == -2) {
-            plugin.processStatus().setStatus("Analysis", "Temporarily Disabled");
-        } else if (id == -1) {
-            plugin.processStatus().setStatus("Analysis", "Enabled");
-        }
         taskId = id;
     }
 

@@ -10,34 +10,34 @@ import java.io.Serializable;
  */
 public class Message {
 
-    private final String message;
+    private final String content;
 
-    public Message(String message) {
-        this.message = message;
+    public Message(String content) {
+        this.content = content;
     }
 
     public String parse(Serializable... p) {
-        String returnValue = this.message;
+        String returnValue = this.content;
         for (int i = 0; i < p.length; i++) {
             returnValue = returnValue.replace("REPLACE" + i, p[i].toString());
         }
         return returnValue;
     }
 
-    @Override
-    public String toString() {
-        return message;
+    public String[] toArray() {
+        return content.split("\\\\");
+    }
+
+    public String[] toArray(Serializable... p) {
+        return parse(p).split("\\\\");
     }
 
     public String parse() {
         return toString();
     }
 
-    public String[] toArray() {
-        return message.split("\\\\");
-    }
-
-    public String[] toArray(Serializable... p) {
-        return parse().split("\\\\");
+    @Override
+    public String toString() {
+        return content;
     }
 }

@@ -1,10 +1,11 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
-import java.io.Serializable;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * PluginData class for ASkyBlock-plugin.
@@ -32,7 +33,7 @@ public class ASkyBlockIslands extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         int count = api.getIslandCount();
         if (count > 0) {
-            return parseContainer(modifierPrefix, count + "");
+            return parseContainer(modifierPrefix, Integer.toString(count));
         }
         return parseContainer(modifierPrefix, "0");
     }

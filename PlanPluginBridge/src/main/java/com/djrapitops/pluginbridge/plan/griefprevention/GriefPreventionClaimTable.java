@@ -53,7 +53,7 @@ public class GriefPreventionClaimTable extends PluginData {
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .forEach(claim -> {
                     String location = FormattingUtils.formatLocation(claim.getGreaterBoundaryCorner());
-                    String area = claim.getArea() + "";
+                    int area = claim.getArea();
                     html.append(Html.TABLELINE_2.parse(location, area));
                 });
         return html.toString();

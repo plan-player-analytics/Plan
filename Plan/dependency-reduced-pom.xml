@@ -3,9 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.djrapitops</groupId>
   <artifactId>Plan</artifactId>
-  <version>3.6.0</version>
+  <version>3.6.3</version>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
+    <testSourceDirectory>${basedir}/test</testSourceDirectory>
     <defaultGoal>clean package install</defaultGoal>
     <resources>
       <resource>
@@ -16,6 +17,7 @@
           <include>*.js</include>
           <include>*.yml</include>
           <include>*.html</include>
+          <include>*.txt</include>
         </includes>
       </resource>
     </resources>
@@ -70,18 +72,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.pitest</groupId>
-        <artifactId>pitest-maven</artifactId>
-        <version>1.1.8</version>
-        <configuration>
-          <targetClasses>
-            <param>main.java.com.djrapitops.plan.*</param>
-          </targetClasses>
-          <targetTests>
-            <param>test.java.main.java.com.djrapitops.plan.*</param>
-          </targetTests>
-          <timeoutConstant>1000</timeoutConstant>
-        </configuration>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.9</version>
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -181,6 +174,9 @@
   </dependencies>
   <properties>
     <sonar.language>java</sonar.language>
+    <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>

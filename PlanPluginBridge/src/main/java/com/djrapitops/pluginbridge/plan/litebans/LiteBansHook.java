@@ -16,12 +16,12 @@ public class LiteBansHook extends Hook {
 
     /**
      * Hooks the plugin and registers it's PluginData objects.
-     *
+     * <p>
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
+     * @see API
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public LiteBansHook(HookHandler hookH) throws NoClassDefFoundError {
@@ -29,7 +29,7 @@ public class LiteBansHook extends Hook {
         try {
             Database.get();
             enabled = true;
-        } catch (Throwable e) {
+        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
             enabled = false;
         }
         if (enabled) {

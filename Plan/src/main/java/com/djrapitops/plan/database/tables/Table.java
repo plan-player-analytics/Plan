@@ -97,6 +97,7 @@ public abstract class Table {
             try {
                 execute(statement);
             } catch (SQLException ignored) {
+                /* Ignored */
             }
         }
     }

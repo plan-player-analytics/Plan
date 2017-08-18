@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.ui.html.graphs.CPUGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.RamGraphCreator;
@@ -40,6 +41,11 @@ public class TPSPart extends RawData {
         List<TPS> week = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.WEEK.ms());
         List<TPS> day = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.DAY.ms());
 
+        addValue("tpshighcol", "#"+ Settings.HCOLOR_TPS_HIGH);
+        addValue("tpsmediumcol", "#"+ Settings.HCOLOR_TPS_MED);
+        addValue("tpslowcol", "#"+ Settings.HCOLOR_TPS_LOW);
+        addValue("tpsmedium", Settings.TPS_GRAPH_MED.getNumber());
+        addValue("tpshigh", Settings.TPS_GRAPH_HIGH.getNumber());
 
         addValue("tpsseries", TPSGraphCreator.buildSeriesDataString(tpsData));
         addValue("cpuseries", CPUGraphCreator.buildSeriesDataString(tpsData));
@@ -47,8 +53,8 @@ public class TPSPart extends RawData {
         addValue("entityseries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
         addValue("chunkseries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
 
-        double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTps));
-        double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTps));
+        double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTicksPerSecond));
+        double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTicksPerSecond));
 
         double averageCPUWeek = MathUtils.averageDouble(week.stream().map(TPS::getCPUUsage).filter(i -> i != 0));
         double averageCPUDay = MathUtils.averageDouble(day.stream().map(TPS::getCPUUsage).filter(i -> i != 0));

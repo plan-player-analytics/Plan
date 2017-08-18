@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,14 +19,13 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.6.0 / Database version 7
  */
-public class WorldTimesTable extends Table {
+public class WorldTimesTable extends UserIDTable {
 
     private final WorldTable worldTable;
     private final String worldIDColumn;
     private final String worldNameColumn;
 
     private final String columnWorldId;
-    private final String columnUserID;
     private final String columnPlaytime;
 
     private final String selectWorldIDsql;
@@ -51,13 +52,13 @@ public class WorldTimesTable extends Table {
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnWorldId + " integer NOT NULL, "
-                    + columnPlaytime + " bigint NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + "), "
-                    + "FOREIGN KEY(" + columnWorldId + ") REFERENCES " + worldTable.getTableName() + "(" + worldTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnWorldId, Sql.INT).notNull()
+                    .column(columnPlaytime, Sql.LONG).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {
@@ -67,18 +68,7 @@ public class WorldTimesTable extends Table {
     }
 
     public boolean removeUserWorldTimes(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**

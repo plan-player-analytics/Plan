@@ -45,7 +45,7 @@ public class GMTimes extends TimeKeeper {
      * @param times 1-4 time parameters.
      * @throws IllegalArgumentException If any parameter is null.
      */
-    public void setAllGMTimes(long... times) throws IllegalArgumentException {
+    public void setAllGMTimes(long... times) {
         Verify.nullCheck(times);
         String[] gms = GMTimesTable.getGMKeyArray();
         int size = times.length;

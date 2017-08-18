@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.net.InetAddress;
@@ -15,9 +17,8 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class IPsTable extends Table {
+public class IPsTable extends UserIDTable {
 
-    private final String columnUserID;
     private final String columnIP;
 
     /**
@@ -37,11 +38,11 @@ public class IPsTable extends Table {
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnIP + " varchar(20) NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnIP, Sql.varchar(20)).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {
@@ -55,18 +56,7 @@ public class IPsTable extends Table {
      * @return if the IPs were removed successfully
      */
     public boolean removeUserIPs(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**

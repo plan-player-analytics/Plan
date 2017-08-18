@@ -1,24 +1,22 @@
 package com.djrapitops.pluginbridge.plan.jobs;
 
 import com.gamingmesh.jobs.Jobs;
-import com.gamingmesh.jobs.PlayerManager;
-import com.gamingmesh.jobs.container.JobProgression;
-import com.gamingmesh.jobs.container.JobsPlayer;
-import com.gamingmesh.jobs.container.PlayerInfo;
-import java.io.Serializable;
-import java.util.List;
-import java.util.UUID;
+import com.gamingmesh.jobs.dao.JobsDAOData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.UUID;
+
 /**
  * PluginData class for Jobs-plugin.
- *
+ * <p>
  * Registered to the plugin by JobsHook
  *
  * @author Rsl1122
- * @since 3.2.1
  * @see JobsHook
+ * @since 3.2.1
  */
 public class JobsInspectJobTable extends PluginData {
 
@@ -37,18 +35,15 @@ public class JobsInspectJobTable extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         try {
-            PlayerManager pm = Jobs.getPlayerManager();
-            PlayerInfo info = pm.getPlayerInfo(uuid);
-            JobsPlayer player = pm.getJobsPlayerOffline(info);
-            List<JobProgression> progression = player.getJobProgression();
-            if (!progression.isEmpty()) {
+            List<JobsDAOData> playersJobs = Jobs.getDBManager().getDB().getAllJobs(null, uuid);
+            if (!playersJobs.isEmpty()) {
                 StringBuilder html = new StringBuilder();
-                for (JobProgression job : progression) {
-                    html.append(Html.TABLELINE_2.parse(job.getJob().getName(), "" + job.getLevel()));
+                for (JobsDAOData job : playersJobs) {
+                    html.append(Html.TABLELINE_2.parse(job.getJobName(), job.getLevel()));
                 }
                 return parseContainer("", html.toString());
             }
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         }
         return parseContainer("", Html.TABLELINE_2.parse("No Jobs.", ""));
     }

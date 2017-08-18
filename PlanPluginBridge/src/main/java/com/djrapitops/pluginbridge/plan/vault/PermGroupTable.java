@@ -6,14 +6,12 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.plugin.utilities.Format;
-import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import net.milkbowl.vault.permission.Permission;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.OfflinePlayer;
 
 import java.io.Serializable;
@@ -65,12 +63,11 @@ public class PermGroupTable extends PluginData {
             groups.put(group, groups.get(group) + 1);
         }
         StringBuilder html = new StringBuilder();
-        for (String group : groups.keySet()) {
-            if (Verify.notNull(group, groups.get(group))) {
-                String groupName = Format.create(group).capitalize().toString();
-                String groupMembers = groups.get(group) + "";
-                html.append(Html.TABLELINE_2.parse(StringUtils.capitalize(group), groups.get(group) + ""));
-            }
+        for (Map.Entry<String, Integer> entry : groups.entrySet()) {
+            String group = entry.getKey();
+            Integer members = entry.getValue();
+            String groupName = Format.create(group).capitalize().toString();
+            html.append(Html.TABLELINE_2.parse(groupName, members));
         }
         return html.toString();
     }

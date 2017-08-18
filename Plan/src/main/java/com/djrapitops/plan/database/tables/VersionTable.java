@@ -2,6 +2,8 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,9 +28,9 @@ public class VersionTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + "version integer NOT NULL"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column("version", Sql.INT).notNull()
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {

@@ -6,6 +6,8 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +17,18 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class GMTimesTable extends Table {
+public class GMTimesTable extends UserIDTable {
 
-    private final String columnUserID;
     private final String columnSurvivalTime;
     private final String columnCreativeTime;
     private final String columnAdventureTime;
     private final String columnSpectatorTime;
+
+    private static final String SURVIVAL = "SURVIVAL";
+    private static final String CREATIVE = "CREATIVE";
+    private static final String ADVENTURE = "ADVENTURE";
+    private static final String SPECTATOR = "SPECTATOR";
+
 
     /**
      * @param db
@@ -30,14 +37,14 @@ public class GMTimesTable extends Table {
     public GMTimesTable(SQLDB db, boolean usingMySQL) {
         super("plan_gamemodetimes", db, usingMySQL);
         columnUserID = "user_id";
-        columnSurvivalTime = "survival";
-        columnCreativeTime = "creative";
-        columnAdventureTime = "adventure";
-        columnSpectatorTime = "spectator";
+        columnSurvivalTime = "SURVIVAL";
+        columnCreativeTime = "CREATIVE";
+        columnAdventureTime = "ADVENTURE";
+        columnSpectatorTime = "SPECTATOR";
     }
 
     public static String[] getGMKeyArray() {
-        return new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
+        return new String[]{SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR};
     }
 
     /**
@@ -47,14 +54,14 @@ public class GMTimesTable extends Table {
     public boolean createTable() {
         UsersTable usersTable = db.getUsersTable();
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnSurvivalTime + " bigint NOT NULL, "
-                    + columnCreativeTime + " bigint NOT NULL, "
-                    + columnAdventureTime + " bigint NOT NULL, "
-                    + columnSpectatorTime + " bigint NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnSurvivalTime, Sql.LONG).notNull()
+                    .column(columnCreativeTime, Sql.LONG).notNull()
+                    .column(columnAdventureTime, Sql.LONG).notNull()
+                    .column(columnSpectatorTime, Sql.LONG).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {
@@ -68,18 +75,7 @@ public class GMTimesTable extends Table {
      * @return
      */
     public boolean removeUserGMTimes(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**
@@ -97,10 +93,10 @@ public class GMTimesTable extends Table {
             HashMap<String, Long> times = new HashMap<>();
 
             while (set.next()) {
-                times.put("SURVIVAL", set.getLong(columnSurvivalTime));
-                times.put("CREATIVE", set.getLong(columnCreativeTime));
-                times.put("ADVENTURE", set.getLong(columnAdventureTime));
-                times.put("SPECTATOR", set.getLong(columnSpectatorTime));
+                times.put(SURVIVAL, set.getLong(columnSurvivalTime));
+                times.put(CREATIVE, set.getLong(columnCreativeTime));
+                times.put(ADVENTURE, set.getLong(columnAdventureTime));
+                times.put(SPECTATOR, set.getLong(columnSpectatorTime));
             }
 
             return times;
@@ -125,10 +121,10 @@ public class GMTimesTable extends Table {
                     continue;
                 }
 
-                gmTimes.put("SURVIVAL", set.getLong(columnSurvivalTime));
-                gmTimes.put("CREATIVE", set.getLong(columnCreativeTime));
-                gmTimes.put("ADVENTURE", set.getLong(columnAdventureTime));
-                gmTimes.put("SPECTATOR", set.getLong(columnSpectatorTime));
+                gmTimes.put(SURVIVAL, set.getLong(columnSurvivalTime));
+                gmTimes.put(CREATIVE, set.getLong(columnCreativeTime));
+                gmTimes.put(ADVENTURE, set.getLong(columnAdventureTime));
+                gmTimes.put(SPECTATOR, set.getLong(columnSpectatorTime));
                 times.put(id, gmTimes);
             }
 

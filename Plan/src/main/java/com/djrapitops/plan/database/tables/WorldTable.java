@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,11 +41,11 @@ public class WorldTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnWorldId + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
-                    + columnWorldName + " varchar(100) NOT NULL"
-                    + (usingMySQL ? ", PRIMARY KEY (" + columnWorldId + ")" : "")
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
+                    .column(columnWorldName, Sql.varchar(100)).notNull()
+                    .primaryKey(usingMySQL, columnWorldId)
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {

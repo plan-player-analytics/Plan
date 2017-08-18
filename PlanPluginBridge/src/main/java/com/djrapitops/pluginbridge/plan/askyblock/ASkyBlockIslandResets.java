@@ -1,9 +1,10 @@
 package com.djrapitops.pluginbridge.plan.askyblock;
 
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
+
 import java.io.Serializable;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 /**
  * PluginData class for ASkyBlock-plugin.
@@ -22,15 +23,15 @@ public class ASkyBlockIslandResets extends PluginData {
      */
     public ASkyBlockIslandResets(ASkyBlockAPI aaAPI) {
         super("ASkyBlock", "island_resets_left");
-        this.api = aaAPI;        
+        this.api = aaAPI;
         super.setIcon("refresh");
         super.setPrefix("Island Resets Left: ");
     }
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        return parseContainer(modifierPrefix, api.getResetsLeft(uuid)+"");
-        
+        return parseContainer(modifierPrefix, Integer.toString(api.getResetsLeft(uuid)));
+
     }
 
     @Override

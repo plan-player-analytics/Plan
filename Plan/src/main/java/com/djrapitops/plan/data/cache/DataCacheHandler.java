@@ -122,7 +122,7 @@ public class DataCacheHandler extends SessionCache {
      *                                  parameters.
      * @throws IllegalStateException    BukkitScheduler is in a wrong state.
      */
-    public void startAsyncPeriodicSaveTask() throws IllegalArgumentException, IllegalStateException {
+    public void startAsyncPeriodicSaveTask() {
         int minutes = Settings.SAVE_CACHE_MIN.getNumber();
         if (minutes <= 0) {
             minutes = 5;
@@ -355,7 +355,7 @@ public class DataCacheHandler extends SessionCache {
 
         for (List<TPS> history : copy) {
             final long lastDate = history.get(history.size() - 1).getDate();
-            final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTps)));
+            final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTicksPerSecond)));
             final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
             final double averageCPUUsage = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage)));
             final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));

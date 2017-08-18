@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -8,7 +9,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -27,7 +27,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
      * @param plugin current instance of Plan
      */
     public DataCacheGetQueue(Plan plugin) {
-        super(new ArrayBlockingQueue(Settings.PROCESS_GET_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(Settings.PROCESS_GET_LIMIT.getNumber()));
         setup = new GetSetup(queue, plugin.getDB());
         setup.go();
     }
@@ -49,8 +49,11 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
         }
     }
 
-    public boolean containsUUIDtoBeCached(UUID uuid) {
-        return uuid != null && new ArrayList<>(queue).stream().anyMatch(map -> (map.get(uuid) != null && map.get(uuid).size() >= 2));
+    boolean containsUUIDtoBeCached(UUID uuid) {
+        return uuid != null && queue.stream()
+                .map(map -> map.get(uuid))
+                .filter(Objects::nonNull)
+                .anyMatch(list -> list.size() >= 2);
     }
 }
 
@@ -58,35 +61,26 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
 
     private Database db;
 
-    GetConsumer(BlockingQueue q, Database db) {
+    GetConsumer(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
         super(q, "GetQueueConsumer");
         this.db = db;
     }
 
     @Override
     void consume(Map<UUID, List<DBCallableProcessor>> processors) {
-        if (db == null) {
+        if (!Verify.notNull(processors, db)) {
             return;
         }
 
         try {
             for (Map.Entry<UUID, List<DBCallableProcessor>> entrySet : processors.entrySet()) {
                 UUID uuid = entrySet.getKey();
-
-                if (uuid == null) {
+                List<DBCallableProcessor> processorsList = entrySet.getValue();
+                if (uuid == null || Verify.isEmpty(processorsList)) {
                     continue;
                 }
-
-                List<DBCallableProcessor> processorsList = entrySet.getValue();
-
-                if (processorsList != null) {
-                    Log.debug("Database", uuid + ": Get, For:" + processorsList.size());
-                    try {
-                        db.giveUserDataToProcessors(uuid, processorsList);
-                    } catch (SQLException e) {
-                        Log.toLog(this.getClass().getName(), e);
-                    }
-                }
+                Log.debug("Database", uuid + ": Get, For:" + processorsList.size());
+                db.giveUserDataToProcessors(uuid, processorsList);
             }
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);

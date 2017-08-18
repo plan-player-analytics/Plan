@@ -52,8 +52,12 @@ public class TextUI {
         boolean online = d.isOnline();
         String ball = sec + " " + DefaultMessages.BALL + main;
 
+        String onlineString = online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline";
+        String activeString = active ? " Active" : "Inactive";
+        String bannedString = banned ? ChatColor.DARK_RED + " Banned" : ter + activeString;
+
         return new String[]{
-                sec + " " + DefaultMessages.BALL + (banned ? ChatColor.DARK_RED + " Banned" : ter + (active ? " Active" : " Inactive")) + (online ? ChatColor.GREEN + " Online" : ChatColor.RED + " Offline"),
+                sec + " " + DefaultMessages.BALL + bannedString + onlineString,
                 ball + " Registered: " + sec + FormatUtils.formatTimeStampYear(d.getRegistered()),
                 ball + " Last seen: " + sec + FormatUtils.formatTimeStamp(d.getLastPlayed()),
                 ball + " Playtime: " + sec + FormatUtils.formatTimeAmount(d.getPlayTime()),
@@ -92,12 +96,12 @@ public class TextUI {
 
         return new String[]{
                 ball + " Total Players: " + sec + count.getPlayerCount(),
-                //
+
                 ball + " Active: " + sec + activity.getActive().size()
                         + main + " Inactive: " + sec + activity.getInactive().size()
                         + main + " Single Join: " + sec + activity.getJoinedOnce().size()
                         + main + " Banned: " + sec + activity.getBans().size(),
-                //
+
                 ball + " New Players 24h: " + sec + join.get("npday") + main + " 7d: " + sec + d.get("npweek") + main + " 30d: " + sec + d.get("npmonth"),
                 "",
                 ball + " Total Playtime: " + sec + playtime.get("totalplaytime") + main + " Player Avg: " + sec + playtime.get("avgplaytime"),

@@ -5,7 +5,6 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -24,10 +23,8 @@ public class ListCommand extends SubCommand {
 
     /**
      * Class Constructor.
-     *
-     * @param plugin Current instance of Plan
      */
-    public ListCommand(Plan plugin) {
+    public ListCommand() {
         super("list, pl", CommandType.CONSOLE, Permissions.INSPECT_OTHER.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
 
     }

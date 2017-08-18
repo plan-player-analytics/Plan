@@ -3,25 +3,27 @@ package com.djrapitops.pluginbridge.plan.towny;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
-import java.io.Serializable;
-import java.util.UUID;
-import main.java.com.djrapitops.plan.Phrase;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * PluginData class for Towny-plugin.
- *
+ * <p>
  * Registered to the plugin by TownyHook
- *
+ * <p>
  * Gives Town name as String.
  *
  * @author Rsl1122
- * @since 3.1.0
  * @see TownyHook
+ * @since 3.1.0
  */
 public class TownyTown extends PluginData {
+
+    private final String notInTown = "Not in a Town";
 
     /**
      * Class Constructor, sets the parameters of the PluginData object.
@@ -37,7 +39,7 @@ public class TownyTown extends PluginData {
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
         if (data == null) {
-            return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
+            return parseContainer(modifierPrefix, notInTown);
         }
         String name = data.getName();
         try {
@@ -46,11 +48,11 @@ public class TownyTown extends PluginData {
             if (res.hasTown()) {
                 town = res.getTown().getName();
             } else {
-                town = Phrase.NOT_IN_TOWN + "";
+                town = notInTown;
             }
             return parseContainer("", town);
         } catch (NotRegisteredException ex) {
-            return parseContainer(modifierPrefix, Phrase.NOT_IN_TOWN + "");
+            return parseContainer(modifierPrefix, notInTown);
         }
     }
 
@@ -58,7 +60,7 @@ public class TownyTown extends PluginData {
     public Serializable getValue(UUID uuid) {
         UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
         if (data == null) {
-            return Phrase.NOT_IN_TOWN + "";
+            return notInTown;
         }
         String name = data.getName();
         try {
@@ -67,7 +69,7 @@ public class TownyTown extends PluginData {
             if (res.hasTown()) {
                 town = res.getTown().getName();
             } else {
-                town = Phrase.NOT_IN_TOWN + "";
+                town = notInTown;
             }
             return town;
         } catch (NotRegisteredException ex) {

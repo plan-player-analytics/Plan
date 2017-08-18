@@ -1,10 +1,11 @@
 package com.djrapitops.pluginbridge.plan.superbvote;
 
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
-import java.io.Serializable;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * PluginData class for GriefPrevention-plugin.
@@ -32,7 +33,7 @@ public class SuperbVoteVotes extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
         int votes = store.getVotes(uuid);
-        return parseContainer(modifierPrefix, votes+"");
+        return parseContainer(modifierPrefix, Integer.toString(votes));
     }
 
     @Override

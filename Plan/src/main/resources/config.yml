@@ -70,6 +70,12 @@ Customization:
         Secondary: 5cb239
         Tertiary: 89c471
         TertiaryDark: 5da341
+      TPSGraph:
+        TPSHigh: 18
+        TPSMedium: 10
+        TPSHighCol: 267F00
+        TPSMediumCol: e5cc12
+        TPSLowCol: b74343
       ActivityGraph:
         OnlinePlayers: '1E90FF'
         NewPlayers: '228B22'

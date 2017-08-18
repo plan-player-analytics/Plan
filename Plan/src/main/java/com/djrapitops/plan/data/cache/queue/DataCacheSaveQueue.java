@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -10,7 +11,6 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -49,30 +49,13 @@ public class DataCacheSaveQueue extends Queue<UserData> {
     }
 
     /**
-     * Schedule multiple UserData objects to be saved to the database.
-     *
-     * @param data Collection of UserData objects.
-     */
-    public void scheduleForSave(Collection<UserData> data) {
-        try {
-            queue.addAll(data);
-        } catch (IllegalStateException e) {
-            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
-        }
-    }
-
-    /**
      * Schedule UserData object for a new player to be saved to the database.
      *
      * @param data UserData object.
      */
     public void scheduleNewPlayer(UserData data) {
         Log.debug(data.getUuid() + ": Scheduling new Player");
-        try {
-            queue.add(data);
-        } catch (IllegalStateException e) {
-            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
-        }
+        scheduleForSave(data);
     }
 
     /**
@@ -100,7 +83,7 @@ class SaveConsumer extends Consumer<UserData> {
 
     @Override
     void consume(UserData data) {
-        if (db == null) {
+        if (!Verify.notNull(handler, db, data)) {
             return;
         }
 

@@ -5,16 +5,16 @@
  */
 package com.djrapitops.pluginbridge.plan;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
- *
  * @author Rsl1122
  */
 public class FakeOfflinePlayer implements OfflinePlayer {
@@ -50,17 +50,13 @@ public class FakeOfflinePlayer implements OfflinePlayer {
     }
 
     @Override
-    @Deprecated
-    public void setBanned(boolean bln) {
-    }
-
-    @Override
     public boolean isWhitelisted() {
         return true;
     }
 
     @Override
     public void setWhitelisted(boolean bln) {
+        /* Not used */
     }
 
     @Override
@@ -95,6 +91,7 @@ public class FakeOfflinePlayer implements OfflinePlayer {
 
     @Override
     public void setOp(boolean bln) {
+        /* Not used */
     }
 
     @Override

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.metrics;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -94,6 +95,7 @@ public class Metrics {
             try {
                 config.save(configFile);
             } catch (IOException ignored) {
+                /* Ignored */
             }
         }
 
@@ -109,6 +111,7 @@ public class Metrics {
                     found = true; // We aren't the first
                     break;
                 } catch (NoSuchFieldException ignored) {
+                    /* Ignored */
                 }
             }
             // Register our service
@@ -191,6 +194,8 @@ public class Metrics {
      * Starts the Scheduler which submits our data every 30 minutes.
      */
     private void startSubmitting() {
+        final Metrics metrics = this;
+
         final Timer timer = new Timer(true); // We use a timer cause the Bukkit scheduler is affected by server lags
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -201,9 +206,9 @@ public class Metrics {
                 }
                 // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
                 // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
-                Bukkit.getScheduler().runTask(plugin, () -> submitData());
+                Bukkit.getScheduler().runTask(plugin, metrics::submitData);
             }
-        }, 1000 * 60 * 5, 1000 * 60 * 30);
+        }, TimeAmount.MINUTE.ms() * 5, TimeAmount.MINUTE.ms() * 30);
         // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
         // WARNING: Changing the frequency has no effect but your plugin WILL be blocked/deleted!
         // WARNING: Just don't do it!
@@ -299,9 +304,11 @@ public class Metrics {
                     try {
                         pluginData.add(provider.getService().getMethod("getPluginData").invoke(provider.getProvider()));
                     } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
+                        /* Ignored */
                     }
                 }
             } catch (NoSuchFieldException ignored) {
+                /* Ignored */
             }
         }
 
@@ -324,7 +331,7 @@ public class Metrics {
     /**
      * Represents a custom chart.
      */
-    public static abstract class CustomChart {
+    public abstract static class CustomChart {
 
         // The id of the chart
         final String chartId;

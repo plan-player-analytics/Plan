@@ -12,6 +12,11 @@ package com.djrapitops.pluginbridge.plan.viaversion;
  */
 public class Protocol {
 
+
+    private Protocol() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * http://wiki.vg/Protocol_version_numbers
      *
@@ -20,6 +25,8 @@ public class Protocol {
      */
     public static String getMCVersion(int protocolVersion) {
         switch (protocolVersion) {
+            case 338:
+                return "1.12.1";
             case 335:
                 return "1.12";
             case 316:

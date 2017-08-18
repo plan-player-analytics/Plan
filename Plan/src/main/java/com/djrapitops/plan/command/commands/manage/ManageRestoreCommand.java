@@ -102,7 +102,7 @@ public class ManageRestoreCommand extends SubCommand {
                         return;
                     }
 
-                    if (ManageUtils.clearAndCopy(database, backupDB, uuids)) {
+                    if (ManageUtils.clearAndCopy(database, backupDB)) {
                         if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
                             plugin.getHandler().getCommandUseFromDb();
                         }

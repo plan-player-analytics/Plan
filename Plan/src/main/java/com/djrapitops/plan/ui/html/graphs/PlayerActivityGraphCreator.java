@@ -33,6 +33,6 @@ public class PlayerActivityGraphCreator {
                 .map(session -> new Point[]{new Point(session.getSessionStart(), 1), new Point(session.getSessionEnd(), 0)})
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toList());
-        return ScatterGraphCreator.scatterGraph(points, true, false);
+        return SeriesCreator.seriesGraph(points, true, false);
     }
 }

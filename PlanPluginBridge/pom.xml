@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>PlanPluginBridge</artifactId>
-    <version>3.6.0</version>
+    <version>3.7.0</version>
     <packaging>jar</packaging>
     <repositories>
+        <repository>
+            <id>plan-repo</id>
+            <url>http://repo.fuzzlemann.de/artifactory/libs-release/</url>
+        </repository>
+        <repository>
+            <id>plan-snapshot-repo</id>
+            <url>http://repo.fuzzlemann.de/artifactory/libs-snapshot/</url>
+        </repository>
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
@@ -23,13 +32,13 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>Plan</artifactId>
-            <version>3.6.0</version>
+            <version>3.7.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper</artifactId>
+            <version>1.12-R0.1-20170725.202533-1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -59,7 +68,7 @@
         <dependency>
             <groupId>com.gamingmesh</groupId>
             <artifactId>jobs</artifactId>
-            <version>3.9.1</version>
+            <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -117,9 +126,22 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+            </plugin>
+        </plugins>
+    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <sonar.language>java</sonar.language>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
     </properties>
 </project>

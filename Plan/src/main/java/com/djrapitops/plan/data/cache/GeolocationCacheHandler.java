@@ -3,13 +3,11 @@ package main.java.com.djrapitops.plan.data.cache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * This class contains the geolocation cache.
@@ -46,12 +44,7 @@ public class GeolocationCacheHandler {
      * @see #getUncachedCountry(String)
      */
     public static String getCountry(String ipAddress) {
-        Log.debug("Started country retrieval from IP Address " + ipAddress);
-
-        Map<String, String> geolocationMap = geolocationCache.asMap();
-        String country = geolocationMap.get(ipAddress);
-
-        Log.debug("Got country from " + ipAddress + " out of cache: " + country + " (if null, country wasn't cached)");
+        String country = getCachedCountry(ipAddress);
 
         if (country != null) {
             return country;
@@ -59,7 +52,6 @@ public class GeolocationCacheHandler {
             country = getUncachedCountry(ipAddress);
             geolocationCache.put(ipAddress, country);
 
-            Log.debug("Got uncached country from IP Address " + ipAddress + ": " + country);
             return country;
         }
     }
@@ -77,17 +69,17 @@ public class GeolocationCacheHandler {
      * @see <a href="http://freegeoip.net">http://freegeoip.net</a>
      * @see #getCountry(String)
      */
-    private static String getUncachedCountry(String ipAddress) {
-        Benchmark.start("getUncachedCountry");
-
+    public static String getUncachedCountry(String ipAddress) {
         URL url;
 
         String urlString = "http://freegeoip.net/csv/" + ipAddress;
+        String unknownString = "Not Known";
+
         try {
             url = new URL(urlString);
         } catch (MalformedURLException e) {
             Log.error("The URL \"" + urlString + "\" couldn't be converted to URL: " + e.getCause()); //Shouldn't ever happen
-            return "Not Known";
+            return unknownString;
         }
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -97,11 +89,29 @@ public class GeolocationCacheHandler {
             String[] results = resultLine.split(",");
             String result = results[2];
 
-            return result.isEmpty() ? "Not Known" : result;
+            return result.isEmpty() ? unknownString : result;
         } catch (Exception exc) {
-            return "Not Known";
-        } finally {
-            Benchmark.stop("getUncachedCountry");
+            return unknownString;
         }
+    }
+
+    /**
+     * Returns the cached country
+     *
+     * @param ipAddress The IP Address which is retrieved out of the cache
+     * @return The cached country, {@code null} if the country is not cached
+     */
+    public static String getCachedCountry(String ipAddress) {
+        return geolocationCache.getIfPresent(ipAddress);
+    }
+
+    /**
+     * Checks if the IP Address is cached
+     *
+     * @param ipAddress The IP Address which is checked
+     * @return true if the IP Address is cached
+     */
+    public static boolean isCached(String ipAddress) {
+        return geolocationCache.asMap().containsKey(ipAddress);
     }
 }

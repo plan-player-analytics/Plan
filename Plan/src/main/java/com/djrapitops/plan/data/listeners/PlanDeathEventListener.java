@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.handling.KillHandling;
 import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -63,12 +64,12 @@ public class PlanDeathEventListener implements Listener {
             } catch (NoSuchMethodError e) {
                 try {
                     itemInHand = killer.getInventory().getItemInHand().getType(); // Support for non dual wielding versions.
-                } catch (Error e2) {
+                } catch (Exception | NoSuchMethodError | NoSuchFieldError e2) {
                     itemInHand = Material.AIR;
                 }
             }
 
-            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, itemInHand.name()));
+            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, KillHandling.normalizeMaterialName(itemInHand)));
             return;
         }
 

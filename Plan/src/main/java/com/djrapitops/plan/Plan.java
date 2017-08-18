@@ -86,7 +86,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *                               Plan and the instance is null.
      * @throws NoClassDefFoundError  If Plan is not installed.
      */
-    public static API getPlanAPI() throws IllegalStateException, NoClassDefFoundError {
+    public static API getPlanAPI() throws NoClassDefFoundError {
         Plan instance = getInstance();
         if (instance == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
@@ -114,15 +114,7 @@ public class Plan extends BukkitPlugin<Plan> {
             // Sets the Required variables for BukkitPlugin instance to function correctly
             setInstance(this);
             super.setDebugMode(Settings.DEBUG.toString());
-            try {
-                ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
-                ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
-                ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
-                super.setColorScheme(new ColorScheme(mainColor, secColor, terColor));
-            } catch (Exception e) {
-                Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
-                super.setColorScheme(new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE));
-            }
+            initColorScheme();
             super.setLogPrefix("[Plan]");
             super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
             super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
@@ -147,7 +139,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            if (Check.ErrorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
+            if (Check.errorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
                 Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
             } else {
                 disablePlugin();
@@ -227,6 +219,18 @@ public class Plan extends BukkitPlugin<Plan> {
         }
     }
 
+    private final void initColorScheme() {
+        try {
+            ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
+            ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
+            ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
+            super.setColorScheme(new ColorScheme(mainColor, secColor, terColor));
+        } catch (Exception e) {
+            Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
+            super.setColorScheme(new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE));
+        }
+    }
+
     /**
      * Disables the plugin.
      * <p>
@@ -261,7 +265,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
         getPluginLogger().endAllDebugs();
         Log.info(Locale.get(Msg.DISABLED).toString());
-        Locale.unload();
+//        Locale.unload();
     }
 
     private void registerListeners() {
@@ -316,10 +320,10 @@ public class Plan extends BukkitPlugin<Plan> {
             return false;
         }
 
-        return Check.ErrorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
+        return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
     }
 
-    private void startAnalysisRefreshTask(int everyXMinutes) throws IllegalStateException {
+    private void startAnalysisRefreshTask(int everyXMinutes) {
         Benchmark.start("Schedule PeriodicAnalysisTask");
         if (everyXMinutes <= 0) {
             return;
@@ -336,7 +340,7 @@ public class Plan extends BukkitPlugin<Plan> {
         Benchmark.stop("Schedule PeriodicAnalysisTask");
     }
 
-    private void startBootAnalysisTask() throws IllegalStateException {
+    private void startBootAnalysisTask() {
         Benchmark.start("Schedule boot analysis task");
         String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
         String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
@@ -448,16 +452,5 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public ServerVariableHolder getVariable() {
         return serverVariableHolder;
-    }
-
-    /**
-     * Old method for getting the API.
-     *
-     * @return the Plan API.
-     * @deprecated Use Plan.getPlanAPI() (static method) instead.
-     */
-    @Deprecated
-    public API getAPI() {
-        return api;
     }
 }

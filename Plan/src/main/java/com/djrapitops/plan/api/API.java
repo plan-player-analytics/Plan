@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.api;
 import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import com.djrapitops.plugin.utilities.player.UUIDFetcher;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -14,6 +13,7 @@ import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -237,7 +237,7 @@ public class API {
      * @throws IllegalStateException    If the player has not played on the server
      *                                  before.
      */
-    public String getPlayerName(UUID uuid) throws IllegalStateException, IllegalArgumentException {
+    public String getPlayerName(UUID uuid) {
         Verify.nullCheck(uuid);
         IOfflinePlayer offlinePlayer = Fetch.getIOfflinePlayer(uuid);
         if (Verify.notNull(offlinePlayer)) {
@@ -247,14 +247,31 @@ public class API {
     }
 
     /**
-     * Uses UUIDFetcher to turn PlayerName to UUID.
+     * Uses UUIDUtility to turn PlayerName to UUID.
      *
      * @param playerName Player's name
      * @return UUID of the Player
      * @throws Exception if player's name is not registered at Mojang
+     * @deprecated Typo in method name, use playerNameToUUID instead
      */
+    @Deprecated
     public UUID PlayerNameToUUID(String playerName) throws Exception {
-        return UUIDFetcher.getUUIDOf(playerName);
+        return playerNameToUUID(playerName);
+    }
+
+    /**
+     * Uses UUIDUtility to turn PlayerName to UUID.
+     *
+     * @param playerName Player's name
+     * @return UUID of the Player
+     * @throws IllegalArgumentException if player's name is not registered at Mojang
+     */
+    public UUID playerNameToUUID(String playerName) {
+        UUID uuid = UUIDUtility.getUUIDOf(playerName);
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID did not get a match");
+        }
+        return uuid;
     }
 
     /**

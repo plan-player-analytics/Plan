@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
@@ -7,6 +8,8 @@ import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
@@ -94,26 +97,26 @@ public class UsersTable extends Table {
     @Override
     public boolean createTable() {
         try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnID + " integer " + ((usingMySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY") + ", "
-                    + columnUUID + " varchar(36) NOT NULL UNIQUE, "
-                    + columnGeolocation + " varchar(50) NOT NULL, "
-                    + columnLastGM + " varchar(15) NOT NULL, "
-                    + columnLastGMSwapTime + " bigint NOT NULL, "
-                    + columnPlayTime + " bigint NOT NULL, "
-                    + columnLoginTimes + " integer NOT NULL, "
-                    + columnLastPlayed + " bigint NOT NULL, "
-                    + columnDeaths + " int NOT NULL, "
-                    + columnMobKills + " int NOT NULL, "
-                    + columnRegistered + " bigint NOT NULL, "
-                    + columnOP + " boolean NOT NULL DEFAULT 0, "
-                    + columnName + " varchar(16) NOT NULL, "
-                    + columnBanned + " boolean NOT NULL DEFAULT 0, "
-                    + columnContainsBukkitData + " boolean NOT NULL DEFAULT 0, "
-                    + columnLastWorld + " varchar(255) NOT NULL, "
-                    + columnLastWorldSwapTime + " bigint NOT NULL"
-                    + (usingMySQL ? ", PRIMARY KEY (" + columnID + ")" : "")
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .primaryKeyIDColumn(usingMySQL, columnID, Sql.INT)
+                    .column(columnUUID, Sql.varchar(36)).notNull().unique()
+                    .column(columnGeolocation, Sql.varchar(50)).notNull()
+                    .column(columnLastGM, Sql.varchar(15)).notNull()
+                    .column(columnLastGMSwapTime, Sql.LONG).notNull()
+                    .column(columnPlayTime, Sql.LONG).notNull()
+                    .column(columnLoginTimes, Sql.INT).notNull()
+                    .column(columnLastPlayed, Sql.LONG).notNull()
+                    .column(columnDeaths, Sql.INT).notNull()
+                    .column(columnMobKills, Sql.INT).notNull()
+                    .column(columnRegistered, Sql.LONG).notNull()
+                    .column(columnOP, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnName, Sql.varchar(16)).notNull()
+                    .column(columnBanned, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnContainsBukkitData, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnLastWorld, Sql.varchar(255)).notNull()
+                    .column(columnLastWorldSwapTime, Sql.LONG).notNull()
+                    .primaryKey(usingMySQL, columnID)
+                    .toString()
             );
             int version = getVersion();
             if (version < 3) {
@@ -732,34 +735,33 @@ public class UsersTable extends Table {
     private List<UserData> updateExistingUserData(Collection<UserData> data) throws SQLException {
         PreparedStatement statement = null;
         try {
-            List<UserData> saveLast = new ArrayList<>();
+            List<UserData> newUserData = new ArrayList<>();
             String sql = getUpdateStatement();
             statement = prepareStatement(sql);
             boolean commitRequired = false;
             Set<UUID> savedUUIDs = getSavedUUIDs();
-            int i = 0;
             for (UserData uData : data) {
-                if (uData == null) {
-                    continue;
-                }
-                UUID uuid = uData.getUuid();
-                if (uuid == null) {
-                    try {
-                        uData.setUuid(UUIDUtility.getUUIDOf(uData.getName(), db));
-                    } catch (Exception ex) {
-                        continue;
+                UUID uuid = null;
+
+                // Get new UUID if uuid == null
+                if (uData != null) {
+                    uuid = uData.getUuid();
+                    if (uuid == null) {
+                        uuid = UUIDUtility.getUUIDOf(uData.getName(), db);
+                        uData.setUuid(uuid);
                     }
                 }
-                uuid = uData.getUuid();
-                if (uuid == null) {
+
+                boolean isNew = !savedUUIDs.contains(uuid) && !newUserData.contains(uData);
+
+                if (isNew) {
+                    newUserData.add(uData);
+                }
+
+                if (!Verify.notNull(uData, uuid) || isNew) {
                     continue;
                 }
-                if (!savedUUIDs.contains(uuid)) {
-                    if (!saveLast.contains(uData)) {
-                        saveLast.add(uData);
-                    }
-                    continue;
-                }
+
                 uData.access();
                 statement.setString(1, uData.getGeolocation());
                 GMTimes gmTimes = uData.getGmTimes();
@@ -782,12 +784,11 @@ public class UsersTable extends Table {
                 statement.addBatch();
                 uData.stopAccessing();
                 commitRequired = true;
-                i++;
             }
             if (commitRequired) {
                 statement.executeBatch();
             }
-            return saveLast;
+            return newUserData;
         } finally {
             close(statement);
         }

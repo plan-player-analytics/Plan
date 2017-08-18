@@ -1,23 +1,24 @@
 package com.djrapitops.pluginbridge.plan.ontime;
 
-import java.io.Serializable;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import me.edge209.OnTime.OnTimeAPI;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * PluginData class for Ontime-plugin.
- *
+ * <p>
  * Registered to the plugin by OnTimeHook
- *
+ * <p>
  * Gives Total Referral Integer as value.
  *
  * @author Rsl1122
- * @since 3.1.0
  * @see OnTimeHook
+ * @since 3.1.0
  */
 public class OntimeRefer extends PluginData {
 
@@ -42,7 +43,7 @@ public class OntimeRefer extends PluginData {
         if (referTotal == -1) {
             return parseContainer(modifierPrefix, "No Referrals.");
         }
-        return parseContainer(modifierPrefix, referTotal + "");
+        return parseContainer(modifierPrefix, Long.toString(referTotal));
     }
 
     @Override

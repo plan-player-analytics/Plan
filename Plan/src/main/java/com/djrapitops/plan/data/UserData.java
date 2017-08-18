@@ -182,16 +182,6 @@ public class UserData {
         }
     }
 
-    @Deprecated
-    public String getLastGamemode() {
-        return gmTimes.getState();
-    }
-
-    @Deprecated
-    public long getLastGmSwapTime() {
-        return gmTimes.getLastStateChange();
-    }
-
     /**
      * Adds an to the ips Set if it is not null or the set doesn't contain it.
      *
@@ -212,8 +202,8 @@ public class UserData {
         if (addIps.isEmpty()) {
             return;
         }
-        ips.addAll(addIps.stream().filter(Verify::notNull).collect(Collectors.toList()));
 
+        ips.addAll(addIps.stream().filter(Verify::notNull).collect(Collectors.toList()));
     }
 
     /**

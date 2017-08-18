@@ -20,6 +20,10 @@ import java.util.stream.Stream;
 
 public class FileUtil {
 
+    private FileUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String getStringFromResource(String fileName) throws FileNotFoundException {
         InputStream resourceStream = null;
         Scanner scanner = null;

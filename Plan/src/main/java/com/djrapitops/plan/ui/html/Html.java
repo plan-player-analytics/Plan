@@ -2,6 +2,8 @@ package main.java.com.djrapitops.plan.ui.html;
 
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.io.Serializable;
+
 /**
  * @author Rsl1122
  */
@@ -72,19 +74,12 @@ public enum Html {
      * @param p The replacement Strings
      * @return The parsed HTML String
      */
-    public String parse(String... p) {
+    public String parse(Serializable... p) {
         Verify.nullCheck(p);
         String returnValue = this.html;
         for (int i = 0; i < p.length; i++) {
-            returnValue = returnValue.replace("REPLACE" + i, p[i]);
+            returnValue = returnValue.replace("REPLACE" + i, p[i].toString());
         }
         return returnValue;
-    }
-
-    /**
-     * @param html Sets the HTML String
-     */
-    public void setHtml(String html) {
-        this.html = html;
     }
 }

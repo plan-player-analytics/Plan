@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 
-import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -44,19 +44,6 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
     }
 
     /**
-     * Used to add multiple HandlingInfo objects to be processed.
-     *
-     * @param info Collection of objects that extends HandlingInfo.
-     */
-    public void addToPool(Collection<HandlingInfo> info) {
-        try {
-            queue.addAll(info);
-        } catch (IllegalStateException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-    }
-
-    /**
      * Check whether or not the queue contains a HandlingInfo object with the
      * uuid.
      *
@@ -79,7 +66,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
 
     @Override
     void consume(HandlingInfo info) {
-        if (handler == null) {
+        if (!Verify.notNull(handler, info)) {
             return;
         }
 

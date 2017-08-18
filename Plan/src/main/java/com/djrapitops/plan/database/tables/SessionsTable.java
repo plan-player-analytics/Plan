@@ -4,6 +4,8 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
@@ -14,9 +16,8 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class SessionsTable extends Table {
+public class SessionsTable extends UserIDTable {
 
-    private final String columnUserID;
     private final String columnSessionStart;
     private final String columnSessionEnd;
 
@@ -38,12 +39,12 @@ public class SessionsTable extends Table {
     public boolean createTable() {
         try {
             UsersTable usersTable = db.getUsersTable();
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUserID + " integer NOT NULL, "
-                    + columnSessionStart + " bigint NOT NULL, "
-                    + columnSessionEnd + " bigint NOT NULL, "
-                    + "FOREIGN KEY(" + columnUserID + ") REFERENCES " + usersTable.getTableName() + "(" + usersTable.getColumnID() + ")"
-                    + ")"
+            execute(TableSqlParser.createTable(tableName)
+                    .column(columnUserID, Sql.INT).notNull()
+                    .column(columnSessionStart, Sql.LONG).notNull()
+                    .column(columnSessionEnd, Sql.LONG).notNull()
+                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .toString()
             );
             return true;
         } catch (SQLException ex) {
@@ -82,18 +83,7 @@ public class SessionsTable extends Table {
      * @return
      */
     public boolean removeUserSessions(int userId) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        return super.removeDataOf(userId);
     }
 
     /**

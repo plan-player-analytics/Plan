@@ -48,7 +48,6 @@ public abstract class SQLDB extends Database {
         gmTimesTable = new GMTimesTable(this, usingMySQL);
         sessionsTable = new SessionsTable(this, usingMySQL);
         killsTable = new KillsTable(this, usingMySQL);
-        locationsTable = new LocationsTable(this, usingMySQL);
         ipsTable = new IPsTable(this, usingMySQL);
         nicknamesTable = new NicknamesTable(this, usingMySQL);
         commandUseTable = new CommandUseTable(this, usingMySQL);
@@ -132,13 +131,8 @@ public abstract class SQLDB extends Database {
                 return false;
             }
 
-            boolean newDatabase = true;
-            try {
-                getVersion();
-                newDatabase = false;
-            } catch (Exception ignored) {
+            boolean newDatabase = isNewDatabase();
 
-            }
             if (!versionTable.createTable()) {
                 Log.error("Failed to create table: " + versionTable.getTableName());
                 return false;
@@ -149,26 +143,47 @@ public abstract class SQLDB extends Database {
                 setVersion(8);
             }
 
-            Benchmark.start("DCreate tables");
-
-            for (Table table : getAllTables()) {
-                if (!table.createTable()) {
-                    Log.error("Failed to create table: " + table.getTableName());
-                    return false;
-                }
-            }
-
-            if (!securityTable.createTable()) {
-                Log.error("Failed to create table: " + securityTable.getTableName());
+            if (!createTables()) {
                 return false;
             }
-            Benchmark.stop("Database", "Create tables");
 
             if (!newDatabase && getVersion() < 8) {
                 setVersion(8);
             }
+
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("DROP TABLE IF EXISTS plan_locations");
+            }
         }
         return true;
+    }
+
+    /**
+     * Creates the tables that contain data.
+     * <p>
+     * Updates table columns to latest schema.
+     *
+     * @return true if successful.
+     */
+    private boolean createTables() {
+        Benchmark.start("Create tables");
+        for (Table table : getAllTables()) {
+            if (!table.createTable()) {
+                Log.error("Failed to create table: " + table.getTableName());
+                return false;
+            }
+        }
+        Benchmark.stop("Database", "Create tables");
+        return true;
+    }
+
+    private boolean isNewDatabase() {
+        try {
+            getVersion();
+            return false;
+        } catch (Exception ignored) {
+            return true;
+        }
     }
 
     /**
@@ -187,7 +202,6 @@ public abstract class SQLDB extends Database {
                         Log.debug("Database", "No conversion necessary.");
                         return;
                     }
-                    setStatus("Bukkit Data Conversion");
                     Log.info("Beginning Bukkit Data -> DB Conversion for " + uuids.size() + " players");
                     int id = plugin.getBootAnalysisTaskID();
                     if (id != -1) {
@@ -214,7 +228,7 @@ public abstract class SQLDB extends Database {
                 usersTable, gmTimesTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, tpsTable, worldTable,
-                worldTimesTable};
+                worldTimesTable, securityTable};
     }
 
     /**
@@ -222,7 +236,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                locationsTable, gmTimesTable, ipsTable,
+                gmTimesTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 worldTimesTable, worldTable, usersTable,
                 commandUseTable, tpsTable};
@@ -241,8 +255,8 @@ public abstract class SQLDB extends Database {
         if (connection != null) {
             connection.close();
         }
-        Log.logDebug("Database"); // Log remaining Debug info if present
         setStatus("Closed");
+        Log.logDebug("Database"); // Log remaining Debug info if present
     }
 
     /**
@@ -272,7 +286,6 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return false;
         }
-        setStatus("User exist check");
         try {
             return usersTable.getUserId(uuid.toString()) != -1;
         } catch (SQLException e) {
@@ -294,7 +307,6 @@ public abstract class SQLDB extends Database {
             return false;
         }
         try {
-            setStatus("Remove account " + uuid);
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
             try {
@@ -305,7 +317,6 @@ public abstract class SQLDB extends Database {
             }
             int userId = usersTable.getUserId(uuid);
             boolean success = userId != -1
-                    && locationsTable.removeUserLocations(userId)
                     && ipsTable.removeUserIPs(userId)
                     && nicknamesTable.removeUserNicknames(userId)
                     && gmTimesTable.removeUserGMTimes(userId)
@@ -410,16 +421,18 @@ public abstract class SQLDB extends Database {
         Map<Integer, Map<String, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
 
-        Log.debug("Database", "Data found for:");
-        Log.debug("Database", "  UUIDs: " + uuids.size());
-        Log.debug("Database", "  IDs: " + userIds.size());
-        Log.debug("Database", "  UserData: " + data.size());
-        Log.debug("Database", "    Nicknames: " + nicknames.size());
-        Log.debug("Database", "    IPs: " + ipList.size());
-        Log.debug("Database", "    Kills: " + playerKills.size());
-        Log.debug("Database", "    Sessions: " + sessionData.size());
-        Log.debug("Database", "    GM Times: " + gmTimes.size());
-        Log.debug("Database", "    World Times: " + worldTimes.size());
+        Log.debug("Database",
+                "Data found for:",
+                "  UUIDs: " + uuids.size(),
+                "  IDs: " + userIds.size(),
+                "  UserData: " + data.size(),
+                "    Nicknames: " + nicknames.size(),
+                "    IPs: " + ipList.size(),
+                "    Kills: " + playerKills.size(),
+                "    Sessions: " + sessionData.size(),
+                "    GM Times: " + gmTimes.size(),
+                "    World Times: " + worldTimes.size()
+        );
 
         for (UserData uData : data) {
             UUID uuid = uData.getUuid();
@@ -565,7 +578,6 @@ public abstract class SQLDB extends Database {
         try {
             checkConnection();
             tpsTable.clean();
-            locationsTable.removeAllData();
             Log.info("Clean complete.");
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
@@ -589,7 +601,7 @@ public abstract class SQLDB extends Database {
             if (success) {
                 commit();
             } else {
-                rollback();
+                rollback(); // TODO Tests for this case
             }
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
@@ -613,11 +625,10 @@ public abstract class SQLDB extends Database {
     }
 
     private void setStatus(String status) {
-        plugin.processStatus().setStatus("DB-" + getName(), status);
+        Log.debug("Database", status);
     }
 
     public void setAvailable() {
-        setStatus("Running");
         Log.logDebug("Database");
     }
 

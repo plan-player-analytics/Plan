@@ -14,15 +14,15 @@ import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparato
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.ChatColor;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.6.2
  */
-public class Locale implements Closeable {
+public class Locale {
 
     private final Plan plugin;
     private final Map<Msg, Message> messages;
@@ -41,13 +41,14 @@ public class Locale implements Closeable {
     public Locale(Plan plugin) {
         LocaleHolder.setLocale(this);
         this.plugin = plugin;
-        messages = new HashMap<>();
+        messages = new EnumMap<>(Msg.class);
     }
 
     public static void unload() {
         Locale locale = LocaleHolder.getLocale();
         if (locale != null) {
-            locale.close();
+            locale.messages.clear();
+            LocaleHolder.locale = null;
         }
     }
 
@@ -83,11 +84,15 @@ public class Locale implements Closeable {
     }
 
     private void writeNewDefaultLocale() throws IOException {
-        final int length = messages.keySet().stream()
+
+        Optional<String> key = messages.keySet().stream()
                 .map(Msg::getIdentifier)
                 .sorted(new StringLengthComparator())
-                .findFirst()
-                .get().length() + 2;
+                .findFirst();
+        if (!key.isPresent()) {
+            throw new IllegalStateException("Locale has not been loaded.");
+        }
+        final int length = key.get().length() + 2;
         List<String> lines = messages.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
                 .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
@@ -334,13 +339,11 @@ public class Locale implements Closeable {
         return messages.getOrDefault(msg, new Message(""));
     }
 
-    @Override
-    public void close() {
-        messages.clear();
-        LocaleHolder.locale = null;
-    }
-
     private static class LocaleHolder {
+
+        private LocaleHolder() {
+            throw new IllegalStateException("Static variable holder class");
+        }
 
         private static Locale locale;
 

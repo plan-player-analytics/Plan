@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache.queue;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
@@ -27,7 +28,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param handler current instance of DataCacheHandler.
      */
     public DataCacheClearQueue(DataCacheHandler handler) {
-        super(new ArrayBlockingQueue(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
         setup = new ClearSetup(queue, handler);
         setup.go();
     }
@@ -47,12 +48,11 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param uuids UUIDs of the UserData object (Players' UUIDs)
      */
     public void scheduleForClear(Collection<UUID> uuids) {
-        if (uuids.isEmpty()) {
+        if (Verify.isEmpty(uuids)) {
             return;
         }
-        uuids = uuids.stream().filter(Objects::nonNull).collect(Collectors.toList());
         try {
-            queue.addAll(uuids);
+            queue.addAll(uuids.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         } catch (IllegalStateException e) {
             Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Clear Queue", Settings.PROCESS_CLEAR_LIMIT.getNumber()));
         }
@@ -63,16 +63,17 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 
     private DataCacheHandler handler;
 
-    ClearConsumer(BlockingQueue q, DataCacheHandler handler) {
+    ClearConsumer(BlockingQueue<UUID> q, DataCacheHandler handler) {
         super(q, "ClearQueueConsumer");
         this.handler = handler;
     }
 
     @Override
     void consume(UUID uuid) {
-        if (handler == null) {
+        if (!Verify.notNull(handler, uuid)) {
             return;
         }
+
         try {
             if (handler.isDataAccessed(uuid)) {
                 queue.add(uuid);
@@ -95,7 +96,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
 
 class ClearSetup extends Setup<UUID> {
 
-    public ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
+    ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {
         super(new ClearConsumer(q, handler));
     }
 }

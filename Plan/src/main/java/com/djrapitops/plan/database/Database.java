@@ -39,14 +39,6 @@ public abstract class Database {
     protected KillsTable killsTable;
 
     /**
-     * Table representing plan_locations in the database.
-     *
-     * @deprecated Removed in 3.5.2
-     */
-    @Deprecated
-    protected LocationsTable locationsTable;
-
-    /**
      * Table representing plan_nicknames in the database.
      */
     protected NicknamesTable nicknamesTable;
@@ -255,7 +247,7 @@ public abstract class Database {
      * @throws SQLException         If a database error occurs.
      * @throws NullPointerException If the database has not initialized tables.
      */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException, NullPointerException {
+    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
         commandUseTable.saveCommandUse(data);
     }
 
@@ -313,17 +305,6 @@ public abstract class Database {
      */
     public KillsTable getKillsTable() {
         return killsTable;
-    }
-
-    /**
-     * Used to get the locations table.
-     *
-     * @return Table representing plan_locations
-     * @deprecated Removed in 3.5.2
-     */
-    @Deprecated
-    public LocationsTable getLocationsTable() {
-        return locationsTable;
     }
 
     /**
