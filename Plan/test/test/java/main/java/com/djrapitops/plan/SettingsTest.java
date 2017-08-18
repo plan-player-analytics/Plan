@@ -74,5 +74,4 @@ public class SettingsTest {
     public void testGetPath() {
         assertEquals("Settings.WebServer.Enabled", Settings.WEBSERVER_ENABLED.getPath());
     }
-
 }

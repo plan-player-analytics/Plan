@@ -77,7 +77,6 @@ public class Log {
      * @param messages All messages to add to the debug log.
      * @return full debug complex so far.
      */
-    @SafeVarargs
     public static DebugInfo debug(String task, String... messages) {
         DebugInfo debug = getDebug(task);
         long time = MiscUtils.getTime();

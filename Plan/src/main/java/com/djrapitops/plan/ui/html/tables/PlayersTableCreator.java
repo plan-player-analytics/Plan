@@ -66,9 +66,14 @@ public class PlayersTableCreator {
     }
 
     private static String getActivityString(boolean isBanned, boolean isUnknown, boolean isActive) {
-        return isBanned ? "Banned"
-                : (isUnknown ? "Unknown"
-                : (isActive ? "Active"
-                : "Inactive"));
+        if (isBanned) {
+            return "Banned";
+        }
+
+        if (isUnknown) {
+            return "Unknown";
+        }
+
+        return isActive ? "Active" : "Inactive";
     }
 }

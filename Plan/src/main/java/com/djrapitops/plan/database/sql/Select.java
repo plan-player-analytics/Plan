@@ -27,11 +27,11 @@ public class Select extends SqlParser {
 
     public Select where(String... conditions) {
         append(" WHERE ");
-        for (int i = 0; i < conditions.length; i++) {
+        for (String condition : conditions) {
             if (this.conditions > 0) {
                 append(" AND ");
             }
-            append("(").append(conditions[i]).append(")");
+            append("(").append(condition).append(")");
             this.conditions++;
         }
         return this;
