@@ -695,18 +695,18 @@
             data: %tpsseries%,
             type: 'spline',
             zones: [{
-                value: 0,
+                value: %tpsmedium%,
                 color: '%tpslowcol%'
             }, {
-                value: %tpsmedium%,
+                value: %tpshigh%,
                 color: '%tpsmediumcol%'
             }, {
-                value: %tpshigh%,
+                value: 30,
                 color: '%tpshighcol%'
-            }]
+            }],
             tooltip: {
-            valueDecimals: 2
-        },
+                valueDecimals: 2
+            },
         yAxis: 1
         };
         var cpuSeries = {
