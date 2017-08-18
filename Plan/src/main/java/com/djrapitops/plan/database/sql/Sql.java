@@ -11,6 +11,6 @@ public class Sql {
     }
 
     public static String varchar(int length) {
-        return "varchar("+length+")";
+        return "varchar(" + length + ")";
     }
 }
