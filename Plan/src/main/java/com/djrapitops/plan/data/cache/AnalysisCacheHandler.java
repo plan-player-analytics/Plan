@@ -1,8 +1,22 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import com.djrapitops.plugin.command.CommandUtils;
+import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.ui.text.TextUI;
+import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import org.bukkit.entity.Player;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * This class is used to store the most recent AnalysisData object and to run
@@ -13,9 +27,12 @@ import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
  */
 public class AnalysisCacheHandler {
 
+    private final Plan plugin;
     private final Analysis analysis;
     private AnalysisData cache;
     private boolean analysisEnabled;
+
+    private Set<UUID> notifyWhenCached;
 
     /**
      * Class Constructor.
@@ -25,8 +42,10 @@ public class AnalysisCacheHandler {
      * @param plugin Current instance of Plan
      */
     public AnalysisCacheHandler(Plan plugin) {
+        this.plugin = plugin;
         analysis = new Analysis(plugin);
         analysisEnabled = true;
+        notifyWhenCached = new HashSet<>();
     }
 
     /**
@@ -43,6 +62,33 @@ public class AnalysisCacheHandler {
      */
     public void cache(AnalysisData data) {
         cache = data;
+        for (UUID uuid : notifyWhenCached) {
+            Optional<IPlayer> player = plugin.fetch().getPlayer(uuid);
+            if (player.isPresent()) {
+                sendAnalysisMessage(player.get());
+            }
+        }
+        notifyWhenCached.clear();
+    }
+
+    public void sendAnalysisMessage(ISender sender) {
+        boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
+        sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
+        if (textUI) {
+            sender.sendMessage(TextUI.getAnalysisMessages());
+        } else {
+            // Link
+            String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
+            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
+            boolean console = !CommandUtils.isPlayer(sender);
+            if (console) {
+                sender.sendMessage(message + url);
+            } else {
+                sender.sendMessage(message);
+                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            }
+        }
+        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 
     /**
@@ -82,5 +128,11 @@ public class AnalysisCacheHandler {
     public void enableAnalysis() {
         analysis.setTaskId(-1);
         analysisEnabled = true;
+    }
+
+    public void addNotification(ISender sender) {
+        if (CommandUtils.isPlayer(sender)) {
+            notifyWhenCached.add(((Player) sender.getSender()).getUniqueId());
+        }
     }
 }

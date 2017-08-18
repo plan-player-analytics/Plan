@@ -691,18 +691,27 @@
         }
         };
         var tpsSeries = {
-                name: 'TPS',
-                data: %tpsseries%,
+            name: 'TPS',
+            data: %tpsseries%,
             type: 'spline',
-            color: '#b74343',
+            zones: [{
+                value: %tpsmedium%,
+                color: '%tpslowcol%'
+            }, {
+                value: %tpshigh%,
+                color: '%tpsmediumcol%'
+            }, {
+                value: 30,
+                color: '%tpshighcol%'
+            }],
             tooltip: {
-            valueDecimals: 2
-        },
+                valueDecimals: 2
+            },
         yAxis: 1
         };
         var cpuSeries = {
-                name: 'CPU Usage',
-                data: %cpuseries%,
+            name: 'CPU Usage',
+            data: %cpuseries%,
             type: 'areaspline',
             color: '#e0d264',
             tooltip: {
@@ -710,8 +719,8 @@
         }
         };
         var ramSeries = {
-                name: 'RAM Usage',
-                data: %ramseries%,
+            name: 'RAM Usage',
+            data: %ramseries%,
             type: 'areaspline',
             color: '#7dcc24',
             tooltip: {
@@ -720,8 +729,8 @@
         yAxis: 1
         };
         var entitySeries = {
-                name: 'Loaded Entities',
-                data: %entityseries%,
+            name: 'Loaded Entities',
+            data: %entityseries%,
             type: 'areaspline',
             color: '#ac69ef',
             tooltip: {
@@ -730,8 +739,8 @@
         yAxis: 1
         };
         var chunkSeries = {
-                name: 'Loaded Chunks',
-                data: %chunkseries%,
+            name: 'Loaded Chunks',
+            data: %chunkseries%,
             type: 'areaspline',
             color: '#b58310',
             tooltip: {
@@ -744,18 +753,18 @@
             data: [{
                 name: 'Active',
                 y: %active%
-        }, {
-            name: 'Inactive',
-            y: %inactive%,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Single Join',
-                y: %joinleaver%
-        }, {
-            name: 'Banned',
-                y: %banned%
-        }]
+            }, {
+                name: 'Inactive',
+                y: %inactive%,
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Single Join',
+                    y: %joinleaver%
+            }, {
+                name: 'Banned',
+                    y: %banned%
+            }]
         };
         var gmData = %gmdata%;
         var gmSeries = {

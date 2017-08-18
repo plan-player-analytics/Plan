@@ -47,8 +47,12 @@ public class PunchCardGraphCreator {
                 if (value == 0) {
                     continue;
                 }
-                arrayBuilder.append("{x:").append(j * 3600000)
-                        .append(", y:").append(i)
+                if (j == 0) {
+                    arrayBuilder.append("{x:").append(24 * 3600000);
+                } else {
+                    arrayBuilder.append("{x:").append(j * 3600000);
+                }
+                arrayBuilder.append(", y:").append(i)
                         .append(", z:").append(value).
                         append(", marker: { radius:").append(value)
                         .append("}}");
