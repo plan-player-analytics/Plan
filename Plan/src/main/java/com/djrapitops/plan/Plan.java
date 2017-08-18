@@ -265,7 +265,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
         getPluginLogger().endAllDebugs();
         Log.info(Locale.get(Msg.DISABLED).toString());
-        Locale.unload();
+//        Locale.unload();
     }
 
     private void registerListeners() {
