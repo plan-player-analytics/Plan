@@ -79,18 +79,20 @@ public class AnalyzeCommand extends SubCommand {
                 }
             }).runTaskAsynchronously();
         }
-        updateCache();
-        runMessageSenderTask(sender);
+        updateCache(sender);
         return true;
     }
 
-    private void updateCache() {
+    private void updateCache(ISender sender) {
         if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {
                 plugin.getServer().getScheduler().cancelTask(bootAnID);
             }
+            analysisCache.addNotification(sender);
             analysisCache.updateCache();
+        } else {
+            analysisCache.sendAnalysisMessage(sender);
         }
     }
 
