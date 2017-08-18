@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -131,7 +132,7 @@ public class AnalysisCacheHandler {
 
     public void addNotification(ISender sender) {
         if (CommandUtils.isPlayer(sender)) {
-            notifyWhenCached.add(((IPlayer) sender.getSender()).getUuid());
+            notifyWhenCached.add(((Player) sender.getSender()).getUniqueId());
         }
     }
 }
