@@ -36,6 +36,8 @@ public enum Settings {
     PROCESS_GET_LIMIT("Settings.Cache.Processing.GetLimit"),
     PROCESS_SAVE_LIMIT("Settings.Cache.Processing.SaveLimit"),
     PROCESS_CLEAR_LIMIT("Settings.Cache.Processing.ClearLimit"),
+    TPS_GRAPH_HIGH("Customization.Colors.HTML.TPSGraph.TPSHigh"),
+    TPS_GRAPH_MED("Customization.Colors.HTML.TPSGraph.TPSMedium"),
     // String
     DEBUG("Settings.Debug"),
     ALTERNATIVE_IP("Settings.WebServer.AlternativeIP"),
@@ -73,6 +75,9 @@ public enum Settings {
     HCOLOR_SEC("Customization.Colors.HTML.UI.Secondary"),
     HCOLOR_TER("Customization.Colors.HTML.UI.Tertiary"),
     HCOLOR_TER_DARK("Customization.Colors.HTML.UI.TertiaryDark"),
+    HCOLOR_TPS_HIGH("Customization.Colors.HTML.TPSGraph.TPSHighCol"),
+    HCOLOR_TPS_MED("Customization.Colors.HTML.TPSGraph.TPSMediumCol"),
+    HCOLOR_TPS_LOW("Customization.Colors.HTML.TPSGraph.TPSLowCol"),
     HCOLOR_ACT_ONL("Customization.Colors.HTML.ActivityGraph.OnlinePlayers"),
     HCOLOR_ACTP_ACT("Customization.Colors.HTML.ActivityPie.Active"),
     HCOLOR_ACTP_BAN("Customization.Colors.HTML.ActivityPie.Banned"),
