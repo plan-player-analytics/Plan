@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.ui.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.ExportUtility;
@@ -46,9 +47,13 @@ public class InspectCacheHandler {
      */
     public void cache(UUID uuid) {
         DBCallableProcessor cacher = data -> {
-            cache.put(uuid, new UserData(data));
+            UserData userData = new UserData(data);
+
+            cache.put(uuid, userData);
             cacheTimes.put(uuid, MiscUtils.getTime());
-            PageCacheHandler.cachePage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(Plan.getInstance().getUiServer().getDataReqHandler(), uuid));
+
+            PageCacheHandler.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(Plan.getInstance().getUiServer().getDataReqHandler(), uuid));
+            PageCacheHandler.cachePage("inspectionJson: " + uuid, () -> new JsonResponse(userData));
 
             try {
                 ExportUtility.writeInspectHtml(data, ExportUtility.getPlayersFolder(ExportUtility.getFolder()), HtmlUtils.getStringFromResource("player.html"));

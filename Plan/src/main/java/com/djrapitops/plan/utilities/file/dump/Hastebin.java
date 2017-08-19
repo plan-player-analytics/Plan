@@ -37,7 +37,7 @@ public class Hastebin {
      */
     public static String safeUpload(String content) {
         List<String> parts = ImmutableList.copyOf(split(content)).reverse();
-
+        
         String lastLink = null;
         try {
             for (String part : parts) {
