@@ -5,6 +5,7 @@ import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
@@ -12,11 +13,15 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.BadRequestResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -26,9 +31,7 @@ import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -84,11 +87,30 @@ public class WebServer {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
                     try {
+                        Headers responseHeaders = exchange.getResponseHeaders();
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
 
-                        Headers responseHeaders = exchange.getResponseHeaders();
-                        responseHeaders.set("Content-Type", "text/html;");
+                        boolean apiRequest = "POST".equals(exchange.getRequestMethod());
+                        Response response = null;
+
+                        String type = "text/html;";
+
+                        if (apiRequest) {
+                            response = getAPIResponse(target, exchange);
+
+                            if (response instanceof JsonResponse) {
+                                type = "application/json;";
+                            }
+                        }
+
+                        responseHeaders.set("Content-Type", type);
+
+                        if (apiRequest) {
+                            sendData(responseHeaders, exchange, response);
+                            return;
+                        }
+
                         WebUser user = null;
 
                         if (usingHttps) {
@@ -100,21 +122,9 @@ public class WebServer {
                             }
                         }
 
-                        responseHeaders.set("Content-Encoding", "gzip");
+                        response = getResponse(target, user);
 
-                        Response response = getResponse(target, user);
-
-                        String content = response.getContent();
-                        exchange.sendResponseHeaders(response.getCode(), 0);
-
-                        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-                             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
-                            byte[] buffer = new byte[2048];
-                            int count;
-                            while ((count = bis.read(buffer)) != -1) {
-                                out.write(buffer, 0, count);
-                            }
-                        }
+                        sendData(responseHeaders, exchange, response);
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName(), e);
                         throw e;
@@ -133,6 +143,20 @@ public class WebServer {
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             enabled = false;
+        }
+    }
+
+    private void sendData(Headers header, HttpExchange exchange, Response response) throws IOException {
+        header.set("Content-Encoding", "gzip");
+        exchange.sendResponseHeaders(response.getCode(), 0);
+
+        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
+             ByteArrayInputStream bis = new ByteArrayInputStream(response.getContent().getBytes())) {
+            byte[] buffer = new byte[2048];
+            int count;
+            while ((count = bis.read(buffer)) != -1) {
+                out.write(buffer, 0, count);
+            }
         }
     }
 
@@ -243,6 +267,137 @@ public class WebServer {
         return startSuccessful;
     }
 
+    private String readPOSTRequest(HttpExchange exchange) throws IOException {
+        try (InputStream in = exchange.getRequestBody()) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte buf[] = new byte[4096];
+            for (int n = in.read(buf); n > 0; n = in.read(buf)) {
+                out.write(buf, 0, n);
+            }
+            return new String(out.toByteArray(), "ISO-8859-1");
+        }
+    }
+
+    private Response getAPIResponse(String target, HttpExchange exchange) throws IOException {
+        String[] args = target.split("/");
+
+        if (args.length < 3) {
+            String error = "API Method not specified";
+            return PageCacheHandler.loadPage(error, () -> new NotFoundResponse(error));
+        }
+
+        String method = args[2];
+        String response = readPOSTRequest(exchange);
+        Map<String, String> variables = readVariables(response);
+
+        //TODO ADD CHECK IF SERVER KEY VALID
+
+        Plan plan = Plan.getInstance();
+
+        String playerString;
+        UUID uuid;
+        String identifier;
+
+        switch (method) {
+            //TODO Add Bungee APIs
+            case "analyze":
+                plan.getAnalysisCache().updateCache();
+                return PageCacheHandler.loadPage("success", SuccessResponse::new);
+            case "inspect":
+                playerString = variables.get("player");
+
+                if (playerString == null) {
+                    String error = "Player String not included";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                uuid = UUIDUtility.getUUIDOf(playerString);
+
+                if (uuid == null) {
+                    String error = "UUID not found";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                Plan.getInstance().getInspectCache().cache(uuid);
+
+                return PageCacheHandler.loadPage("success", SuccessResponse::new);
+            case "analysis":
+            case "analytics":
+                identifier = "analysisJson";
+                if (!PageCacheHandler.isCached(identifier)) {
+                    return PageCacheHandler.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));
+                }
+
+                return PageCacheHandler.loadPage(identifier);
+            case "inspection":
+                playerString = variables.get("player");
+
+                if (playerString == null) {
+                    String error = "Player String not included";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                uuid = UUIDUtility.getUUIDOf(playerString);
+
+                if (uuid == null) {
+                    String error = "UUID not found";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                UserData userData = plan.getInspectCache().getFromCache(uuid);
+
+                if (userData == null) {
+                    String error = "User not cached";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                return PageCacheHandler.loadPage("inspectionJson: " + uuid, () -> new JsonResponse(plan.getInspectCache().getFromCache(uuid)));
+            case "configure":
+                String key = variables.get("configKey");
+
+                if (key == null) {
+                    String error = "Config Key null";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                String value = variables.get("configValue");
+
+                if (value == null) {
+                    String error = "Config Value null";
+                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+                }
+
+                if (value.equals("null")) {
+                    value = null;
+                }
+
+                FileConfiguration config = plan.getConfig();
+                config.set(key, value);
+                plan.saveConfig();
+
+                return PageCacheHandler.loadPage("success", SuccessResponse::new);
+            default:
+                String error = "API Method not found";
+                return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
+    }
+
+    private Map<String, String> readVariables(String response) {
+        Map<String, String> variableMap = new HashMap<>();
+        String[] variables = response.split("&");
+
+        for (String variable : variables) {
+            String[] splittedVariables = variable.split("=", 2);
+            if (splittedVariables.length != 2) {
+                continue;
+            }
+
+            variableMap.put(splittedVariables[0], splittedVariables[1]);
+        }
+
+        return variableMap;
+    }
+
     private Response getResponse(String target, WebUser user) {
         if ("/favicon.ico".equals(target)) {
             return PageCacheHandler.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
@@ -259,6 +414,7 @@ public class WebServer {
                 return forbiddenResponse(permLevel, required);
             }
         }
+
         String[] args = target.split("/");
         if (args.length < 2) {
             return rootPageResponse(user);
@@ -294,6 +450,7 @@ public class WebServer {
         if (user == null) {
             return notFoundResponse();
         }
+
         switch (user.getPermLevel()) {
             case 0:
                 return serverResponse();
@@ -333,7 +490,7 @@ public class WebServer {
             return PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCacheHandler.loadPage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(dataReqHandler, uuid));
+        return PageCacheHandler.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(dataReqHandler, uuid));
     }
 
     private Response notFoundResponse() {

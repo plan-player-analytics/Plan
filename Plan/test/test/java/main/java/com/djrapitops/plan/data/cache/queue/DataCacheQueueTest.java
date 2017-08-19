@@ -106,14 +106,11 @@ public class DataCacheQueueTest {
     public void testGetQueue_cache() {
         List<Integer> calls = new ArrayList<>();
         List<Integer> errors = new ArrayList<>();
-        handler.getUserDataForProcessing(new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                if (data.equals(data1)) {
-                    calls.add(1);
-                } else {
-                    errors.add(1);
-                }
+        handler.getUserDataForProcessing(data -> {
+            if (data.equals(data1)) {
+                calls.add(1);
+            } else {
+                errors.add(1);
             }
         }, uuid1);
         while (calls.size() < 1) {
@@ -131,14 +128,11 @@ public class DataCacheQueueTest {
     public void testGetQueue_dontCache() {
         List<Integer> getCalls = new ArrayList<>();
         List<Integer> errors = new ArrayList<>();
-        handler.getUserDataForProcessing(new DBCallableProcessor() {
-            @Override
-            public void process(UserData data) {
-                if (data.equals(data1)) {
-                    getCalls.add(1);
-                } else {
-                    errors.add(1);
-                }
+        handler.getUserDataForProcessing(data -> {
+            if (data.equals(data1)) {
+                getCalls.add(1);
+            } else {
+                errors.add(1);
             }
         }, uuid1, false);
         while (getCalls.size() < 1) {

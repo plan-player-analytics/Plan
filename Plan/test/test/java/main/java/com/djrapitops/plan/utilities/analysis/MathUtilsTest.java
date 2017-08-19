@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +47,7 @@ public class MathUtilsTest {
      */
     @Test
     public void testAverageIntEmpty() {
-        List<Integer> l = new ArrayList<>();
+        List<Integer> l = Collections.emptyList();
         double exp = 0;
         double result = MathUtils.averageInt(l.stream());
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);

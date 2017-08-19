@@ -46,7 +46,6 @@ public class HastebinTest {
                 /* Ignored */
             }
 
-            Log.info(link);
             testLink.set(link);
         });
 

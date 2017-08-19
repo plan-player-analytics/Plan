@@ -18,8 +18,7 @@ public class DumpLog {
      * @param header The name of the header
      */
     public void addHeader(String header) {
-        addLine("");
-        addLine("--- " + header + " ---");
+        addLines("", "--- " + header + " ---");
     }
 
     /**
