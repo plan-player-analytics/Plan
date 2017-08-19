@@ -5,7 +5,6 @@ import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
@@ -15,13 +14,13 @@ import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPI;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -294,92 +293,14 @@ public class WebServer {
 
         Plan plan = Plan.getInstance();
 
-        String playerString;
-        UUID uuid;
-        String identifier;
+        WebAPI api = WebAPIManager.getAPI(method);
 
-        switch (method) {
-            //TODO Add Bungee APIs
-            case "analyze":
-                plan.getAnalysisCache().updateCache();
-                return PageCacheHandler.loadPage("success", SuccessResponse::new);
-            case "inspect":
-                playerString = variables.get("player");
-
-                if (playerString == null) {
-                    String error = "Player String not included";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                uuid = UUIDUtility.getUUIDOf(playerString);
-
-                if (uuid == null) {
-                    String error = "UUID not found";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                Plan.getInstance().getInspectCache().cache(uuid);
-
-                return PageCacheHandler.loadPage("success", SuccessResponse::new);
-            case "analysis":
-            case "analytics":
-                identifier = "analysisJson";
-                if (!PageCacheHandler.isCached(identifier)) {
-                    return PageCacheHandler.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));
-                }
-
-                return PageCacheHandler.loadPage(identifier);
-            case "inspection":
-                playerString = variables.get("player");
-
-                if (playerString == null) {
-                    String error = "Player String not included";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                uuid = UUIDUtility.getUUIDOf(playerString);
-
-                if (uuid == null) {
-                    String error = "UUID not found";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                UserData userData = plan.getInspectCache().getFromCache(uuid);
-
-                if (userData == null) {
-                    String error = "User not cached";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                return PageCacheHandler.loadPage("inspectionJson: " + uuid, () -> new JsonResponse(plan.getInspectCache().getFromCache(uuid)));
-            case "configure":
-                String key = variables.get("configKey");
-
-                if (key == null) {
-                    String error = "Config Key null";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                String value = variables.get("configValue");
-
-                if (value == null) {
-                    String error = "Config Value null";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                if (value.equals("null")) {
-                    value = null;
-                }
-
-                FileConfiguration config = plan.getConfig();
-                config.set(key, value);
-                plan.saveConfig();
-
-                return PageCacheHandler.loadPage("success", SuccessResponse::new);
-            default:
-                String error = "API Method not found";
-                return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        if (api == null) {
+            String error = "API Method not found";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
         }
+
+        return api.onResponse(plan, variables);
     }
 
     private Map<String, String> readVariables(String response) {
