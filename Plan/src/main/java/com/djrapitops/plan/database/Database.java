@@ -92,6 +92,11 @@ public abstract class Database {
     protected WorldTimesTable worldTimesTable;
 
     /**
+     * Table representing plan_servers in the database.
+     */
+    protected ServerTable serverTable;
+
+    /**
      * Super constructor.
      *
      * @param plugin current instance of Plan.
@@ -368,5 +373,9 @@ public abstract class Database {
      */
     public WorldTimesTable getWorldTimesTable() {
         return worldTimesTable;
+    }
+
+    public ServerTable getServerTable() {
+        return serverTable;
     }
 }
