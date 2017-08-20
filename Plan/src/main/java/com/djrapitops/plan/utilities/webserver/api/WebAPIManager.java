@@ -11,6 +11,14 @@ import java.util.Map;
  * @author Fuzzlemann
  */
 public class WebAPIManager {
+
+    /**
+     * Constructor used to hide the public constructor
+     */
+    private WebAPIManager() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static Map<String, WebAPI> registry = new HashMap<>();
 
     public static void registerNewAPI(String method, WebAPI api) {

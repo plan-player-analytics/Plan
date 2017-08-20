@@ -269,7 +269,7 @@ public class WebServer {
     private String readPOSTRequest(HttpExchange exchange) throws IOException {
         try (InputStream in = exchange.getRequestBody()) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte buf[] = new byte[4096];
+            byte[] buf = new byte[4096];
             for (int n = in.read(buf); n > 0; n = in.read(buf)) {
                 out.write(buf, 0, n);
             }

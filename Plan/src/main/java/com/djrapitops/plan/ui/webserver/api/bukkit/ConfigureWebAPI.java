@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.ui.webserver.response.Response;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPI;
+import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Map;
