@@ -25,6 +25,7 @@ public class WorldTable extends Table {
 
     private final String columnWorldId;
     private final String columnWorldName;
+    private final String columnServerID; //TODO
 
     /**
      * Constructor.
@@ -36,6 +37,7 @@ public class WorldTable extends Table {
         super("plan_worlds", db, usingMySQL);
         columnWorldId = "world_id";
         columnWorldName = "world_name";
+        columnServerID = "server_id";
     }
 
     @Override

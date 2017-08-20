@@ -22,6 +22,8 @@ public class KillsTable extends Table {
     private final String columnVictimUserID;
     private final String columnWeapon;
     private final String columnDate;
+    private final String columnServerID; //TODO
+    private final String columnSessionID; //TODO
 
     /**
      * @param db
@@ -33,6 +35,8 @@ public class KillsTable extends Table {
         columnDate = "date";
         columnKillerUserID = "killer_id";
         columnVictimUserID = "victim_id";
+        columnServerID = "server_id";
+        columnSessionID = "session_id";
     }
 
     /**

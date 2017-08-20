@@ -19,6 +19,7 @@ public class NicknamesTable extends UserIDTable {
 
     private final String columnNick;
     private final String columnCurrent;
+    private final String columnServerID; //TODO
 
     /**
      * @param db         The database
@@ -29,6 +30,7 @@ public class NicknamesTable extends UserIDTable {
         columnUserID = "user_id";
         columnNick = "nickname";
         columnCurrent = "current_nick";
+        columnServerID = "server_id";
     }
 
     /**

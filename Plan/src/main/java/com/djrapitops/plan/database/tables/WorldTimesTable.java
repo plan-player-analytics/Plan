@@ -21,12 +21,14 @@ import java.util.Map;
  */
 public class WorldTimesTable extends UserIDTable {
 
+    private final String columnServerID; //TODO
     private final WorldTable worldTable;
     private final String worldIDColumn;
     private final String worldNameColumn;
 
     private final String columnWorldId;
-    private final String columnPlaytime;
+    @Deprecated private final String columnPlaytime;
+    //TODO GM Times to World table
 
     private final String selectWorldIDsql;
 
@@ -44,6 +46,7 @@ public class WorldTimesTable extends UserIDTable {
         columnWorldId = "world_id";
         columnUserID = "user_id";
         columnPlaytime = "playtime";
+        columnServerID = "server_id";
 
         selectWorldIDsql = "(SELECT " + worldIDColumn + " FROM " + worldTable + " WHERE (" + worldNameColumn + "=?))";
     }

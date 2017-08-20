@@ -20,6 +20,7 @@ public class CommandUseTable extends Table {
 
     private final String columnCommand;
     private final String columnTimesUsed;
+    private final String columnServerID; //TODO
 
     /**
      * @param db
@@ -29,6 +30,7 @@ public class CommandUseTable extends Table {
         super("plan_commandusages", db, usingMySQL);
         columnCommand = "command";
         columnTimesUsed = "times_used";
+        columnServerID = "server_id";
     }
 
     /**
