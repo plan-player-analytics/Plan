@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -300,23 +301,21 @@ public class WebServer {
             return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
         }
 
-        return api.onResponse(plan, variables);
+        try {
+            return api.onResponse(plan, variables);
+        } catch (Exception ex) {
+            Log.toLog("WebServer.getAPIResponse", ex);
+            return new InternalErrorResponse(ex, "An error while processing the request happened");
+        }
     }
 
     private Map<String, String> readVariables(String response) {
-        Map<String, String> variableMap = new HashMap<>();
         String[] variables = response.split("&");
 
-        for (String variable : variables) {
-            String[] splittedVariables = variable.split("=", 2);
-            if (splittedVariables.length != 2) {
-                continue;
-            }
-
-            variableMap.put(splittedVariables[0], splittedVariables[1]);
-        }
-
-        return variableMap;
+        return Arrays.stream(variables)
+                .map(variable -> variable.split("=", 2))
+                .filter(splittedVariables -> splittedVariables.length == 2)
+                .collect(Collectors.toMap(splittedVariables -> splittedVariables[0], splittedVariables -> splittedVariables[1], (a, b) -> b));
     }
 
     private Response getResponse(String target, WebUser user) {
