@@ -70,7 +70,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
     }
 
     @Override
-    void consume(UUID uuid) {
+    protected void consume(UUID uuid) {
         if (!Verify.notNull(handler, uuid)) {
             return;
         }
@@ -88,7 +88,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (handler != null) {
             handler = null;
         }

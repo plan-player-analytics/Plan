@@ -12,8 +12,8 @@ import java.util.concurrent.BlockingQueue;
  */
 public abstract class Queue<T> {
 
-    final BlockingQueue<T> queue;
-    Setup<T> setup;
+    protected final BlockingQueue<T> queue;
+    protected Setup<T> setup;
 
     /**
      * Constructor, defines queue.

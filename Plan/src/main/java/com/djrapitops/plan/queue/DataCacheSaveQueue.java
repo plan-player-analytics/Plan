@@ -83,7 +83,7 @@ class SaveConsumer extends Consumer<UserData> {
     }
 
     @Override
-    void consume(UserData data) {
+    protected void consume(UserData data) {
         if (!Verify.notNull(handler, db, data)) {
             return;
         }
@@ -106,7 +106,7 @@ class SaveConsumer extends Consumer<UserData> {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (db != null) {
             db = null;
         }

@@ -68,7 +68,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
     }
 
     @Override
-    void consume(Map<UUID, List<DBCallableProcessor>> processors) {
+    protected void consume(Map<UUID, List<DBCallableProcessor>> processors) {
         if (!Verify.notNull(processors, db)) {
             return;
         }
@@ -89,7 +89,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (db != null) {
             db = null;
         }

@@ -68,7 +68,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     }
 
     @Override
-    void consume(HandlingInfo info) {
+    protected void consume(HandlingInfo info) {
         if (!Verify.notNull(handler, info)) {
             return;
         }
@@ -88,7 +88,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (handler != null) {
             handler = null;
         }
