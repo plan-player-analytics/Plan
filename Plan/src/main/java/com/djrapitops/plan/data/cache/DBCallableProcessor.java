@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.data.UserData;
  * @author Rsl1122
  * @since 2.6.0
  */
+@Deprecated
 public interface DBCallableProcessor {
 
     /**

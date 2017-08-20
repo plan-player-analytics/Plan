@@ -36,9 +36,9 @@ public class UsersTable extends Table {
     @Deprecated private final String columnDeaths;
     @Deprecated private final String columnMobKills;
     private final String columnRegistered;
+    private final String columnName;
     //TODO Server Specific Table (Also has registered on it)
     @Deprecated private final String columnOP;
-    @Deprecated private final String columnName;
     @Deprecated private final String columnBanned;
     //
     @Deprecated private final String columnContainsBukkitData;

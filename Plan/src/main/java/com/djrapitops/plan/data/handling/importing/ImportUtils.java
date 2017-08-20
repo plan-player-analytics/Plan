@@ -14,6 +14,7 @@ import static org.bukkit.Bukkit.getPluginManager;
  * @author Rsl1122
  * @since 3.2.0
  */
+@Deprecated
 public class ImportUtils {
 
     /**

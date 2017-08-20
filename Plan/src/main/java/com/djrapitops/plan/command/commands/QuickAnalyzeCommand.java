@@ -23,6 +23,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class QuickAnalyzeCommand extends SubCommand {
 
     private final Plan plugin;

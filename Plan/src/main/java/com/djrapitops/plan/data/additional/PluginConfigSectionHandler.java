@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  * @author Rsl1122
  * @since 3.5.0
  */
+// TODO Move the auto generation to the correct location (Customization.Plugins -> Plugins)
 public class PluginConfigSectionHandler {
 
     private final Plan plan;

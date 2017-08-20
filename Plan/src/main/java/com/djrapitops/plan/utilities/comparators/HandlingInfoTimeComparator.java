@@ -12,6 +12,7 @@ import java.util.Comparator;
 /**
  * @author Rsl1122
  */
+@Deprecated
 public class HandlingInfoTimeComparator implements Comparator<HandlingInfo> {
 
     @Override

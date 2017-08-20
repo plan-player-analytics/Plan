@@ -17,6 +17,9 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
+// TODO Change Processing Queue to use more generic object as processing.
+    // GOAL: Processing queue can be used to process query results from the database
+    // & for processing events into statements.
 public class DataCacheProcessQueue extends Queue<HandlingInfo> {
 
     /**

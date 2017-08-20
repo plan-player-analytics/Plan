@@ -19,6 +19,7 @@ import java.util.UUID;
 /**
  * @author Rsl1122
  */
+@Deprecated // Too much work to create bungee support for this
 public class TextUI {
 
     /**

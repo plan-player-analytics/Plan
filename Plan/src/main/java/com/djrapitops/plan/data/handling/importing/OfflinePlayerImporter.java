@@ -10,6 +10,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.5.0
  */
+@Deprecated
 public class OfflinePlayerImporter extends Importer {
 
     public OfflinePlayerImporter() {

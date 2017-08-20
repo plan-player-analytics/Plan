@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
+
 /**
  * This class is used for storing start and end of a play session inside UserData
  * object.
@@ -8,6 +10,7 @@ package main.java.com.djrapitops.plan.data;
  */
 public class SessionData {
 
+    private WorldTimes worldTimes; // TODO add World Times to SessionData
     private final long sessionStart;
     private long sessionEnd;
 

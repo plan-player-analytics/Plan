@@ -20,6 +20,7 @@ import java.util.*;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Deprecated
 public class InspectCacheHandler {
 
     private final DataCacheHandler handler;

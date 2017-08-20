@@ -16,13 +16,13 @@ import java.util.UUID;
  */
 public class SessionCache {
 
-    private final HashMap<UUID, SessionData> activeSessions;
+    private static final Map<UUID, SessionData> activeSessions = new HashMap<>();
 
     /**
      * Class Constructor.
      */
     public SessionCache() {
-        this.activeSessions = new HashMap<>();
+
     }
 
     /**

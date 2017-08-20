@@ -21,6 +21,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class DataCacheSaveQueue extends Queue<UserData> {
 
     /**
@@ -68,7 +69,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         return uuid != null && queue.stream().anyMatch(d -> d.getUuid().equals(uuid));
     }
 }
-
+@Deprecated
 class SaveConsumer extends Consumer<UserData> {
 
     private Database db;
@@ -115,7 +116,7 @@ class SaveConsumer extends Consumer<UserData> {
         }
     }
 }
-
+@Deprecated
 class SaveSetup extends Setup<UserData> {
 
     SaveSetup(BlockingQueue<UserData> q, DataCacheHandler handler, Database db) {

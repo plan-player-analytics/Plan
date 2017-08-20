@@ -13,6 +13,7 @@ import java.util.UUID;
 /**
  * @author Rsl1122
  */
+@Deprecated //TODO Make an utility class for parsing files to give to the page cache.
 public class DataRequestHandler {
 
     private final InspectCacheHandler inspectCache;

@@ -19,6 +19,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>>> {
 
     /**
@@ -56,7 +57,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
                 .anyMatch(list -> list.size() >= 2);
     }
 }
-
+@Deprecated
 class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
 
     private Database db;
@@ -94,7 +95,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
         }
     }
 }
-
+@Deprecated
 class GetSetup extends Setup<Map<UUID, List<DBCallableProcessor>>> {
 
     GetSetup(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {

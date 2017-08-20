@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class DataCacheClearQueue extends Queue<UUID> {
 
     /**
@@ -58,7 +59,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
         }
     }
 }
-
+@Deprecated
 class ClearConsumer extends Consumer<UUID> implements Runnable {
 
     private DataCacheHandler handler;
@@ -93,7 +94,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
         }
     }
 }
-
+@Deprecated
 class ClearSetup extends Setup<UUID> {
 
     ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {

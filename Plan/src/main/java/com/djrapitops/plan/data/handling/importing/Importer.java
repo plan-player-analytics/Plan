@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
  * @author Rsl1122
  * @since 3.2.0
  */
+@Deprecated
 public abstract class Importer {
 
     private String info;

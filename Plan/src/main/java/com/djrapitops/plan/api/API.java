@@ -105,6 +105,7 @@ public class API {
      * @param processor Object implementing DBCallableProcessor, which
      *                  process (UserData data) method will be called.
      */
+    @Deprecated
     public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
         plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
     }
@@ -117,6 +118,7 @@ public class API {
      *
      * @param info object that extends HandlingInfo.
      */
+    @Deprecated
     public void scheduleEventHandlingInfo(HandlingInfo info) {
         plugin.getHandler().addToPool(info);
     }
@@ -129,6 +131,7 @@ public class API {
      * @param data UserData object. Will be placed to the data.getUuid() key in
      *             the cache.
      */
+    @Deprecated
     public void placeDataToCache(UserData data) {
         plugin.getHandler().cache(data);
     }
@@ -138,6 +141,7 @@ public class API {
      * <p>
      * Should be only called from an Asynchronous thread.
      */
+    @Deprecated
     public void saveCachedData() {
         plugin.getHandler().saveCachedUserData();
     }
@@ -148,6 +152,7 @@ public class API {
      * @param uuid UUID of the player.
      * @return true/false
      */
+    @Deprecated
     public boolean isPlayersDataInspectCached(UUID uuid) {
         return plugin.getInspectCache().isCached(uuid);
     }
@@ -160,6 +165,7 @@ public class API {
      *
      * @param uuid UUID of the player.
      */
+    @Deprecated
     public void cacheUserDataToInspectCache(UUID uuid) {
         plugin.getInspectCache().cache(uuid);
     }
