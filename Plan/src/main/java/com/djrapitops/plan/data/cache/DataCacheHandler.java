@@ -8,7 +8,6 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
-import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -17,11 +16,11 @@ import main.java.com.djrapitops.plan.queue.DataCacheClearQueue;
 import main.java.com.djrapitops.plan.queue.DataCacheGetQueue;
 import main.java.com.djrapitops.plan.queue.DataCacheProcessQueue;
 import main.java.com.djrapitops.plan.queue.DataCacheSaveQueue;
+import main.java.com.djrapitops.plan.queue.processing.Processor;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.HandlingInfoTimeComparator;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -240,7 +239,7 @@ public class DataCacheHandler extends SessionCache {
         if (i == null) {
             return;
         }
-        processTask.addToPool(i);
+        //TODO processTask.addToPool(i);
     }
 
     /**
@@ -256,7 +255,7 @@ public class DataCacheHandler extends SessionCache {
         saveTask.stop();
         getTask.stop();
         clearTask.stop();
-        List<HandlingInfo> toProcess = processTask.stopAndReturnLeftovers();
+        List<Processor> toProcess = processTask.stopAndReturnLeftovers();
         Benchmark.start("Cache: ProcessOnlineHandlingInfo");
         Log.debug("ToProcess size: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
         List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
@@ -265,11 +264,11 @@ public class DataCacheHandler extends SessionCache {
             UUID uuid = p.getUuid();
             endSession(uuid);
             String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
-            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode().name(), getSession(uuid), worldName));
+            //TODO toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode().name(), getSession(uuid), worldName));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
-        toProcess.sort(new HandlingInfoTimeComparator());
-        processUnprocessedHandlingInfo(toProcess);
+        //TODO toProcess.sort(new HandlingInfoTimeComparator());
+        //TODO processUnprocessedHandlingInfo(toProcess);
         Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
@@ -436,11 +435,12 @@ public class DataCacheHandler extends SessionCache {
         if (userData == null) {
             return false;
         }
-        boolean isAccessed = (userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
+        /*TODO boolean isAccessed = (userData.isAccessed()) || saveTask.containsUUID(uuid) || processTask.containsUUID(uuid);
         if (isAccessed) {
             userData.setClearAfterSave(false);
         }
-        return isAccessed;
+        return isAccessed;*/
+        return true;
     }
 
     /**
