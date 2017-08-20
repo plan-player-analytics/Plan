@@ -4,16 +4,16 @@ Analysis FAIL - No Data                   || Analyysi | Analyysi ei onnistunut, 
 Analysis FAIL - No Players                || Analyysi | Analyysi ei onnistunut, Ei tunnettuja pelaajia
 Analysis - Fetch Phase                    || Analyysi | Haetaan Dataa..
 Analysis - Fetch Phase Start              || Analyysi | Tarkistetaan saatavilla olevia pelaajia..
-Analysis - Complete                       || Analyysi | Analyysi Valmis. (meni REPLACE0ms) REPLACE1
-Analysis - Begin Analysis                 || Analyysi | Data Haettu (REPLACE0 käyttäjää, meni REPLACE1ms), aloitetaan Datan analysointi..
+Analysis - Complete                       || Analyysi | Analyysi Valmis. (meni ${0}ms) ${1}
+Analysis - Begin Analysis                 || Analyysi | Data Haettu (${0} käyttäjää, meni ${1}ms), aloitetaan Datan analysointi..
 Analysis - Start                          || Analyysi | Aloitetaan Analyysi..
 >Constant - CMD Footer                    || §f»
 >Constant - List Ball                     || §7 •§2
 Cmd FAIL - No Data View                   || §e[Plan] Dataa ei voida näyttää.
 Cmd FAIL - No Permission                  || §c[Plan] Sinulla ei ole lupaa tähän komentoon.
-Cmd FAIL - Requires Arguments             || §c[Plan] Komento tarvitsee argumentteja. REPLACE0
+Cmd FAIL - Requires Arguments             || §c[Plan] Komento tarvitsee argumentteja. ${0}
 Cmd FAIL - Require only one Argument      || §c[Plan] Komento tarvitsee yhden argumentin.
-Cmd FAIL - Timeout                        || §c[Plan] REPLACE0 komento aikakatkaistu! Tarkista '/plan status' & konsoli.
+Cmd FAIL - Timeout                        || §c[Plan] ${0} komento aikakatkaistu! Tarkista '/plan status' & konsoli.
 Cmd FAIL - Unknown Username               || §c[Plan] Pelaajaa ei löytynyt tietokannasta
 Cmd FAIL - Unseen Username                || §c[Plan] Pelaaja ei ole pelannut palvelimella.
 Cmd FAIL - Invalid Username               || §c[Plan] Pelaajaa ei ole olemassa.
@@ -40,7 +40,7 @@ Analysis NOTIFY - Temporary Disable       || §eAnalyysi poistettu käytöstä t
 Cmd - Click Me                            || Klikkaa minua
 Cmd - Fetch Data                          || §f»§2 Haetaan tietoja välimuistiin..
 Cmd - Link                                || §7 • §2Linkki: §f
-Cmd - No Results                          || §7 • §2Ei tuloksia hakusanalle §7REPLACE0§2.
+Cmd - No Results                          || §7 • §2Ei tuloksia hakusanalle §7${0}§2.
 Cmd - Reload Success                      || §a[Plan] Uudelleenkäynnistys Valmis.
 Cmd - Results                             || §7 Sopivat pelaajat: §f
 Cmd - Searching                           || §f»§2Haetaaan..
@@ -75,9 +75,9 @@ Enable                                    || Player Analytics Enabled.
 Enable - Boot Analysis 30s Notify         || Analyysi | Käynnistyksen yhteinen analyysi 30 sekunnin kuluttua..
 Enable - Boot Analysis Notify             || Analysis | Aloitetaan Käynnistyksen yhteinen analyysi..
 Enable Db FAIL - Disable Info             || Database initialization has failed, disabling Plan.
-Enable - Db Info                          || REPLACE0-tietokantayhteys onnistui.
+Enable - Db Info                          || ${0}-tietokantayhteys onnistui.
 Enable - Db                               || Tietokannan käynnistys..
-Enable FAIL-Db                            || REPLACE0-Database Connection failed: REPLACE1
+Enable FAIL-Db                            || ${0}-Database Connection failed: ${1}
 Enable FAIL - Wrong Db Type               || Tietokantatyyppiä ei ole olemassa
 Enable Notify - ChatListener              || §eViestien kuuntelu pois käytöstä, nimi tieto voi olla väärin.
 Enable Notify - Disabled CommandListener  || §eKomentojen kuuntelu pois käytöstä.	
@@ -85,7 +85,7 @@ Enable Notify - Disabled DeathListener    || §eKuolema kuuntelu pois käytöst�
 Enable Notify-Empty IP                    || §eIP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!
 Enable Notify - No data view              || §eNetti Palvelin Poissa käytöstä, mutta Alternative IP/TextUI ei ole käytössä, dataa ei voi tarkastella!
 Enable - WebServer                        || Käynnistetään Netti Palvelin..
-Enable - WebServer Info                   || Netti Palvelin pyörii PORTILLA REPLACE0
+Enable - WebServer Info                   || Netti Palvelin pyörii PORTILLA ${0}
 Html - Active                             || Pelaaja on aktiivinen
 Html - Banned                             || | <span class="darkred">Pannassa</span>
 Html - Inactive                           || Pelaaja ei ole aktiivinen
@@ -94,7 +94,7 @@ Html - Offline                            || | <span class="darkred">Offline</sp
 Html - Online                             || | <span class="darkgreen">Online</span>
 Html - OP                                 || , Operaattori (Op)
 Html - Table No Kills                     || Ei tappoja
-Manage FAIL - Confirm Action              || §c[Plan] Lisää -a vahvistaaksesi! REPLACE0
+Manage FAIL - Confirm Action              || §c[Plan] Lisää -a vahvistaaksesi! ${0}
 Manage FAIL - Faulty DB Connection        || §c[Plan] Toinen tietokannoista ei käynnistynyt odotetusti.
 Manage FAIL - Backup File Not Found       || §c[Plan] Varmuuskopiota ei ole olemassa!
 Manage FAIL - Incorrect DB                || §c[Plan] Väärä tietokanta! (sqlite/mysql hyväksytään): 
@@ -108,11 +108,11 @@ Manage - Copy Success                     || §a[Plan] Kaikki tiedot kopioitu on
 Manage - Process Fail                     || §c[Plan] Jokin meni vikaan dataa käsitellessä!
 Manage - Import                           || §f» §2 Tuodaan Dataa..
 Manage - Move Success                     || §a[Plan] Kaikki data siirretty onnistuneesti!
-Manage - Remove Success                   || §f» §fREPLACE0:n§2 data poistettiin tietokannasta §fREPLACE1§2.
+Manage - Remove Success                   || §f» §f${0}:n§2 data poistettiin tietokannasta §f${1}§2.
 Manage - Start                            || »§7 Käsitellään Dataa..
 Manage - Success                          || §f» §2 Onnistui!
-Manage NOTIFY - Overwrite                 || Tiedot REPLACE0-tietokannassa ylikirjoitetaan!
-Manage NOTIFY - Partial Overwrite         || Osa tiedoista REPLACE0-tietokannassa ylikirjoitetaan!
-Manage NOTIFY - Remove                    || Tiedot REPLACE0-tietokannassa poistetaan!
-Manage NOTIFY - Rewrite                   || Tiedot REPLACE0-tietokannassa uudelleenkirjoitetaan!
-WARN - Too Small Queue Size               || Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)
+Manage NOTIFY - Overwrite                 || Tiedot ${0}-tietokannassa ylikirjoitetaan!
+Manage NOTIFY - Partial Overwrite         || Osa tiedoista ${0}-tietokannassa ylikirjoitetaan!
+Manage NOTIFY - Remove                    || Tiedot ${0}-tietokannassa poistetaan!
+Manage NOTIFY - Rewrite                   || Tiedot ${0}-tietokannassa uudelleenkirjoitetaan!
+WARN - Too Small Queue Size               || Queue size is too small! (${0}), change the setting to a higher number! (Currently ${1})

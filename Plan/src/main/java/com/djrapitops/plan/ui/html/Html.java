@@ -1,13 +1,15 @@
 package main.java.com.djrapitops.plan.ui.html;
 
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Rsl1122
  */
-// TODO Start using StrSubstitute with REPLACE variables
 public enum Html {
 
     COLOR_0("<span class=\"black\">"),
@@ -27,34 +29,34 @@ public enum Html {
     COLOR_E("<span class=\"yellow\">"),
     COLOR_F("<span class=\"white\">"),
     //
-    FONT_AWESOME_ICON("<i class=\"fa fa-REPLACE0\" aria-hidden=\"true\"></i>"),
-    @Deprecated MINOTAR_SMALL_IMG("<img style=\"float: left; padding: 2px 2px 0px 2px\" alt=\"REPLACE0\" src=\"https://minotar.net/avatar/REPLACE0/19\">"),
-    SPAN("REPLACE0</span>"),
-    BUTTON("<a class=\"button\" href=\"REPLACE0\">REPLACE1</a>"),
+    FONT_AWESOME_ICON("<i class=\"fa fa-${0}\" aria-hidden=\"true\"></i>"),
+    @Deprecated MINOTAR_SMALL_IMG("<img style=\"float: left; padding: 2px 2px 0px 2px\" alt=\"${0}\" src=\"https://minotar.net/avatar/${0}/19\">"),
+    SPAN("${0}</span>"),
+    BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
-    LINK("<a class=\"link\" href=\"REPLACE0\">REPLACE1</a>"),
-    LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"REPLACE0\">REPLACE1</a>"),
+    LINK("<a class=\"link\" href=\"${0}\">${1}</a>"),
+    LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
-    IMG("<img src=\"REPLACE0\">"),
-    @Deprecated COLUMNS_DIV_WRAPPER("<div class=\"columns\">REPLACE0</div>"),
-    @Deprecated COLUMN_DIV_WRAPPER("<div class=\"about box column\">REPLACE0</div>"),
-    @Deprecated HEADER("<div class=\"headerbox\" style=\"width: 95%;\"><div class=\"header-icon\"><div class=\"header-label\"><i class=\"fa fa-cube\" aria-hidden=\"true\"></i><span class=\"header-text\"> REPLACE0</span></div></div></div>"),
-    @Deprecated PLUGIN_DATA_WRAPPER("<div class=\"plugin-data\">REPLACE0</div>"),
+    IMG("<img src=\"${0}\">"),
+    @Deprecated COLUMNS_DIV_WRAPPER("<div class=\"columns\">${0}</div>"),
+    @Deprecated COLUMN_DIV_WRAPPER("<div class=\"about box column\">${0}</div>"),
+    @Deprecated HEADER("<div class=\"headerbox\" style=\"width: 95%;\"><div class=\"header-icon\"><div class=\"header-label\"><i class=\"fa fa-cube\" aria-hidden=\"true\"></i><span class=\"header-text\"> ${0}</span></div></div></div>"),
+    @Deprecated PLUGIN_DATA_WRAPPER("<div class=\"plugin-data\">${0}</div>"),
     @Deprecated PLUGIN_CONTAINER_START("<div class=\"plugin-container\">"),
     //
-    TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>REPLACE0</th><th>REPLACE1</th></tr></thead><tbody>"),
-    TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>REPLACE0</th><th>REPLACE1</th><th>REPLACE2</th></tr></thead><tbody>"),
-    TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>REPLACE0</th><th>REPLACE1</th><th>REPLACE2</th><th>REPLACE3</th></tr></thead><tbody>"),
-    @Deprecated TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
-    @Deprecated TABLE_KILLS_START(TABLE_START_3.parse("Date", "Killed", "With")),
-    @Deprecated TABLE_FACTIONS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("flag") + " Faction", FONT_AWESOME_ICON.parse("bolt") + " Power", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Leader")),
-    @Deprecated TABLE_TOWNS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("bank") + " Town", FONT_AWESOME_ICON.parse("users") + " Residents", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Mayor")),
-    TABLELINE_2("<tr><td><b>REPLACE0</b></td><td>REPLACE1</td></tr>"),
-    TABLELINE_3("<tr><td><b>REPLACE0</b></td><td>REPLACE1</td><td>REPLACE2</td></tr>"),
-    TABLELINE_4("<tr><td><b>REPLACE0</b></td><td>REPLACE1</td><td>REPLACE2</td><td>REPLACE3</td></tr>"),
-    TABLELINE_PLAYERS("<tr><td>REPLACE0</td><td>REPLACE1</td><td sorttable_customkey=\"REPLACE2\">REPLACE3</td><td>REPLACE4</td><td sorttable_customkey=\"REPLACE5\">REPLACE6</td>" + "<td sorttable_customkey=\"REPLACE7\">REPLACE8</td><td>REPLACE9</td></tr>"),
-    TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td sorttable_customkey=\"REPLACE2\">REPLACE3</td><td sorttable_customkey=\"REPLACE4\">REPLACE5</td></tr>"),
-    TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"REPLACE0\">REPLACE1</td><td>REPLACE2</td><td>REPLACE3</td></tr>"),
+    TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
+    TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
+    TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
+    TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
+    TABLE_KILLS_START(TABLE_START_3.parse("Date", "Killed", "With")),
+    TABLE_FACTIONS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("flag") + " Faction", FONT_AWESOME_ICON.parse("bolt") + " Power", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Leader")),
+    TABLE_TOWNS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("bank") + " Town", FONT_AWESOME_ICON.parse("users") + " Residents", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Mayor")),
+    TABLELINE_2("<tr><td><b>${0}</b></td><td>${1}</td></tr>"),
+    TABLELINE_3("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td></tr>"),
+    TABLELINE_4("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td><td>${3}</td></tr>"),
+    TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td>${4}</td><td sorttable_customkey=\"${5}\">${6}</td>" + "<td sorttable_customkey=\"${7}\">${8}</td><td>${9}</td></tr>"),
+    TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"${0}\">${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td sorttable_customkey=\"${4}\">${5}</td></tr>"),
+    TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"${0}\">${1}</td><td>${2}</td><td>${3}</td></tr>"),
     @Deprecated ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
     TABLE_END("</tbody></table>"); //    KILLDATA_NONE("No Kills"),
 
@@ -77,10 +79,15 @@ public enum Html {
      */
     public String parse(Serializable... p) {
         Verify.nullCheck(p);
-        String returnValue = this.html;
+
+        Map<String, Serializable> replaceMap = new HashMap<>();
+
         for (int i = 0; i < p.length; i++) {
-            returnValue = returnValue.replace("REPLACE" + i, p[i].toString());
+            replaceMap.put(String.valueOf(i), p[i].toString());
         }
-        return returnValue;
+
+        StrSubstitutor sub = new StrSubstitutor(replaceMap);
+
+        return sub.replace(html);
     }
 }

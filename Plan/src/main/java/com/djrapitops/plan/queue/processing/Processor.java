@@ -9,6 +9,12 @@ package main.java.com.djrapitops.plan.queue.processing;
  *
  * @author Rsl1122
  */
-public interface Processor<T> {
-    public void process(T object);
+public abstract class Processor<T> {
+    private T processed;
+
+    public Processor(T processed) {
+        this.processed = processed;
+    }
+
+    public abstract void process();
 }

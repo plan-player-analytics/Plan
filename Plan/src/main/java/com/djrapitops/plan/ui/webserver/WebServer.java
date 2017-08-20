@@ -26,6 +26,7 @@ import javax.net.ssl.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -281,7 +282,7 @@ public class WebServer {
         }
 
         try {
-            return new String(bytes, "ISO-8859-1");
+            return new String(bytes, StandardCharsets.ISO_8859_1);
         } catch (Exception e) {
             return null;
         }

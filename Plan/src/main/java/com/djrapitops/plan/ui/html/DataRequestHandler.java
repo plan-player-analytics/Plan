@@ -52,6 +52,7 @@ public class DataRequestHandler {
             if (data == null) {
                 return "<h1>404 Data was not found in cache</h1>";
             }
+
             return HtmlUtils.replacePlaceholders(
                     HtmlUtils.getStringFromResource("player.html"),
                     PlaceholderUtils.getInspectReplaceRules(data)

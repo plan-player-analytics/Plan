@@ -89,10 +89,10 @@ class SaveConsumer extends Consumer<UserData> {
         }
 
         UUID uuid = data.getUuid();
-        if (handler.getProcessTask().containsUUID(uuid)) { // Wait for process queue.
+        /*TODO if (handler.getProcessTask().containsUUID(uuid)) { // Wait for process queue.
             queue.add(data);
             return;
-        }
+        }*/
 
         try {
             db.saveUserData(data);

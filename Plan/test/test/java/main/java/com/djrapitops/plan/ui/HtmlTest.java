@@ -28,7 +28,7 @@ public class HtmlTest {
     @Test
     public void testParseWithZeroArgs() {
         Html instance = Html.SPAN;
-        String expResult = "REPLACE0</span>";
+        String expResult = "${0}</span>";
         String result = instance.parse();
         assertEquals(expResult, result);
     }

@@ -124,9 +124,9 @@ public class Locale {
 
         add(Msg.ENABLED, "Player Analytics Enabled.");
         add(Msg.ENABLE_DB_INIT, "Database init..");
-        add(Msg.ENABLE_DB_INFO, "REPLACE0-database connection established.");
+        add(Msg.ENABLE_DB_INFO, "${0}-database connection established.");
         add(Msg.ENABLE_WEBSERVER, "Initializing Webserver..");
-        add(Msg.ENABLE_WEBSERVER_INFO, "Webserver running on PORT REPLACE0");
+        add(Msg.ENABLE_WEBSERVER_INFO, "Webserver running on PORT ${0}");
         add(Msg.ENABLE_BOOT_ANALYSIS_INFO, analysis + "Boot analysis in 30 seconds..");
         add(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO, analysis + "Starting Boot Analysis..");
 
@@ -137,10 +137,10 @@ public class Locale {
         add(Msg.ENABLE_NOTIFY_DISABLED_DEATHLISTENER, yellow + "Death listener disabled, player & mob kills not recorded.");
 
         add(Msg.ENABLE_FAIL_WRONG_DB, "That database type doesn't exist.");
-        add(Msg.ENABLE_FAIL_DB, "REPLACE0-Database Connection failed: REPLACE1");
+        add(Msg.ENABLE_FAIL_DB, "${0}-Database Connection failed: ${1}");
         add(Msg.ENABLE_DB_FAIL_DISABLE_INFO, "Database initialization has failed, disabling Plan.");
 
-        add(Msg.RUN_WARN_QUEUE_SIZE, "Queue size is too small! (REPLACE0), change the setting to a higher number! (Currently REPLACE1)");
+        add(Msg.RUN_WARN_QUEUE_SIZE, "Queue size is too small! (${0}), change the setting to a higher number! (Currently ${1})");
 
         add(Msg.DISABLED, "Player Analytics Disabled.");
         add(Msg.DISABLE_CACHE_SAVE, "Saving cached data..");
@@ -149,9 +149,9 @@ public class Locale {
         add(Msg.ANALYSIS_START, analysis + "Beginning analysis of user data..");
         add(Msg.ANALYSIS_FETCH_UUID, analysis + "Checking for available players..");
         add(Msg.ANALYSIS_FETCH, analysis + "Fetching Data..");
-        add(Msg.ANALYSIS_PHASE_START, analysis + "Data Fetched (REPLACE0 users, took REPLACE1ms), beginning Analysis of data..");
+        add(Msg.ANALYSIS_PHASE_START, analysis + "Data Fetched (${0} users, took ${1}ms), beginning Analysis of data..");
         add(Msg.ANALYSIS_3RD_PARTY, analysis + "Analyzing additional data sources (3rd party)");
-        add(Msg.ANALYSIS_FINISHED, analysis + "Analysis Complete. (took REPLACE0ms) REPLACE1");
+        add(Msg.ANALYSIS_FINISHED, analysis + "Analysis Complete. (took ${0}ms) ${1}");
         add(Msg.ANALYSIS_FAIL_NO_PLAYERS, analysis + "Analysis failed, no known players.");
         add(Msg.ANALYSIS_FAIL_NO_DATA, analysis + "Analysis failed, no data in the database.");
         add(Msg.ANALYSIS_FAIL_FETCH_EXCEPTION, analysis + "Failed to fetch data for Analysis, Exception occurred.");
@@ -164,7 +164,7 @@ public class Locale {
         add(Msg.MANAGE_INFO_COPY_SUCCESS, green + prefix + "All data copied successfully!");
         add(Msg.MANAGE_INFO_MOVE_SUCCESS, green + prefix + "All data moved successfully!");
         add(Msg.MANAGE_INFO_CLEAR_SUCCESS, green + prefix + "All data cleared successfully!");
-        add(Msg.MANAGE_INFO_REMOVE_SUCCESS, cmdFooter + " " + mCol + "Data of " + tCol + "REPLACE0" + mCol + " was removed from Database " + tCol + "REPLACE1" + mCol + ".");
+        add(Msg.MANAGE_INFO_REMOVE_SUCCESS, cmdFooter + " " + mCol + "Data of " + tCol + "${0}" + mCol + " was removed from Database " + tCol + "${1}" + mCol + ".");
 
         add(Msg.MANAGE_FAIL_INCORRECT_PLUGIN, red + prefix + "Plugin not supported: ");
         add(Msg.MANAGE_FAIL_PLUGIN_NOT_ENABLED, red + prefix + "Plugin is not enabled: ");
@@ -174,19 +174,19 @@ public class Locale {
         add(Msg.MANAGE_FAIL_NO_PLAYERS, red + prefix + "Database has no player data!");
         add(Msg.MANAGE_FAIL_FILE_NOT_FOUND, red + prefix + "Backup file doesn't exist!");
 
-        add(Msg.MANAGE_FAIL_CONFIRM, red + prefix + "Add -a to confirm execution! REPLACE0");
-        add(Msg.MANAGE_NOTIFY_REWRITE, "Data in REPLACE0-database will be rewritten!");
-        add(Msg.MANAGE_NOTIFY_OVERWRITE, "Data in REPLACE0-database will be overwritten!");
-        add(Msg.MANAGE_NOTIFY_PARTIAL_OVERWRITE, "Some data in REPLACE0-database will be overwritten!");
-        add(Msg.MANAGE_NOTIFY_REMOVE, "Data in REPLACE0-database will be removed!");
+        add(Msg.MANAGE_FAIL_CONFIRM, red + prefix + "Add -a to confirm execution! ${0}");
+        add(Msg.MANAGE_NOTIFY_REWRITE, "Data in ${0}-database will be rewritten!");
+        add(Msg.MANAGE_NOTIFY_OVERWRITE, "Data in ${0}-database will be overwritten!");
+        add(Msg.MANAGE_NOTIFY_PARTIAL_OVERWRITE, "Some data in ${0}-database will be overwritten!");
+        add(Msg.MANAGE_NOTIFY_REMOVE, "Data in ${0}-database will be removed!");
 
-        add(Msg.CMD_FAIL_REQ_ARGS, red + prefix + "Command requires arguments. REPLACE0");
+        add(Msg.CMD_FAIL_REQ_ARGS, red + prefix + "Command requires arguments. ${0}");
         add(Msg.CMD_FAIL_REQ_ONE_ARG, red + prefix + "Command requires one argument.");
         add(Msg.CMD_FAIL_NO_PERMISSION, red + prefix + "You do not have the required permission.");
         add(Msg.CMD_FAIL_USERNAME_NOT_VALID, red + prefix + "This Player doesn't exist.");
         add(Msg.CMD_FAIL_USERNAME_NOT_SEEN, red + prefix + "This Player has not played on this server.");
         add(Msg.CMD_FAIL_USERNAME_NOT_KNOWN, red + prefix + "Player not found from the database.");
-        add(Msg.CMD_FAIL_TIMEOUT, red + prefix + "REPLACE0 Command timed out! Check '/plan status' & console.");
+        add(Msg.CMD_FAIL_TIMEOUT, red + prefix + "${0} Command timed out! Check '/plan status' & console.");
         add(Msg.CMD_FAIL_NO_DATA_VIEW, yellow + "" + prefix + "No Way to view Data Available.");
 
         add(Msg.CMD_INFO_ANALYSIS_TEMP_DISABLE, yellow + "Analysis has been temporarily disabled due to expensive task, use /plan status for info.");
@@ -195,7 +195,7 @@ public class Locale {
         add(Msg.CMD_INFO_CLICK_ME, "Click Me");
         add(Msg.CMD_INFO_LINK, sCol + " • " + mCol + "Link: " + tCol);
         add(Msg.CMD_INFO_RESULTS, sCol + " Matching players: " + tCol);
-        add(Msg.CMD_INFO_NO_RESULTS, sCol + " • " + mCol + "No results for " + sCol + "REPLACE0" + mCol + ".");
+        add(Msg.CMD_INFO_NO_RESULTS, sCol + " • " + mCol + "No results for " + sCol + "${0}" + mCol + ".");
         add(Msg.CMD_INFO_SEARCHING, cmdFooter + mCol + "Searching..");
 
         add(Msg.CMD_USG_ANALYZE, "View the Server Analysis");
