@@ -4,16 +4,16 @@ Analysis FAIL - No Data                   || Analyse | Analyse fehlgeschlagen, k
 Analysis FAIL - No Players                || Analyse | Analyse fehlgeschlagen, keine bekannten Spieler.
 Analysis - Fetch Phase                    || Analyse | Hole Daten...
 Analysis - Fetch Phase Start              || Analyse | Suche nach verfügbaren Spieler...
-Analysis - Complete                       || Analyse | Analyse vollständig. (dauerte REPLACE0ms) REPLACE1
-Analysis - Begin Analysis                 || Analyse | Daten geholt (REPLACE0 Spieler, dauerte REPLACE1ms), beginne mit der Analyse der Daten...
+Analysis - Complete                       || Analyse | Analyse vollständig. (dauerte ${0}ms) ${1}
+Analysis - Begin Analysis                 || Analyse | Daten geholt (${0} Spieler, dauerte ${1}ms), beginne mit der Analyse der Daten...
 Analysis - Start                          || Analyse | Beginne die Analyse der Spieler Daten...
 >Constant - CMD Footer                    || §f»
 >Constant - List Ball                     || §7 •§2
 Cmd FAIL - No Data View                   || §e[Plan] Dieser Befehl kann nur benutzt werden wenn der WebServer oder das TextUI auf dem Server aktiviert ist.
 Cmd FAIL - No Permission                  || §c[Plan] Du hast nicht die benötigte Berechtigung.
-Cmd FAIL - Requires Arguments             || §c[Plan] Dieser Befehl erfordert Argumente. REPLACE0
+Cmd FAIL - Requires Arguments             || §c[Plan] Dieser Befehl erfordert Argumente. ${0}
 Cmd FAIL - Require only one Argument      || §c[Plan] Der Befehl benötigt ein Argument.
-Cmd FAIL - Timeout                        || §c[Plan] REPLACE0 Befehl ausgetimed! Mehr Infos unter '/plan status' und in der Serverkonsole.
+Cmd FAIL - Timeout                        || §c[Plan] ${0} Befehl ausgetimed! Mehr Infos unter '/plan status' und in der Serverkonsole.
 Cmd FAIL - Unknown Username               || §c[Plan] Der Spielername konnte in der Datenbank nicht gefunden werden.
 Cmd FAIL - Unseen Username                || §c[Plan] Dieser Spieler war noch nie auf diesem Server.
 Cmd FAIL - Invalid Username               || §c[Plan] Dieser Spieler existiert nicht.
@@ -40,7 +40,7 @@ Analysis NOTIFY - Temporary Disable       || §eAnalyse wurde temporär aufgrund
 Cmd - Click Me                            || Klick Mich
 Cmd - Fetch Data                          || §f»§2 Hole Daten in den Cache...
 Cmd - Link                                || §7 •§2 Link: §f
-Cmd - No Results                          || §7 •§2 Keine Ergebnisse für §7REPLACE0§2.
+Cmd - No Results                          || §7 •§2 Keine Ergebnisse für §7${0}§2.
 Cmd - Reload Success                      || §a[Plan] Reload abgeschlossen.
 Cmd - Results                             || §7 Übereinstimmender Spieler: §f
 Cmd - Searching                           || §f»§2Suchen...
@@ -75,16 +75,16 @@ Enable                                    || Player Analytics aktiviert.
 Enable - Boot Analysis 30s Notify         || Analyse | Boot Analyse in 30 Sekunden...
 Enable - Boot Analysis Notify             || Analyse | Starte Boot Analyse...
 Enable Db FAIL - Disable Info             || Datenbank Initialisierung fehlgeschlagen, deaktiviere Plan.
-Enable - Db Info                          || REPLACE0-Datenbank Verbindung hergestellt.
+Enable - Db Info                          || ${0}-Datenbank Verbindung hergestellt.
 Enable - Db                               || Datenbank Initialisierung...
-Enable FAIL-Db                            || REPLACE0-Datenbank Verbindung fehlgeschlagen: REPLACE1
+Enable FAIL-Db                            || ${0}-Datenbank Verbindung fehlgeschlagen: ${1}
 Enable FAIL - Wrong Db Type               || Dieser Datenbank Typ existiert nicht.
 Enable Notify - ChatListener              || §eChataufzeichnung deaktiviert, die Information der Nicknamen ist nicht akkurat.
 Enable Notify - Disabled CommandListener  || §eBefehlsaufzeichnung deaktiviert.
 Enable Notify - Disabled DeathListener    || §eTodesaufzeichnung deaktiviert, Spieler & Mob Kills werden nicht aufgezeichnet.
 Enable Notify - No data view              || §eWebserver deaktiviert, aber es wird keine alternative IP benutzt, sodass Daten nicht angezeigt werden können!
 Enable - WebServer                        || Initialisiere Webserver...
-Enable - WebServer Info                   || Webserver läuft auf PORT REPLACE0
+Enable - WebServer Info                   || Webserver läuft auf PORT ${0}
 Html - Active                             || Spieler ist aktiv
 Html - Banned                             || | <span class="darkred">Gesperrt</span>
 Html - Inactive                           || Spieler ist inaktiv
@@ -93,7 +93,7 @@ Html - Offline                            || | <span class="darkred">Offline</sp
 Html - Online                             || | <span class="darkgreen">Online</span>
 Html - OP                                 || , Operator (Op)
 Html - Table No Kills                     || Keine Kills
-Manage FAIL - Confirm Action              || §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! REPLACE0
+Manage FAIL - Confirm Action              || §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! ${0}
 Manage FAIL - Faulty DB Connection        || §c[Plan] Eine der Datenbanken wurde nicht richtig initialisiert.
 Manage FAIL - Backup File Not Found       || §c[Plan] Sicherheitskopie existiert nicht!
 Manage FAIL - Incorrect DB                || §c[Plan] Falsche Datenbank! (SQlite/MySQL wird unterstützt):
@@ -107,11 +107,11 @@ Manage - Copy Success                     || §a[Plan] Alle Daten wurden erfolgr
 Manage - Process Fail                     || §c[Plan] Irgendwas lief schief während die Daten verarbeitet wurden!
 Manage - Import                           || §f» §2 Importiere Daten...
 Manage - Move Success                     || §a[Plan] Alle Daten wurden erfolgreich verschoben!
-Manage - Remove Success                   || §f» §2Daten von §fREPLACE0§2 wurden aus dieser Datenbank entfernt §fREPLACE1§2.
+Manage - Remove Success                   || §f» §2Daten von §f${0}§2 wurden aus dieser Datenbank entfernt §f${1}§2.
 Manage - Start                            || »§7 Verarbeite Daten...
 Manage - Success                          || §f» §2 Erfolgreich!
-Manage NOTIFY - Overwrite                 || Daten in REPLACE0-Datenbank werden überschrieben!
-Manage NOTIFY - Partial Overwrite         || Einige Daten in REPLACE0-Datenbank werden überschrieben!
-Manage NOTIFY - Remove                    || Daten in REPLACE0-Datenbank werden entfernt!
-Manage NOTIFY - Rewrite                   || Daten in REPLACE0-Datenbank werden neu geschrieben!
-WARN - Too Small Queue Size               || Warteschlagengröße ist zu klein! (REPLACE0), änder diese Einstellung zu einer höheren! (Derzeit REPLACE1)
+Manage NOTIFY - Overwrite                 || Daten in ${0}-Datenbank werden überschrieben!
+Manage NOTIFY - Partial Overwrite         || Einige Daten in ${0}-Datenbank werden überschrieben!
+Manage NOTIFY - Remove                    || Daten in ${0}-Datenbank werden entfernt!
+Manage NOTIFY - Rewrite                   || Daten in ${0}-Datenbank werden neu geschrieben!
+WARN - Too Small Queue Size               || Warteschlagengröße ist zu klein! (${0}), änder diese Einstellung zu einer höheren! (Derzeit ${1})

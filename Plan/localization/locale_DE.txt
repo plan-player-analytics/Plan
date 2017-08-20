@@ -2,19 +2,19 @@ ENABLED <> Player Analytics aktiviert.
 DISABLED <> Player Analytics deaktiviert.
 RELOAD_COMPLETE <> §a[Plan] Reload abgeschlossen.
 CACHE_SAVE <> Daten im Cache werden gespeichert...
-CACHE_ADD <> REPLACE0 wurde zum Cache hinzugefügt.
-CACHE_REMOVE <> REPLACE0 wurde aus dem Cache gelöscht.
+CACHE_ADD <> ${0} wurde zum Cache hinzugefügt.
+CACHE_REMOVE <> ${0} wurde aus dem Cache gelöscht.
 CONFIG_HEADER <> Plan Config | Mehr Informationen auf https://www.spigotmc.org/wiki/plan-configuration/
 DB_INIT <> Datenbank Initialisierung...
 WEBSERVER_INIT <> Initialisiere Webserver...
 WEBSERVER_CLOSE <> Webserver wird heruntergefahren...
-WEBSERVER_RUNNING <> Webserver läuft auf PORT REPLACE0
-DB_CONNECTION_FAIL <> REPLACE0-Datenbank Verbindung fehlgeschlagen: REPLACE1
-DB_ESTABLISHED <> REPLACE0-Datenbank Verbindung hergestellt.
+WEBSERVER_RUNNING <> Webserver läuft auf PORT ${0}
+DB_CONNECTION_FAIL <> ${0}-Datenbank Verbindung fehlgeschlagen: ${1}
+DB_ESTABLISHED <> ${0}-Datenbank Verbindung hergestellt.
 DB_TYPE_DOES_NOT_EXIST <> Dieser Datenbank Typ existiert nicht.
 DB_FAILURE_DISABLE <> Datenbank Initialisierung fehlgeschlagen, deaktiviere Plan.
 NOTIFY_EMPTY_IP <> §e[Plan] IP in server.properties ist leer & Alternative ServerIP wird nicht benutzt, fehlerhafte Links werden ausgegeben!
-VERSION_NEW_AVAILABLE <> Eine neue Version (REPLACE0) ist verfügbar auf https://www.spigotmc.org/resources/plan-player-analytics.32536/
+VERSION_NEW_AVAILABLE <> Eine neue Version (${0}) ist verfügbar auf https://www.spigotmc.org/resources/plan-player-analytics.32536/
 VERSION_LATEST <> Du benutzt die neueste Version.
 VERSION_CHECK_ERROR <> Versionen konnten nicht abgeglichen werden.
 VERSION_FAIL <> Die neueste Versionsnummer konnte nicht abgerufen werden.
@@ -25,7 +25,7 @@ GRABBING_DATA_MESSAGE <> »§2 Hole Daten ins Cache...
 DEM_UNKNOWN <> Nicht bekannt
 NOT_IN_TOWN <> Nicht in einem Dorf
 NOT_IN_FAC <> Nicht in einer Faction
-COMMAND_TIMEOUT <> §c[Plan] REPLACE0 Befehl ausgetimed! Der Error befindest sich vermutlich in der Serverkonsole.
+COMMAND_TIMEOUT <> §c[Plan] ${0} Befehl ausgetimed! Der Error befindest sich vermutlich in der Serverkonsole.
 ANALYSIS_START <> Analyse | Beginne die Analyse der Spieler Daten...
 ANALYSIS_BOOT_NOTIFY <> Analyse | Boot Analyse in 30 Sekunden...
 ANALYSIS_BOOT <> Analyse | Starte Boot Analyse...
@@ -35,7 +35,7 @@ ANALYSIS_FAIL_NO_PLAYERS <> Analyse | Analyse fehlgeschlagen, keine bekannten Sp
 ANALYSIS_FAIL_NO_DATA <> Analyse | Analyse fehlgeschlagen, keine Daten in der Datenbank.
 ANALYSIS_BEGIN_ANALYSIS <> Analyse | Daten geholt, beginne mit der Analyse der Daten...
 ANALYSIS_COMPLETE <> Analyse | Analyse vollständig.
-DATA_CORRUPTION_WARN <> Einige Daten könnten beschädigt sein: REPLACE0
+DATA_CORRUPTION_WARN <> Einige Daten könnten beschädigt sein: ${0}
 ERROR_NO_DATA_VIEW <> §eWebserver deaktiviert aber Alternative IP/PlanLite wird nicht benutzt, Daten können nicht angezeigt werden!
 ERROR_WEBSERVER_OFF_ANALYSIS <> §e[Plan] Dieser Befehl kann nur benutzt werden wenn der Webserver auf diesem Server läuft...
 ERROR_WEBSERVER_OFF_INSPECT <> §e[Plan] Dieser Befehl kann nur benutzt werden wenn Webserver/Planlite auf dem Server aktiviert ist.
@@ -52,22 +52,22 @@ MANAGE_MOVE_SUCCESS <> §a[Plan] Alle Daten wurden erfolgreich verschoben!
 MANAGE_COPY_SUCCESS <> §a[Plan] Alle Daten wurden erfolgreich kopiert!
 MANAGE_PROCESS_FAIL <> §c[Plan] Irgendwas lief schief während die Daten verarbeitet wurden!
 MANAGE_CLEAR_SUCCESS <> §a[Plan] Alle Daten wurden erfolgreich gesäubert!
-MANAGE_REMOVE_SUCCESS <> §f» §2Daten von §fREPLACE0§2 wurden aus dieser Datenbank entfernt §fREPLACE1§2.
+MANAGE_REMOVE_SUCCESS <> §f» §2Daten von §f${0}§2 wurden aus dieser Datenbank entfernt §f${1}§2.
 MANAGE_IMPORTING <> §f» §2 Importiere Daten...
 MANAGE_SUCCESS <> §f» §2 Erfolgreich!
 CMD_ANALYZE_HEADER <> §f»§2 Player Analytics - Analyse Ergebnisse
 CMD_INSPECT_HEADER <> §f»§2 Player Analytics - Überprüfe die Ergebnisse: 
 CMD_INFO_HEADER <> §f»§2 Player Analytics - Info
-CMD_INFO_VERSION <> §7 •§2§2 Version: §7REPLACE0
+CMD_INFO_VERSION <> §7 •§2§2 Version: §7${0}
 CMD_SEARCH_HEADER <> §f»§2 Player Analytics - Suchergebnisse für: 
 CMD_HELP_HEADER <> §f»§2 Player Analytics - Hilfe
 CMD_MANAGE_HELP_HEADER <> §f»§2 Player Analytics - Management Hilfe
 CMD_MANAGE_STATUS_HEADER <> §f»§2 Player Analytics - Datenbank Status
-CMD_MANAGE_STATUS_ACTIVE_DB <> §7 •§2§2 Aktive Datenbank: §7REPLACE0
+CMD_MANAGE_STATUS_ACTIVE_DB <> §7 •§2§2 Aktive Datenbank: §7${0}
 CMD_CLICK_ME <> Klick Mich
 CMD_LINK <> §7 •§2 Link: §f
-CMD_RESULTS_AVAILABLE <> §7   Die Ergebnisse werden für §fREPLACE0§7 Minuten erreichbar sein.
-CMD_NO_RESULTS <> §7 •§2 Keine Ergebnisse für §7REPLACE0§2.
+CMD_RESULTS_AVAILABLE <> §7   Die Ergebnisse werden für §f${0}§7 Minuten erreichbar sein.
+CMD_NO_RESULTS <> §7 •§2 Keine Ergebnisse für §7${0}§2.
 CMD_MATCH <> §7 Übereinstimmender Spieler: §f
 CMD_USG_ANALYZE <> Zeige die Server Analyse
 CMD_USG_HELP <> Zeige die Befehlsliste.
@@ -97,13 +97,13 @@ USE_PLAN <> Nutze /plan für Hilfe
 USE_MOVE <> Nutze /plan manage move <vonDB> <nachDB> [-a]
 USE_COMBINE <> Nutze /plan manage combine <vonDB> <nachDB> [-a]
 USE_IMPORT <> Nutze /plan manage import <Plugin> [-a]
-WARN_REWRITE <> Daten in REPLACE0-Datenbank werden neu geschrieben!
-WARN_OVERWRITE <> Daten in REPLACE0-Datenbank werden überschrieben!
-WARN_OVERWRITE_SOME <> Einige Daten in REPLACE0-Datenbank werden überschrieben!
-WARN_REMOVE <> Daten in REPLACE0-Datenbank werden entfernt!
+WARN_REWRITE <> Daten in ${0}-Datenbank werden neu geschrieben!
+WARN_OVERWRITE <> Daten in ${0}-Datenbank werden überschrieben!
+WARN_OVERWRITE_SOME <> Einige Daten in ${0}-Datenbank werden überschrieben!
+WARN_REMOVE <> Daten in ${0}-Datenbank werden entfernt!
 COMMAND_SENDER_NOT_PLAYER <> §c[Plan] Dieser Befehl kann nur als Spieler benutzt werden.
-COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Dieser Befehl erfordert Argumente. REPLACE0
-COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! REPLACE0
+COMMAND_REQUIRES_ARGUMENTS <> §c[Plan] Dieser Befehl erfordert Argumente. ${0}
+COMMAND_ADD_CONFIRMATION_ARGUMENT <> §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! ${0}
 COMMAND_REQUIRES_ARGUMENTS_ONE <> §c[Plan] Der Befehl benötigt ein Argument.
 COMMAND_NO_PERMISSION <> §c[Plan] Du hast nicht die benötigte Berechtigung.
 <<<<<<HTML>>>>>>
@@ -119,13 +119,13 @@ HIDDEN <> Versteckt (config)
 FACTION_NOT_FOUND <> Faction nicht gefunden
 FACTION_NO_LEADER <> Kein Anführer
 FACTION_NO_FACTIONS <> Keine Factions
-WARPS <> <br/>Warps: REPLACE0
-ACHIEVEMENTS <> <br/>Errungenschaften: REPLACE0/REPLACE1
+WARPS <> <br/>Warps: ${0}
+ACHIEVEMENTS <> <br/>Errungenschaften: ${0}/${1}
 JAILED <> | Eingesperrt
 MUTED <> | Stummgeschaltet
-VOTES <> <br/>Hat REPLACE0 mal gevoted
-FACTION <> <br/>Faction: REPLACE0 | Power: REPLACE1/REPLACE2
-TOWN <> <br/>Dorf: REPLACE0
+VOTES <> <br/>Hat ${0} mal gevoted
+FACTION <> <br/>Faction: ${0} | Power: ${1}/${2}
+TOWN <> <br/>Dorf: ${0}
 TOWN_NO_TOWNS <> Keine Dörfer
 GRAPH_BANNED <> Gesperrt
 GRAPH_UNKNOWN <> Unbekannt
