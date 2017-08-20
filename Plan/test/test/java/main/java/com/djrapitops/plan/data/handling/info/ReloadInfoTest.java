@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -55,7 +55,7 @@ public class ReloadInfoTest {
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
         ReloadInfo i = new ReloadInfo(data.getUuid(), time, ip, true, nick, "CREATIVE", "World");
-        assertTrue(i.process(data));
+        i.process(data);
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
         assertTrue("Login times is not the same", data.getLoginTimes() == loginTimes);

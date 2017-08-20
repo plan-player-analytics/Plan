@@ -20,8 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.TestInit;
 import test.java.utils.MockUtils;
+import test.java.utils.TestInit;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -85,7 +85,7 @@ public class KillInfoTest {
         UserData data = MockUtils.mockUser();
         Player dead = MockUtils.mockPlayer2();
         KillInfo i = new KillInfo(data.getUuid(), 10L, dead, "TestWeapon");
-        assertTrue(i.process(data));
+        i.process(data);
         KillData expected = new KillData(dead.getUniqueId(), 1, "TestWeapon", 10L);
         assertTrue("Didn't add the kill", data.getPlayerKills().size() == 1);
         KillData result = data.getPlayerKills().get(0);
@@ -102,7 +102,7 @@ public class KillInfoTest {
     public void testProcessMobKill() throws SQLException {
         UserData data = MockUtils.mockUser();
         KillInfo i = new KillInfo(data.getUuid(), 10L, null, "TestWeapon");
-        assertTrue(i.process(data));
+        i.process(data);
         assertTrue("Added a kill", data.getPlayerKills().isEmpty());
         assertEquals(1, data.getMobKills());
     }

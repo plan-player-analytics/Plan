@@ -15,6 +15,7 @@ import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -56,13 +57,15 @@ public class ServerInfoManager {
         String webAddress = address[0];
         int port = Integer.parseInt(address[1]);
         String name = Settings.SERVER_NAME.toString();
-        //TODO serverTable.saveCurrentServerInfo(new ServerInfo(-1, serverUUID, name, webAddress, port));
+        try {
+            serverTable.saveCurrentServerInfo(new ServerInfo(-1, serverUUID, name, webAddress, port));
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     public UUID generateNewUUID(Server server) {
         String seed = server.getName() + server.getIp() + server.getPort() + server.getVersion() + server.getBukkitVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
-
-
 }

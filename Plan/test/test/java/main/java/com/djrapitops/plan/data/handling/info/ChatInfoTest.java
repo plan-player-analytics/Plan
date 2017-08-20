@@ -33,7 +33,7 @@ public class ChatInfoTest {
         UserData data = MockUtils.mockUser();
         String expected = "TestNicknameChatInfo";
         ChatInfo i = new ChatInfo(data.getUuid(), expected);
-        assertTrue("Didn't succeed", i.process(data));
+        i.process(data);
         assertTrue("Didn't add nickname", data.getNicknames().contains(expected));
     }
 }

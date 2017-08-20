@@ -152,14 +152,13 @@ public class DataCacheQueueTest {
         List<Integer> errors = new ArrayList<>();
         handler.addToPool(new HandlingInfo(uuid1, InfoType.OTHER, 0) {
             @Override
-            public boolean process(UserData uData) {
+            public void process(UserData uData) {
                 if (uData.equals(data1)) {
                     uData.setName("TestSuccessful");
                     processCalls.add(1);
                 } else {
                     errors.add(1);
                 }
-                return true;
             }
         });
         while (processCalls.size() < 1) {

@@ -147,8 +147,7 @@ public abstract class Importer {
     public HandlingInfo importData(UUID uuid, String... args) {
         return new HandlingInfo(uuid, InfoType.OTHER, 0) {
             @Override
-            public boolean process(UserData uData) {
-                return true;
+            public void process(UserData uData) {
             }
         };
     }

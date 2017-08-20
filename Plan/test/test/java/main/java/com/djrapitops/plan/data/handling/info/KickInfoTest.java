@@ -17,7 +17,6 @@ import test.java.utils.MockUtils;
 import test.java.utils.TestInit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Rsl1122
@@ -47,7 +46,7 @@ public class KickInfoTest {
     public void testProcess() {
         UserData data = MockUtils.mockUser();
         KickInfo i = new KickInfo(data.getUuid());
-        assertTrue(i.process(data));
+        i.process(data);
         assertEquals(1, data.getTimesKicked());
     }
 

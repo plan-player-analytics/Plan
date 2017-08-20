@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
 import main.java.com.djrapitops.plan.data.handling.info.ReloadInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -109,7 +110,7 @@ public class DataCacheHandler extends SessionCache {
      */
     public void startQueues() {
         getTask = new DataCacheGetQueue(plugin);
-        processTask = new DataCacheProcessQueue(this);
+        processTask = new DataCacheProcessQueue();
         clearTask = new DataCacheClearQueue(this);
         saveTask = new DataCacheSaveQueue(plugin, this);
     }
@@ -235,11 +236,12 @@ public class DataCacheHandler extends SessionCache {
      *
      * @param i Object that extends HandlingInfo.
      */
+    @Deprecated
     public void addToPool(HandlingInfo i) {
         if (i == null) {
             return;
         }
-        //TODO processTask.addToPool(i);
+        processTask.addToQueue(i);
     }
 
     /**
@@ -264,11 +266,11 @@ public class DataCacheHandler extends SessionCache {
             UUID uuid = p.getUuid();
             endSession(uuid);
             String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
-            //TODO toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode().name(), getSession(uuid), worldName));
+            toProcess.add(new LogoutInfo(uuid, time, p.isBanned(), p.getGamemode().name(), getSession(uuid), worldName));
         }
         Log.debug("ToProcess size_AFTER: " + toProcess.size() + " DataCache size: " + dataCache.keySet().size());
-        //TODO toProcess.sort(new HandlingInfoTimeComparator());
-        //TODO processUnprocessedHandlingInfo(toProcess);
+//        toProcess.sort(new HandlingInfoTimeComparator());
+        processUnprocessedHandlingInfo(toProcess);
         Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
         List<UserData> data = new ArrayList<>();
         data.addAll(dataCache.values());
@@ -292,16 +294,10 @@ public class DataCacheHandler extends SessionCache {
         Benchmark.stop("Cache: SaveOnDisable");
     }
 
-    private void processUnprocessedHandlingInfo(List<HandlingInfo> toProcess) {
+    private void processUnprocessedHandlingInfo(List<Processor> toProcess) {
         Log.debug("PROCESS: " + toProcess.size());
-        for (HandlingInfo i : toProcess) {
-            UserData uData = dataCache.get(i.getUuid());
-            if (uData == null) {
-                DBCallableProcessor p = i::process;
-                getUserDataForProcessing(p, i.getUuid());
-            } else {
-                i.process(uData);
-            }
+        for (Processor i : toProcess) {
+            i.process();
         }
     }
 

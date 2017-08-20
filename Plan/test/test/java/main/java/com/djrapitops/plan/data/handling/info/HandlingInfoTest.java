@@ -33,8 +33,8 @@ public class HandlingInfoTest {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
         HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L) {
             @Override
-            public boolean process(UserData data) {
-                return true;
+            public void process(UserData data) {
+
             }
         };
         assertEquals(uuid, i.getUuid());
@@ -48,8 +48,8 @@ public class HandlingInfoTest {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
         HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L) {
             @Override
-            public boolean process(UserData data) {
-                return true;
+            public void process(UserData data) {
+
             }
         };
         assertEquals(InfoType.CHAT, i.getType());
@@ -63,8 +63,8 @@ public class HandlingInfoTest {
         UUID uuid = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
         HandlingInfo i = new HandlingInfo(uuid, InfoType.CHAT, 10L) {
             @Override
-            public boolean process(UserData data) {
-                return true;
+            public void process(UserData data) {
+
             }
         };
         assertEquals(10L, i.getTime());

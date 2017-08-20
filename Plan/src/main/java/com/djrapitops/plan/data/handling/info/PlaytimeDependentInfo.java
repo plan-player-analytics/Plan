@@ -18,11 +18,10 @@ public class PlaytimeDependentInfo extends HandlingInfo {
     }
 
     @Override
-    public boolean process(UserData uData) {
+    public void process(UserData uData) {
         if (!uuid.equals(uData.getUuid())) {
-            return false;
+            return;
         }
         PlaytimeHandling.processPlaytimeDependentInfo(uData, time, gamemode, worldName);
-        return true;
     }
 }
