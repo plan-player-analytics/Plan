@@ -79,7 +79,7 @@ public class HtmlUtils {
 
     private static String getProtocol() {
         WebServer uiServer = Plan.getInstance().getUiServer();
-        return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.LINK_PROTOCOL.toString();
+        return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.ETERNAL_WEBSERVER_LINK_PROTOCOL.toString();
     }
 
     /**

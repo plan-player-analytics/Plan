@@ -27,7 +27,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
      * @param plugin current instance of Plan
      */
     public DataCacheGetQueue(Plan plugin) {
-        super(new ArrayBlockingQueue<>(Settings.PROCESS_GET_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(20000));
         setup = new GetSetup(queue, plugin.getDB());
         setup.go();
     }

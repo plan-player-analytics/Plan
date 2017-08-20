@@ -17,9 +17,7 @@ import test.java.utils.TestInit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Rsl1122
@@ -38,12 +36,12 @@ public class SettingsTest {
 
     @Test
     public void testIsTrue() {
-        assertTrue("Webserver supposed to be enabled by default", Settings.WEBSERVER_ENABLED.isTrue());
+        assertTrue("COMBINE_COMMAND_ALIASES supposed to be true by default", Settings.COMBINE_COMMAND_ALIASES.isTrue());
     }
 
     @Test
     public void testIsTrue2() {
-        Settings gatherCommands = Settings.GATHERCOMMANDS;
+        Settings gatherCommands = Settings.LOG_UNKNOWN_COMMANDS;
 
         gatherCommands.setValue(false);
         assertFalse(gatherCommands.isTrue());
@@ -54,7 +52,7 @@ public class SettingsTest {
 
     @Test
     public void testToString() {
-        assertEquals("sqlite", Settings.DB_TYPE.toString());
+        assertEquals("SQLite", Settings.DB_TYPE.toString());
     }
 
     @Test
@@ -72,6 +70,6 @@ public class SettingsTest {
 
     @Test
     public void testGetPath() {
-        assertEquals("Settings.WebServer.Enabled", Settings.WEBSERVER_ENABLED.getPath());
+        assertEquals("WebServer.Port", Settings.WEBSERVER_PORT.getPath());
     }
 }

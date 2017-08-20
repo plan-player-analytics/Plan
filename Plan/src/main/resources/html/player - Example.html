@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan | Rsl1122</title>
+    <meta name="description" content="Player Analysis window">
+    <meta name="author" content="Rsl1122">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./main.css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
+    <script src="https://use.fontawesome.com/df48eb908b.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <div>
+        <img class="right" src="https://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
+        <p class="right">Player Analytics v.4.0.0</p>
+        <h1>Plan | Rsl1122</h1>
+    </div>
+</header>
+<div class="content-server">
+    <div class="nav-bar row">
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-info-circle" aria-hidden="true"></i> Information
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-calendar" aria-hidden="true"></i> Sessions
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-line-chart" aria-hidden="true"></i> Overview
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-cubes" aria-hidden="true"></i> Plugins
+        </a>
+    </div>
+    <div id="limiter" class="main-limiter">
+        <div id="main" class="main-wrapper">
+            <div id="tab-information" class="tab">
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Information</h2>
+                        </div>
+                        <div class="box" style="margin-bottom: 5px;">
+                            <div class="row">
+                                <div class="column">
+                                    <p>Active &#x2022; <span class="darkred">Offline</span> &#x2022; Operator<br>
+                                        <br>
+                                        Also Known As:<br>
+                                        &#x2022; <span class="darkred">Rsl</span><br>
+                                        &#x2022; Rsl1122<br>
+                                        <br>
+                                        Has Logged in From:<br>
+                                        &#x2022; Finland</p>
+                                </div>
+                                <div class="column">
+                                    <p>Registered: May 01 2016, 13:39<br>
+                                        Last Seen: Aug 18 2017, 20:00<br>
+                                        <br>
+                                        Sessions: 76<br>
+                                        Total Playtime: 4d 4h 40m<br>
+                                        Session Median: 7m<br>
+                                        <br>
+                                        Longest Session: 2h 37m
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-header">
+                            <h2><i class="fa fa-drivers-license" aria-hidden="true"></i> Rsl1122</h2>
+                        </div>
+                        <div class="box-footer scrollbar" style="padding: 2px;">
+                            <div class="row">
+                                <div class="column" style="padding: 5px 0px 5px 10px;"><p>Times Kicked: 0<br></p></div>
+                                <div class="column"><img style="padding: 10px 100px; height: 100px; width: 100px;"
+                                                         src="https://cravatar.eu/avatar/Rsl1122/100"></div>
+                                <div class="column"><p>Player Kills: 49<br>
+                                    Mob Kills: 548<br>
+                                    Deaths: 12
+                                </p>
+                                </div>
+                            </div>
+                            <table class="sortable table">
+                                <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                    <th>Info</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>Aug 16 2017, 17:20</th>
+                                    <th>Killed</th>
+                                    <th>HannesDaDon with Iron Sword</th>
+                                </tr>
+                                <tr>
+                                    <th>Aug 16 2017, 17:19</th>
+                                    <th>Killed</th>
+                                    <th>Einsamer_Keksi with Iron Sword</th>
+                                </tr>
+                                <tr>
+                                    <th>Aug 16 2017, 15:19</th>
+                                    <th>Changed name</th>
+                                    <th>Rsl1122 <i class="fa fa-long-arrow-right" aria-hidden="true"></i> <span
+                                            class="darkred">Rsl</span></th>
+                                </tr>
+                                <tr>
+                                    <th>May 01 2016, 14:24</th>
+                                    <th>First Logout</th>
+                                    <th>Messages sent: 74</th>
+                                </tr>
+                                <tr>
+                                    <th>May 01 2016, 13:39</th>
+                                    <th>Registered</th>
+                                    <th>Online: 34 Players</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-braille" aria-hidden="true"></i> Join PunchCard</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="playersOnlineDay" src="http://puu.sh/xdhil/73c2c5b944.png"
+                                 style="width: 100%; /height: 700px;"><!--</div>-->
+                        </div>
+                        <div class="box-header">
+                            <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Server Preference</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="playersOnlineDay" src="http://puu.sh/xdgXa/f4a3b7df80.png"
+                                 style="width: 100%; /height: 700px;"><!--</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-sessions" class="tab">
+                <div class="row" style="flex-grow: 2; width: 140%;">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-calendar" aria-hidden="true"></i> 50 Most Recent Sessions</h2>
+                        </div>
+                        <div class="session column">
+                            <div class="session-header">
+                                <div class="session-col" style="width: 200%;"><h3>Aug 14 2017, 12:12 &#x2022; 1h</h3>
+                                    <p>Click to Expand</p></div>
+                            </div>
+                            <div class="session-content">
+                                <div class="row">
+                                    <div class="session-col" style="padding: 0px;">
+                                        <div class="box-header" style="margin: 0px;">
+                                            <h2><i class="fa fa-calendar" aria-hidden="true"></i> Aug 13 2017, 13:23
+                                            </h2>
+                                        </div>
+                                        <div class="box" style="margin: 0px;">
+                                            <p>Session Length: 3h 5m<br>
+                                                Session Ended: Aug 14 2017, 13:12<br>
+                                                Server: Server 2<br>
+                                                <br>
+                                                Mob Kills: 0<br>
+                                                Deaths: 1</p>
+                                            <table class="sortable table">
+                                                <thead>
+                                                <tr>
+                                                    <th><i class="fa fa-clock-o" aria-hidden="true"> Time</th>
+                                                    <th>Killed</th>
+                                                    <th>With</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th>12:42</th>
+                                                    <th>Zubat</th>
+                                                    <th>Lightning</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>12:53</th>
+                                                    <th>Zezima</th>
+                                                    <th>Iron Sword</th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="session-col">
+                                        <img id="worldPie" style="width: 100%;"
+                                             src="http://puu.sh/xdhF0/3c7ae10d4e.png">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="session column">
+                            <div class="session-header">
+                                <div class="session-col" style="width: 200%;"><h3>Aug 13 2017, 15:23 &#x2022; 3h 5m</h3>
+                                    <p>Click to Expand</p></div>
+                            </div>
+                            <div class="session-content">
+                                <div class="row">
+                                    <div class="session-col" style="padding: 0px;">
+                                        <div class="box-header" style="margin: 0px;">
+                                            <h2><i class="fa fa-calendar" aria-hidden="true"></i> Aug 13 2017, 13:23
+                                            </h2>
+                                        </div>
+                                        <div class="box" style="margin: 0px;">
+                                            <p>Session Length: 3h 5m<br>
+                                                Session Ended: Aug 13 2017, 16:28<br>
+                                                Server: Server 1<br>
+                                                <br>
+                                                Mob Kills: 45<br>
+                                                Deaths: 6</p>
+                                            <table class="sortable table">
+                                                <thead>
+                                                <tr>
+                                                    <th><i class="fa fa-clock-o" aria-hidden="true"> Time</th>
+                                                    <th>Killed</th>
+                                                    <th>With</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <th>13:42</th>
+                                                    <th>Zubat</th>
+                                                    <th>Lightning</th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="session-col">
+                                        <img id="worldPie" style="width: 100%;"
+                                             src="http://puu.sh/xdhF0/3c7ae10d4e.png">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-performance" class="tab">
+                <div class="row">
+                    <div class="column"> <!--First row (horizontal)-->
+                        <div class="column">
+                            <div class="box-header">
+                                <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> World Playtime</h2>
+                            </div>
+                            <div class="box-footer">
+                                <img id="worldPie" style="width: 100%;" src="http://puu.sh/xdhF0/3c7ae10d4e.png">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2>Last 24 Hours</h2>
+                                </div>
+                                <div class="box" style="margin-bottom: 5px;">
+                                    <p>Sessions: 4<br>
+                                        Playtime: 4h 20m<br>
+                                        <br>
+                                        Longest Session: 1h 43m
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2>Last 7 Days</h2>
+                                </div>
+                                <div class="box" style="margin-bottom: 5px;">
+                                    <p>Sessions: 63<br>
+                                        Playtime: 1d 3h 32m<br>
+                                        <br>
+                                        Longest Session: 1h 43m
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!--First row (horizontal)-->
+                    <div class="row">
+                        <div class="column">
+                            <div class="box-header">
+                                <h2><i class="fa fa-server" aria-hidden="true"></i> Server 1</h2>
+                            </div>
+                            <div class="box" style="margin-bottom: 5px;">
+                                <p>Sessions: 24<br>
+                                    Playtime: 3d 2h 2m<br>
+                                    <br>
+                                    Longest Session: 2h 43m
+                                </p>
+                            </div>
+                            <div class="box-header">
+                                <h2><i class="fa fa-server" aria-hidden="true"></i> Server 2</h2>
+                            </div>
+                            <div class="box" style="margin-bottom: 5px;">
+                                <p>Sessions: 52<br>
+                                    Playtime: 6d 10h 2m<br>
+                                    <br>
+                                    Longest Session: 3h 7m
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-plugins" class="tab column">
+                <div class="plugins-server">
+                    <div class="plugins-header">
+                        <div class="row">
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-server" aria-hidden="true"></i> Server 2</h2>
+                                    <p>Click to Expand</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plugins-content">
+                        <div class="row">
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 1</h2>
+                                </div>
+                                <div class="box plugin">
+                                    <p>Test: 5 / 25<br>
+                                        Test: 20%</p>
+                                    <p>More data: Yes<br>
+                                        Data: 4</p>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 2</h2>
+                                </div>
+                                <div class="box plugin">
+                                    <p>Yes<br>
+                                        Yes<br>
+                                        Yes<br>Yes<br>Yes<br>Yes<br>Yes<br>
+                                        Yes<br>Yes<br>Yes<br>Yes<br>Yes<br>
+                                        Yes<br>Yes<br>Yes<br>Yes<br>Yes<br>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 3</h2>
+                                </div>
+                                <div class="box plugin">
+                                    <img id="worldPie" style="width: 100%;" src="http://puu.sh/xdhF0/3c7ae10d4e.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <div class="box-header" style="margin-top: 10px;">
+                                    <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 4</h2>
+                                </div>
+                                <div class="box plugin" style="height: 100%;">
+                                    <table class="sortable table">
+                                        <thead>
+                                        <tr>
+                                            <th>Test</th>
+                                            <th>Test2</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Data</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="column"></div>
+                            <div class="column"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <script src="./js/activityPie.js"></script>
+    <script src="./js/gmPie.js"></script>
+    <script src="./js/playerGraph.js"></script>
+    <script src="./js/punchCard.js"></script>
+    <script src="./js/resourceGraph.js"></script>
+    <script src="./js/sessionDistributionChart.js"></script>
+    <script src="./js/tpsGraph.js"></script>
+    <script src="./js/worldGraph.js"></script>
+    <script src="./js/worldMap.js"></script>
+    <script src="./js/worldPie.js"></script>
+    <script src="./js/pluginsTabExpand.js"></script>
+    <script src="./js/sessionTabExpand.js"></script>
+    <script>
+            var navButtons = document.getElementsByClassName("nav-button");
+            var tabs = document.getElementsByClassName("tab");
+            var slideIndex = window.sessionStorage.getItem("InspectSlideIndex");
+            if (slideIndex === null) {
+                slideIndex = 0;
+            }
+            var x = document.getElementById("main");
+            x.style.transform = "translate3d(0px,0px,0)";
+            x.style.width = "" + navButtons.length * 100 + "%";
+            for (var i = 0; i < navButtons.length; i++) {
+                navButtons[i].onclick = openFunc(i)
+                tabs[i].style.width = "" + 100 / navButtons.length + "%";
+            }
+            x.style.opacity = "1";
+            openFunc(slideIndex)();
+
+            function openFunc(i) {
+                return function() {                    
+                    var max = navButtons.length;
+                    for (var j = 0; j < max; j++) {
+                        if (j === i) {
+                            navButtons[j].classList.add('active');
+                            continue;
+                        }
+                        if (navButtons[j].classList.contains('active')) {
+                            navButtons[j].classList.remove('active');
+                        }
+                    }
+                    var perc = - 100 / navButtons.length;
+                    slideIndex = i;
+                    if (slideIndex > max) {slideIndex = 0};
+                    if (slideIndex < 0) {slideIndex = max};
+                    window.sessionStorage.setItem("InspectSlideIndex", slideIndex);
+                    var value = slideIndex * perc;
+                    x.style.transition = "0.5s";
+                    x.style.transform = "translate3d(" + value + "%,0px,0)";
+                };
+            }
+
+    </script>
+</div>
+</body>
+</html>

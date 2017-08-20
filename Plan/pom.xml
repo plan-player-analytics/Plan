@@ -107,10 +107,28 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>*.keystore</include>
-                    <include>*.js</include>
+                    <include>*.css</include>
                     <include>*.yml</include>
+                </includes>
+                <excludes>
+                    <exclude>licence.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/html</directory>
+                <includes>
                     <include>*.html</include>
-                    <include>*.txt</include>
+                </includes>
+                <excludes>
+                    <exclude>*Example*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/js</directory>
+                <includes>
+                    <include>*.js</include>
                 </includes>
             </resource>
         </resources>

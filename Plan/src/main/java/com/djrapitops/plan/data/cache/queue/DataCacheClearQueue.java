@@ -28,7 +28,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param handler current instance of DataCacheHandler.
      */
     public DataCacheClearQueue(DataCacheHandler handler) {
-        super(new ArrayBlockingQueue<>(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(20000));
         setup = new ClearSetup(queue, handler);
         setup.go();
     }

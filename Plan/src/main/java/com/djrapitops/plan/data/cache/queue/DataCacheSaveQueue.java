@@ -30,7 +30,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
      * @param handler DataCacheHandler
      */
     public DataCacheSaveQueue(Plan plugin, DataCacheHandler handler) {
-        super(new ArrayBlockingQueue<>(Settings.PROCESS_SAVE_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(20000));
         setup = new SaveSetup(queue, handler, plugin.getDB());
         setup.go();
     }
