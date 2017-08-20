@@ -66,6 +66,7 @@ public class DataRequestHandler {
      *
      * @return the html
      */
+    @Deprecated //analysis.html has been removed //TODO server.html
     public String getAnalysisHtml() {
         try {
             if (!analysisCache.isCached()) {
