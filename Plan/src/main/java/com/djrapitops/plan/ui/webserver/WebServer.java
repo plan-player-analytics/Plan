@@ -12,10 +12,14 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.BadRequestResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPI;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.bukkit.ChatColor;
 
 import javax.net.ssl.*;
@@ -26,12 +30,11 @@ import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -84,11 +87,30 @@ public class WebServer {
                 @Override
                 public void handle(HttpExchange exchange) throws IOException {
                     try {
+                        Headers responseHeaders = exchange.getResponseHeaders();
                         URI uri = exchange.getRequestURI();
                         String target = uri.toString();
 
-                        Headers responseHeaders = exchange.getResponseHeaders();
-                        responseHeaders.set("Content-Type", "text/html;");
+                        boolean apiRequest = "POST".equals(exchange.getRequestMethod());
+                        Response response = null;
+
+                        String type = "text/html;";
+
+                        if (apiRequest) {
+                            response = getAPIResponse(target, exchange);
+
+                            if (response instanceof JsonResponse) {
+                                type = "application/json;";
+                            }
+                        }
+
+                        responseHeaders.set("Content-Type", type);
+
+                        if (apiRequest) {
+                            sendData(responseHeaders, exchange, response);
+                            return;
+                        }
+
                         WebUser user = null;
 
                         if (usingHttps) {
@@ -100,21 +122,9 @@ public class WebServer {
                             }
                         }
 
-                        responseHeaders.set("Content-Encoding", "gzip");
+                        response = getResponse(target, user);
 
-                        Response response = getResponse(target, user);
-
-                        String content = response.getContent();
-                        exchange.sendResponseHeaders(response.getCode(), 0);
-
-                        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
-                             ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
-                            byte[] buffer = new byte[2048];
-                            int count;
-                            while ((count = bis.read(buffer)) != -1) {
-                                out.write(buffer, 0, count);
-                            }
-                        }
+                        sendData(responseHeaders, exchange, response);
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName(), e);
                         throw e;
@@ -133,6 +143,20 @@ public class WebServer {
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             enabled = false;
+        }
+    }
+
+    private void sendData(Headers header, HttpExchange exchange, Response response) throws IOException {
+        header.set("Content-Encoding", "gzip");
+        exchange.sendResponseHeaders(response.getCode(), 0);
+
+        try (GZIPOutputStream out = new GZIPOutputStream(exchange.getResponseBody());
+             ByteArrayInputStream bis = new ByteArrayInputStream(response.getContent().getBytes())) {
+            byte[] buffer = new byte[2048];
+            int count;
+            while ((count = bis.read(buffer)) != -1) {
+                out.write(buffer, 0, count);
+            }
         }
     }
 
@@ -243,6 +267,73 @@ public class WebServer {
         return startSuccessful;
     }
 
+    private String readPOSTRequest(HttpExchange exchange) throws IOException {
+        byte[] bytes;
+
+        try (InputStream in = exchange.getRequestBody()) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            for (int n = in.read(buf); n > 0; n = in.read(buf)) {
+                out.write(buf, 0, n);
+            }
+
+            bytes = out.toByteArray();
+        }
+
+        try {
+            return new String(bytes, "ISO-8859-1");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Response getAPIResponse(String target, HttpExchange exchange) throws IOException {
+        String[] args = target.split("/");
+
+        if (args.length < 3) {
+            String error = "API Method not specified";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
+
+        String method = args[2];
+        String response = readPOSTRequest(exchange);
+
+        if (response == null) {
+            String error = "Error at reading the POST request." +
+                    "Note that the Encoding must be ISO-8859-1.";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
+
+        Map<String, String> variables = readVariables(response);
+
+        //TODO ADD CHECK IF SERVER KEY VALID
+
+        Plan plan = Plan.getInstance();
+
+        WebAPI api = WebAPIManager.getAPI(method);
+
+        if (api == null) {
+            String error = "API Method not found";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
+
+        try {
+            return api.onResponse(plan, variables);
+        } catch (Exception ex) {
+            Log.toLog("WebServer.getAPIResponse", ex);
+            return new InternalErrorResponse(ex, "An error while processing the request happened");
+        }
+    }
+
+    private Map<String, String> readVariables(String response) {
+        String[] variables = response.split("&");
+
+        return Arrays.stream(variables)
+                .map(variable -> variable.split("=", 2))
+                .filter(splittedVariables -> splittedVariables.length == 2)
+                .collect(Collectors.toMap(splittedVariables -> splittedVariables[0], splittedVariables -> splittedVariables[1], (a, b) -> b));
+    }
+
     private Response getResponse(String target, WebUser user) {
         if ("/favicon.ico".equals(target)) {
             return PageCacheHandler.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
@@ -259,6 +350,7 @@ public class WebServer {
                 return forbiddenResponse(permLevel, required);
             }
         }
+
         String[] args = target.split("/");
         if (args.length < 2) {
             return rootPageResponse(user);
@@ -294,6 +386,7 @@ public class WebServer {
         if (user == null) {
             return notFoundResponse();
         }
+
         switch (user.getPermLevel()) {
             case 0:
                 return serverResponse();
@@ -333,7 +426,7 @@ public class WebServer {
             return PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCacheHandler.loadPage("inspectPage: " + uuid.toString(), () -> new InspectPageResponse(dataReqHandler, uuid));
+        return PageCacheHandler.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(dataReqHandler, uuid));
     }
 
     private Response notFoundResponse() {

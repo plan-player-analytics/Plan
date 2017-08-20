@@ -145,7 +145,7 @@ public class DumpUtils {
         List<String> plugins = Arrays.stream(server.getPluginManager().getPlugins())
                 .map(Plugin::getDescription)
                 .map(description -> description.getName() + " " + description.getVersion())
-                .sorted()
+                .sorted(String::compareToIgnoreCase)
                 .collect(Collectors.toList());
 
         log.addHeader("Server Details");

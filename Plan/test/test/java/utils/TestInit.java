@@ -139,7 +139,7 @@ public class TestInit {
 
                     @Override
                     public ITask runTask() {
-                        new Thread(() -> runnable.run()).start();
+                        new Thread(runnable::run).start();
                         return null;
                     }
 

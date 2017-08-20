@@ -43,20 +43,20 @@ public class PlanCommandPreprocessListener implements Listener {
             return;
         }
 
-        String commandName = event.getMessage().split(" ")[0].toLowerCase();
+        String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
 
         boolean doNotLogUnknownCommands = Settings.DO_NOT_LOG_UNKNOWN_COMMANDS.isTrue();
         boolean combineCommandAliasesToMainCommand = Settings.COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND.isTrue();
 
         if (doNotLogUnknownCommands || combineCommandAliasesToMainCommand) {
-            Command command = plugin.getServer().getPluginCommand(commandName.substring(1, commandName.length()));
+            Command command = plugin.getServer().getPluginCommand(commandName);
             if (command == null) {
                 if (doNotLogUnknownCommands) {
                     Log.debug("Ignored command, command is unknown");
                     return;
                 }
             } else if (combineCommandAliasesToMainCommand) {
-                commandName = "/" + command.getName();
+                commandName = command.getName();
             }
         }
 

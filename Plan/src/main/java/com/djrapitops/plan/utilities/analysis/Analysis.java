@@ -20,6 +20,7 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
 import main.java.com.djrapitops.plan.ui.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
+import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -165,8 +166,9 @@ public class Analysis {
                 Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
             }
 
-            PageCacheHandler.removeIf(identifier -> identifier.startsWith("inspectPage: "));
+            PageCacheHandler.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
             PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
+            PageCacheHandler.cachePage("analysisJson", () -> new JsonResponse(analysisData));
             PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
 
             ExportUtility.export(analysisData, rawData);

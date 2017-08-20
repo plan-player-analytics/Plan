@@ -64,9 +64,7 @@ public class AnalysisCacheHandler {
         cache = data;
         for (UUID uuid : notifyWhenCached) {
             Optional<IPlayer> player = plugin.fetch().getPlayer(uuid);
-            if (player.isPresent()) {
-                sendAnalysisMessage(player.get());
-            }
+            player.ifPresent(this::sendAnalysisMessage);
         }
         notifyWhenCached.clear();
     }
