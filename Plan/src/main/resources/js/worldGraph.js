@@ -1,5 +1,5 @@
 function worldChart(id, entitySeries, chunkSeries) {
-	var myChart = Highcharts.stockChart(id, {
+	Highcharts.stockChart(id, {
 		rangeSelector: {
 			selected: 1,
 			buttons: [{

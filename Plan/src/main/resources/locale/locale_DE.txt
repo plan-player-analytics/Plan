@@ -95,7 +95,7 @@ Html - OP                                 || , Operator (Op)
 Html - Table No Kills                     || Keine Kills
 Manage FAIL - Confirm Action              || §c[Plan] Füge -a hinzu um den Befehl zu bestätigen! ${0}
 Manage FAIL - Faulty DB Connection        || §c[Plan] Eine der Datenbanken wurde nicht richtig initialisiert.
-Manage FAIL - Backup File Not Found       || §c[Plan] Sicherheitskopie existiert nicht!
+Manage FAIL - Backup File Not Found       || §c[Plan] Es existiert keine Sicherheitskopie!
 Manage FAIL - Incorrect DB                || §c[Plan] Falsche Datenbank! (SQlite/MySQL wird unterstützt):
 Manage FAIL - Incorrect Plugin            || §c[Plan] Plugin nicht unterstützt:
 Manage FAIL - Empty DB                    || §c[Plan] Datenbank hat keine Spieler Daten!
@@ -114,4 +114,4 @@ Manage NOTIFY - Overwrite                 || Daten in ${0}-Datenbank werden übe
 Manage NOTIFY - Partial Overwrite         || Einige Daten in ${0}-Datenbank werden überschrieben!
 Manage NOTIFY - Remove                    || Daten in ${0}-Datenbank werden entfernt!
 Manage NOTIFY - Rewrite                   || Daten in ${0}-Datenbank werden neu geschrieben!
-WARN - Too Small Queue Size               || Warteschlagengröße ist zu klein! (${0}), änder diese Einstellung zu einer höheren! (Derzeit ${1})
+WARN - Too Small Queue Size               || Die Warteschlagengröße ist zu klein! (${0}), änder' diese Einstellung zu einer höheren! (Derzeit ${1})

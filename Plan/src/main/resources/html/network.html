@@ -22,7 +22,7 @@
     <div class="row">
         <div class="column">
             <div class="box-header">
-                <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Players Online</h2>
+                <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
             </div>
             <div class="box-footer">
                 <div id="playersOnline" style="width: 100%; height: 500px;"></div>
@@ -30,7 +30,7 @@
         </div>
         <div class="column">
             <div class="box-header">
-                <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Information</h2>
+                <h2><i class="fa fa-info-circle"></i> Information</h2>
             </div>
             <div class="box" style="height: 75%;">
                 <p>${playersOnline}/${playersMax} Players Online</p>
@@ -45,15 +45,15 @@
 <script>
         var playersOnlineSeries = {
 			name: 'Players Online',
-			data: %playersonlineseries%,
+			data: ${playersonlineseries},
 			type: 'areaspline',
-			color: '#%playersgraphcolor%',
+			color: '#${playersgraphcolor}',
             tooltip: {
                 valueDecimals: 0
             }
         };
-        /*playersChart('playerChart', playersOnlineSeries, 3);*/
 
+        //playersChart('playerChart', playersOnlineSeries, 3);
 </script>
 </body>
 </html>

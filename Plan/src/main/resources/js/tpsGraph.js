@@ -1,5 +1,5 @@
 function tpsChart(id, tpsSeries, playersOnlineSeries) {
-	var myChart = Highcharts.stockChart(id, {
+	Highcharts.stockChart(id, {
 		rangeSelector: {
 			selected: 1,
 			buttons: [{
@@ -31,7 +31,7 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
 			title: {
 				text: 'Players'
 			},
-			height: '30%',
+			height: '30%'
 		}, {
 			lineWidth: 2,
 			labels: {
@@ -43,8 +43,7 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
 			},
 			height: '70%',
 			top: '30%',
-			offset: 0,
-			lineWidth: 2
+			offset: 0
 		}],
 		tooltip: {
 			split: true

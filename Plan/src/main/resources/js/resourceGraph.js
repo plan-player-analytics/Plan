@@ -1,5 +1,5 @@
 function resourceChart(id, cpuSeries, ramSeries) {
-	var myChart = Highcharts.stockChart(id, {
+	Highcharts.stockChart(id, {
 		rangeSelector: {
 			selected: 1,
 			buttons: [{
