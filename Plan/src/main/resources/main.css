@@ -42,11 +42,11 @@
 }
 .yellow {
     color: #FFFF55;
-     text-shadow: 0px 0px 6px #000;
+     text-shadow: 0 0 6px #000;
 }
 .white {
     color: #FFFFFF;
-    text-shadow: 0px 0px 8px #000;
+    text-shadow: 0 0 8px #000;
 }
 
 body {
@@ -68,15 +68,15 @@ header {
 header h1 {    
     font-weight: 500;
     font-size: 55px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-left: 10px;
 }
 header p {
     font-weight: 400;
 }
 header div {
-    padding: 5pxpx 20px;
+    padding: 5px 20px;
 }
 
 .right {
@@ -126,14 +126,14 @@ header div {
     background-color: #5da341;
      padding: 5px 20px;
     text-align: left;
-    margin: 5px 5px 0px 5px;
+    margin: 5px 5px 0 5px;
 }
 .box {
     background-color: #fff;
     padding: 5px 20px;
     color: #000;
     text-align: left;
-    margin: 0px 5px;
+    margin: 0 5px;
 }
 .box-footer {
     vertical-align: middle;
@@ -234,10 +234,10 @@ tr:nth-child(odd) {background: #eee}
 }
 
 .session-header h3 {
-    margin: 0px;
+    margin: 0;
 }
 .session-header p {
-    margin: 0px;
+    margin: 0;
 }
 .session {
     
@@ -249,14 +249,14 @@ tr:nth-child(odd) {background: #eee}
     margin: 1px 3px;
     display: flex;
     flex-direction: row;
-    padding: 0px;
+    padding: 0;
 }
 
 .session-col {
     width: 100%;
     background: #fff;
     color: #000;
-    margin: 0px 2px;
+    margin: 0 2px;
     display: flex;
     flex-direction: column;
     padding: 10px 20px;
@@ -272,10 +272,10 @@ tr:nth-child(odd) {background: #eee}
     display: none;
 }
 .plugins-header h2 {
-    margin: 0px;
+    margin: 0;
 }
 .plugins-header p {
-    margin: 0px;
+    margin: 0;
 }
 
 @media only screen and (max-width: 1680px) {
@@ -290,14 +290,14 @@ tr:nth-child(odd) {background: #eee}
     }
     .content {
         margin-top: 100px;
-        margin-left: 0%;
-        margin-right: 0%;
+        margin-left: 0;
+        margin-right: 0;
         width: 100%;
     }
     .content-server {
         margin-top: 100px;
-        margin-left: 0%;
-        margin-right: 0%;
+        margin-left: 0;
+        margin-right: 0;
         width: 100%;
     }
     .nav-bar {
