@@ -13,6 +13,7 @@ public class SessionData {
     private WorldTimes worldTimes; // TODO add World Times to SessionData
     private final long sessionStart;
     private long sessionEnd;
+    // TODO Add kills & deaths to SessionData
 
     /**
      * Creates a new session with given start and end of -1.

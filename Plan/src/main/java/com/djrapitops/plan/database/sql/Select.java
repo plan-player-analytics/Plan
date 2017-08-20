@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.database.sql;
 
 import main.java.com.djrapitops.plan.Log;
 
-@Deprecated
 public class Select extends SqlParser {
 
     private int conditions = 0;
