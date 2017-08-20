@@ -12,7 +12,6 @@ import org.junit.Test;
 import test.java.utils.MockUtils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Rsl1122
@@ -39,7 +38,7 @@ public class DeathInfoTest {
     public void testProcess() {
         UserData data = MockUtils.mockUser();
         DeathInfo i = new DeathInfo(data.getUuid());
-        assertTrue(i.process(data));
+        i.process(data);
         assertEquals(1, data.getDeaths());
     }
 }

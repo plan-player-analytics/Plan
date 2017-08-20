@@ -79,8 +79,8 @@ public class RandomData {
         for (int i = 0; i < 20; i++) {
             test.add(new HandlingInfo(UUID.randomUUID(), randomEnum(InfoType.class), r.nextLong()) {
                 @Override
-                public boolean process(UserData uData) {
-                    return false;
+                public void process(UserData uData) {
+
                 }
             });
         }

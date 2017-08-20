@@ -22,12 +22,11 @@ public class KickInfo extends HandlingInfo {
     }
 
     @Override
-    public boolean process(UserData uData) {
+    public void process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {
-            return false;
+            return;
         }
         uData.setTimesKicked(uData.getTimesKicked() + 1);
-        return true;
     }
 
 }

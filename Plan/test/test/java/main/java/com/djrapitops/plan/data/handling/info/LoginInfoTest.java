@@ -54,7 +54,7 @@ public class LoginInfoTest {
         int loginTimes = data.getLoginTimes();
         String nick = "TestProcessLoginInfo";
         LoginInfo i = new LoginInfo(data.getUuid(), time, ip, true, nick, "CREATIVE", 1, "World");
-        assertTrue(i.process(data));
+        i.process(data);
         assertTrue("LastPlayed wrong: " + data.getLastPlayed(), data.getLastPlayed() == time);
         assertTrue("Ip not added", data.getIps().contains(ip));
         assertTrue("Logintimes not +1", data.getLoginTimes() == loginTimes + 1);

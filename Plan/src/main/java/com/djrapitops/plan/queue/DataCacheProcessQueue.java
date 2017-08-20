@@ -1,9 +1,6 @@
 package main.java.com.djrapitops.plan.queue;
 
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.queue.processing.Processor;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -16,30 +13,25 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
-// TODO Change Processing Queue to use more generic object as processing.
-    // GOAL: Processing queue can be used to process query results from the database
-    // & for processing events into statements.
 public class DataCacheProcessQueue extends Queue<Processor> {
 
     /**
      * Class constructor, starts the new Thread for processing.
-     *
-     * @param handler current instance of DataCacheHandler.
      */
-    public DataCacheProcessQueue(DataCacheHandler handler) {
+    public DataCacheProcessQueue() {
         super(new ArrayBlockingQueue<>(20000));
-        setup = new ProcessSetup(queue, handler);
+        setup = new ProcessSetup(queue);
         setup.go();
     }
 
     /**
      * Used to add HandlingInfo object to be processed.
      *
-     * @param info object that extends HandlingInfo.
+     * @param processor object that extends HandlingInfo.
      */
-    public void addToPool(Processor info) {
+    public void addToQueue(Processor processor) {
         try {
-            queue.add(info);
+            queue.add(processor);
         } catch (IllegalStateException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -48,35 +40,27 @@ public class DataCacheProcessQueue extends Queue<Processor> {
 
 class ProcessConsumer extends Consumer<Processor> {
 
-    private DataCacheHandler handler;
 
-    ProcessConsumer(BlockingQueue<Processor> q, DataCacheHandler h) {
+    ProcessConsumer(BlockingQueue<Processor> q) {
         super(q, "ProcessQueueConsumer");
-        handler = h;
     }
 
     @Override
-    protected void consume(Processor info) {
-        if (!Verify.notNull(handler, info)) {
+    protected void consume(Processor process) {
+        if (process == null) {
             return;
         }
-
-        DBCallableProcessor p = data -> info.process();
-
-        //TODO handler.getUserDataForProcessing(p, info.getUuid());
+        process.process();
     }
 
     @Override
     protected void clearVariables() {
-        if (handler != null) {
-            handler = null;
-        }
     }
 }
 
 class ProcessSetup extends Setup<Processor> {
 
-    ProcessSetup(BlockingQueue<Processor> q, DataCacheHandler h) {
-        super(new ProcessConsumer(q, h), new ProcessConsumer(q, h));
+    ProcessSetup(BlockingQueue<Processor> q) {
+        super(new ProcessConsumer(q), new ProcessConsumer(q));
     }
 }

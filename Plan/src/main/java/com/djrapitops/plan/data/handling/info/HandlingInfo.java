@@ -1,6 +1,9 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import main.java.com.djrapitops.plan.queue.processing.Processor;
 
 import java.util.UUID;
 
@@ -11,7 +14,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.0.0
  */
-public abstract class HandlingInfo {
+public abstract class HandlingInfo extends Processor<UUID> implements DBCallableProcessor{
 
     final UUID uuid;
     final InfoType type;
@@ -26,7 +29,8 @@ public abstract class HandlingInfo {
      * @param time Epoch ms of the event.
      */
     public HandlingInfo(UUID uuid, InfoType type, long time) {
-        this.uuid = uuid;
+        super(uuid);
+        this.uuid = object;
         this.type = type;
         this.time = time;
     }
@@ -58,6 +62,10 @@ public abstract class HandlingInfo {
         return time;
     }
 
+    public void process() {
+        Plan.getInstance().getHandler().getUserDataForProcessing(this, uuid);
+    }
+
     /**
      * Process the info and modify the UserData object accordingly.
      * <p>
@@ -66,5 +74,5 @@ public abstract class HandlingInfo {
      * @param uData UserData object to modify.
      * @return UUID of the UserData object and HandlingInfo match.
      */
-    public abstract boolean process(UserData uData);
+    public abstract void process(UserData uData);
 }

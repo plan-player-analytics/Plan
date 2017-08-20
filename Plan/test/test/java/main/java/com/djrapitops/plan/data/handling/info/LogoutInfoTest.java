@@ -44,7 +44,7 @@ public class LogoutInfoTest {
         long time = 20L;
         data.getGmTimes().setState("SURVIVAL");
         LogoutInfo i = new LogoutInfo(data.getUuid(), time, true, "CREATIVE", new SessionData(0, 1), "World");
-        assertTrue(i.process(data));
+        i.process(data);
         assertTrue("Last Played wrong", data.getLastPlayed() == 20L);
         assertTrue("Playtime wrong", data.getPlayTime() == 10L);
         assertTrue("Banned wrong", data.isBanned());

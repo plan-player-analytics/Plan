@@ -62,12 +62,11 @@ public class LoginInfo extends HandlingInfo {
     }
 
     @Override
-    public boolean process(UserData uData) {
+    public void process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {
-            return false;
+            return;
         }
         LoginHandling.processLoginInfo(uData, time, ip, banned, nickname, loginTimes);
         playtimeDependentInfo.process(uData);
-        return true;
     }
 }

@@ -36,14 +36,13 @@ public class LogoutInfo extends HandlingInfo {
     }
 
     @Override
-    public boolean process(UserData uData) {
+    public void process(UserData uData) {
         if (!uData.getUuid().equals(uuid)) {
-            return false;
+            return;
         }
         uData.addSession(sData);
         LogoutHandling.processLogoutInfo(uData, time, banned);
         playtimeDependentInfo.process(uData);
-        return true;
     }
 
 }

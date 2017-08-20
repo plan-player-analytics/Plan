@@ -5,16 +5,20 @@
 package main.java.com.djrapitops.plan.queue.processing;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstract class for processing different objects using Generics.
  *
  * @author Rsl1122
  */
 public abstract class Processor<T> {
-    private T processed;
+    protected T object;
 
-    public Processor(T processed) {
-        this.processed = processed;
+    public Processor(T object) {
+        this.object = object;
     }
 
     public abstract void process();
+
+    public T getObject() {
+        return object;
+    }
 }
