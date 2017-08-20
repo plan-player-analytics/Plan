@@ -268,13 +268,22 @@ public class WebServer {
     }
 
     private String readPOSTRequest(HttpExchange exchange) throws IOException {
+        byte[] bytes;
+
         try (InputStream in = exchange.getRequestBody()) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buf = new byte[4096];
             for (int n = in.read(buf); n > 0; n = in.read(buf)) {
                 out.write(buf, 0, n);
             }
-            return new String(out.toByteArray(), "ISO-8859-1");
+
+            bytes = out.toByteArray();
+        }
+
+        try {
+            return new String(bytes, "ISO-8859-1");
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -283,11 +292,18 @@ public class WebServer {
 
         if (args.length < 3) {
             String error = "API Method not specified";
-            return PageCacheHandler.loadPage(error, () -> new NotFoundResponse(error));
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         String method = args[2];
         String response = readPOSTRequest(exchange);
+
+        if (response == null) {
+            String error = "Error at reading the POST request." +
+                    "Note that the Encoding must be ISO-8859-1.";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
+
         Map<String, String> variables = readVariables(response);
 
         //TODO ADD CHECK IF SERVER KEY VALID
