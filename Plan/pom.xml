@@ -109,6 +109,7 @@
                     <include>*.keystore</include>
                     <include>*.css</include>
                     <include>*.yml</include>
+                    <include>*.html</include>
                 </includes>
                 <excludes>
                     <exclude>licence.yml</exclude>
