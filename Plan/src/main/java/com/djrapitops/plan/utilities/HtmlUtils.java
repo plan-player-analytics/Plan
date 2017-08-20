@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 import java.io.FileNotFoundException;
 import java.io.Serializable;
@@ -40,14 +41,9 @@ public class HtmlUtils {
      * @return
      */
     public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
-        for (Map.Entry<String, Serializable> entrySet : replaceMap.entrySet()) {
-            String placeholder = entrySet.getKey();
-            String replacer = entrySet.getValue().toString();
+        StrSubstitutor sub = new StrSubstitutor(replaceMap);
 
-            html = html.replace(placeholder, replacer);
-        }
-
-        return html;
+        return sub.replace(html);
     }
 
     /**

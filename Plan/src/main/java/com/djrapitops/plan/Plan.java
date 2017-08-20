@@ -40,10 +40,12 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
+import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
 
@@ -174,6 +176,7 @@ public class Plan extends BukkitPlugin<Plan> {
             if (analysisRefreshTaskIsEnabled) {
                 startAnalysisRefreshTask(analysisRefreshMinutes);
             }
+
             Benchmark.stop("Enable", "Analysis refresh task registration");
 
             Benchmark.start("WebServer Initialization");
@@ -185,6 +188,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
             uiServer = new WebServer(this);
             if (webserverIsEnabled) {
+                registerWebAPIs();
                 uiServer.initServer();
 
                 if (!uiServer.isEnabled()) {
@@ -198,6 +202,7 @@ public class Plan extends BukkitPlugin<Plan> {
             if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
             }
+
             Benchmark.stop("Enable", "WebServer Initialization");
 
             registerCommand(new PlanCommand(this));
@@ -293,6 +298,14 @@ public class Plan extends BukkitPlugin<Plan> {
         Benchmark.stop("Enable", "Register Listeners");
     }
 
+    private void registerWebAPIs() {
+        WebAPIManager.registerNewAPI("analytics", new AnalyticsWebAPI());
+        WebAPIManager.registerNewAPI("analyze", new AnalyzeWebAPI());
+        WebAPIManager.registerNewAPI("configure", new ConfigureWebAPI());
+        WebAPIManager.registerNewAPI("inspection", new InspectionWebAPI());
+        WebAPIManager.registerNewAPI("inspect", new InspectWebAPI());
+    }
+
     /**
      * Initializes the database according to settings in the config.
      * <p>
@@ -300,7 +313,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return true if init was successful, false if not.
      */
-    public boolean initDatabase() {
+    private boolean initDatabase() {
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));

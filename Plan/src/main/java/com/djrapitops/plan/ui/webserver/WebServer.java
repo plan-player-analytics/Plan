@@ -5,7 +5,6 @@ import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
@@ -15,13 +14,13 @@ import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.response.*;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
-import main.java.com.djrapitops.plan.ui.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPI;
+import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -35,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -268,13 +268,22 @@ public class WebServer {
     }
 
     private String readPOSTRequest(HttpExchange exchange) throws IOException {
+        byte[] bytes;
+
         try (InputStream in = exchange.getRequestBody()) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte buf[] = new byte[4096];
+            byte[] buf = new byte[4096];
             for (int n = in.read(buf); n > 0; n = in.read(buf)) {
                 out.write(buf, 0, n);
             }
-            return new String(out.toByteArray(), "ISO-8859-1");
+
+            bytes = out.toByteArray();
+        }
+
+        try {
+            return new String(bytes, "ISO-8859-1");
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -283,119 +292,46 @@ public class WebServer {
 
         if (args.length < 3) {
             String error = "API Method not specified";
-            return PageCacheHandler.loadPage(error, () -> new NotFoundResponse(error));
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         String method = args[2];
         String response = readPOSTRequest(exchange);
+
+        if (response == null) {
+            String error = "Error at reading the POST request." +
+                    "Note that the Encoding must be ISO-8859-1.";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
+
         Map<String, String> variables = readVariables(response);
 
         //TODO ADD CHECK IF SERVER KEY VALID
 
         Plan plan = Plan.getInstance();
 
-        String playerString;
-        UUID uuid;
-        String identifier;
+        WebAPI api = WebAPIManager.getAPI(method);
 
-        switch (method) {
-            //TODO Add Bungee APIs
-            case "analyze":
-                plan.getAnalysisCache().updateCache();
-                return PageCacheHandler.loadPage("success", SuccessResponse::new);
-            case "inspect":
-                playerString = variables.get("player");
+        if (api == null) {
+            String error = "API Method not found";
+            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        }
 
-                if (playerString == null) {
-                    String error = "Player String not included";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                uuid = UUIDUtility.getUUIDOf(playerString);
-
-                if (uuid == null) {
-                    String error = "UUID not found";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                Plan.getInstance().getInspectCache().cache(uuid);
-
-                return PageCacheHandler.loadPage("success", SuccessResponse::new);
-            case "analysis":
-            case "analytics":
-                identifier = "analysisJson";
-                if (!PageCacheHandler.isCached(identifier)) {
-                    return PageCacheHandler.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));
-                }
-
-                return PageCacheHandler.loadPage(identifier);
-            case "inspection":
-                playerString = variables.get("player");
-
-                if (playerString == null) {
-                    String error = "Player String not included";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                uuid = UUIDUtility.getUUIDOf(playerString);
-
-                if (uuid == null) {
-                    String error = "UUID not found";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                UserData userData = plan.getInspectCache().getFromCache(uuid);
-
-                if (userData == null) {
-                    String error = "User not cached";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                return PageCacheHandler.loadPage("inspectionJson: " + uuid, () -> new JsonResponse(plan.getInspectCache().getFromCache(uuid)));
-            case "configure":
-                String key = variables.get("configKey");
-
-                if (key == null) {
-                    String error = "Config Key null";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                String value = variables.get("configValue");
-
-                if (value == null) {
-                    String error = "Config Value null";
-                    return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
-                }
-
-                if (value.equals("null")) {
-                    value = null;
-                }
-
-                FileConfiguration config = plan.getConfig();
-                config.set(key, value);
-                plan.saveConfig();
-
-                return PageCacheHandler.loadPage("success", SuccessResponse::new);
-            default:
-                String error = "API Method not found";
-                return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+        try {
+            return api.onResponse(plan, variables);
+        } catch (Exception ex) {
+            Log.toLog("WebServer.getAPIResponse", ex);
+            return new InternalErrorResponse(ex, "An error while processing the request happened");
         }
     }
 
     private Map<String, String> readVariables(String response) {
-        Map<String, String> variableMap = new HashMap<>();
         String[] variables = response.split("&");
 
-        for (String variable : variables) {
-            String[] splittedVariables = variable.split("=", 2);
-            if (splittedVariables.length != 2) {
-                continue;
-            }
-
-            variableMap.put(splittedVariables[0], splittedVariables[1]);
-        }
-
-        return variableMap;
+        return Arrays.stream(variables)
+                .map(variable -> variable.split("=", 2))
+                .filter(splittedVariables -> splittedVariables.length == 2)
+                .collect(Collectors.toMap(splittedVariables -> splittedVariables[0], splittedVariables -> splittedVariables[1], (a, b) -> b));
     }
 
     private Response getResponse(String target, WebUser user) {

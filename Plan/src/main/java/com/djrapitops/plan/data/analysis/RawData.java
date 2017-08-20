@@ -72,24 +72,7 @@ public abstract class RawData {
      * @param value       Any value the placeholder should be replaced with.
      */
     public void addValue(String placeholder, Serializable value) {
-        replaceMap.put(addPlaceholderSigns(placeholder), value.toString());
-    }
-
-    private String addPlaceholderSigns(String placeholder) {
-        StringBuilder newPlaceholder = new StringBuilder();
-
-        if (placeholder.charAt(0) != '%') {
-            newPlaceholder.append("%");
-        }
-
-        newPlaceholder.append(placeholder);
-        int lastIndex = placeholder.length() - 1;
-
-        if (placeholder.charAt(lastIndex) != '%') {
-            newPlaceholder.append("%");
-        }
-
-        return newPlaceholder.toString();
+        replaceMap.put(placeholder, value.toString());
     }
 
     /**
@@ -102,12 +85,12 @@ public abstract class RawData {
     }
 
     /**
-     * Used to get the value for a placeholder with or without the % symbols.
+     * Used to get the value for a placeholder without the placeholder prefix and suffix.
      *
-     * @param key placeholder with or without % symbols.
+     * @param key placeholder without the prefix and suffix
      * @return Value the placeholder should be replaced with or null.
      */
     public String get(String key) {
-        return replaceMap.get(addPlaceholderSigns(key));
+        return replaceMap.get(key);
     }
 }
