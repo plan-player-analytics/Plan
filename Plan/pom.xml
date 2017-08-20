@@ -120,9 +120,6 @@
                 <includes>
                     <include>*.html</include>
                 </includes>
-                <excludes>
-                    <exclude>*Example*</exclude>
-                </excludes>
             </resource>
             <resource>
                 <targetPath>.</targetPath>
