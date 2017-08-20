@@ -73,6 +73,7 @@ Theme:
       Light: Base
   Colors:
     Main: Base
+    Main-Dark: Base
     Secondary: Base
     Secondary-Dark: Base
     Tertiary: Base

@@ -146,9 +146,9 @@ ${tabContentPlugins} row[column[box-header[h2[i, text]],box plugin], column...],
 
 STYLE:
 
-#267f00 - Theme
+#267f00 - Main Dark (Geolocations)
 #222 - Punchcard
-#89c471 - Theme (+sessionLength)
+#89c471 - Tertiary (Disabled links)
 #b58310 - Chunks
 #ac69ef - Entities
 #7dcc24 - RAM
@@ -163,7 +163,7 @@ main.css:
 #e2e2e2 (Table, even)
 #eee (Table, odd)
 
-#348e0f Theme (Header, on hover) Darker
-#5da341 Theme (Main color)
+#348e0f Secondary Dark (Header, on hover)
+#5da341 Secondary
 
 'Quicksand', sans-serif (Font Family)

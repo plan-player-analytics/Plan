@@ -39,6 +39,7 @@ import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.ui.theme.Theme;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -213,6 +214,8 @@ public class Plan extends BukkitPlugin<Plan> {
 //Analytics temporarily disabled TODO enable before release
 //            BStats bStats = new BStats(this);
 //            bStats.registerMetrics();
+
+            Theme.test(); //TODO Remove
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
