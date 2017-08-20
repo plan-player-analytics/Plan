@@ -30,7 +30,7 @@ public enum Html {
     COLOR_F("<span class=\"white\">"),
     //
     FONT_AWESOME_ICON("<i class=\"fa fa-${0}\" aria-hidden=\"true\"></i>"),
-    MINOTAR_SMALL_IMG("<img style=\"float: left; padding: 2px 2px 0px 2px\" alt=\"${0}\" src=\"https://minotar.net/avatar/${0}/19\">"),
+    @Deprecated MINOTAR_SMALL_IMG("<img style=\"float: left; padding: 2px 2px 0px 2px\" alt=\"${0}\" src=\"https://minotar.net/avatar/${0}/19\">"),
     SPAN("${0}</span>"),
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
@@ -38,11 +38,11 @@ public enum Html {
     LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
     IMG("<img src=\"${0}\">"),
-    COLUMNS_DIV_WRAPPER("<div class=\"columns\">${0}</div>"),
-    COLUMN_DIV_WRAPPER("<div class=\"about box column\">${0}</div>"),
-    HEADER("<div class=\"headerbox\" style=\"width: 95%;\"><div class=\"header-icon\"><div class=\"header-label\"><i class=\"fa fa-cube\" aria-hidden=\"true\"></i><span class=\"header-text\"> ${0}</span></div></div></div>"),
-    PLUGIN_DATA_WRAPPER("<div class=\"plugin-data\">${0}</div>"),
-    PLUGIN_CONTAINER_START("<div class=\"plugin-container\">"),
+    @Deprecated COLUMNS_DIV_WRAPPER("<div class=\"columns\">${0}</div>"),
+    @Deprecated COLUMN_DIV_WRAPPER("<div class=\"about box column\">${0}</div>"),
+    @Deprecated HEADER("<div class=\"headerbox\" style=\"width: 95%;\"><div class=\"header-icon\"><div class=\"header-label\"><i class=\"fa fa-cube\" aria-hidden=\"true\"></i><span class=\"header-text\"> ${0}</span></div></div></div>"),
+    @Deprecated PLUGIN_DATA_WRAPPER("<div class=\"plugin-data\">${0}</div>"),
+    @Deprecated PLUGIN_CONTAINER_START("<div class=\"plugin-container\">"),
     //
     TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
     TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
@@ -57,7 +57,7 @@ public enum Html {
     TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td>${4}</td><td sorttable_customkey=\"${5}\">${6}</td>" + "<td sorttable_customkey=\"${7}\">${8}</td><td>${9}</td></tr>"),
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"${0}\">${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td sorttable_customkey=\"${4}\">${5}</td></tr>"),
     TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"${0}\">${1}</td><td>${2}</td><td>${3}</td></tr>"),
-    ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
+    @Deprecated ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
     TABLE_END("</tbody></table>"); //    KILLDATA_NONE("No Kills"),
 
     private String html;

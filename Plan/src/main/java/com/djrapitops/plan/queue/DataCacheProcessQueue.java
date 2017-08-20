@@ -4,9 +4,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
+import main.java.com.djrapitops.plan.queue.processing.Processor;
 
-import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -20,7 +19,7 @@ import java.util.concurrent.BlockingQueue;
 // TODO Change Processing Queue to use more generic object as processing.
     // GOAL: Processing queue can be used to process query results from the database
     // & for processing events into statements.
-public class DataCacheProcessQueue extends Queue<HandlingInfo> {
+public class DataCacheProcessQueue extends Queue<Processor> {
 
     /**
      * Class constructor, starts the new Thread for processing.
@@ -38,53 +37,33 @@ public class DataCacheProcessQueue extends Queue<HandlingInfo> {
      *
      * @param info object that extends HandlingInfo.
      */
-    public void addToPool(HandlingInfo info) {
+    public void addToPool(Processor info) {
         try {
             queue.add(info);
         } catch (IllegalStateException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
-
-    /**
-     * Check whether or not the queue contains a HandlingInfo object with the
-     * uuid.
-     *
-     * @param uuid UUID of the player.
-     * @return true/false
-     */
-    public boolean containsUUID(UUID uuid) {
-        return uuid != null && queue.stream().anyMatch(info -> info.getUuid().equals(uuid));
-    }
 }
 
-class ProcessConsumer extends Consumer<HandlingInfo> {
+class ProcessConsumer extends Consumer<Processor> {
 
     private DataCacheHandler handler;
 
-    ProcessConsumer(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
+    ProcessConsumer(BlockingQueue<Processor> q, DataCacheHandler h) {
         super(q, "ProcessQueueConsumer");
         handler = h;
     }
 
     @Override
-    protected void consume(HandlingInfo info) {
+    protected void consume(Processor info) {
         if (!Verify.notNull(handler, info)) {
             return;
         }
 
-        if (handler.getGetTask().containsUUIDtoBeCached(info.getUuid())) { // Wait for get queue.
-            queue.add(info);
-            return;
-        }
+        DBCallableProcessor p = data -> info.process();
 
-        DBCallableProcessor p = data -> {
-            if (!info.process(data)) {
-                Log.error("Attempted to process data for wrong uuid: W:" + data.getUuid() + " | R:" + info.getUuid() + " Type:" + info.getType().name());
-            }
-        };
-
-        handler.getUserDataForProcessing(p, info.getUuid());
+        //TODO handler.getUserDataForProcessing(p, info.getUuid());
     }
 
     @Override
@@ -95,9 +74,9 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     }
 }
 
-class ProcessSetup extends Setup<HandlingInfo> {
+class ProcessSetup extends Setup<Processor> {
 
-    ProcessSetup(BlockingQueue<HandlingInfo> q, DataCacheHandler h) {
+    ProcessSetup(BlockingQueue<Processor> q, DataCacheHandler h) {
         super(new ProcessConsumer(q, h), new ProcessConsumer(q, h));
     }
 }

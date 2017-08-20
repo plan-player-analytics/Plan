@@ -50,55 +50,50 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
         }
     }
 
-    boolean containsUUIDtoBeCached(UUID uuid) {
-        return uuid != null && queue.stream()
-                .map(map -> map.get(uuid))
-                .filter(Objects::nonNull)
-                .anyMatch(list -> list.size() >= 2);
-    }
-}
-@Deprecated
-class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
+    @Deprecated
+    class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
 
-    private Database db;
+        private Database db;
 
-    GetConsumer(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
-        super(q, "GetQueueConsumer");
-        this.db = db;
-    }
-
-    @Override
-    protected void consume(Map<UUID, List<DBCallableProcessor>> processors) {
-        if (!Verify.notNull(processors, db)) {
-            return;
+        GetConsumer(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
+            super(q, "GetQueueConsumer");
+            this.db = db;
         }
 
-        try {
-            for (Map.Entry<UUID, List<DBCallableProcessor>> entrySet : processors.entrySet()) {
-                UUID uuid = entrySet.getKey();
-                List<DBCallableProcessor> processorsList = entrySet.getValue();
-                if (uuid == null || Verify.isEmpty(processorsList)) {
-                    continue;
-                }
-                Log.debug("Database", uuid + ": Get, For:" + processorsList.size());
-                db.giveUserDataToProcessors(uuid, processorsList);
+        @Override
+        protected void consume(Map<UUID, List<DBCallableProcessor>> processors) {
+            if (!Verify.notNull(processors, db)) {
+                return;
             }
-        } catch (Exception ex) {
-            Log.toLog(this.getClass().getName(), ex);
+
+            try {
+                for (Map.Entry<UUID, List<DBCallableProcessor>> entrySet : processors.entrySet()) {
+                    UUID uuid = entrySet.getKey();
+                    List<DBCallableProcessor> processorsList = entrySet.getValue();
+                    if (uuid == null || Verify.isEmpty(processorsList)) {
+                        continue;
+                    }
+                    Log.debug("Database", uuid + ": Get, For:" + processorsList.size());
+                    db.giveUserDataToProcessors(uuid, processorsList);
+                }
+            } catch (Exception ex) {
+                Log.toLog(this.getClass().getName(), ex);
+            }
+        }
+
+        @Override
+        protected void clearVariables() {
+            if (db != null) {
+                db = null;
+            }
         }
     }
 
-    @Override
-    protected void clearVariables() {
-        if (db != null) {
-            db = null;
-        }
-    }
-}
-@Deprecated
-class GetSetup extends Setup<Map<UUID, List<DBCallableProcessor>>> {
+    @Deprecated
+    class GetSetup extends Setup<Map<UUID, List<DBCallableProcessor>>> {
 
-    GetSetup(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
-        super(new GetConsumer(q, db), new GetConsumer(q, db));
+        GetSetup(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {
+            super(new GetConsumer(q, db), new GetConsumer(q, db));
+        }
     }
 }
