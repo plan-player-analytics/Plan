@@ -21,7 +21,7 @@ import java.util.Map;
  * analysed using the analysis method.
  * <p>
  * After being analysed the ReplaceMap can be retrieved for replacing
- * placeholders on the analysis.html file.
+ * placeholders on the server.html file.
  *
  * @author Rsl1122
  * @since 3.5.2

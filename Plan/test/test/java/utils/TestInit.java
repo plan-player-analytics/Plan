@@ -89,7 +89,7 @@ public class TestInit {
 
         // Html Files
         File analysis = new File(getClass().getResource("/server.html").getPath());
-        when(planMock.getResource("analysis.html")).thenReturn(new FileInputStream(analysis));
+        when(planMock.getResource("server.html")).thenReturn(new FileInputStream(analysis));
         File player = new File(getClass().getResource("/player.html").getPath());
         when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
 

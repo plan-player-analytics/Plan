@@ -10,6 +10,6 @@ public class AnalysisPageResponse extends Response {
 
     public AnalysisPageResponse(DataRequestHandler h) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(h.getAnalysisHtml());
+        super.setContent(h.getServerHtml());
     }
 }

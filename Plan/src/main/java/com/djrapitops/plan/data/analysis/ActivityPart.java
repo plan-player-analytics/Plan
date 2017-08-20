@@ -83,7 +83,7 @@ public class ActivityPart extends RawData {
     private void playerActivityGraphs() {
         List<TPS> tpsData = tpsPart.getTpsData();
         addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
-        addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
+        addValue("playersgraphcolor", Settings.HCOLOR_ACT_ONL.toString());
     }
 
     private void activityPiechart() {
@@ -93,24 +93,24 @@ public class ActivityPart extends RawData {
         final String colJoi = Settings.HCOLOR_ACTP_JON.toString();
         final String colBan = Settings.HCOLOR_ACTP_BAN.toString();
 
-        addValue("%activecol%", colAct);
-        addValue("%inactivecol%", colIna);
-        addValue("%joinleavecol%", colJoi);
-        addValue("%bancol%", colBan);
+        addValue("activecol", colAct);
+        addValue("inactivecol", colIna);
+        addValue("joinleavecol", colJoi);
+        addValue("bancol", colBan);
         String activityColors = HtmlUtils.separateWithQuotes(
                 "#" + colAct, "#" + colIna, "#" + colJoi, "#" + colBan
         );
-        addValue("%activitycolors%", activityColors);
+        addValue("activitycolors", activityColors);
 
         String activityLabels = "[" + HtmlUtils.separateWithQuotes(
                 "Active", "Inactive", "Unknown", "Banned") + "]";
-        addValue("%labelsactivity%", activityLabels);
+        addValue("labelsactivity", activityLabels);
 
         addValue("activitydata", Arrays.toString(counts));
-        addValue("%active%", counts[0]);
-        addValue("%inactive%", counts[1]);
-        addValue("%joinleaver%", counts[2]);
-        addValue("%banned%", counts[3]);
+        addValue("active", counts[0]);
+        addValue("inactive", counts[1]);
+        addValue("joinleaver", counts[2]);
+        addValue("banned", counts[3]);
     }
 
     public void addBan(UUID uuid) {

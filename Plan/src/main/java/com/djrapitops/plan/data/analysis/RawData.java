@@ -68,7 +68,7 @@ public abstract class RawData {
     /**
      * Adds a placeholder to the replaceMap.
      *
-     * @param placeholder placeholder, with or without % signs.
+     * @param placeholder placeholder, without prefix and suffix
      * @param value       Any value the placeholder should be replaced with.
      */
     public void addValue(String placeholder, Serializable value) {

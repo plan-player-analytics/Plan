@@ -58,17 +58,17 @@ public class GamemodePart extends RawData {
         String col2 = Settings.HCOLOR_GMP_2.toString();
         String col3 = Settings.HCOLOR_GMP_3.toString();
 
-        addValue("%gm0col%", col0);
-        addValue("%gm1col%", col1);
-        addValue("%gm2col%", col2);
-        addValue("%gm3col%", col3);
+        addValue("gm0col", col0);
+        addValue("gm1col", col1);
+        addValue("gm2col", col2);
+        addValue("gm3col", col3);
         String gmColors = HtmlUtils.separateWithQuotes(
                 "#" + col0, "#" + col1, "#" + col2, "#" + col3
         );
         String gmLabels = "[" + HtmlUtils.separateWithQuotes(
                 "Survival", "Creative", "Adventure", "Spectator") + "]";
-        addValue("%gmcolors%", gmColors);
-        addValue("%gmlabels%", gmLabels);
+        addValue("gmcolors", gmColors);
+        addValue("gmlabel", gmLabels);
 
         // Adds Percentage indicators
         for (int i = 0; i < percentages.length; i++) {
