@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache.queue;
+package main.java.com.djrapitops.plan.queue;
 
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
@@ -13,8 +13,8 @@ import java.util.concurrent.BlockingQueue;
  */
 public abstract class Consumer<T> extends AbsRunnable {
 
-    final BlockingQueue<T> queue;
-    boolean run;
+    protected final BlockingQueue<T> queue;
+    protected boolean run;
 
     /**
      * Constructor, defines queue.
@@ -40,12 +40,12 @@ public abstract class Consumer<T> extends AbsRunnable {
         }
     }
 
-    void stop() {
+    protected void stop() {
         run = false;
         super.cancel();
     }
 
-    abstract void clearVariables();
+    protected abstract void clearVariables();
 
-    abstract void consume(T toConsume);
+    protected abstract void consume(T toConsume);
 }

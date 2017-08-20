@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class TPSTable extends Table {
 
+    private final String columnServerID; //TODO
     private final String columnDate;
     private final String columnTPS;
     private final String columnPlayers;
@@ -38,6 +39,7 @@ public class TPSTable extends Table {
      */
     public TPSTable(SQLDB db, boolean usingMySQL) {
         super("plan_tps", db, usingMySQL);
+        columnServerID = "server_id";
         columnDate = "date";
         columnTPS = "tps";
         columnPlayers = "players_online";

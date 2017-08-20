@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache.queue;
+package main.java.com.djrapitops.plan.queue;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
@@ -19,6 +19,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>>> {
 
     /**
@@ -27,7 +28,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
      * @param plugin current instance of Plan
      */
     public DataCacheGetQueue(Plan plugin) {
-        super(new ArrayBlockingQueue<>(Settings.PROCESS_GET_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(20000));
         setup = new GetSetup(queue, plugin.getDB());
         setup.go();
     }
@@ -56,7 +57,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
                 .anyMatch(list -> list.size() >= 2);
     }
 }
-
+@Deprecated
 class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
 
     private Database db;
@@ -67,7 +68,7 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
     }
 
     @Override
-    void consume(Map<UUID, List<DBCallableProcessor>> processors) {
+    protected void consume(Map<UUID, List<DBCallableProcessor>> processors) {
         if (!Verify.notNull(processors, db)) {
             return;
         }
@@ -88,13 +89,13 @@ class GetConsumer extends Consumer<Map<UUID, List<DBCallableProcessor>>> {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (db != null) {
             db = null;
         }
     }
 }
-
+@Deprecated
 class GetSetup extends Setup<Map<UUID, List<DBCallableProcessor>>> {
 
     GetSetup(BlockingQueue<Map<UUID, List<DBCallableProcessor>>> q, Database db) {

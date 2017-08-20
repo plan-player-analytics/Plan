@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache.queue;
+package main.java.com.djrapitops.plan.queue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import java.util.concurrent.BlockingQueue;
  */
 public abstract class Queue<T> {
 
-    final BlockingQueue<T> queue;
-    Setup<T> setup;
+    protected final BlockingQueue<T> queue;
+    protected Setup<T> setup;
 
     /**
      * Constructor, defines queue.

@@ -27,42 +27,23 @@ public class UsersTable extends Table {
 
     private final String columnID;
     private final String columnUUID;
-    private final String columnGeolocation;
-    private final String columnLastGM;
-    private final String columnLastGMSwapTime;
-    private final String columnPlayTime;
-    private final String columnLoginTimes;
-    private final String columnLastPlayed;
-    private final String columnDeaths;
-    private final String columnMobKills;
-    /**
-     * @since 3.3.0
-     */
+    @Deprecated private final String columnGeolocation;
+    @Deprecated private final String columnLastGM;
+    @Deprecated private final String columnLastGMSwapTime;
+    @Deprecated private final String columnPlayTime;
+    @Deprecated private final String columnLoginTimes;
+    @Deprecated private final String columnLastPlayed;
+    @Deprecated private final String columnDeaths;
+    @Deprecated private final String columnMobKills;
     private final String columnRegistered;
-    /**
-     * @since 3.3.0
-     */
-    private final String columnOP;
-    /**
-     * @since 3.3.0
-     */
     private final String columnName;
-    /**
-     * @since 3.3.0
-     */
-    private final String columnBanned;
-    /**
-     * @since 3.3.0
-     */
-    private final String columnContainsBukkitData;
-    /**
-     * @since 3.6.0
-     */
-    private final String columnLastWorldSwapTime;
-    /**
-     * @since 3.6.0
-     */
-    private final String columnLastWorld;
+    //TODO Server Specific Table (Also has registered on it)
+    @Deprecated private final String columnOP;
+    @Deprecated private final String columnBanned;
+    //
+    @Deprecated private final String columnContainsBukkitData;
+    @Deprecated private final String columnLastWorldSwapTime;
+    @Deprecated private final String columnLastWorld;
 
     /**
      * @param db

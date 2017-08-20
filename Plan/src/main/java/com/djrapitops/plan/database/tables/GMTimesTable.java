@@ -16,7 +16,9 @@ import java.util.*;
 
 /**
  * @author Rsl1122
+ * @deprecated GM Times moved to WorldTable
  */
+@Deprecated
 public class GMTimesTable extends UserIDTable {
 
     private final String columnSurvivalTime;

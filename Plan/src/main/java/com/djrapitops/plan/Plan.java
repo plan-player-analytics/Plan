@@ -44,7 +44,6 @@ import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
@@ -211,8 +210,9 @@ public class Plan extends BukkitPlugin<Plan> {
             hookHandler = new HookHandler(this);
             Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
-            BStats bStats = new BStats(this);
-            bStats.registerMetrics();
+//Analytics temporarily disabled TODO enable before release
+//            BStats bStats = new BStats(this);
+//            bStats.registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
@@ -276,25 +276,11 @@ public class Plan extends BukkitPlugin<Plan> {
     private void registerListeners() {
         Benchmark.start("Register Listeners");
         registerListener(new PlanPlayerListener(this));
-        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_CHATLISTENER).toString());
-        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_COMMANDLISTENER).toString());
-        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_DEATHLISTENER).toString());
-
-        if (chatListenerIsEnabled) {
-            registerListener(new PlanChatListener(this));
-        }
-
+        registerListener(new PlanChatListener(this));
         registerListener(new PlanGamemodeChangeListener(this));
         registerListener(new PlanWorldChangeListener(this));
-
-        if (commandListenerIsEnabled) {
-            registerListener(new PlanCommandPreprocessListener(this));
-        }
-
-        if (deathListenerIsEnabled) {
-            registerListener(new PlanDeathEventListener(this));
-        }
-
+        registerListener(new PlanCommandPreprocessListener(this));
+        registerListener(new PlanDeathEventListener(this));
         Benchmark.stop("Enable", "Register Listeners");
     }
 

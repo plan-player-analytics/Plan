@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.7.0</version>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -107,10 +107,25 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>*.keystore</include>
-                    <include>*.js</include>
+                    <include>*.css</include>
                     <include>*.yml</include>
+                </includes>
+                <excludes>
+                    <exclude>licence.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/html</directory>
+                <includes>
                     <include>*.html</include>
-                    <include>*.txt</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/js</directory>
+                <includes>
+                    <include>*.js</include>
                 </includes>
             </resource>
         </resources>

@@ -20,6 +20,7 @@ import java.util.*;
 public class IPsTable extends UserIDTable {
 
     private final String columnIP;
+    private final String columnGeolocation; // TODO
 
     /**
      * @param db         The database
@@ -29,6 +30,7 @@ public class IPsTable extends UserIDTable {
         super("plan_ips", db, usingMySQL);
         columnUserID = "user_id";
         columnIP = "ip";
+        columnGeolocation = "geolocation";
     }
 
     /**

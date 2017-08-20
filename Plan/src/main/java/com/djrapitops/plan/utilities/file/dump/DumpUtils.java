@@ -204,12 +204,8 @@ public class DumpUtils {
         boolean analysisExport = Settings.ANALYSIS_EXPORT.isTrue();
         boolean usingAlternativeServerIP = Settings.USE_ALTERNATIVE_UI.isTrue();
 
-        boolean chatGathering = Settings.GATHERCHAT.isTrue();
-        boolean killGathering = Settings.GATHERKILLS.isTrue();
-        boolean commandGathering = Settings.GATHERCOMMANDS.isTrue();
-
-        boolean combineAliases = Settings.COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND.isTrue();
-        boolean unknownCommandLogging = Settings.DO_NOT_LOG_UNKNOWN_COMMANDS.isTrue();
+        boolean combineAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+        boolean unknownCommandLogging = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
 
         String locale = Settings.LOCALE.toString();
         String dbType = Settings.DB_TYPE.toString();
@@ -221,10 +217,6 @@ public class DumpUtils {
         log.add("Refresh Analysis on Enable", refreshAnalysisOnEnable);
         log.add("Analysis Export", analysisExport);
         log.add("Alternative Server IP", usingAlternativeServerIP);
-
-        log.add("Chat Gathering", chatGathering);
-        log.add("Kill Gathering", killGathering);
-        log.add("Command Gathering", commandGathering);
 
         log.add("Combine Aliases", combineAliases);
         log.add("Unknown Command Logging", unknownCommandLogging);

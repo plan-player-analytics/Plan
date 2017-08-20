@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache.queue;
+package main.java.com.djrapitops.plan.queue;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class DataCacheClearQueue extends Queue<UUID> {
 
     /**
@@ -28,7 +29,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
      * @param handler current instance of DataCacheHandler.
      */
     public DataCacheClearQueue(DataCacheHandler handler) {
-        super(new ArrayBlockingQueue<>(Settings.PROCESS_CLEAR_LIMIT.getNumber()));
+        super(new ArrayBlockingQueue<>(20000));
         setup = new ClearSetup(queue, handler);
         setup.go();
     }
@@ -58,7 +59,7 @@ public class DataCacheClearQueue extends Queue<UUID> {
         }
     }
 }
-
+@Deprecated
 class ClearConsumer extends Consumer<UUID> implements Runnable {
 
     private DataCacheHandler handler;
@@ -69,7 +70,7 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
     }
 
     @Override
-    void consume(UUID uuid) {
+    protected void consume(UUID uuid) {
         if (!Verify.notNull(handler, uuid)) {
             return;
         }
@@ -87,13 +88,13 @@ class ClearConsumer extends Consumer<UUID> implements Runnable {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (handler != null) {
             handler = null;
         }
     }
 }
-
+@Deprecated
 class ClearSetup extends Setup<UUID> {
 
     ClearSetup(BlockingQueue<UUID> q, DataCacheHandler handler) {

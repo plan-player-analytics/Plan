@@ -25,6 +25,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 2.0.0
  */
+@Deprecated
 public class AnalysisCacheHandler {
 
     private final Plan plugin;

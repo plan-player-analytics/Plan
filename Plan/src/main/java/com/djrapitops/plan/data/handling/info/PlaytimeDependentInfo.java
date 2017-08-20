@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.data.handling.PlaytimeHandling;
 
 import java.util.UUID;
 
+@Deprecated //Sessions will take care of the stuff in the future.
 public class PlaytimeDependentInfo extends HandlingInfo {
 
     private final String gamemode;

@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.data.cache.queue;
+package main.java.com.djrapitops.plan.queue;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
@@ -17,6 +17,9 @@ import java.util.concurrent.BlockingQueue;
  * @author Rsl1122
  * @since 3.0.0
  */
+// TODO Change Processing Queue to use more generic object as processing.
+    // GOAL: Processing queue can be used to process query results from the database
+    // & for processing events into statements.
 public class DataCacheProcessQueue extends Queue<HandlingInfo> {
 
     /**
@@ -65,7 +68,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     }
 
     @Override
-    void consume(HandlingInfo info) {
+    protected void consume(HandlingInfo info) {
         if (!Verify.notNull(handler, info)) {
             return;
         }
@@ -85,7 +88,7 @@ class ProcessConsumer extends Consumer<HandlingInfo> {
     }
 
     @Override
-    void clearVariables() {
+    protected void clearVariables() {
         if (handler != null) {
             handler = null;
         }

@@ -1,0 +1,169 @@
+Placeholders:
+
+${}
+
+player.html:
+${playerName}
+${serverName}
+${version}
+
+${playerClassification} (Active &#x2022; Offline etc)
+${nicknames} &#x2022; name<br>
+${geolocations} &#x2022; country<br>
+
+${registered} time format full
+${lastSeen} time format full
+${sessionCount} num
+${playtimeTotal} timeamount
+${sessionLengthMedian} timeamount
+${sessionLengthLongest} timeamount
+
+${kickCount} num
+${playerKillCount} num
+${mobKillCount} num
+${deathCount} num
+
+${sessionCountDay} num
+${sessionCountWeek} num
+${playtimeDay} timeamount
+${playtimeWeek} timeamount
+${sessionLengthLongestDay} timeamount
+${sessionLengthLongestWeek} timeamount
+
+${contentSessions} See example page
+${contentServerOverview} See example page
+
+${tabContentPlugins} See example page
+
+${tableBodyActions} (3) (100)
+
+punchcard
+serverPie
+worldPie
+
+network.html:
+${networkName}
+${playersOnlineSeries}
+${version}
+
+${playersOnline} num
+${playersMax} num
+${playersTotal} num
+${playersActive} num
+
+${playersNewDay} num
+${playersNewWeek} num
+
+${contentServers} row[column[box-header, box, box-footer[p,button right, refresh button right]], column...], row...
+
+server.html:
+${serverName} String
+${timeZone} num
+
+${playersOnline} num
+${playersMax} num
+${playersTotal} num
+${playersActive} num
+
+${playersAverage} num
+${playersNewAverage} num
+
+${playersDay} num
+${playersWeek} num
+${playersMonth} num
+${playersAverageDay} num
+${playersAverageWeek} num
+${playersAverageMonth} num
+${playersNewDay} num
+${playersNewWeek} num
+${playersNewMonth} num
+${playersNewAverageDay} num
+${playersNewAverageWeek} num
+${playersNewAverageMonth} num
+
+${lastPeakTime} time format hh:mm
+${playersLastPeak} num
+${bestPeakTime} time format full
+${playersBestPeak} num
+
+${sessionAverage} timeamount
+
+${playtimeTotal} timeamount
+${sessionCount} num
+${killCount} num
+${mobKillCount} num
+${deathCount} num
+
+${tpsAverageDay} num
+${tpsAverageWeek} num
+${cpuAverageDay} num%
+${cpuAverageWeek} num%
+${ramAverageDay} num MB
+${ramAverageWeek} num MB
+${entityAverageDay} num
+${entityAverageWeek} num
+${chunkAverageDay} num
+${chunkAverageWeek} num
+
+${tableBodyRecentLogins} tr th html (2) (15-20)
+${tableBodySessions} tr th html (4) (50)
+${tableBodyPlayerList} tr th html (7) (250)
+${tableBodyCommands} tr th html (2) (100)
+
+${playersOnlineSeries}
+${tpsSeries}
+${cpuSeries}
+${ramSeries}
+${entitySeries}
+${chunkSeries}
+${worldSeries}
+${geoMapSeries}
+${sessionLengthSeries}
+${punchCardSeries}
+
+${playersGraphColor}
+
+${gmData}
+${gmTotal} timeamount
+${gmColors}
+
+${active}
+${inactive}
+${joinLeaver}
+${banned}
+${activityColors}
+
+${worldTotal} timeamount
+${worldColors} NOT IMPLEMENTED //TODO
+
+${tpsMedium}
+${tpsHigh}
+${tpsLowColor}
+${tpsMediumColor}
+${tpsHighColor}
+
+${tabContentPlugins} row[column[box-header[h2[i, text]],box plugin], column...], row... + style="width: 200%;" <h2>That's all..</h2> <p>Do you have more plugins? ._.</p>
+
+STYLE:
+
+#267f00 - Theme
+#222 - Punchcard
+#89c471 - Theme (+sessionLength)
+#b58310 - Chunks
+#ac69ef - Entities
+#7dcc24 - RAM
+#e0d264 - CPU
+
+https://fonts.googleapis.com/css?family=Quicksand:300,400 (Font Link)
+
+main.css:
+#fff (white)
+#000 (black)
+
+#e2e2e2 (Table, even)
+#eee (Table, odd)
+
+#348e0f Theme (Header, on hover) Darker
+#5da341 Theme (Main color)
+
+'Quicksand', sans-serif (Font Family)

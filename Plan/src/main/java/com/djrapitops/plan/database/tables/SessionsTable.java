@@ -18,8 +18,12 @@ import java.util.*;
  */
 public class SessionsTable extends UserIDTable {
 
+    private final String columnSessionID; //TODO
     private final String columnSessionStart;
     private final String columnSessionEnd;
+    private final String columnServerID; //TODO
+    private final String columnMobKills; //TODO
+    private final String columnDeaths; //TODO
 
     /**
      * @param db
@@ -30,6 +34,10 @@ public class SessionsTable extends UserIDTable {
         columnUserID = "user_id";
         columnSessionStart = "session_start";
         columnSessionEnd = "session_end";
+        columnServerID = "server_id";
+        columnSessionID = "id";
+        columnMobKills = "mob_kills";
+        columnDeaths = "deaths";
     }
 
     /**

@@ -8,6 +8,7 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.6.0
  */
+// TODO Change WorldTimes to use GMTimes per world.
 public class WorldTimes extends TimeKeeper {
 
     public WorldTimes(Map<String, Long> times, String lastState, long lastStateChange) {

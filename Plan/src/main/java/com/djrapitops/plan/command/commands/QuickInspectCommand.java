@@ -27,6 +27,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public class QuickInspectCommand extends SubCommand {
 
     private final Plan plugin;

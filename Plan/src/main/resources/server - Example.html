@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan | Server</title>
+    <meta name="description" content="Player Analysis window">
+    <meta name="author" content="Rsl1122">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./main.css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
+    <script src="https://use.fontawesome.com/df48eb908b.js"></script>
+</head>
+<body>
+<header>
+    <div>
+        <img class="right" src="https://puu.sh/tJZUb/c2e0ab220f.png" alt="Player Analytics | Analysis">
+        <p class="right">Player Analytics v.4.0.0</p>
+        <h1>Plan | Server Analysis</h1>
+    </div>
+</header>
+<div class="content-server">
+    <div class="row nav-bar">
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-info-circle" aria-hidden="true"></i> Information
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-bar-chart" aria-hidden="true"></i> Online Activity
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-calendar" aria-hidden="true"></i> Sessions
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-cogs" aria-hidden="true"></i> Performance
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-list-alt" aria-hidden="true"></i> Playerlist
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-terminal" aria-hidden="true"></i> Command usage
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-globe" aria-hidden="true"></i> Demographics
+        </a>
+        <a href="javascript:void(0)" class="nav-button">
+            <i class="fa fa-cubes" aria-hidden="true"></i> Plugins
+        </a>
+    </div>
+    <div id="limiter" class="main-limiter">
+        <div id="main" class="main-wrapper row">
+            <div id="tab-information" class="tab">
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Players Online</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="playersOnline" style="width: 100%;" src="http://puu.sh/xdcdv/77aca85f4c.png">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Information</h2>
+                        </div>
+                        <div class="box" style="margin-bottom: 5px;">
+                            <div class="row">
+                                <div class="column">
+                                    <p>30/50 Players Online<br>43 New Players Today<br>
+                                        <br>
+                                        100 Active Players<br>
+                                        1246 Total Players<br>
+                                        <br>
+                                        Peak Time: 18:23 Pm<br>
+                                        Last Peak: 53 Players<br>
+                                        <br>
+                                        <b>All Time Peak:</b><br>
+                                        Aug 13 2017, 18:46: 75 Players
+                                    </p>
+                                </div>
+                                <div class="column">
+                                    <p><b>Averages:</b></p>
+                                    <li>Session Length: 28m 42s</li>
+                                    <li>Players / Day: 196</li>
+                                    <li>New Players / Day: 24</li>
+                                    <p><b>Total:</b></p>
+                                    <li>Playtime: 3 months 5d 53h</li>
+                                    <li>Sessions: 6480</li>
+                                    <li>Kills: 3403</li>
+                                    <li>Mob Kills: 503402</li>
+                                    <li>Deaths: 5704</li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-header">
+                            <h2><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Recent Logins</h2>
+                        </div>
+                        <div class="box-footer" style="padding: 2px;">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Seen</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th><a class="link" href="#">Rsl1122</a></th>
+                                    <th>18 Aug 2017, 15:56</th>
+                                </tr>
+                                <tr>
+                                    <th><a class="link" href="#">Melonking</a></th>
+                                    <th>18 Aug 2017, 15:43</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-online-activity" class="tab column">
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Players Online</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="playersOnline2" style="width: 100%;" src="http://puu.sh/xdcdv/77aca85f4c.png">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-braille" aria-hidden="true"></i> Player Join PunchCard</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="punchCard" style="width: 100%;" src="http://puu.sh/xdhil/73c2c5b944.png">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2>Last 24 Hours</h2>
+                        </div>
+                        <div class="box">
+                            <p>Unique Players: 217<br>
+                                Unique / Day: 217</p>
+                            <p>New Players: 38<br>
+                                New / Day: 38</p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2>Last 7 Days</h2>
+                        </div>
+                        <div class="box">
+                            <p>Unique Players: 670<br>
+                                Unique / Day: 204</p>
+                            <p>New Players: 247<br>
+                                New / Day: 35</p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2>Last 30 Days</h2>
+                        </div>
+                        <div class="box">
+                            <p>Unique Players: 812<br>
+                                Unique / Day: 196</p>
+                            <p>New Players: 463<br>
+                                New / Day: 15</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-sessions" class="tab">
+                <div class="row" style="flex-grow: 2; width: 140%;">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-calendar" aria-hidden="true"></i> 50 Most Recent Sessions</h2>
+                        </div>
+                        <div class="box-footer scrollbar" style="padding: 2px;">
+                            <table class="sortable table">
+                                <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Started</th>
+                                    <th>Length</th>
+                                    <th>World - Time</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th><a class="link" href="#">Rsl1122</a></th>
+                                    <th>18 Aug, 16:22</th>
+                                    <th>Online</th>
+                                    <th>freebuildnew - 100%</th>
+                                </tr>
+                                <tr>
+                                    <th><a class="link" href="#">Rsl1122</a></th>
+                                    <th>18 Aug, 15:56</th>
+                                    <th>1h 45m 43s</th>
+                                    <th>world - 87%</th>
+                                </tr>
+                                <tr>
+                                    <th><a class="link" href="#">Melonking</a></th>
+                                    <th>18 Aug, 15:43</th>
+                                    <th>5m 2s</th>
+                                    <th>gm3 - 62%</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> World Playtime</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="worldPie" style="width: 100%;" src="http://puu.sh/xdhF0/3c7ae10d4e.png">
+                        </div>
+                        <div class="box-header">
+                            <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Playerbase</h2>
+                        </div>
+                        <div class="box-footer">
+                            <img id="activityPie" style="width: 100%;" src="http://puu.sh/xdgXa/f4a3b7df80.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-performance" class="tab">
+                <div class="column">
+                    <div class="row"> <!--First row (horizontal)-->
+                        <div class="column">
+                            <div class="box-header">
+                                <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Ticks Per Second</h2>
+                            </div>
+                            <div class="box-footer">
+                                <img id="tpsGraph" style="width: 100%;" src="http://puu.sh/xdivg/0dfd27035a.png">
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="box-header">
+                                <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Resource Usage</h2>
+                            </div>
+                            <div class="box-footer">
+                                <img id="resourceGraph" style="width: 100%;" src="http://puu.sh/xdjtY/419496ddf3.png">
+                            </div>
+                        </div>
+                    </div> <!--First row (horizontal)-->
+                    <div class="row">
+                        <div class="column">
+                            <div class="box-header">
+                                <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> World Load</h2>
+                            </div>
+                            <div class="box-footer">
+                                <img id="worldGraph" style="width: 100%;" src="http://puu.sh/xdjut/bcc8d4d7ff.png">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cogs" aria-hidden="true"></i> Last 24 Hours</h2>
+                                </div>
+                                <div class="box">
+                                    <p><b>Averages:</b></p>
+                                    <ul>
+                                        <li>TPS: 19.83</li>
+                                        <li>CPU: 25.51%</li>
+                                        <li>RAM: 5282 Mb</li>
+                                        <li>Entities: 3649</li>
+                                        <li>Chunks: 1789</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="box-header">
+                                    <h2><i class="fa fa-cogs" aria-hidden="true"></i> Last 7 Days</h2>
+                                </div>
+                                <div class="box">
+                                    <p><b>Averages:</b></p>
+                                    <ul>
+                                        <li>TPS: 19.83</li>
+                                        <li>CPU: 25.51%</li>
+                                        <li>RAM: 5282 Mb</li>
+                                        <li>Entities: 3649</li>
+                                        <li>Chunks: 1789</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-playerlist" class="tab">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list" aria-hidden="true"></i> Playerlist</h2>
+                    </div>
+                    <div class="box-footer scrollbar" style="padding: 2px;">
+                        <table class="sortable table">
+                            <thead>
+                            <tr>
+                                <th><i class="fa fa-user" aria-hidden="true"></i> Player</th>
+                                <th><i class="fa fa-check" aria-hidden="true"></i> Active</th>
+                                <th><i class="fa fa-clock-o" aria-hidden="true"></i> Playtime</th>
+                                <th><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Login times</th>
+                                <th><i class="fa fa-user-plus" aria-hidden="true"></i> Registered</th>
+                                <th><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Last seen</th>
+                                <th><i class="fa fa-globe" aria-hidden="true"></i> Geolocation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th><a class="link" href="#">Rsl1122</a></th>
+                                <th>Active</th>
+                                <th>1d 20h 4m 2s</th>
+                                <th>324</th>
+                                <th>Aug 18 2017, 15:54</th>
+                                <th>Aug 18, 16:48</th>
+                                <th>Finland</th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-command-usage" class="tab">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-list" aria-hidden="true"></i> Playerlist</h2>
+                    </div>
+                    <div class="box-footer scrollbar" style="padding: 2px;">
+                        <table class="sortable table">
+                            <thead>
+                            <tr>
+                                <th><i class="fa fa-chevron-right" aria-hidden="true"></i> Command</th>
+                                <th><i class="fa fa-list-ol" aria-hidden="true"></i> Times used</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>/plan</th>
+                                <th>432</th>
+                            </tr>
+                            <tr>
+                                <th>/spawn</th>
+                                <th>23</th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-demographics" class="tab">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-globe" aria-hidden="true"></i> Geolocations</h2>
+                    </div>
+                    <div class="box-footer" style="padding: 2px;">
+                        <img id="geoChart" style="width: 100%;" src="http://puu.sh/xdVkp/9eddada8bd.png">
+                    </div>
+                </div>
+            </div>
+            <div id="tab-plugins" class="tab column">
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 1</h2>
+                        </div>
+                        <div class="box plugin">
+                            <p>Test: 5 / 25<br>
+                                Test: 20%</p>
+                            <p>More data: Yes<br>
+                                Data: 4</p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 2</h2>
+                        </div>
+                        <div class="box plugin">
+                            <p>Yes<br>
+                                Yes<br>
+                                Yes<br>Yes<br>Yes<br>Yes<br>Yes<br>
+                                Yes<br>Yes<br>Yes<br>Yes<br>Yes<br>
+                                Yes<br>Yes<br>Yes<br>Yes<br>Yes<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="box-header">
+                            <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 3</h2>
+                        </div>
+                        <div class="box plugin">
+                            <img id="pluginpie" style="width: 100%;" src="http://puu.sh/xdhF0/3c7ae10d4e.png">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <div class="box-header" style="margin-top: 10px;">
+                            <h2><i class="fa fa-cube" aria-hidden="true"></i> Plugin 4</h2>
+                        </div>
+                        <div class="box plugin" style="height: 100%;">
+                            <table class="sortable table">
+                                <thead>
+                                <tr>
+                                    <th>Test</th>
+                                    <th>Test2</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Data</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="column" style="width: 200%;">
+                        <div class="box-header" style="margin-top: 10px;">
+                            <h2>That's all..</h2>
+                        </div>
+                        <div class="box plugin">
+                            <p>Do you have more plugins? ._.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <script src="./js/activityPie.js"></script>
+    <script src="./js/gmPie.js"></script>
+    <script src="./js/playerGraph.js"></script>
+    <script src="./js/punchCard.js"></script>
+    <script src="./js/resourceGraph.js"></script>
+    <script src="./js/sessionDistributionChart.js"></script>
+    <script src="./js/tpsGraph.js"></script>
+    <script src="./js/worldGraph.js"></script>
+    <script src="./js/worldMap.js"></script>
+    <script src="./js/worldPie.js"></script>
+    <script>
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: ${timeZone} * 60
+            }
+        });
+		// Data Variables
+		var playersOnlineSeries = {
+			name: 'Players Online',
+			data: ${playersOnlineSeries},
+			type: 'areaspline',
+			color: '#%playersgraphcolor%',
+            tooltip: {
+            valueDecimals: 0
+        }
+        };
+        var tpsSeries = {
+            name: 'TPS',
+            data: ${tpsSeries},
+            type: 'spline',
+            zones: [{
+                value: %tpsmedium%,
+                color: '${tpsLowColor}'
+            }, {
+                value: %tpshigh%,
+                color: '${tpsMediumColor}'
+            }, {
+                value: 30,
+                color: '${tpsHighColor}'
+            }],
+            tooltip: {
+                valueDecimals: 2
+            },
+        yAxis: 1
+        };
+        var cpuSeries = {
+            name: 'CPU Usage',
+            data: ${cpuSeries},
+            type: 'areaspline',
+            color: '#e0d264',
+            tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.2f}%</b>'
+        }
+        };
+        var ramSeries = {
+            name: 'RAM Usage',
+            data: ${ramSeries},
+            type: 'areaspline',
+            color: '#7dcc24',
+            tooltip: {
+            valueDecimals: 0
+        },
+        yAxis: 1
+        };
+        var entitySeries = {
+            name: 'Loaded Entities',
+            data: ${entitySeries},
+            type: 'areaspline',
+            color: '#ac69ef',
+            tooltip: {
+            valueDecimals: 0
+        },
+        yAxis: 1
+        };
+        var chunkSeries = {
+            name: 'Loaded Chunks',
+            data: ${chunkSeries},
+            type: 'areaspline',
+            color: '#b58310',
+            tooltip: {
+            valueDecimals: 0
+        }
+        };
+        var activitySeries = {
+            name: 'Players',
+            colorByPoint: true,
+            data: [{
+                name: 'Active',
+                y: ${active}
+            }, {
+                name: 'Inactive',
+                y: ${inactive},
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Single Join',
+                    y: ${joinLeaver}
+            }, {
+                name: 'Banned',
+                    y: ${banned}
+            }]
+        };
+        var gmData = ${gmData};
+        var gmSeries = {
+            name: 'GM Usage',
+            colorByPoint: true,
+            data: [{
+                name: 'Survival',
+                y: gmData[0],
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Creative',
+                y: gmData[1]
+            }, {
+                name: 'Adventure',
+                y: gmData[2]
+            }, {
+                name: 'Spectator',
+                y: gmData[3]
+            }]
+        };
+        var worldSeries = {
+            name: 'World Playtime',
+            colorByPoint: true,
+            data: ${worldSeries}
+        };
+        var mapSeries = {
+                name: 'Players',
+                type: 'map',
+                mapData: Highcharts.maps['custom/world'],
+                data: ${geoMapSeries}
+            joinBy: ['iso-a3', 'code']
+        };
+        var sessionLengthSeries = {
+            name: 'Sessions',
+            color: '#89c471',
+            data: ${sessionLengthSeries}
+        };
+        var punchcardSeries = {
+            name: 'Relative Activity',
+            color: '#222',
+            data: ${punchCardSeries}
+        };
+
+    </script>
+    <script>
+            var navButtons = document.getElementsByClassName("nav-button");
+            var tabs = document.getElementsByClassName("tab");
+            var slideIndex = window.sessionStorage.getItem("AnalysisSlideIndex");
+            if (slideIndex === null) {
+                slideIndex = 0;
+            }
+            var x = document.getElementById("main");
+            x.style.transform = "translate3d(0px,0px,0)";
+            x.style.width = "" + navButtons.length * 100 + "%";
+            for (var i = 0; i < navButtons.length; i++) {
+                navButtons[i].onclick = openFunc(i)
+                tabs[i].style.width = "" + 100 / navButtons.length + "%";
+            }
+            x.style.opacity = "1";
+            openFunc(slideIndex)();
+            /*gmPie('gmPie', gmSeries, '%gmtotal%', [%gmcolors%]);
+            activityPie('activityPie', activitySeries, %activitytotal%, [%activitycolors%]);
+            worldPie('worldPie', worldSeries, '%worldtotal%');
+            playersChart('playerChartDay', playersOnlineSeries, 1);
+            playersChart('playerChartMonth', playersOnlineSeries, 4);
+            tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
+            resourceChart('resourceGraph', cpuSeries, ramSeries);
+            worldChart('worldGraph', entitySeries, chunkSeries);
+            worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
+            sessionDistributionChart('sessionDistribution', sessionLengthSeries);
+            punchCard('punchcard', punchcardSeries);
+            countUpTimer();*/
+
+            function openFunc(i) {
+                return function() {                    
+                    var max = navButtons.length;
+                    for (var j = 0; j < max; j++) {
+                        if (j === i) {
+                            navButtons[j].classList.add('active');
+                            continue;
+                        }
+                        if (navButtons[j].classList.contains('active')) {
+                            navButtons[j].classList.remove('active');
+                        }
+                    }
+                    var perc = - 100 / navButtons.length;
+                    slideIndex = i;
+                    if (slideIndex > max) {slideIndex = 0};
+                    if (slideIndex < 0) {slideIndex = max};
+                    window.sessionStorage.setItem("AnalysisSlideIndex", slideIndex);
+                    var value = slideIndex * perc;
+                    x.style.transition = "0.5s";
+                    x.style.transform = "translate3d(" + value + "%,0px,0)";
+                };
+            }
+
+    </script>
+</div>
+</body>
+</html>

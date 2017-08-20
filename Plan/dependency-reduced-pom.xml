@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.djrapitops</groupId>
   <artifactId>Plan</artifactId>
-  <version>3.6.3</version>
+  <version>4.0.0</version>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
     <testSourceDirectory>${basedir}/test</testSourceDirectory>
