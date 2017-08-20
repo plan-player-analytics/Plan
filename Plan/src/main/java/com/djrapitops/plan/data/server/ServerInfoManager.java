@@ -56,7 +56,7 @@ public class ServerInfoManager {
         String webAddress = address[0];
         int port = Integer.parseInt(address[1]);
         String name = Settings.SERVER_NAME.toString();
-        serverTable.saveCurrentServerInfo(new ServerInfo(-1, serverUUID, name, webAddress, port));
+        //TODO serverTable.saveCurrentServerInfo(new ServerInfo(-1, serverUUID, name, webAddress, port));
     }
 
     public UUID generateNewUUID(Server server) {
