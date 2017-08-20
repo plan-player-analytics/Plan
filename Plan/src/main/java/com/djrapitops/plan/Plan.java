@@ -43,7 +43,6 @@ import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
 
@@ -206,8 +205,9 @@ public class Plan extends BukkitPlugin<Plan> {
             hookHandler = new HookHandler(this);
             Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
-            BStats bStats = new BStats(this);
-            bStats.registerMetrics();
+//Analytics temporarily disabled TODO enable before release
+//            BStats bStats = new BStats(this);
+//            bStats.registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
