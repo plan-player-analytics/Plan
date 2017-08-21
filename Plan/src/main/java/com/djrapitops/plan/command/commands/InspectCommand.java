@@ -124,7 +124,7 @@ public class InspectCommand extends SubCommand {
     }
 
     private void sendInspectMsg(ISender sender, String playerName, UUID uuid) {
-        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + playerName);
+        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
         // Link
         String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();

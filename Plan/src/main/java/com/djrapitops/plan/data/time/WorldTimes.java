@@ -71,9 +71,11 @@ public class WorldTimes {
             }
             currentGMTimes.changeState(currentGamemode, changeTime);
         }
+
         for (GMTimes gmTimes : worldTimes.values()) {
             gmTimes.setLastStateChange(changeTime);
         }
+
         currentWorld = worldName;
         currentGamemode = gameMode;
     }
@@ -86,10 +88,7 @@ public class WorldTimes {
      */
     public long getWorldPlaytime(String world) {
         GMTimes gmTimes = worldTimes.get(world);
-        if (gmTimes != null) {
-            return gmTimes.getTotal();
-        }
-        return 0;
+        return gmTimes != null ? gmTimes.getTotal() : 0;
     }
 
     public long getTotal() {
@@ -109,11 +108,7 @@ public class WorldTimes {
      * @return GMTimes object with play times of each GameMode.
      */
     public GMTimes getGMTimes(String world) {
-        GMTimes gmTimes = worldTimes.get(world);
-        if (gmTimes != null) {
-            return gmTimes;
-        }
-        return new GMTimes();
+        return worldTimes.getOrDefault(world, new GMTimes());
     }
 
     @Override
