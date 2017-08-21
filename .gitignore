@@ -13,3 +13,7 @@
 /Filetool/build/
 /PlanPluginBridge/target/
 /MakroS/nbproject/private/
+*.xml
+Plan/Plan.iml
+Plan/.sonar/.sonar_lock
+Plan/.sonar/report-task.txt

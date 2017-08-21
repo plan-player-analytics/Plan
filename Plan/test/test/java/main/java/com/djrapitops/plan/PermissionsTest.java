@@ -28,5 +28,4 @@ public class PermissionsTest {
     public void testGetPermission() {
         assertEquals("plan.inspect.other", Permissions.INSPECT_OTHER.getPerm());
     }
-
 }

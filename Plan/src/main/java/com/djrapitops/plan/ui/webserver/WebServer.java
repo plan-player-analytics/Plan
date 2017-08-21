@@ -308,10 +308,18 @@ public class WebServer {
         }
 
         Map<String, String> variables = readVariables(response);
-
-        //TODO ADD CHECK IF SERVER KEY VALID
+        String key = variables.get("key");
 
         Plan plan = Plan.getInstance();
+
+        if (!checkKey(plan, key)) {
+            String error = "Server Key not given or invalid";
+            return PageCacheHandler.loadPage(error, () -> {
+                ForbiddenResponse forbidden = new ForbiddenResponse();
+                forbidden.setContent(error);
+                return forbidden;
+            });
+        }
 
         WebAPI api = WebAPIManager.getAPI(method);
 
@@ -326,6 +334,18 @@ public class WebServer {
             Log.toLog("WebServer.getAPIResponse", ex);
             return new InternalErrorResponse(ex, "An error while processing the request happened");
         }
+    }
+
+    private boolean checkKey(Plan plan, String key) {
+        UUID uuid = plan.getServerInfoManager().getServerUUID();
+        UUID keyUUID;
+        try {
+            keyUUID = UUID.fromString(key);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        return uuid.equals(keyUUID);
     }
 
     private Map<String, String> readVariables(String response) {

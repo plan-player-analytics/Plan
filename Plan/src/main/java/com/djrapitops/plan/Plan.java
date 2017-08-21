@@ -189,7 +189,7 @@ public class Plan extends BukkitPlugin<Plan> {
             }
 
             Benchmark.start("ServerInfo Registration");
-                serverInfoManager = new ServerInfoManager(this);
+            serverInfoManager = new ServerInfoManager(this);
             Benchmark.stop("Enable", "ServerInfo Registration");
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
@@ -454,5 +454,15 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public ServerVariableHolder getVariable() {
         return serverVariableHolder;
+    }
+
+    /**
+     * Used to get the object storing server info
+     *
+     * @return ServerInfoManager
+     * @see ServerInfoManager
+     */
+    public ServerInfoManager getServerInfoManager() {
+        return serverInfoManager;
     }
 }
