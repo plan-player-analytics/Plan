@@ -2,7 +2,6 @@ package test.java.main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
@@ -16,18 +15,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import test.java.utils.MockUtils;
 import test.java.utils.RandomData;
 import test.java.utils.TestInit;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -48,11 +43,6 @@ public class DatabaseCommitTest {
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
             @Override
             public void startConnectionPingTask() {
-
-            }
-
-            @Override
-            public void convertBukkitDataToDB() {
 
             }
         };
@@ -102,26 +92,7 @@ public class DatabaseCommitTest {
         assertFalse(db.getTpsTable().getTPSData().isEmpty());
     }
 
-    @Test
-    public void testCommitToDBFile3() throws SQLException {
-        db.init();
-        UserData userData = MockUtils.mockUser();
-        db.saveUserData(userData);
-        db.close();
-        db.init();
-        assertFalse(db.getUserDataForUUIDS(Collections.singletonList(MockUtils.getPlayerUUID())).isEmpty());
-    }
-
-    @Test
-    public void testCommitToDBFile4() throws SQLException {
-        db.init();
-        List<UserData> data = RandomData.randomUserData();
-        List<UUID> uuids = data.stream().map(UserData::getUuid).collect(Collectors.toList());
-        db.saveMultipleUserData(data);
-        db.close();
-        db.init();
-        assertFalse(db.getUserDataForUUIDS(uuids).isEmpty());
-    }
+    // TODO Commit tests for new Login save features.
 
     @Test
     public void testCommitToDBFile5() throws SQLException, PassEncryptUtil.CannotPerformOperationException {
