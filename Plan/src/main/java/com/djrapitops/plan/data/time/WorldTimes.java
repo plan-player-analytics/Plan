@@ -9,7 +9,7 @@ import java.util.Map;
  * Class that tracks the time spent in each World based on GMTimes.
  *
  * @author Rsl1122
- * @since 3.6.0
+ * @since 4.0.0
  */
 public class WorldTimes {
 
@@ -30,16 +30,26 @@ public class WorldTimes {
         addWorld(startingWorld, startingGM, MiscUtils.getTime());
     }
 
-    public WorldTimes(Map<String, GMTimes> times, String lastWorld, String lastGM) {
+    /**
+     * Re-Creates an existing WorldTimes object for viewing.
+     *
+     * @param times Map of each World's GMTimes object.
+     */
+    public WorldTimes(Map<String, GMTimes> times) {
         worldTimes = times;
-        currentWorld = lastWorld;
-        currentGamemode = lastGM;
     }
 
     private void addWorld(String worldName, String gameMode, long changeTime) {
         worldTimes.put(worldName, new GMTimes(gameMode, changeTime));
     }
 
+    /**
+     * Updates the time status to match the new state.
+     *
+     * @param worldName World name of the world swapped to.
+     * @param gameMode GameMode name of the gm swapped to.
+     * @param changeTime Epoch ms the change occurred.
+     */
     public void updateState(String worldName, String gameMode, long changeTime) {
         GMTimes currentGMTimes = worldTimes.get(currentWorld);
         if (worldName.equals(currentWorld)) {
@@ -109,7 +119,12 @@ public class WorldTimes {
         return b.toString();
     }
 
-    public String getCurrentWorld() {
-        return currentWorld;
+    /**
+     * Used to get the Map for saving.
+     *
+     * @return Current time map.
+     */
+    public Map<String, GMTimes> getWorldTimes() {
+        return worldTimes;
     }
 }
