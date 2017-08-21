@@ -27,6 +27,6 @@ public class PlaytimeHandling {
         }
 
         WorldTimes worldTimes = data.getWorldTimes();
-        worldTimes.changeState(worldName, playTime);
+//       TODO worldTimes.changeState(worldName, playTime);
     }
 }

@@ -224,9 +224,9 @@ public class DatabaseTest {
         gmTimes.setState("SURVIVAL");
         gmTimes.setLastStateChange(10L);
         WorldTimes worldTimes = data.getWorldTimes();
-        worldTimes.setTime("World", 20L);
-        worldTimes.setState("World");
-        worldTimes.setLastStateChange(10L);
+//   TODO     worldTimes.setTime("World", 20L);
+//        worldTimes.setState("World");
+//        worldTimes.setLastStateChange(10L);
         db.saveUserData(data);
         data.addNickname("TestUpdateForSave");
         db.saveUserData(data);
@@ -261,7 +261,7 @@ public class DatabaseTest {
         db.init();
         UserData data = MockUtils.mockUser();
         data.getGmTimes().setAllGMTimes(5L, 10L, 15L, 20L);
-        data.getWorldTimes().setTime("World", 20L);
+//   TODO     data.getWorldTimes().setTime("World", 20L);
         data.addIpAddress(InetAddress.getByName("185.64.113.61"));
         data.addSession(new SessionData(1286349L, 2342978L));
         data.addNickname("TestNick");

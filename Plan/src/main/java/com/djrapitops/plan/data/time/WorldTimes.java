@@ -1,6 +1,10 @@
 package main.java.com.djrapitops.plan.data.time;
 
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * TimeKeeper class that tracks the time spent in each World based on Playtime.
@@ -8,37 +12,85 @@ import java.util.Map;
  * @author Rsl1122
  * @since 3.6.0
  */
-// TODO Change WorldTimes to use GMTimes per world.
-public class WorldTimes extends TimeKeeper {
+public class WorldTimes {
 
-    public WorldTimes(Map<String, Long> times, String lastState, long lastStateChange) {
-        super(times, lastState, lastStateChange);
+    private final Map<String, GMTimes> worldTimes;
+    private String currentWorld;
+    private String currentGamemode;
+
+    /**
+     * Creates a new Empty WorldTimes object.
+     *
+     * @param startingWorld World to start the calculations at.
+     * @param startingGM    GameMode to start the calculations at.
+     */
+    public WorldTimes(String startingWorld, String startingGM) {
+        worldTimes = new HashMap<>();
+        currentWorld = startingWorld;
+        currentGamemode = startingGM;
+        addWorld(startingWorld, startingGM, MiscUtils.getTime());
     }
 
-    public WorldTimes(String lastState, long lastStateChange) {
-        super(lastState, lastStateChange);
+    public WorldTimes(Map<String, GMTimes> times, String lastWorld, String lastGM) {
+        worldTimes = times;
+        currentWorld = lastWorld;
+        currentGamemode = lastGM;
     }
 
-    public WorldTimes(String lastState) {
-        super(lastState);
+    private void addWorld(String worldName, String gameMode, long changeTime) {
+        worldTimes.put(worldName, new GMTimes(gameMode, changeTime));
     }
 
-    public WorldTimes(Map<String, Long> times, long lastStateChange) {
-        super(times, null, lastStateChange);
+    public void updateState(String worldName, String gameMode, long changeTime) {
+        GMTimes currentGMTimes = worldTimes.get(currentWorld);
+
+        GMTimes newGMTimes = worldTimes.get(worldName);
+        if (newGMTimes == null) {
+            addWorld(worldName, gameMode, currentGMTimes.getLastStateChange());
+        }
+        currentGMTimes.changeState(gameMode, changeTime);
+        for (GMTimes gmTimes : worldTimes.values()) {
+            gmTimes.setLastStateChange(changeTime);
+        }
+        worldTimes.put(currentWorld, currentGMTimes);
+        currentWorld = worldName;
+        currentGamemode = gameMode;
     }
 
-    public WorldTimes(Map<String, Long> times) {
-        super(times);
+    public Optional<Long> getWorldPlaytime(String world) {
+        GMTimes gmTimes = worldTimes.get(world);
+        if (gmTimes != null) {
+            return Optional.of(gmTimes.getTotal());
+        }
+        return Optional.empty();
     }
 
-    public WorldTimes() {
-        super();
+    public Optional<GMTimes> getGMTimes(String world) {
+        GMTimes gmTimes = worldTimes.get(world);
+        if (gmTimes != null) {
+            return Optional.of(gmTimes);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public String getState() {
-        String state = super.getState();
-        return state != null ? state : "Unknown";
+    public String toString() {
+        StringBuilder b = new StringBuilder("WorldTimes (Current: " + currentWorld + "){\n");
+        for (Map.Entry<String, GMTimes> entry : worldTimes.entrySet()) {
+            b.append("World '").append(entry.getKey()).append("':\n");
+            GMTimes value = entry.getValue();
+            b.append("  Total: ").append(value.getTotal()).append("\n");
+            b.append("  ").append(value.toString()).append("\n");
+        }
+        b.append("}");
+        return b.toString();
     }
 
+    public String getCurrentWorld() {
+        return currentWorld;
+    }
+
+    public String getCurrentGamemode() {
+        return currentGamemode;
+    }
 }
