@@ -137,6 +137,14 @@ public class TPS {
 
     @Override
     public String toString() {
-        return "TPS{" + date + "|" + ticksPerSecond + "|" + players + "|" + cpuUsage + "}";
+        return "TPS{" +
+                "date=" + date +
+                ", ticksPerSecond=" + ticksPerSecond +
+                ", players=" + players +
+                ", cpuUsage=" + cpuUsage +
+                ", usedMemory=" + usedMemory +
+                ", entityCount=" + entityCount +
+                ", chunksLoaded=" + chunksLoaded +
+                '}';
     }
 }
