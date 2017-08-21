@@ -9,7 +9,6 @@ import test.java.utils.RandomData;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * @author Rsl1122
@@ -67,7 +66,7 @@ public class WorldTimesTest {
     }
 
     @Test
-    public void testLotOfChanges() {
+    public void testLotOfChangesWorldTime() {
         long amount = 1000L;
         String[] worlds = new String[]{worldOne, worldTwo};
 
@@ -89,7 +88,6 @@ public class WorldTimesTest {
 
             long time = i * amount + this.time;
 
-            printCurrentState(testedW, i, gm, world);
             test.updateState(world, gm, time);
         }
 
@@ -114,66 +112,71 @@ public class WorldTimesTest {
         assertEquals(amount * 50, time1 + time2);
         assertEquals(worldTimeOne, time1);
         assertEquals(worldTimeTwo, time2);
-
-        // Tests GM Time calculation
-        for (Map.Entry<String, List<String>> entry : testedW.entrySet()) {
-            String world = entry.getKey();
-            List<String> gmList = entry.getValue();
-            for (int i = 0; i < gms.length; i++) {
-                final String lookFor = gms[i];
-                long gmCount = gmList.stream().filter(gmNum -> gmNum.equals(lookFor)).count();
-
-                Optional<GMTimes> gmTimes = test.getGMTimes(world);
-
-                if (gmTimes.isPresent()) {
-                    long expected = gmCount * amount;
-                    long actual = gmTimes.get().getTime(lookFor);
-                    assertEquals(world + ": " + lookFor + ": " + expected + " Actual: " + actual, expected, actual);
-                } else {
-                    fail("GM Times can't not be present.");
-                }
-            }
-        }
     }
 
-    private void printCurrentState(Map<String, List<String>> testedW, int i, String gm, String world) {
-        int sizeW1 = testedW.get(worldOne).size();
-        int sizeW2 = testedW.get(worldTwo).size();
+    @Test
+    public void testGMTrackingSingleWorld() {
+        long changeTime = time + 1000L;
+        long changeTime2 = changeTime + 1000L;
+        GMTimes gmTimes = test.getGMTimes(worldOne).get();
+        test.updateState(worldOne, "CREATIVE", changeTime);
+        assertEquals(1000L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(0L, gmTimes.getTime("CREATIVE"));
+        test.updateState(worldOne, "ADVENTURE", changeTime2);
+        assertEquals(1000L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, gmTimes.getTime("CREATIVE"));
+        assertEquals(0L, gmTimes.getTime("ADVENTURE"));
+    }
 
-        StringBuilder b = new StringBuilder(""+i);
-        while (b.length() < 3) {
-            b.append(" ");
-        }
-        b.append(world).append(":").append(gm).append(": ");
-        while (b.length() < 18) {
-            b.append(" ");
-        }
-        b.append(sizeW1);
+    @Test
+    public void testGMTrackingTwoWorlds() {
+        long changeTime = time + 1000L;
+        long changeTime2 = time + 2000L;
+        GMTimes worldOneGMTimes = test.getGMTimes(worldOne).get();
+        test.updateState(worldOne, "CREATIVE", changeTime);
+        test.updateState(worldOne, "ADVENTURE", changeTime2);
+        assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
+        assertEquals(0L, worldOneGMTimes.getTime("ADVENTURE"));
 
-        while (b.length() < 21) {
-            b.append(" ");
-        }
+        test.updateState(worldTwo, "SURVIVAL", time + 3000L);
+        GMTimes worldTwoGMTimes = test.getGMTimes(worldTwo).get();
+        assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
 
-        for (final String lookFor : gms) {
-            long count = testedW.get(worldOne).stream().filter(gmNum -> gmNum.equals(lookFor)).count();
-            b.append(" ").append(count);
-        }
-        while (b.length() < 29) {
-            b.append(" ");
-        }
-        b.append(" |");
-        for (final String lookFor : gms) {
-            long count = testedW.get(worldTwo).stream().filter(gmNum -> gmNum.equals(lookFor)).count();
-            b.append(" ").append(count);
-        }
-        while (b.length() < 40) {
-            b.append(" ");
-        }
-        b.append(" ")
-                .append(sizeW2)
-                .append(" = ")
-                .append(sizeW1 + sizeW2);
-        System.out.println(b.toString());
+        assertEquals(0L, worldTwoGMTimes.getTime("SURVIVAL"));
+        assertEquals(0L, worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(0L, worldTwoGMTimes.getTime("ADVENTURE"));
+
+        test.updateState(worldTwo, "CREATIVE", time + 4000L);
+
+        assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
+
+        assertEquals(1000L, worldTwoGMTimes.getTime("SURVIVAL"));
+        assertEquals(0L, worldTwoGMTimes.getTime("CREATIVE"));
+
+        test.updateState(worldTwo, "CREATIVE", time + 5000L);
+        assertEquals(1000L, worldTwoGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldTwoGMTimes.getTime("CREATIVE"));
+
+        // No change should occur.
+        test.updateState(worldOne, "ADVENTURE", time + 5000L);
+        System.out.println(test);
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
+        assertEquals(1000L, worldTwoGMTimes.getTime("CREATIVE"));
+        test.updateState(worldTwo, "CREATIVE", time + 5000L);
+        System.out.println(test);
+        test.updateState(worldOne, "ADVENTURE", time + 6000L);
+        System.out.println(test);
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
+        assertEquals(2000L, worldTwoGMTimes.getTime("CREATIVE"));
+
+        test.updateState(worldTwo, "ADVENTURE", time + 7000L);
+        assertEquals(2000L, worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(2000L, worldOneGMTimes.getTime("ADVENTURE"));
     }
 
     // TODO Test where SessionData is ended, check if worldTimes & session length add up.
