@@ -370,13 +370,13 @@ public class UsersTable extends Table {
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
                 WorldTimes worldTimes = data.getWorldTimes();
-                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-                String lastWorld = set.getString(columnLastWorld);
-                if (!"Unknown".equals(lastWorld)) {
-                    worldTimes.setState(lastWorld);
-                } else {
-                    worldTimes.setLastStateChange(playTime);
-                }
+//            TODO    worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+//                String lastWorld = set.getString(columnLastWorld);
+//                if (!"Unknown".equals(lastWorld)) {
+//                    worldTimes.setState(lastWorld);
+//                } else {
+//                    worldTimes.setLastStateChange(playTime);
+//                }
                 return data;
             }
         } finally {
@@ -415,13 +415,13 @@ public class UsersTable extends Table {
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
                 WorldTimes worldTimes = data.getWorldTimes();
-                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-                String lastWorld = set.getString(columnLastWorld);
-                if (!"Unknown".equals(lastWorld)) {
-                    worldTimes.setState(lastWorld);
-                } else {
-                    worldTimes.setLastStateChange(playTime);
-                }
+//        TODO        worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+//                String lastWorld = set.getString(columnLastWorld);
+//                if (!"Unknown".equals(lastWorld)) {
+//                    worldTimes.setState(lastWorld);
+//                } else {
+//                    worldTimes.setLastStateChange(playTime);
+//                }
                 datas.add(data);
             }
         } finally {
@@ -454,13 +454,13 @@ public class UsersTable extends Table {
                 data.setDeaths(set.getInt(columnDeaths));
                 data.setMobKills(set.getInt(columnMobKills));
                 WorldTimes worldTimes = data.getWorldTimes();
-                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-                String lastWorld = set.getString(columnLastWorld);
-                if (!"Unknown".equals(lastWorld)) {
-                    worldTimes.setState(lastWorld);
-                } else {
-                    worldTimes.setLastStateChange(playTime);
-                }
+//          TODO      worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+//                String lastWorld = set.getString(columnLastWorld);
+//                if (!"Unknown".equals(lastWorld)) {
+//                    worldTimes.setState(lastWorld);
+//                } else {
+//                    worldTimes.setLastStateChange(playTime);
+//                }
             }
         } finally {
             close(set);
@@ -497,13 +497,13 @@ public class UsersTable extends Table {
                 gmTimes.setState(set.getString(columnLastGM));
                 gmTimes.setLastStateChange(set.getLong(columnLastGMSwapTime));
                 WorldTimes worldTimes = uData.getWorldTimes();
-                worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-                String lastWorld = set.getString(columnLastWorld);
-                if (!"Unknown".equals(lastWorld)) {
-                    worldTimes.setState(lastWorld);
-                } else {
-                    worldTimes.setLastStateChange(playTime);
-                }
+//     TODO           worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
+//                String lastWorld = set.getString(columnLastWorld);
+//                if (!"Unknown".equals(lastWorld)) {
+//                    worldTimes.setState(lastWorld);
+//                } else {
+//                    worldTimes.setLastStateChange(playTime);
+//                }
             }
         } finally {
             close(set);
@@ -540,8 +540,8 @@ public class UsersTable extends Table {
                 statement.setString(12, data.getName());
                 statement.setLong(13, data.getRegistered());
                 WorldTimes worldTimes = data.getWorldTimes();
-                statement.setString(14, worldTimes.getState());
-                statement.setLong(15, worldTimes.getLastStateChange());
+//     TODO           statement.setString(14, worldTimes.getState());
+//                statement.setLong(15, worldTimes.getLastStateChange());
                 statement.setString(16, uuid.toString());
                 update = statement.executeUpdate();
             }
@@ -565,8 +565,8 @@ public class UsersTable extends Table {
                 statement.setString(13, data.getName());
                 statement.setLong(14, data.getRegistered());
                 WorldTimes worldTimes = data.getWorldTimes();
-                statement.setString(15, worldTimes.getState());
-                statement.setLong(16, worldTimes.getLastStateChange());
+//       TODO         statement.setString(15, worldTimes.getState());
+//                statement.setLong(16, worldTimes.getLastStateChange());
                 statement.execute();
             }
         } finally {
@@ -701,8 +701,8 @@ public class UsersTable extends Table {
                 statement.setLong(14, uData.getRegistered());
 
                 WorldTimes worldTimes = uData.getWorldTimes();
-                statement.setString(15, worldTimes.getState());
-                statement.setLong(16, worldTimes.getLastStateChange());
+//      TODO          statement.setString(15, worldTimes.getState());
+//                statement.setLong(16, worldTimes.getLastStateChange());
 
                 statement.addBatch();
             }
@@ -759,8 +759,8 @@ public class UsersTable extends Table {
                 statement.setString(12, uData.getName());
                 statement.setLong(13, uData.getRegistered());
                 WorldTimes worldTimes = uData.getWorldTimes();
-                statement.setString(14, worldTimes.getState());
-                statement.setLong(15, worldTimes.getLastStateChange());
+//         TODO       statement.setString(14, worldTimes.getState());
+//                statement.setLong(15, worldTimes.getLastStateChange());
                 statement.setString(16, uuid.toString());
                 statement.addBatch();
                 uData.stopAccessing();

@@ -374,10 +374,10 @@ public abstract class SQLDB extends Database {
         data.getGmTimes().setTimes(gmTimes);
         Map<String, Long> worldTimes = worldTimesTable.getWorldTimes(userId);
         WorldTimes worldT = data.getWorldTimes();
-        worldT.setTimes(worldTimes);
-        if (worldT.getLastStateChange() == 0) {
-            worldT.setLastStateChange(data.getPlayTime());
-        }
+//        worldT.setTimes(worldTimes); //TODO
+//        if (worldT.getLastStateChange() == 0) {
+//            worldT.setLastStateChange(data.getPlayTime());
+//        }
 
         List<SessionData> sessions = sessionsTable.getSessionData(userId);
         data.addSessions(sessions);
@@ -448,10 +448,10 @@ public abstract class SQLDB extends Database {
             uData.setPlayerKills(playerKills.get(id));
             uData.getGmTimes().setTimes(gmTimes.get(id));
             WorldTimes worldT = uData.getWorldTimes();
-            worldT.setTimes(worldTimes.get(id));
-            if (worldT.getLastStateChange() == 0) {
-                worldT.setLastStateChange(uData.getPlayTime());
-            }
+//            worldT.setTimes(worldTimes.get(id)); //TODO
+//            if (worldT.getLastStateChange() == 0) {
+//                worldT.setLastStateChange(uData.getPlayTime());
+//            }
         }
 
         Benchmark.stop("Database", "Get UserData for " + uuidsCol.size());
@@ -493,13 +493,13 @@ public abstract class SQLDB extends Database {
         Map<Integer, Map<String, Long>> worldTimes = new HashMap<>();
 
         // Put in data set
-        List<String> worldNames = data.stream()
-                .map(UserData::getWorldTimes)
-                .map(WorldTimes::getTimes)
-                .map(Map::keySet)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+//        List<String> worldNames = data.stream() //TODO
+//                .map(UserData::getWorldTimes)
+//                .map(WorldTimes::getTimes)
+//                .map(Map::keySet)
+//                .flatMap(Collection::stream)
+//                .distinct()
+//                .collect(Collectors.toList());
 
         for (Map.Entry<UUID, UserData> entrySet : userDatas.entrySet()) {
             UUID uuid = entrySet.getKey();
@@ -518,7 +518,7 @@ public abstract class SQLDB extends Database {
             kills.put(id, new ArrayList<>(uData.getPlayerKills()));
             sessions.put(id, new ArrayList<>(uData.getSessions()));
             gmTimes.put(id, new HashMap<>(uData.getGmTimes().getTimes()));
-            worldTimes.put(id, new HashMap<>(uData.getWorldTimes().getTimes()));
+//         TODO   worldTimes.put(id, new HashMap<>(uData.getWorldTimes().getTimes()));
         }
 
         // Save
@@ -527,7 +527,7 @@ public abstract class SQLDB extends Database {
         killsTable.savePlayerKills(kills, uuids);
         sessionsTable.saveSessionData(sessions);
         gmTimesTable.saveGMTimes(gmTimes);
-        worldTable.saveWorlds(worldNames);
+//      TODO  worldTable.saveWorlds(worldNames);
         worldTimesTable.saveWorldTimes(worldTimes);
         commit();
         userDatas.values().stream()
@@ -562,8 +562,8 @@ public abstract class SQLDB extends Database {
         ipsTable.saveIPList(userId, new HashSet<>(data.getIps()));
         killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
         gmTimesTable.saveGMTimes(userId, data.getGmTimes().getTimes());
-        worldTable.saveWorlds(new HashSet<>(data.getWorldTimes().getTimes().keySet()));
-        worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
+//      TODO  worldTable.saveWorlds(new HashSet<>(data.getWorldTimes().getTimes().keySet()));
+//        worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
         data.stopAccessing();
         commit();
         Benchmark.stop("Database", "Save Single UserData");
