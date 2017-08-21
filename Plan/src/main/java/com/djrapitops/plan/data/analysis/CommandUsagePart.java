@@ -13,11 +13,12 @@ import java.util.Map;
 /**
  * Part responsible for all CommandUsage related analysis.
  * <p>
- * Command Usage Table.
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: uniquecommands, totalcommands, commanduse
+ * Contains following placeholders after analyzed:
+ * ${commandCount} - (Number)
+ * ${commandUniqueCount} - (Number)
+ * ${tableBodyCommands} - Table body for CommandUsage table.
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -32,10 +33,10 @@ public class CommandUsagePart extends RawData {
 
     @Override
     public void analyse() {
-        addValue("uniquecommands", String.valueOf(getUniqueCommands()));
-        addValue("totalcommands", String.valueOf(getCommandTotal()));
+        addValue("commandUniqueCount", String.valueOf(getUniqueCommands()));
+        addValue("commandCount", String.valueOf(getCommandTotal()));
         String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
-        addValue("commanduse", HtmlUtils.removeXSS(commandUsageTable));
+        addValue("tableBodyCommands", HtmlUtils.removeXSS(commandUsageTable));
     }
 
     public int getUniqueCommands() {

@@ -49,8 +49,8 @@ public class AnalysisData extends RawData {
         geolocationPart = new GeolocationPart();
         joinInfoPart = new JoinInfoPart();
         playerCountPart = new PlayerCountPart();
-        playtimePart = new PlaytimePart(playerCountPart);
-        killPart = new KillPart(playerCountPart);
+        playtimePart = new PlaytimePart();
+        killPart = new KillPart();
         gamemodePart = new GamemodePart();
         tpsPart = new TPSPart(tpsData);
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
@@ -137,7 +137,7 @@ public class AnalysisData extends RawData {
         Verify.nullCheck(pluginsTabLayout);
         Verify.nullCheck(planVersion);
 
-        addValue("sortabletable", playersTable);
+        addValue("tableBodyPlayerList", playersTable);
         addValue("version", planVersion);
 
         final List<RawData> parts = getAllParts();

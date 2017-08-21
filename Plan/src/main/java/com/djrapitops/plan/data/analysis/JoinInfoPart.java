@@ -12,15 +12,25 @@ import java.util.stream.Collectors;
 /**
  * Part responsible for all Player login related analysis.
  * <p>
- * Unique per Day, Unique, New Players, Logins
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: totallogins, uniquejoinsday,
- * uniquejoinsweek, uniquejoinsmonth, avguniquejoins, avguniquejoinsday,
- * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth,
- * npdataday, npdataweek, npdatamonth, newperday, newperdayday, newperdayweek, newperdaymonth
- *
+ * Contains following placeholders after analyzed:
+ * ${playersAverage} - (Number)
+ * ${playersNewAverage} - (Number)
+ * <p>
+ * ${playersDay} - (Number)
+ * ${playersWeek} - (Number)
+ * ${playersMonth} - (Number)
+ * ${playersAverageDay} - (Number)
+ * ${playersAverageWeek} - (Number)
+ * ${playersAverageMonth} - (Number)
+ * ${playersNewDay} - (Number)
+ * ${playersNewWeek} - (Number)
+ * ${playersNewMonth} - (Number)
+ * ${playersNewAverageDay} - (Number)
+ * ${playersNewAverageWeek} - (Number)
+ * ${playersNewAverageMonth} - (Number)
+ * //TODO ${tableBodySessions}, ${sessionCount}, ${lastPeakTime}, ${playersLastPeak}, ${bestPeakTime}, ${playersBestPeak}
  * @author Rsl1122
  * @since 3.5.2
  */
@@ -38,8 +48,6 @@ public class JoinInfoPart extends RawData {
 
     @Override
     public void analyse() {
-        addValue("totallogins", loginTimes);
-
         newPlayers();
         uniquePlayers();
         uniquePlayersPerDay();
@@ -50,9 +58,9 @@ public class JoinInfoPart extends RawData {
         int uniqueWeek = AnalysisUtils.getUniqueJoins(sessions, TimeAmount.WEEK.ms());
         int uniqueMonth = AnalysisUtils.getUniqueJoins(sessions, TimeAmount.MONTH.ms());
 
-        addValue("uniquejoinsday", uniqueDay);
-        addValue("uniquejoinsweek", uniqueWeek);
-        addValue("uniquejoinsmonth", uniqueMonth);
+        addValue("playersDay", uniqueDay);
+        addValue("playersWeek", uniqueWeek);
+        addValue("playersMonth", uniqueMonth);
     }
 
     private void uniquePlayersPerDay() {
@@ -61,10 +69,10 @@ public class JoinInfoPart extends RawData {
         int perDayWeek = AnalysisUtils.getUniqueJoinsPerDay(sessions, TimeAmount.WEEK.ms());
         int perDayMonth = AnalysisUtils.getUniqueJoinsPerDay(sessions, TimeAmount.MONTH.ms());
 
-        addValue("avguniquejoins", perDay);
-        addValue("avguniquejoinsday", perDayDay);
-        addValue("avguniquejoinsweek", perDayWeek);
-        addValue("avguniquejoinsmonth", perDayMonth);
+        addValue("playersAverage", perDay);
+        addValue("playersAverageDay", perDayDay);
+        addValue("playersAverageWeek", perDayWeek);
+        addValue("playersAverageMonth", perDayMonth);
     }
 
     private void newPlayers() {
@@ -73,19 +81,19 @@ public class JoinInfoPart extends RawData {
         long newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), now);
         long newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), now);
 
-        addValue("npday", newDay);
-        addValue("npweek", newWeek);
-        addValue("npmonth", newMonth);
+        addValue("playersNewDay", newDay);
+        addValue("playersNewWeek", newWeek);
+        addValue("playersNewMonth", newMonth);
 
         long newPerDay = AnalysisUtils.getNewUsersPerDay(registered, -1);
         long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.DAY.ms());
         long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.WEEK.ms());
         long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.MONTH.ms());
 
-        addValue("newperday", newPerDay);
-        addValue("newperdayday", newPerDayDay);
-        addValue("newperdayweek", newPerDayWeek);
-        addValue("newperdaymonth", newPerDayMonth);
+        addValue("playersNewAverage", newPerDay);
+        addValue("playersNewAverageDay", newPerDayDay);
+        addValue("playersNewAverageWeek", newPerDayWeek);
+        addValue("playersNewAverageMonth", newPerDayMonth);
     }
 
     public void addToLoginTimes() {

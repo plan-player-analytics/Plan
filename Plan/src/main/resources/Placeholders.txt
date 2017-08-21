@@ -23,6 +23,7 @@ ${playerKillCount} num
 ${mobKillCount} num
 ${deathCount} num
 
+// TODO All these after SessionData has been updated.
 ${sessionCountDay} num
 ${sessionCountWeek} num
 ${playtimeDay} timeamount
@@ -57,17 +58,18 @@ ${playersNewWeek} num
 ${contentServers} row[column[box-header, box, box-footer[p,button right, refresh button right]], column...], row...
 
 server.html:
-${serverName} String
-${timeZone} num
+${serverName} String //done
+${timeZone} num //done
 
 ${playersOnline} num
 ${playersMax} num
-${playersTotal} num
-${playersActive} num
+${playersTotal} num //done
+${playersActive} num // done
 
+//done
 ${playersAverage} num
 ${playersNewAverage} num
-
+//done
 ${playersDay} num
 ${playersWeek} num
 ${playersMonth} num
@@ -86,14 +88,19 @@ ${playersLastPeak} num
 ${bestPeakTime} time format full
 ${playersBestPeak} num
 
-${sessionAverage} timeamount
+${sessionAverage} timeamount // done
 
-${playtimeTotal} timeamount
+${playtimeTotal} timeamount // done
 ${sessionCount} num
+// done
 ${killCount} num
 ${mobKillCount} num
 ${deathCount} num
 
+${commandCount} num //TODO
+${commandUniqueCount} num //TODO
+
+//done
 ${tpsAverageDay} num
 ${tpsAverageWeek} num
 ${cpuAverageDay} num%
@@ -107,41 +114,46 @@ ${chunkAverageWeek} num
 
 ${tableBodyRecentLogins} tr th html (2) (15-20)
 ${tableBodySessions} tr th html (4) (50)
-${tableBodyPlayerList} tr th html (7) (250)
-${tableBodyCommands} tr th html (2) (100)
+${tableBodyPlayerList} tr th html (7) (250) // done
+${tableBodyCommands} tr th html (2) (100) // done
 
-${playersOnlineSeries}
-${tpsSeries}
-${cpuSeries}
-${ramSeries}
-${entitySeries}
-${chunkSeries}
+// done
+${playersOnlineSeries} 
+${tpsSeries} 
+${cpuSeries} 
+${ramSeries} 
+${entitySeries} 
+${chunkSeries} 
 ${worldSeries}
-${geoMapSeries}
-${sessionLengthSeries}
-${punchCardSeries}
+${geoMapSeries} 
+${sessionLengthSeries} 
+${punchCardSeries} 
 
-${playersGraphColor}
+${playersGraphColor} // done
 
-${gmData}
-${gmTotal} timeamount
-${gmColors}
 
+${gmData} // TODO Remove
+${gmTotal} timeamount // TODO Remove
+${gmColors} // TODO Move to World Graph
+
+// done
 ${active}
 ${inactive}
 ${joinLeaver}
 ${banned}
 ${activityColors}
 
-${worldTotal} timeamount
-${worldColors} NOT IMPLEMENTED //TODO
+${worldTotal} timeamount //done
+${worldColors} //TODO NOT IMPLEMENTED
 
+//done
 ${tpsMedium}
 ${tpsHigh}
 ${tpsLowColor}
 ${tpsMediumColor}
 ${tpsHighColor}
 
+// Replace done
 ${tabContentPlugins} row[column[box-header[h2[i, text]],box plugin], column...], row... + style="width: 200%;" <h2>That's all..</h2> <p>Do you have more plugins? ._.</p>
 
 STYLE:

@@ -8,11 +8,10 @@ import java.util.Map;
 /**
  * Part responsible for all Geolocation related analysis.
  * <p>
- * Player location World Choropleth map.
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: geomapz, geomapcountries, geomapcodes
+ * Contains following placeholders after analyzed:
+ * ${geoMapSeries}
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -39,7 +38,7 @@ public class GeolocationPart extends RawData {
 
     @Override
     public void analyse() {
-        addValue("geomapseries", WorldMapCreator.createDataSeries(geoCodeCounts));
+        addValue("geoMapSeries", WorldMapCreator.createDataSeries(geoCodeCounts));
     }
 
     public void addGeolocation(String country) {

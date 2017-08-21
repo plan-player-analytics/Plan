@@ -20,11 +20,7 @@ public class PlaytimeHandling {
         data.setLastPlayed(time);
 
         GMTimes gmTimes = data.getGmTimes();
-        if (gamemode != null) {
-            gmTimes.changeState(gamemode, playTime);
-        } else {
-            gmTimes.changeState(gmTimes.getState(), playTime);
-        }
+        gmTimes.changeState(gamemode != null ? gamemode : gmTimes.getState(), playTime);
 
         WorldTimes worldTimes = data.getWorldTimes();
         worldTimes.changeState(worldName, playTime);

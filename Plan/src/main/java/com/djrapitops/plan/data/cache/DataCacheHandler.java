@@ -4,7 +4,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
@@ -123,17 +122,6 @@ public class DataCacheHandler extends SessionCache {
      * @throws IllegalStateException    BukkitScheduler is in a wrong state.
      */
     public void startAsyncPeriodicSaveTask() {
-        int minutes = Settings.SAVE_CACHE_MIN.getNumber();
-        if (minutes <= 0) {
-            minutes = 5;
-        }
-        final int clearAfterXsaves;
-        int configValue = Settings.CLEAR_CACHE_X_SAVES.getNumber();
-        if (configValue <= 1) {
-            clearAfterXsaves = 2;
-        } else {
-            clearAfterXsaves = configValue;
-        }
         DataCacheHandler handler = this;
         plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
@@ -148,9 +136,6 @@ public class DataCacheHandler extends SessionCache {
                     Log.debug("Database", "Periodic Cache Save: " + dataCache.size());
                     handler.saveHandlerDataToCache();
                     handler.saveCachedUserData();
-                    if (timesSaved % clearAfterXsaves == 0) {
-                        handler.clearCache();
-                    }
                     saveCommandUse();
                     saveUnsavedTPSHistory();
                     timesSaved++;
@@ -160,7 +145,7 @@ public class DataCacheHandler extends SessionCache {
                     periodicTaskIsSaving = false;
                 }
             }
-        }).runTaskTimerAsynchronously(60L * 20L * minutes, 60L * 20L * minutes);
+        }).runTaskTimerAsynchronously(60L * 20L * 5, 60L * 20L * 5);
     }
 
     /**

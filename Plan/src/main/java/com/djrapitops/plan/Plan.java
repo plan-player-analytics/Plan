@@ -34,12 +34,12 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
+import main.java.com.djrapitops.plan.data.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.theme.Theme;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -76,6 +76,8 @@ public class Plan extends BukkitPlugin<Plan> {
     private Set<Database> databases;
 
     private WebServer uiServer;
+
+    private ServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
     private int bootAnalysisTaskID = -1;
@@ -165,14 +167,11 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Analysis refresh task registration");
             // Analysis refresh settings
-            boolean bootAnalysisIsEnabled = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
             int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
             boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
 
             // Analysis refresh tasks
-            if (bootAnalysisIsEnabled) {
-                startBootAnalysisTask();
-            }
+            startBootAnalysisTask();
             if (analysisRefreshTaskIsEnabled) {
                 startAnalysisRefreshTask(analysisRefreshMinutes);
             }
@@ -180,23 +179,26 @@ public class Plan extends BukkitPlugin<Plan> {
             Benchmark.stop("Enable", "Analysis refresh task registration");
 
             Benchmark.start("WebServer Initialization");
-            // Data view settings
-            boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
-            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-            boolean usingAlternativeUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-            boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
 
             uiServer = new WebServer(this);
-            if (webserverIsEnabled) {
-                registerWebAPIs();
-                uiServer.initServer();
+            registerWebAPIs(); // TODO Move to WebServer class
+            uiServer.initServer();
 
-                if (!uiServer.isEnabled()) {
-                    Log.error("WebServer was not successfully initialized.");
-                }
+            if (!uiServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+            }
 
-                setupFilter();
-            } else if (!hasDataViewCapability) {
+            Benchmark.start("ServerInfo Registration");
+            serverInfoManager = new ServerInfoManager(this);
+            Benchmark.stop("Enable", "ServerInfo Registration");
+
+            setupFilter(); // TODO Move to RegisterCommand Constructor
+
+            // Data view settings // TODO Rewrite. (TextUI removed & webserver might be running on bungee
+            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+            boolean hasDataViewCapability = usingAlternativeIP;
+
+            if (!hasDataViewCapability) {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
             }
             if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
@@ -214,8 +216,6 @@ public class Plan extends BukkitPlugin<Plan> {
 //Analytics temporarily disabled TODO enable before release
 //            BStats bStats = new BStats(this);
 //            bStats.registerMetrics();
-
-            Theme.test(); //TODO Remove
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
@@ -454,5 +454,15 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public ServerVariableHolder getVariable() {
         return serverVariableHolder;
+    }
+
+    /**
+     * Used to get the object storing server info
+     *
+     * @return ServerInfoManager
+     * @see ServerInfoManager
+     */
+    public ServerInfoManager getServerInfoManager() {
+        return serverInfoManager;
     }
 }

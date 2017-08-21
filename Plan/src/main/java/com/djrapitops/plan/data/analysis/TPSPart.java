@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.ui.html.graphs.CPUGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.RamGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.TPSGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.WorldLoadGraphCreator;
+import main.java.com.djrapitops.plan.ui.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -16,13 +17,31 @@ import java.util.List;
 /**
  * Part responsible for all TPS related analysis.
  * <p>
- * Ticks Per Second Graphs
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: tpsscatterday, tpsscatterweek, cpuscatterday, cpuscatterweek, averagetps(-week),
- * averagetpsday, averagecpuday, averagecpuweek, averagememoryday, averagememoryweek, averageentitiesday, averageentitiesweek,
- * averagechunksday, averagechunkweek, ramscatterday, ramscatterweek
+ * Contains following placeholders after being analyzed:
+ * ${tpsSeries} - HighCharts data
+ * ${cpuSeries} - HighCharts data
+ * ${ramSeries} - HighCharts data
+ * ${entitySeries} - HighCharts data
+ * ${chunkSeries} - HighCharts data
+ * <p>
+ * ${tpsAverageDay} - (Number)
+ * ${tpsAverageWeek} - (Number)
+ * ${cpuAverageDay} - (Number)%
+ * ${cpuAverageWeek} - (Number)%
+ * ${ramAverageDay} - (Number) MB
+ * ${ramAverageWeek} - (Number) MB
+ * ${entityAverageDay} - (Number)
+ * ${entityAverageWeek} - (Number)
+ * ${chunkAverageDay} - (Number)
+ * ${chunkAverageWeek} - (Number)
+ * <p>
+ * ${tpsMedium} - (Number) Color Threshold for Medium TPS
+ * ${tpsHigh} - (Number) Color Threshold for High TPS
+ * ${tpsLowColor} - Color of Low TPS
+ * ${tpsMediumColor} - Color of Low TPS
+ * ${tpsHighColor} - Color of Low TPS
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -41,17 +60,17 @@ public class TPSPart extends RawData {
         List<TPS> week = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.WEEK.ms());
         List<TPS> day = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.DAY.ms());
 
-        addValue("tpshighcol", "#"+ Settings.HCOLOR_TPS_HIGH);
-        addValue("tpsmediumcol", "#"+ Settings.HCOLOR_TPS_MED);
-        addValue("tpslowcol", "#"+ Settings.HCOLOR_TPS_LOW);
-        addValue("tpsmedium", Settings.TPS_GRAPH_MED.getNumber());
-        addValue("tpshigh", Settings.TPS_GRAPH_HIGH.getNumber());
+        addValue("tpsHighColor", Colors.TPS_HIGH.getColor());
+        addValue("tpsMediumColor", Colors.TPS_MED.getColor());
+        addValue("tpsLowColor", Colors.TPS_LOW.getColor());
+        addValue("tpsMedium", Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
+        addValue("tpsHigh", Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
 
-        addValue("tpsseries", TPSGraphCreator.buildSeriesDataString(tpsData));
-        addValue("cpuseries", CPUGraphCreator.buildSeriesDataString(tpsData));
-        addValue("ramseries", RamGraphCreator.buildSeriesDataString(tpsData));
-        addValue("entityseries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
-        addValue("chunkseries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
+        addValue("tpsSeries", TPSGraphCreator.buildSeriesDataString(tpsData));
+        addValue("cpuSeries", CPUGraphCreator.buildSeriesDataString(tpsData));
+        addValue("ramSeries", RamGraphCreator.buildSeriesDataString(tpsData));
+        addValue("entitySeries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
+        addValue("chunkSeries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
 
         double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTicksPerSecond));
         double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTicksPerSecond));
@@ -68,21 +87,20 @@ public class TPSPart extends RawData {
         double averageChunksLoadedWeek = MathUtils.averageInt(week.stream().map(TPS::getChunksLoaded).filter(i -> i != 0));
         double averageChunksLoadedDay = MathUtils.averageInt(day.stream().map(TPS::getChunksLoaded).filter(i -> i != 0));
 
-        addValue("averagetps", FormatUtils.cutDecimals(averageTPSWeek)); //Staying for backwards compatibility
-        addValue("averagetpsweek", FormatUtils.cutDecimals(averageTPSWeek));
-        addValue("averagetpsday", FormatUtils.cutDecimals(averageTPSDay));
+        addValue("tpsAverageWeek", FormatUtils.cutDecimals(averageTPSWeek));
+        addValue("tpsAverageDay", FormatUtils.cutDecimals(averageTPSDay));
 
-        addValue("averagecpuweek", averageCPUWeek >= 0 ? FormatUtils.cutDecimals(averageCPUWeek) + "%" : "Unavailable");
-        addValue("averagecpuday", averageCPUDay >= 0 ? FormatUtils.cutDecimals(averageCPUDay) + "%" : "Unavailable");
+        addValue("cpuAverageWeek", averageCPUWeek >= 0 ? FormatUtils.cutDecimals(averageCPUWeek) + "%" : "Unavailable");
+        addValue("cpuAverageDay", averageCPUDay >= 0 ? FormatUtils.cutDecimals(averageCPUDay) + "%" : "Unavailable");
 
-        addValue("averagememoryweek", FormatUtils.cutDecimals(averageUsedMemoryWeek));
-        addValue("averagememoryday", FormatUtils.cutDecimals(averageUsedMemoryDay));
+        addValue("ramAverageWeek", FormatUtils.cutDecimals(averageUsedMemoryWeek));
+        addValue("ramAverageDay", FormatUtils.cutDecimals(averageUsedMemoryDay));
 
-        addValue("averageentitiesweek", FormatUtils.cutDecimals(averageEntityCountWeek));
-        addValue("averageentitiesday", FormatUtils.cutDecimals(averageEntityCountDay));
+        addValue("entityAverageWeek", FormatUtils.cutDecimals(averageEntityCountWeek));
+        addValue("entityAverageDay", FormatUtils.cutDecimals(averageEntityCountDay));
 
-        addValue("averagechunksweek", FormatUtils.cutDecimals(averageChunksLoadedWeek));
-        addValue("averagechunksday", FormatUtils.cutDecimals(averageChunksLoadedDay));
+        addValue("chunkAverageWeek", FormatUtils.cutDecimals(averageChunksLoadedWeek));
+        addValue("chunkAverageDay", FormatUtils.cutDecimals(averageChunksLoadedDay));
     }
 
     public List<TPS> getTpsData() {

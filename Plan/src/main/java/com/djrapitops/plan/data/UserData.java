@@ -16,30 +16,31 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
+// TODO Change to be only used for DB User Get Query responses.
 public class UserData {
 
     private final List<SessionData> sessions;
     private int accessing;
     private boolean clearAfterSave;
     private UUID uuid;
-    private String name;
-    private Set<String> nicknames;
-    private String lastNick;
-    private String geolocation;
-    private Set<InetAddress> ips;
-    private int loginTimes;
-    private int timesKicked;
-    private boolean isOp;
-    private boolean isBanned;
-    private boolean isOnline;
-    private int mobKills;
-    private List<KillData> playerKills;
-    private int deaths;
-    private long registered;
-    private long lastPlayed;
-    private long playTime;
-    private GMTimes gmTimes;
-    private WorldTimes worldTimes;
+    private String name; //TODO DB Update code to JoinListener
+    @Deprecated private Set<String> nicknames; //TODO DB Update code to ChatListener
+    @Deprecated private String lastNick; //TODO DB Update code to ChatListener
+    @Deprecated private String geolocation; //TODO DB Update code to JoinListener
+    @Deprecated private Set<InetAddress> ips; //TODO DB Update code to JoinListener
+    @Deprecated private int loginTimes; // Moving to sessions.size
+    @Deprecated private int timesKicked; //TODO DB Update code to KickListener
+    @Deprecated private boolean isOp; //TODO DB Update code to JoinListener
+    @Deprecated private boolean isBanned; //TODO DB Update code to JoinListener
+    @Deprecated private boolean isOnline; //TODO New Class for getting online status of players
+    @Deprecated private int mobKills; //TODO Move to SessionData
+    @Deprecated private List<KillData> playerKills; //TODO Move to SessionData
+    @Deprecated private int deaths; //TODO Move to SessionData
+    @Deprecated private long registered; //TODO DB Update code to JoinListener (When registering)
+    @Deprecated private long lastPlayed; //TODO DB Update code to Join, Refresh, QuitListener
+    @Deprecated private long playTime; //TODO Move to SessionData
+    @Deprecated private GMTimes gmTimes; //TODO Move to WorldTimes
+    @Deprecated private WorldTimes worldTimes; //TODO Move to SessionData
 
     /**
      * Creates a new UserData object with given values and default values.

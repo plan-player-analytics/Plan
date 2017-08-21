@@ -1,11 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-
-import java.util.Arrays;
 
 /**
  * Part responsible for all Gamemode usage related analysis.
@@ -20,6 +16,7 @@ import java.util.Arrays;
  * @author Rsl1122
  * @since 3.5.2
  */
+@Deprecated
 public class GamemodePart extends RawData {
 
     private long survivalTime;
@@ -41,51 +38,16 @@ public class GamemodePart extends RawData {
 
     private void gamemodePiechart() {
         long totalTime = survivalTime + creativeTime + adventureTime + spectatorTime;
-
-        addValue("gmtotal", FormatUtils.formatTimeAmount(totalTime));
-
-        double[] percentages = new double[]{
-                (survivalTime * 100.0) / totalTime,
-                (creativeTime * 100.0) / totalTime,
-                (adventureTime * 100.0) / totalTime,
-                (spectatorTime * 100.0) / totalTime
-        };
-        long[] times = new long[]{
-                survivalTime, creativeTime, adventureTime, spectatorTime
-        };
-        String col0 = Settings.HCOLOR_GMP_0.toString();
-        String col1 = Settings.HCOLOR_GMP_1.toString();
-        String col2 = Settings.HCOLOR_GMP_2.toString();
-        String col3 = Settings.HCOLOR_GMP_3.toString();
-
-        addValue("gm0col", col0);
-        addValue("gm1col", col1);
-        addValue("gm2col", col2);
-        addValue("gm3col", col3);
         String gmColors = HtmlUtils.separateWithQuotes(
-                "#" + col0, "#" + col1, "#" + col2, "#" + col3
+                "#555", "#555", "#555", "#555" // TODO Write Colors (enum) variables for GameMode colors.
         );
-        String gmLabels = "[" + HtmlUtils.separateWithQuotes(
-                "Survival", "Creative", "Adventure", "Spectator") + "]";
-        addValue("gmcolors", gmColors);
-        addValue("gmlabel", gmLabels);
-
-        // Adds Percentage indicators
-        for (int i = 0; i < percentages.length; i++) {
-            addValue("gm" + i, (int) (percentages[i]) + "%");
-        }
-        // Adds Value array for graph
-        addValue("gmdata", Arrays.toString(times));
-
-        // Adds formatted time amounts for each gamemode
-        for (int i = 0; i < times.length; i++) {
-            addValue("gm" + i + "total", FormatUtils.formatTimeAmount(times[i]));
-        }
+        addValue("gmColors", gmColors);
     }
 
     /**
      * Adds time to a gamemode.
-     * @param gm Name of Gamemode
+     *
+     * @param gm     Name of Gamemode
      * @param amount milliseconds to add
      * @throws IllegalArgumentException if gm is null
      */

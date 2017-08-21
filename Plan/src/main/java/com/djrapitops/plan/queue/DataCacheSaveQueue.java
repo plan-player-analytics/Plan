@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.queue;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
@@ -45,7 +44,7 @@ public class DataCacheSaveQueue extends Queue<UserData> {
         try {
             queue.add(data);
         } catch (IllegalStateException e) {
-            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", Settings.PROCESS_SAVE_LIMIT.getNumber()));
+            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Save Queue", 20000));
         }
     }
 

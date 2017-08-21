@@ -29,10 +29,9 @@ public class CommandUseTableCreator {
 
         StringBuilder html = new StringBuilder();
         if (sorted.isEmpty()) {
-            html.append(Html.ERROR_TABLE_2.parse());
+            html.append(Html.TABLELINE_2.parse("No Commands", ""));
         } else {
             Collections.reverse(sorted);
-
             int i = 0;
             for (String[] values : sorted) {
                 if (i >= 500) {

@@ -54,7 +54,7 @@
                             <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="playersOnlineDay" style="width: 100%; height: 700px;"></div>
+                            <div id="playerChartDay" style="width: 100%; height: 400px;"></div>
                         </div>
                     </div>
                     <div class="column">
@@ -116,7 +116,7 @@
                             <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="playersOnlineMonth" style="width: 100%; height: 700px;"></div>
+                            <div id="playerChartMonth" style="width: 100%; height: 400px;"></div>
                         </div>
                     </div>
                     <div class="column">
@@ -124,7 +124,7 @@
                             <h2><i class="fa fa-braille"></i> Player Join PunchCard</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="punchcard" style="width: 100%; height: 700px;"></div>
+                            <div id="punchcard" style="width: 100%; height: 400px;"></div>
                         </div>
                     </div>
                 </div>
@@ -193,26 +193,26 @@
                             <h2><i class="fa fa-pie-chart"></i> World Playtime</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="worldPie" style="width: 100%; height: 450px;"></div>
+                            <div id="worldPie" style="width: 100%; height: 350px;"></div>
                         </div>
                         <div class="box-header">
                             <h2><i class="fa fa-pie-chart"></i> Playerbase</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="activityPie" style="width: 100%; height: 450px;"></div>
+                            <div id="activityPie" style="width: 100%; height: 350px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="tab-performance" class="tab">
                 <div class="column">
-                    <div class="row"> <!--First row (horizontal)-->
+                    <div class="row"> 
                         <div class="column">
                             <div class="box-header">
                                 <h2><i class="fa fa-bar-chart"></i> Ticks Per Second</h2>
                             </div>
                             <div class="box-footer">
-                                <div id="tpsGraph" style="width: 100%; height: 700px;"></div>
+                                <div id="tpsGraph" style="width: 100%; height: 350px;"></div>
                             </div>
                         </div>
                         <div class="column">
@@ -220,17 +220,17 @@
                                 <h2><i class="fa fa-bar-chart"></i> Resource Usage</h2>
                             </div>
                             <div class="box-footer">
-                                <div id="resourceGraph" style="width: 100%; height: 700px;"></div>
+                                <div id="resourceGraph" style="width: 100%; height: 350px;"></div>
                             </div>
                         </div>
-                    </div> <!--First row (horizontal)-->
+                    </div> 
                     <div class="row">
                         <div class="column">
                             <div class="box-header">
                                 <h2><i class="fa fa-bar-chart"></i> World Load</h2>
                             </div>
                             <div class="box-footer">
-                                <div id="worldGraph" style="width: 100%; height: 700px;"></div>
+                                <div id="worldGraph" style="width: 100%; height: 350px;"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -319,7 +319,7 @@
                         <h2><i class="fa fa-globe"></i> Geolocations</h2>
                     </div>
                     <div class="box-footer" style="padding: 2px;">
-                        <div id="choropleth" style="width: 100%; height: 700px;"></div>
+                        <div id="choropleth" style="width: 100%; height: 600px;"></div>
                     </div>
                 </div>
             </div>
@@ -333,11 +333,9 @@
     <script src="https://code.highcharts.com/maps/modules/map.js"></script>
     <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
     <script src="./js/activityPie.js"></script>
-    <script src="./js/gmPie.js"></script>
     <script src="./js/playerGraph.js"></script>
     <script src="./js/punchCard.js"></script>
     <script src="./js/resourceGraph.js"></script>
-    <script src="./js/sessionDistributionChart.js"></script>
     <script src="./js/tpsGraph.js"></script>
     <script src="./js/worldGraph.js"></script>
     <script src="./js/worldMap.js"></script>
@@ -434,42 +432,17 @@
                     y: ${banned}
             }]
         };
-        var gmData = ${gmData};
-        var gmSeries = {
-            name: 'GM Usage',
-            colorByPoint: true,
-            data: [{
-                name: 'Survival',
-                y: gmData[0],
-                sliced: true,
-                selected: true
-            }, {
-                name: 'Creative',
-                y: gmData[1]
-            }, {
-                name: 'Adventure',
-                y: gmData[2]
-            }, {
-                name: 'Spectator',
-                y: gmData[3]
-            }]
-        };
         var worldSeries = {
             name: 'World Playtime',
             colorByPoint: true,
             data: ${worldSeries}
         };
         var mapSeries = {
-                name: 'Players',
-                type: 'map',
-                mapData: Highcharts.maps['custom/world'],
-                data: ${geoMapSeries}
+            name: 'Players',
+            type: 'map',
+            mapData: Highcharts.maps['custom/world'],
+            data: ${geoMapSeries},
             joinBy: ['iso-a3', 'code']
-        };
-        var sessionLengthSeries = {
-            name: 'Sessions',
-            color: '#89c471',
-            data: ${sessionLengthSeries}
         };
         var punchcardSeries = {
             name: 'Relative Activity',
@@ -494,7 +467,6 @@
             }
             x.style.opacity = "1";
             openFunc(slideIndex)();
-            /*gmPie('gmPie', gmSeries, '${gmTotal}', [${gmColors}]);
             activityPie('activityPie', activitySeries, ${playersTotal}, [${activityColors}]);
             worldPie('worldPie', worldSeries, '${worldTotal}');
             playersChart('playerChartDay', playersOnlineSeries, 1);
@@ -503,9 +475,8 @@
             resourceChart('resourceGraph', cpuSeries, ramSeries);
             worldChart('worldGraph', entitySeries, chunkSeries);
             worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
-            sessionDistributionChart('sessionDistribution', sessionLengthSeries);
             punchCard('punchcard', punchcardSeries);
-            countUpTimer();*/
+            /*countUpTimer();*/
 
             function openFunc(i) {
                 return function() {                    

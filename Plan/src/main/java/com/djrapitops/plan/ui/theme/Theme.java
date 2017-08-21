@@ -5,13 +5,6 @@
 package main.java.com.djrapitops.plan.ui.theme;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Collections;
 
 /**
  * Enum that contains available themes.
@@ -58,7 +51,7 @@ public enum Theme {
 
     Theme(String... colors) {
         int length = colors.length;
-        if (length != 19) {
+        if (length < Colors.values().length) {
             Log.error("Not All colors (" + length + ") were specified in the theme file: " + name());
             Log.error("If the theme is used it WILL CAUSE EXCEPTIONS.");
         }
@@ -78,20 +71,12 @@ public enum Theme {
         return replaced;
     }
 
-    // TODO Remove
-    public static void test() throws IOException {
-        String serverHtml = HtmlUtils.getStringFromResource("server - Example.html");
-        String css = HtmlUtils.getStringFromResource("main.css");
-
-        File folder = new File(Plan.getInstance().getDataFolder(), "themes");
-        folder.mkdirs();
-        for (Theme t : Theme.values()) {
-            File themeFolder = new File(folder, t.name());
-            themeFolder.mkdirs();
-            File themeHtml = new File(themeFolder, "server.html");
-            File themeCss = new File(themeFolder, "main.css");
-            Files.write(themeHtml.toPath(), Collections.singletonList(t.replaceThemeColors(serverHtml)));
-            Files.write(themeCss.toPath(), Collections.singletonList(t.replaceThemeColors(css)));
+    public static String replaceColors(String resourceString) {
+        Theme def = Theme.DEFAULT;
+        String replaced = resourceString;
+        for (Colors c : Colors.values()) {
+            replaced = replaced.replace("#" + def.getColor(c.getId()), c.getColor());
         }
+        return replaced;
     }
 }

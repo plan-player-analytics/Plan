@@ -26,10 +26,11 @@ public class ConditionUtils {
      *
      * @return true/false
      */
+    // TODO Rewrite this method
     public static boolean pluginHasViewCapability() {
         final boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        final boolean webserverIsOn = Settings.WEBSERVER_ENABLED.isTrue();
-        final boolean usingTextUI = Settings.USE_ALTERNATIVE_UI.isTrue();
+        final boolean webserverIsOn = true;
+        final boolean usingTextUI = false;
         return webserverIsOn || usingAlternativeIP || usingTextUI;
     }
 

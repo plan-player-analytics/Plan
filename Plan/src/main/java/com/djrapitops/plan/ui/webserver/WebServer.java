@@ -124,7 +124,9 @@ public class WebServer {
                         }
 
                         response = getResponse(target, user);
-
+                        if (response instanceof CSSResponse) {
+                            responseHeaders.set("Content-Type", "text/css");
+                        }
                         sendData(responseHeaders, exchange, response);
                     } catch (Exception e) {
                         Log.toLog(this.getClass().getName(), e);
@@ -306,10 +308,18 @@ public class WebServer {
         }
 
         Map<String, String> variables = readVariables(response);
-
-        //TODO ADD CHECK IF SERVER KEY VALID
+        String key = variables.get("key");
 
         Plan plan = Plan.getInstance();
+
+        if (!checkKey(plan, key)) {
+            String error = "Server Key not given or invalid";
+            return PageCacheHandler.loadPage(error, () -> {
+                ForbiddenResponse forbidden = new ForbiddenResponse();
+                forbidden.setContent(error);
+                return forbidden;
+            });
+        }
 
         WebAPI api = WebAPIManager.getAPI(method);
 
@@ -324,6 +334,18 @@ public class WebServer {
             Log.toLog("WebServer.getAPIResponse", ex);
             return new InternalErrorResponse(ex, "An error while processing the request happened");
         }
+    }
+
+    private boolean checkKey(Plan plan, String key) {
+        UUID uuid = plan.getServerInfoManager().getServerUUID();
+        UUID keyUUID;
+        try {
+            keyUUID = UUID.fromString(key);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        return uuid.equals(keyUUID);
     }
 
     private Map<String, String> readVariables(String response) {
@@ -352,9 +374,23 @@ public class WebServer {
             }
         }
 
+        boolean javaScriptRequest = target.endsWith(".js");
+        boolean cssRequest = target.endsWith(".css");
+
         String[] args = target.split("/");
         if (args.length < 2) {
             return rootPageResponse(user);
+        }
+
+        if (javaScriptRequest) {
+            return getJSResponse(args[args.length - 1]);
+        }
+        if (cssRequest) {
+            try {
+                return new CSSResponse("main.css");
+            } catch (Exception e) {
+                return new InternalErrorResponse(e, target);
+            }
         }
 
         String page = args[1];
@@ -367,6 +403,14 @@ public class WebServer {
                 return serverResponse();
             default:
                 return notFoundResponse();
+        }
+    }
+
+    private Response getJSResponse(String fileName) {
+        try {
+            return new JavaScriptResponse(fileName);
+        } catch (Exception e) {
+            return new InternalErrorResponse(e, fileName);
         }
     }
 
@@ -506,5 +550,9 @@ public class WebServer {
 
     public boolean isAuthRequired() {
         return usingHttps;
+    }
+
+    public String getAccessAddress() {
+        return getProtocol()+":/"+ HtmlUtils.getIP();
     }
 }

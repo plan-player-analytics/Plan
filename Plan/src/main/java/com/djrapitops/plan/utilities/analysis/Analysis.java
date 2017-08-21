@@ -4,7 +4,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -162,9 +161,7 @@ public class Analysis {
 
             Log.logDebug("Analysis", time);
 
-            if (Settings.ANALYSIS_LOG_FINISHED.isTrue()) {
-                Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
-            }
+            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
 
             PageCacheHandler.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
             PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
@@ -182,9 +179,8 @@ public class Analysis {
     }
 
     private void log(String msg) {
-        if (Settings.ANALYSIS_LOG_TO_CONSOLE.isTrue()) {
-            Log.info(msg);
-        }
+        // TODO Send info to the command sender. (Needs a new system)
+        Log.info(msg);
     }
 
     private Map<String, Serializable> analyzeAdditionalPluginData(List<UUID> uuids) {

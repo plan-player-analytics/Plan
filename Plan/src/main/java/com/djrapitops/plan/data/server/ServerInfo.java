@@ -12,18 +12,16 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ServerInfo {
-    private final int id;
+    private int id;
     private final UUID uuid;
     private String name;
     private String webAddress;
-    private int port;
 
-    public ServerInfo(int id, UUID uuid, String name, String webAddress, int port) {
+    public ServerInfo(int id, UUID uuid, String name, String webAddress) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
         this.webAddress = webAddress;
-        this.port = port;
     }
 
     public int getId() {
@@ -42,10 +40,6 @@ public class ServerInfo {
         return webAddress;
     }
 
-    public int getPort() {
-        return port;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -54,7 +48,7 @@ public class ServerInfo {
         this.webAddress = webAddress;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public void setId(int id) {
+        this.id = id;
     }
 }
