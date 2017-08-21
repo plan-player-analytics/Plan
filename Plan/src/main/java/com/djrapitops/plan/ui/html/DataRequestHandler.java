@@ -63,21 +63,20 @@ public class DataRequestHandler {
     }
 
     /**
-     * Returns the analysis.html as string with replaced placeholders.
+     * Returns the server.html as string with replaced placeholders.
      *
      * @return the html
      */
-    @Deprecated //analysis.html has been removed //TODO server.html
-    public String getAnalysisHtml() {
+    public String getServerHtml() {
         try {
             if (!analysisCache.isCached()) {
                 return "<h1>404 Data was not found in cache</h1>";
             }
             return HtmlUtils.replacePlaceholders(
-                    HtmlUtils.getStringFromResource("analysis.html"),
+                    HtmlUtils.getStringFromResource("server.html"),
                     PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData()));
         } catch (FileNotFoundException ex) {
-            return "<h1>404 analysis.html was not found</h1>";
+            return "<h1>404 server.html was not found</h1>";
         }
     }
 

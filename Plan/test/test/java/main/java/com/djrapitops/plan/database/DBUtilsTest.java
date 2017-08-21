@@ -7,8 +7,6 @@ package test.java.main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,17 +20,6 @@ import static org.junit.Assert.assertEquals;
  * @author ristolah
  */
 public class DBUtilsTest {
-
-    public DBUtilsTest() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testSplitIntoBatches() {

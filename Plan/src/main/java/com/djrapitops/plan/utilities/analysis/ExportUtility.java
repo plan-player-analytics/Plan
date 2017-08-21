@@ -141,7 +141,7 @@ public class ExportUtility {
             return;
         }
         serverFolder.mkdirs();
-        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("analysis.html"), //TODO server.html
+        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("server.html"),
                 PlaceholderUtils.getAnalysisReplaceRules(analysisData))
                 .replace(HtmlUtils.getInspectUrl(""), "../player/");
         File analysisHtmlFile = new File(serverFolder, "index.html");

@@ -1,5 +1,5 @@
 function worldMap(id, colorMin, colorMax, mapSeries) {
-	var myChart = Highcharts.mapChart(id, {                
+	Highcharts.mapChart(id, {
 		chart: {
 			animation: true
 		},

@@ -211,15 +211,15 @@ public class API {
      * <p>
      * Check if the data is cached to AnalysisCache before calling this.
      *
-     * @return analysis.html with all placeholders replaced.
+     * @return server.html with all placeholders replaced.
      */
     public String getAnalysisHtmlAsString() {
         WebServer server = plugin.getUiServer();
         if (Verify.notNull(server)) {
-            return server.getDataReqHandler().getAnalysisHtml();
+            return server.getDataReqHandler().getServerHtml();
         }
         DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getAnalysisHtml();
+        return reqH.getServerHtml();
     }
 
     /**

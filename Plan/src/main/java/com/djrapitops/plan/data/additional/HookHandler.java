@@ -73,7 +73,7 @@ public class HookHandler {
 
     /**
      * Used to get the Layout with PluginData placeholders to replace %plugins%
-     * placeholder on analysis.html.
+     * placeholder on server.html.
      *
      * @return html, getPluginsTabLayout-method
      * @see HtmlUtils
@@ -85,7 +85,7 @@ public class HookHandler {
     }
 
     /**
-     * Used to get the Layout with PluginData placeholders to replace %plugins%
+     * Used to get the Layout with PluginData placeholders to replace ${plugins}
      * placeholder on player.html.
      *
      * @return html, getPluginsTabLayout-method

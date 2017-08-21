@@ -45,11 +45,11 @@ public enum Settings {
     LOCALE("Plugin.Locale"),
     WEBSERVER_IP("WebServer.InternalIP"),
     ANALYSIS_EXPORT_PATH("Analysis.Export.DestinationFolder"),
-    WEBSERVER_CERTIFICATE_PATH("WebServer.Security.Certificate.KeyStorePath"),
-    WEBSERVER_CERTIFICATE_KEYPASS("WebServer.Security.Certificate.KeyPass"),
-    WEBSERVER_CERTIFICATE_STOREPASS("WebServer.Security.Certificate.StorePass"),
-    WEBSERVER_CERTIFICATE_ALIAS("WebServer.Security.Certificate.Alias"),
-    ETERNAL_WEBSERVER_LINK_PROTOCOL("Analysis.Export.ExternalWebServerLinkProtocol"),
+    WEBSERVER_CERTIFICATE_PATH("WebServer.Security.SSL-Certificate.KeyStorePath"),
+    WEBSERVER_CERTIFICATE_KEYPASS("WebServer.Security.SSL-Certificate.KeyPass"),
+    WEBSERVER_CERTIFICATE_STOREPASS("WebServer.Security.SSL-Certificate.StorePass"),
+    WEBSERVER_CERTIFICATE_ALIAS("WebServer.Security.SSL-Certificate.Alias"),
+    EXTERNAL_WEBSERVER_LINK_PROTOCOL("Analysis.Export.ExternalWebServerLinkProtocol"),
     //
     SERVER_NAME("Server.ServerName"),
     //

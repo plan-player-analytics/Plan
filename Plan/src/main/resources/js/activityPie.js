@@ -1,5 +1,5 @@
 function activityPie(id, activitySeries, activityTotal, activityColors) {
-	var myChart = Highcharts.chart(id, {
+	Highcharts.chart(id, {
 		chart: {
 			plotBackgroundColor: null,
 			plotBorderWidth: null,

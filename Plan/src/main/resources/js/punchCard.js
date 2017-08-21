@@ -11,7 +11,7 @@ function punchCard(id, punchcardSeries) {
 			tickInterval: 3600000
 		},
 		yAxis: {
-			categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+			categories: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 		},
 		tooltip: {
 			pointFormat: 'Activity: {point.z}'

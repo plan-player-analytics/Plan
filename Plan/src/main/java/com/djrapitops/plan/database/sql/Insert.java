@@ -2,8 +2,6 @@ package main.java.com.djrapitops.plan.database.sql;
 
 public class Insert extends SqlParser {
 
-    private int conditions = 0;
-
     public Insert(String table) {
         super("INSERT INTO " + table);
         addSpace();
