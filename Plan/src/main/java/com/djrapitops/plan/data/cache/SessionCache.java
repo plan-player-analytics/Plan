@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.data.cache;
 
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +21,18 @@ public class SessionCache {
      * Class Constructor.
      */
     public SessionCache() {
+    }
+
+    public void cacheSession(UUID uuid, SessionData session) {
+        activeSessions.put(uuid, session);
+    }
+
+    public void endSession(UUID uuid, long time) {
+        SessionData session = activeSessions.get(uuid);
+        if (session == null) {
+            return;
+        }
+        session.endSession(time);
 
     }
 
@@ -30,9 +41,8 @@ public class SessionCache {
      *
      * @param uuid UUID of the player.
      */
+    @Deprecated
     public void startSession(UUID uuid) {
-        SessionData session = new SessionData(MiscUtils.getTime());
-        activeSessions.put(uuid, session);
     }
 
     /**
@@ -40,11 +50,8 @@ public class SessionCache {
      *
      * @param uuid UUID of the player.
      */
+    @Deprecated
     public void endSession(UUID uuid) {
-        SessionData currentSession = activeSessions.get(uuid);
-        if (currentSession != null) {
-            currentSession.endSession(MiscUtils.getTime());
-        }
     }
 
     /**
@@ -53,6 +60,7 @@ public class SessionCache {
      * @param uuid UUID of the player.
      * @return SessionData or null if not cached.
      */
+    @Deprecated
     public SessionData getSession(UUID uuid) {
         return activeSessions.get(uuid);
     }
@@ -62,6 +70,7 @@ public class SessionCache {
      *
      * @param data UserData object a session should be added to.
      */
+    @Deprecated
     public void addSession(UserData data) {
         UUID uuid = data.getUuid();
         SessionData currentSession = activeSessions.get(uuid);
@@ -78,6 +87,7 @@ public class SessionCache {
      *
      * @return key:value UUID:SessionData
      */
+    @Deprecated
     public Map<UUID, SessionData> getActiveSessions() {
         return activeSessions;
     }

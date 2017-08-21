@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.data.handling.info.PlaytimeDependentInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -20,7 +19,7 @@ import java.util.UUID;
  */
 public class PlanGamemodeChangeListener implements Listener {
 
-    private final DataCacheHandler handler;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -28,7 +27,7 @@ public class PlanGamemodeChangeListener implements Listener {
      * @param plugin Current instance of Plan
      */
     public PlanGamemodeChangeListener(Plan plugin) {
-        handler = plugin.getHandler();
+        this.plugin = plugin;
     }
 
     /**
@@ -48,6 +47,6 @@ public class PlanGamemodeChangeListener implements Listener {
         String gameMode = event.getNewGameMode().name();
         String worldName = p.getWorld().getName();
 
-        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.GM, time, gameMode, worldName));
+        plugin.addToProcessQueue(new PlaytimeDependentInfo(uuid, InfoType.GM, time, gameMode, worldName));
     }
 }

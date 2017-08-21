@@ -23,7 +23,7 @@ import java.util.*;
 @Deprecated
 public class InspectCacheHandler {
 
-    private final DataCacheHandler handler;
+    private final DataCache handler;
     private final Map<UUID, UserData> cache;
     private final Map<UUID, Long> cacheTimes;
 
@@ -46,6 +46,7 @@ public class InspectCacheHandler {
      *
      * @param uuid UUID of the player.
      */
+    @Deprecated // Does not cache anything anymore // TODO Remove
     public void cache(UUID uuid) {
         DBCallableProcessor cacher = data -> {
             UserData userData = new UserData(data);
@@ -62,8 +63,6 @@ public class InspectCacheHandler {
                 Log.toLog(this.getClass().getName(), e);
             }
         };
-
-        handler.getUserDataForProcessing(cacher, uuid, false);
     }
 
     /**
@@ -74,18 +73,7 @@ public class InspectCacheHandler {
      * @throws SQLException If Database is not properly enabled
      */
     public void cacheAllUserData(Database db) throws SQLException {
-        Set<UUID> cachedUserData = handler.getDataCache().keySet();
-        for (UUID uuid : cachedUserData) {
-            cache(uuid);
-        }
-        Set<UUID> savedUUIDs = new HashSet<>();
-        try {
-            savedUUIDs = db.getUsersTable().getSavedUUIDs();
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-        }
-        savedUUIDs.removeAll(cachedUserData);
-        List<UserData> userDataForUUIDS = db.getUserDataForUUIDS(savedUUIDs);
+        List<UserData> userDataForUUIDS = db.getUserDataForUUIDS(db.getUsersTable().getSavedUUIDs());
         long time = MiscUtils.getTime();
         for (UserData uData : userDataForUUIDS) {
             UUID uuid = uData.getUuid();

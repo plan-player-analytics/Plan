@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.data.handling.info.PlaytimeDependentInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -14,10 +13,10 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import java.util.UUID;
 
 public class PlanWorldChangeListener implements Listener {
-    private final DataCacheHandler handler;
+    private final Plan plugin;
 
     public PlanWorldChangeListener(Plan plugin) {
-        this.handler = plugin.getHandler();
+        this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -34,6 +33,6 @@ public class PlanWorldChangeListener implements Listener {
         String gameMode = p.getGameMode().name();
         long time = MiscUtils.getTime();
 
-        handler.addToPool(new PlaytimeDependentInfo(uuid, InfoType.WORLD, time, gameMode, worldName));
+        plugin.addToProcessQueue(new PlaytimeDependentInfo(uuid, InfoType.WORLD, time, gameMode, worldName));
     }
 }

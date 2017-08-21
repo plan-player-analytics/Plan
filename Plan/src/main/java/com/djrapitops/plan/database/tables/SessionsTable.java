@@ -75,7 +75,7 @@ public class SessionsTable extends UserIDTable {
             set = statement.executeQuery();
             List<SessionData> sessions = new ArrayList<>();
             while (set.next()) {
-                sessions.add(new SessionData(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
+//                sessions.add(new SessionData(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
             }
             set.close();
             statement.close();
@@ -169,7 +169,7 @@ public class SessionsTable extends UserIDTable {
                 long sessionStart = set.getLong(columnSessionStart);
                 long sessionEnd = set.getLong(columnSessionEnd);
 
-                sessions.get(id).add(new SessionData(sessionStart, sessionEnd));
+//                sessions.get(id).add(new SessionData(sessionStart, sessionEnd));
             }
 
             return sessions;

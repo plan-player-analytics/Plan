@@ -30,7 +30,7 @@ import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
@@ -40,6 +40,8 @@ import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.queue.processing.ProcessingQueue;
+import main.java.com.djrapitops.plan.queue.processing.Processor;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -67,7 +69,8 @@ public class Plan extends BukkitPlugin<Plan> {
 
     private API api;
 
-    private DataCacheHandler handler;
+    private ProcessingQueue processingQueue;
+    private DataCache handler;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
     private HookHandler hookHandler; // Manages 3rd party data sources
@@ -141,6 +144,8 @@ public class Plan extends BukkitPlugin<Plan> {
             saveConfig();
             Benchmark.stop("Enable", "Copy default config");
 
+            processingQueue = new ProcessingQueue();
+
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             if (Check.errorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
@@ -152,7 +157,7 @@ public class Plan extends BukkitPlugin<Plan> {
             Benchmark.stop("Enable", "Init Database");
 
             Benchmark.start("Init DataCache");
-            this.handler = new DataCacheHandler(this);
+            this.handler = new DataCache(this);
             this.inspectCache = new InspectCacheHandler(this);
             this.analysisCache = new AnalysisCacheHandler(this);
             Benchmark.stop("Enable", "Init DataCache");
@@ -161,9 +166,6 @@ public class Plan extends BukkitPlugin<Plan> {
             registerListeners();
 
             this.api = new API(this);
-            Benchmark.start("Handle Reload");
-            handler.handleReload();
-            Benchmark.stop("Enable", "Handle Reload");
 
             Benchmark.start("Analysis refresh task registration");
             // Analysis refresh settings
@@ -392,9 +394,9 @@ public class Plan extends BukkitPlugin<Plan> {
     /**
      * Used to access Cache.
      *
-     * @return Current instance of the DataCacheHandler
+     * @return Current instance of the DataCache
      */
-    public DataCacheHandler getHandler() {
+    public DataCache getHandler() {
         return handler;
     }
 
@@ -454,5 +456,13 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public ServerVariableHolder getVariable() {
         return serverVariableHolder;
+    }
+
+    public ProcessingQueue getProcessingQueue() {
+        return processingQueue;
+    }
+
+    public void addToProcessQueue(Processor processor) {
+        processingQueue.addToQueue(processor);
     }
 }

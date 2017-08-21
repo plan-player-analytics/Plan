@@ -5,7 +5,7 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.database.Database;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -18,10 +18,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
-public class DataCacheHandlerTest {
+public class DataCacheTest {
 
     private Database db;
-    private DataCacheHandler handler;
+    private DataCache handler;
 
     private int callsToSaveCommandUse;
     private int callsToSaveUserData;
@@ -30,7 +30,7 @@ public class DataCacheHandlerTest {
     /**
      *
      */
-    public DataCacheHandlerTest() {
+    public DataCacheTest() {
     }
 
     /**

@@ -247,6 +247,7 @@ public class UserData {
      *
      * @param session SessionData object
      */
+    @Deprecated
     public void addSession(SessionData session) {
         if (Verify.notNull(session) && session.isValid()) {
             sessions.add(session);

@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.handling.KillHandling;
 import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
 import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
@@ -22,7 +21,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
  */
 public class PlanDeathEventListener implements Listener {
 
-    private final DataCacheHandler handler;
+    private final Plan plugin;
 
     /**
      * Class Constructor.
@@ -30,7 +29,7 @@ public class PlanDeathEventListener implements Listener {
      * @param plugin Current instance of Plan
      */
     public PlanDeathEventListener(Plan plugin) {
-        this.handler = plugin.getHandler();
+        this.plugin = plugin;
     }
 
     /**
@@ -45,7 +44,7 @@ public class PlanDeathEventListener implements Listener {
         LivingEntity dead = event.getEntity();
 
         if (dead instanceof Player) {
-            handler.addToPool(new DeathInfo(dead.getUniqueId()));
+            plugin.addToProcessQueue(new DeathInfo(dead.getUniqueId()));
         }
 
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
@@ -69,7 +68,7 @@ public class PlanDeathEventListener implements Listener {
                 }
             }
 
-            handler.addToPool(new KillInfo(killer.getUniqueId(), time, dead, KillHandling.normalizeMaterialName(itemInHand)));
+            plugin.addToProcessQueue(new KillInfo(killer.getUniqueId(), time, dead, KillHandling.normalizeMaterialName(itemInHand)));
             return;
         }
 
@@ -86,7 +85,7 @@ public class PlanDeathEventListener implements Listener {
                 return;
             }
 
-            handler.addToPool(new KillInfo(owner.getUniqueId(), time, dead, "Wolf"));
+            plugin.addToProcessQueue(new KillInfo(owner.getUniqueId(), time, dead, "Wolf"));
         }
     }
 }

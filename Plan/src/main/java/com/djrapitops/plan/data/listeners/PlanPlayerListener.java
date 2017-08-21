@@ -6,7 +6,7 @@ import com.djrapitops.plugin.utilities.player.Gamemode;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
@@ -32,7 +32,7 @@ import java.util.UUID;
 public class PlanPlayerListener implements Listener {
 
     private final Plan plugin;
-    private final DataCacheHandler handler;
+    private final DataCache handler;
 
     /**
      * Class Constructor.
@@ -80,9 +80,9 @@ public class PlanPlayerListener implements Listener {
                 if (isNewPlayer) {
                     UserData newUserData = NewPlayerCreator.createNewPlayer(iPlayer);
                     loginInfo.process(newUserData);
-                    handler.newPlayer(newUserData);
+                    // TODO Rewrite Register & Login system handler.newPlayer(newUserData);
                 } else {
-                    handler.addToPool(loginInfo);
+                    // handler.addToPool(loginInfo);
                 }
                 this.cancel();
             }
@@ -98,6 +98,7 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
+        // TODO Rewrite Logout system
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         handler.endSession(uuid);
@@ -107,8 +108,7 @@ public class PlanPlayerListener implements Listener {
         Gamemode gm = Gamemode.wrap(player.getGameMode());
         String worldName = player.getWorld().getName();
 
-        handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
-        handler.saveCachedData(uuid);
+        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
     }
 
     /**
@@ -134,8 +134,7 @@ public class PlanPlayerListener implements Listener {
         Gamemode gm = Gamemode.wrap(player.getGameMode());
         String worldName = player.getWorld().getName();
 
-        handler.addToPool(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
-        handler.addToPool(new KickInfo(uuid));
-        handler.saveCachedData(uuid);
+        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
+        plugin.addToProcessQueue(new KickInfo(uuid));
     }
 }

@@ -10,7 +10,7 @@ import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
@@ -126,7 +126,7 @@ public class Analysis {
             rawData.sort(new UserDataLastPlayedComparator());
             List<UUID> uuids = rawData.stream().map(UserData::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
-            DataCacheHandler handler = plugin.getHandler();
+            DataCache handler = plugin.getHandler();
             Map<String, Integer> commandUse = handler.getCommandUse();
 
             AnalysisData analysisData = new AnalysisData(commandUse, tpsData);

@@ -5,7 +5,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.World;
@@ -23,7 +23,7 @@ import java.util.List;
 public class TPSCountTimer extends AbsRunnable {
 
     private final Plan plugin;
-    private final DataCacheHandler handler;
+    private final DataCache handler;
     private final List<TPS> history;
     private long lastCheckNano;
 

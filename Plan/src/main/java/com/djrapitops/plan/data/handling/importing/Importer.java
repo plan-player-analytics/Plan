@@ -5,7 +5,7 @@ import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.database.Database;
@@ -51,7 +51,7 @@ public abstract class Importer {
         plan.getAnalysisCache().disableAnalysisTemporarily();
         String processName = "Import, " + getClass().getSimpleName();
         try {
-            DataCacheHandler handler = plan.getHandler();
+            DataCache handler = plan.getHandler();
             Database db = plan.getDB();
 
             Benchmark.start(processName);
@@ -103,7 +103,7 @@ public abstract class Importer {
             plan.getDB().saveMultipleUserData(newUsers);
 
             for (UUID uuid : uuids) {
-                handler.addToPool(importData(uuid, args));
+                Plan.getInstance().addToProcessQueue(importData(uuid, args));
             }
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
