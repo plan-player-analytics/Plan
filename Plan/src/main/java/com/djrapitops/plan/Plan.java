@@ -34,12 +34,12 @@ import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
+import main.java.com.djrapitops.plan.data.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.theme.Theme;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -76,6 +76,8 @@ public class Plan extends BukkitPlugin<Plan> {
     private Set<Database> databases;
 
     private WebServer uiServer;
+
+    private ServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
     private int bootAnalysisTaskID = -1;
@@ -185,6 +187,11 @@ public class Plan extends BukkitPlugin<Plan> {
             if (!uiServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized.");
             }
+
+            Benchmark.start("ServerInfo Registration");
+                serverInfoManager = new ServerInfoManager(this);
+            Benchmark.stop("Enable", "ServerInfo Registration");
+
             setupFilter(); // TODO Move to RegisterCommand Constructor
 
             // Data view settings // TODO Rewrite. (TextUI removed & webserver might be running on bungee
@@ -209,8 +216,6 @@ public class Plan extends BukkitPlugin<Plan> {
 //Analytics temporarily disabled TODO enable before release
 //            BStats bStats = new BStats(this);
 //            bStats.registerMetrics();
-
-            Theme.test(); //TODO Remove
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));

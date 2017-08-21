@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ServerInfo {
-    private final int id;
+    private int id;
     private final UUID uuid;
     private String name;
     private String webAddress;
@@ -48,4 +48,7 @@ public class ServerInfo {
         this.webAddress = webAddress;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }

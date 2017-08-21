@@ -5,13 +5,6 @@
 package main.java.com.djrapitops.plan.ui.theme;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Collections;
 
 /**
  * Enum that contains available themes.
@@ -76,23 +69,6 @@ public enum Theme {
             replaced = replaced.replace("#" + def.getColor(c.getId()), "#" + this.getColor(c.getId()));
         }
         return replaced;
-    }
-
-    // TODO Remove
-    public static void test() throws IOException {
-        String serverHtml = HtmlUtils.getStringFromResource("server - Example.html");
-        String css = HtmlUtils.getStringFromResource("main.css");
-
-        File folder = new File(Plan.getInstance().getDataFolder(), "themes");
-        folder.mkdirs();
-        for (Theme t : Theme.values()) {
-            File themeFolder = new File(folder, t.name());
-            themeFolder.mkdirs();
-            File themeHtml = new File(themeFolder, "server.html");
-            File themeCss = new File(themeFolder, "main.css");
-            Files.write(themeHtml.toPath(), Collections.singletonList(t.replaceThemeColors(serverHtml)));
-            Files.write(themeCss.toPath(), Collections.singletonList(t.replaceThemeColors(css)));
-        }
     }
 
     public static String replaceColors(String resourceString) {

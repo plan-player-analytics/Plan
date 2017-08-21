@@ -19,7 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Table representing plan_servers in the database.
+ * <p>
+ * Used for managing multiple server's data in the database.
  *
  * @author Rsl1122
  */
@@ -31,7 +33,7 @@ public class ServerTable extends Table {
     private final String columnWebserverAddress;
     private final String columnInstalled;
 
-    public ServerTable(String name, SQLDB db, boolean usingMySQL) {
+    public ServerTable(SQLDB db, boolean usingMySQL) {
         super("plan_servers", db, usingMySQL);
         columnServerID = "id";
         columnServerUUID = "uuid";

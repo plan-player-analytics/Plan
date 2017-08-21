@@ -19,7 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Manages the Server information required for Bungee-Bukkit WebAPI connection.
+ * <p>
+ * Also manages Server ID required for MySQL database independence.
  *
  * @author Rsl1122
  */
@@ -33,9 +35,8 @@ public class ServerInfoManager {
     public ServerInfoManager(Plan plugin) {
         this.plugin = plugin;
         Database db = plugin.getDB();
-        if ("sqlite".equals(db.getConfigName())) {
-            return;
-        }
+        serverTable = db.getServerTable();
+
         try {
             serverInfoFile = new ServerInfoFile(plugin);
         } catch (IOException | InvalidConfigurationException e) {
@@ -44,39 +45,52 @@ public class ServerInfoManager {
             plugin.disablePlugin();
         }
 
-        serverTable = db.getServerTable();
+        Optional<UUID> serverUUID = serverInfoFile.getUUID();
 
-        int serverID = serverInfoFile.getID();
         try {
-            if (serverID == -1) {
-                registerServer();
+            if (serverUUID.isPresent()) {
+                updateDbInfo(serverUUID.get());
             } else {
-                updateDbInfo(serverID);
+                registerServer();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
+            Log.error("Failed to register server info to database, disabling plugin.");
+            plugin.disablePlugin();
         }
-
     }
 
-    private void updateDbInfo(int serverID) throws SQLException {
-        UUID uuid = serverInfoFile.getUUID();
+    private void updateDbInfo(UUID serverUUID) throws SQLException {
+        Optional<Integer> serverID = serverTable.getServerID(serverUUID);
+        if (!serverID.isPresent()) {
+            registerServer(serverUUID);
+            return;
+        }
         String name = Settings.SERVER_NAME.toString();
         String webAddress = plugin.getUiServer().getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
-            name = "Server" + Integer.toString(serverID);
+            name = "Server" + serverID.get();
         }
 
-        serverInfo = new ServerInfo(serverID, uuid, name, webAddress);
+        serverInfo = new ServerInfo(serverID.get(), serverUUID, name, webAddress);
         serverTable.saveCurrentServerInfo(serverInfo);
     }
 
     private void registerServer() throws SQLException {
-        UUID serverUUID = generateNewUUID(plugin.getServer());
+        registerServer(generateNewUUID(plugin.getServer()));
+    }
+
+    private void registerServer(UUID serverUUID) throws SQLException {
         String webAddress = plugin.getUiServer().getAccessAddress();
         String name = Settings.SERVER_NAME.toString();
         serverInfo = new ServerInfo(-1, serverUUID, name, webAddress);
         serverTable.saveCurrentServerInfo(serverInfo);
+        Optional<Integer> serverID = serverTable.getServerID(serverUUID);
+        if (serverID.isPresent()) {
+            serverInfo.setId(serverID.get());
+        } else {
+            throw new IllegalStateException("Failed to Register Server (ID not found)");
+        }
     }
 
     private UUID generateNewUUID(Server server) {
@@ -96,8 +110,16 @@ public class ServerInfoManager {
         return Optional.empty();
     }
 
+    public void saveBungeeConnectionAddress(String address) throws IOException {
+        serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, "Bungee", address));
+    }
+
     public int getServerID() {
         return serverInfo.getId();
+    }
+
+    public UUID getServerUUID() {
+        return serverInfo.getUuid();
     }
 
     public String getServerName() {

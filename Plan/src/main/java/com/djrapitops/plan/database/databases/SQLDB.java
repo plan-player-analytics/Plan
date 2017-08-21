@@ -56,6 +56,7 @@ public abstract class SQLDB extends Database {
         securityTable = new SecurityTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
+        serverTable = new ServerTable(this, usingMySQL);
 
         startConnectionPingTask();
     }
