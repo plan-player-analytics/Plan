@@ -3,17 +3,20 @@ package main.java.com.djrapitops.plan.database.databases;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class containing main logic for different data related save & load functionality.
@@ -96,7 +99,6 @@ public abstract class SQLDB extends Database {
             if (!checkConnection()) {
                 return false;
             }
-            convertBukkitDataToDB();
             clean();
             return true;
         } catch (SQLException e) {
@@ -177,40 +179,6 @@ public abstract class SQLDB extends Database {
         } catch (Exception ignored) {
             return true;
         }
-    }
-
-    /**
-     *
-     */
-    public void convertBukkitDataToDB() {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("BukkitDataConversionTask") {
-            @Override
-            public void run() {
-                try {
-                    Benchmark.start("Convert BukkitData to DB data");
-                    Log.debug("Database", "Bukkit Data Conversion");
-                    Set<UUID> uuids = usersTable.getSavedUUIDs();
-                    uuids.removeAll(usersTable.getContainsBukkitData(uuids));
-                    if (uuids.isEmpty()) {
-                        Log.debug("Database", "No conversion necessary.");
-                        return;
-                    }
-                    Log.info("Beginning Bukkit Data -> DB Conversion for " + uuids.size() + " players");
-                    int id = plugin.getBootAnalysisTaskID();
-                    if (id != -1) {
-                        Log.info("Analysis | Cancelled Boot Analysis Due to conversion.");
-                        plugin.getServer().getScheduler().cancelTask(id);
-                    }
-                    saveMultipleUserData(getUserDataForUUIDS(uuids));
-                    Log.info("Conversion complete, took: " + FormatUtils.formatTimeAmount(Benchmark.stop("Database", "Convert BukkitData to DB data")) + " ms");
-                } catch (SQLException ex) {
-                    Log.toLog(this.getClass().getName(), ex);
-                } finally {
-                    setAvailable();
-                    this.cancel();
-                }
-            }
-        }).runTaskAsynchronously();
     }
 
     /**
@@ -367,6 +335,56 @@ public abstract class SQLDB extends Database {
         }
         setAvailable();
         return success;
+    }
+
+    @Override
+    public List<UserData> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
+        if (uuidsCol == null || uuidsCol.isEmpty()) {
+            return new ArrayList<>();
+        }
+        setStatus("Get userdata (multiple) for: " + uuidsCol.size());
+        Benchmark.start("Get UserData for " + uuidsCol.size());
+        Map<UUID, Integer> userIds = usersTable.getAllUserIds();
+        Set<UUID> remove = uuidsCol.stream()
+                .filter(uuid -> !userIds.containsKey(uuid))
+                .collect(Collectors.toSet());
+        List<UUID> uuids = new ArrayList<>(uuidsCol);
+        Log.debug("Database", "Data not found for: " + remove.size());
+        uuids.removeAll(remove);
+        Benchmark.start("Create UserData objects for " + userIds.size());
+        List<UserData> data = usersTable.getUserData(uuids);
+        Benchmark.stop("Database", "Create UserData objects for " + userIds.size());
+        if (data.isEmpty()) {
+            return data;
+        }
+        Map<Integer, UUID> idUuidRel = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        List<Integer> ids = userIds.entrySet().stream().filter(e -> uuids.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
+        Log.debug("Database", "Using IDs: " + ids.size());
+        Map<Integer, List<String>> nicknames = nicknamesTable.getNicknames(ids);
+        Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
+        Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
+        Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
+        Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
+
+        Log.debug("Database",
+                "Data found for:",
+                "  UUIDs: " + uuids.size(),
+                "  IDs: " + userIds.size(),
+                "  UserData: " + data.size(),
+                "    Nicknames: " + nicknames.size(),
+                "    IPs: " + ipList.size(),
+                "    Kills: " + playerKills.size(),
+                "    Sessions: " + sessionData.size(),
+                "    World Times: " + worldTimes.size()
+        );
+
+        for (UserData uData : data) {
+            // TODO add extra data
+        }
+
+        Benchmark.stop("Database", "Get UserData for " + uuidsCol.size());
+        setAvailable();
+        return data;
     }
 
     /**

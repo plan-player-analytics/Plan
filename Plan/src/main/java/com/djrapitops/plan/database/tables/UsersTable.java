@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -367,5 +368,10 @@ public class UsersTable extends Table {
             close(set);
             close(statement);
         }
+    }
+
+    public List<UserData> getUserData(List<UUID> uuids) {
+        // TODO Rewrite method for new UserData objects.
+        return null;
     }
 }

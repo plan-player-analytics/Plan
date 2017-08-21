@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.tables.*;
 
 import java.sql.SQLException;
@@ -112,32 +111,6 @@ public abstract class Database {
     }
 
     /**
-     * Used to give Database processors to call with UserData after they have
-     * been fetched from the database.
-     * <p>
-     * This method is a shortcut method for multiple parameters.
-     *
-     * @param uuid       UUID of the player.
-     * @param processors Processors to call with the UserData after the fetch is
-     *                   complete.
-     * @throws SQLException If a database error occurs.
-     */
-    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException {
-        giveUserDataToProcessors(uuid, Arrays.asList(processors));
-    }
-
-    /**
-     * Used to give Database processors to call with UserData after they have
-     * been fetched from the database.
-     *
-     * @param uuid       UUID of the player.
-     * @param processors Processors to call with the UserData after the fetch is
-     *                   complete.
-     * @throws SQLException If a database error occurs.
-     */
-    public abstract void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException;
-
-    /**
      * Used to get all UserData for multiple UUIDs.
      * <p>
      * Should only be called from async thread.
@@ -147,22 +120,6 @@ public abstract class Database {
      * @throws SQLException If database error occurs.
      */
     public abstract List<UserData> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException;
-
-    /**
-     * Used to save UserData object of a user.
-     *
-     * @param data UserData of the Player.
-     * @throws SQLException If a database error occurs.
-     */
-    public abstract void saveUserData(UserData data) throws SQLException;
-
-    /**
-     * Used to save UserData object of multiple users.
-     *
-     * @param data Collection of UserData objects.
-     * @throws SQLException If a database error occurs.
-     */
-    public abstract void saveMultipleUserData(Collection<UserData> data) throws SQLException;
 
     /**
      * Check if the user is saved in the database.
