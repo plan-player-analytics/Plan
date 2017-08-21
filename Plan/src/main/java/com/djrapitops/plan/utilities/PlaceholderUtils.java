@@ -5,18 +5,9 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.analysis.GamemodePart;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
-import main.java.com.djrapitops.plan.ui.html.tables.KillsTableCreator;
-import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -64,68 +55,39 @@ public class PlaceholderUtils {
     public static Map<String, Serializable> getInspectReplaceRules(UserData data) {
 
         HashMap<String, Serializable> replaceMap = new HashMap<>();
-        replaceMap.put("timezone", MiscUtils.getTimeZoneOffsetHours());
-
         UUID uuid = data.getUuid();
-        replaceMap.put("lastseen", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
-        replaceMap.put("logintimes", data.getLoginTimes());
-        replaceMap.put("geoloc", data.getGeolocation());
-        long now = MiscUtils.getTime();
-        boolean isActive = AnalysisUtils.isActive(now, data.getLastPlayed(), data.getPlayTime(), data.getLoginTimes());
-        replaceMap.put("active", isActive ? Locale.get(Msg.HTML_ACTIVE).parse() : Locale.get(Msg.HTML_INACTIVE).parse());
-        GamemodePart gmPart = new GamemodePart();
-        Map<String, Long> gmTimes = data.getGmTimes().getTimes();
-        String[] gms = GMTimes.getGMKeyArray();
-        for (String gm : gms) {
-            Long time = gmTimes.get(gm);
-            if (time != null) {
-                gmPart.addTo(gm, time);
-            }
-        }
-        gmPart.analyse();
-        replaceMap.putAll(gmPart.getReplaceMap());
-
-        replaceMap.put("nicknames", HtmlUtils.removeXSS(HtmlUtils.swapColorsToSpan(data.getNicknames().toString())));
-        replaceMap.put("name", data.getName());
-        replaceMap.put("registered", FormatUtils.formatTimeStampYear(data.getRegistered()));
-        replaceMap.put("timeskicked", data.getTimesKicked());
-        replaceMap.put("playtime", FormatUtils.formatTimeAmount(data.getPlayTime()));
-        replaceMap.put("banned", data.isBanned() ? Locale.get(Msg.HTML_BANNED).parse() : "");
-        replaceMap.put("op", data.isOp() ? Locale.get(Msg.HTML_OP).parse() : "");
-        replaceMap.put("isonline", data.isOnline() ? Locale.get(Msg.HTML_ONLINE).parse() : Locale.get(Msg.HTML_OFFLINE).parse());
-        replaceMap.put("deaths", data.getDeaths());
-        replaceMap.put("playerkills", data.getPlayerKills().size());
-        replaceMap.put("mobkills", data.getMobKills());
-        replaceMap.put("sessionaverage", FormatUtils.formatTimeAmount(MathUtils.averageLong(AnalysisUtils.transformSessionDataToLengths(data.getSessions()))));
-        replaceMap.put("killstable", KillsTableCreator.createKillsTable(data.getPlayerKills()));
+        replaceMap.put("playerName", data.getName());
+        replaceMap.put("serverName", Settings.SERVER_NAME.toString());
         Plan plugin = Plan.getInstance();
         replaceMap.put("version", plugin.getDescription().getVersion());
-        replaceMap.put("playersgraphcolor", Settings.HCOLOR_ACT_ONL.toString());
+
+        replaceMap.put("playerClassification", "TODO"); //TODO Playerclassification (Active &#x2022; Offline etc)
+        replaceMap.put("nicknames", "TODO"); //TODO Nickname list creator &#x2022; name<br>
+        replaceMap.put("geolocations", "TODO"); //TODO Geolocation list creator &#x2022; name<br>
+
+        replaceMap.put("registered", FormatUtils.formatTimeStampYear(data.getRegistered()));
+        replaceMap.put("lastSeen", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
+
+        replaceMap.put("sessionCount", data.getSessions().size());
+        replaceMap.put("playtimeTotal", FormatUtils.formatTimeAmount(data.getPlayTime()));
+
+        replaceMap.put("kickCount", data.getTimesKicked());
+        replaceMap.put("playerKillCount", data.getPlayerKills().size());
+        replaceMap.put("mobKillCount", data.getMobKills());
+        replaceMap.put("deathCount", data.getDeaths());
 
         Set<SessionData> sessions = new HashSet<>(data.getSessions());
-        List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
-        replaceMap.put("punchcardseries", PunchCardGraphCreator.createDataSeries(sessions));
-        replaceMap.put("sessionlengthseries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
-        replaceMap.put("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataStringSessions(sessions));
+        replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
         WorldTimes worldTimes = data.getWorldTimes();
-        replaceMap.put("worldseries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
-        replaceMap.put("worldtotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
+        replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
+        replaceMap.put("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
 
-        String[] colors = new String[]{Settings.HCOLOR_MAIN.toString(), Settings.HCOLOR_MAIN_DARK.toString(), Settings.HCOLOR_SEC.toString(), Settings.HCOLOR_TER.toString(), Settings.HCOLOR_TER_DARK.toString()};
-        String[] defaultCols = new String[]{"348e0f", "267F00", "5cb239", "89c471", "5da341"};
-        for (int i = 0; i < colors.length; i++) {
-            if (!defaultCols[i].equals(colors[i])) {
-                replaceMap.put("#" + defaultCols[i], "#" + colors[i]);
-            }
-        }
-        long cacheTime = plugin.getInspectCache().getCacheTime(uuid);
-        replaceMap.put("refresh", FormatUtils.formatTimeAmountDifference(cacheTime, now));
-        replaceMap.put("refreshlong", cacheTime);
-        replaceMap.put("servername", Settings.SERVER_NAME.toString());
+        //TODO Plugin Tab content Web API
+        //TODO Player Plugin tab code.
         String pluginsTabHtml = plugin.getHookHandler().getPluginsTabLayoutForInspect();
         Map<String, Serializable> additionalReplaceRules = plugin.getHookHandler().getAdditionalInspectReplaceRules(uuid);
         String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabHtml, additionalReplaceRules);
-        replaceMap.put("plugins", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
+        replaceMap.put("tabContentPlugins", HtmlUtils.replacePlaceholders(replacedOnce, additionalReplaceRules));
         return replaceMap;
     }
 }
