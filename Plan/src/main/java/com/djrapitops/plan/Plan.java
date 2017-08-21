@@ -458,6 +458,16 @@ public class Plan extends BukkitPlugin<Plan> {
         return serverVariableHolder;
     }
 
+    /**
+     * Used to get the object storing server info
+     *
+     * @return ServerInfoManager
+     * @see ServerInfoManager
+     */
+    public ServerInfoManager getServerInfoManager() {
+        return serverInfoManager;
+    }
+
     public ProcessingQueue getProcessingQueue() {
         return processingQueue;
     }
