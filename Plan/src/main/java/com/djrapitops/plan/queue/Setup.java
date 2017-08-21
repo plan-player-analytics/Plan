@@ -22,13 +22,13 @@ public abstract class Setup<T> {
         this.consumers = consumers;
     }
 
-    void go() {
+    public void go() {
         for (Consumer<T> consumer : consumers) {
             Plan.getInstance().getRunnableFactory().createNew(consumer).runTaskAsynchronously();
         }
     }
 
-    void stop() {
+    public void stop() {
         for (Consumer<T> consumer : consumers) {
             consumer.stop();
         }

@@ -6,13 +6,8 @@
 package test.java.main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
@@ -36,8 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -210,87 +203,6 @@ public class DatabaseTest {
         c.put("/pla", 7);
         commandUse = db.getCommandUse();
         assertEquals(c, commandUse);
-    }
-
-    /**
-     * @throws SQLException
-     */
-    @Test
-    public void testSaveUserData() throws SQLException {
-        db.init();
-        UserData data = MockUtils.mockUser();
-        GMTimes gmTimes = data.getGmTimes();
-        gmTimes.setAllGMTimes(5L, 10L, 15L, 20L);
-        gmTimes.setState("SURVIVAL");
-        gmTimes.setLastStateChange(10L);
-        WorldTimes worldTimes = data.getWorldTimes();
-//   TODO     worldTimes.setTime("World", 20L);
-//        worldTimes.setState("World");
-//        worldTimes.setLastStateChange(10L);
-        db.saveUserData(data);
-        data.addNickname("TestUpdateForSave");
-        db.saveUserData(data);
-        DBCallableProcessor process = d -> {
-            System.out.println("\nOriginal: " + data);
-            System.out.println("Database: " + d);
-            assertTrue("Not Equals", data.equals(d));
-        };
-        db.giveUserDataToProcessors(data.getUuid(), process);
-    }
-
-    /**
-     * @throws SQLException
-     */
-    @Test
-    public void testNicknameInjection() throws SQLException {
-        db.init();
-        UserData data = MockUtils.mockUser();
-        UserData data2 = MockUtils.mockUser2();
-        db.saveUserData(data2);
-        data.addNickname("s); DROP TABLE plan_users;--");
-        db.saveUserData(data);
-        assertTrue("Removed Users table.", db.getUsersTable().getUserId(data2.getUuid().toString()) != -1);
-    }
-
-    /**
-     * @throws SQLException
-     * @throws java.net.UnknownHostException
-     */
-    @Test
-    public void testSaveMultipleUserData() throws SQLException, UnknownHostException {
-        db.init();
-        UserData data = MockUtils.mockUser();
-        data.getGmTimes().setAllGMTimes(5L, 10L, 15L, 20L);
-//   TODO     data.getWorldTimes().setTime("World", 20L);
-        data.addIpAddress(InetAddress.getByName("185.64.113.61"));
-        data.addSession(new SessionData(1286349L, 2342978L));
-        data.addNickname("TestNick");
-        data.addPlayerKill(new KillData(MockUtils.getPlayer2UUID(), 2, "DiamondSword", 75843759L));
-        System.out.println(data.toString());
-        db.saveUserData(data);
-        data.getPlayerKills().clear();
-        System.out.println(data.toString());
-        data.addNickname("TestUpdateForSave");
-        UserData data2 = MockUtils.mockUser2();
-        data2.getGmTimes().setAllGMTimes(5L, 10L, 15L, 20L);
-        data2.addNickname("Alright");
-        data.addNickname("TestNick2");
-        data2.addIpAddress(InetAddress.getByName("185.64.113.60"));
-        data2.addSession(new SessionData(2348743L, 4839673L));
-        data2.addPlayerKill(new KillData(MockUtils.getPlayerUUID(), 1, "DiamondSword", 753759L));
-        List<UserData> list = new ArrayList<>();
-        list.add(data);
-        list.add(data2);
-        db.saveMultipleUserData(list);
-        data.addPlayerKill(new KillData(MockUtils.getPlayer2UUID(), 2, "DiamondSword", 75843759L));
-        List<UserData> userDataForUUIDS = db.getUserDataForUUIDS(MockUtils.getUUIDs());
-
-        System.out.println("\nData1:" + data.toString());
-        System.out.println("Data2:" + data2.toString() + "\n");
-        for (UserData uData : userDataForUUIDS) {
-            System.out.println("uData:" + uData.toString());
-            assertTrue("Not Equals", (data.equals(uData) || data2.equals(uData)));
-        }
     }
 
     /**

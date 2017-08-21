@@ -5,7 +5,6 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 
 import java.io.Serializable;
@@ -68,16 +67,16 @@ public class PlaceholderUtils {
         replaceMap.put("lastSeen", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
 
         replaceMap.put("sessionCount", data.getSessions().size());
-        replaceMap.put("playtimeTotal", FormatUtils.formatTimeAmount(data.getPlayTime()));
+        //TODO replaceMap.put("playtimeTotal", FormatUtils.formatTimeAmount(data.getPlayTime()));
 
         replaceMap.put("kickCount", data.getTimesKicked());
-        replaceMap.put("playerKillCount", data.getPlayerKills().size());
-        replaceMap.put("mobKillCount", data.getMobKills());
-        replaceMap.put("deathCount", data.getDeaths());
+//        replaceMap.put("playerKillCount", data.getPlayerKills().size()); //TODO
+//        replaceMap.put("mobKillCount", data.getMobKills());
+//        replaceMap.put("deathCount", data.getDeaths());
 
         Set<SessionData> sessions = new HashSet<>(data.getSessions());
         replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
-        WorldTimes worldTimes = data.getWorldTimes();
+        //TODO    WorldTimes worldTimes = data.getWorldTimes();
 //    TODO    replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
 //        replaceMap.put("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
 

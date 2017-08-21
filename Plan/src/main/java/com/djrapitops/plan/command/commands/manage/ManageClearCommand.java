@@ -82,7 +82,7 @@ public class ManageClearCommand extends SubCommand {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
                     if (database.removeAllData()) {
-                        plugin.getHandler().getDataCache().clear();
+                        // TODO Clear active session of all users & start new ones
                         sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
                     } else {
                         sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

@@ -50,7 +50,7 @@ public class PlayersTableCreator {
                         String.valueOf(uData.getLoginTimes()),
                         String.valueOf(uData.getRegistered()), FormatUtils.formatTimeStampYear(uData.getRegistered()),
                         String.valueOf(uData.getLastPlayed()), FormatUtils.formatTimeStamp(uData.getLastPlayed()),
-                        String.valueOf(uData.getGeolocation())
+                        String.valueOf(uData.getGeolocations()) //TODO get last Geoloc
                 ));
             } catch (NullPointerException ignored) {
             }

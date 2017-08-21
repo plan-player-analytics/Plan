@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.ChatHandling;
 
 import java.util.UUID;
 
@@ -11,6 +10,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated // TODO Update Straight to db
 public class ChatInfo extends HandlingInfo {
 
     private final String nickname;
@@ -28,9 +28,6 @@ public class ChatInfo extends HandlingInfo {
 
     @Override
     public void process(UserData uData) {
-        if (!uData.getUuid().equals(uuid)) {
-            return;
-        }
-        ChatHandling.processChatInfo(uData, nickname);
+
     }
 }

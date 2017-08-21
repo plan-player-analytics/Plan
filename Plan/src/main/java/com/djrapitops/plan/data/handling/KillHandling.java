@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.data.handling;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.KillData;
 import main.java.com.djrapitops.plan.data.UserData;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Material;
@@ -48,12 +47,12 @@ public class KillHandling {
                 if (victimID == -1) {
                     return;
                 }
-                data.addPlayerKill(new KillData(victimUUID, victimID, weaponName, time));
+                //TODO Move to Session data.addPlayerKill(new KillData(victimUUID, victimID, weaponName, time));
             } catch (SQLException e) {
                 Log.toLog("main.java.com.djrapitops.plan.KillHandling", e);
             }
         } else {
-            data.setMobKills(data.getMobKills() + 1);
+            //TODO Move to Session  data.setMobKills(data.getMobKills() + 1);
         }
     }
 

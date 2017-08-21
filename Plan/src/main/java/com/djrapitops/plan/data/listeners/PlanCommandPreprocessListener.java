@@ -4,7 +4,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
+import main.java.com.djrapitops.plan.data.cache.DataCache;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class PlanCommandPreprocessListener implements Listener {
 
     private final Plan plugin;
-    private final DataCacheHandler handler;
+    private final DataCache handler;
 
     /**
      * Class Constructor.

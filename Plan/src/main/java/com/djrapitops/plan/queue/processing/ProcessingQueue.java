@@ -1,40 +1,37 @@
-package main.java.com.djrapitops.plan.queue;
+package main.java.com.djrapitops.plan.queue.processing;
 
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.queue.processing.Processor;
+import main.java.com.djrapitops.plan.queue.Consumer;
+import main.java.com.djrapitops.plan.queue.Queue;
+import main.java.com.djrapitops.plan.queue.Setup;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * This Class is starts the Process Queue Thread, that processes HandlingInfo
+ * This Class is starts the Process Queue Thread, that processes Processor
  * objects.
  *
  * @author Rsl1122
  * @since 3.0.0
  */
-public class DataCacheProcessQueue extends Queue<Processor> {
+public class ProcessingQueue extends Queue<Processor> {
 
     /**
      * Class constructor, starts the new Thread for processing.
      */
-    public DataCacheProcessQueue() {
+    public ProcessingQueue() {
         super(new ArrayBlockingQueue<>(20000));
         setup = new ProcessSetup(queue);
         setup.go();
     }
 
     /**
-     * Used to add HandlingInfo object to be processed.
+     * Used to add Processor object to be processed.
      *
-     * @param processor object that extends HandlingInfo.
+     * @param processor processing object.
      */
     public void addToQueue(Processor processor) {
-        try {
-            queue.add(processor);
-        } catch (IllegalStateException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
+        queue.offer(processor);
     }
 }
 

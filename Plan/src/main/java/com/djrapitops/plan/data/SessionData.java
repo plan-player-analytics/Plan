@@ -2,6 +2,9 @@ package main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class is used for storing start and end of a play session inside UserData
  * object.
@@ -10,40 +13,48 @@ import main.java.com.djrapitops.plan.data.time.WorldTimes;
  */
 public class SessionData {
 
-    private WorldTimes worldTimes; // TODO add World Times to SessionData
+    private final WorldTimes worldTimes; // TODO add World Times to SessionData
     private final long sessionStart;
     private long sessionEnd;
-    // TODO Add kills & deaths to SessionData
+    private final List<KillData> playerKills;
+    private int mobKills;
+    private int deaths;
+
+
+    @Deprecated // TODO Remove
+    public SessionData(long sessionStart) {
+        worldTimes = null;
+        this.sessionStart = 0;
+        playerKills = null;
+    }
 
     /**
      * Creates a new session with given start and end of -1.
      *
      * @param sessionStart Epoch millisecond the session was started.
      */
-    public SessionData(long sessionStart) {
+    public SessionData(long sessionStart, String world, String gm) {
+        this.worldTimes = new WorldTimes(world, gm);
         this.sessionStart = sessionStart;
         this.sessionEnd = -1;
+        playerKills = new ArrayList<>();
+        mobKills = 0;
+        deaths = 0;
     }
 
     /**
-     * Creates a new session with given start and end.
+     * Re-Creates a session data object for viewing.
      *
      * @param sessionStart Epoch millisecond the session was started.
      * @param sessionEnd   Epoch millisecond the session ended.
      */
-    public SessionData(long sessionStart, long sessionEnd) {
+    public SessionData(long sessionStart, long sessionEnd, WorldTimes worldTimes, List<KillData> playerKills, int mobKills, int deaths) {
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
-    }
-
-    /**
-     * Constructor for copying the object.
-     *
-     * @param s SessionData to copy.
-     */
-    public SessionData(SessionData s) {
-        this.sessionStart = s.getSessionStart();
-        this.sessionEnd = s.getSessionEnd();
+        this.worldTimes = worldTimes;
+        this.playerKills = playerKills;
+        this.mobKills = mobKills;
+        this.deaths = deaths;
     }
 
     /**
@@ -55,6 +66,16 @@ public class SessionData {
      */
     public void endSession(long endOfSession) {
         sessionEnd = endOfSession;
+        worldTimes.updateState(endOfSession);
+    }
+
+    /**
+     * Get the length of the session in milliseconds.
+     *
+     * @return Long in ms.
+     */
+    public long getLength() {
+        return sessionEnd - sessionStart;
     }
 
     /**
@@ -76,24 +97,11 @@ public class SessionData {
     }
 
     /**
-     * Get the length of the session in milliseconds.
-     *
-     * @return Long in ms.
-     */
-    public long getLength() {
-        return sessionEnd - sessionStart;
-    }
-
-    @Override
-    public String toString() {
-        return "s:" + sessionStart + " e:" + sessionEnd;
-    }
-
-    /**
      * Check if the session start was before the end.
      *
      * @return Is the length positive?
      */
+    @Deprecated // TODO Remove
     public boolean isValid() {
         return sessionStart <= sessionEnd;
     }

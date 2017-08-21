@@ -4,7 +4,6 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.ui.html.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
@@ -67,7 +66,7 @@ public class ActivityPart extends RawData {
         Verify.nullCheck(recentPlayersUUIDs);
 
         // TODO Recent logins table
-        addValue("recentlogins", RecentPlayersButtonsCreator.createRecentLoginsButtons(recentPlayers, 15));
+        addValue("recentlogins", "");
 
         activityPiechart();
 

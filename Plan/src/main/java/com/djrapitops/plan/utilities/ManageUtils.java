@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 
@@ -69,8 +68,8 @@ public class ManageUtils {
     public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) {
         try {
             clearAndCopyToDB.removeAllData();
-            List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
-            clearAndCopyToDB.saveMultipleUserData(allUserData);
+          //TODO  List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
+          //  clearAndCopyToDB.saveMultipleUserData(allUserData);
             clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());
             clearAndCopyToDB.getTpsTable().saveTPSData(copyFromDB.getTpsTable().getTPSData());
         } catch (SQLException | NullPointerException e) {

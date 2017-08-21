@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.PlaytimeHandling;
 
 import java.util.UUID;
 
@@ -22,6 +21,5 @@ public class PlaytimeDependentInfo extends HandlingInfo {
         if (!uuid.equals(uData.getUuid())) {
             return;
         }
-        PlaytimeHandling.processPlaytimeDependentInfo(uData, time, gamemode, worldName);
     }
 }

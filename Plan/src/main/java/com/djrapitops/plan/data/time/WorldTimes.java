@@ -44,10 +44,20 @@ public class WorldTimes {
     }
 
     /**
+     * Updates the state at the end of the session.
+     * Does not change world or GameMode.
+     *
+     * @param changeTime epoch ms session ended.
+     */
+    public void updateState(long changeTime) {
+        updateState(currentWorld, currentGamemode, changeTime);
+    }
+
+    /**
      * Updates the time status to match the new state.
      *
-     * @param worldName World name of the world swapped to.
-     * @param gameMode GameMode name of the gm swapped to.
+     * @param worldName  World name of the world swapped to.
+     * @param gameMode   GameMode name of the gm swapped to.
      * @param changeTime Epoch ms the change occurred.
      */
     public void updateState(String worldName, String gameMode, long changeTime) {

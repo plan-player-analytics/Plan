@@ -96,57 +96,6 @@ public class API {
     }
 
     /**
-     * Schedule a UserData object to be fetched from the database or cache if
-     * the player is online.
-     * <p>
-     * The data will not be cached if it is not already cached.
-     *
-     * @param uuid      UUID of the player.
-     * @param processor Object implementing DBCallableProcessor, which
-     *                  process (UserData data) method will be called.
-     */
-    @Deprecated
-    public void scheduleForGet(UUID uuid, DBCallableProcessor processor) {
-        plugin.getHandler().getUserDataForProcessing(processor, uuid, false);
-    }
-
-    /**
-     * Schedule a HandlingInfo object to be processed.
-     * <p>
-     * UserData associated with the UUID of the HandlingInfo object will be
-     * cached.
-     *
-     * @param info object that extends HandlingInfo.
-     */
-    @Deprecated
-    public void scheduleEventHandlingInfo(HandlingInfo info) {
-        plugin.getHandler().addToPool(info);
-    }
-
-    /**
-     * Used to cache a UserData object.
-     * <p>
-     * If data is already cached it will be overridden.
-     *
-     * @param data UserData object. Will be placed to the data.getUuid() key in
-     *             the cache.
-     */
-    @Deprecated
-    public void placeDataToCache(UserData data) {
-        plugin.getHandler().cache(data);
-    }
-
-    /**
-     * Used to save the cached data to the database.
-     * <p>
-     * Should be only called from an Asynchronous thread.
-     */
-    @Deprecated
-    public void saveCachedData() {
-        plugin.getHandler().saveCachedUserData();
-    }
-
-    /**
      * Check if the UserData is cached to the InspectCache.
      *
      * @param uuid UUID of the player.

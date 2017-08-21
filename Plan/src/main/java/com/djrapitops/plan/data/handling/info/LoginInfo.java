@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.handling.info;
 
 import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.LoginHandling;
 
 import java.net.InetAddress;
 import java.util.UUID;
@@ -12,6 +11,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated // TODO Update in listener to db
 public class LoginInfo extends HandlingInfo {
 
     private final InetAddress ip;
@@ -63,10 +63,5 @@ public class LoginInfo extends HandlingInfo {
 
     @Override
     public void process(UserData uData) {
-        if (!uData.getUuid().equals(uuid)) {
-            return;
-        }
-        LoginHandling.processLoginInfo(uData, time, ip, banned, nickname, loginTimes);
-        playtimeDependentInfo.process(uData);
     }
 }
