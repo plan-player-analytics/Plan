@@ -152,7 +152,7 @@ public class MathUtils {
 
     /**
      * Gets the biggest Integer in a Collection with Integer as Entry
-     * If the Collection is empty, it will return 0.
+     * If the Collection is empty, it will return 1.
      *
      * @param values The Collection with Integer as the Entry
      * @return The biggest Integer
@@ -166,7 +166,7 @@ public class MathUtils {
 
     /**
      * Gets the biggest Long in a Collection with Long as Entry
-     * If the Collection is empty, it will return 0.
+     * If the Collection is empty, it will return 1.
      *
      * @param values The Collection with Long as the Entry
      * @return The biggest Integer

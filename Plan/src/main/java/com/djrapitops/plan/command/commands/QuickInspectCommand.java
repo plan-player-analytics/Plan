@@ -90,9 +90,9 @@ public class QuickInspectCommand extends SubCommand {
             public void run() {
                 timesrun++;
                 if (inspectCache.isCached(uuid)) {
-                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + playerName);
+                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
                     sender.sendMessage(TextUI.getInspectMessages(uuid));
-                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER) + "");
+                    sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
                     this.cancel();
                 }
                 if (timesrun > 10) {
