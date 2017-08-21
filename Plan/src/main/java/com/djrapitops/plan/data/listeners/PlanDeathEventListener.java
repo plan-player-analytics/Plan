@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * Event Listener for EntityDeathEvents.
@@ -87,6 +88,20 @@ public class PlanDeathEventListener implements Listener {
             }
 
             handler.addToPool(new KillInfo(owner.getUniqueId(), time, dead, "Wolf"));
+        }
+
+        if (killerEntity instanceof Arrow) {
+            Arrow arrow = (Arrow) killerEntity;
+
+            ProjectileSource source = arrow.getShooter();
+
+            if (!(source instanceof Player)) {
+                return;
+            }
+
+            Player player = (Player) source;
+
+            handler.addToPool(new KillInfo(player.getUniqueId(), time, dead, "Bow"));
         }
     }
 }
