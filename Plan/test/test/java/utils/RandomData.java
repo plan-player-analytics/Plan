@@ -79,4 +79,9 @@ public class RandomData {
         int x = r.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
+
+    public static List<UserData> randomUserData() {
+        return new ArrayList<>();
+        // TODO Rewrite
+    }
 }
