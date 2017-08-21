@@ -4,11 +4,9 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import org.bukkit.entity.Player;
@@ -71,22 +69,19 @@ public class AnalysisCacheHandler {
     }
 
     public void sendAnalysisMessage(ISender sender) {
-        boolean textUI = Settings.USE_ALTERNATIVE_UI.isTrue();
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
-        if (textUI) {
-            sender.sendMessage(TextUI.getAnalysisMessages());
+
+        // Link
+        String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
+        String message = Locale.get(Msg.CMD_INFO_LINK).toString();
+        boolean console = !CommandUtils.isPlayer(sender);
+        if (console) {
+            sender.sendMessage(message + url);
         } else {
-            // Link
-            String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
-            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
-            boolean console = !CommandUtils.isPlayer(sender);
-            if (console) {
-                sender.sendMessage(message + url);
-            } else {
-                sender.sendMessage(message);
-                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
-            }
+            sender.sendMessage(message);
+            sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
         }
+
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 

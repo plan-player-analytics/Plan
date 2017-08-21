@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -33,14 +32,9 @@ public class AnalysisUtils {
      * @return
      */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
-        int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
 
-        if (timeToActive < 0) {
-            timeToActive = 0;
-        }
-
+        int timeToActive = 10;
         long twoWeeks = 1209600000;
-
         return now - lastPlayed < twoWeeks
                 && loginTimes > 3
                 && playTime > 60 * timeToActive;

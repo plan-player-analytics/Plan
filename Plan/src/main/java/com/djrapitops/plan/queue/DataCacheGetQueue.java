@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.queue;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -46,7 +45,7 @@ public class DataCacheGetQueue extends Queue<Map<UUID, List<DBCallableProcessor>
             map.put(uuid, Arrays.asList(processors));
             queue.add(map);
         } catch (IllegalStateException e) {
-            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Get Queue", Settings.PROCESS_GET_LIMIT.getNumber()));
+            Log.error(Locale.get(Msg.RUN_WARN_QUEUE_SIZE).parse("Get Queue", 20000));
         }
     }
 

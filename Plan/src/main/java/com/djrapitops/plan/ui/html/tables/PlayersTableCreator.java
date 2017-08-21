@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.ui.html.tables;
 
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -30,7 +29,6 @@ public class PlayersTableCreator {
         StringBuilder html = new StringBuilder();
 
         long now = MiscUtils.getTime();
-        boolean showImages = Settings.PLAYERLIST_SHOW_IMAGES.isTrue();
 
         int i = 0;
         for (UserData uData : data) {
@@ -45,10 +43,8 @@ public class PlayersTableCreator {
 
                 String activityString = getActivityString(isBanned, isUnknown, isActive);
 
-                String img = showImages ? Html.MINOTAR_SMALL_IMG.parse(uData.getName()) : "";
-
                 html.append(Html.TABLELINE_PLAYERS.parse(
-                        img + Html.LINK.parse(HtmlUtils.getInspectUrl(uData.getName()), uData.getName()),
+                        Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(uData.getName()), uData.getName()),
                         activityString,
                         String.valueOf(uData.getPlayTime()), FormatUtils.formatTimeAmount(uData.getPlayTime()),
                         String.valueOf(uData.getLoginTimes()),

@@ -10,12 +10,10 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.text.TextUI;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -126,24 +124,16 @@ public class InspectCommand extends SubCommand {
     }
 
     private void sendInspectMsg(ISender sender, String playerName, UUID uuid) {
-
-        boolean usingTextUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + playerName);
-
-        if (usingTextUI) {
-            sender.sendMessage(TextUI.getInspectMessages(uuid));
+        // Link
+        String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
+        String message = Locale.get(Msg.CMD_INFO_LINK).toString();
+        boolean console = !CommandUtils.isPlayer(sender);
+        if (console) {
+            sender.sendMessage(message + url);
         } else {
-            // Link
-            String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
-            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
-            boolean console = !CommandUtils.isPlayer(sender);
-            if (console) {
-                sender.sendMessage(message + url);
-            } else {
-                sender.sendMessage(message);
-                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
-            }
+            sender.sendMessage(message);
+            sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
         }
 
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());

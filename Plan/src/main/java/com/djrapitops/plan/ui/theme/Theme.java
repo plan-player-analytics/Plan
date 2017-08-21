@@ -58,7 +58,7 @@ public enum Theme {
 
     Theme(String... colors) {
         int length = colors.length;
-        if (length != 19) {
+        if (length < Colors.values().length) {
             Log.error("Not All colors (" + length + ") were specified in the theme file: " + name());
             Log.error("If the theme is used it WILL CAUSE EXCEPTIONS.");
         }
@@ -93,5 +93,14 @@ public enum Theme {
             Files.write(themeHtml.toPath(), Collections.singletonList(t.replaceThemeColors(serverHtml)));
             Files.write(themeCss.toPath(), Collections.singletonList(t.replaceThemeColors(css)));
         }
+    }
+
+    public static String replaceColors(String resourceString) {
+        Theme def = Theme.DEFAULT;
+        String replaced = resourceString;
+        for (Colors c : Colors.values()) {
+            replaced = replaced.replace("#" + def.getColor(c.getId()), c.getColor());
+        }
+        return replaced;
     }
 }

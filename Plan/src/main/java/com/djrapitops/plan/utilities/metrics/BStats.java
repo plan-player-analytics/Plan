@@ -21,13 +21,10 @@ public class BStats {
     }
 
     private void registerConfigSettingGraphs() {
-        boolean webserver = Settings.WEBSERVER_ENABLED.isTrue();
-        boolean analysisRefreshEnable = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
+        // TODO Write a Module bar graph
         boolean analysisAutoRefresh = Settings.ANALYSIS_AUTO_REFRESH.getNumber() != -1;
         boolean export = Settings.ANALYSIS_EXPORT.isTrue();
 
-        addEnabledDisabledPie("webserver_enabled", webserver);
-        addEnabledDisabledPie("analysis_enable_refresh", analysisRefreshEnable);
         addEnabledDisabledPie("analysis_auto_refresh", analysisAutoRefresh);
         addEnabledDisabledPie("html_export", export);
 

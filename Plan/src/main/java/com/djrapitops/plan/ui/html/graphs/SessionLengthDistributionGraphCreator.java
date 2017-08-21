@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * @author Rsl1122
  */
+@Deprecated // Not going to be used TODO REMOVE
 public class SessionLengthDistributionGraphCreator {
 
     /**

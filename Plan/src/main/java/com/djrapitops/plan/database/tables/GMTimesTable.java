@@ -26,11 +26,6 @@ public class GMTimesTable extends UserIDTable {
     private final String columnAdventureTime;
     private final String columnSpectatorTime;
 
-    private static final String SURVIVAL = "SURVIVAL";
-    private static final String CREATIVE = "CREATIVE";
-    private static final String ADVENTURE = "ADVENTURE";
-    private static final String SPECTATOR = "SPECTATOR";
-
 
     /**
      * @param db
@@ -43,10 +38,6 @@ public class GMTimesTable extends UserIDTable {
         columnCreativeTime = "CREATIVE";
         columnAdventureTime = "ADVENTURE";
         columnSpectatorTime = "SPECTATOR";
-    }
-
-    public static String[] getGMKeyArray() {
-        return new String[]{SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR};
     }
 
     /**
@@ -95,10 +86,10 @@ public class GMTimesTable extends UserIDTable {
             HashMap<String, Long> times = new HashMap<>();
 
             while (set.next()) {
-                times.put(SURVIVAL, set.getLong(columnSurvivalTime));
-                times.put(CREATIVE, set.getLong(columnCreativeTime));
-                times.put(ADVENTURE, set.getLong(columnAdventureTime));
-                times.put(SPECTATOR, set.getLong(columnSpectatorTime));
+                times.put(GMTimes.SURVIVAL, set.getLong(columnSurvivalTime));
+                times.put(GMTimes.CREATIVE, set.getLong(columnCreativeTime));
+                times.put(GMTimes.ADVENTURE, set.getLong(columnAdventureTime));
+                times.put(GMTimes.SPECTATOR, set.getLong(columnSpectatorTime));
             }
 
             return times;
@@ -123,10 +114,10 @@ public class GMTimesTable extends UserIDTable {
                     continue;
                 }
 
-                gmTimes.put(SURVIVAL, set.getLong(columnSurvivalTime));
-                gmTimes.put(CREATIVE, set.getLong(columnCreativeTime));
-                gmTimes.put(ADVENTURE, set.getLong(columnAdventureTime));
-                gmTimes.put(SPECTATOR, set.getLong(columnSpectatorTime));
+                gmTimes.put(GMTimes.SURVIVAL, set.getLong(columnSurvivalTime));
+                gmTimes.put(GMTimes.CREATIVE, set.getLong(columnCreativeTime));
+                gmTimes.put(GMTimes.ADVENTURE, set.getLong(columnAdventureTime));
+                gmTimes.put(GMTimes.SPECTATOR, set.getLong(columnSpectatorTime));
                 times.put(id, gmTimes);
             }
 
@@ -148,7 +139,7 @@ public class GMTimesTable extends UserIDTable {
         }
 
         PreparedStatement statement = null;
-        String[] gms = getGMKeyArray();
+        String[] gms = GMTimes.getGMKeyArray();
 
         int update;
         try {
@@ -233,7 +224,7 @@ public class GMTimesTable extends UserIDTable {
             return;
         }
 
-        String[] gms = getGMKeyArray();
+        String[] gms = GMTimes.getGMKeyArray();
         Set<Integer> savedIDs = getSavedIDs();
 
         PreparedStatement statement = null;
@@ -300,7 +291,7 @@ public class GMTimesTable extends UserIDTable {
             return;
         }
 
-        String[] gms = getGMKeyArray();
+        String[] gms = GMTimes.getGMKeyArray();
 
         PreparedStatement statement = null;
         try {
@@ -338,7 +329,7 @@ public class GMTimesTable extends UserIDTable {
         }
 
         PreparedStatement statement = null;
-        String[] gms = getGMKeyArray();
+        String[] gms = GMTimes.getGMKeyArray();
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "

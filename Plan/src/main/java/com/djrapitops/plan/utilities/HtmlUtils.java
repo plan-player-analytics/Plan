@@ -30,7 +30,9 @@ public class HtmlUtils {
      * @param fileName
      * @return
      * @throws FileNotFoundException
+     * @deprecated Use FileUtil
      */
+    @Deprecated
     public static String getStringFromResource(String fileName) throws FileNotFoundException {
         return FileUtil.getStringFromResource(fileName);
     }
@@ -42,7 +44,7 @@ public class HtmlUtils {
      */
     public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
         StrSubstitutor sub = new StrSubstitutor(replaceMap);
-
+        sub.setEnableSubstitutionInVariables(true);
         return sub.replace(html);
     }
 
@@ -119,6 +121,7 @@ public class HtmlUtils {
      * @param placeholders
      * @return
      */
+    // TODO REWRITE
     public static String getPluginsTabLayout(List<String> pluginNames, Map<String, List<String>> placeholders) {
         boolean sizeIsEvenNumber = pluginNames.size() % 2 == 0;
         StringBuilder html = new StringBuilder();

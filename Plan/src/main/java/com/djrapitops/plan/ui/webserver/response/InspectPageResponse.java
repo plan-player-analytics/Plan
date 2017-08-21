@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
+import main.java.com.djrapitops.plan.ui.theme.Theme;
 
 import java.util.UUID;
 
@@ -12,6 +13,6 @@ public class InspectPageResponse extends Response {
 
     public InspectPageResponse(DataRequestHandler h, UUID uuid) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(h.getInspectHtml(uuid));
+        super.setContent(Theme.replaceColors(h.getInspectHtml(uuid)));
     }
 }

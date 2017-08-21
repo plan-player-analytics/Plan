@@ -154,7 +154,7 @@ public abstract class PluginData {
      * @see AnalysisType
      */
     public final String getPlaceholder(String modifier) {
-        return "%" + sourcePlugin + "_" + placeholder + modifier + "%";
+        return "${" + sourcePlugin + "_" + placeholder + modifier + "}";
     }
 
     /**

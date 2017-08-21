@@ -87,7 +87,7 @@ public abstract class RawData {
     /**
      * Used to get the value for a placeholder without the placeholder prefix and suffix.
      *
-     * @param key placeholder without the prefix and suffix
+     * @param key placeholder name without ${ and }
      * @return Value the placeholder should be replaced with or null.
      */
     public String get(String key) {

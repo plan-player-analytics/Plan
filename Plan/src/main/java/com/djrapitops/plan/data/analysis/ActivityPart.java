@@ -2,13 +2,13 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.ui.html.RecentPlayersButtonsCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
+import main.java.com.djrapitops.plan.ui.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -21,17 +21,22 @@ import java.util.stream.Collectors;
 /**
  * Part responsible for all Player Activity related analysis.
  * <p>
- * Online Graphs, Player-base pie-chart, Recent Players and Session
- * visualisation.
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: recentlogins, sessionaverage,
- * datapunchcard, datasessiondistribution, labelssessiondistribution,
- * datascatterday, datascatterweek, datascattermonth, playersonlinecolor,
- * playersgraphfill, activecol, inactivecol, joinleavecol, bannedcol,
- * activitycolors, labelsactivity, dataaactivity, active, inactive, joinleaver,
- * banned
+ * Contains following placeholders after analyzed:
+ * ${active} - (Number)
+ * ${inactive} - (Number)
+ * ${joinLeaver} - (Number)
+ * ${banned} - (Number)
+ * ${activityColors} - Color array
+ * ${playersGraphColor} - Color
+ * <p>
+ * ${playersOnlineSeries} - Data for HighCharts
+ * ${sessionLengthSeries} - Data for HighCharts
+ * ${punchCardSeries} - Data for HighCharts
+ * <p>
+ * ${sessionAverage} - Formatted Time amount
+ * //TODO ${tableBodyRecentLogins}
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -61,6 +66,7 @@ public class ActivityPart extends RawData {
         Verify.nullCheck(recentPlayers);
         Verify.nullCheck(recentPlayersUUIDs);
 
+        // TODO Recent logins table
         addValue("recentlogins", RecentPlayersButtonsCreator.createRecentLoginsButtons(recentPlayers, 15));
 
         activityPiechart();
@@ -71,45 +77,34 @@ public class ActivityPart extends RawData {
 
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
         long averageLength = MathUtils.averageLong(lengths);
-        addValue("sessionaverage", FormatUtils.formatTimeAmount(averageLength));
+        addValue("sessionAverage", FormatUtils.formatTimeAmount(averageLength));
 
         List<SessionData> sessionsMonth = sessions.stream()
                 .filter(s -> s.getSessionStart() > MiscUtils.getTime() - TimeAmount.MONTH.ms())
                 .collect(Collectors.toList());
-        addValue("punchcardseries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
-        addValue("sessionlengthseries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
+        addValue("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
+        addValue("sessionLengthSeries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
     }
 
     private void playerActivityGraphs() {
         List<TPS> tpsData = tpsPart.getTpsData();
-        addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
-        addValue("playersgraphcolor", Settings.HCOLOR_ACT_ONL.toString());
+        addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
+        addValue("playersGraphColor", Colors.PLAYERS_ONLINE.getColor());
     }
 
     private void activityPiechart() {
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
-        final String colAct = Settings.HCOLOR_ACTP_ACT.toString();
-        final String colIna = Settings.HCOLOR_ACTP_INA.toString();
-        final String colJoi = Settings.HCOLOR_ACTP_JON.toString();
-        final String colBan = Settings.HCOLOR_ACTP_BAN.toString();
 
-        addValue("activecol", colAct);
-        addValue("inactivecol", colIna);
-        addValue("joinleavecol", colJoi);
-        addValue("bancol", colBan);
         String activityColors = HtmlUtils.separateWithQuotes(
-                "#" + colAct, "#" + colIna, "#" + colJoi, "#" + colBan
+                "#55ffff", "#ff55ff", "#ff5555", "#ffff55" //TODO Write Colors (enums) for Activity pie.
         );
-        addValue("activitycolors", activityColors);
+        addValue("activityColors", activityColors);
 
-        String activityLabels = "[" + HtmlUtils.separateWithQuotes(
-                "Active", "Inactive", "Unknown", "Banned") + "]";
-        addValue("labelsactivity", activityLabels);
-
-        addValue("activitydata", Arrays.toString(counts));
+//        addValue("activitydata", Arrays.toString(counts)); // TODO Check if needed
+        addValue("playersActive", counts[0]);
         addValue("active", counts[0]);
         addValue("inactive", counts[1]);
-        addValue("joinleaver", counts[2]);
+        addValue("joinLeaver", counts[2]);
         addValue("banned", counts[3]);
     }
 

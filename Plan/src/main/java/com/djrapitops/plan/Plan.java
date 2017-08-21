@@ -165,14 +165,11 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Analysis refresh task registration");
             // Analysis refresh settings
-            boolean bootAnalysisIsEnabled = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
             int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
             boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
 
             // Analysis refresh tasks
-            if (bootAnalysisIsEnabled) {
-                startBootAnalysisTask();
-            }
+            startBootAnalysisTask();
             if (analysisRefreshTaskIsEnabled) {
                 startAnalysisRefreshTask(analysisRefreshMinutes);
             }
@@ -180,23 +177,21 @@ public class Plan extends BukkitPlugin<Plan> {
             Benchmark.stop("Enable", "Analysis refresh task registration");
 
             Benchmark.start("WebServer Initialization");
-            // Data view settings
-            boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
-            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-            boolean usingAlternativeUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-            boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
 
             uiServer = new WebServer(this);
-            if (webserverIsEnabled) {
-                registerWebAPIs();
-                uiServer.initServer();
+            registerWebAPIs(); // TODO Move to WebServer class
+            uiServer.initServer();
 
-                if (!uiServer.isEnabled()) {
-                    Log.error("WebServer was not successfully initialized.");
-                }
+            if (!uiServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+            }
+            setupFilter(); // TODO Move to RegisterCommand Constructor
 
-                setupFilter();
-            } else if (!hasDataViewCapability) {
+            // Data view settings // TODO Rewrite. (TextUI removed & webserver might be running on bungee
+            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+            boolean hasDataViewCapability = usingAlternativeIP;
+
+            if (!hasDataViewCapability) {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
             }
             if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {

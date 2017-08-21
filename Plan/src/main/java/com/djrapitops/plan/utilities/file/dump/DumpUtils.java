@@ -198,11 +198,9 @@ public class DumpUtils {
      * @param plan The Plan instance
      */
     private static void addConfigurationDetails(DumpLog log, Plan plan) {
-        boolean webServerEnabled = Settings.WEBSERVER_ENABLED.isTrue();
         boolean usingHTTPS = plan.getUiServer().usingHttps();
-        boolean refreshAnalysisOnEnable = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
         boolean analysisExport = Settings.ANALYSIS_EXPORT.isTrue();
-        boolean usingAlternativeServerIP = Settings.USE_ALTERNATIVE_UI.isTrue();
+        boolean usingAlternativeServerIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
         boolean combineAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
         boolean unknownCommandLogging = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
@@ -212,9 +210,7 @@ public class DumpUtils {
 
         log.addHeader("Plan Configuration");
 
-        log.add("Webserver Enabled", webServerEnabled);
         log.add("Webserver HTTPS", usingHTTPS);
-        log.add("Refresh Analysis on Enable", refreshAnalysisOnEnable);
         log.add("Analysis Export", analysisExport);
         log.add("Alternative Server IP", usingAlternativeServerIP);
 
