@@ -531,4 +531,8 @@ public class WebServer {
     public boolean isAuthRequired() {
         return usingHttps;
     }
+
+    public String getAccessAddress() {
+        return getProtocol()+":/"+ HtmlUtils.getIP();
+    }
 }

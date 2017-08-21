@@ -20,28 +20,29 @@ public abstract class WhereParser extends SqlParser {
     private int conditions = 0;
 
     public WhereParser where(String... conditions) {
-        return and(conditions);
-    }
-
-    public WhereParser and(String... conditions) {
-        return whereOperator("AND", conditions);
-    }
-    
-    public WhereParser or(String... conditions) {
-        return whereOperator("OR", conditions);
-    }
-    
-    private WhereParser whereOperator(String operator, String... conditions) {
         append(" WHERE ");
         for (String condition : conditions) {
             if (this.conditions > 0) {
-                addSpace().append(operator).addSpace();
+                append(" AND ");
             }
-
             append("(").append(condition).append(")");
             this.conditions++;
         }
 
+        return this;
+    }
+
+    public WhereParser and(String condition) {
+        append(" AND ");
+        append("(").append(condition).append(")");
+        this.conditions++;
+        return this;
+    }
+
+    public WhereParser or(String condition) {
+        append(" OR ");
+        append("(").append(condition).append(")");
+        this.conditions++;
         return this;
     }
 }

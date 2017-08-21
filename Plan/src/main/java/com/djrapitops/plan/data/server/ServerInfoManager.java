@@ -10,12 +10,12 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,11 +25,13 @@ import java.util.UUID;
  */
 public class ServerInfoManager {
 
+    private Plan plugin;
     private ServerInfo serverInfo;
     private ServerInfoFile serverInfoFile;
     private ServerTable serverTable;
 
     public ServerInfoManager(Plan plugin) {
+        this.plugin = plugin;
         Database db = plugin.getDB();
         if ("sqlite".equals(db.getConfigName())) {
             return;
@@ -45,27 +47,60 @@ public class ServerInfoManager {
         serverTable = db.getServerTable();
 
         int serverID = serverInfoFile.getID();
-        if (serverID == -1) {
-            registerServer(plugin);
-        }
-    }
-
-    private void registerServer(Plan plugin) {
-        UUID serverUUID = generateNewUUID(plugin.getServer());
-        // TODO Clean Up HtmlUtils so this method can make sense
-        String[] address = (HtmlUtils.getProtocol() + "/" + HtmlUtils.getIP()).split(":");
-        String webAddress = address[0];
-        int port = Integer.parseInt(address[1]);
-        String name = Settings.SERVER_NAME.toString();
         try {
-            serverTable.saveCurrentServerInfo(new ServerInfo(-1, serverUUID, name, webAddress, port));
+            if (serverID == -1) {
+                registerServer();
+            } else {
+                updateDbInfo(serverID);
+            }
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+
     }
 
-    public UUID generateNewUUID(Server server) {
+    private void updateDbInfo(int serverID) throws SQLException {
+        UUID uuid = serverInfoFile.getUUID();
+        String name = Settings.SERVER_NAME.toString();
+        String webAddress = plugin.getUiServer().getAccessAddress();
+        if ("plan".equalsIgnoreCase(name)) {
+            name = "Server" + Integer.toString(serverID);
+        }
+
+        serverInfo = new ServerInfo(serverID, uuid, name, webAddress);
+        serverTable.saveCurrentServerInfo(serverInfo);
+    }
+
+    private void registerServer() throws SQLException {
+        UUID serverUUID = generateNewUUID(plugin.getServer());
+        String webAddress = plugin.getUiServer().getAccessAddress();
+        String name = Settings.SERVER_NAME.toString();
+        serverInfo = new ServerInfo(-1, serverUUID, name, webAddress);
+        serverTable.saveCurrentServerInfo(serverInfo);
+    }
+
+    private UUID generateNewUUID(Server server) {
         String seed = server.getName() + server.getIp() + server.getPort() + server.getVersion() + server.getBukkitVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
+    }
+
+    public Optional<String> getBungeeConnectionAddress() {
+        try {
+            String bungeeWebAddress = serverInfoFile.getBungeeWebAddress();
+            if (!bungeeWebAddress.isEmpty()) {
+                return Optional.of(bungeeWebAddress);
+            }
+        } catch (Exception ignored) {
+            /* Ignored */
+        }
+        return Optional.empty();
+    }
+
+    public int getServerID() {
+        return serverInfo.getId();
+    }
+
+    public String getServerName() {
+        return serverInfo.getName();
     }
 }
