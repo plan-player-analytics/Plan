@@ -9,7 +9,6 @@ import test.java.utils.RandomData;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Rsl1122
@@ -121,12 +120,12 @@ public class WorldTimesTest {
         long changeTime2 = changeTime + 1000L;
         GMTimes gmTimes = test.getGMTimes(worldOne).get();
         test.updateState(worldOne, "CREATIVE", changeTime);
-        assertTrue(1000L == gmTimes.getTime("SURVIVAL"));
-        assertTrue(0L == gmTimes.getTime("CREATIVE"));
+        assertEquals(1000L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(0L, gmTimes.getTime("CREATIVE"));
         test.updateState(worldOne, "ADVENTURE", changeTime2);
-        assertTrue(1000L == gmTimes.getTime("SURVIVAL"));
-        assertTrue(1000L == gmTimes.getTime("CREATIVE"));
-        assertTrue(0L == gmTimes.getTime("ADVENTURE"));
+        assertEquals(1000L, gmTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, gmTimes.getTime("CREATIVE"));
+        assertEquals(0L, gmTimes.getTime("ADVENTURE"));
     }
 
     @Test
@@ -136,46 +135,48 @@ public class WorldTimesTest {
         GMTimes worldOneGMTimes = test.getGMTimes(worldOne).get();
         test.updateState(worldOne, "CREATIVE", changeTime);
         test.updateState(worldOne, "ADVENTURE", changeTime2);
-        // Same state as above.
+        assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
+        assertEquals(0L, worldOneGMTimes.getTime("ADVENTURE"));
 
         test.updateState(worldTwo, "SURVIVAL", time + 3000L);
-        assertTrue(1000L == worldOneGMTimes.getTime("SURVIVAL"));
-        assertTrue(1000L == worldOneGMTimes.getTime("CREATIVE"));
-        assertTrue(1000L == worldOneGMTimes.getTime("ADVENTURE"));
-
         GMTimes worldTwoGMTimes = test.getGMTimes(worldTwo).get();
+        assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
 
-        assertTrue(0L == worldTwoGMTimes.getTime("SURVIVAL"));
-        assertTrue(0L == worldTwoGMTimes.getTime("CREATIVE"));
-        assertTrue(0L == worldTwoGMTimes.getTime("ADVENTURE"));
+        assertEquals(0L, worldTwoGMTimes.getTime("SURVIVAL"));
+        assertEquals(0L, worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(0L, worldTwoGMTimes.getTime("ADVENTURE"));
 
         test.updateState(worldTwo, "CREATIVE", time + 4000L);
 
-        assertTrue(1000L == worldOneGMTimes.getTime("SURVIVAL"));
-        assertTrue(1000L == worldOneGMTimes.getTime("CREATIVE"));
-        assertTrue(1000L == worldOneGMTimes.getTime("ADVENTURE"));
+        assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
 
-        assertTrue(1000L == worldTwoGMTimes.getTime("SURVIVAL"));
-        assertTrue(0L == worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldTwoGMTimes.getTime("SURVIVAL"));
+        assertEquals(0L, worldTwoGMTimes.getTime("CREATIVE"));
 
         test.updateState(worldTwo, "CREATIVE", time + 5000L);
-        assertTrue(1000L == worldTwoGMTimes.getTime("SURVIVAL"));
-        assertTrue(1000L == worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldTwoGMTimes.getTime("SURVIVAL"));
+        assertEquals(1000L, worldTwoGMTimes.getTime("CREATIVE"));
 
         // No change should occur.
         test.updateState(worldOne, "ADVENTURE", time + 5000L);
-        assertTrue(1000L == worldOneGMTimes.getTime("ADVENTURE"));
-        assertTrue(1000L == worldTwoGMTimes.getTime("CREATIVE"));
+        System.out.println(test);
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
+        assertEquals(1000L, worldTwoGMTimes.getTime("CREATIVE"));
         test.updateState(worldTwo, "CREATIVE", time + 5000L);
         System.out.println(test);
         test.updateState(worldOne, "ADVENTURE", time + 6000L);
         System.out.println(test);
-        assertTrue(1000L == worldOneGMTimes.getTime("ADVENTURE"));
-        assertTrue(2000L == worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
+        assertEquals(2000L, worldTwoGMTimes.getTime("CREATIVE"));
 
         test.updateState(worldTwo, "ADVENTURE", time + 7000L);
-        assertTrue(2000L == worldTwoGMTimes.getTime("CREATIVE"));
-        assertTrue(2000L == worldOneGMTimes.getTime("ADVENTURE"));
+        assertEquals(2000L, worldTwoGMTimes.getTime("CREATIVE"));
+        assertEquals(2000L, worldOneGMTimes.getTime("ADVENTURE"));
     }
 
     // TODO Test where SessionData is ended, check if worldTimes & session length add up.

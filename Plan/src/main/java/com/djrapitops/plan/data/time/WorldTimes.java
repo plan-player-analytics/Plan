@@ -43,16 +43,18 @@ public class WorldTimes {
 
     public void updateState(String worldName, String gameMode, long changeTime) {
         GMTimes currentGMTimes = worldTimes.get(currentWorld);
-
-        GMTimes newGMTimes = worldTimes.get(worldName);
-        if (newGMTimes == null) {
-            addWorld(worldName, gameMode, currentGMTimes.getLastStateChange());
+        if (worldName.equals(currentWorld)) {
+            currentGMTimes.changeState(gameMode, changeTime);
+        } else {
+            GMTimes newGMTimes = worldTimes.get(worldName);
+            if (newGMTimes == null) {
+                addWorld(worldName, gameMode, currentGMTimes.getLastStateChange());
+            }
+            currentGMTimes.changeState(currentGamemode, changeTime);
         }
-        currentGMTimes.changeState(gameMode, changeTime);
         for (GMTimes gmTimes : worldTimes.values()) {
             gmTimes.setLastStateChange(changeTime);
         }
-        worldTimes.put(currentWorld, currentGMTimes);
         currentWorld = worldName;
         currentGamemode = gameMode;
     }
