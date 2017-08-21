@@ -12,11 +12,10 @@ import java.util.Map;
  */
 public class GMTimes extends TimeKeeper {
 
-    // TODO Make private once GMTimesTable is removed
-    public static final String SURVIVAL = "SURVIVAL";
-    public static final String CREATIVE = "CREATIVE";
-    public static final String ADVENTURE = "ADVENTURE";
-    public static final String SPECTATOR = "SPECTATOR";
+    private static final String SURVIVAL = "SURVIVAL";
+    private static final String CREATIVE = "CREATIVE";
+    private static final String ADVENTURE = "ADVENTURE";
+    private static final String SPECTATOR = "SPECTATOR";
 
     public GMTimes(Map<String, Long> times, String lastState, long lastStateChange) {
         super(times, lastState, lastStateChange);
@@ -67,8 +66,8 @@ public class GMTimes extends TimeKeeper {
         }
     }
 
-    public void resetTimes(long playtime) {
-        resetState(SURVIVAL, playtime);
+    public void resetTimes(long time) {
+        resetState(SURVIVAL, time);
         resetState(CREATIVE);
         resetState(ADVENTURE);
         resetState(SPECTATOR);

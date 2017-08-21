@@ -4,13 +4,12 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
- * TimeKeeper class that tracks the time spent in each World based on Playtime.
+ * Class that tracks the time spent in each World based on GMTimes.
  *
  * @author Rsl1122
- * @since 3.6.0
+ * @since 4.0.0
  */
 public class WorldTimes {
 
@@ -31,16 +30,26 @@ public class WorldTimes {
         addWorld(startingWorld, startingGM, MiscUtils.getTime());
     }
 
-    public WorldTimes(Map<String, GMTimes> times, String lastWorld, String lastGM) {
+    /**
+     * Re-Creates an existing WorldTimes object for viewing.
+     *
+     * @param times Map of each World's GMTimes object.
+     */
+    public WorldTimes(Map<String, GMTimes> times) {
         worldTimes = times;
-        currentWorld = lastWorld;
-        currentGamemode = lastGM;
     }
 
     private void addWorld(String worldName, String gameMode, long changeTime) {
         worldTimes.put(worldName, new GMTimes(gameMode, changeTime));
     }
 
+    /**
+     * Updates the time status to match the new state.
+     *
+     * @param worldName World name of the world swapped to.
+     * @param gameMode GameMode name of the gm swapped to.
+     * @param changeTime Epoch ms the change occurred.
+     */
     public void updateState(String worldName, String gameMode, long changeTime) {
         GMTimes currentGMTimes = worldTimes.get(currentWorld);
         if (worldName.equals(currentWorld)) {
@@ -59,20 +68,42 @@ public class WorldTimes {
         currentGamemode = gameMode;
     }
 
-    public Optional<Long> getWorldPlaytime(String world) {
+    /**
+     * Used to get a total playtime of a world.
+     *
+     * @param world World name being checked.
+     * @return total milliseconds spent in a world.
+     */
+    public long getWorldPlaytime(String world) {
         GMTimes gmTimes = worldTimes.get(world);
         if (gmTimes != null) {
-            return Optional.of(gmTimes.getTotal());
+            return gmTimes.getTotal();
         }
-        return Optional.empty();
+        return 0;
     }
 
-    public Optional<GMTimes> getGMTimes(String world) {
+    public long getTotal() {
+        return worldTimes.values().stream()
+                .mapToLong(GMTimes::getTotal)
+                .sum();
+    }
+
+    /**
+     * Used for Quick access to time of each GameMode.
+     * <p>
+     * Should not be used for changing state,
+     * because if player has not played in the world,
+     * an empty GMTimes is given, with 0 as playtime
+     *
+     * @param world World name being checked.
+     * @return GMTimes object with play times of each GameMode.
+     */
+    public GMTimes getGMTimes(String world) {
         GMTimes gmTimes = worldTimes.get(world);
         if (gmTimes != null) {
-            return Optional.of(gmTimes);
+            return gmTimes;
         }
-        return Optional.empty();
+        return new GMTimes();
     }
 
     @Override
@@ -88,11 +119,12 @@ public class WorldTimes {
         return b.toString();
     }
 
-    public String getCurrentWorld() {
-        return currentWorld;
-    }
-
-    public String getCurrentGamemode() {
-        return currentGamemode;
+    /**
+     * Used to get the Map for saving.
+     *
+     * @return Current time map.
+     */
+    public Map<String, GMTimes> getWorldTimes() {
+        return worldTimes;
     }
 }

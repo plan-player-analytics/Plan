@@ -45,7 +45,6 @@ public abstract class SQLDB extends Database {
         usingMySQL = getName().equals("MySQL");
 
         usersTable = new UsersTable(this, usingMySQL);
-        gmTimesTable = new GMTimesTable(this, usingMySQL);
         sessionsTable = new SessionsTable(this, usingMySQL);
         killsTable = new KillsTable(this, usingMySQL);
         ipsTable = new IPsTable(this, usingMySQL);
@@ -226,7 +225,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTables() {
         return new Table[]{
-                usersTable, gmTimesTable, ipsTable,
+                usersTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, tpsTable, worldTable,
                 worldTimesTable, securityTable};
@@ -237,7 +236,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                gmTimesTable, ipsTable,
+                ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 worldTimesTable, worldTable, usersTable,
                 commandUseTable, tpsTable};
@@ -320,7 +319,6 @@ public abstract class SQLDB extends Database {
             boolean success = userId != -1
                     && ipsTable.removeUserIPs(userId)
                     && nicknamesTable.removeUserNicknames(userId)
-                    && gmTimesTable.removeUserGMTimes(userId)
                     && sessionsTable.removeUserSessions(userId)
                     && killsTable.removeUserKillsAndVictims(userId)
                     && worldTimesTable.removeUserWorldTimes(userId)
@@ -369,9 +367,6 @@ public abstract class SQLDB extends Database {
 
         List<InetAddress> ips = ipsTable.getIPAddresses(userId);
         data.addIpAddresses(ips);
-
-        Map<String, Long> gmTimes = gmTimesTable.getGMTimes(userId);
-        data.getGmTimes().setTimes(gmTimes);
         Map<String, Long> worldTimes = worldTimesTable.getWorldTimes(userId);
         WorldTimes worldT = data.getWorldTimes();
 //        worldT.setTimes(worldTimes); //TODO
@@ -419,7 +414,6 @@ public abstract class SQLDB extends Database {
         Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
         Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
         Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
-        Map<Integer, Map<String, Long>> gmTimes = gmTimesTable.getGMTimes(ids);
         Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
 
         Log.debug("Database",
@@ -431,7 +425,6 @@ public abstract class SQLDB extends Database {
                 "    IPs: " + ipList.size(),
                 "    Kills: " + playerKills.size(),
                 "    Sessions: " + sessionData.size(),
-                "    GM Times: " + gmTimes.size(),
                 "    World Times: " + worldTimes.size()
         );
 
@@ -446,7 +439,6 @@ public abstract class SQLDB extends Database {
             }
             uData.addSessions(sessionData.get(id));
             uData.setPlayerKills(playerKills.get(id));
-            uData.getGmTimes().setTimes(gmTimes.get(id));
             WorldTimes worldT = uData.getWorldTimes();
 //            worldT.setTimes(worldTimes.get(id)); //TODO
 //            if (worldT.getLastStateChange() == 0) {
@@ -526,7 +518,6 @@ public abstract class SQLDB extends Database {
         ipsTable.saveIPList(ips);
         killsTable.savePlayerKills(kills, uuids);
         sessionsTable.saveSessionData(sessions);
-        gmTimesTable.saveGMTimes(gmTimes);
 //      TODO  worldTable.saveWorlds(worldNames);
         worldTimesTable.saveWorldTimes(worldTimes);
         commit();
@@ -561,7 +552,6 @@ public abstract class SQLDB extends Database {
         nicknamesTable.saveNickList(userId, new HashSet<>(data.getNicknames()), data.getLastNick());
         ipsTable.saveIPList(userId, new HashSet<>(data.getIps()));
         killsTable.savePlayerKills(userId, new ArrayList<>(data.getPlayerKills()));
-        gmTimesTable.saveGMTimes(userId, data.getGmTimes().getTimes());
 //      TODO  worldTable.saveWorlds(new HashSet<>(data.getWorldTimes().getTimes().keySet()));
 //        worldTimesTable.saveWorldTimes(userId, data.getWorldTimes().getTimes());
         data.stopAccessing();

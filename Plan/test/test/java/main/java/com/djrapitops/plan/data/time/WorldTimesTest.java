@@ -6,7 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.RandomData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,10 +28,7 @@ public class WorldTimesTest {
     @Before
     public void setUp() throws Exception {
         test = new WorldTimes(worldOne, gms[0]);
-        Optional<GMTimes> gmTimes = test.getGMTimes(worldOne);
-        gmTimes.ifPresent(gmTimes1 ->
-                time = gmTimes1.getLastStateChange()
-        );
+        time = test.getGMTimes(worldOne).getLastStateChange();
         System.out.println(test);
     }
 
@@ -37,8 +37,8 @@ public class WorldTimesTest {
         long changeTime = time + 1000L;
         test.updateState(worldTwo, gms[0], changeTime);
         System.out.println(test);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne).get());
-        assertEquals(1000L, test.getGMTimes(worldOne).get().getTime(gms[0]));
+        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
     }
 
     @Test
@@ -46,8 +46,8 @@ public class WorldTimesTest {
         long changeTime = time + 1000L;
         test.updateState(worldOne, gms[0], changeTime);
         System.out.println(test);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne).get());
-        assertEquals(1000L, test.getGMTimes(worldOne).get().getTime(gms[0]));
+        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
     }
 
     @Test
@@ -56,13 +56,13 @@ public class WorldTimesTest {
         long changeTime2 = changeTime + 1000L;
         test.updateState(worldTwo, gms[2], changeTime);
         System.out.println(test);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne).get());
-        assertEquals(1000L, test.getGMTimes(worldOne).get().getTime(gms[0]));
+        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
         test.updateState(worldOne, gms[1], changeTime2);
         System.out.println(test);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne).get());
-        assertEquals(1000L, test.getGMTimes(worldOne).get().getTime(gms[0]));
-        assertEquals(1000L, test.getGMTimes(worldTwo).get().getTime(gms[2]));
+        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
+        assertEquals(1000L, test.getGMTimes(worldTwo).getTime(gms[2]));
     }
 
     @Test
@@ -96,16 +96,8 @@ public class WorldTimesTest {
         long worldTimeOne = worldOneCount * amount;
         long worldTimeTwo = worldTwoCount * amount;
 
-        long time1 = 0L;
-        long time2 = 0L;
-        Optional<Long> worldPlaytime = test.getWorldPlaytime(worldOne);
-        if (worldPlaytime.isPresent()) {
-            time1 += worldPlaytime.get();
-        }
-        Optional<Long> worldPlaytime2 = test.getWorldPlaytime(worldTwo);
-        if (worldPlaytime2.isPresent()) {
-            time2 += worldPlaytime2.get();
-        }
+        long time1 = test.getWorldPlaytime(worldOne);
+        long time2 = test.getWorldPlaytime(worldTwo);
         System.out.println(test);
 
         // Tests World time calculation.
@@ -118,7 +110,7 @@ public class WorldTimesTest {
     public void testGMTrackingSingleWorld() {
         long changeTime = time + 1000L;
         long changeTime2 = changeTime + 1000L;
-        GMTimes gmTimes = test.getGMTimes(worldOne).get();
+        GMTimes gmTimes = test.getGMTimes(worldOne);
         test.updateState(worldOne, "CREATIVE", changeTime);
         assertEquals(1000L, gmTimes.getTime("SURVIVAL"));
         assertEquals(0L, gmTimes.getTime("CREATIVE"));
@@ -132,7 +124,7 @@ public class WorldTimesTest {
     public void testGMTrackingTwoWorlds() {
         long changeTime = time + 1000L;
         long changeTime2 = time + 2000L;
-        GMTimes worldOneGMTimes = test.getGMTimes(worldOne).get();
+        GMTimes worldOneGMTimes = test.getGMTimes(worldOne);
         test.updateState(worldOne, "CREATIVE", changeTime);
         test.updateState(worldOne, "ADVENTURE", changeTime2);
         assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
@@ -140,7 +132,7 @@ public class WorldTimesTest {
         assertEquals(0L, worldOneGMTimes.getTime("ADVENTURE"));
 
         test.updateState(worldTwo, "SURVIVAL", time + 3000L);
-        GMTimes worldTwoGMTimes = test.getGMTimes(worldTwo).get();
+        GMTimes worldTwoGMTimes = test.getGMTimes(worldTwo);
         assertEquals(1000L, worldOneGMTimes.getTime("SURVIVAL"));
         assertEquals(1000L, worldOneGMTimes.getTime("CREATIVE"));
         assertEquals(1000L, worldOneGMTimes.getTime("ADVENTURE"));
