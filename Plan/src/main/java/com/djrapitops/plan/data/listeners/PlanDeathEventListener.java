@@ -100,7 +100,7 @@ public class PlanDeathEventListener implements Listener {
 
             Player player = (Player) source;
 
-            handler.addToPool(new KillInfo(player.getUniqueId(), time, dead, "Bow"));
+            plugin.addToProcessQueue(new KillInfo(player.getUniqueId(), time, dead, "Bow"));
         }
     }
 }

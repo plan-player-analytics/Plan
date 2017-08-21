@@ -191,7 +191,7 @@ public class Plan extends BukkitPlugin<Plan> {
             }
 
             Benchmark.start("ServerInfo Registration");
-                serverInfoManager = new ServerInfoManager(this);
+            serverInfoManager = new ServerInfoManager(this);
             Benchmark.stop("Enable", "ServerInfo Registration");
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
@@ -229,7 +229,7 @@ public class Plan extends BukkitPlugin<Plan> {
         }
     }
 
-    private final void initColorScheme() {
+    private void initColorScheme() {
         try {
             ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
             ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
