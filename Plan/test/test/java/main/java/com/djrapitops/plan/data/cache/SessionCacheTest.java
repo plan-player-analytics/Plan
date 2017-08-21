@@ -6,7 +6,6 @@
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.SessionCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
@@ -59,15 +58,4 @@ public class SessionCacheTest {
         assertTrue("Session length not positive", testSession.getLength() > 0L);
         assertTrue("Session not valid", testSession.isValid());
     }
-
-    @Test
-    public void testAddSession() {
-        UUID uuid = MockUtils.getPlayerUUID();
-        test.getActiveSessions().put(uuid, new SessionData(0));
-        test.endSession(uuid);
-        UserData data = MockUtils.mockUser();
-        test.addSession(data);
-        assertTrue("Didn't add session to data", data.getSessions().size() == 1);
-    }
-
 }

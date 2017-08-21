@@ -1,24 +1,15 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.plugin.utilities.Verify;
-import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -27,23 +18,36 @@ public class UsersTable extends Table {
 
     private final String columnID;
     private final String columnUUID;
-    @Deprecated private final String columnGeolocation;
-    @Deprecated private final String columnLastGM;
-    @Deprecated private final String columnLastGMSwapTime;
-    @Deprecated private final String columnPlayTime;
-    @Deprecated private final String columnLoginTimes;
-    @Deprecated private final String columnLastPlayed;
-    @Deprecated private final String columnDeaths;
-    @Deprecated private final String columnMobKills;
+    @Deprecated
+    private final String columnGeolocation;
+    @Deprecated
+    private final String columnLastGM;
+    @Deprecated
+    private final String columnLastGMSwapTime;
+    @Deprecated
+    private final String columnPlayTime;
+    @Deprecated
+    private final String columnLoginTimes;
+    @Deprecated
+    private final String columnLastPlayed;
+    @Deprecated
+    private final String columnDeaths;
+    @Deprecated
+    private final String columnMobKills;
     private final String columnRegistered;
     private final String columnName;
     //TODO Server Specific Table (Also has registered on it)
-    @Deprecated private final String columnOP;
-    @Deprecated private final String columnBanned;
+    @Deprecated
+    private final String columnOP;
+    @Deprecated
+    private final String columnBanned;
     //
-    @Deprecated private final String columnContainsBukkitData;
-    @Deprecated private final String columnLastWorldSwapTime;
-    @Deprecated private final String columnLastWorld;
+    @Deprecated
+    private final String columnContainsBukkitData;
+    @Deprecated
+    private final String columnLastWorldSwapTime;
+    @Deprecated
+    private final String columnLastWorld;
 
     /**
      * @param db
@@ -253,70 +257,6 @@ public class UsersTable extends Table {
     }
 
     /**
-     * @param uuid
-     * @return
-     * @throws SQLException
-     */
-    public UserData getUserData(UUID uuid) throws SQLException {
-        boolean containsBukkitData = getContainsBukkitData(uuid);
-        UserData data = null;
-        if (containsBukkitData) {
-            data = getUserDataForKnown(uuid);
-        }
-        if (data == null) {
-            data = new UserData(Fetch.getIOfflinePlayer(uuid));
-            addUserInformationToUserData(data);
-        }
-        return data;
-    }
-
-    private boolean getContainsBukkitData(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        boolean containsBukkitData = false;
-        try {
-            statement = prepareStatement("SELECT " + columnContainsBukkitData + " FROM " + tableName + " WHERE (" + columnUUID + "=?)");
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                containsBukkitData = set.getBoolean(columnContainsBukkitData);
-            }
-        } finally {
-            close(statement);
-            close(set);
-        }
-        return containsBukkitData;
-    }
-
-    /**
-     * @param uuids
-     * @return
-     * @throws SQLException
-     */
-    public List<UserData> getUserData(Collection<UUID> uuids) throws SQLException {
-        Benchmark.start("Get UserInfo Multiple");
-        List<UUID> containsBukkitData = getContainsBukkitData(uuids);
-        List<UserData> datas = new ArrayList<>();
-        datas.addAll(getUserDataForKnown(containsBukkitData));
-
-        uuids.removeAll(containsBukkitData);
-        if (!uuids.isEmpty()) {
-            List<UserData> noBukkitData = new ArrayList<>();
-            Benchmark.start("Create UserData objects for No BukkitData players");
-            for (UUID uuid : uuids) {
-                UserData uData = new UserData(Fetch.getIOfflinePlayer(uuid));
-                noBukkitData.add(uData);
-            }
-            Benchmark.stop("Database", "Create UserData objects for No BukkitData players");
-            addUserInformationToUserData(noBukkitData);
-            datas.addAll(noBukkitData);
-        }
-
-        Benchmark.stop("Database", "Get UserInfo Multiple");
-        return datas;
-    }
-
-    /**
      * @param uuids
      * @return
      * @throws SQLException
@@ -344,435 +284,6 @@ public class UsersTable extends Table {
             close(set);
         }
         return containsBukkitData;
-    }
-
-    private UserData getUserDataForKnown(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUUID + "=?)");
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                String gm = set.getString(columnLastGM);
-                boolean op = set.getBoolean(columnOP);
-                boolean banned = set.getBoolean(columnBanned);
-                String name = set.getString(columnName);
-                long registered = set.getLong(columnRegistered);
-                UserData data = new UserData(uuid, registered, op, gm, name, false);
-                data.setBanned(banned);
-                data.setGeolocation(set.getString(columnGeolocation));
-                data.getGmTimes().setLastStateChange(set.getLong(columnLastGMSwapTime));
-                long playTime = set.getLong(columnPlayTime);
-                data.setPlayTime(playTime);
-                data.setLoginTimes(set.getInt(columnLoginTimes));
-                data.setLastPlayed(set.getLong(columnLastPlayed));
-                data.setDeaths(set.getInt(columnDeaths));
-                data.setMobKills(set.getInt(columnMobKills));
-                WorldTimes worldTimes = data.getWorldTimes();
-//            TODO    worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-//                String lastWorld = set.getString(columnLastWorld);
-//                if (!"Unknown".equals(lastWorld)) {
-//                    worldTimes.setState(lastWorld);
-//                } else {
-//                    worldTimes.setLastStateChange(playTime);
-//                }
-                return data;
-            }
-        } finally {
-            close(set);
-            close(statement);
-        }
-        return null;
-    }
-
-    private List<UserData> getUserDataForKnown(Collection<UUID> uuids) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        List<UserData> datas = new ArrayList<>();
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            while (set.next()) {
-                String uuidS = set.getString(columnUUID);
-                UUID uuid = UUID.fromString(uuidS);
-                if (!uuids.contains(uuid)) {
-                    continue;
-                }
-                String gm = set.getString(columnLastGM);
-                boolean op = set.getBoolean(columnOP);
-                boolean banned = set.getBoolean(columnBanned);
-                String name = set.getString(columnName);
-                long registered = set.getLong(columnRegistered);
-                UserData data = new UserData(uuid, registered, op, gm, name, false);
-                data.setBanned(banned);
-                data.setGeolocation(set.getString(columnGeolocation));
-                data.getGmTimes().setLastStateChange(set.getLong(columnLastGMSwapTime));
-                long playTime = set.getLong(columnPlayTime);
-                data.setPlayTime(playTime);
-                data.setLoginTimes(set.getInt(columnLoginTimes));
-                data.setLastPlayed(set.getLong(columnLastPlayed));
-                data.setDeaths(set.getInt(columnDeaths));
-                data.setMobKills(set.getInt(columnMobKills));
-                WorldTimes worldTimes = data.getWorldTimes();
-//        TODO        worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-//                String lastWorld = set.getString(columnLastWorld);
-//                if (!"Unknown".equals(lastWorld)) {
-//                    worldTimes.setState(lastWorld);
-//                } else {
-//                    worldTimes.setLastStateChange(playTime);
-//                }
-                datas.add(data);
-            }
-        } finally {
-            close(set);
-            close(statement);
-        }
-        return datas;
-    }
-
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void addUserInformationToUserData(UserData data) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUUID + "=?)");
-            statement.setString(1, data.getUuid().toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                data.setGeolocation(set.getString(columnGeolocation));
-                GMTimes gmTimes = data.getGmTimes();
-                gmTimes.setState(set.getString(columnLastGM));
-                gmTimes.setLastStateChange(set.getLong(columnLastGMSwapTime));
-                long playTime = set.getLong(columnPlayTime);
-                data.setPlayTime(playTime);
-                data.setLoginTimes(set.getInt(columnLoginTimes));
-                data.setLastPlayed(set.getLong(columnLastPlayed));
-                data.setDeaths(set.getInt(columnDeaths));
-                data.setMobKills(set.getInt(columnMobKills));
-                WorldTimes worldTimes = data.getWorldTimes();
-//          TODO      worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-//                String lastWorld = set.getString(columnLastWorld);
-//                if (!"Unknown".equals(lastWorld)) {
-//                    worldTimes.setState(lastWorld);
-//                } else {
-//                    worldTimes.setLastStateChange(playTime);
-//                }
-            }
-        } finally {
-            close(set);
-            close(statement);
-        }
-    }
-
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void addUserInformationToUserData(List<UserData> data) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            Map<UUID, UserData> userDatas = data.stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
-            statement = prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            while (set.next()) {
-                String uuidS = set.getString(columnUUID);
-                UUID uuid = UUID.fromString(uuidS);
-                if (!userDatas.keySet().contains(uuid)) {
-                    continue;
-                }
-                UserData uData = userDatas.get(uuid);
-                uData.setGeolocation(set.getString(columnGeolocation));
-                long playTime = set.getLong(columnPlayTime);
-                uData.setPlayTime(playTime);
-                uData.setLoginTimes(set.getInt(columnLoginTimes));
-                uData.setLastPlayed(set.getLong(columnLastPlayed));
-                uData.setDeaths(set.getInt(columnDeaths));
-                uData.setMobKills(set.getInt(columnMobKills));
-                GMTimes gmTimes = uData.getGmTimes();
-                gmTimes.setState(set.getString(columnLastGM));
-                gmTimes.setLastStateChange(set.getLong(columnLastGMSwapTime));
-                WorldTimes worldTimes = uData.getWorldTimes();
-//     TODO           worldTimes.setLastStateChange(set.getLong(columnLastWorldSwapTime));
-//                String lastWorld = set.getString(columnLastWorld);
-//                if (!"Unknown".equals(lastWorld)) {
-//                    worldTimes.setState(lastWorld);
-//                } else {
-//                    worldTimes.setLastStateChange(playTime);
-//                }
-            }
-        } finally {
-            close(set);
-            close(statement);
-        }
-    }
-
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void saveUserDataInformation(UserData data) throws SQLException {
-        PreparedStatement statement = null;
-        try {
-            UUID uuid = data.getUuid();
-            int userId = getUserId(uuid);
-            int update = 0;
-            if (userId != -1) {
-                String sql = getUpdateStatement();
-
-                statement = prepareStatement(sql);
-                statement.setString(1, data.getGeolocation());
-                GMTimes gmTimes = data.getGmTimes();
-                statement.setString(2, gmTimes.getState());
-                statement.setLong(3, gmTimes.getLastStateChange());
-                statement.setLong(4, data.getPlayTime());
-                statement.setInt(5, data.getLoginTimes());
-                statement.setLong(6, data.getLastPlayed());
-                statement.setInt(7, data.getDeaths());
-                statement.setInt(8, data.getMobKills());
-                statement.setBoolean(9, data.getName() != null);
-                statement.setBoolean(10, data.isOp());
-                statement.setBoolean(11, data.isBanned());
-                statement.setString(12, data.getName());
-                statement.setLong(13, data.getRegistered());
-                WorldTimes worldTimes = data.getWorldTimes();
-//     TODO           statement.setString(14, worldTimes.getState());
-//                statement.setLong(15, worldTimes.getLastStateChange());
-                statement.setString(16, uuid.toString());
-                update = statement.executeUpdate();
-            }
-            if (update == 0) {
-                close(statement);
-                statement = prepareStatement(getInsertStatement());
-
-                statement.setString(1, uuid.toString());
-                statement.setString(2, data.getGeolocation());
-                GMTimes gmTimes = data.getGmTimes();
-                statement.setString(3, gmTimes.getState());
-                statement.setLong(4, gmTimes.getLastStateChange());
-                statement.setLong(5, data.getPlayTime());
-                statement.setInt(6, data.getLoginTimes());
-                statement.setLong(7, data.getLastPlayed());
-                statement.setInt(8, data.getDeaths());
-                statement.setInt(9, data.getMobKills());
-                statement.setBoolean(10, data.getName() != null);
-                statement.setBoolean(11, data.isOp());
-                statement.setBoolean(12, data.isBanned());
-                statement.setString(13, data.getName());
-                statement.setLong(14, data.getRegistered());
-                WorldTimes worldTimes = data.getWorldTimes();
-//       TODO         statement.setString(15, worldTimes.getState());
-//                statement.setLong(16, worldTimes.getLastStateChange());
-                statement.execute();
-            }
-        } finally {
-            close(statement);
-        }
-    }
-
-    private boolean tableHasV4Columns() {
-        if (usingMySQL) {
-            return false;
-        } else {
-            PreparedStatement statement = null;
-            ResultSet set = null;
-            try {
-                try {
-                    statement = prepareStatement("SELECT age FROM " + tableName + " LIMIT 1");
-                    set = statement.executeQuery();
-                    Log.debug("Database", "UsersTable has V4 columns.");
-                    return true;
-                } catch (SQLException e) {
-                    return false;
-                }
-            } finally {
-                close(set, statement);
-            }
-        }
-    }
-
-    private String getInsertStatement() {
-        final boolean hasV4Columns = tableHasV4Columns();
-        String v4rows = hasV4Columns ? "age, gender, " : "";
-        String v4values = hasV4Columns ? "-1, Deprecated, " : "";
-        return "INSERT INTO " + tableName + " ("
-                + v4rows
-                + columnUUID + ", "
-                + columnGeolocation + ", "
-                + columnLastGM + ", "
-                + columnLastGMSwapTime + ", "
-                + columnPlayTime + ", "
-                + columnLoginTimes + ", "
-                + columnLastPlayed + ", "
-                + columnDeaths + ", "
-                + columnMobKills + ", "
-                + columnContainsBukkitData + ", "
-                + columnOP + ", "
-                + columnBanned + ", "
-                + columnName + ", "
-                + columnRegistered + ", "
-                + columnLastWorld + ", "
-                + columnLastWorldSwapTime
-                + ") VALUES (" + v4values + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    }
-
-    private String getUpdateStatement() {
-        final boolean hasV4Columns = tableHasV4Columns();
-        String v4rows = hasV4Columns ? "age=-1, gender='Deprecated', " : "";
-        return "UPDATE " + tableName + " SET "
-                + v4rows
-                + columnGeolocation + "=?, "
-                + columnLastGM + "=?, "
-                + columnLastGMSwapTime + "=?, "
-                + columnPlayTime + "=?, "
-                + columnLoginTimes + "=?, "
-                + columnLastPlayed + "=?, "
-                + columnDeaths + "=?, "
-                + columnMobKills + "=?, "
-                + columnContainsBukkitData + "=?, "
-                + columnOP + "=?, "
-                + columnBanned + "=?, "
-                + columnName + "=?, "
-                + columnRegistered + "=?, "
-                + columnLastWorld + "=?, "
-                + columnLastWorldSwapTime + "=? "
-                + "WHERE " + columnUUID + "=?";
-    }
-
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void saveUserDataInformationBatch(Collection<UserData> data) throws SQLException {
-        Benchmark.start("Save UserInfo multiple");
-        try {
-            List<UserData> newUserdata = updateExistingUserData(data);
-            Benchmark.start("Insert new UserInfo multiple");
-
-            List<List<UserData>> batches = DBUtils.splitIntoBatches(newUserdata);
-
-            batches
-                    .forEach(batch -> {
-                        try {
-                            insertNewUserData(batch);
-                        } catch (SQLException e) {
-                            Log.toLog("UsersTable.saveUserDataInformationBatch", e);
-                        }
-                    });
-
-            Benchmark.stop("Database", "Insert new UserInfo multiple");
-        } finally {
-            Benchmark.stop("Database", "Save UserInfo multiple");
-        }
-    }
-
-    private void insertNewUserData(Collection<UserData> data) throws SQLException {
-        if (data.isEmpty()) {
-            return;
-        }
-
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(getInsertStatement());
-
-            for (UserData uData : data) {
-                UUID uuid = uData.getUuid();
-
-                statement.setString(1, uuid.toString());
-                statement.setString(2, uData.getGeolocation());
-
-                GMTimes gmTimes = uData.getGmTimes();
-                statement.setString(3, gmTimes.getState());
-                statement.setLong(4, gmTimes.getLastStateChange());
-
-                statement.setLong(5, uData.getPlayTime());
-                statement.setInt(6, uData.getLoginTimes());
-                statement.setLong(7, uData.getLastPlayed());
-                statement.setInt(8, uData.getDeaths());
-                statement.setInt(9, uData.getMobKills());
-                statement.setBoolean(10, uData.getName() != null);
-                statement.setBoolean(11, uData.isOp());
-                statement.setBoolean(12, uData.isBanned());
-                statement.setString(13, uData.getName());
-                statement.setLong(14, uData.getRegistered());
-
-                WorldTimes worldTimes = uData.getWorldTimes();
-//      TODO          statement.setString(15, worldTimes.getState());
-//                statement.setLong(16, worldTimes.getLastStateChange());
-
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
-        } finally {
-            close(statement);
-        }
-    }
-
-    private List<UserData> updateExistingUserData(Collection<UserData> data) throws SQLException {
-        PreparedStatement statement = null;
-        try {
-            List<UserData> newUserData = new ArrayList<>();
-            String sql = getUpdateStatement();
-            statement = prepareStatement(sql);
-            boolean commitRequired = false;
-            Set<UUID> savedUUIDs = getSavedUUIDs();
-            for (UserData uData : data) {
-                UUID uuid = null;
-
-                // Get new UUID if uuid == null
-                if (uData != null) {
-                    uuid = uData.getUuid();
-                    if (uuid == null) {
-                        uuid = UUIDUtility.getUUIDOf(uData.getName(), db);
-                        uData.setUuid(uuid);
-                    }
-                }
-
-                boolean isNew = !savedUUIDs.contains(uuid) && !newUserData.contains(uData);
-
-                if (isNew) {
-                    newUserData.add(uData);
-                }
-
-                if (!Verify.notNull(uData, uuid) || isNew) {
-                    continue;
-                }
-
-                uData.access();
-                statement.setString(1, uData.getGeolocation());
-                GMTimes gmTimes = uData.getGmTimes();
-                statement.setString(2, gmTimes.getState());
-                statement.setLong(3, uData.getGmTimes().getLastStateChange());
-                statement.setLong(4, uData.getPlayTime());
-                statement.setInt(5, uData.getLoginTimes());
-                statement.setLong(6, uData.getLastPlayed());
-                statement.setInt(7, uData.getDeaths());
-                statement.setInt(8, uData.getMobKills());
-                statement.setBoolean(9, uData.getName() != null);
-                statement.setBoolean(10, uData.isOp());
-                statement.setBoolean(11, uData.isBanned());
-                statement.setString(12, uData.getName());
-                statement.setLong(13, uData.getRegistered());
-                WorldTimes worldTimes = uData.getWorldTimes();
-//         TODO       statement.setString(14, worldTimes.getState());
-//                statement.setLong(15, worldTimes.getLastStateChange());
-                statement.setString(16, uuid.toString());
-                statement.addBatch();
-                uData.stopAccessing();
-                commitRequired = true;
-            }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
-            return newUserData;
-        } finally {
-            close(statement);
-        }
     }
 
     /**

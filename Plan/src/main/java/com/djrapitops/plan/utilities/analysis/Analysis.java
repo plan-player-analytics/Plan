@@ -4,7 +4,10 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.*;
+import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -266,28 +269,13 @@ public class Analysis {
         List<PluginData> banSources = plugin.getHookHandler().getAdditionalDataSources()
                 .stream().filter(PluginData::isBanData).collect(Collectors.toList());
         rawData.forEach(uData -> {
-            uData.access();
-            Map<String, Long> gmTimes = uData.getGmTimes().getTimes();
-            String[] gms = new String[]{"SURVIVAL", "CREATIVE", "ADVENTURE", "SPECTATOR"};
-            if (gmTimes != null) {
-                for (String gm : gms) {
-                    Long time = gmTimes.get(gm);
-                    if (time != null) {
-                        gmPart.addTo(gm, time);
-                    }
-                }
-            }
 //        TODO    Map<String, Long> worldTimes = uData.getWorldTimes().getTimes();
-//            for (Map.Entry<String, Long> world : worldTimes.entrySet()) {
-//                worldPart.addToWorld(world.getKey(), world.getValue());
-//            }
 
-            final long playTime = uData.getPlayTime();
-            playtime.addToPlaytime(playTime);
+       // TODO     playtime.addToPlaytime(playTime);
             joinInfo.addToLoginTimes(uData.getLoginTimes());
             joinInfo.addRegistered(uData.getRegistered());
 
-            geolocPart.addGeolocation(uData.getGeolocation());
+      //TODO      geolocPart.addGeolocation(uData.getGeolocation());
 
             final UUID uuid = uData.getUuid();
             if (uData.isOp()) {
@@ -310,19 +298,15 @@ public class Analysis {
                 activity.addBan(uuid);
             } else if (uData.getLoginTimes() == 1) {
                 activity.addJoinedOnce(uuid);
-            } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
-                activity.addActive(uuid);
+//        TODO    } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
+//                activity.addActive(uuid);
             } else {
                 activity.addInActive(uuid);
             }
-            List<KillData> playerKills = uData.getPlayerKills();
-            killPart.addKills(uuid, playerKills);
-            killPart.addDeaths(uData.getDeaths());
-            killPart.addMobKills(uData.getMobKills());
+        //TODO    List<KillData> playerKills = uData.getPlayerKills();
 
             List<SessionData> sessions = uData.getSessions();
             joinInfo.addSessions(uuid, sessions);
-            uData.stopAccessing();
         });
         Benchmark.stop("Analysis", "Fill Dataset");
     }

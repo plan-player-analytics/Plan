@@ -10,6 +10,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated //TODO Update Straight to db
 public class KickInfo extends HandlingInfo {
 
     /**
@@ -23,10 +24,6 @@ public class KickInfo extends HandlingInfo {
 
     @Override
     public void process(UserData uData) {
-        if (!uData.getUuid().equals(uuid)) {
-            return;
-        }
-        uData.setTimesKicked(uData.getTimesKicked() + 1);
     }
 
 }

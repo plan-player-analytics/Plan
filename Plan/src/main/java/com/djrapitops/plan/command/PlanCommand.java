@@ -39,9 +39,7 @@ public class PlanCommand extends TreeCommand<Plan> {
     @Override
     public void addCommands() {
         commands.add(new InspectCommand(plugin));
-        commands.add(new QuickInspectCommand(plugin));
         commands.add(new AnalyzeCommand(plugin));
-        commands.add(new QuickAnalyzeCommand(plugin));
         commands.add(new SearchCommand(plugin));
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));

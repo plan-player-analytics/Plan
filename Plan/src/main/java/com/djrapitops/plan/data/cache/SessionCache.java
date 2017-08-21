@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.cache;
 
 import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.data.UserData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,21 +62,6 @@ public class SessionCache {
     @Deprecated
     public SessionData getSession(UUID uuid) {
         return activeSessions.get(uuid);
-    }
-
-    /**
-     * Add a session to the UserData object if it is cached and has been ended.
-     *
-     * @param data UserData object a session should be added to.
-     */
-    @Deprecated
-    public void addSession(UserData data) {
-        UUID uuid = data.getUuid();
-        SessionData currentSession = activeSessions.get(uuid);
-        if (currentSession != null && currentSession.isValid() && !data.getSessions().contains(currentSession)) {
-            data.addSession(currentSession);
-            activeSessions.remove(uuid);
-        }
     }
 
     /**

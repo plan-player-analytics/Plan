@@ -131,7 +131,7 @@ public class Locale {
         add(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO, analysis + "Starting Boot Analysis..");
 
         add(Msg.ENABLE_NOTIFY_EMPTY_IP, yellow + "IP in server.properties is empty & AlternativeServerIP is not used, incorrect links will be given!");
-        add(Msg.ENABLE_NOTIFY_NO_DATA_VIEW, yellow + "Webserver disabled but Alternative IP/TextUI not used, no way to view data!");
+        add(Msg.ENABLE_NOTIFY_NO_DATA_VIEW, yellow + "Webserver disabled but Alternative IP not used, no way to view data!");
         add(Msg.ENABLE_NOTIFY_DISABLED_CHATLISTENER, yellow + "Chat listener disabled, nickname info inaccurate.");
         add(Msg.ENABLE_NOTIFY_DISABLED_COMMANDLISTENER, yellow + "Command usage listener disabled.");
         add(Msg.ENABLE_NOTIFY_DISABLED_DEATHLISTENER, yellow + "Death listener disabled, player & mob kills not recorded.");

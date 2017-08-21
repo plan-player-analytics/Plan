@@ -6,7 +6,6 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.data.handling.info.InfoType;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import org.apache.commons.lang.RandomStringUtils;
@@ -23,17 +22,6 @@ public class RandomData {
 
     public static int randomInt(int rangeStart, int rangeEnd) {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
-    }
-
-    public static List<UserData> randomUserData() {
-        List<UserData> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            String randomName = randomString(10);
-            UserData uD = new UserData(UUID.randomUUID(), r.nextLong(), r.nextBoolean(), GMTimes.getGMKeyArray()[r.nextInt(3)], randomName, r.nextBoolean());
-            uD.setLastPlayed(r.nextLong());
-            test.add(uD);
-        }
-        return test;
     }
 
     public static String randomString(int size) {
@@ -61,7 +49,7 @@ public class RandomData {
     public static List<SessionData> randomSessions() {
         List<SessionData> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new SessionData(r.nextLong(), r.nextLong()));
+            test.add(new SessionData(r.nextLong(), r.nextLong(), null, null, 0, 0));
         }
         return test;
     }

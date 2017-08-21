@@ -3,11 +3,6 @@ package test.java.utils;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import com.sun.net.httpserver.HttpServer;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -37,36 +30,6 @@ public class MockUtils {
         World mockWorld = Mockito.mock(World.class);
         when(mockWorld.toString()).thenReturn("World");
         return mockWorld;
-    }
-
-    public static UserData mockUser() {
-        return NewPlayerCreator.createNewPlayer(mockIPlayer());
-    }
-
-    public static UserData mockUserWithMoreData() {
-        UserData mock = mockUser();
-        try {
-            mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
-        } catch (UnknownHostException ignored) {
-            /* Ignored */
-        }
-        mock.addNickname("MoreNicks");
-        mock.addPlayerKill(new KillData(getPlayer2UUID(), 1, "WEP", 126873643232L));
-        mock.addSession(new SessionData(12345L, 23456L));
-        GMTimes gmTimes = mock.getGmTimes();
-        gmTimes.setAllGMTimes(1234, 2345, 4356, 4767);
-        gmTimes.setState("ADVENTURE");
-        mock.setDeaths(5);
-        mock.setTimesKicked(5);
-        mock.setPlayTime(34438926);
-        mock.setGeolocation("Finland");
-        mock.setLoginTimes(5);
-        mock.setMobKills(5);
-        return mock;
-    }
-
-    public static UserData mockUser2() {
-        return NewPlayerCreator.createNewPlayer(mockIPlayer2());
     }
 
     /**

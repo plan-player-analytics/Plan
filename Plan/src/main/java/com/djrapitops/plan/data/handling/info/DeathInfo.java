@@ -26,6 +26,6 @@ public class DeathInfo extends HandlingInfo {
         if (!uData.getUuid().equals(uuid)) {
             return;
         }
-        uData.setDeaths(uData.getDeaths() + 1);
+       //TODO uData.setDeaths(uData.getDeaths() + 1);
     }
 }

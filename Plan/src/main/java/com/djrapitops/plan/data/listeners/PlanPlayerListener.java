@@ -108,7 +108,7 @@ public class PlanPlayerListener implements Listener {
         Gamemode gm = Gamemode.wrap(player.getGameMode());
         String worldName = player.getWorld().getName();
 
-        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
+        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), worldName));
     }
 
     /**
@@ -133,8 +133,8 @@ public class PlanPlayerListener implements Listener {
         boolean banned = player.isBanned();
         Gamemode gm = Gamemode.wrap(player.getGameMode());
         String worldName = player.getWorld().getName();
-
-        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), handler.getSession(uuid), worldName));
+        //TODO    String geoLocation = GeolocationCacheHandler.getCountry(ip.getHostAddress());
+        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), worldName));
         plugin.addToProcessQueue(new KickInfo(uuid));
     }
 }

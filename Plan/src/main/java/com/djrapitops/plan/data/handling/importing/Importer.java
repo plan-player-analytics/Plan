@@ -90,7 +90,6 @@ public abstract class Importer {
             offlineP.parallelStream()
                     .map(NewPlayerCreator::createNewOfflinePlayer)
                     .forEach(newPlayer -> {
-                        newPlayer.setLastPlayed(newPlayer.getRegistered());
                         newUsers.add(newPlayer);
                         if (milestones.contains(currentUser.incrementAndGet())) {
                             Log.debug(processName, "Creating new UserData objects: " + currentPercent.addAndGet(5) + "%");
