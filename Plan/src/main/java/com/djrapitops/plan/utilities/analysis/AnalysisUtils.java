@@ -65,7 +65,7 @@ public class AnalysisUtils {
     public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
         return data.stream()
                 .filter(Objects::nonNull)
-                .filter(SessionData::isValid)
+                .filter(session -> session.getLength() > 0)
                 .map(SessionData::getLength)
                 .collect(Collectors.toList());
     }

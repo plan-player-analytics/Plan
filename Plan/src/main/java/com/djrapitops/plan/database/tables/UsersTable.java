@@ -372,6 +372,6 @@ public class UsersTable extends Table {
 
     public List<UserData> getUserData(List<UUID> uuids) {
         // TODO Rewrite method for new UserData objects.
-        return null;
+        return new ArrayList<>();
     }
 }

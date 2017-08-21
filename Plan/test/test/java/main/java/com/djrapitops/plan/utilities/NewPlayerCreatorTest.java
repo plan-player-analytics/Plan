@@ -8,6 +8,7 @@ package test.java.main.java.com.djrapitops.plan.utilities;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -38,6 +39,10 @@ public class NewPlayerCreatorTest {
     @After
     public void tearDown() {
     }
-    //TODO Rewrite
+
+    @Test
+    public void test() {
+        // TODO Rewrite
+    }
 
 }
