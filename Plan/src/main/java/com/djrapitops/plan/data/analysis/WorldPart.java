@@ -1,8 +1,6 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
-import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
-import main.java.com.djrapitops.plan.utilities.FormatUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +29,8 @@ public class WorldPart extends RawData {
 
     @Override
     protected void analyse() {
-        WorldTimes t = new WorldTimes(worldTimes);
-        addValue("worldTotal", FormatUtils.formatTimeAmount(t.getTotal()));
+//   TODO     WorldTimes t = new WorldTimes(worldTimes);
+//        addValue("worldTotal", FormatUtils.formatTimeAmount(t.getTotal()));
         addValue("worldSeries", WorldPieCreator.createSeriesData(worldTimes));
     }
 

@@ -23,6 +23,6 @@ public class PlaytimeHandling {
         gmTimes.changeState(gamemode != null ? gamemode : gmTimes.getState(), playTime);
 
         WorldTimes worldTimes = data.getWorldTimes();
-        worldTimes.changeState(worldName, playTime);
+//       TODO worldTimes.changeState(worldName, playTime);
     }
 }

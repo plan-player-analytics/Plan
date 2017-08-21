@@ -7,7 +7,6 @@ import main.java.com.djrapitops.plan.data.SessionData;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -79,8 +78,8 @@ public class PlaceholderUtils {
         Set<SessionData> sessions = new HashSet<>(data.getSessions());
         replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
         WorldTimes worldTimes = data.getWorldTimes();
-        replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
-        replaceMap.put("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
+//    TODO    replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
+//        replaceMap.put("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
 
         //TODO Plugin Tab content Web API
         //TODO Player Plugin tab code.

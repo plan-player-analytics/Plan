@@ -67,7 +67,7 @@ public class UserData {
         accessing = 0;
 
         this.gmTimes = new GMTimes(gm);
-        this.worldTimes = new WorldTimes();
+//   TODO REMOVE     this.worldTimes = new WorldTimes();
 
         this.uuid = uuid;
         this.name = name;
