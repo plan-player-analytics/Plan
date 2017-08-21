@@ -29,11 +29,6 @@ public abstract class Database {
     protected UsersTable usersTable;
 
     /**
-     * Table representing plan_gamemodetimes in the database.
-     */
-    protected GMTimesTable gmTimesTable;
-
-    /**
      * Table representing plan_kills in the database.
      */
     protected KillsTable killsTable;
@@ -292,15 +287,6 @@ public abstract class Database {
      */
     public SessionsTable getSessionsTable() {
         return sessionsTable;
-    }
-
-    /**
-     * Used to get the gm times table.
-     *
-     * @return Table representing plan_gamemodetimes
-     */
-    public GMTimesTable getGmTimesTable() {
-        return gmTimesTable;
     }
 
     /**
