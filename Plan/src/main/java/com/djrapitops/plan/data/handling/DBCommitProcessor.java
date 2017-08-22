@@ -22,6 +22,7 @@ public class DBCommitProcessor extends Processor<Database> {
 
     @Override
     public void process() {
+        // TODO Prevent Commit during batch operations.
         try {
             object.commit();
         } catch (SQLException e) {
