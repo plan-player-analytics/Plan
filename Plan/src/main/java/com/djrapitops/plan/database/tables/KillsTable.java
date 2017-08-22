@@ -18,12 +18,12 @@ import java.util.*;
  */
 public class KillsTable extends Table {
 
-    private final String columnKillerUserID;
-    private final String columnVictimUserID;
-    private final String columnWeapon;
-    private final String columnDate;
-    private final String columnServerID; //TODO
-    private final String columnSessionID; //TODO
+    private final String columnKillerUserID = "killer_id";
+    private final String columnVictimUserID = "victim_id";
+    private final String columnWeapon = "weapon";
+    private final String columnDate = "date";
+    private final String columnServerID = "server_id"; //TODO
+    private final String columnSessionID = "session_id"; //TODO
 
     /**
      * @param db
@@ -31,12 +31,6 @@ public class KillsTable extends Table {
      */
     public KillsTable(SQLDB db, boolean usingMySQL) {
         super("plan_kills", db, usingMySQL);
-        columnWeapon = "weapon";
-        columnDate = "date";
-        columnKillerUserID = "killer_id";
-        columnVictimUserID = "victim_id";
-        columnServerID = "server_id";
-        columnSessionID = "session_id";
     }
 
     /**
@@ -97,9 +91,8 @@ public class KillsTable extends Table {
             set = statement.executeQuery();
             List<KillData> killData = new ArrayList<>();
             while (set.next()) {
-                int victimID = set.getInt(columnVictimUserID);
-                UUID victimUUID = usersTable.getUserUUID(String.valueOf(victimID));
-                killData.add(new KillData(victimUUID, victimID, set.getString(columnWeapon), set.getLong(columnDate)));
+                UUID victimUUID = null; // TODO Victim UUID Retrieval
+                killData.add(new KillData(victimUUID, set.getString(columnWeapon), set.getLong(columnDate)));
             }
             return killData;
         } finally {
@@ -128,26 +121,14 @@ public class KillsTable extends Table {
                     + columnDate
                     + ") VALUES (?, ?, ?, ?)");
             boolean commitRequired = false;
-            kills.stream().filter(Objects::nonNull).forEach(killData -> {
-                int victimUserID = killData.getVictimUserID();
-                if (victimUserID == -1) {
-                    try {
-                        int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
-                        killData.setVictimUserID(newVictimID);
-                    } catch (SQLException e) {
-                        Log.toLog(this.getClass().getName(), e);
-                        return;
-                    }
-                }
-            });
             for (KillData kill : kills) {
-                if (kill == null || kill.getVictimUserID() == -1) {
+                if (kill == null) {
                     continue;
                 }
                 statement.setInt(1, userId);
-                statement.setInt(2, kill.getVictimUserID());
+                statement.setInt(2, -1); // TODO Victim ID Retrieval
                 statement.setString(3, kill.getWeapon());
-                statement.setLong(4, kill.getDate());
+                statement.setLong(4, kill.getTime());
                 statement.addBatch();
                 commitRequired = true;
             }
@@ -183,12 +164,11 @@ public class KillsTable extends Table {
             }
             while (set.next()) {
                 int killerID = set.getInt(columnKillerUserID);
-                int victimID = set.getInt(columnVictimUserID);
                 if (!ids.contains(killerID)) {
                     continue;
                 }
-                UUID victimUUID = uuids.get(victimID);
-                kills.get(killerID).add(new KillData(victimUUID, victimID, set.getString(columnWeapon), set.getLong(columnDate)));
+                UUID victimUUID = null; // TODO Victim UUID Retrieval
+                kills.get(killerID).add(new KillData(victimUUID, set.getString(columnWeapon), set.getLong(columnDate)));
             }
             return kills;
         } finally {
@@ -230,16 +210,11 @@ public class KillsTable extends Table {
                     playerKills.removeAll(s);
                 }
 
-                findMissingIDs(playerKills);
-
                 for (KillData kill : playerKills) {
-                    if (kill.getVictimUserID() == -1) {
-                        continue;
-                    }
                     statement.setInt(1, id);
-                    statement.setInt(2, kill.getVictimUserID());
+                    statement.setInt(2, -1); // TODO Victim ID Retrieval
                     statement.setString(3, kill.getWeapon());
-                    statement.setLong(4, kill.getDate());
+                    statement.setLong(4, kill.getTime());
                     statement.addBatch();
                     commitRequired = true;
                 }
@@ -254,13 +229,7 @@ public class KillsTable extends Table {
         }
     }
 
-    private void findMissingIDs(List<KillData> playerKills) throws SQLException {
-        for (KillData killData : playerKills) {
-            int victimUserID = killData.getVictimUserID();
-            if (victimUserID == -1) {
-                int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
-                killData.setVictimUserID(newVictimID);
-            }
-        }
+    public void savePlayerKills(UUID uuid, List<KillData> playerKills) {
+        // TODO savePlayerKills
     }
 }

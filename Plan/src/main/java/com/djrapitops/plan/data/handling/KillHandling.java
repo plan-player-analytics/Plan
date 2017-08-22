@@ -3,8 +3,6 @@ package main.java.com.djrapitops.plan.data.handling;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
-import org.apache.commons.lang3.text.WordUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -56,13 +54,4 @@ public class KillHandling {
         }
     }
 
-    /**
-     * Normalizes a material name
-     *
-     * @param material The material
-     * @return The normalized material name
-     */
-    public static String normalizeMaterialName(Material material) {
-        return WordUtils.capitalizeFully(material.name(), '_').replace('_', ' ');
-    }
 }

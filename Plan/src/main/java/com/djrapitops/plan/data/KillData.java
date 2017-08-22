@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
+import main.java.com.djrapitops.plan.database.tables.Actions;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,23 +14,20 @@ import java.util.UUID;
 public class KillData {
 
     private final UUID victim;
-    private int victimUserID;
-    private final long date;
+    private final long time;
     private final String weapon;
 
     /**
      * Creates a KillData object with given parameters.
      *
-     * @param victim   UUID of the victim.
-     * @param victimID ID of the victim, get from the database.
-     * @param weapon   Weapon used.
-     * @param date     Epoch millisecond at which the kill occurred.
+     * @param victim UUID of the victim.
+     * @param weapon Weapon used.
+     * @param time   Epoch millisecond at which the kill occurred.
      */
-    public KillData(UUID victim, int victimID, String weapon, long date) {
+    public KillData(UUID victim, String weapon, long time) {
         this.victim = victim;
         this.weapon = weapon;
-        victimUserID = victimID;
-        this.date = date;
+        this.time = time;
     }
 
     /**
@@ -45,8 +44,8 @@ public class KillData {
      *
      * @return long in ms.
      */
-    public long getDate() {
-        return date;
+    public long getTime() {
+        return time;
     }
 
     /**
@@ -58,18 +57,10 @@ public class KillData {
         return weapon;
     }
 
-    /**
-     * Get the UserID of the victim, found from the database.
-     *
-     * @return For example: 6
-     */
-    public int getVictimUserID() {
-        return victimUserID;
-    }
 
     @Override
     public String toString() {
-        return "{victim:" + victim + "|victimUserID:" + victimUserID + "|date:" + date + "|weapon:" + weapon + '}';
+        return "{victim:" + victim + "|time:" + time + "|weapon:" + weapon + '}';
     }
 
     @Override
@@ -84,7 +75,7 @@ public class KillData {
             return false;
         }
         final KillData other = (KillData) obj;
-        return this.date == other.date
+        return this.time == other.time
                 && Objects.equals(this.weapon, other.weapon)
                 && Objects.equals(this.victim, other.victim);
     }
@@ -93,12 +84,12 @@ public class KillData {
     public int hashCode() {
         int hash = 3;
         hash = 89 * hash + Objects.hashCode(this.victim);
-        hash = 89 * hash + (int) (this.date ^ (this.date >>> 32));
+        hash = 89 * hash + (int) (this.time ^ (this.time >>> 32));
         hash = 89 * hash + Objects.hashCode(this.weapon);
         return hash;
     }
 
-    public void setVictimUserID(int victimUserID) {
-        this.victimUserID = victimUserID;
+    public Action convertToAction() {
+        return new Action(time, Actions.KILLED, "name with " + weapon); // TODO Name Cache.
     }
 }

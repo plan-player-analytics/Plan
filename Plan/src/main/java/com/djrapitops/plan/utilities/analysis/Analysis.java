@@ -5,7 +5,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
@@ -129,8 +129,8 @@ public class Analysis {
             rawData.sort(new UserDataLastPlayedComparator());
             List<UUID> uuids = rawData.stream().map(UserData::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
-            DataCache handler = plugin.getHandler();
-            Map<String, Integer> commandUse = handler.getCommandUse();
+            DataCache dataCache = plugin.getDataCache();
+            Map<String, Integer> commandUse = dataCache.getCommandUse();
 
             AnalysisData analysisData = new AnalysisData(commandUse, tpsData);
             analysisData.setPluginsTabLayout(plugin.getHookHandler().getPluginsTabLayoutForAnalysis());
@@ -305,7 +305,7 @@ public class Analysis {
             }
         //TODO    List<KillData> playerKills = uData.getPlayerKills();
 
-            List<SessionData> sessions = uData.getSessions();
+            List<Session> sessions = uData.getSessions();
             joinInfo.addSessions(uuid, sessions);
         });
         Benchmark.stop("Analysis", "Fill Dataset");

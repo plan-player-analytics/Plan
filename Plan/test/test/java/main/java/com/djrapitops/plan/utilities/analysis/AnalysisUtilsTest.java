@@ -5,7 +5,7 @@
  */
 package test.java.main.java.com.djrapitops.plan.utilities.analysis;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -122,10 +122,9 @@ public class AnalysisUtilsTest {
      */
     @Test
     public void testTransformSessionDataToLengths() {
-        Collection<SessionData> data = new ArrayList<>();
-        data.add(new SessionData(0L, 5L, null, null, 0, 0));
-        data.add(new SessionData(0, 20L, null, null, 0, 0));
-        data.add(new SessionData(0));
+        Collection<Session> data = new ArrayList<>();
+        data.add(new Session(0L, 5L, null, null, 0, 0));
+        data.add(new Session(0, 20L, null, null, 0, 0));
         List<Long> expResult = new ArrayList<>();
         expResult.add(5L);
         expResult.add(20L);

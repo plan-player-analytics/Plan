@@ -69,6 +69,14 @@ public class DatabaseCommitTest {
     }
 
     @Test
+    public void testNoExceptionWhenCommitEmpty() throws SQLException {
+        db.init();
+        db.commit();
+        db.commit();
+        db.commit();
+    }
+
+    @Test
     public void testCommitToDBFile() throws SQLException {
         db.init();
         HashMap<String, Integer> c = new HashMap<>();

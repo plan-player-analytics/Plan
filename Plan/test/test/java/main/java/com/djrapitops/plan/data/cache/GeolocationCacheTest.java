@@ -12,9 +12,7 @@ import test.java.utils.TestInit;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 /**
  * @author Fuzzlemann
@@ -27,6 +25,7 @@ public class GeolocationCacheTest {
 
     @Before
     public void setUp() {
+        GeolocationCacheHandler.clearCache();
         ipsToCountries.put("8.8.8.8", "United States");
         ipsToCountries.put("8.8.4.4", "United States");
         ipsToCountries.put("4.4.2.2", "United States");
@@ -46,7 +45,7 @@ public class GeolocationCacheTest {
             String ip = entry.getKey();
             String expCountry = entry.getValue();
 
-            String country = GeolocationCacheHandler.getUncachedCountry(ip);
+            String country = GeolocationCacheHandler.getCountry(ip);
 
             assertEquals(country, expCountry);
         }
@@ -60,15 +59,12 @@ public class GeolocationCacheTest {
             String ip = entry.getKey();
             String expIp = entry.getValue();
 
-            String countryFirstCall = GeolocationCacheHandler.getUncachedCountry(ip);
             assertFalse(GeolocationCacheHandler.isCached(ip));
-
             String countrySecondCall = GeolocationCacheHandler.getCountry(ip);
             assertTrue(GeolocationCacheHandler.isCached(ip));
 
-            String countryThirdCall = GeolocationCacheHandler.getCachedCountry(ip);
+            String countryThirdCall = GeolocationCacheHandler.getCountry(ip);
 
-            assertEquals(countryFirstCall, countrySecondCall);
             assertEquals(countrySecondCall, countryThirdCall);
             assertEquals(countryThirdCall, expIp);
         }

@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -20,7 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class PlanCommandPreprocessListener implements Listener {
 
     private final Plan plugin;
-    private final DataCache handler;
+    private final DataCache dataCache;
 
     /**
      * Class Constructor.
@@ -29,7 +28,7 @@ public class PlanCommandPreprocessListener implements Listener {
      */
     public PlanCommandPreprocessListener(Plan plugin) {
         this.plugin = plugin;
-        handler = plugin.getHandler();
+        dataCache = plugin.getDataCache();
     }
 
     /**
@@ -42,6 +41,10 @@ public class PlanCommandPreprocessListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
+        Player player = event.getPlayer();
+        if (player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission())) {
+            return;
+        }
 
         String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
 
@@ -52,21 +55,13 @@ public class PlanCommandPreprocessListener implements Listener {
             Command command = plugin.getServer().getPluginCommand(commandName);
             if (command == null) {
                 if (doNotLogUnknownCommands) {
-                    Log.debug("Ignored command, command is unknown");
                     return;
                 }
             } else if (combineCommandAliasesToMainCommand) {
                 commandName = command.getName();
             }
         }
-
-        Player player = event.getPlayer();
-
-        if (player.hasPermission(Permissions.IGNORE_COMMANDUSE.getPermission())) {
-            Log.debug("Ignored command, player had ignore permission.");
-            return;
-        }
-
-        handler.handleCommand(commandName);
+        // TODO Command Usage -> DB Save Processor
+        dataCache.handleCommand(commandName);
     }
 }

@@ -21,7 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class DataCacheTest {
 
     private Database db;
-    private DataCache handler;
+    private DataCache dataCache;
 
     private int callsToSaveCommandUse;
     private int callsToSaveUserData;

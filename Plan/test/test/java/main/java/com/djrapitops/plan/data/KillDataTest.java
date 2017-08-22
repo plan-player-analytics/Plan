@@ -6,6 +6,7 @@
 package test.java.main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.data.KillData;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -17,10 +18,19 @@ import static org.junit.Assert.assertEquals;
  */
 public class KillDataTest {
 
+    private KillData test;
+    private UUID testUUID;
+
     /**
      *
      */
     public KillDataTest() {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        testUUID = UUID.fromString("71cfb6f0-c3ef-4954-8abe-13fa07afc340");
+        test = new KillData(testUUID, "TestWeapon", 100L);
     }
 
     /**
@@ -28,9 +38,7 @@ public class KillDataTest {
      */
     @Test
     public void testGetVictim() {
-        UUID uuid = UUID.fromString("71cfb6f0-c3ef-4954-8abe-13fa07afc340");
-        KillData k = new KillData(uuid, 1, "TestWeapon", 100L);
-        assertEquals(k.getVictim(), uuid);
+        assertEquals(test.getVictim(), testUUID);
     }
 
     /**
@@ -38,9 +46,7 @@ public class KillDataTest {
      */
     @Test
     public void testGetDate() {
-        UUID uuid = UUID.fromString("71cfb6f0-c3ef-4954-8abe-13fa07afc340");
-        KillData k = new KillData(uuid, 1, "TestWeapon", 100L);
-        assertEquals(k.getDate(), 100L);
+        assertEquals(test.getTime(), 100L);
     }
 
     /**
@@ -48,19 +54,6 @@ public class KillDataTest {
      */
     @Test
     public void testGetWeapon() {
-        UUID uuid = UUID.fromString("71cfb6f0-c3ef-4954-8abe-13fa07afc340");
-        KillData k = new KillData(uuid, 1, "TestWeapon", 100L);
-        assertEquals(k.getWeapon(), "TestWeapon");
+        assertEquals(test.getWeapon(), "TestWeapon");
     }
-
-    /**
-     *
-     */
-    @Test
-    public void testGetVictimUserID() {
-        UUID uuid = UUID.fromString("71cfb6f0-c3ef-4954-8abe-13fa07afc340");
-        KillData k = new KillData(uuid, 1, "TestWeapon", 100L);
-        assertEquals(k.getVictimUserID(), 1);
-    }
-
 }

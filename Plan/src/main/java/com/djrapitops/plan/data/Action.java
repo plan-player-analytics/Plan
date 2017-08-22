@@ -1,0 +1,60 @@
+/* 
+ * Licence is provided in the jar as license.yml also here:
+ * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
+ */
+package main.java.com.djrapitops.plan.data;
+
+import main.java.com.djrapitops.plan.database.tables.Actions;
+import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
+
+/**
+ * Class that represents an action made by a player.
+ *
+ * @author Rsl1122
+ */
+public class Action {
+    private final long date;
+    private final Actions doneAction;
+    private final String additionalInfo;
+    private int serverID;
+
+    public Action(long date, Actions doneAction, String additionalInfo) {
+        this.date = date;
+        this.doneAction = doneAction;
+        this.additionalInfo = additionalInfo;
+    }
+
+    public Action(long date, Actions doneAction, String additionalInfo, int serverID) {
+        this.date = date;
+        this.doneAction = doneAction;
+        this.additionalInfo = additionalInfo;
+        this.serverID = serverID;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public Actions getDoneAction() {
+        return doneAction;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    /**
+     * Can only be used on Action classes returned by the ActionsTable.
+     *
+     * @return ID of the server the action occurred on.
+     */
+    public int getServerID() {
+        return serverID;
+    }
+
+    @Override
+    public String toString() {
+        return Html.TABLELINE_3.parse(FormatUtils.formatTimeStampYear(date), doneAction.toString(), additionalInfo);
+    }
+}

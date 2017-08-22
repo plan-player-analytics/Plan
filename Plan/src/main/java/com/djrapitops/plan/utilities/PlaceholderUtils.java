@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 
@@ -34,7 +34,7 @@ public class PlaceholderUtils {
         replaceMap.put("tabContentPlugins", data.replacePluginsTabLayout());
 
         // TODO Refresh time for Network pages
-//        replaceMap.put("refresh", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getTime()));
+//        replaceMap.put("refresh", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getDate()));
 //        replaceMap.put("refreshlong", String.valueOf(data.getRefreshDate()));
 
         replaceMap.put("serverName", Settings.SERVER_NAME.toString());
@@ -74,7 +74,7 @@ public class PlaceholderUtils {
 //        replaceMap.put("mobKillCount", data.getMobKills());
 //        replaceMap.put("deathCount", data.getDeaths());
 
-        Set<SessionData> sessions = new HashSet<>(data.getSessions());
+        Set<Session> sessions = new HashSet<>(data.getSessions());
         replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
         //TODO    WorldTimes worldTimes = data.getWorldTimes();
 //    TODO    replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));

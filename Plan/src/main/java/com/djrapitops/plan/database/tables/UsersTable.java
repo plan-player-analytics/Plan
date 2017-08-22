@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.database.tables;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -17,8 +18,8 @@ import java.util.*;
  */
 public class UsersTable extends Table {
 
-    private final String columnID;
-    private final String columnUUID;
+    private final String columnID = "id";
+    private final String columnUUID = "uuid";
     @Deprecated
     private final String columnGeolocation;
     @Deprecated
@@ -50,14 +51,16 @@ public class UsersTable extends Table {
     @Deprecated
     private final String columnLastWorld;
 
+    public final String statementSelectID;
+
     /**
      * @param db
      * @param usingMySQL
      */
     public UsersTable(SQLDB db, boolean usingMySQL) {
         super("plan_users", db, usingMySQL);
-        columnID = "id";
-        columnUUID = "uuid";
+        statementSelectID = "(" + Select.from(tableName, tableName + "." + columnID).where(columnUUID + "=?").toString() + ")";
+
         columnGeolocation = "geolocation";
         columnLastGM = "last_gamemode";
         columnLastGMSwapTime = "last_gamemode_swap";

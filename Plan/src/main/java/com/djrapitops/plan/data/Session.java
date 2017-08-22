@@ -6,34 +6,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used for storing start and end of a play session inside UserData
- * object.
+ * Object for storing various information about a player's play session.
+ * <p>
+ * Includes:
+ * <ul>
+ * <li>World & GameMode playtimes</li>
+ * <li>Player & Mob kills</li>
+ * <li>Deaths</li>
+ * </ul>
+ * <p>
+ * Following data can be derived from Sessions in the database (Between any time span):
+ * <ul>
+ * <li>Playtime</li>
+ * <li>LoginTimes</li>
+ * </ul>
  *
  * @author Rsl1122
  */
-public class SessionData {
+public class Session {
 
-    private final WorldTimes worldTimes; // TODO add World Times to SessionData
+    private Long sessionID;
+    private WorldTimes worldTimes;
     private final long sessionStart;
     private long sessionEnd;
-    private final List<KillData> playerKills;
+    private List<KillData> playerKills;
     private int mobKills;
     private int deaths;
-
-
-    @Deprecated // TODO Remove
-    public SessionData(long sessionStart) {
-        worldTimes = null;
-        this.sessionStart = 0;
-        playerKills = null;
-    }
 
     /**
      * Creates a new session with given start and end of -1.
      *
      * @param sessionStart Epoch millisecond the session was started.
      */
-    public SessionData(long sessionStart, String world, String gm) {
+    public Session(long sessionStart, String world, String gm) {
         this.worldTimes = new WorldTimes(world, gm);
         this.sessionStart = sessionStart;
         this.sessionEnd = -1;
@@ -48,7 +53,8 @@ public class SessionData {
      * @param sessionStart Epoch millisecond the session was started.
      * @param sessionEnd   Epoch millisecond the session ended.
      */
-    public SessionData(long sessionStart, long sessionEnd, WorldTimes worldTimes, List<KillData> playerKills, int mobKills, int deaths) {
+    public Session(long id, long sessionStart, long sessionEnd, int mobKills, int deaths) {
+        this.sessionID = id;
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
         this.worldTimes = worldTimes;
@@ -67,6 +73,29 @@ public class SessionData {
     public void endSession(long endOfSession) {
         sessionEnd = endOfSession;
         worldTimes.updateState(endOfSession);
+    }
+
+    /**
+     * Updates WorldTimes state.
+     *
+     * @param world World Name the player has moved to
+     * @param gm    GameMode the player is in.
+     * @param time  Epoch ms of the event.
+     */
+    public void changeState(String world, String gm, long time) {
+        worldTimes.updateState(world, gm, time);
+    }
+
+    public void playerKilled(KillData kill) {
+        playerKills.add(kill);
+    }
+
+    public void mobKilled() {
+        mobKills++;
+    }
+
+    public void died() {
+        deaths++;
     }
 
     /**
@@ -96,14 +125,20 @@ public class SessionData {
         return sessionEnd;
     }
 
-    /**
-     * Check if the session start was before the end.
-     *
-     * @return Is the length positive?
-     */
-    @Deprecated // TODO Remove
-    public boolean isValid() {
-        return sessionStart <= sessionEnd;
+    public WorldTimes getWorldTimes() {
+        return worldTimes;
+    }
+
+    public List<KillData> getPlayerKills() {
+        return playerKills;
+    }
+
+    public int getMobKills() {
+        return mobKills;
+    }
+
+    public int getDeaths() {
+        return deaths;
     }
 
     @Override
@@ -117,7 +152,7 @@ public class SessionData {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final SessionData other = (SessionData) obj;
+        final Session other = (Session) obj;
         return this.sessionStart == other.sessionStart && this.sessionEnd == other.sessionEnd;
     }
 
@@ -127,5 +162,39 @@ public class SessionData {
         hash = 97 * hash + (int) (this.sessionStart ^ (this.sessionStart >>> 32));
         hash = 97 * hash + (int) (this.sessionEnd ^ (this.sessionEnd >>> 32));
         return hash;
+    }
+
+    /**
+     * Starts a new Session.
+     *
+     * @param time  Time the session started.
+     * @param world World the session started in.
+     * @param gm    GameMode the session started in.
+     * @return a new Session object.
+     */
+    public static Session start(long time, String world, String gm) {
+        return new Session(time, world, gm);
+    }
+
+    public boolean isFetchedFromDB() {
+        return sessionID != null;
+    }
+
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
+    }
+
+    public void setPlayerKills(List<KillData> playerKills) {
+        this.playerKills = playerKills;
+    }
+
+    /**
+     * Used to get the ID of the session in the Database.
+     *
+     * @return ID if present.
+     * @throws NullPointerException if Session was not fetched from DB. Check using {@code isFetchedFromDB}
+     */
+    public long getSessionID() {
+        return sessionID;
     }
 }

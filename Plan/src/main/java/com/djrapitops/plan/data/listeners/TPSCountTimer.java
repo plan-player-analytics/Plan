@@ -23,14 +23,16 @@ import java.util.List;
 public class TPSCountTimer extends AbsRunnable {
 
     private final Plan plugin;
-    private final DataCache handler;
+    private final DataCache dataCache;
     private final List<TPS> history;
     private long lastCheckNano;
+
+    private int latestPlayersOnline = 0;
 
     public TPSCountTimer(Plan plugin) {
         super("TPSCountTimer");
         lastCheckNano = -1;
-        this.handler = plugin.getHandler();
+        this.dataCache = plugin.getDataCache();
         this.plugin = plugin;
         history = new ArrayList<>();
     }
@@ -52,7 +54,8 @@ public class TPSCountTimer extends AbsRunnable {
         history.add(tps);
 
         if (history.size() >= 60) {
-            handler.addTPSLastMinute(history);
+            // TODO Process & Save to DB with a new Processor.
+            dataCache.addTPSLastMinute(history);
             history.clear();
         }
     }
@@ -79,6 +82,7 @@ public class TPSCountTimer extends AbsRunnable {
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
         int playersOnline = plugin.getServer().getOnlinePlayers().size();
+        latestPlayersOnline = playersOnline;
         int loadedChunks = getLoadedChunks();
         int entityCount;
 
@@ -166,5 +170,9 @@ public class TPSCountTimer extends AbsRunnable {
      */
     private int getEntityCountPaper() {
         return plugin.getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
+    }
+
+    public int getLatestPlayersOnline() {
+        return latestPlayersOnline;
     }
 }

@@ -17,9 +17,9 @@ import java.util.*;
  */
 public class NicknamesTable extends UserIDTable {
 
-    private final String columnNick;
-    private final String columnCurrent;
-    private final String columnServerID; //TODO
+    private final String columnNick = "nickname";
+    private final String columnCurrent = "current_nick";
+    private final String columnServerID = "server_id"; //TODO
 
     /**
      * @param db         The database
@@ -27,10 +27,6 @@ public class NicknamesTable extends UserIDTable {
      */
     public NicknamesTable(SQLDB db, boolean usingMySQL) {
         super("plan_nicknames", db, usingMySQL);
-        columnUserID = "user_id";
-        columnNick = "nickname";
-        columnCurrent = "current_nick";
-        columnServerID = "server_id";
     }
 
     /**

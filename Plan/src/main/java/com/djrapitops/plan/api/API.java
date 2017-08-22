@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
-import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -37,7 +36,6 @@ import java.util.stream.Collectors;
  * @see PluginData
  * @see AnalysisType
  * @see DBCallableProcessor
- * @see HandlingInfo
  * @since 2.0.0
  */
 public class API {

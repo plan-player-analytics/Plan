@@ -53,6 +53,7 @@ import org.bukkit.ChatColor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -70,7 +71,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private API api;
 
     private ProcessingQueue processingQueue;
-    private DataCache handler;
+    private DataCache dataCache;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
     private HookHandler hookHandler; // Manages 3rd party data sources
@@ -83,6 +84,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private ServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
+    private TPSCountTimer tpsCountTimer;
     private int bootAnalysisTaskID = -1;
 
     /**
@@ -157,12 +159,13 @@ public class Plan extends BukkitPlugin<Plan> {
             Benchmark.stop("Enable", "Init Database");
 
             Benchmark.start("Init DataCache");
-            this.handler = new DataCache(this);
+            this.dataCache = new DataCache(this);
             this.inspectCache = new InspectCacheHandler(this);
             this.analysisCache = new AnalysisCacheHandler(this);
             Benchmark.stop("Enable", "Init DataCache");
 
-            super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+            tpsCountTimer = new TPSCountTimer(this);
+            super.getRunnableFactory().createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
             registerListeners();
 
             this.api = new API(this);
@@ -190,9 +193,10 @@ public class Plan extends BukkitPlugin<Plan> {
                 Log.error("WebServer was not successfully initialized.");
             }
 
-            Benchmark.start("ServerInfo Registration");
-            serverInfoManager = new ServerInfoManager(this);
-            Benchmark.stop("Enable", "ServerInfo Registration");
+            //TODO Re-Enable after DB ServerTable has been initialized properly.
+//            Benchmark.start("ServerInfo Registration");
+//            serverInfoManager = new ServerInfoManager(this);
+//            Benchmark.stop("Enable", "ServerInfo Registration");
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
 
@@ -258,14 +262,14 @@ public class Plan extends BukkitPlugin<Plan> {
 
         getServer().getScheduler().cancelTasks(this);
 
-        if (Verify.notNull(handler, db)) {
+        if (Verify.notNull(dataCache, db)) {
             Benchmark.start("Disable: DataCache Save");
             // Saves the DataCache to the database without Bukkit's Schedulers.
             Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
 
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.execute(() -> {
-                handler.saveCacheOnDisable();
+                dataCache.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
                 Benchmark.stop("Disable: DataCache Save");
             });
@@ -396,8 +400,8 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return Current instance of the DataCache
      */
-    public DataCache getHandler() {
-        return handler;
+    public DataCache getDataCache() {
+        return dataCache;
     }
 
     /**
@@ -472,7 +476,17 @@ public class Plan extends BukkitPlugin<Plan> {
         return processingQueue;
     }
 
-    public void addToProcessQueue(Processor processor) {
-        processingQueue.addToQueue(processor);
+    public TPSCountTimer getTpsCountTimer() {
+        return tpsCountTimer;
+    }
+
+    public void addToProcessQueue(Processor... processors) {
+        for (Processor processor : processors) {
+            processingQueue.addToQueue(processor);
+        }
+    }
+
+    public static UUID getServerUUID() {
+        return getInstance().serverInfoManager.getServerUUID();
     }
 }

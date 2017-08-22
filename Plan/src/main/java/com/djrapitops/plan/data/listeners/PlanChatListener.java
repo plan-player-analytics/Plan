@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.info.ChatInfo;
+import main.java.com.djrapitops.plan.data.handling.player.NameProcessor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,6 +38,6 @@ public class PlanChatListener implements Listener {
         }
 
         Player p = event.getPlayer();
-        plugin.addToProcessQueue(new ChatInfo(p.getUniqueId(), p.getDisplayName()));
+        plugin.addToProcessQueue(new NameProcessor(p.getUniqueId(), p.getName(), p.getDisplayName()));
     }
 }

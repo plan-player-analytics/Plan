@@ -5,20 +5,20 @@
  */
 package test.java.main.java.com.djrapitops.plan.data;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import org.junit.Before;
 
 /**
  * @author Rsl1122
  */
-public class SessionDataTest {
+public class SessionTest {
 
-    private SessionData test;
+    private Session test;
 
     /**
      *
      */
-    public SessionDataTest() {
+    public SessionTest() {
     }
 
     /**
@@ -26,7 +26,6 @@ public class SessionDataTest {
      */
     @Before
     public void setUp() {
-        test = new SessionData(0);
     }
 
     /**

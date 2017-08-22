@@ -14,10 +14,12 @@ import java.sql.SQLException;
  */
 public abstract class UserIDTable extends Table {
 
-    protected String columnUserID;
+    protected final String columnUserID = "user_id";
+    protected final UsersTable usersTable;
 
     public UserIDTable(String name, SQLDB db, boolean usingMySQL) {
         super(name, db, usingMySQL);
+        usersTable = db.getUsersTable();
     }
 
     protected boolean removeDataOf(int userID) {
