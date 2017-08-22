@@ -81,7 +81,7 @@ public class ActionsTable extends UserIDTable {
                     + "?, ?, ?)"
             );
             statement.setString(1, uuid.toString());
-            statement.setString(2, Plan.getInstance().getServerInfoManager().getServerUUID().toString());
+            statement.setString(2, Plan.getServerUUID().toString());
             statement.setInt(3, action.getDoneAction().getId());
             statement.setLong(4, action.getDate());
             statement.setString(5, action.getAdditionalInfo());

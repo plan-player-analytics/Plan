@@ -19,9 +19,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Table representing plan_servers in the database.
+ * Table for managing multiple server's data in the database.
  * <p>
- * Used for managing multiple server's data in the database.
+ * plan_servers contains columns:
+ * <ul>
+ * <li>id</li>
+ * <li>uuid</li>
+ * <li>name</li>
+ * <li>web_address</li>
+ * <li>is_installed</li>
+ * </ul>
+ * Columns refer to Server Information.
  *
  * @author Rsl1122
  */
@@ -226,6 +234,6 @@ public class ServerTable extends Table {
     }
 
     public String getColumnID() {
-        return columnServerID;
+        return tableName + "." + columnServerID;
     }
 }

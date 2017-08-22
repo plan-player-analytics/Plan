@@ -53,6 +53,7 @@ import org.bukkit.ChatColor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -483,5 +484,9 @@ public class Plan extends BukkitPlugin<Plan> {
         for (Processor processor : processors) {
             processingQueue.addToQueue(processor);
         }
+    }
+
+    public static UUID getServerUUID() {
+        return getInstance().serverInfoManager.getServerUUID();
     }
 }
