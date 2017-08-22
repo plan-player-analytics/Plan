@@ -34,6 +34,7 @@ public abstract class SQLDB extends Database {
         this.supportsModification = supportsModification;
         usingMySQL = getName().equals("MySQL");
 
+        serverTable = new ServerTable(this, usingMySQL);
         usersTable = new UsersTable(this, usingMySQL);
         sessionsTable = new SessionsTable(this, usingMySQL);
         killsTable = new KillsTable(this, usingMySQL);
@@ -45,7 +46,6 @@ public abstract class SQLDB extends Database {
         securityTable = new SecurityTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
-        serverTable = new ServerTable(this, usingMySQL);
 
         setupDataSource();
     }
@@ -67,11 +67,9 @@ public abstract class SQLDB extends Database {
         String benchName = "Init " + getConfigName();
         Benchmark.start(benchName);
         try {
-            System.out.println("SETUP DATABASES");
             if (!setupDatabases()) {
                 return false;
             }
-            System.out.println("CLEAN DATABASES");
             clean();
             return true;
         } catch (SQLException e) {
@@ -126,10 +124,8 @@ public abstract class SQLDB extends Database {
      * @return true if successful.
      */
     private boolean createTables() {
-        System.out.println("Create Tables");
         Benchmark.start("Create tables");
         for (Table table : getAllTables()) {
-            System.out.println("Create Table " + table.getTableName());
             if (!table.createTable()) {
                 Log.error("Failed to create table: " + table.getTableName());
                 return false;

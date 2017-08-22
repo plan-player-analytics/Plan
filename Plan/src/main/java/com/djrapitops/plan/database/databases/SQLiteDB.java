@@ -38,12 +38,14 @@ public class SQLiteDB extends SQLDB {
     public void setupDataSource() {
         dataSource = new BasicDataSource();
 
-        dataSource.setUrl("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath());
+        String filePath = new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath();
+        dataSource.setUrl("jdbc:sqlite:" + filePath);
 
         dataSource.setEnableAutoCommitOnReturn(false);
         dataSource.setDefaultAutoCommit(false);
 
         dataSource.setConnectionInitSqls(Collections.singletonList("PRAGMA JOURNAL_MODE=WAL"));
+        dataSource.setMaxTotal(-1);
     }
 
     /**

@@ -56,7 +56,6 @@ public class SessionsTable extends UserIDTable {
                     .foreignKey(columnServerID, serverTableName, serverTableID)
                     .primaryKey(usingMySQL, columnSessionID)
                     .toString();
-            System.out.println(sql);
             execute(sql);
             return true;
         } catch (SQLException ex) {

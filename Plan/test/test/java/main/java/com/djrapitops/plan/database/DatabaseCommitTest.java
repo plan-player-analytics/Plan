@@ -20,7 +20,6 @@ import test.java.utils.TestInit;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -70,11 +69,9 @@ public class DatabaseCommitTest {
     public void testNoExceptionWhenCommitEmpty() throws SQLException {
         db.init();
 
-        Connection con = db.getConnection();
-
-        db.commit(con);
-        db.commit(con);
-        db.commit(con);
+        db.commit(db.getConnection());
+        db.commit(db.getConnection());
+        db.commit(db.getConnection());
     }
 
     @Ignore("//TODO")

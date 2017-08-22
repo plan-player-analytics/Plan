@@ -136,7 +136,7 @@ public class DatabaseTest {
     @Ignore("")
     @Test // TODO Rewrite
     public void testRemoveAll() throws SQLException {
-        //db.init();
+        db.init();
         //UserData data = MockUtils.mockUser();
         //db.saveUserData(data);
         HashMap<String, Integer> c = new HashMap<>();
@@ -157,7 +157,7 @@ public class DatabaseTest {
     @Ignore("//TODO")
     @Test
     public void testSaveCommandUse() throws SQLException {
-        //db.init();
+        db.init();
         HashMap<String, Integer> c = new HashMap<>();
         c.put("/plan", 1);
         c.put("/tp", 4);
@@ -211,7 +211,7 @@ public class DatabaseTest {
 
     @Test
     public void testTPSSaving() throws SQLException {
-        //db.init();
+        db.init();
         TPSTable tpsTable = db.getTpsTable();
         List<TPS> expected = new ArrayList<>();
         Random r = new Random();
