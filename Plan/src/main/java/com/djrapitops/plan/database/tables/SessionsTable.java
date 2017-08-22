@@ -42,8 +42,10 @@ public class SessionsTable extends UserIDTable {
     @Override
     public boolean createTable() {
         try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnServerID, Sql.LONG)
+            String serverTableName = serverTable.getTableName();
+            String serverTableID = serverTable.getColumnID();
+            String sql = TableSqlParser.createTable(this.tableName)
+                    .primaryKeyIDColumn(usingMySQL, columnSessionID, Sql.LONG)
                     .column(columnUserID, Sql.INT).notNull()
                     .column(columnServerID, Sql.INT).notNull()
                     .column(columnSessionStart, Sql.LONG).notNull()
@@ -51,10 +53,11 @@ public class SessionsTable extends UserIDTable {
                     .column(columnMobKills, Sql.INT).notNull()
                     .column(columnDeaths, Sql.INT).notNull()
                     .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                    .foreignKey(columnServerID, serverTableName, serverTableID)
                     .primaryKey(usingMySQL, columnSessionID)
-                    .toString()
-            );
+                    .toString();
+            System.out.println(sql);
+            execute(sql);
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -128,6 +131,52 @@ public class SessionsTable extends UserIDTable {
                 sessions.add(new Session(id, start, end, deaths, mobKills));
             }
             return sessionsByServer;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public long getPlaytime(UUID uuid) throws SQLException {
+        return getPlaytime(uuid, Plan.getServerUUID());
+    }
+
+    public long getPlaytime(UUID uuid, UUID serverUUID) throws SQLException {
+        return getPlaytime(uuid, serverUUID, 0L);
+    }
+
+    public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT FROM " + tableName + " "
+                    + "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime "
+                    + "WHERE " + columnSessionStart + ">? AND "
+                    + columnUserID + "=" + usersTable.statementSelectID + " AND "
+                    + columnServerID + "=" + serverTable.statementSelectServerID);
+            statement.setLong(1, afterDate);
+            statement.setString(2, uuid.toString());
+            statement.setString(3, serverUUID.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getLong("playtime");
+            }
+            return 0;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public Map<String, Long> getPlaytimeByServer(UUID uuid) throws SQLException {
+        Map<Integer, String> serverNames = serverTable.getServerNames();
+        Map<String, Long> playtimes = new HashMap<>();
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT FROM " + tableName + " "
+                    + "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime "
+                    + "WHERE " + columnSessionStart + ">? AND "
+                    + columnUserID + "=" + usersTable.statementSelectID); // TODO CONTINUE
+            return playtimes;
         } finally {
             close(set, statement);
         }

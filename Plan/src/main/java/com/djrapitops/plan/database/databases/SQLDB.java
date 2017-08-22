@@ -3,15 +3,12 @@ package main.java.com.djrapitops.plan.database.databases;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
-import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -40,6 +37,7 @@ public abstract class SQLDB extends Database {
         this.supportsModification = supportsModification;
         usingMySQL = getName().equals("MySQL");
 
+        serverTable = new ServerTable(this, usingMySQL);
         usersTable = new UsersTable(this, usingMySQL);
         sessionsTable = new SessionsTable(this, usingMySQL);
         killsTable = new KillsTable(this, usingMySQL);
@@ -51,7 +49,6 @@ public abstract class SQLDB extends Database {
         securityTable = new SecurityTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
-        serverTable = new ServerTable(this, usingMySQL);
 
         startConnectionPingTask();
     }
@@ -186,7 +183,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTables() {
         return new Table[]{
-                usersTable, ipsTable,
+                serverTable, usersTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, tpsTable, worldTable,
                 worldTimesTable, securityTable};
@@ -200,7 +197,7 @@ public abstract class SQLDB extends Database {
                 ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 worldTimesTable, worldTable, usersTable,
-                commandUseTable, tpsTable};
+                commandUseTable, tpsTable, serverTable};
     }
 
     /**
@@ -357,30 +354,7 @@ public abstract class SQLDB extends Database {
         if (data.isEmpty()) {
             return data;
         }
-        Map<Integer, UUID> idUuidRel = userIds.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-        List<Integer> ids = userIds.entrySet().stream().filter(e -> uuids.contains(e.getKey())).map(Map.Entry::getValue).collect(Collectors.toList());
-        Log.debug("Database", "Using IDs: " + ids.size());
-        Map<Integer, List<String>> nicknames = nicknamesTable.getNicknames(ids);
-        Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
-        Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
-        Map<Integer, List<Session>> sessionData = sessionsTable.getSessionData(ids);
-        Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
-
-        Log.debug("Database",
-                "Data found for:",
-                "  UUIDs: " + uuids.size(),
-                "  IDs: " + userIds.size(),
-                "  UserData: " + data.size(),
-                "    Nicknames: " + nicknames.size(),
-                "    IPs: " + ipList.size(),
-                "    Kills: " + playerKills.size(),
-                "    Sessions: " + sessionData.size(),
-                "    World Times: " + worldTimes.size()
-        );
-
-        for (UserData uData : data) {
-            // TODO add extra data
-        }
+        // TODO REWRITE
 
         Benchmark.stop("Database", "Get UserData for " + uuidsCol.size());
         setAvailable();

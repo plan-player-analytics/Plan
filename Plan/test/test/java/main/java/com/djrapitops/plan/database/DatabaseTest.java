@@ -146,6 +146,7 @@ public class DatabaseTest {
     /**
      * @throws SQLException
      */
+    @Ignore("")
     @Test // TODO Rewrite
     public void testRemoveAll() throws SQLException {
         db.init();
@@ -166,6 +167,7 @@ public class DatabaseTest {
     /**
      * @throws SQLException
      */
+    @Ignore("//TODO")
     @Test
     public void testSaveCommandUse() throws SQLException {
         db.init();
