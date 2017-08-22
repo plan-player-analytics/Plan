@@ -10,6 +10,7 @@ package main.java.com.djrapitops.plan.data.handling.info;
  * @author Rsl1122
  * @since 3.0.0
  */
+@Deprecated
 public enum InfoType {
 
     /**

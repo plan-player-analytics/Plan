@@ -2,8 +2,8 @@ package main.java.com.djrapitops.plan.data.listeners;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
 import main.java.com.djrapitops.plan.data.handling.player.DeathProcessor;
+import main.java.com.djrapitops.plan.data.handling.player.KillProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Material;
@@ -100,8 +100,7 @@ public class PlanDeathEventListener implements Listener {
         }
 
         if (Verify.notNull(killerUUID, weapon)) {
-
-            plugin.addToProcessQueue(new KillInfo(killerUUID, time, dead, weapon));
+            plugin.addToProcessQueue(new KillProcessor(killerUUID, time, dead, weapon));
         }
     }
 

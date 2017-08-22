@@ -4,6 +4,7 @@ import main.java.com.djrapitops.plan.data.Session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -59,9 +60,12 @@ public class SessionCache {
      * @param uuid UUID of the player.
      * @return Session or null if not cached.
      */
-    @Deprecated
-    public Session getSession(UUID uuid) {
-        return activeSessions.get(uuid);
+    public Optional<Session> getSession(UUID uuid) {
+        Session session = activeSessions.get(uuid);
+        if (session != null) {
+            return Optional.of(session);
+        }
+        return Optional.empty();
     }
 
     /**
