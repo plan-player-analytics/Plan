@@ -1,8 +1,7 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.info.InfoType;
-import main.java.com.djrapitops.plan.data.handling.info.PlaytimeDependentInfo;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -40,13 +40,16 @@ public class PlanGamemodeChangeListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-
         Player p = event.getPlayer();
         UUID uuid = p.getUniqueId();
         long time = MiscUtils.getTime();
         String gameMode = event.getNewGameMode().name();
         String worldName = p.getWorld().getName();
 
-        plugin.addToProcessQueue(new PlaytimeDependentInfo(uuid, InfoType.GM, time, gameMode, worldName));
+        Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
+        if (cachedSession.isPresent()) {
+            Session session = cachedSession.get();
+            session.changeState(worldName, gameMode, time);
+        }
     }
 }

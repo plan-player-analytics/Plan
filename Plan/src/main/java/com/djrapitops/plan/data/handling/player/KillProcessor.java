@@ -12,6 +12,8 @@ import java.util.UUID;
 /**
  * Processor Class for KillEvent information when the killer is a
  * player.
+ * <p>
+ * Adds KillData or a Mob kill to the active Session.
  *
  * @author Rsl1122
  * @since 4.0.0
@@ -43,7 +45,7 @@ public class KillProcessor extends PlayerProcessor {
 
         Plan plugin = Plan.getInstance();
 
-        Optional<Session> cachedSession = plugin.getDataCache().getSession(uuid);
+        Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
         if (!cachedSession.isPresent()) {
             return;
         }
