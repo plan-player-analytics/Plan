@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Part responsible for all Player login related analysis.
+ * Part responsible for all Player player related analysis.
  * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>

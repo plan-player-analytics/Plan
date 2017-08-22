@@ -478,7 +478,9 @@ public class Plan extends BukkitPlugin<Plan> {
         return tpsCountTimer;
     }
 
-    public void addToProcessQueue(Processor processor) {
-        processingQueue.addToQueue(processor);
+    public void addToProcessQueue(Processor... processors) {
+        for (Processor processor : processors) {
+            processingQueue.addToQueue(processor);
+        }
     }
 }

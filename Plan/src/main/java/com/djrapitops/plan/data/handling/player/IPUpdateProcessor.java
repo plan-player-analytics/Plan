@@ -2,10 +2,9 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.data.handling.login;
+package main.java.com.djrapitops.plan.data.handling.player;
 
 import main.java.com.djrapitops.plan.data.cache.GeolocationCacheHandler;
-import main.java.com.djrapitops.plan.data.handling.PlayerProcessor;
 
 import java.util.UUID;
 
@@ -26,7 +25,7 @@ public class IPUpdateProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        GeolocationCacheHandler.getCountry(ip);
+        String country = GeolocationCacheHandler.getCountry(ip);
         // TODO DB Update IP & Geolocation
     }
 }
