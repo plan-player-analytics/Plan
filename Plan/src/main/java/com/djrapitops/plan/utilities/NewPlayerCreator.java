@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.data.UserData;
 /**
  * @author Rsl1122
  */
+@Deprecated // TODO Remove once sure that this is unnecessary.
 public class NewPlayerCreator {
 
     /**
@@ -45,7 +46,6 @@ public class NewPlayerCreator {
      * @return a new UserData object
      */
     public static UserData createNewPlayer(IOfflinePlayer player, Gamemode gm) {
-        // TODO Rewrite
         return null;
     }
 

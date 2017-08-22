@@ -192,9 +192,10 @@ public class Plan extends BukkitPlugin<Plan> {
                 Log.error("WebServer was not successfully initialized.");
             }
 
-            Benchmark.start("ServerInfo Registration");
-            serverInfoManager = new ServerInfoManager(this);
-            Benchmark.stop("Enable", "ServerInfo Registration");
+            //TODO Re-Enable after DB ServerTable has been initialized properly.
+//            Benchmark.start("ServerInfo Registration");
+//            serverInfoManager = new ServerInfoManager(this);
+//            Benchmark.stop("Enable", "ServerInfo Registration");
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
 
@@ -398,7 +399,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return Current instance of the DataCache
      */
-    public DataCache getHandler() {
+    public DataCache getDataCache() {
         return handler;
     }
 

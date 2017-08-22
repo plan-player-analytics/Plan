@@ -56,7 +56,7 @@ public class QueueTest {
             public void startAsyncPeriodicSaveTask() {
             }
         };
-        when(plan.getHandler()).thenReturn(handler);
+        when(plan.getDataCache()).thenReturn(handler);
     }
 
     @After

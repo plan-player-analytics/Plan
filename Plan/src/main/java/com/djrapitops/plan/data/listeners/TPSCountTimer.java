@@ -32,7 +32,7 @@ public class TPSCountTimer extends AbsRunnable {
     public TPSCountTimer(Plan plugin) {
         super("TPSCountTimer");
         lastCheckNano = -1;
-        this.handler = plugin.getHandler();
+        this.handler = plugin.getDataCache();
         this.plugin = plugin;
         history = new ArrayList<>();
     }

@@ -1,23 +1,12 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.player.Fetch;
-import com.djrapitops.plugin.utilities.player.Gamemode;
-import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.data.handling.DBCommitProcessor;
-import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
-import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
-import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
-import main.java.com.djrapitops.plan.data.handling.player.BanProcessor;
-import main.java.com.djrapitops.plan.data.handling.player.IPUpdateProcessor;
-import main.java.com.djrapitops.plan.data.handling.player.NameProcessor;
-import main.java.com.djrapitops.plan.data.handling.player.RegisterProcessor;
+import main.java.com.djrapitops.plan.data.handling.player.*;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,7 +16,6 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.net.InetAddress;
 import java.util.UUID;
 
 /**
@@ -50,7 +38,7 @@ public class PlanPlayerListener implements Listener {
      */
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
-        cache = plugin.getHandler();
+        cache = plugin.getDataCache();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -58,25 +46,23 @@ public class PlanPlayerListener implements Listener {
         PlayerLoginEvent.Result result = event.getResult();
         UUID uuid = event.getPlayer().getUniqueId();
         if (result == PlayerLoginEvent.Result.KICK_BANNED) {
-            plugin.addToProcessQueue(new BanProcessor(uuid));
+            plugin.addToProcessQueue(new BanProcessor(uuid, true));
+        } else {
+            plugin.addToProcessQueue(new BanProcessor(uuid, false));
         }
     }
 
     /**
      * PlayerJoinEvent Listener.
      * <p>
-     * If player is a new player, creates new data for the player.
-     * <p>
-     * Adds a LoginInfo to the processingQueue if the user is not new.
+     * Adds processing information to the Queue.
      *
      * @param event The Fired event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
-        IPlayer iPlayer = Fetch.wrapBukkit(player);
-        plugin.getNotificationCenter().checkNotifications(iPlayer);
+        plugin.getNotificationCenter().checkNotifications(Fetch.wrapBukkit(player));
 
         UUID uuid = player.getUniqueId();
         long time = MiscUtils.getTime();
@@ -99,31 +85,6 @@ public class PlanPlayerListener implements Listener {
                 new NameProcessor(uuid, playerName, displayName),
                 new DBCommitProcessor(plugin.getDB())
         );
-
-
-        plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
-            @Override
-            public void run() {
-                long time = MiscUtils.getTime();
-                InetAddress ip = player.getAddress().getAddress();
-                boolean banned = player.isBanned();
-                String displayName = player.getDisplayName();
-                String gm = player.getGameMode().name();
-                String worldName = player.getWorld().getName();
-
-                LoginInfo loginInfo = new LoginInfo(uuid, time, ip, banned, displayName, gm, 1, worldName);
-                boolean isNewPlayer = !plugin.getDB().wasSeenBefore(uuid);
-
-                if (isNewPlayer) {
-                    UserData newUserData = NewPlayerCreator.createNewPlayer(iPlayer);
-                    loginInfo.process(newUserData);
-                    // TODO Rewrite Register & Login system cache.newPlayer(newUserData);
-                } else {
-                    // cache.addToPool(loginInfo);
-                }
-                this.cancel();
-            }
-        }).runTaskAsynchronously();
     }
 
     /**
@@ -135,23 +96,21 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        // TODO Rewrite Logout system
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        cache.endSession(uuid);
 
         long time = MiscUtils.getTime();
-        boolean banned = player.isBanned();
-        Gamemode gm = Gamemode.wrap(player.getGameMode());
-        String worldName = player.getWorld().getName();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
 
-        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), worldName));
+        plugin.addToProcessQueue(
+                new BanProcessor(uuid, player.isBanned()),
+                new EndSessionProcessor(uuid, time)
+        );
     }
 
     /**
      * PlayerKickEvent Listener.
      * <p>
-     * Adds a KickInfo & LogoutInfo to the processing Queue.
+     * After KickEvent, the QuitEvent is automatically called.
      *
      * @param event Fired event
      */
@@ -160,18 +119,7 @@ public class PlanPlayerListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        cache.endSession(uuid);
-
-        long time = MiscUtils.getTime();
-        boolean banned = player.isBanned();
-        Gamemode gm = Gamemode.wrap(player.getGameMode());
-        String worldName = player.getWorld().getName();
-        //TODO    String geoLocation = GeolocationCacheHandler.getCountry(ip.getHostAddress());
-        plugin.addToProcessQueue(new LogoutInfo(uuid, time, banned, gm.name(), worldName));
-        plugin.addToProcessQueue(new KickInfo(uuid));
+        UUID uuid = event.getPlayer().getUniqueId();
+        plugin.addToProcessQueue(new KickProcessor(uuid));
     }
 }

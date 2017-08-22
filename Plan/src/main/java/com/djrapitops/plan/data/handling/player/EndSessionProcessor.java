@@ -4,6 +4,8 @@
  */
 package main.java.com.djrapitops.plan.data.handling.player;
 
+import main.java.com.djrapitops.plan.Plan;
+
 import java.util.UUID;
 
 /**
@@ -11,18 +13,18 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BanProcessor extends PlayerProcessor {
+public class EndSessionProcessor extends PlayerProcessor {
 
-    private final boolean banned;
+    private final long time;
 
-    public BanProcessor(UUID uuid, boolean banned) {
+    public EndSessionProcessor(UUID uuid, long time) {
         super(uuid);
-        this.banned = banned;
+        this.time = time;
     }
 
     @Override
     public void process() {
         UUID uuid = getUUID();
-        // TODO DB Update Ban status
+        Plan.getInstance().getDataCache().endSession(uuid, time);
     }
 }

@@ -33,7 +33,7 @@ public class InspectCacheHandler {
      * @param plugin Current instance of Plan.class
      */
     public InspectCacheHandler(Plan plugin) {
-        this.handler = plugin.getHandler();
+        this.handler = plugin.getDataCache();
         this.cache = new HashMap<>();
         cacheTimes = new HashMap<>();
     }

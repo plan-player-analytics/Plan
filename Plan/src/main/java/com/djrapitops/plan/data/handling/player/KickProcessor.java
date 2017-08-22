@@ -11,18 +11,14 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class BanProcessor extends PlayerProcessor {
-
-    private final boolean banned;
-
-    public BanProcessor(UUID uuid, boolean banned) {
+public class KickProcessor extends PlayerProcessor {
+    public KickProcessor(UUID uuid) {
         super(uuid);
-        this.banned = banned;
     }
 
     @Override
     public void process() {
         UUID uuid = getUUID();
-        // TODO DB Update Ban status
+        // TODO Update DB Kick +1
     }
 }
