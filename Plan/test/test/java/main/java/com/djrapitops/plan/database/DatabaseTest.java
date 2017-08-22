@@ -213,7 +213,6 @@ public class DatabaseTest {
     public void testTPSSaving() throws SQLException {
         db.init();
         TPSTable tpsTable = db.getTpsTable();
-        List<TPS> expected = new ArrayList<>();
         Random r = new Random();
 
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
@@ -224,12 +223,17 @@ public class DatabaseTest {
         final int entityCount = 6123;
         final int chunksLoaded = 2134;
 
+        List<TPS> expected = new ArrayList<>();
+
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
 
+        List<TPS> tpsDataOld = tpsTable.getTPSData();
         tpsTable.saveTPSData(expected);
+
+        expected.addAll(0, tpsDataOld);
         assertEquals(expected, tpsTable.getTPSData());
     }
 }

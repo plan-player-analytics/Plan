@@ -4,6 +4,7 @@
  */
 package test.java.utils;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -24,7 +25,7 @@ public class DBTestSuite {
         clean(true);
     }
 
-    @BeforeClass
+    @AfterClass
     public static void tearDown() throws IOException {
         clean(false);
     }
@@ -37,7 +38,7 @@ public class DBTestSuite {
         }
 
         for (File f : testFolder.listFiles()) {
-            if (dbOnly && !f.getName().endsWith(".db")) {
+            if (dbOnly && !f.getName().contains(".db")) {
                 continue;
             }
 
