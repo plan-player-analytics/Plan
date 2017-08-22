@@ -82,9 +82,9 @@ public class TestInit {
         when(planMock.getConfig()).thenReturn(config);
 
         File testFolder = getTestFolder();
-        if (clearOnStart) {
+        /*if (clearOnStart) {
             clean(testFolder);
-        }
+        }*/
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
         // Html Files
@@ -119,7 +119,7 @@ public class TestInit {
     }
 
     private RunnableFactory<Plan> mockRunnableFactory() {
-        RunnableFactory<Plan> runnableFactory = new RunnableFactory<Plan>(planMock) {
+        return new RunnableFactory<Plan>(planMock) {
             @Override
             public IRunnable createNew(String name, final AbsRunnable runnable) {
                 return new IRunnable() {
@@ -170,7 +170,6 @@ public class TestInit {
                 };
             }
         };
-        return runnableFactory;
     }
 
     private static File getTestFolder() {

@@ -101,8 +101,8 @@ public class CommandUseTable extends Table {
             }
             return commandUse;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get CommandUse");
         }
     }
@@ -136,7 +136,6 @@ public class CommandUseTable extends Table {
         }
 
         updateCommands(updateData);
-        commit();
         Benchmark.stop("Database", "Save Commanduse");
         db.setAvailable();
     }
@@ -149,7 +148,7 @@ public class CommandUseTable extends Table {
                     "WHERE (" + columnCommand + "=?) AND (" +
                     columnServerID + "=" + serverTable.statementSelectServerID + ")";
             statement = prepareStatement(updateStatement);
-            boolean commitRequired = false;
+
             for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
                 String key = entrySet.getKey();
                 Integer amount = entrySet.getValue();
@@ -162,13 +161,11 @@ public class CommandUseTable extends Table {
                 statement.setString(2, key);
                 statement.setString(3, Plan.getServerUUID().toString());
                 statement.addBatch();
-                commitRequired = true;
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -182,7 +179,6 @@ public class CommandUseTable extends Table {
                     + columnServerID
                     + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
             statement = prepareStatement(insertStatement);
-            boolean addedRows = false;
             for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
                 String key = entrySet.getKey();
                 Integer amount = entrySet.getValue();
@@ -195,20 +191,18 @@ public class CommandUseTable extends Table {
                 statement.setInt(2, amount);
                 statement.setString(3, Plan.getServerUUID().toString());
                 statement.addBatch();
-                addedRows = true;
             }
 
-            if (addedRows) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
 
     public Optional<String> getCommandByID(int id) throws SQLException {
         PreparedStatement statement = null;
-        ResultSet set = null;
+        ResultSet set;
         try {
             statement = prepareStatement(Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString());
             statement.setInt(1, id);
@@ -218,13 +212,14 @@ public class CommandUseTable extends Table {
             }
             return Optional.empty();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
 
     public Optional<Integer> getCommandID(String command) throws SQLException {
         PreparedStatement statement = null;
-        ResultSet set = null;
+        ResultSet set;
         try {
             statement = prepareStatement(Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString());
             statement.setString(1, command);
@@ -234,6 +229,7 @@ public class CommandUseTable extends Table {
             }
             return Optional.empty();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

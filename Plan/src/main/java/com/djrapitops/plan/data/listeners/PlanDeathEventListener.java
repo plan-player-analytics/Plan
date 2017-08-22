@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.handling.KillHandling;
-import main.java.com.djrapitops.plan.data.handling.info.DeathInfo;
-import main.java.com.djrapitops.plan.data.handling.info.KillInfo;
+import main.java.com.djrapitops.plan.data.handling.player.DeathProcessor;
+import main.java.com.djrapitops.plan.data.handling.player.KillProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -45,7 +45,7 @@ public class PlanDeathEventListener implements Listener {
         LivingEntity dead = event.getEntity();
 
         if (dead instanceof Player) {
-            plugin.addToProcessQueue(new DeathInfo(dead.getUniqueId()));
+            plugin.addToProcessQueue(new DeathProcessor(dead.getUniqueId()));
         }
 
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
@@ -69,7 +69,7 @@ public class PlanDeathEventListener implements Listener {
                 }
             }
 
-            plugin.addToProcessQueue(new KillInfo(killer.getUniqueId(), time, dead, KillHandling.normalizeMaterialName(itemInHand)));
+            plugin.addToProcessQueue(new KillProcessor(killer.getUniqueId(), time, dead, normalizeMaterialName(itemInHand)));
             return;
         }
 
@@ -86,7 +86,7 @@ public class PlanDeathEventListener implements Listener {
                 return;
             }
 
-            plugin.addToProcessQueue(new KillInfo(owner.getUniqueId(), time, dead, "Wolf"));
+            plugin.addToProcessQueue(new KillProcessor(owner.getUniqueId(), time, dead, "Wolf"));
         }
 
         if (killerEntity instanceof Arrow) {
@@ -100,8 +100,18 @@ public class PlanDeathEventListener implements Listener {
 
             Player player = (Player) source;
 
-            plugin.addToProcessQueue(new KillInfo(player.getUniqueId(), time, dead, "Bow"));
+            plugin.addToProcessQueue(new KillProcessor(player.getUniqueId(), time, dead, "Bow"));
         }
+    }
+
+    /**
+     * Normalizes a material name
+     *
+     * @param material The material
+     * @return The normalized material name
+     */
+    private String normalizeMaterialName(Material material) {
+        return WordUtils.capitalizeFully(material.name(), '_').replace('_', ' ');
     }
 }
 

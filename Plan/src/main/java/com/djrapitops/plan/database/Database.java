@@ -3,7 +3,9 @@ package main.java.com.djrapitops.plan.database;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.tables.*;
+import org.apache.commons.dbcp2.BasicDataSource;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -89,6 +91,8 @@ public abstract class Database {
      * Table representing plan_servers in the database.
      */
     protected ServerTable serverTable;
+
+    protected BasicDataSource dataSource;
 
     /**
      * Super constructor.
@@ -322,5 +326,9 @@ public abstract class Database {
         return serverTable;
     }
 
-    public abstract void commit() throws SQLException;
+    public BasicDataSource getDataSource() {
+        return dataSource;
+    }
+
+    public abstract void commit(Connection connection) throws SQLException;
 }

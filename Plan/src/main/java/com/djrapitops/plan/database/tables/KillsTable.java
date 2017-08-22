@@ -66,7 +66,9 @@ public class KillsTable extends Table {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE " + columnKillerUserID + " = ? OR " + columnVictimUserID + " = ?");
             statement.setInt(1, userId);
             statement.setInt(2, userId);
+
             statement.execute();
+            commit(statement.getConnection());
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -96,8 +98,8 @@ public class KillsTable extends Table {
             }
             return killData;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -120,7 +122,6 @@ public class KillsTable extends Table {
                     + columnWeapon + ", "
                     + columnDate
                     + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
             for (KillData kill : kills) {
                 if (kill == null) {
                     continue;
@@ -130,13 +131,11 @@ public class KillsTable extends Table {
                 statement.setString(3, kill.getWeapon());
                 statement.setLong(4, kill.getTime());
                 statement.addBatch();
-                commitRequired = true;
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
             Benchmark.stop("Database", "Save Kills");
         }
@@ -172,8 +171,8 @@ public class KillsTable extends Table {
             }
             return kills;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get Kills multiple");
         }
     }
@@ -199,7 +198,6 @@ public class KillsTable extends Table {
                     + columnWeapon + ", "
                     + columnDate
                     + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
             for (Map.Entry<Integer, List<KillData>> entrySet : kills.entrySet()) {
                 Integer id = entrySet.getKey();
                 List<KillData> playerKills = entrySet.getValue();
@@ -216,14 +214,12 @@ public class KillsTable extends Table {
                     statement.setString(3, kill.getWeapon());
                     statement.setLong(4, kill.getTime());
                     statement.addBatch();
-                    commitRequired = true;
                 }
 
-                if (commitRequired) {
-                    statement.executeBatch();
-                }
+                statement.executeBatch();
             }
         } finally {
+            endTransaction(statement);
             close(statement);
             Benchmark.stop("Database", "Save Kills multiple");
         }

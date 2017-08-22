@@ -101,6 +101,7 @@ public class SessionsTable extends UserIDTable {
             statement.setString(6, Plan.getServerUUID().toString());
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
 
@@ -132,6 +133,7 @@ public class SessionsTable extends UserIDTable {
             }
             return sessionsByServer;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

@@ -99,6 +99,7 @@ public class NicknamesTable extends UserIDTable {
 
             return nicknames;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -136,6 +137,7 @@ public class NicknamesTable extends UserIDTable {
 
             statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -192,6 +194,7 @@ public class NicknamesTable extends UserIDTable {
 
             return nicks;
         } finally {
+            endTransaction(statement);
             close(set, statement);
             Benchmark.stop("Database", "Get Nicknames Multiple");
         }
@@ -212,7 +215,6 @@ public class NicknamesTable extends UserIDTable {
         Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
         PreparedStatement statement = null;
         try {
-            boolean commitRequired = false;
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "
                     + columnCurrent + ", "
@@ -239,14 +241,12 @@ public class NicknamesTable extends UserIDTable {
                     statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
                     statement.setString(3, name);
                     statement.addBatch();
-                    commitRequired = true;
                 }
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
             Benchmark.stop("Database", "Save Nicknames Multiple");
         }

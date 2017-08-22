@@ -4,11 +4,8 @@
  */
 package main.java.com.djrapitops.plan.data.handling;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.queue.processing.Processor;
-
-import java.sql.SQLException;
 
 /**
  * Processor for queueing a Database Commit after changes.
@@ -23,10 +20,10 @@ public class DBCommitProcessor extends Processor<Database> {
     @Override
     public void process() {
         // TODO Prevent Commit during batch operations.
-        try {
-            object.commit();
+        /*try {
+            TODO FIX object.commit();
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
-        }
+        }*/
     }
 }

@@ -44,11 +44,7 @@ public class QueueTest {
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         Plan plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
-            @Override
-            public void startConnectionPingTask() {
-            }
-        };
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
         when(plan.getDB()).thenReturn(db);
         dataCache = new DataCache(plan) {

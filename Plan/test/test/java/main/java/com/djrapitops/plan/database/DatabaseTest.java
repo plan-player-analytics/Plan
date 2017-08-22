@@ -61,14 +61,11 @@ public class DatabaseTest {
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        };
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
+
+        db.init();
     }
 
     /**
@@ -122,12 +119,7 @@ public class DatabaseTest {
      */
     @Test
     public void testMysqlGetConfigName() {
-        assertEquals("mysql", new MySQLDB(plan) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        }.getConfigName());
+        assertEquals("mysql", new MySQLDB(plan).getConfigName());
     }
 
     /**
@@ -135,12 +127,7 @@ public class DatabaseTest {
      */
     @Test
     public void testMysqlGetName() {
-        assertEquals("MySQL", new MySQLDB(plan) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        }.getName());
+        assertEquals("MySQL", new MySQLDB(plan).getName());
     }
 
     /**
@@ -149,9 +136,9 @@ public class DatabaseTest {
     @Ignore("")
     @Test // TODO Rewrite
     public void testRemoveAll() throws SQLException {
-        db.init();
-//        UserData data = MockUtils.mockUser();
-//        db.saveUserData(data);
+        //db.init();
+        //UserData data = MockUtils.mockUser();
+        //db.saveUserData(data);
         HashMap<String, Integer> c = new HashMap<>();
         c.put("/plan", 1);
         c.put("/tp", 4);
@@ -170,7 +157,7 @@ public class DatabaseTest {
     @Ignore("//TODO")
     @Test
     public void testSaveCommandUse() throws SQLException {
-        db.init();
+        //db.init();
         HashMap<String, Integer> c = new HashMap<>();
         c.put("/plan", 1);
         c.put("/tp", 4);
@@ -195,11 +182,13 @@ public class DatabaseTest {
      */
     @Test // TODO Rewrite
     public void testRemove() throws SQLException {
+        /*
         db.init();
-//        UserData data = MockUtils.mockUser();
-//        db.saveUserData(data);
-//        assertTrue(db.removeAccount(data.getUuid().toString()));
-//        assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));
+        UserData data = MockUtils.mockUser();
+        db.saveUserData(data);
+        assertTrue(db.removeAccount(data.getUuid().toString()));
+        assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));
+        */
     }
 
     /**
@@ -222,7 +211,7 @@ public class DatabaseTest {
 
     @Test
     public void testTPSSaving() throws SQLException {
-        db.init();
+        //db.init();
         TPSTable tpsTable = db.getTpsTable();
         List<TPS> expected = new ArrayList<>();
         Random r = new Random();

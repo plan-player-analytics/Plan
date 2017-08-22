@@ -60,6 +60,12 @@ public class SecurityTable extends Table {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         } finally {
+            try {
+                endTransaction(statement);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+
             close(statement);
         }
     }
@@ -80,7 +86,8 @@ public class SecurityTable extends Table {
             statement.setString(2, saltPassHash);
             statement.setInt(3, permLevel);
             statement.execute();
-            commit();
+            
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
@@ -104,8 +111,8 @@ public class SecurityTable extends Table {
             }
             return null;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -125,8 +132,8 @@ public class SecurityTable extends Table {
             }
             return list;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 }

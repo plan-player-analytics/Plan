@@ -87,6 +87,7 @@ public class ActionsTable extends UserIDTable {
             statement.setString(5, action.getAdditionalInfo());
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -117,6 +118,7 @@ public class ActionsTable extends UserIDTable {
             }
             return actions;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

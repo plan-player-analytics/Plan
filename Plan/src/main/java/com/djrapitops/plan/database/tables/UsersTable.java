@@ -183,8 +183,8 @@ public class UsersTable extends Table {
             }
             return userId;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -206,8 +206,8 @@ public class UsersTable extends Table {
             }
             return uuid;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -228,8 +228,8 @@ public class UsersTable extends Table {
             }
             return uuids;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get Saved UUIDS");
         }
     }
@@ -251,11 +251,17 @@ public class UsersTable extends Table {
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)");
             statement.setString(1, uuid);
+
             statement.execute();
             return true;
         } catch (SQLException ex) {
             return false;
         } finally {
+            try {
+                endTransaction(statement);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
             close(statement);
         }
     }
@@ -284,8 +290,8 @@ public class UsersTable extends Table {
                 }
             }
         } finally {
-            close(statement);
-            close(set);
+            endTransaction(statement);
+            close(set, statement);
         }
         return containsBukkitData;
     }
@@ -313,8 +319,8 @@ public class UsersTable extends Table {
             }
             return ids;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get User IDS Multiple");
         }
     }
@@ -337,8 +343,8 @@ public class UsersTable extends Table {
             }
             return ids;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get User IDS ALL");
         }
     }
@@ -368,8 +374,8 @@ public class UsersTable extends Table {
             }
             return null;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 

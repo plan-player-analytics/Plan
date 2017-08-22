@@ -95,8 +95,8 @@ public class WorldTimesTable extends UserIDTable {
             }
             return times;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -125,8 +125,8 @@ public class WorldTimesTable extends UserIDTable {
             }
             return times;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -167,7 +167,6 @@ public class WorldTimesTable extends UserIDTable {
                             " WHERE (" + selectWorldIDsql + "=" + columnWorldId + ")" +
                             " AND (" + columnUserID + "=?)"
             );
-            boolean commitRequired = false;
             for (Map.Entry<String, Long> entry : updateData.entrySet()) {
                 String worldName = entry.getKey();
                 long time = entry.getValue();
@@ -175,12 +174,10 @@ public class WorldTimesTable extends UserIDTable {
                 statement.setString(2, worldName);
                 statement.setInt(3, userId);
                 statement.addBatch();
-                commitRequired = true;
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -198,7 +195,6 @@ public class WorldTimesTable extends UserIDTable {
                             + columnPlaytime
                             + ") VALUES (?, " + selectWorldIDsql + ", ?)"
             );
-            boolean commitRequired = false;
             for (Map.Entry<String, Long> entry : newData.entrySet()) {
                 String worldName = entry.getKey();
                 long time = entry.getValue();
@@ -206,12 +202,10 @@ public class WorldTimesTable extends UserIDTable {
                 statement.setString(2, worldName);
                 statement.setLong(3, time);
                 statement.addBatch();
-                commitRequired = true;
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -259,7 +253,6 @@ public class WorldTimesTable extends UserIDTable {
                             " WHERE (" + selectWorldIDsql + "=" + columnWorldId + ")" +
                             " AND (" + columnUserID + "=?)"
             );
-            boolean commitRequired = false;
             for (Map.Entry<Integer, Map<String, Long>> entry : updateData.entrySet()) {
                 int userId = entry.getKey();
                 for (Map.Entry<String, Long> times : entry.getValue().entrySet()) {
@@ -269,13 +262,11 @@ public class WorldTimesTable extends UserIDTable {
                     statement.setString(2, worldName);
                     statement.setInt(3, userId);
                     statement.addBatch();
-                    commitRequired = true;
                 }
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -293,7 +284,6 @@ public class WorldTimesTable extends UserIDTable {
                             + columnPlaytime
                             + ") VALUES (?, " + selectWorldIDsql + ", ?)"
             );
-            boolean commitRequired = false;
             for (Map.Entry<Integer, Map<String, Long>> entry : newData.entrySet()) {
                 int userId = entry.getKey();
                 for (Map.Entry<String, Long> times : entry.getValue().entrySet()) {
@@ -303,13 +293,11 @@ public class WorldTimesTable extends UserIDTable {
                     statement.setString(2, worldName);
                     statement.setLong(3, time);
                     statement.addBatch();
-                    commitRequired = true;
                 }
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

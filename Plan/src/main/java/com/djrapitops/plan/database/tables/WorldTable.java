@@ -75,6 +75,7 @@ public class WorldTable extends Table {
             }
             return worldNames;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -101,16 +102,14 @@ public class WorldTable extends Table {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnWorldName
                     + ") VALUES (?)");
-            boolean commitRequired = false;
             for (String world : worlds) {
                 statement.setString(1, world);
                 statement.addBatch();
-                commitRequired = true;
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+
+            statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

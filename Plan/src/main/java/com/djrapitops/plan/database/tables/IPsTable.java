@@ -91,6 +91,7 @@ public class IPsTable extends UserIDTable {
 
             return stringList;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -100,6 +101,7 @@ public class IPsTable extends UserIDTable {
         if (ips.contains(ip)) {
             return;
         }
+
         insertIp(uuid, ip, geolocation);
     }
 
@@ -118,6 +120,7 @@ public class IPsTable extends UserIDTable {
             statement.setString(3, geolocation);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -136,6 +139,7 @@ public class IPsTable extends UserIDTable {
             }
             return Optional.empty();
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
