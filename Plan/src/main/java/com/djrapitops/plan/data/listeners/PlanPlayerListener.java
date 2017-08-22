@@ -31,8 +31,6 @@ public class PlanPlayerListener implements Listener {
 
     /**
      * Class Constructor.
-     * <p>
-     * Copies the references to multiple handlers from Current instance of cache.
      *
      * @param plugin Current instance of Plan
      */
@@ -53,9 +51,26 @@ public class PlanPlayerListener implements Listener {
     }
 
     /**
+     * PlayerKickEvent Listener.
+     * <p>
+     * Adds processing information to the ProcessingQueue.
+     * After KickEvent, the QuitEvent is automatically called.
+     *
+     * @param event Fired event
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerKick(PlayerKickEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        UUID uuid = event.getPlayer().getUniqueId();
+        plugin.addToProcessQueue(new KickProcessor(uuid));
+    }
+
+    /**
      * PlayerJoinEvent Listener.
      * <p>
-     * Adds processing information to the Queue.
+     * Adds processing information to the ProcessingQueue.
      *
      * @param event The Fired event.
      */
@@ -90,7 +105,7 @@ public class PlanPlayerListener implements Listener {
     /**
      * PlayerQuitEvent Listener.
      * <p>
-     * Adds a LogoutInfo to the processing Queue.
+     * Adds processing information to the ProcessingQueue.
      *
      * @param event Fired event
      */
@@ -105,21 +120,5 @@ public class PlanPlayerListener implements Listener {
                 new BanProcessor(uuid, player.isBanned()),
                 new EndSessionProcessor(uuid, time)
         );
-    }
-
-    /**
-     * PlayerKickEvent Listener.
-     * <p>
-     * After KickEvent, the QuitEvent is automatically called.
-     *
-     * @param event Fired event
-     */
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerKick(PlayerKickEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        UUID uuid = event.getPlayer().getUniqueId();
-        plugin.addToProcessQueue(new KickProcessor(uuid));
     }
 }

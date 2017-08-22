@@ -70,7 +70,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private API api;
 
     private ProcessingQueue processingQueue;
-    private DataCache handler;
+    private DataCache dataCache;
     private InspectCacheHandler inspectCache;
     private AnalysisCacheHandler analysisCache;
     private HookHandler hookHandler; // Manages 3rd party data sources
@@ -158,7 +158,7 @@ public class Plan extends BukkitPlugin<Plan> {
             Benchmark.stop("Enable", "Init Database");
 
             Benchmark.start("Init DataCache");
-            this.handler = new DataCache(this);
+            this.dataCache = new DataCache(this);
             this.inspectCache = new InspectCacheHandler(this);
             this.analysisCache = new AnalysisCacheHandler(this);
             Benchmark.stop("Enable", "Init DataCache");
@@ -261,14 +261,14 @@ public class Plan extends BukkitPlugin<Plan> {
 
         getServer().getScheduler().cancelTasks(this);
 
-        if (Verify.notNull(handler, db)) {
+        if (Verify.notNull(dataCache, db)) {
             Benchmark.start("Disable: DataCache Save");
             // Saves the DataCache to the database without Bukkit's Schedulers.
             Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
 
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.execute(() -> {
-                handler.saveCacheOnDisable();
+                dataCache.saveCacheOnDisable();
                 taskStatus().cancelAllKnownTasks();
                 Benchmark.stop("Disable: DataCache Save");
             });
@@ -400,7 +400,7 @@ public class Plan extends BukkitPlugin<Plan> {
      * @return Current instance of the DataCache
      */
     public DataCache getDataCache() {
-        return handler;
+        return dataCache;
     }
 
     /**

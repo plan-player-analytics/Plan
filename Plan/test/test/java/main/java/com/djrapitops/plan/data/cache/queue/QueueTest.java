@@ -34,7 +34,7 @@ public class QueueTest {
 
     private final UUID uuid1 = MockUtils.getPlayerUUID();
 
-    private DataCache handler;
+    private DataCache dataCache;
     private Database db;
 
     public QueueTest() {
@@ -51,12 +51,12 @@ public class QueueTest {
         };
         db.init();
         when(plan.getDB()).thenReturn(db);
-        handler = new DataCache(plan) {
+        dataCache = new DataCache(plan) {
             @Override
             public void startAsyncPeriodicSaveTask() {
             }
         };
-        when(plan.getDataCache()).thenReturn(handler);
+        when(plan.getDataCache()).thenReturn(dataCache);
     }
 
     @After
@@ -68,7 +68,7 @@ public class QueueTest {
     public void testProcessQueue() {
         List<Integer> processCalls = new ArrayList<>();
         List<Integer> errors = new ArrayList<>();
-//        handler.addToPool(new HandlingInfo(uuid1, InfoType.OTHER, 0) {
+//        dataCache.addToPool(new HandlingInfo(uuid1, InfoType.OTHER, 0) {
 //            @Override
 //            public void process(UserData uData) {
 //                if (uData.equals(data1)) {

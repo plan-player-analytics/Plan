@@ -129,8 +129,8 @@ public class Analysis {
             rawData.sort(new UserDataLastPlayedComparator());
             List<UUID> uuids = rawData.stream().map(UserData::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
-            DataCache handler = plugin.getDataCache();
-            Map<String, Integer> commandUse = handler.getCommandUse();
+            DataCache dataCache = plugin.getDataCache();
+            Map<String, Integer> commandUse = dataCache.getCommandUse();
 
             AnalysisData analysisData = new AnalysisData(commandUse, tpsData);
             analysisData.setPluginsTabLayout(plugin.getHookHandler().getPluginsTabLayoutForAnalysis());

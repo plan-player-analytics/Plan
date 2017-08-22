@@ -23,7 +23,7 @@ import java.util.*;
 @Deprecated
 public class InspectCacheHandler {
 
-    private final DataCache handler;
+    private final DataCache dataCache;
     private final Map<UUID, UserData> cache;
     private final Map<UUID, Long> cacheTimes;
 
@@ -33,7 +33,7 @@ public class InspectCacheHandler {
      * @param plugin Current instance of Plan.class
      */
     public InspectCacheHandler(Plan plugin) {
-        this.handler = plugin.getDataCache();
+        this.dataCache = plugin.getDataCache();
         this.cache = new HashMap<>();
         cacheTimes = new HashMap<>();
     }

@@ -23,7 +23,7 @@ import java.util.List;
 public class TPSCountTimer extends AbsRunnable {
 
     private final Plan plugin;
-    private final DataCache handler;
+    private final DataCache dataCache;
     private final List<TPS> history;
     private long lastCheckNano;
 
@@ -32,7 +32,7 @@ public class TPSCountTimer extends AbsRunnable {
     public TPSCountTimer(Plan plugin) {
         super("TPSCountTimer");
         lastCheckNano = -1;
-        this.handler = plugin.getDataCache();
+        this.dataCache = plugin.getDataCache();
         this.plugin = plugin;
         history = new ArrayList<>();
     }
@@ -54,7 +54,8 @@ public class TPSCountTimer extends AbsRunnable {
         history.add(tps);
 
         if (history.size() >= 60) {
-            handler.addTPSLastMinute(history);
+            // TODO Process & Save to DB with a new Processor.
+            dataCache.addTPSLastMinute(history);
             history.clear();
         }
     }

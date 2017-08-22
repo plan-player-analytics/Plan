@@ -91,7 +91,7 @@ public class DataCache extends SessionCache {
      * @throws IllegalStateException    BukkitScheduler is in a wrong state.
      */
     public void startAsyncPeriodicSaveTask() {
-        DataCache handler = this;
+        DataCache dataCache = this;
         plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
             private int timesSaved = 0;
 
