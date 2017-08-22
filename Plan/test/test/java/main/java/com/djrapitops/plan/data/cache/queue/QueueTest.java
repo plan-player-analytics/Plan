@@ -68,21 +68,6 @@ public class QueueTest {
     public void testProcessQueue() {
         List<Integer> processCalls = new ArrayList<>();
         List<Integer> errors = new ArrayList<>();
-//        dataCache.addToPool(new HandlingInfo(uuid1, InfoType.OTHER, 0) {
-//            @Override
-//            public void process(UserData uData) {
-//                if (uData.equals(data1)) {
-//                    uData.setName("TestSuccessful");
-//                    processCalls.add(1);
-//                } else {
-//                    errors.add(1);
-//                }
-//            }
-//        });
-//        while (processCalls.size() < 1) {
-//            if (errors.size() > 0) {
-//                fail();
-//            }
-//        }
+        // TODO Rewrite
     }
 }

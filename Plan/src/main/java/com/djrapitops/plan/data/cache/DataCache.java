@@ -134,7 +134,6 @@ public class DataCache extends SessionCache {
             endSession(uuid);
             String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
         }
-//        toProcess.sort(new HandlingInfoTimeComparator());
         Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
         try {
             db.saveCommandUse(commandUse);

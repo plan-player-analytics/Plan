@@ -4,8 +4,6 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
-import main.java.com.djrapitops.plan.data.handling.info.InfoType;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import org.apache.commons.lang.RandomStringUtils;
@@ -13,7 +11,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomData {
@@ -58,19 +55,6 @@ public class RandomData {
         List<Point> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             test.add(new Point(r.nextLong(), r.nextLong()));
-        }
-        return test;
-    }
-
-    public static List<HandlingInfo> randomHandlingInfo() {
-        List<HandlingInfo> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            test.add(new HandlingInfo(UUID.randomUUID(), randomEnum(InfoType.class), r.nextLong()) {
-                @Override
-                public void process(UserData uData) {
-
-                }
-            });
         }
         return test;
     }

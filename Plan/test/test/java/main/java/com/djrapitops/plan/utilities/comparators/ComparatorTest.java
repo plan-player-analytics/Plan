@@ -4,7 +4,6 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
 import main.java.com.djrapitops.plan.locale.Message;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
@@ -19,16 +18,6 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 public class ComparatorTest {
-
-    @Test
-    public void testHandlingInfoComparator() {
-        List<HandlingInfo> test = RandomData.randomHandlingInfo();
-        List<Long> longValues = test.stream().map(HandlingInfo::getTime).collect(Collectors.toList());
-        longValues.sort(Long::compare);
-        test.sort(new HandlingInfoTimeComparator());
-        List<Long> afterSort = test.stream().map(HandlingInfo::getTime).collect(Collectors.toList());
-        assertEquals(longValues, afterSort);
-    }
 
     @Test
     public void testPointComparator() {
