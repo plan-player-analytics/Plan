@@ -46,7 +46,7 @@ public class KillDataTest {
      */
     @Test
     public void testGetDate() {
-        assertEquals(test.getDate(), 100L);
+        assertEquals(test.getTime(), 100L);
     }
 
     /**

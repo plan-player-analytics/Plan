@@ -11,7 +11,7 @@ public class KillDataComparator implements Comparator<KillData> {
 
     @Override
     public int compare(KillData o1, KillData o2) {
-        return Long.compare(o1.getDate(), o2.getDate());
+        return Long.compare(o1.getTime(), o2.getTime());
     }
 
 }

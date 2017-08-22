@@ -136,7 +136,7 @@ public class KillsTable extends Table {
                 statement.setInt(1, userId);
                 statement.setInt(2, -1); // TODO Victim ID Retrieval
                 statement.setString(3, kill.getWeapon());
-                statement.setLong(4, kill.getDate());
+                statement.setLong(4, kill.getTime());
                 statement.addBatch();
                 commitRequired = true;
             }
@@ -222,7 +222,7 @@ public class KillsTable extends Table {
                     statement.setInt(1, id);
                     statement.setInt(2, -1); // TODO Victim ID Retrieval
                     statement.setString(3, kill.getWeapon());
-                    statement.setLong(4, kill.getDate());
+                    statement.setLong(4, kill.getTime());
                     statement.addBatch();
                     commitRequired = true;
                 }

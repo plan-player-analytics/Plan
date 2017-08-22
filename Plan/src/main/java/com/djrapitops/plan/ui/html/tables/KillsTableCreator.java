@@ -44,7 +44,7 @@ public class KillsTableCreator {
                     break;
                 }
 
-                long date = kill.getDate();
+                long date = kill.getTime();
 
                 IOfflinePlayer victim = Fetch.getIOfflinePlayer(kill.getVictim());
                 String name = victim.getName();

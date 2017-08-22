@@ -34,7 +34,7 @@ public class PlaceholderUtils {
         replaceMap.put("tabContentPlugins", data.replacePluginsTabLayout());
 
         // TODO Refresh time for Network pages
-//        replaceMap.put("refresh", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getTime()));
+//        replaceMap.put("refresh", FormatUtils.formatTimeAmountDifference(data.getRefreshDate(), MiscUtils.getDate()));
 //        replaceMap.put("refreshlong", String.valueOf(data.getRefreshDate()));
 
         replaceMap.put("serverName", Settings.SERVER_NAME.toString());

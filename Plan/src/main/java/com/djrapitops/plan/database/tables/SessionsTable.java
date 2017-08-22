@@ -18,12 +18,12 @@ import java.util.*;
  */
 public class SessionsTable extends UserIDTable {
 
-    private final String columnSessionID; //TODO
-    private final String columnSessionStart;
-    private final String columnSessionEnd;
-    private final String columnServerID; //TODO
-    private final String columnMobKills; //TODO
-    private final String columnDeaths; //TODO
+    private final String columnSessionID = "id"; //TODO
+    private final String columnSessionStart = "session_start";
+    private final String columnSessionEnd = "session_end";
+    private final String columnServerID = "server_id"; //TODO
+    private final String columnMobKills = "mob_kills"; //TODO
+    private final String columnDeaths = "deaths"; //TODO
 
     /**
      * @param db
@@ -31,13 +31,6 @@ public class SessionsTable extends UserIDTable {
      */
     public SessionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_sessions", db, usingMySQL);
-        columnUserID = "user_id";
-        columnSessionStart = "session_start";
-        columnSessionEnd = "session_end";
-        columnServerID = "server_id";
-        columnSessionID = "id";
-        columnMobKills = "mob_kills";
-        columnDeaths = "deaths";
     }
 
     /**

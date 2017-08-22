@@ -27,19 +27,17 @@ import java.util.UUID;
  */
 public class ServerTable extends Table {
 
-    private final String columnServerID;
-    private final String columnServerUUID;
-    private final String columnServerName;
-    private final String columnWebserverAddress;
-    private final String columnInstalled;
+    private final String columnServerID = "id";
+    private final String columnServerUUID = "uuid";
+    private final String columnServerName = "name";
+    private final String columnWebserverAddress = "web_address";
+    private final String columnInstalled = "is_installed";
+
+    public final String statementSelectServerID;
 
     public ServerTable(SQLDB db, boolean usingMySQL) {
         super("plan_servers", db, usingMySQL);
-        columnServerID = "id";
-        columnServerUUID = "uuid";
-        columnServerName = "name";
-        columnWebserverAddress = "web_address";
-        columnInstalled = "is_installed";
+        statementSelectServerID = "(" + Select.from(tableName, tableName + "." + columnServerID).where(columnServerUUID + "=?").toString() + ")";
     }
 
     @Override
@@ -225,5 +223,9 @@ public class ServerTable extends Table {
         } finally {
             close(set, statement);
         }
+    }
+
+    public String getColumnID() {
+        return columnServerID;
     }
 }
