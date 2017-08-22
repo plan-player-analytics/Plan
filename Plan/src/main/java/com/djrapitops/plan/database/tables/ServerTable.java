@@ -252,6 +252,6 @@ public class ServerTable extends Table {
     }
 
     public String getColumnID() {
-        return tableName + "." + columnServerID;
+        return columnServerID;
     }
 }

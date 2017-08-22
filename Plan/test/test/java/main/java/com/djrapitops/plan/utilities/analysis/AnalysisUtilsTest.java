@@ -123,8 +123,8 @@ public class AnalysisUtilsTest {
     @Test
     public void testTransformSessionDataToLengths() {
         Collection<Session> data = new ArrayList<>();
-        data.add(new Session(0L, 5L, null, null, 0, 0));
-        data.add(new Session(0, 20L, null, null, 0, 0));
+        data.add(new Session(1, 0L, 5L, 0, 0));
+        data.add(new Session(1, 0, 20L, 0, 0));
         List<Long> expResult = new ArrayList<>();
         expResult.add(5L);
         expResult.add(20L);
