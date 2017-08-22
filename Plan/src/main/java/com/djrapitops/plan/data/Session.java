@@ -25,10 +25,11 @@ import java.util.List;
  */
 public class Session {
 
-    private final WorldTimes worldTimes;
+    private Long sessionID;
+    private WorldTimes worldTimes;
     private final long sessionStart;
     private long sessionEnd;
-    private final List<KillData> playerKills;
+    private List<KillData> playerKills;
     private int mobKills;
     private int deaths;
 
@@ -52,7 +53,8 @@ public class Session {
      * @param sessionStart Epoch millisecond the session was started.
      * @param sessionEnd   Epoch millisecond the session ended.
      */
-    public Session(long sessionStart, long sessionEnd, WorldTimes worldTimes, List<KillData> playerKills, int mobKills, int deaths) {
+    public Session(long id, long sessionStart, long sessionEnd, int mobKills, int deaths) {
+        this.sessionID = id;
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
         this.worldTimes = worldTimes;
@@ -172,5 +174,27 @@ public class Session {
      */
     public static Session start(long time, String world, String gm) {
         return new Session(time, world, gm);
+    }
+
+    public boolean isFetchedFromDB() {
+        return sessionID != null;
+    }
+
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
+    }
+
+    public void setPlayerKills(List<KillData> playerKills) {
+        this.playerKills = playerKills;
+    }
+
+    /**
+     * Used to get the ID of the session in the Database.
+     *
+     * @return ID if present.
+     * @throws NullPointerException if Session was not fetched from DB. Check using {@code isFetchedFromDB}
+     */
+    public long getSessionID() {
+        return sessionID;
     }
 }

@@ -18,14 +18,12 @@ import java.util.*;
  */
 public class KillsTable extends Table {
 
-    private final String columnKillerUserID;
-    private final String columnVictimUserID;
-    private final String columnWeapon;
-    private final String columnDate;
-    private final String columnServerID; //TODO
-    private final String columnSessionID; //TODO
-
-    // TODO Automatic UserID Retrieval from UsersTable.
+    private final String columnKillerUserID = "killer_id";
+    private final String columnVictimUserID = "victim_id";
+    private final String columnWeapon = "weapon";
+    private final String columnDate = "date";
+    private final String columnServerID = "server_id"; //TODO
+    private final String columnSessionID = "session_id"; //TODO
 
     /**
      * @param db
@@ -33,12 +31,6 @@ public class KillsTable extends Table {
      */
     public KillsTable(SQLDB db, boolean usingMySQL) {
         super("plan_kills", db, usingMySQL);
-        columnWeapon = "weapon";
-        columnDate = "date";
-        columnKillerUserID = "killer_id";
-        columnVictimUserID = "victim_id";
-        columnServerID = "server_id";
-        columnSessionID = "session_id";
     }
 
     /**
@@ -235,5 +227,9 @@ public class KillsTable extends Table {
             close(statement);
             Benchmark.stop("Database", "Save Kills multiple");
         }
+    }
+
+    public void savePlayerKills(UUID uuid, List<KillData> playerKills) {
+        // TODO savePlayerKills
     }
 }

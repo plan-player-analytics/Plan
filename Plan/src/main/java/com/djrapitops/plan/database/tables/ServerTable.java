@@ -13,10 +13,7 @@ import main.java.com.djrapitops.plan.database.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Table for managing multiple server's data in the database.
@@ -42,10 +39,12 @@ public class ServerTable extends Table {
     private final String columnInstalled = "is_installed";
 
     public final String statementSelectServerID;
+    public final String statementSelectServerNameID;
 
     public ServerTable(SQLDB db, boolean usingMySQL) {
         super("plan_servers", db, usingMySQL);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + columnServerID).where(columnServerUUID + "=?").toString() + ")";
+        statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + columnServerName).where(columnServerID + "=?").toString() + ")";
     }
 
     @Override
@@ -176,6 +175,25 @@ public class ServerTable extends Table {
             } else {
                 return Optional.empty();
             }
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public Map<Integer, String> getServerNames() throws SQLException {
+        Map<Integer, String> names = new HashMap<>();
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName,
+                    columnServerName)
+                    .toString());
+            set = statement.executeQuery();
+            while (set.next()) {
+                int id = set.getInt(columnServerID);
+                names.put(id, set.getString(columnServerName));
+            }
+            return names;
         } finally {
             close(set, statement);
         }

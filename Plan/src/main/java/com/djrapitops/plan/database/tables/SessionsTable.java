@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,12 +18,14 @@ import java.util.*;
  */
 public class SessionsTable extends UserIDTable {
 
-    private final String columnSessionID = "id"; //TODO
+    private final String columnSessionID = "id";
     private final String columnSessionStart = "session_start";
     private final String columnSessionEnd = "session_end";
-    private final String columnServerID = "server_id"; //TODO
-    private final String columnMobKills = "mob_kills"; //TODO
-    private final String columnDeaths = "deaths"; //TODO
+    private final String columnServerID = "server_id";
+    private final String columnMobKills = "mob_kills";
+    private final String columnDeaths = "deaths";
+
+    private final ServerTable serverTable;
 
     /**
      * @param db
@@ -31,6 +33,7 @@ public class SessionsTable extends UserIDTable {
      */
     public SessionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_sessions", db, usingMySQL);
+        serverTable = db.getServerTable();
     }
 
     /**
@@ -39,12 +42,17 @@ public class SessionsTable extends UserIDTable {
     @Override
     public boolean createTable() {
         try {
-            UsersTable usersTable = db.getUsersTable();
             execute(TableSqlParser.createTable(tableName)
+                    .primaryKeyIDColumn(usingMySQL, columnServerID, Sql.LONG)
                     .column(columnUserID, Sql.INT).notNull()
+                    .column(columnServerID, Sql.INT).notNull()
                     .column(columnSessionStart, Sql.LONG).notNull()
                     .column(columnSessionEnd, Sql.LONG).notNull()
+                    .column(columnMobKills, Sql.INT).notNull()
+                    .column(columnDeaths, Sql.INT).notNull()
                     .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                    .primaryKey(usingMySQL, columnSessionID)
                     .toString()
             );
             return true;
@@ -55,31 +63,10 @@ public class SessionsTable extends UserIDTable {
     }
 
     /**
-     * @param userId
-     * @return
-     * @throws SQLException
-     */
-    public List<Session> getSessionData(int userId) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
-            set = statement.executeQuery();
-            List<Session> sessions = new ArrayList<>();
-            while (set.next()) {
-//                sessions.add(new Session(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
-            }
-            set.close();
-            statement.close();
-            return sessions;
-        } finally {
-            close(set);
-            close(statement);
-        }
-    }
-
-    /**
+     * Removes User's Sessions from the Database.
+     * <p>
+     * // TODO KILLS SHOULD BE REMOVED FIRST.
+     *
      * @param userId
      * @return
      */
@@ -87,161 +74,62 @@ public class SessionsTable extends UserIDTable {
         return super.removeDataOf(userId);
     }
 
-    /**
-     * @param userId
-     * @param sessions
-     * @throws SQLException
-     */
-    public void saveSessionData(int userId, List<Session> sessions) throws SQLException {
-        if (sessions == null) {
-            return;
-        }
-
-        sessions.removeAll(getSessionData(userId));
-
-        if (sessions.isEmpty()) {
-            return;
-        }
-
-
+    public void saveSessionInformation(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "
                     + columnSessionStart + ", "
-                    + columnSessionEnd
-                    + ") VALUES (?, ?, ?)");
-            for (Session session : sessions) {
-                long end = session.getSessionEnd();
-                long start = session.getSessionStart();
-                if (end < start) {
-                    continue;
-                }
+                    + columnSessionEnd + ", "
+                    + columnDeaths + ", "
+                    + columnMobKills + ", "
+                    + columnServerID
+                    + ") VALUES ("
+                    + columnUserID + "=" + usersTable.statementSelectID + ", "
+                    + "?, ?, ?, ?, "
+                    + serverTable.statementSelectServerID + ")");
+            statement.setString(1, uuid.toString());
 
-                statement.setInt(1, userId);
-                statement.setLong(2, start);
-                statement.setLong(3, end);
-                statement.addBatch();
-            }
+            statement.setLong(2, session.getSessionStart());
+            statement.setLong(3, session.getSessionEnd());
+            statement.setInt(4, session.getDeaths());
+            statement.setInt(5, session.getMobKills());
 
-            statement.executeBatch();
+            statement.setString(6, Plan.getServerUUID().toString());
+            statement.execute();
         } finally {
             close(statement);
         }
+
+        db.getWorldTimesTable().saveWorldTimes(session.getWorldTimes());
+        db.getKillsTable().savePlayerKills(uuid, session.getPlayerKills());
     }
 
-    /**
-     * @param ids
-     * @return
-     * @throws SQLException
-     */
-    public Map<Integer, List<Session>> getSessionData(Collection<Integer> ids) throws SQLException {
-        if (ids == null || ids.isEmpty()) {
-            return new HashMap<>();
-        }
-
-        Benchmark.start("Get Sessions multiple");
+    public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
+        Map<Integer, String> serverNames = serverTable.getServerNames();
+        Map<String, List<Session>> sessionsByServer = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
-
         try {
-            Map<Integer, List<Session>> sessions = new HashMap<>();
-            statement = prepareStatement("SELECT * FROM " + tableName);
+            statement = prepareStatement(Select.from(tableName, "*")
+                    .where(columnUserID + "=" + usersTable.statementSelectID)
+                    .toString());
+            statement.setString(1, uuid.toString());
             set = statement.executeQuery();
-
-            for (Integer id : ids) {
-                sessions.put(id, new ArrayList<>());
-            }
-
             while (set.next()) {
-                Integer id = set.getInt(columnUserID);
-                if (!ids.contains(id)) {
-                    continue;
-                }
+                long id = set.getLong(columnSessionID);
+                long start = set.getLong(columnSessionStart);
+                long end = set.getLong(columnSessionEnd);
+                String serverName = serverNames.get(set.getInt(columnServerID));
 
-                long sessionStart = set.getLong(columnSessionStart);
-                long sessionEnd = set.getLong(columnSessionEnd);
-
-//                sessions.get(id).add(new Session(sessionStart, sessionEnd));
+                int deaths = set.getInt(columnDeaths);
+                int mobKills = set.getInt(columnMobKills);
+                List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
+                sessions.add(new Session(id, start, end, deaths, mobKills));
             }
-
-            return sessions;
+            return sessionsByServer;
         } finally {
-            close(set);
-            close(statement);
-            Benchmark.stop("Database", "Get Sessions multiple");
+            close(set, statement);
         }
-    }
-
-    /**
-     * @param sessions
-     * @throws SQLException
-     */
-    public void saveSessionData(Map<Integer, List<Session>> sessions) throws SQLException {
-        if (sessions == null || sessions.isEmpty()) {
-            return;
-        }
-
-        Benchmark.start("Save Sessions multiple");
-
-        Map<Integer, List<Session>> saved = getSessionData(sessions.keySet());
-        for (Map.Entry<Integer, List<Session>> entrySet : sessions.entrySet()) {
-            Integer id = entrySet.getKey();
-            List<Session> sessionList = entrySet.getValue();
-            List<Session> s = saved.get(id);
-
-            if (s != null) {
-                sessionList.removeAll(s);
-            }
-
-            if (sessionList.isEmpty()) {
-                continue;
-            }
-
-            saved.put(id, sessionList);
-        }
-
-        List<List<Container<Session>>> batches = splitIntoBatches(sessions);
-
-        batches.forEach(batch -> {
-            try {
-                saveSessionBatch(batch);
-            } catch (SQLException e) {
-                Log.toLog("SessionsTable.saveSessionData", e);
-            }
-        });
-
-        Benchmark.stop("Database", "Save Sessions multiple");
-    }
-
-    private void saveSessionBatch(List<Container<Session>> batch) throws SQLException {
-        if (batch.isEmpty()) {
-            return;
-        }
-
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnSessionStart + ", "
-                    + columnSessionEnd
-                    + ") VALUES (?, ?, ?)");
-
-            for (Container<Session> data : batch) {
-                Session session = data.getObject();
-                int id = data.getId();
-                statement.setInt(1, id);
-                statement.setLong(2, session.getSessionStart());
-                statement.setLong(3, session.getSessionEnd());
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        } finally {
-            close(statement);
-        }
-    }
-
-    public void clean() {
-        // TODO Clean sessions before Configurable time span
     }
 }
