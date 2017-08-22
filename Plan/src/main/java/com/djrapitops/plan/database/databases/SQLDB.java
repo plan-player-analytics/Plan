@@ -4,7 +4,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
@@ -363,7 +363,7 @@ public abstract class SQLDB extends Database {
         Map<Integer, List<String>> nicknames = nicknamesTable.getNicknames(ids);
         Map<Integer, Set<InetAddress>> ipList = ipsTable.getIPList(ids);
         Map<Integer, List<KillData>> playerKills = killsTable.getPlayerKills(ids, idUuidRel);
-        Map<Integer, List<SessionData>> sessionData = sessionsTable.getSessionData(ids);
+        Map<Integer, List<Session>> sessionData = sessionsTable.getSessionData(ids);
         Map<Integer, Map<String, Long>> worldTimes = worldTimesTable.getWorldTimes(ids);
 
         Log.debug("Database",

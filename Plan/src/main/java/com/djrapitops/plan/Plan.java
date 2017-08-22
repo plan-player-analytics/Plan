@@ -83,6 +83,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private ServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
+    private TPSCountTimer tpsCountTimer;
     private int bootAnalysisTaskID = -1;
 
     /**
@@ -162,7 +163,8 @@ public class Plan extends BukkitPlugin<Plan> {
             this.analysisCache = new AnalysisCacheHandler(this);
             Benchmark.stop("Enable", "Init DataCache");
 
-            super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+            tpsCountTimer = new TPSCountTimer(this);
+            super.getRunnableFactory().createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
             registerListeners();
 
             this.api = new API(this);
@@ -470,6 +472,10 @@ public class Plan extends BukkitPlugin<Plan> {
 
     public ProcessingQueue getProcessingQueue() {
         return processingQueue;
+    }
+
+    public TPSCountTimer getTpsCountTimer() {
+        return tpsCountTimer;
     }
 
     public void addToProcessQueue(Processor processor) {

@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
 
@@ -74,7 +74,7 @@ public class PlaceholderUtils {
 //        replaceMap.put("mobKillCount", data.getMobKills());
 //        replaceMap.put("deathCount", data.getDeaths());
 
-        Set<SessionData> sessions = new HashSet<>(data.getSessions());
+        Set<Session> sessions = new HashSet<>(data.getSessions());
         replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
         //TODO    WorldTimes worldTimes = data.getWorldTimes();
 //    TODO    replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));

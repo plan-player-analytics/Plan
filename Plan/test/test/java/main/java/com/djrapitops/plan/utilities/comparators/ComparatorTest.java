@@ -1,6 +1,6 @@
 package test.java.main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
@@ -43,11 +43,11 @@ public class ComparatorTest {
 
     @Test
     public void testSessionDataComparator() {
-        List<SessionData> test = RandomData.randomSessions();
-        List<Long> longValues = test.stream().map(SessionData::getSessionStart).collect(Collectors.toList());
+        List<Session> test = RandomData.randomSessions();
+        List<Long> longValues = test.stream().map(Session::getSessionStart).collect(Collectors.toList());
         longValues.sort(Long::compare);
         test.sort(new SessionDataComparator());
-        List<Long> afterSort = test.stream().map(SessionData::getSessionStart).collect(Collectors.toList());
+        List<Long> afterSort = test.stream().map(Session::getSessionStart).collect(Collectors.toList());
         assertEquals(longValues, afterSort);
     }
 

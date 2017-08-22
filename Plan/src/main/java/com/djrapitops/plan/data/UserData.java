@@ -11,7 +11,7 @@ import java.util.*;
 // TODO Change to be only used for DB User Get Query responses.
 public class UserData {
 
-    private final List<SessionData> sessions;
+    private final List<Session> sessions;
     private int accessing;
     private boolean clearAfterSave;
     private UUID uuid;
@@ -30,8 +30,6 @@ public class UserData {
     private boolean isOp; //TODO DB Update code to JoinListener
     @Deprecated
     private boolean isBanned; //TODO DB Update code to JoinListener
-    @Deprecated
-    private boolean isOnline; //TODO New Class for getting online status of players
     @Deprecated
     private long registered; //TODO DB Update code to JoinListener (When registering)
     @Deprecated
@@ -173,9 +171,9 @@ public class UserData {
     /**
      * Get the sessions of a player.
      *
-     * @return a list of SessionData.
+     * @return a list of Session.
      */
-    public List<SessionData> getSessions() {
+    public List<Session> getSessions() {
         return sessions;
     }
 

@@ -5,7 +5,7 @@
  */
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class PunchCardGraphCreator {
      * @param sessions Sessions (Unique/Player) to be placed into the PunchCard.
      * @return Data array as a string.
      */
-    public static String createDataSeries(Collection<SessionData> sessions) {
+    public static String createDataSeries(Collection<Session> sessions) {
         List<Long> sessionStarts = getSessionStarts(sessions);
         List<int[]> daysAndHours = AnalysisUtils.getDaysAndHours(sessionStarts);
         int[][] dataArray = createDataArray(daysAndHours);
@@ -75,11 +75,10 @@ public class PunchCardGraphCreator {
         return dataArray;
     }
 
-    private static List<Long> getSessionStarts(Collection<SessionData> data) {
+    private static List<Long> getSessionStarts(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
-                .filter(SessionData::isValid)
-                .map(SessionData::getSessionStart)
+                .map(Session::getSessionStart)
                 .sorted()
                 .collect(Collectors.toList());
     }

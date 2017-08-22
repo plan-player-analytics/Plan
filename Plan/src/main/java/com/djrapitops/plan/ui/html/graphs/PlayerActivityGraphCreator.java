@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.ui.html.graphs;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 
@@ -28,7 +28,7 @@ public class PlayerActivityGraphCreator {
         return SeriesCreator.seriesGraph(points, true);
     }
 
-    public static String buildSeriesDataStringSessions(Collection<SessionData> sessions) {
+    public static String buildSeriesDataStringSessions(Collection<Session> sessions) {
         List<Point> points = sessions.stream()
                 .map(session -> new Point[]{new Point(session.getSessionStart(), 1), new Point(session.getSessionEnd(), 0)})
                 .flatMap(Arrays::stream)

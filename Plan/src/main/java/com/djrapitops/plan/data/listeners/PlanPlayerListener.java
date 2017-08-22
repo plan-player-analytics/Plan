@@ -5,11 +5,13 @@ import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.Gamemode;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.data.handling.info.KickInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LoginInfo;
 import main.java.com.djrapitops.plan.data.handling.info.LogoutInfo;
+import main.java.com.djrapitops.plan.data.handling.login.RegisterProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.entity.Player;
@@ -32,18 +34,18 @@ import java.util.UUID;
 public class PlanPlayerListener implements Listener {
 
     private final Plan plugin;
-    private final DataCache handler;
+    private final DataCache cache;
 
     /**
      * Class Constructor.
      * <p>
-     * Copies the references to multiple handlers from Current instance of handler.
+     * Copies the references to multiple handlers from Current instance of cache.
      *
      * @param plugin Current instance of Plan
      */
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
-        handler = plugin.getHandler();
+        cache = plugin.getHandler();
     }
 
     /**
@@ -63,7 +65,16 @@ public class PlanPlayerListener implements Listener {
         plugin.getNotificationCenter().checkNotifications(iPlayer);
 
         UUID uuid = player.getUniqueId();
-        handler.startSession(uuid);
+        String world = player.getWorld().getName();
+        String gm = player.getGameMode().name();
+        long time = MiscUtils.getTime();
+
+        int playersOnline = plugin.getTpsCountTimer().getLatestPlayersOnline();
+
+        cache.cacheSession(uuid, Session.start(time, world, gm));
+
+        plugin.addToProcessQueue(new RegisterProcessor(uuid, time, playersOnline));
+
         plugin.getRunnableFactory().createNew(new AbsRunnable("NewPlayerCheckTask") {
             @Override
             public void run() {
@@ -80,9 +91,9 @@ public class PlanPlayerListener implements Listener {
                 if (isNewPlayer) {
                     UserData newUserData = NewPlayerCreator.createNewPlayer(iPlayer);
                     loginInfo.process(newUserData);
-                    // TODO Rewrite Register & Login system handler.newPlayer(newUserData);
+                    // TODO Rewrite Register & Login system cache.newPlayer(newUserData);
                 } else {
-                    // handler.addToPool(loginInfo);
+                    // cache.addToPool(loginInfo);
                 }
                 this.cancel();
             }
@@ -101,7 +112,7 @@ public class PlanPlayerListener implements Listener {
         // TODO Rewrite Logout system
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        handler.endSession(uuid);
+        cache.endSession(uuid);
 
         long time = MiscUtils.getTime();
         boolean banned = player.isBanned();
@@ -127,7 +138,7 @@ public class PlanPlayerListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        handler.endSession(uuid);
+        cache.endSession(uuid);
 
         long time = MiscUtils.getTime();
         boolean banned = player.isBanned();

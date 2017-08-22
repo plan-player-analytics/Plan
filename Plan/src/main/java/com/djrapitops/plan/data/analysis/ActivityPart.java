@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
@@ -72,13 +72,13 @@ public class ActivityPart extends RawData {
 
         playerActivityGraphs();
 
-        final List<SessionData> sessions = joins.getAllSessions();
+        final List<Session> sessions = joins.getAllSessions();
 
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
         long averageLength = MathUtils.averageLong(lengths);
         addValue("sessionAverage", FormatUtils.formatTimeAmount(averageLength));
 
-        List<SessionData> sessionsMonth = sessions.stream()
+        List<Session> sessionsMonth = sessions.stream()
                 .filter(s -> s.getSessionStart() > MiscUtils.getTime() - TimeAmount.MONTH.ms())
                 .collect(Collectors.toList());
         addValue("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessionsMonth));

@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -62,11 +62,11 @@ public class AnalysisUtils {
      * @param data
      * @return
      */
-    public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
+    public static List<Long> transformSessionDataToLengths(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
                 .filter(session -> session.getLength() > 0)
-                .map(SessionData::getLength)
+                .map(Session::getLength)
                 .collect(Collectors.toList());
     }
 
@@ -206,7 +206,7 @@ public class AnalysisUtils {
      * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
      * @return Amount of Unique joins within the time span.
      */
-    public static int getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
+    public static int getUniqueJoins(Map<UUID, List<Session>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
 
@@ -226,13 +226,13 @@ public class AnalysisUtils {
      * @param scale
      * @return
      */
-    public static int getUniqueJoinsPerDay(Map<UUID, List<SessionData>> sessions, long scale) {
+    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long scale) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
 
         sessions.forEach((uuid, s) -> {
-            for (SessionData session : s) {
+            for (Session session : s) {
                 if (scale != -1
                         && session.getSessionStart() < nowMinusScale) {
                     continue;
@@ -308,7 +308,7 @@ public class AnalysisUtils {
         }).collect(Collectors.toList());
     }
 
-    private static int getDayOfYear(SessionData session) {
+    private static int getDayOfYear(Session session) {
         return getDayOfYear(session.getSessionStart());
 
     }

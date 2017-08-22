@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class JoinInfoPart extends RawData {
 
-    private final Map<UUID, List<SessionData>> sessions;
+    private final Map<UUID, List<Session>> sessions;
     private final List<Long> registered;
     private long loginTimes;
 
@@ -108,11 +108,11 @@ public class JoinInfoPart extends RawData {
         return loginTimes;
     }
 
-    public Map<UUID, List<SessionData>> getSessions() {
+    public Map<UUID, List<Session>> getSessions() {
         return sessions;
     }
 
-    public List<SessionData> getAllSessions() {
+    public List<Session> getAllSessions() {
         return MiscUtils.flatMap(sessions.values());
     }
 
@@ -124,7 +124,7 @@ public class JoinInfoPart extends RawData {
         return registered;
     }
 
-    public void addSessions(UUID uuid, List<SessionData> sessions) {
+    public void addSessions(UUID uuid, List<Session> sessions) {
         Verify.nullCheck(uuid);
         Verify.nullCheck(sessions);
         this.sessions.put(uuid, sessions.stream().distinct().collect(Collectors.toList()));

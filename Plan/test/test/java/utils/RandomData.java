@@ -1,6 +1,6 @@
 package test.java.utils;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.WebUser;
@@ -46,10 +46,10 @@ public class RandomData {
         return test;
     }
 
-    public static List<SessionData> randomSessions() {
-        List<SessionData> test = new ArrayList<>();
+    public static List<Session> randomSessions() {
+        List<Session> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new SessionData(r.nextLong(), r.nextLong(), null, null, 0, 0));
+            test.add(new Session(r.nextLong(), r.nextLong(), null, null, 0, 0));
         }
         return test;
     }

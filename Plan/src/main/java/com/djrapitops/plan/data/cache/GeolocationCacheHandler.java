@@ -69,7 +69,7 @@ public class GeolocationCacheHandler {
      * @see <a href="http://freegeoip.net">http://freegeoip.net</a>
      * @see #getCountry(String)
      */
-    public static String getUncachedCountry(String ipAddress) {
+    private static String getUncachedCountry(String ipAddress) {
         URL url;
 
         String urlString = "http://freegeoip.net/csv/" + ipAddress;
@@ -101,7 +101,7 @@ public class GeolocationCacheHandler {
      * @param ipAddress The IP Address which is retrieved out of the cache
      * @return The cached country, {@code null} if the country is not cached
      */
-    public static String getCachedCountry(String ipAddress) {
+    private static String getCachedCountry(String ipAddress) {
         return geolocationCache.getIfPresent(ipAddress);
     }
 
@@ -113,5 +113,9 @@ public class GeolocationCacheHandler {
      */
     public static boolean isCached(String ipAddress) {
         return geolocationCache.asMap().containsKey(ipAddress);
+    }
+
+    public static void clearCache() {
+        geolocationCache.invalidateAll();
     }
 }

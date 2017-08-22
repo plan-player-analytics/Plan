@@ -171,5 +171,5 @@ public class WorldTimesTest {
         assertEquals(2000L, worldOneGMTimes.getTime("ADVENTURE"));
     }
 
-    // TODO Test where SessionData is ended, check if worldTimes & session length add up.
+    // TODO Test where Session is ended, check if worldTimes & session length add up.
 }

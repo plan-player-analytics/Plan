@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -66,16 +66,16 @@ public class SessionsTable extends UserIDTable {
      * @return
      * @throws SQLException
      */
-    public List<SessionData> getSessionData(int userId) throws SQLException {
+    public List<Session> getSessionData(int userId) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
             statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUserID + "=?)");
             statement.setInt(1, userId);
             set = statement.executeQuery();
-            List<SessionData> sessions = new ArrayList<>();
+            List<Session> sessions = new ArrayList<>();
             while (set.next()) {
-//                sessions.add(new SessionData(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
+//                sessions.add(new Session(set.getLong(columnSessionStart), set.getLong(columnSessionEnd)));
             }
             set.close();
             statement.close();
@@ -99,7 +99,7 @@ public class SessionsTable extends UserIDTable {
      * @param sessions
      * @throws SQLException
      */
-    public void saveSessionData(int userId, List<SessionData> sessions) throws SQLException {
+    public void saveSessionData(int userId, List<Session> sessions) throws SQLException {
         if (sessions == null) {
             return;
         }
@@ -118,7 +118,7 @@ public class SessionsTable extends UserIDTable {
                     + columnSessionStart + ", "
                     + columnSessionEnd
                     + ") VALUES (?, ?, ?)");
-            for (SessionData session : sessions) {
+            for (Session session : sessions) {
                 long end = session.getSessionEnd();
                 long start = session.getSessionStart();
                 if (end < start) {
@@ -142,7 +142,7 @@ public class SessionsTable extends UserIDTable {
      * @return
      * @throws SQLException
      */
-    public Map<Integer, List<SessionData>> getSessionData(Collection<Integer> ids) throws SQLException {
+    public Map<Integer, List<Session>> getSessionData(Collection<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) {
             return new HashMap<>();
         }
@@ -152,7 +152,7 @@ public class SessionsTable extends UserIDTable {
         ResultSet set = null;
 
         try {
-            Map<Integer, List<SessionData>> sessions = new HashMap<>();
+            Map<Integer, List<Session>> sessions = new HashMap<>();
             statement = prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
 
@@ -169,7 +169,7 @@ public class SessionsTable extends UserIDTable {
                 long sessionStart = set.getLong(columnSessionStart);
                 long sessionEnd = set.getLong(columnSessionEnd);
 
-//                sessions.get(id).add(new SessionData(sessionStart, sessionEnd));
+//                sessions.get(id).add(new Session(sessionStart, sessionEnd));
             }
 
             return sessions;
@@ -184,18 +184,18 @@ public class SessionsTable extends UserIDTable {
      * @param sessions
      * @throws SQLException
      */
-    public void saveSessionData(Map<Integer, List<SessionData>> sessions) throws SQLException {
+    public void saveSessionData(Map<Integer, List<Session>> sessions) throws SQLException {
         if (sessions == null || sessions.isEmpty()) {
             return;
         }
 
         Benchmark.start("Save Sessions multiple");
 
-        Map<Integer, List<SessionData>> saved = getSessionData(sessions.keySet());
-        for (Map.Entry<Integer, List<SessionData>> entrySet : sessions.entrySet()) {
+        Map<Integer, List<Session>> saved = getSessionData(sessions.keySet());
+        for (Map.Entry<Integer, List<Session>> entrySet : sessions.entrySet()) {
             Integer id = entrySet.getKey();
-            List<SessionData> sessionList = entrySet.getValue();
-            List<SessionData> s = saved.get(id);
+            List<Session> sessionList = entrySet.getValue();
+            List<Session> s = saved.get(id);
 
             if (s != null) {
                 sessionList.removeAll(s);
@@ -208,7 +208,7 @@ public class SessionsTable extends UserIDTable {
             saved.put(id, sessionList);
         }
 
-        List<List<Container<SessionData>>> batches = splitIntoBatches(sessions);
+        List<List<Container<Session>>> batches = splitIntoBatches(sessions);
 
         batches.forEach(batch -> {
             try {
@@ -221,7 +221,7 @@ public class SessionsTable extends UserIDTable {
         Benchmark.stop("Database", "Save Sessions multiple");
     }
 
-    private void saveSessionBatch(List<Container<SessionData>> batch) throws SQLException {
+    private void saveSessionBatch(List<Container<Session>> batch) throws SQLException {
         if (batch.isEmpty()) {
             return;
         }
@@ -234,13 +234,9 @@ public class SessionsTable extends UserIDTable {
                     + columnSessionEnd
                     + ") VALUES (?, ?, ?)");
 
-            for (Container<SessionData> data : batch) {
-                SessionData session = data.getObject();
+            for (Container<Session> data : batch) {
+                Session session = data.getObject();
                 int id = data.getId();
-                if (!session.isValid()) {
-                    continue;
-                }
-
                 statement.setInt(1, id);
                 statement.setLong(2, session.getSessionStart());
                 statement.setLong(3, session.getSessionEnd());
