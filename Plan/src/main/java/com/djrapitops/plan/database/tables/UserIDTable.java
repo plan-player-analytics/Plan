@@ -56,6 +56,11 @@ public abstract class UserIDTable extends Table {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         } finally {
+            try {
+                endTransaction(statement);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
             close(statement);
         }
     }

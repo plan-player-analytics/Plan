@@ -169,6 +169,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(3, name);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -233,6 +234,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(2, uuid.toString());
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

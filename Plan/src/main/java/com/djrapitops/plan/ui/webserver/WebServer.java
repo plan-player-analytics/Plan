@@ -544,7 +544,7 @@ public class WebServer {
         return usingHttps ? "https" : "http";
     }
 
-    public boolean usingHttps() {
+    public boolean isUsingHTTPS() {
         return usingHttps;
     }
 
