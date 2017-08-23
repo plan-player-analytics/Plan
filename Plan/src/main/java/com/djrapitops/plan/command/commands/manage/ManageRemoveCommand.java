@@ -85,7 +85,7 @@ public class ManageRemoveCommand extends SubCommand {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
                     try {
                         // TODO Clear active session of user & start new one
-                        if (plugin.getDB().removeAccount(uuid.toString())) {
+                        if (plugin.getDB().removeAccount(uuid)) {
                             sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, plugin.getDB().getConfigName()));
                         } else {
                             sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
