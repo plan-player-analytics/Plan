@@ -227,6 +227,7 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return false;
         }
+
         try {
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
@@ -237,25 +238,20 @@ public abstract class SQLDB extends Database {
                 return false;
             }
 
-            boolean success = true;
             for (Table t : getAllTablesInRemoveOrder()) {
-                if (t instanceof UserIDTable) {
-                    UserIDTable table = (UserIDTable) t;
-                    success = table.removeUser(uuid);
-                    if (!success) {
-                        break;
-                    }
+                if (!(t instanceof UserIDTable)) {
+                    continue;
+                }
+
+                UserIDTable table = (UserIDTable) t;
+                if (!table.removeUser(uuid)) {
+                    throw new IllegalStateException("Removal Failed");
                 }
             }
 
-            if (success) {
-                return true;
-            }
-
-            throw new IllegalStateException("Removal Failed");
+            return true;
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
-            rollback(); // TODO Test case
             return false;
         } finally {
             Benchmark.stop("Database", "Remove Account");

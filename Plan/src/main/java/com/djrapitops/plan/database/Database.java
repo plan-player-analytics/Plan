@@ -331,8 +331,6 @@ public abstract class Database {
         return serverTable;
     }
 
-    public abstract void commit() throws SQLException;
-
     public ActionsTable getActionsTable() {
         return actionsTable;
     }
