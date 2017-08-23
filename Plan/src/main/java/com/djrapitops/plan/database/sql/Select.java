@@ -22,4 +22,8 @@ public class Select extends WhereParser {
         Log.debug(parser.toString());
         return parser;
     }
+
+    public static Select all(String table) {
+        return new Select("SELECT * FROM " + table);
+    }
 }
