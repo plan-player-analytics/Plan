@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.database.databases;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -41,6 +41,7 @@ public abstract class SQLDB extends Database {
         tpsTable = new TPSTable(this, usingMySQL);
 
         usersTable = new UsersTable(this, usingMySQL);
+        userInfoTable = new UserInfoTable(this, usingMySQL);
         actionsTable = new ActionsTable(this, usingMySQL);
         ipsTable = new IPsTable(this, usingMySQL);
         nicknamesTable = new NicknamesTable(this, usingMySQL);
@@ -151,7 +152,7 @@ public abstract class SQLDB extends Database {
      */
     public Table[] getAllTables() {
         return new Table[]{
-                serverTable, usersTable, ipsTable,
+                serverTable, usersTable, userInfoTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
                 commandUseTable, actionsTable, tpsTable,
                 worldTable, worldTimesTable, securityTable
@@ -167,8 +168,9 @@ public abstract class SQLDB extends Database {
         return new Table[]{
                 ipsTable, nicknamesTable, killsTable,
                 worldTimesTable, sessionsTable, actionsTable,
-                worldTable, usersTable, commandUseTable,
-                tpsTable, serverTable
+                worldTable, userInfoTable, usersTable,
+                commandUseTable, tpsTable, securityTable,
+                serverTable
         };
     }
 
@@ -295,7 +297,7 @@ public abstract class SQLDB extends Database {
 
 
     @Override
-    public List<UserData> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
+    public List<UserInfo> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
         if (uuidsCol == null || uuidsCol.isEmpty()) {
             return new ArrayList<>();
         }

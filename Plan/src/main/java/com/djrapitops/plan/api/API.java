@@ -5,10 +5,8 @@ import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
 import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -16,11 +14,7 @@ import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * This class contains the API methods.
@@ -35,7 +29,6 @@ import java.util.stream.Collectors;
  * @author Rsl1122
  * @see PluginData
  * @see AnalysisType
- * @see DBCallableProcessor
  * @since 2.0.0
  */
 public class API {
@@ -94,18 +87,19 @@ public class API {
     }
 
     /**
-     * Check if the UserData is cached to the InspectCache.
+     * Check if the UserInfo is cached to the InspectCache.
      *
      * @param uuid UUID of the player.
      * @return true/false
      */
     @Deprecated
     public boolean isPlayersDataInspectCached(UUID uuid) {
-        return plugin.getInspectCache().isCached(uuid);
+        // TODO Check PageCache
+        return false;
     }
 
     /**
-     * Cache the UserData to InspectCache.
+     * Cache the UserInfo to InspectCache.
      * <p>
      * Uses cache if data is cached or database if not. Call from an Asynchronous
      * thread.
@@ -114,7 +108,7 @@ public class API {
      */
     @Deprecated
     public void cacheUserDataToInspectCache(UUID uuid) {
-        plugin.getInspectCache().cache(uuid);
+        // TODO Run Inspect parse
     }
 
     /**
@@ -140,7 +134,8 @@ public class API {
      * @return true/false
      */
     public boolean isAnalysisCached() {
-        return plugin.getAnalysisCache().isCached();
+        // TODO Check PageCache
+        return false;
     }
 
     /**
@@ -150,7 +145,7 @@ public class API {
      * Starts a new Asynchronous task to run the analysis.
      */
     public void updateAnalysisCache() {
-        plugin.getAnalysisCache().updateCache();
+        // TODO Run analysis
     }
 
     /**
@@ -178,7 +173,8 @@ public class API {
      * @see AnalysisData
      */
     public AnalysisData getAnalysisDataFromCache() {
-        return plugin.getAnalysisCache().getData();
+        // TODO Fix
+        return null;
     }
 
     /**
@@ -238,50 +234,5 @@ public class API {
      */
     public Collection<UUID> getSavedUUIDs() throws SQLException {
         return plugin.getDB().getSavedUUIDs();
-    }
-
-    /**
-     * Get the saved UserData in the database for a collection of UUIDs.
-     * <p>
-     * Will not contain data for UUIDs not found in the database.
-     * <p>
-     * Should be called from async thread.
-     *
-     * @param uuids Collection of UUIDs that can be found in the database.
-     * @return List of all Data in the database.
-     * @throws SQLException If database error occurs.
-     * @since 3.4.2
-     */
-    public List<UserData> getUserDataOfUsers(Collection<UUID> uuids) throws SQLException {
-        return plugin.getDB().getUserDataForUUIDS(uuids);
-    }
-
-    /**
-     * Get the cached UserData objects in the InspectCache.
-     * <p>
-     * This can be used with PluginData objects safely to get the data for all
-     * users in Plan database, because all data is InspectCached before analysis
-     * begins.
-     *
-     * @return List of all Data in the InspectCache.
-     * @since 3.5.0
-     */
-    public List<UserData> getInspectCachedUserData() {
-        return plugin.getInspectCache().getCachedUserData();
-    }
-
-    /**
-     * Get the cached UserData objects in the InspectCache in a Map form.
-     * <p>
-     * This can be used with PluginData objects safely to get the data for all
-     * users in Plan database, because all data is InspectCached before analysis
-     * begins.
-     *
-     * @return Map of all Data in the InspectCache with UUID of the player as
-     * the key.
-     * @since 3.5.0
-     */
-    public Map<UUID, UserData> getInspectCachedUserDataMap() {
-        return getInspectCachedUserData().stream().collect(Collectors.toMap(UserData::getUuid, Function.identity()));
     }
 }

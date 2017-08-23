@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 
 /**
  * This interface can be extended with anything as the process method and
  * given to the Database.
  * <p>
- * The process method will be called with the UserData object fetched from the
+ * The process method will be called with the UserInfo object fetched from the
  * database.
  *
  * @author Rsl1122
@@ -16,11 +16,11 @@ import main.java.com.djrapitops.plan.data.UserData;
 public interface DBCallableProcessor {
 
     /**
-     * Method used to do multiple things to UserData objects such as Caching,
+     * Method used to do multiple things to UserInfo objects such as Caching,
      * changing properties etc.
      *
-     * @param data UserData object given to the DBCallableProcessor by the
+     * @param data UserInfo object given to the DBCallableProcessor by the
      *             method it was given as parameter to.
      */
-    void process(UserData data);
+    void process(UserInfo data);
 }

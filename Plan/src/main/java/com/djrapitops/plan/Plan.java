@@ -29,9 +29,7 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCache;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.data.server.ServerInfoManager;
@@ -46,7 +44,6 @@ import main.java.com.djrapitops.plan.ui.webserver.WebServer;
 import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
@@ -70,8 +67,6 @@ public class Plan extends BukkitPlugin<Plan> {
 
     private ProcessingQueue processingQueue;
     private DataCache dataCache;
-    private InspectCacheHandler inspectCache;
-    private AnalysisCacheHandler analysisCache;
     private HookHandler hookHandler; // Manages 3rd party data sources
 
     private Database db;
@@ -158,8 +153,6 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Init DataCache");
             this.dataCache = new DataCache(this);
-            this.inspectCache = new InspectCacheHandler(this);
-            this.analysisCache = new AnalysisCacheHandler(this);
             Benchmark.stop("Enable", "Init DataCache");
 
             tpsCountTimer = new TPSCountTimer(this);
@@ -331,8 +324,9 @@ public class Plan extends BukkitPlugin<Plan> {
             @Override
             public void run() {
                 Log.debug("Running PeriodicalAnalysisTask");
-                if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
-                    analysisCache.updateCache();
+                // TODO DataCacheMethod for checking analysis refresh date.
+                if (true) {
+//                 TODO   analysisCache.updateCache();
                 }
             }
         }).runTaskTimerAsynchronously(everyXMinutes * TimeAmount.MINUTE.ticks(), everyXMinutes * TimeAmount.MINUTE.ticks());
@@ -352,7 +346,7 @@ public class Plan extends BukkitPlugin<Plan> {
                 Log.debug("Running BootAnalysisTask");
                 Log.info(bootAnalysisRunMsg);
 
-                analysisCache.updateCache();
+                //TODO analysisCache.updateCache();
                 this.cancel();
             }
         }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
@@ -366,24 +360,6 @@ public class Plan extends BukkitPlugin<Plan> {
     private void setupFilter() {
         org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
         logger.addFilter(new RegisterCommandFilter());
-    }
-
-    /**
-     * Used to access AnalysisCache.
-     *
-     * @return Current instance of the AnalysisCacheHandler
-     */
-    public AnalysisCacheHandler getAnalysisCache() {
-        return analysisCache;
-    }
-
-    /**
-     * Used to access InspectCache.
-     *
-     * @return Current instance of the InspectCacheHandler
-     */
-    public InspectCacheHandler getInspectCache() {
-        return inspectCache;
     }
 
     /**
@@ -478,6 +454,6 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     public static UUID getServerUUID() {
-        return getInstance().serverInfoManager.getServerUUID();
+        return getInstance().getServerInfoManager().getServerUUID();
     }
 }

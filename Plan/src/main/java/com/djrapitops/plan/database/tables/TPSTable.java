@@ -1,9 +1,8 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -25,7 +24,7 @@ import java.util.List;
  */
 public class TPSTable extends Table {
 
-    private final String columnServerID = "server_id"; //TODO
+    private final String columnServerID = "server_id";
     private final String columnDate = "date";
     private final String columnTPS = "tps";
     private final String columnPlayers = "players_online";
@@ -34,17 +33,21 @@ public class TPSTable extends Table {
     private final String columnEntities = "entities";
     private final String columnChunksLoaded = "chunks_loaded";
 
+    private final ServerTable serverTable;
+
     /**
      * @param db
      * @param usingMySQL
      */
     public TPSTable(SQLDB db, boolean usingMySQL) {
         super("plan_tps", db, usingMySQL);
+        serverTable = db.getServerTable();
     }
 
     @Override
     public boolean createTable() {
         return createTable(TableSqlParser.createTable(tableName)
+                .column(columnServerID, Sql.INT).notNull()
                 .column(columnDate, Sql.LONG).notNull()
                 .column(columnTPS, Sql.DOUBLE).notNull()
                 .column(columnPlayers, Sql.INT).notNull()
@@ -52,6 +55,7 @@ public class TPSTable extends Table {
                 .column(columnRAMUsage, Sql.LONG).notNull()
                 .column(columnEntities, Sql.INT).notNull()
                 .column(columnChunksLoaded, Sql.INT).notNull()
+                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
                 .toString()
         );
     }
@@ -65,7 +69,11 @@ public class TPSTable extends Table {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement(Select.all(tableName).toString());
+            statement = prepareStatement(Select.all(tableName)
+                    .where(columnServerID + "=" + serverTable.statementSelectServerID)
+                    .toString());
+            statement.setFetchSize(5000);
+            statement.setString(1, Plan.getServerUUID().toString());
             set = statement.executeQuery();
             while (set.next()) {
                 long date = set.getLong(columnDate);
@@ -85,30 +93,11 @@ public class TPSTable extends Table {
         }
     }
 
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void saveTPSData(List<TPS> data) throws SQLException {
-        List<List<TPS>> batches = DBUtils.splitIntoBatches(data);
-        batches.forEach(batch -> {
-            try {
-                saveTPSBatch(batch);
-            } catch (SQLException e) {
-                Log.toLog("UsersTable.saveUserDataInformationBatch", e);
-            }
-        });
-        db.setAvailable();
-    }
-
-    private void saveTPSBatch(List<TPS> batch) throws SQLException {
-        if (batch.isEmpty()) {
-            return;
-        }
-
+    public void insertTPS(TPS tps) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
+                    + columnServerID + ", "
                     + columnDate + ", "
                     + columnTPS + ", "
                     + columnPlayers + ", "
@@ -116,21 +105,19 @@ public class TPSTable extends Table {
                     + columnRAMUsage + ", "
                     + columnEntities + ", "
                     + columnChunksLoaded
-                    + ") VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    + ") VALUES ("
+                    + serverTable.statementSelectServerID + ", "
+                    + "?, ?, ?, ?, ?, ?, ?)");
 
-            for (TPS tps : batch) {
-                statement.setLong(1, tps.getDate());
-                statement.setDouble(2, tps.getTicksPerSecond());
-                statement.setInt(3, tps.getPlayers());
-                statement.setDouble(4, tps.getCPUUsage());
-                statement.setLong(5, tps.getUsedMemory());
-                statement.setDouble(6, tps.getEntityCount());
-                statement.setDouble(7, tps.getChunksLoaded());
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
-            commit(statement.getConnection());
+            statement.setString(1, Plan.getServerUUID().toString());
+            statement.setLong(2, tps.getDate());
+            statement.setDouble(3, tps.getTicksPerSecond());
+            statement.setInt(4, tps.getPlayers());
+            statement.setDouble(5, tps.getCPUUsage());
+            statement.setLong(6, tps.getUsedMemory());
+            statement.setDouble(7, tps.getEntityCount());
+            statement.setDouble(8, tps.getChunksLoaded());
+            statement.execute();
         } finally {
             close(statement);
         }
@@ -143,8 +130,8 @@ public class TPSTable extends Table {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnDate + "<?)");
-            // More than 5 Weeks ago.
-            long fiveWeeks = TimeAmount.WEEK.ms() * 5L;
+            // More than 2 Months ago.
+            long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
             statement.execute();
         } finally {

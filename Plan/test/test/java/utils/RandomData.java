@@ -2,7 +2,7 @@ package test.java.utils;
 
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
@@ -22,7 +22,7 @@ public class RandomData {
     }
 
     public static String randomString(int size) {
-        return RandomStringUtils.random(size);
+        return RandomStringUtils.randomAlphanumeric(size);
     }
 
     public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
@@ -64,7 +64,7 @@ public class RandomData {
         return clazz.getEnumConstants()[x];
     }
 
-    public static List<UserData> randomUserData() {
+    public static List<UserInfo> randomUserData() {
         return new ArrayList<>();
         // TODO Rewrite
     }

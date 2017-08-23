@@ -12,6 +12,7 @@ import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.data.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.locale.Locale;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -23,6 +24,8 @@ import org.powermock.api.mockito.PowerMockito;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -33,10 +36,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class TestInit {
 
     private Plan planMock;
+    private static final UUID serverUUID = UUID.fromString("9a27457b-f1a2-4b71-be7f-daf2170a1b66");
 
-    /**
-     *
-     */
     public TestInit() {
     }
 
@@ -67,8 +68,6 @@ public class TestInit {
     }
 
     private void setUp() throws Exception {
-        clean();
-
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -103,6 +102,10 @@ public class TestInit {
         when(planMock.benchmark()).thenReturn(bench);
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.fetch()).thenReturn(fetch);
+        ServerInfoManager serverInfoManager = PowerMockito.mock(ServerInfoManager.class);
+
+        when(serverInfoManager.getServerUUID()).thenReturn(serverUUID);
+        when(planMock.getServerInfoManager()).thenReturn(serverInfoManager);
         RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
         when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
@@ -196,15 +199,7 @@ public class TestInit {
         return planMock;
     }
 
-    public static void clean() throws IOException {
-        File testFolder = getTestFolder();
-
-        if (!testFolder.exists() || !testFolder.isDirectory()) {
-            return;
-        }
-
-        for (File f : testFolder.listFiles()) {
-            f.delete();
-        }
+    public static UUID getServerUUID() {
+        return serverUUID;
     }
 }
