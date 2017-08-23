@@ -69,10 +69,6 @@ public class WorldTimesTable extends UserIDTable {
         }
     }
 
-    public boolean removeUserWorldTimes(int userId) {
-        return super.removeDataOf(userId);
-    }
-
     public void saveWorldTimes(UUID uuid, long sessionID, WorldTimes worldTimes) throws SQLException {
         if (Verify.isEmpty(worldTimes.getWorldTimes())) {
             return;

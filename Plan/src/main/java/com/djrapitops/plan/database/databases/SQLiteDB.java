@@ -28,7 +28,7 @@ public class SQLiteDB extends SQLDB {
      * @param dbName
      */
     public SQLiteDB(Plan plugin, String dbName) {
-        super(plugin, false);
+        super(plugin);
         this.dbName = dbName;
     }
 

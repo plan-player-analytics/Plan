@@ -12,8 +12,10 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Class containing main logic for different data related save & load functionality.
@@ -23,18 +25,15 @@ import java.util.stream.Collectors;
  */
 public abstract class SQLDB extends Database {
 
-    private final boolean supportsModification;
     private final boolean usingMySQL;
 
     private Connection connection;
 
     /**
      * @param plugin
-     * @param supportsModification
      */
-    public SQLDB(Plan plugin, boolean supportsModification) {
+    public SQLDB(Plan plugin) {
         super(plugin);
-        this.supportsModification = supportsModification;
         usingMySQL = getName().equals("MySQL");
 
         versionTable = new VersionTable(this, usingMySQL);
@@ -252,7 +251,7 @@ public abstract class SQLDB extends Database {
             return false;
         }
         try {
-            return usersTable.getUserId(uuid.toString()) != -1;
+            return usersTable.isRegistered(uuid);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
             return false;
@@ -261,39 +260,34 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    /**
-     * @param uuid
-     * @return
-     * @throws SQLException
-     */
-    @Override
-    public boolean removeAccount(String uuid) throws SQLException {
-        if (uuid == null || uuid.isEmpty()) {
+    public boolean removeAccount(UUID uuid) throws SQLException {
+        if (uuid == null) {
             return false;
         }
         try {
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
-            try {
-                checkConnection();
-            } catch (Exception e) {
-                Log.toLog(this.getClass().getName(), e);
-                return false;
+            checkConnection();
+
+            boolean success = true;
+            for (Table t : getAllTablesInRemoveOrder()) {
+                if (!success) {
+                    continue;
+                }
+                if (t instanceof UserIDTable) {
+                    UserIDTable table = (UserIDTable) t;
+                    success = table.removeUser(uuid);
+                }
             }
-            int userId = usersTable.getUserId(uuid);
-            boolean success = userId != -1
-                    && ipsTable.removeUserIPs(userId)
-                    && nicknamesTable.removeUserNicknames(userId)
-                    && killsTable.removeUserKillsAndVictims(userId)
-                    && worldTimesTable.removeUserWorldTimes(userId)
-                    && sessionsTable.removeUserSessions(userId)
-                    && usersTable.removeUser(uuid);
             if (success) {
                 commit();
-            } else {
-                rollback();
+                return true;
             }
-            return success;
+            throw new IllegalStateException("Removal Failed");
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
+            rollback(); // TODO Test case
+            return false;
         } finally {
             Benchmark.stop("Database", "Remove Account");
             setAvailable();
@@ -346,33 +340,8 @@ public abstract class SQLDB extends Database {
         if (uuidsCol == null || uuidsCol.isEmpty()) {
             return new ArrayList<>();
         }
-        setStatus("Get userdata (multiple) for: " + uuidsCol.size());
-        Benchmark.start("Get UserData for " + uuidsCol.size());
-        Map<UUID, Integer> userIds = usersTable.getAllUserIds();
-        Set<UUID> remove = uuidsCol.stream()
-                .filter(uuid -> !userIds.containsKey(uuid))
-                .collect(Collectors.toSet());
-        List<UUID> uuids = new ArrayList<>(uuidsCol);
-        Log.debug("Database", "Data not found for: " + remove.size());
-        uuids.removeAll(remove);
-        Benchmark.start("Create UserData objects for " + userIds.size());
-        List<UserData> data = usersTable.getUserData(uuids);
-        Benchmark.stop("Database", "Create UserData objects for " + userIds.size());
-        if (data.isEmpty()) {
-            return data;
-        }
         // TODO REWRITE
-
-        Benchmark.stop("Database", "Get UserData for " + uuidsCol.size());
-        setAvailable();
-        return data;
-    }
-
-    /**
-     * @return
-     */
-    public boolean supportsModification() {
-        return supportsModification;
+        return new ArrayList<>();
     }
 
     /**

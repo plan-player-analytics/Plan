@@ -191,7 +191,7 @@ public abstract class Database {
      * @return Success of the removal.
      * @throws SQLException If a database error occurs.
      */
-    public abstract boolean removeAccount(String uuid) throws SQLException;
+    public abstract boolean removeAccount(UUID uuid) throws SQLException;
 
     /**
      * Used to clear all data from the database.

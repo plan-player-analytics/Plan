@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class UsersTable extends Table {
+public class UsersTable extends UserIDTable {
 
     private final String columnID = "id";
     private final String columnUUID = "uuid";
@@ -78,6 +78,7 @@ public class UsersTable extends Table {
      * @param uuid
      * @return
      */
+    @Override
     public boolean removeUser(UUID uuid) {
         PreparedStatement statement = null;
         try {

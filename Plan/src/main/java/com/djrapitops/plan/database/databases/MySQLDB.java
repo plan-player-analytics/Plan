@@ -21,7 +21,7 @@ public class MySQLDB extends SQLDB {
      * @param plugin Current instance of Plan
      */
     public MySQLDB(Plan plugin) {
-        super(plugin, true);
+        super(plugin);
     }
 
     /**

@@ -55,14 +55,6 @@ public class NicknamesTable extends UserIDTable {
     }
 
     /**
-     * @param userId The User ID whose the nicknames should be removed
-     * @return if the removal was successful
-     */
-    public boolean removeUserNicknames(int userId) {
-        return super.removeDataOf(userId);
-    }
-
-    /**
      * Get ALL nicknames of the user.
      * <p>
      * Get's nicknames from other servers as well.

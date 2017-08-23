@@ -61,16 +61,15 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    /**
-     * @param userId
-     * @return
-     */
-    public boolean removeUserKillsAndVictims(int userId) {
+    @Override
+    public boolean removeUser(UUID uuid) {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE " + columnKillerUserID + " = ? OR " + columnVictimUserID + " = ?");
-            statement.setInt(1, userId);
-            statement.setInt(2, userId);
+            statement = prepareStatement("DELETE FROM " + tableName +
+                    " WHERE " + columnKillerUserID + " = " + usersTable.statementSelectID +
+                    " OR " + columnVictimUserID + " = " + usersTable.statementSelectID);
+            statement.setString(1, uuid.toString());
+            statement.setString(2, uuid.toString());
             statement.execute();
             return true;
         } catch (SQLException ex) {

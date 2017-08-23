@@ -54,14 +54,6 @@ public class IPsTable extends UserIDTable {
     }
 
     /**
-     * @param userId The User ID from which the IPs should be removed from
-     * @return if the IPs were removed successfully
-     */
-    public boolean removeUserIPs(int userId) {
-        return super.removeDataOf(userId);
-    }
-
-    /**
      * @param uuid UUID of the user.
      * @return Users's Login Geolocations.
      * @throws SQLException when an error at retrieval happens

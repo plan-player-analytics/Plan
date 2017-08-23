@@ -70,17 +70,6 @@ public class SessionsTable extends UserIDTable {
     }
 
     /**
-     * Removes User's Sessions from the Database.
-     * <p>
-     *
-     * @param userId
-     * @return
-     */
-    public boolean removeUserSessions(int userId) {
-        return super.removeDataOf(userId);
-    }
-
-    /**
      * Used to save a session, with all it's information into the database.
      * <p>
      * Also saves WorldTimes and Kills.

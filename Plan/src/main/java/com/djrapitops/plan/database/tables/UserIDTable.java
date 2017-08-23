@@ -39,7 +39,7 @@ public abstract class UserIDTable extends Table {
         }
     }
 
-    protected boolean removeDataOf(UUID uuid) {
+    public boolean removeUser(UUID uuid) {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName +
