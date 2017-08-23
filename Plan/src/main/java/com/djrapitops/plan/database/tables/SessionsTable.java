@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -92,7 +93,7 @@ public class SessionsTable extends UserIDTable {
         if (sessionID == -1) {
             throw new IllegalStateException("Session was not Saved!");
         }
-        db.getWorldTimesTable().saveWorldTimes(sessionID, session.getWorldTimes());
+        db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getWorldTimes());
         db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
     }
 
@@ -201,7 +202,8 @@ public class SessionsTable extends UserIDTable {
 
     public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
         Map<String, List<Session>> sessions = getSessionInformation(uuid);
-        List<Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        Map<Long, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
+
         db.getKillsTable().addKillsToSessions(uuid, allSessions);
         db.getWorldTimesTable().addWorldTimesToSessions(uuid, allSessions);
         return sessions;

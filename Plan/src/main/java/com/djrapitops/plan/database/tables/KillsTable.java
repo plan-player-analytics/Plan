@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -26,7 +24,7 @@ public class KillsTable extends UserIDTable {
     private final String columnVictimUserID = "victim_id";
     private final String columnWeapon = "weapon";
     private final String columnDate = "date";
-    private final String columnSessionID = "session_id"; //TODO
+    private final String columnSessionID = "session_id";
 
     private final SessionsTable sessionsTable;
 
@@ -116,21 +114,20 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    public void addKillsToSessions(UUID uuid, List<Session> allSessions) throws SQLException {
+    public void addKillsToSessions(UUID uuid, Map<Long, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        Map<Long, Session> sessions = allSessions.stream().collect(Collectors.toMap(Session::getSessionID, Function.identity()));
         try {
-            String usersTableID = usersTable + "." + usersTable.getColumnID();
-            String usersTableUUID = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
             statement = prepareStatement("SELECT " +
                     columnSessionID + ", " +
                     columnDate + ", " +
                     columnWeapon + ", " +
-                    usersTableUUID + ", " +
+                    usersUUIDColumn +
                     " FROM " + tableName +
                     " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID +
-                    " JOIN " + usersTable + " on " + usersTableID + "=" + columnVictimUserID); // Might not work TODO TEST
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID); // Might not work TODO TEST
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -149,4 +146,6 @@ public class KillsTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    // TODO getPlayerKills (UUID)
 }

@@ -23,9 +23,11 @@ import java.util.List;
  */
 public class WorldTable extends Table {
 
-    private final String columnWorldId;
-    private final String columnWorldName;
-    private final String columnServerID; //TODO
+    private final String columnWorldId = "id";
+    private final String columnWorldName = "world_name";
+    private final String columnServerID = "server_id";
+
+    public final String statementSelectID;
 
     /**
      * Constructor.
@@ -35,9 +37,7 @@ public class WorldTable extends Table {
      */
     public WorldTable(SQLDB db, boolean usingMySQL) {
         super("plan_worlds", db, usingMySQL);
-        columnWorldId = "world_id";
-        columnWorldName = "world_name";
-        columnServerID = "server_id";
+        statementSelectID = "(SELECT " + columnWorldId + " FROM " + tableName + " WHERE (" + columnWorldName + "=?))";
     }
 
     @Override
