@@ -328,4 +328,8 @@ public abstract class Database {
     }
 
     public abstract void commit() throws SQLException;
+
+    public ActionsTable getActionsTable() {
+        return actionsTable;
+    }
 }

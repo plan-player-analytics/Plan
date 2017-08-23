@@ -4,6 +4,11 @@
  */
 package main.java.com.djrapitops.plan.data.handling.player;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.Database;
+
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -25,6 +30,12 @@ public class NameProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        // TODO DB Update Name & Nicknames.
+        Database db = Plan.getInstance().getDB();
+        try {
+            db.getUsersTable().updateName(uuid, playerName);
+            db.getNicknamesTable().saveUserName(uuid, displayName);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 }
