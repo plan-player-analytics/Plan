@@ -64,6 +64,7 @@ public class VersionTable extends Table {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " (version) VALUES (" + version + ")");
+
             statement.executeUpdate();
             commit(statement.getConnection());
         } finally {

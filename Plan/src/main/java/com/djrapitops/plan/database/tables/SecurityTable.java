@@ -47,18 +47,14 @@ public class SecurityTable extends Table {
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)");
             statement.setString(1, user);
+
             statement.execute();
+            commit(statement.getConnection());
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         } finally {
-            try {
-                endTransaction(statement);
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
-
             close(statement);
         }
     }

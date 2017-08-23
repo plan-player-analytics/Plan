@@ -152,9 +152,10 @@ public class NicknamesTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             statement.setString(2, Plan.getServerUUID().toString());
             statement.setString(3, displayName);
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

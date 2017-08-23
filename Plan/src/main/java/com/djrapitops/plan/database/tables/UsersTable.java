@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 
@@ -79,16 +78,13 @@ public class UsersTable extends UserIDTable {
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)");
             statement.setString(1, uuid.toString());
+
             statement.execute();
+            commit(statement.getConnection());
             return true;
         } catch (SQLException ex) {
             return false;
         } finally {
-            try {
-                endTransaction(statement);
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
             close(statement);
         }
     }
@@ -167,9 +163,10 @@ public class UsersTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             statement.setLong(2, registered);
             statement.setString(3, name);
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
@@ -198,9 +195,10 @@ public class UsersTable extends UserIDTable {
                     .toString());
             statement.setString(1, name);
             statement.setString(2, uuid.toString());
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
@@ -231,9 +229,10 @@ public class UsersTable extends UserIDTable {
                     + columnTimesKicked + "=" + columnTimesKicked + "+ 1" +
                     " WHERE " + columnUUID + "=?");
             statement.setString(1, uuid.toString());
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

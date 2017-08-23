@@ -233,12 +233,6 @@ public abstract class SQLDB extends Database {
         try {
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
-            try {
-                setupDatabase();
-            } catch (Exception e) {
-                Log.toLog(this.getClass().getName(), e);
-                return false;
-            }
 
             for (Table t : getAllTablesInRemoveOrder()) {
                 if (!(t instanceof UserIDTable)) {

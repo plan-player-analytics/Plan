@@ -343,6 +343,7 @@ public abstract class Database {
     public UserInfoTable getUserInfoTable() {
         return userInfoTable;
     }
+
     public BasicDataSource getDataSource() {
         return dataSource;
     }

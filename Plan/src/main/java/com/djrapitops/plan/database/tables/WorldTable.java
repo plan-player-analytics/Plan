@@ -101,8 +101,8 @@ public class WorldTable extends Table {
             }
 
             statement.executeBatch();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

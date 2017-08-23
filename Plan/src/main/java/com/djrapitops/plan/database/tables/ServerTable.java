@@ -65,7 +65,6 @@ public class ServerTable extends Table {
         } else {
             updateServerInfo(info);
         }
-
     }
 
     private void updateServerInfo(ServerInfo info) throws SQLException {
@@ -85,8 +84,9 @@ public class ServerTable extends Table {
             statement.setBoolean(4, true);
             statement.setInt(5, info.getId());
             statement.executeUpdate();
+
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
@@ -116,8 +116,9 @@ public class ServerTable extends Table {
             statement.setString(3, webAddress);
             statement.setBoolean(4, true);
             statement.execute();
+
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
