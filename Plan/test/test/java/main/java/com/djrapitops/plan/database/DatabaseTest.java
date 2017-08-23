@@ -58,12 +58,7 @@ public class DatabaseTest {
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        };
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
         db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, t.getServerUUID(), "ServerName", ""));
         File f = new File(plan.getDataFolder(), "Errors.txt");
