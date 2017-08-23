@@ -1,13 +1,7 @@
 package main.java.com.djrapitops.plan.ui.html;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
-import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
 
-import java.io.FileNotFoundException;
 import java.util.UUID;
 
 /**
@@ -16,17 +10,13 @@ import java.util.UUID;
 @Deprecated //TODO Make an utility class for parsing files to give to the page cache.
 public class DataRequestHandler {
 
-    private final InspectCacheHandler inspectCache;
-    private final AnalysisCacheHandler analysisCache;
-
     /**
      * Class Constructor.
      *
      * @param plugin Current instance of Plan
      */
+    @Deprecated
     public DataRequestHandler(Plan plugin) {
-        this.inspectCache = plugin.getInspectCache();
-        this.analysisCache = plugin.getAnalysisCache();
     }
 
     /**
@@ -35,31 +25,23 @@ public class DataRequestHandler {
      * @param uuid UUID of Player
      * @return true if cached.
      */
+    @Deprecated
     public boolean checkIfCached(UUID uuid) {
-        return inspectCache.isCached(uuid);
+        // TODO Check from PageCache
+        return false;
     }
 
     /**
      * Returns the player.html as string with replaced placeholders.
      *
-     * @param uuid UUID of player, whose UserData is used to replace
+     * @param uuid UUID of player, whose UserInfo is used to replace
      *             placeholders with
      * @return The html
      */
+    @Deprecated
     public String getInspectHtml(UUID uuid) {
-        try {
-            UserData data = inspectCache.getFromCache(uuid);
-            if (data == null) {
-                return "<h1>404 Data was not found in cache</h1>";
-            }
-
-            return HtmlUtils.replacePlaceholders(
-                    HtmlUtils.getStringFromResource("player.html"),
-                    PlaceholderUtils.getInspectReplaceRules(data)
-            );
-        } catch (FileNotFoundException ex) {
-            return "<h1>404 player.html was not found. </h1>";
-        }
+        // TODO Get from PageCache
+        return "";
     }
 
     /**
@@ -67,17 +49,10 @@ public class DataRequestHandler {
      *
      * @return the html
      */
+    @Deprecated
     public String getServerHtml() {
-        try {
-            if (!analysisCache.isCached()) {
-                return "<h1>404 Data was not found in cache</h1>";
-            }
-            return HtmlUtils.replacePlaceholders(
-                    HtmlUtils.getStringFromResource("server.html"),
-                    PlaceholderUtils.getAnalysisReplaceRules(analysisCache.getData()));
-        } catch (FileNotFoundException ex) {
-            return "<h1>404 server.html was not found</h1>";
-        }
+        // TODO Get from PageCache
+        return "";
     }
 
     /**
@@ -85,7 +60,9 @@ public class DataRequestHandler {
      *
      * @return true if cached.
      */
+    @Deprecated
     public boolean checkIfAnalysisIsCached() {
-        return analysisCache.isCached();
+        // TODO Check from PageCache
+        return false;
     }
 }

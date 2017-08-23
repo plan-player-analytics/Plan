@@ -39,8 +39,11 @@ public class ActionsTable extends UserIDTable {
     private final String columnActionID = "action_id";
     private final String columnAdditionalInfo = "additional_info";
 
+    private ServerTable serverTable;
+
     public ActionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_actions", db, usingMySQL);
+        serverTable = db.getServerTable();
     }
 
     @Override
@@ -60,7 +63,6 @@ public class ActionsTable extends UserIDTable {
     public void insertAction(UUID uuid, Action action) throws SQLException {
         PreparedStatement statement = null;
         try {
-            ServerTable serverTable = db.getServerTable();
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnUserID + ", "
                     + columnServerID + ", "
@@ -96,10 +98,10 @@ public class ActionsTable extends UserIDTable {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            ServerTable serverTable = db.getServerTable();
             statement = prepareStatement(Select.from(tableName, "*")
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
+            statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
                 int serverID = set.getInt(columnServerID);

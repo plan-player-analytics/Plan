@@ -23,27 +23,6 @@ public abstract class UserIDTable extends Table {
         usersTable = db.getUsersTable();
     }
 
-    @Deprecated
-    protected boolean removeDataOf(int userID) {
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userID);
-            statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            try {
-                endTransaction(statement);
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
-            close(statement);
-        }
-    }
-
     public boolean removeUser(UUID uuid) {
         PreparedStatement statement = null;
         try {

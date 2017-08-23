@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
@@ -24,7 +23,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * This command is used to cache UserData to InspectCache and display the link.
+ * This command is used to cache UserInfo to InspectCache and display the link.
  *
  * @author Rsl1122
  * @since 1.0.0
@@ -32,7 +31,6 @@ import java.util.UUID;
 public class InspectCommand extends SubCommand {
 
     private final Plan plugin;
-    private final InspectCacheHandler inspectCache;
 
     /**
      * Class Constructor.
@@ -47,7 +45,6 @@ public class InspectCommand extends SubCommand {
                 "<player>");
 
         this.plugin = plugin;
-        inspectCache = plugin.getInspectCache();
 
     }
 
@@ -90,7 +87,7 @@ public class InspectCommand extends SubCommand {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }
                     }
-                    inspectCache.cache(uuid);
+                    //TODO Inspect Request.
                     runMessageSenderTask(uuid, sender, playerName);
                 } catch (SQLException ex) {
                     Log.toLog(this.getClass().getName(), ex);
@@ -108,11 +105,7 @@ public class InspectCommand extends SubCommand {
             @Override
             public void run() {
                 timesrun++;
-                if (inspectCache.isCached(uuid)) {
-                    sendInspectMsg(sender, playerName, uuid);
-                    this.cancel();
-                    return;
-                }
+                // TODO better message sending.
                 if (timesrun > 10) {
                     Log.debug("Command Timeout Message, Inspect.");
                     sender.sendMessage(Locale.get(Msg.CMD_FAIL_TIMEOUT).parse("Inspect"));

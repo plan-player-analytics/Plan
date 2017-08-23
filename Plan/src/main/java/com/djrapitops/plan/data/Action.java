@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.data;
 
+import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -56,5 +57,21 @@ public class Action {
     @Override
     public String toString() {
         return Html.TABLELINE_3.parse(FormatUtils.formatTimeStampYear(date), doneAction.toString(), additionalInfo);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Action action = (Action) o;
+        return date == action.date &&
+                serverID == action.serverID &&
+                doneAction == action.doneAction &&
+                Objects.equal(additionalInfo, action.additionalInfo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(date, doneAction, additionalInfo, serverID);
     }
 }

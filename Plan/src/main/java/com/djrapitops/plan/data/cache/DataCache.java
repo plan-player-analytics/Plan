@@ -3,16 +3,12 @@ package main.java.com.djrapitops.plan.data.cache;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +28,6 @@ public class DataCache extends SessionCache {
 
     //Cache
     private Map<String, Integer> commandUse;
-    private List<List<TPS>> unsavedTPSHistory;
 
     // Queues
 
@@ -58,7 +53,6 @@ public class DataCache extends SessionCache {
             plugin.disablePlugin();
             return;
         }
-        unsavedTPSHistory = new ArrayList<>();
         startAsyncPeriodicSaveTask();
     }
 
@@ -98,7 +92,6 @@ public class DataCache extends SessionCache {
                     periodicTaskIsSaving = true;
                     Log.debug("Database", "Periodic Cache Save");
                     saveCommandUse();
-                    saveUnsavedTPSHistory();
                     timesSaved++;
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + "(" + this.getName() + ")", e);
@@ -122,41 +115,6 @@ public class DataCache extends SessionCache {
         }
     }
 
-    public void saveUnsavedTPSHistory() {
-        List<TPS> averages = calculateAverageTpsForEachMinute();
-        if (averages.isEmpty()) {
-            return;
-        }
-        try {
-            Log.debug("Database", "Periodic TPS Save: " + averages.size());
-            db.getTpsTable().saveTPSData(averages);
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-        }
-    }
-
-    private List<TPS> calculateAverageTpsForEachMinute() {
-        final List<TPS> averages = new ArrayList<>();
-        if (unsavedTPSHistory.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<List<TPS>> copy = new ArrayList<>(unsavedTPSHistory);
-
-        for (List<TPS> history : copy) {
-            final long lastDate = history.get(history.size() - 1).getDate();
-            final double averageTPS = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getTicksPerSecond)));
-            final int averagePlayersOnline = (int) MathUtils.averageInt(history.stream().map(TPS::getPlayers));
-            final double averageCPUUsage = MathUtils.round(MathUtils.averageDouble(history.stream().map(TPS::getCPUUsage)));
-            final long averageUsedMemory = MathUtils.averageLong(history.stream().map(TPS::getUsedMemory));
-            final int averageEntityCount = (int) MathUtils.averageInt(history.stream().map(TPS::getEntityCount));
-            final int averageChunksLoaded = (int) MathUtils.averageInt(history.stream().map(TPS::getChunksLoaded));
-
-            averages.add(new TPS(lastDate, averageTPS, averagePlayersOnline, averageCPUUsage, averageUsedMemory, averageEntityCount, averageChunksLoaded));
-        }
-        unsavedTPSHistory.removeAll(copy);
-        return averages;
-    }
-
     /**
      * Used to get the cached commandUse.
      *
@@ -175,10 +133,5 @@ public class DataCache extends SessionCache {
         int amount = commandUse.getOrDefault(command, 0);
 
         commandUse.put(command, amount + 1);
-    }
-
-    public void addTPSLastMinute(List<TPS> history) {
-        // Copy the contents to avoid reference, thus making the whole calculation pointless.
-        unsavedTPSHistory.add(new ArrayList<>(history));
     }
 }

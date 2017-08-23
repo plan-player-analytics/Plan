@@ -80,7 +80,7 @@ public class IPsTable extends UserIDTable {
         }
     }
 
-    public void updateIP(UUID uuid, String ip, String geolocation) throws SQLException {
+    public void saveIP(UUID uuid, String ip, String geolocation) throws SQLException {
         List<String> ips = getIps(uuid);
         if (ips.contains(ip)) {
             return;

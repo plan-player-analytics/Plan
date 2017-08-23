@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * This class is used to store data about a player kill inside the UserData
+ * This class is used to store data about a player kill inside the UserInfo
  * object.
  *
  * @author Rsl1122
