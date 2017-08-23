@@ -23,18 +23,12 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 public class MockUtils {
 
-    /**
-     * @return
-     */
     public static World mockWorld() {
         World mockWorld = Mockito.mock(World.class);
         when(mockWorld.toString()).thenReturn("World");
         return mockWorld;
     }
 
-    /**
-     * @return
-     */
     public static IPlayer mockIPlayer() {
         return Fetch.wrapBukkit(mockPlayer());
     }
@@ -54,16 +48,10 @@ public class MockUtils {
         return p;
     }
 
-    /**
-     * @return
-     */
     public static UUID getPlayerUUID() {
         return UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
     }
 
-    /**
-     * @return
-     */
     public static IPlayer mockIPlayer2() {
         return Fetch.wrapBukkit(mockPlayer2());
     }
@@ -83,9 +71,6 @@ public class MockUtils {
         return p;
     }
 
-    /**
-     * @return
-     */
     public static UUID getPlayer2UUID() {
         return UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
     }
@@ -97,9 +82,6 @@ public class MockUtils {
         return uuids;
     }
 
-    /**
-     * @return
-     */
     public static IPlayer mockBrokenPlayer() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
@@ -114,9 +96,6 @@ public class MockUtils {
         return Fetch.wrapBukkit(p);
     }
 
-    /**
-     * @return
-     */
     public static CommandSender mockConsoleSender() {
         return PowerMockito.mock(CommandSender.class);
     }

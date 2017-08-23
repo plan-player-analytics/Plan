@@ -80,8 +80,9 @@ public class ActionsTable extends UserIDTable {
             statement.setLong(4, action.getDate());
             statement.setString(5, action.getAdditionalInfo());
             statement.execute();
+
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

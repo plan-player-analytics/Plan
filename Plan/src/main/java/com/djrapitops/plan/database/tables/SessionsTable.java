@@ -74,6 +74,7 @@ public class SessionsTable extends UserIDTable {
         if (sessionID == -1) {
             throw new IllegalStateException("Session was not Saved!");
         }
+
         db.getWorldTimesTable().saveWorldTimes(uuid, sessionID, session.getWorldTimes());
         db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
     }
@@ -107,11 +108,11 @@ public class SessionsTable extends UserIDTable {
             statement.setLong(3, session.getSessionEnd());
             statement.setInt(4, session.getDeaths());
             statement.setInt(5, session.getMobKills());
-
             statement.setString(6, Plan.getServerUUID().toString());
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
