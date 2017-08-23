@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.cache.DataCache;
+import main.java.com.djrapitops.plan.data.handling.TPSInsertProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import org.bukkit.World;
@@ -54,8 +55,7 @@ public class TPSCountTimer extends AbsRunnable {
         history.add(tps);
 
         if (history.size() >= 60) {
-            // TODO Process & Save to DB with a new Processor.
-            dataCache.addTPSLastMinute(history);
+            plugin.addToProcessQueue(new TPSInsertProcessor(new ArrayList<>(history)));
             history.clear();
         }
     }
