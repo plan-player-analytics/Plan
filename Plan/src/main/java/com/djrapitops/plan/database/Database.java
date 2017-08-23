@@ -28,6 +28,11 @@ public abstract class Database {
     protected UsersTable usersTable;
 
     /**
+     * Table representing plan_actions in the database.
+     */
+    protected ActionsTable actionsTable;
+
+    /**
      * Table representing plan_kills in the database.
      */
     protected KillsTable killsTable;

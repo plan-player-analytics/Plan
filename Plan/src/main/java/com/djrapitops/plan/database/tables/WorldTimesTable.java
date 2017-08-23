@@ -20,7 +20,7 @@ import java.util.UUID;
  * Table class representing database table plan_world_times.
  *
  * @author Rsl1122
- * @since 3.6.0 / Database version 7
+ * @since 4.0.0
  */
 public class WorldTimesTable extends UserIDTable {
 
@@ -77,6 +77,7 @@ public class WorldTimesTable extends UserIDTable {
         if (Verify.isEmpty(worldTimes.getWorldTimes())) {
             return;
         }
+
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " (" +
@@ -91,6 +92,7 @@ public class WorldTimesTable extends UserIDTable {
                     usersTable.statementSelectID + ", " +
                     worldTable.statementSelectID + ", " +
                     "?, ?, ?, ?, ?)");
+
             for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
                 String worldName = entry.getKey();
                 GMTimes gmTimes = entry.getValue();
@@ -105,6 +107,7 @@ public class WorldTimesTable extends UserIDTable {
                 statement.setLong(7, gmTimes.getTime(gms[3]));
                 statement.addBatch();
             }
+
             statement.executeBatch();
         } finally {
             close(statement);
@@ -131,19 +134,24 @@ public class WorldTimesTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             String[] gms = GMTimes.getGMKeyArray();
+
             while (set.next()) {
                 long sessionID = set.getLong(columnSessionID);
                 Session session = sessions.get(sessionID);
+
                 if (session == null) {
                     continue;
                 }
+
                 String worldName = set.getString("world_name");
+
                 Map<String, Long> gmMap = new HashMap<>();
                 gmMap.put(gms[0], set.getLong(columnSurvival));
                 gmMap.put(gms[1], set.getLong(columnCreative));
                 gmMap.put(gms[2], set.getLong(columnAdventure));
                 gmMap.put(gms[3], set.getLong(columnSpectator));
                 GMTimes gmTimes = new GMTimes(gmMap);
+
                 session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
             }
         } finally {

@@ -40,8 +40,8 @@ public class ActionsTable extends UserIDTable {
     private final String columnActionID = "action_id";
     private final String columnAdditionalInfo = "additional_info";
 
-    public ActionsTable(String name, SQLDB db, boolean usingMySQL) {
-        super(name, db, usingMySQL);
+    public ActionsTable(SQLDB db, boolean usingMySQL) {
+        super("plan_actions", db, usingMySQL);
     }
 
     @Override

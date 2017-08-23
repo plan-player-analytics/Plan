@@ -37,16 +37,19 @@ public abstract class SQLDB extends Database {
         this.supportsModification = supportsModification;
         usingMySQL = getName().equals("MySQL");
 
+        versionTable = new VersionTable(this, usingMySQL);
         serverTable = new ServerTable(this, usingMySQL);
+        securityTable = new SecurityTable(this, usingMySQL);
+
+        commandUseTable = new CommandUseTable(this, usingMySQL);
+        tpsTable = new TPSTable(this, usingMySQL);
+
         usersTable = new UsersTable(this, usingMySQL);
-        sessionsTable = new SessionsTable(this, usingMySQL);
-        killsTable = new KillsTable(this, usingMySQL);
+        actionsTable = new ActionsTable(this, usingMySQL);
         ipsTable = new IPsTable(this, usingMySQL);
         nicknamesTable = new NicknamesTable(this, usingMySQL);
-        commandUseTable = new CommandUseTable(this, usingMySQL);
-        versionTable = new VersionTable(this, usingMySQL);
-        tpsTable = new TPSTable(this, usingMySQL);
-        securityTable = new SecurityTable(this, usingMySQL);
+        sessionsTable = new SessionsTable(this, usingMySQL);
+        killsTable = new KillsTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
 
@@ -185,19 +188,23 @@ public abstract class SQLDB extends Database {
         return new Table[]{
                 serverTable, usersTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
-                commandUseTable, tpsTable, worldTable,
-                worldTimesTable, securityTable};
+                commandUseTable, actionsTable, tpsTable,
+                worldTable, worldTimesTable, securityTable
+        };
     }
 
     /**
-     * @return
+     * Get all tables except securityTable for removal of user data.
+     *
+     * @return Tables in the order the data should be removed in.
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                ipsTable,
-                nicknamesTable, killsTable, worldTimesTable,
-                sessionsTable, worldTable, usersTable,
-                commandUseTable, tpsTable, serverTable};
+                ipsTable, nicknamesTable, killsTable,
+                worldTimesTable, sessionsTable, actionsTable,
+                worldTable, usersTable, commandUseTable,
+                tpsTable, serverTable
+        };
     }
 
     /**
