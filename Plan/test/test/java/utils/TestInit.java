@@ -67,6 +67,8 @@ public class TestInit {
     }
 
     private void setUp() throws Exception {
+        clean();
+
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -192,5 +194,17 @@ public class TestInit {
      */
     public Plan getPlanMock() {
         return planMock;
+    }
+
+    public static void clean() throws IOException {
+        File testFolder = getTestFolder();
+
+        if (!testFolder.exists() || !testFolder.isDirectory()) {
+            return;
+        }
+
+        for (File f : testFolder.listFiles()) {
+            f.delete();
+        }
     }
 }

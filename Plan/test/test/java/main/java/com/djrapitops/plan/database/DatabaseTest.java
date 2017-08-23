@@ -64,7 +64,6 @@ public class DatabaseTest {
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
-
         db.init();
     }
 
@@ -230,10 +229,8 @@ public class DatabaseTest {
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
 
-        List<TPS> tpsDataOld = tpsTable.getTPSData();
         tpsTable.saveTPSData(expected);
 
-        expected.addAll(0, tpsDataOld);
         assertEquals(expected, tpsTable.getTPSData());
     }
 }
