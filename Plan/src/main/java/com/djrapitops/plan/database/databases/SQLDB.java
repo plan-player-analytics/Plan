@@ -195,8 +195,8 @@ public abstract class SQLDB extends Database {
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
                 ipsTable,
-                nicknamesTable, sessionsTable, killsTable,
-                worldTimesTable, worldTable, usersTable,
+                nicknamesTable, killsTable, worldTimesTable,
+                sessionsTable, worldTable, usersTable,
                 commandUseTable, tpsTable, serverTable};
     }
 

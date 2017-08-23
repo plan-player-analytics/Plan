@@ -197,4 +197,8 @@ public class Session {
     public long getSessionID() {
         return sessionID;
     }
+
+    public void setSessionID(long sessionID) {
+        this.sessionID = sessionID;
+    }
 }

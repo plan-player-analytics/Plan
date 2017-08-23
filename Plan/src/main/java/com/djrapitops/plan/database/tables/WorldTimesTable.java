@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -316,5 +318,9 @@ public class WorldTimesTable extends UserIDTable {
 
     public void saveWorldTimes(WorldTimes worldTimes) {
         // TODO saveWorldTimes (INSERT)
+    }
+
+    public void addWorldTimesToSessions(List<Session> allSessions) {
+        // TODO saveWorldTimes
     }
 }

@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -231,5 +232,9 @@ public class KillsTable extends Table {
 
     public void savePlayerKills(UUID uuid, List<KillData> playerKills) {
         // TODO savePlayerKills
+    }
+
+    public void addKillsToSessions(List<Session> allSessions) {
+        // TODO addKillsToSessions
     }
 }

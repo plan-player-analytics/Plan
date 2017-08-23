@@ -5,6 +5,8 @@
  */
 package main.java.com.djrapitops.plan.data;
 
+import com.google.common.base.Objects;
+
 /**
  * Class containing single datapoint of TPS / Players online / CPU Usage / Used Memory / Entity Count / Chunks loaded.
  *
@@ -106,37 +108,34 @@ public class TPS {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + (int) (this.date ^ (this.date >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.ticksPerSecond) ^ (Double.doubleToLongBits(this.ticksPerSecond) >>> 32));
-        hash = 97 * hash + this.players;
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TPS tps = (TPS) o;
+        return date == tps.date &&
+                Double.compare(tps.ticksPerSecond, ticksPerSecond) == 0 &&
+                players == tps.players &&
+                Double.compare(tps.cpuUsage, cpuUsage) == 0 &&
+                usedMemory == tps.usedMemory &&
+                entityCount == tps.entityCount &&
+                chunksLoaded == tps.chunksLoaded;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null) {
-            return false;
-        }
-
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final TPS other = (TPS) obj;
-        return date == other.date
-                && Double.compare(this.ticksPerSecond, other.ticksPerSecond) == 0
-                && this.players == other.players
-                && Double.compare(cpuUsage, other.cpuUsage) == 0;
+    public int hashCode() {
+        return Objects.hashCode(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }
 
     @Override
     public String toString() {
-        return "TPS{" + date + "|" + ticksPerSecond + "|" + players + "|" + cpuUsage + "}";
+        return "TPS{" +
+                "date=" + date +
+                ", ticksPerSecond=" + ticksPerSecond +
+                ", players=" + players +
+                ", cpuUsage=" + cpuUsage +
+                ", usedMemory=" + usedMemory +
+                ", entityCount=" + entityCount +
+                ", chunksLoaded=" + chunksLoaded +
+                '}';
     }
 }

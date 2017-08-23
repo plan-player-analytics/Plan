@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -68,7 +69,6 @@ public class SessionsTable extends UserIDTable {
     /**
      * Removes User's Sessions from the Database.
      * <p>
-     * // TODO KILLS SHOULD BE REMOVED FIRST.
      *
      * @param userId
      * @return
@@ -77,7 +77,36 @@ public class SessionsTable extends UserIDTable {
         return super.removeDataOf(userId);
     }
 
-    public void saveSessionInformation(UUID uuid, Session session) throws SQLException {
+    /**
+     * Used to save a session, with all it's information into the database.
+     * <p>
+     * Also saves WorldTimes and Kills.
+     *
+     * @param uuid    UUID of the player.
+     * @param session Session of the player that has ended ({@code endSession} has been called)
+     * @throws SQLException
+     */
+    public void saveSession(UUID uuid, Session session) throws SQLException {
+        saveSessionInformation(uuid, session);
+        long sessionID = getSessionID(uuid, session);
+        if (sessionID == -1) {
+            throw new IllegalStateException("Session was not Saved!");
+        }
+        session.setSessionID(sessionID);
+        db.getWorldTimesTable().saveWorldTimes(session.getWorldTimes());
+        db.getKillsTable().savePlayerKills(uuid, session.getPlayerKills());
+    }
+
+    /**
+     * Saves Session's Information to the Session Table.
+     * <p>
+     * Does not save Kills or WorldTimes.
+     *
+     * @param uuid    UUID of the player.
+     * @param session Session of the player that has ended ({@code endSession} has been called)
+     * @throws SQLException
+     */
+    private void saveSessionInformation(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
@@ -103,12 +132,47 @@ public class SessionsTable extends UserIDTable {
         } finally {
             close(statement);
         }
-
-        db.getWorldTimesTable().saveWorldTimes(session.getWorldTimes());
-        db.getKillsTable().savePlayerKills(uuid, session.getPlayerKills());
     }
 
-    public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
+    /**
+     * Used to get the sessionID of a newly inserted row.
+     *
+     * @param uuid    UUID of the player
+     * @param session session inserted.
+     * @return ID of the inserted session or -1 if session has not been inserted.
+     */
+    private long getSessionID(UUID uuid, Session session) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT " + columnSessionID + " FROM " + tableName +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
+                    " AND " + columnSessionStart + "=?" +
+                    " AND " + columnSessionEnd + "=?");
+            statement.setString(1, uuid.toString());
+            statement.setLong(2, session.getSessionStart());
+            statement.setLong(3, session.getSessionEnd());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getLong(columnSessionID);
+            }
+            return -1L;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    /**
+     * Returns a Map containing Lists of sessions, key as ServerName.
+     * <p>
+     * Does not include Kills or WorldTimes.
+     * Use {@code getSessions} to get full Sessions.
+     *
+     * @param uuid UUID of the player
+     * @return Map with Sessions that don't contain Kills or WorldTimes.
+     * @throws SQLException
+     */
+    private Map<String, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
         Map<Integer, String> serverNames = serverTable.getServerNames();
         Map<String, List<Session>> sessionsByServer = new HashMap<>();
         PreparedStatement statement = null;
@@ -136,23 +200,56 @@ public class SessionsTable extends UserIDTable {
         }
     }
 
+    public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
+        Map<String, List<Session>> sessions = getSessionInformation(uuid);
+        List<Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        db.getKillsTable().addKillsToSessions(allSessions);
+        db.getWorldTimesTable().addWorldTimesToSessions(allSessions);
+        return sessions;
+    }
+
+    /**
+     * Get Total Playtime of a Player on THIS server.
+     *
+     * @param uuid UUID of the player.
+     * @return Milliseconds played on THIS server. 0 if player or server not found.
+     * @throws SQLException
+     */
     public long getPlaytime(UUID uuid) throws SQLException {
         return getPlaytime(uuid, Plan.getServerUUID());
     }
 
+    /**
+     * Get Total Playtime of a Player on a server.
+     *
+     * @param uuid       UUID of the player.
+     * @param serverUUID UUID of the server. @see ServerTable
+     * @return Milliseconds played on the server. 0 if player or server not found.
+     * @throws SQLException
+     */
     public long getPlaytime(UUID uuid, UUID serverUUID) throws SQLException {
         return getPlaytime(uuid, serverUUID, 0L);
     }
 
+    /**
+     * Used to get Playtime after Epoch ms on a server.
+     *
+     * @param uuid       UUID of the player.
+     * @param serverUUID UUID of the server. @see ServerTable
+     * @param afterDate  Epoch ms (Playtime after this date is calculated)
+     * @return Milliseconds played after given epoch ms on the server. 0 if player or server not found.
+     * @throws SQLException
+     */
     public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT FROM " + tableName + " "
-                    + "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime "
-                    + "WHERE " + columnSessionStart + ">? AND "
-                    + columnUserID + "=" + usersTable.statementSelectID + " AND "
-                    + columnServerID + "=" + serverTable.statementSelectServerID);
+            statement = prepareStatement("SELECT" +
+                    " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
+                    " FROM " + tableName +
+                    " WHERE " + columnSessionStart + ">?" +
+                    " AND " + columnUserID + "=" + usersTable.statementSelectID +
+                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
             statement.setLong(1, afterDate);
             statement.setString(2, uuid.toString());
             statement.setString(3, serverUUID.toString());
@@ -166,17 +263,153 @@ public class SessionsTable extends UserIDTable {
         }
     }
 
+    /**
+     * Used to get Totals of Playtime in a Map, sorted by ServerNames.
+     *
+     * @param uuid UUID of the Player.
+     * @return key - ServerName, value ms played
+     * @throws SQLException
+     */
     public Map<String, Long> getPlaytimeByServer(UUID uuid) throws SQLException {
+        return getPlaytimeByServer(uuid, 0L);
+    }
+
+    /**
+     * Used to get Playtimes after a date in a Map, sorted by ServerNames.
+     *
+     * @param uuid      UUID of the Player.
+     * @param afterDate Epoch ms (Playtime after this date is calculated)
+     * @return key - ServerName, value ms played
+     * @throws SQLException
+     */
+    public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) throws SQLException {
         Map<Integer, String> serverNames = serverTable.getServerNames();
         Map<String, Long> playtimes = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT FROM " + tableName + " "
-                    + "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime "
-                    + "WHERE " + columnSessionStart + ">? AND "
-                    + columnUserID + "=" + usersTable.statementSelectID); // TODO CONTINUE
+            statement = prepareStatement("SELECT " +
+                    "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
+                    columnServerID + "," +
+                    " FROM " + tableName +
+                    " WHERE " + columnSessionStart + ">?" +
+                    " AND " + columnUserID + "=" + usersTable.statementSelectID);
+            statement.setLong(1, afterDate);
+            statement.setString(2, uuid.toString());
+            set = statement.executeQuery();
+            while (set.next()) {
+                String serverName = serverNames.get(set.getInt(columnServerID));
+                long playtime = set.getLong("playtime");
+                playtimes.put(serverName, playtime);
+            }
             return playtimes;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    /**
+     * Used to get the Total Playtime of a Server.
+     *
+     * @param serverUUID UUID of the server.
+     * @return Milliseconds played on the server. 0 if server not found.
+     * @throws SQLException
+     */
+    public long getPlaytimeOfServer(UUID serverUUID) throws SQLException {
+        return getPlaytimeOfServer(serverUUID, 0L);
+    }
+
+    /**
+     * Used to get Playtime after a date of a Server.
+     *
+     * @param serverUUID UUID of the server.
+     * @param afterDate  Epoch ms (Playtime after this date is calculated)
+     * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
+     * @throws SQLException
+     */
+    public long getPlaytimeOfServer(UUID serverUUID, long afterDate) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT" +
+                    " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
+                    " FROM " + tableName +
+                    " WHERE " + columnSessionStart + ">?" +
+                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
+            statement.setLong(1, afterDate);
+            statement.setString(2, serverUUID.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getLong("playtime");
+            }
+            return 0;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    /**
+     * Used to get total Session count of a Player on THIS server.
+     *
+     * @param uuid UUID of the player.
+     * @return How many sessions player has. 0 if player or server not found.
+     * @throws SQLException
+     */
+    public int getSessionCount(UUID uuid) throws SQLException {
+        return getSessionCount(uuid, 0L);
+    }
+
+    /**
+     * Used to get total Session count of a Player on THIS server after a given epoch ms.
+     *
+     * @param uuid      UUID of the player.
+     * @param afterDate Epoch ms (Session count after this date is calculated)
+     * @return How many sessions player has. 0 if player or server not found.
+     * @throws SQLException
+     */
+    public int getSessionCount(UUID uuid, long afterDate) throws SQLException {
+        return getSessionCount(uuid, Plan.getServerUUID(), afterDate);
+    }
+
+    /**
+     * Used to get total Session count of a Player on a server.
+     *
+     * @param uuid       UUID of the player.
+     * @param serverUUID UUID of the server.
+     * @return How many sessions player has. 0 if player or server not found.
+     * @throws SQLException
+     */
+    public int getSessionCount(UUID uuid, UUID serverUUID) throws SQLException {
+        return getSessionCount(uuid, serverUUID, 0L);
+    }
+
+    /**
+     * Used to get total Session count of a Player on a server after a given epoch ms.
+     *
+     * @param uuid       UUID of the player.
+     * @param serverUUID UUID of the server.
+     * @param afterDate  Epoch ms (Session count after this date is calculated)
+     * @return How many sessions player has. 0 if player or server not found.
+     * @throws SQLException
+     */
+    public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT" +
+                    " (COUNT(" + columnSessionID + ") - SUM(" + columnSessionStart + ")) as logintimes" +
+                    " FROM " + tableName +
+                    " WHERE " + columnSessionStart + ">?" +
+                    " AND " + columnUserID + "=" + usersTable.statementSelectID +
+                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
+            statement.setLong(1, afterDate);
+            statement.setString(2, uuid.toString());
+            statement.setString(3, serverUUID.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getInt("logintimes");
+            }
+            return 0;
         } finally {
             close(set, statement);
         }
