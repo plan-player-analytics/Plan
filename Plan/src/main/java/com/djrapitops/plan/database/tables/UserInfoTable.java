@@ -5,6 +5,8 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Sql;
+import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
 /**
  * //TODO Class Javadoc Comment
@@ -29,6 +31,14 @@ public class UserInfoTable extends UserIDTable {
 
     @Override
     public boolean createTable() {
-        return false;
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnRegistered, Sql.LONG).notNull()
+                .column(columnOP, Sql.BOOL).notNull().defaultValue(false)
+                .column(columnBanned, Sql.BOOL).notNull().defaultValue(false)
+                .column(columnServerID, Sql.INT).notNull()
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                .toString());
     }
 }

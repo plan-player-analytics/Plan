@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -24,14 +25,14 @@ import java.util.List;
  */
 public class TPSTable extends Table {
 
-    private final String columnServerID; //TODO
-    private final String columnDate;
-    private final String columnTPS;
-    private final String columnPlayers;
-    private final String columnCPUUsage;
-    private final String columnRAMUsage;
-    private final String columnEntities;
-    private final String columnChunksLoaded;
+    private final String columnServerID = "server_id"; //TODO
+    private final String columnDate = "date";
+    private final String columnTPS = "tps";
+    private final String columnPlayers = "players_online";
+    private final String columnCPUUsage = "cpu_usage";
+    private final String columnRAMUsage = "ram_usage";
+    private final String columnEntities = "entities";
+    private final String columnChunksLoaded = "chunks_loaded";
 
     /**
      * @param db
@@ -39,14 +40,6 @@ public class TPSTable extends Table {
      */
     public TPSTable(SQLDB db, boolean usingMySQL) {
         super("plan_tps", db, usingMySQL);
-        columnServerID = "server_id";
-        columnDate = "date";
-        columnTPS = "tps";
-        columnPlayers = "players_online";
-        columnCPUUsage = "cpu_usage";
-        columnRAMUsage = "ram_usage";
-        columnEntities = "entities";
-        columnChunksLoaded = "chunks_loaded";
     }
 
     @Override
@@ -72,7 +65,7 @@ public class TPSTable extends Table {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+            statement = prepareStatement(Select.all(tableName).toString());
             set = statement.executeQuery();
             while (set.next()) {
                 long date = set.getLong(columnDate);
