@@ -195,7 +195,7 @@ public class CommandUseTable extends Table {
 
     public Optional<String> getCommandByID(int id) throws SQLException {
         PreparedStatement statement = null;
-        ResultSet set;
+        ResultSet set = null;
         try {
             statement = prepareStatement(Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString());
             statement.setInt(1, id);
@@ -206,13 +206,13 @@ public class CommandUseTable extends Table {
             return Optional.empty();
         } finally {
             endTransaction(statement);
-            close(statement);
+            close(set, statement);
         }
     }
 
     public Optional<Integer> getCommandID(String command) throws SQLException {
         PreparedStatement statement = null;
-        ResultSet set;
+        ResultSet set = null;
         try {
             statement = prepareStatement(Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString());
             statement.setString(1, command);
@@ -223,7 +223,7 @@ public class CommandUseTable extends Table {
             return Optional.empty();
         } finally {
             endTransaction(statement);
-            close(statement);
+            close(set, statement);
         }
     }
 }
