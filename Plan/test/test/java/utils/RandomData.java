@@ -22,7 +22,7 @@ public class RandomData {
     }
 
     public static String randomString(int size) {
-        return RandomStringUtils.random(size);
+        return RandomStringUtils.randomAlphanumeric(size);
     }
 
     public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {

@@ -30,7 +30,7 @@ public class IPUpdateProcessor extends PlayerProcessor {
         UUID uuid = getUUID();
         String country = GeolocationCacheHandler.getCountry(ip);
         try {
-            Plan.getInstance().getDB().getIpsTable().updateIP(uuid, ip, country);
+            Plan.getInstance().getDB().getIpsTable().saveIP(uuid, ip, country);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }

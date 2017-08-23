@@ -119,6 +119,7 @@ public abstract class Table {
      * @throws SQLException
      */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
+        System.out.println(sql);
         return getConnection().prepareStatement(sql);
     }
 

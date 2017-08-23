@@ -454,6 +454,6 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     public static UUID getServerUUID() {
-        return getInstance().serverInfoManager.getServerUUID();
+        return getInstance().getServerInfoManager().getServerUUID();
     }
 }

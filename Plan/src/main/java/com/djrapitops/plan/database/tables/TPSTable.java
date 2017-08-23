@@ -73,6 +73,7 @@ public class TPSTable extends Table {
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
             statement.setFetchSize(5000);
+            statement.setString(1, Plan.getServerUUID().toString());
             set = statement.executeQuery();
             while (set.next()) {
                 long date = set.getLong(columnDate);

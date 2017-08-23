@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
+import com.google.common.base.Objects;
+
 import java.util.UUID;
 
 /**
@@ -66,5 +68,23 @@ public class UserInfo {
 
     public boolean isOpped() {
         return opped;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserInfo userInfo = (UserInfo) o;
+        return registered == userInfo.registered &&
+                lastSeen == userInfo.lastSeen &&
+                banned == userInfo.banned &&
+                opped == userInfo.opped &&
+                Objects.equal(uuid, userInfo.uuid) &&
+                Objects.equal(name, userInfo.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uuid, name, registered, lastSeen, banned, opped);
     }
 }

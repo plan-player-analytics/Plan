@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan.database.sql;
 
-import main.java.com.djrapitops.plan.Log;
-
 public class Select extends WhereParser {
 
     public Select(String start) {
@@ -19,7 +17,6 @@ public class Select extends WhereParser {
         }
 
         parser.append(" FROM ").append(table);
-        Log.debug(parser.toString());
         return parser;
     }
 

@@ -119,8 +119,8 @@ public class KillsTable extends UserIDTable {
                     columnWeapon + ", " +
                     usersUUIDColumn +
                     " FROM " + tableName +
-                    " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID); // Might not work TODO TEST
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
+                    " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID);
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {

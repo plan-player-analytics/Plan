@@ -180,7 +180,7 @@ public class ServerTable extends Table {
         ResultSet set = null;
         try {
             statement = prepareStatement(Select.from(tableName,
-                    columnServerName)
+                    columnServerID, columnServerName)
                     .toString());
             set = statement.executeQuery();
             while (set.next()) {

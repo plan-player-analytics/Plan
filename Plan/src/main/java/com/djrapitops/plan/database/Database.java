@@ -337,4 +337,8 @@ public abstract class Database {
     public ActionsTable getActionsTable() {
         return actionsTable;
     }
+
+    public UserInfoTable getUserInfoTable() {
+        return userInfoTable;
+    }
 }

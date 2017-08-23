@@ -203,7 +203,8 @@ public abstract class SQLDB extends Database {
                 ipsTable, nicknamesTable, killsTable,
                 worldTimesTable, sessionsTable, actionsTable,
                 worldTable, userInfoTable, usersTable,
-                commandUseTable, tpsTable, serverTable
+                commandUseTable, tpsTable, securityTable,
+                serverTable
         };
     }
 

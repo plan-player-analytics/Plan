@@ -117,14 +117,14 @@ public class UserInfoTable extends UserIDTable {
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
             statement = prepareStatement("SELECT " +
-                    columnRegistered + ", " +
+                    tableName + "." + columnRegistered + ", " +
                     columnOP + ", " +
                     columnBanned + ", " +
                     usersNameColumn +
                     " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                     " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
-                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
+                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID
             );
             statement.setString(1, uuid.toString());
             statement.setString(2, serverUUID.toString());
@@ -160,14 +160,14 @@ public class UserInfoTable extends UserIDTable {
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
             statement = prepareStatement("SELECT " +
-                    columnRegistered + ", " +
+                    tableName + "." + columnRegistered + ", " +
                     columnOP + ", " +
                     columnBanned + ", " +
                     usersNameColumn + ", " +
                     usersUUIDColumn +
                     " FROM " + tableName +
-                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID
             );
             statement.setFetchSize(2000);
             statement.setString(1, serverUUID.toString());
