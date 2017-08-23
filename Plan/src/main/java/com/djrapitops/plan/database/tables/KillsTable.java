@@ -64,17 +64,14 @@ public class KillsTable extends UserIDTable {
                     " OR " + columnVictimUserID + " = " + usersTable.statementSelectID);
             statement.setString(1, uuid.toString());
             statement.setString(2, uuid.toString());
+
             statement.execute();
+            commit(statement.getConnection());
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         } finally {
-            try {
-                endTransaction(statement);
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
             close(statement);
         }
     }
@@ -106,9 +103,10 @@ public class KillsTable extends UserIDTable {
                 statement.setString(5, weapon);
                 statement.addBatch();
             }
+
             statement.executeBatch();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
@@ -128,7 +126,10 @@ public class KillsTable extends UserIDTable {
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
                     " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID);
             statement.setString(1, uuid.toString());
+
             set = statement.executeQuery();
+            commit(statement.getConnection());
+
             while (set.next()) {
                 long sessionID = set.getLong(columnSessionID);
                 Session session = sessions.get(sessionID);
@@ -142,7 +143,6 @@ public class KillsTable extends UserIDTable {
                 session.getPlayerKills().add(new KillData(victim, weapon, date));
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }

@@ -60,7 +60,7 @@ public class DatabaseTest {
         plan = t.getPlanMock();
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
-        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, t.getServerUUID(), "ServerName", ""));
+        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", ""));
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
 
@@ -339,6 +339,7 @@ public class DatabaseTest {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
+
         Session session = new Session(12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());
@@ -496,7 +497,12 @@ public class DatabaseTest {
 
         assertTrue(usersTable.isRegistered(uuid));
 
+        System.out.println("0 " + uuid);
+        System.out.println("1 " + db.getUsersTable().getSavedUUIDs());
+
         db.removeAccount(uuid);
+
+        System.out.println("2 " + db.getUsersTable().getSavedUUIDs());
 
         assertFalse(usersTable.isRegistered(uuid));
         assertFalse(userInfoTable.isRegistered(uuid));

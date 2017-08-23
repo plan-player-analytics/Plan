@@ -117,7 +117,9 @@ public class TPSTable extends Table {
             statement.setLong(6, tps.getUsedMemory());
             statement.setDouble(7, tps.getEntityCount());
             statement.setDouble(8, tps.getChunksLoaded());
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
@@ -133,9 +135,10 @@ public class TPSTable extends Table {
             // More than 2 Months ago.
             long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

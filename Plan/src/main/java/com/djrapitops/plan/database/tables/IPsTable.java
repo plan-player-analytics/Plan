@@ -103,8 +103,9 @@ public class IPsTable extends UserIDTable {
             statement.setString(2, ip);
             statement.setString(3, geolocation);
             statement.execute();
+
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

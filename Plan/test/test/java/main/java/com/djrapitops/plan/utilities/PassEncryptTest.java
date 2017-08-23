@@ -21,9 +21,9 @@ public class PassEncryptTest {
     @Before
     public void setUp() throws Exception {
         for (int i = 0; i < 20; i++) {
-            String password = RandomData.randomString(RandomData.randomInt(1, 50));
+            String password = RandomData.randomString(RandomData.randomInt(1, 20));
             PASSWORD_MAP.put(password, PassEncryptUtil.createHash(password));
-        };
+        }
     }
 
     @Test

@@ -20,22 +20,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(JavaPlugin.class)
 public class NewPlayerCreatorTest {
 
-    /**
-     *
-     */
     public NewPlayerCreatorTest() {
     }
 
-    /**
-     *
-     */
     @Before
     public void setUp() throws Exception {
     }
 
-    /**
-     *
-     */
     @After
     public void tearDown() {
     }

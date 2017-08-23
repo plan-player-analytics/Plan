@@ -157,8 +157,8 @@ public class CommandUseTable extends Table {
             }
 
             statement.executeBatch();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }
@@ -187,8 +187,8 @@ public class CommandUseTable extends Table {
             }
 
             statement.executeBatch();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

@@ -29,17 +29,14 @@ public abstract class UserIDTable extends Table {
             statement = prepareStatement("DELETE FROM " + tableName +
                     " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")");
             statement.setString(1, uuid.toString());
+
             statement.execute();
+            commit(statement.getConnection());
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         } finally {
-            try {
-                endTransaction(statement);
-            } catch (SQLException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
             close(statement);
         }
     }
