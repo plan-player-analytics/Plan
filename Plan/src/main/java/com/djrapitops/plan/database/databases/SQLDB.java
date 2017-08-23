@@ -277,9 +277,9 @@ public abstract class SQLDB extends Database {
             boolean success = userId != -1
                     && ipsTable.removeUserIPs(userId)
                     && nicknamesTable.removeUserNicknames(userId)
-                    && sessionsTable.removeUserSessions(userId)
                     && killsTable.removeUserKillsAndVictims(userId)
                     && worldTimesTable.removeUserWorldTimes(userId)
+                    && sessionsTable.removeUserSessions(userId)
                     && usersTable.removeUser(uuid);
             if (success) {
                 commit();

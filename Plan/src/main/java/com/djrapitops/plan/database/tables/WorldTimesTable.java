@@ -11,10 +11,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Table class representing database table plan_world_times.
@@ -316,11 +313,11 @@ public class WorldTimesTable extends UserIDTable {
         }
     }
 
-    public void saveWorldTimes(WorldTimes worldTimes) {
+    public void saveWorldTimes(long sessionID, WorldTimes worldTimes) {
         // TODO saveWorldTimes (INSERT)
     }
 
-    public void addWorldTimesToSessions(List<Session> allSessions) {
+    public void addWorldTimesToSessions(UUID uuid, List<Session> allSessions) {
         // TODO saveWorldTimes
     }
 }

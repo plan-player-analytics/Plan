@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class SessionsTable extends UserIDTable {
 
-    private final String columnSessionID = "id";
+    private final String columnID = "id";
     private final String columnSessionStart = "session_start";
     private final String columnSessionEnd = "session_end";
     private final String columnServerID = "server_id";
@@ -46,7 +46,7 @@ public class SessionsTable extends UserIDTable {
             String serverTableName = serverTable.getTableName();
             String serverTableID = serverTable.getColumnID();
             String sql = TableSqlParser.createTable(this.tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnSessionID, Sql.LONG)
+                    .primaryKeyIDColumn(usingMySQL, columnID, Sql.LONG)
                     .column(columnUserID, Sql.INT).notNull()
                     .column(columnServerID, Sql.INT).notNull()
                     .column(columnSessionStart, Sql.LONG).notNull()
@@ -55,7 +55,7 @@ public class SessionsTable extends UserIDTable {
                     .column(columnDeaths, Sql.INT).notNull()
                     .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
                     .foreignKey(columnServerID, serverTableName, serverTableID)
-                    .primaryKey(usingMySQL, columnSessionID)
+                    .primaryKey(usingMySQL, columnID)
                     .toString();
             System.out.println(sql);
             execute(sql);
@@ -92,9 +92,8 @@ public class SessionsTable extends UserIDTable {
         if (sessionID == -1) {
             throw new IllegalStateException("Session was not Saved!");
         }
-        session.setSessionID(sessionID);
-        db.getWorldTimesTable().saveWorldTimes(session.getWorldTimes());
-        db.getKillsTable().savePlayerKills(uuid, session.getPlayerKills());
+        db.getWorldTimesTable().saveWorldTimes(sessionID, session.getWorldTimes());
+        db.getKillsTable().savePlayerKills(uuid, sessionID, session.getPlayerKills());
     }
 
     /**
@@ -117,7 +116,7 @@ public class SessionsTable extends UserIDTable {
                     + columnMobKills + ", "
                     + columnServerID
                     + ") VALUES ("
-                    + columnUserID + "=" + usersTable.statementSelectID + ", "
+                    + usersTable.statementSelectID + ", "
                     + "?, ?, ?, ?, "
                     + serverTable.statementSelectServerID + ")");
             statement.setString(1, uuid.toString());
@@ -145,7 +144,7 @@ public class SessionsTable extends UserIDTable {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT " + columnSessionID + " FROM " + tableName +
+            statement = prepareStatement("SELECT " + columnID + " FROM " + tableName +
                     " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
                     " AND " + columnSessionStart + "=?" +
                     " AND " + columnSessionEnd + "=?");
@@ -154,7 +153,7 @@ public class SessionsTable extends UserIDTable {
             statement.setLong(3, session.getSessionEnd());
             set = statement.executeQuery();
             if (set.next()) {
-                return set.getLong(columnSessionID);
+                return set.getLong(columnID);
             }
             return -1L;
         } finally {
@@ -184,7 +183,7 @@ public class SessionsTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
-                long id = set.getLong(columnSessionID);
+                long id = set.getLong(columnID);
                 long start = set.getLong(columnSessionStart);
                 long end = set.getLong(columnSessionEnd);
                 String serverName = serverNames.get(set.getInt(columnServerID));
@@ -203,8 +202,8 @@ public class SessionsTable extends UserIDTable {
     public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
         Map<String, List<Session>> sessions = getSessionInformation(uuid);
         List<Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-        db.getKillsTable().addKillsToSessions(allSessions);
-        db.getWorldTimesTable().addWorldTimesToSessions(allSessions);
+        db.getKillsTable().addKillsToSessions(uuid, allSessions);
+        db.getWorldTimesTable().addWorldTimesToSessions(uuid, allSessions);
         return sessions;
     }
 
@@ -397,7 +396,7 @@ public class SessionsTable extends UserIDTable {
         ResultSet set = null;
         try {
             statement = prepareStatement("SELECT" +
-                    " (COUNT(" + columnSessionID + ") - SUM(" + columnSessionStart + ")) as logintimes" +
+                    " (COUNT(" + columnID + ") - SUM(" + columnSessionStart + ")) as logintimes" +
                     " FROM " + tableName +
                     " WHERE " + columnSessionStart + ">?" +
                     " AND " + columnUserID + "=" + usersTable.statementSelectID +
@@ -413,5 +412,9 @@ public class SessionsTable extends UserIDTable {
         } finally {
             close(set, statement);
         }
+    }
+
+    public String getColumnID() {
+        return columnID;
     }
 }

@@ -377,4 +377,8 @@ public class UsersTable extends Table {
         // TODO Rewrite method for new UserData objects.
         return new ArrayList<>();
     }
+
+    public String getColumnUUID() {
+        return columnUUID;
+    }
 }
