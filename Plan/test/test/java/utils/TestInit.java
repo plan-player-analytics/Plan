@@ -35,12 +35,6 @@ public class TestInit {
     private Plan planMock;
 
     /**
-     *
-     */
-    public TestInit() {
-    }
-
-    /**
      * Init locale with empty messages.
      * <p>
      * Does not load any messages from anywhere because that would cause exceptions.
