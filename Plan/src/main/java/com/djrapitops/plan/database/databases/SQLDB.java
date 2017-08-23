@@ -48,8 +48,6 @@ public abstract class SQLDB extends Database {
         killsTable = new KillsTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
-
-        setupDataSource();
     }
 
     /**
@@ -69,6 +67,8 @@ public abstract class SQLDB extends Database {
         String benchName = "Init " + getConfigName();
         Benchmark.start(benchName);
         try {
+            setupDataSource();
+
             if (!setupDatabase()) {
                 return false;
             }
