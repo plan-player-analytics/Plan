@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.utilities.player.Gamemode;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import com.djrapitops.plugin.utilities.player.IPlayer;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 
 /**
  * @author Rsl1122
@@ -20,33 +20,33 @@ public class NewPlayerCreator {
     }
 
     /**
-     * Creates a new instance of UserData with default values.
+     * Creates a new instance of UserInfo with default values.
      *
-     * @param player Player the UserData is created for.
-     * @return a new UserData object
+     * @param player Player the UserInfo is created for.
+     * @return a new UserInfo object
      */
-    public static UserData createNewPlayer(IPlayer player) {
+    public static UserInfo createNewPlayer(IPlayer player) {
         return createNewPlayer(player, player.getGamemode());
     }
 
     /**
-     * Creates a new instance of UserData with default values.
+     * Creates a new instance of UserInfo with default values.
      *
-     * @param player OfflinePlayer the UserData is created for.
-     * @return a new UserData object
+     * @param player OfflinePlayer the UserInfo is created for.
+     * @return a new UserInfo object
      */
-    public static UserData createNewOfflinePlayer(IOfflinePlayer player) {
+    public static UserInfo createNewOfflinePlayer(IOfflinePlayer player) {
         return createNewPlayer(player, Gamemode.SURVIVAL);
     }
 
     /**
-     * Creates a new instance of UserData with default values.
+     * Creates a new instance of UserInfo with default values.
      *
-     * @param player Player the UserData is created for.
+     * @param player Player the UserInfo is created for.
      * @param gm     Gamemode set as the starting Gamemode
-     * @return a new UserData object
+     * @return a new UserInfo object
      */
-    public static UserData createNewPlayer(IOfflinePlayer player, Gamemode gm) {
+    public static UserInfo createNewPlayer(IOfflinePlayer player, Gamemode gm) {
         return null;
     }
 

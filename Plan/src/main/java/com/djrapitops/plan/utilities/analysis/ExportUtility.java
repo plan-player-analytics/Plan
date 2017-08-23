@@ -4,7 +4,7 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
@@ -57,7 +57,7 @@ public class ExportUtility {
      * @param analysisData
      * @param rawData
      */
-    public static void export(AnalysisData analysisData, List<UserData> rawData) {
+    public static void export(AnalysisData analysisData, List<UserInfo> rawData) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
@@ -98,15 +98,15 @@ public class ExportUtility {
     }
 
     /**
-     * @param userData
+     * @param userInfo
      * @param playersFolder
      */
-    public static void writeInspectHtml(UserData userData, File playersFolder, String playerHtml) {
+    public static void writeInspectHtml(UserInfo userInfo, File playersFolder, String playerHtml) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
 
-        String name = userData.getName();
+        String name = userInfo.getName();
 
         if (name.endsWith(".")) {
             name = name.replace(".", "%2E");
@@ -118,7 +118,7 @@ public class ExportUtility {
 
         try {
             String inspectHtml = HtmlUtils.replacePlaceholders(playerHtml,
-                    PlaceholderUtils.getInspectReplaceRules(userData));
+                    PlaceholderUtils.getInspectReplaceRules(userInfo));
 
             File playerFolder = new File(playersFolder, name);
             playerFolder.mkdirs();
@@ -149,7 +149,7 @@ public class ExportUtility {
         Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
-    private static void writePlayersPageHtml(List<UserData> rawData, File playersFolder) throws IOException {
+    private static void writePlayersPageHtml(List<UserInfo> rawData, File playersFolder) throws IOException {
         String playersHtml = PlayersPageResponse.buildContent(rawData);
         playersFolder.mkdirs();
         File playersHtmlFile = new File(playersFolder, "index.html");

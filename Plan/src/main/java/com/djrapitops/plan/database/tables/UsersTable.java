@@ -227,15 +227,36 @@ public class UsersTable extends UserIDTable {
     public void kicked(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement(Update.values(tableName, columnTimesKicked)
-                    .where(columnUUID + "=?")
-                    .toString());
-            statement.setInt(1, getTimesKicked(uuid) + 1);
-            statement.setString(2, uuid.toString());
+            statement = prepareStatement("UPDATE " + tableName + " SET "
+                    + columnTimesKicked + "=" + columnTimesKicked + "+ 1" +
+                    " WHERE " + columnUUID + "=?");
+            statement.setString(1, uuid.toString());
             statement.execute();
         } finally {
             endTransaction(statement);
             close(statement);
         }
+    }
+
+    public String getPlayerName(UUID uuid) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName, columnName)
+                    .where(columnUUID + "=?")
+                    .toString());
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getString(columnName);
+            }
+            return null;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public String getColumnName() {
+        return columnName;
     }
 }

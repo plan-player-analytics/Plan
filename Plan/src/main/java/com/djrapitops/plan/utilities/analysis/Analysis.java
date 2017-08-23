@@ -5,28 +5,23 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.DataCache;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
 import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.html.tables.PlayersTableCreator;
 import main.java.com.djrapitops.plan.ui.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.ui.webserver.response.api.JsonResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.comparators.UserDataLastPlayedComparator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -38,7 +33,6 @@ import java.util.stream.Collectors;
 public class Analysis {
 
     private final Plan plugin;
-    private final InspectCacheHandler inspectCache;
     private int taskId = -1;
 
     /**
@@ -48,7 +42,6 @@ public class Analysis {
      */
     public Analysis(Plan plugin) {
         this.plugin = plugin;
-        this.inspectCache = plugin.getInspectCache();
     }
 
     /**
@@ -56,7 +49,7 @@ public class Analysis {
      * <p>
      * First retrieves all offline players and checks those that are in the
      * database. Then runs a new Analysis Task asynchronously. Saves AnalysisData
-     * to the provided Cache. Saves all UserData to InspectCache for 15 minutes.
+     * to the provided Cache. Saves all UserInfo to InspectCache for 15 minutes.
      *
      * @param analysisCache Cache that the data is saved to.
      */
@@ -92,42 +85,28 @@ public class Analysis {
         Benchmark.start("Fetch Phase");
         Log.debug("Database", "Analysis Fetch");
         Log.debug("Analysis", "Analysis Fetch Phase");
-        try {
-            inspectCache.cacheAllUserData(db);
-        } catch (Exception ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            Log.error(Locale.get(Msg.ANALYSIS_FAIL_FETCH_EXCEPTION).toString());
-        }
-
-        List<UserData> rawData = inspectCache.getCachedUserData();
-        if (rawData.isEmpty()) {
-            Log.info(Locale.get(Msg.ANALYSIS_FAIL_NO_DATA).toString());
-            return false;
-        }
-
+        //TODO Rewrite FETCH
         List<TPS> tpsData = new ArrayList<>();
 
         try {
             tpsData = db.getTpsTable().getTPSData();
-            Log.debug("Analysis", "Raw Data Size: " + rawData.size());
             Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
         } catch (Exception ex) {
             Log.toLog(this.getClass().getName(), ex);
         }
 
-        return analyzeData(rawData, tpsData, analysisCache);
+        return analyzeData(tpsData, analysisCache);
     }
 
     /**
-     * @param rawData
      * @param tpsData
      * @param analysisCache
      * @return
      */
-    public boolean analyzeData(List<UserData> rawData, List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
+    public boolean analyzeData(List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
         try {
-            rawData.sort(new UserDataLastPlayedComparator());
-            List<UUID> uuids = rawData.stream().map(UserData::getUuid).collect(Collectors.toList());
+//            rawData.sort(new UserDataLastPlayedComparator());
+//            List<UUID> uuids = rawData.stream().map(UserInfo::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
             DataCache dataCache = plugin.getDataCache();
             Map<String, Integer> commandUse = dataCache.getCommandUse();
@@ -136,28 +115,33 @@ public class Analysis {
             analysisData.setPluginsTabLayout(plugin.getHookHandler().getPluginsTabLayoutForAnalysis());
             analysisData.setPlanVersion(plugin.getVersion());
             ActivityPart activityPart = analysisData.getActivityPart();
-            activityPart.setRecentPlayersUUIDs(uuids);
-            analysisData.getPlayerCountPart().addPlayers(uuids);
-            activityPart.setRecentPlayers(rawData.stream().map(UserData::getName).collect(Collectors.toList()));
+            // TODO GetRecentPlayers
+//            activityPart.setRecentPlayersUUIDs(uuids);
+//            analysisData.getPlayerCountPart().addPlayers(uuids);
+
+//            activityPart.setRecentPlayers(rawData.stream().map(UserInfo::getName).collect(Collectors.toList()));
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             Benchmark.start("Analysis Phase");
             Log.debug("Analysis", "Analysis Phase");
-            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(rawData.size(), fetchPhaseLength));
 
-            String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
-            analysisData.setPlayersTable(playersTable);
+            //TODO Fetch Size
+            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(0, fetchPhaseLength));
 
-            fillDataset(analysisData, rawData);
+            // TODO Create playersTable
+//            String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
+//            analysisData.setPlayersTable(playersTable);
+
+            fillDataset(analysisData);
             // Analyze
             analysisData.analyseData();
             Benchmark.stop("Analysis", "Analysis Phase");
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
-            analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
+//    TODO        analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
             analysisCache.cache(analysisData);
             long time = Benchmark.stop("Analysis", "Analysis");
@@ -171,7 +155,8 @@ public class Analysis {
             PageCacheHandler.cachePage("analysisJson", () -> new JsonResponse(analysisData));
             PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
 
-            ExportUtility.export(analysisData, rawData);
+            // TODO Export
+//            ExportUtility.export(analysisData, rawData);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             Log.debug("Analysis", "Error: " + e);
@@ -187,6 +172,7 @@ public class Analysis {
     }
 
     private Map<String, Serializable> analyzeAdditionalPluginData(List<UUID> uuids) {
+        // TODO Rewrite
         Benchmark.start("3rd party");
         final Map<String, Serializable> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
@@ -253,7 +239,7 @@ public class Analysis {
         taskId = id;
     }
 
-    private void fillDataset(AnalysisData analysisData, List<UserData> rawData) {
+    private void fillDataset(AnalysisData analysisData) {
         ActivityPart activity = analysisData.getActivityPart();
         GamemodePart gmPart = analysisData.getGamemodePart();
         GeolocationPart geolocPart = analysisData.getGeolocationPart();
@@ -268,46 +254,46 @@ public class Analysis {
         Benchmark.start("Fill Dataset");
         List<PluginData> banSources = plugin.getHookHandler().getAdditionalDataSources()
                 .stream().filter(PluginData::isBanData).collect(Collectors.toList());
-        rawData.forEach(uData -> {
+//        rawData.forEach(uData -> {
 //        TODO    Map<String, Long> worldTimes = uData.getWorldTimes().getTimes();
 
-       // TODO     playtime.addToPlaytime(playTime);
-            joinInfo.addToLoginTimes(uData.getLoginTimes());
-            joinInfo.addRegistered(uData.getRegistered());
+        // TODO     playtime.addToPlaytime(playTime);
+//            joinInfo.addToLoginTimes(uData.getLoginTimes());
+//            joinInfo.addRegistered(uData.getRegistered());
 
-      //TODO      geolocPart.addGeolocation(uData.getGeolocation());
+        //TODO      geolocPart.addGeolocation(uData.getGeolocation());
 
-            final UUID uuid = uData.getUuid();
-            if (uData.isOp()) {
-                playerCount.addOP(uuid);
-            }
+//            final UUID uuid = uData.getUuid();
+//            if (uData.isOp()) {
+//                playerCount.addOP(uuid);
+//            }
 
-            boolean banned = uData.isBanned();
-            if (!banned) {
-                banned = banSources.stream()
-                        .anyMatch(banData -> {
-                            Serializable value = banData.getValue(uuid);
-                            if (value instanceof Boolean) {
-                                return (Boolean) value;
-                            }
-                            return false;
-                        });
-            }
-
-            if (banned) {
-                activity.addBan(uuid);
-            } else if (uData.getLoginTimes() == 1) {
-                activity.addJoinedOnce(uuid);
+//            boolean banned = uData.isBanned();
+//            if (!banned) {
+//                banned = banSources.stream()
+//                        .anyMatch(banData -> {
+//                            Serializable value = banData.getValue(uuid);
+//                            if (value instanceof Boolean) {
+//                                return (Boolean) value;
+//                            }
+//                            return false;
+//                        });
+//            }
+//
+//            if (banned) {
+//                activity.addBan(uuid);
+//            } else if (uData.getLoginTimes() == 1) {
+//                activity.addJoinedOnce(uuid);
 //        TODO    } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getSessionCount())) {
 //                activity.addActive(uuid);
-            } else {
-                activity.addInActive(uuid);
-            }
+//            } else {
+//                activity.addInActive(uuid);
+//            }
         //TODO    List<KillData> playerKills = uData.getPlayerKills();
 
-            List<Session> sessions = uData.getSessions();
-            joinInfo.addSessions(uuid, sessions);
-        });
+//            List<Session> sessions = uData.getSessions();
+//            joinInfo.addSessions(uuid, sessions);
+//        });
         Benchmark.stop("Analysis", "Fill Dataset");
     }
 }

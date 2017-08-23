@@ -172,10 +172,15 @@ public class SessionsTable extends UserIDTable {
                 long end = set.getLong(columnSessionEnd);
                 String serverName = serverNames.get(set.getInt(columnServerID));
 
+                if (serverName == null) {
+                    throw new IllegalStateException("Server not present");
+                }
+
                 int deaths = set.getInt(columnDeaths);
                 int mobKills = set.getInt(columnMobKills);
                 List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
                 sessions.add(new Session(id, start, end, deaths, mobKills));
+                sessionsByServer.put(serverName, sessions);
             }
             return sessionsByServer;
         } finally {
@@ -202,6 +207,18 @@ public class SessionsTable extends UserIDTable {
      */
     public long getPlaytime(UUID uuid) throws SQLException {
         return getPlaytime(uuid, Plan.getServerUUID());
+    }
+
+    /**
+     * Get Playtime of a Player after Epoch ms on THIS server.
+     *
+     * @param uuid      UUID of the player.
+     * @param afterDate Epoch ms (Playtime after this date is calculated)
+     * @return Milliseconds played on THIS server. 0 if player or server not found.
+     * @throws SQLException
+     */
+    public long getPlaytime(UUID uuid, long afterDate) throws SQLException {
+        return getPlaytime(uuid, Plan.getServerUUID(), afterDate);
     }
 
     /**
@@ -385,9 +402,9 @@ public class SessionsTable extends UserIDTable {
         ResultSet set = null;
         try {
             statement = prepareStatement("SELECT" +
-                    " (COUNT(" + columnID + ") - SUM(" + columnSessionStart + ")) as logintimes" +
+                    " COUNT(*) as logintimes" +
                     " FROM " + tableName +
-                    " WHERE " + columnSessionStart + ">?" +
+                    " WHERE (" + columnSessionStart + " >= ?)" +
                     " AND " + columnUserID + "=" + usersTable.statementSelectID +
                     " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
             statement.setLong(1, afterDate);

@@ -5,17 +5,17 @@
  */
 package main.java.com.djrapitops.plan.utilities.comparators;
 
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 
 import java.util.Comparator;
 
 /**
  * @author Risto
  */
-public class UserDataLastPlayedComparator implements Comparator<UserData> {
+public class UserDataLastPlayedComparator implements Comparator<UserInfo> {
 
     @Override
-    public int compare(UserData u1, UserData u2) {
-        return Long.compare(u2.getLastPlayed(), u1.getLastPlayed());
+    public int compare(UserInfo u1, UserInfo u2) {
+        return Long.compare(u2.getLastSeen(), u1.getLastSeen());
     }
 }

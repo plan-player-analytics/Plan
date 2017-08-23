@@ -118,8 +118,8 @@ public class WorldTimesTable extends UserIDTable {
                     columnSpectator + ", " +
                     worldNameColumn +
                     " FROM " + tableName +
-                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
-                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId // TODO TEST
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID
             );
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();

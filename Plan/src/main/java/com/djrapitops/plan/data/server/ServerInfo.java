@@ -4,6 +4,8 @@
  */
 package main.java.com.djrapitops.plan.data.server;
 
+import com.google.common.base.Objects;
+
 import java.util.UUID;
 
 /**
@@ -50,5 +52,21 @@ public class ServerInfo {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServerInfo that = (ServerInfo) o;
+        return id == that.id &&
+                Objects.equal(uuid, that.uuid) &&
+                Objects.equal(name, that.name) &&
+                Objects.equal(webAddress, that.webAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, uuid, name, webAddress);
     }
 }
