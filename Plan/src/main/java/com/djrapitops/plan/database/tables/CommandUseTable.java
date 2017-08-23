@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
@@ -43,21 +42,15 @@ public class CommandUseTable extends Table {
     @Override
     public boolean createTable() {
         ServerTable serverTable = db.getServerTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnCommandId, Sql.INT)
-                    .column(columnCommand, Sql.varchar(20)).notNull()
-                    .column(columnTimesUsed, Sql.INT).notNull()
-                    .column(columnServerID, Sql.INT).notNull()
-                    .primaryKey(usingMySQL, columnCommandId)
-                    .foreignKey(columnServerID, serverTable.toString(), serverTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnCommandId, Sql.INT)
+                .column(columnCommand, Sql.varchar(20)).notNull()
+                .column(columnTimesUsed, Sql.INT).notNull()
+                .column(columnServerID, Sql.INT).notNull()
+                .primaryKey(usingMySQL, columnCommandId)
+                .foreignKey(columnServerID, serverTable.toString(), serverTable.getColumnID())
+                .toString()
+        );
     }
 
     /**

@@ -38,6 +38,7 @@ public class PlanChatListener implements Listener {
         }
 
         Player p = event.getPlayer();
+        // TODO NameCache to DataCache
         plugin.addToProcessQueue(new NameProcessor(p.getUniqueId(), p.getName(), p.getDisplayName()));
     }
 }

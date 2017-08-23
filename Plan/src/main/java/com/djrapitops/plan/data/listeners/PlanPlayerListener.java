@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -28,6 +30,8 @@ public class PlanPlayerListener implements Listener {
     private final Plan plugin;
     private final DataCache cache;
 
+    private final Set<UUID> playersWithFirstSession;
+
     /**
      * Class Constructor.
      *
@@ -36,6 +40,7 @@ public class PlanPlayerListener implements Listener {
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
         cache = plugin.getDataCache();
+        playersWithFirstSession = new HashSet<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -94,9 +99,9 @@ public class PlanPlayerListener implements Listener {
         cache.cacheSession(uuid, Session.start(time, world, gm));
 
         plugin.addToProcessQueue(
-                new RegisterProcessor(uuid, time, playersOnline), //TODO Add required variables after UsersTable is done.
+                new RegisterProcessor(this, uuid, time, playerName, playersOnline),
                 new IPUpdateProcessor(uuid, ip),
-                new NameProcessor(uuid, playerName, displayName)
+                new NameProcessor(uuid, playerName, displayName) // TODO NameCache to DataCache
         );
     }
 
@@ -118,5 +123,16 @@ public class PlanPlayerListener implements Listener {
                 new BanProcessor(uuid, player.isBanned()),
                 new EndSessionProcessor(uuid, time)
         );
+
+        int messagesSent = 0; // TODO messages Sent on first session
+
+        if (playersWithFirstSession.contains(uuid)) {
+            plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
+        }
+    }
+
+    // TODO MOVE TO DATACACHE
+    public void addFirstLeaveCheck(UUID uuid) {
+        playersWithFirstSession.add(uuid);
     }
 }

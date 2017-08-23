@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -10,29 +11,27 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Table class representing database table plan_world_times.
  *
  * @author Rsl1122
- * @since 3.6.0 / Database version 7
+ * @since 4.0.0
  */
 public class WorldTimesTable extends UserIDTable {
 
-    private final String columnServerID = "server_id"; //TODO
-    private final WorldTable worldTable;
-    private final String worldIDColumn;
-    private final String worldNameColumn;
-
+    private final String columnSessionID = "session_id";
     private final String columnWorldId = "world_id";
-    @Deprecated
-    private final String columnPlaytime = "playtime";
-    //TODO GM Times to World table
+    private final String columnSurvival = "survival_time";
+    private final String columnCreative = "creative_time";
+    private final String columnAdventure = "adventure_time";
+    private final String columnSpectator = "spectator_time";
 
-    private final String selectWorldIDsql;
+    private final WorldTable worldTable;
+    private final SessionsTable sessionsTable;
 
     /**
      * Constructor.
@@ -43,266 +42,111 @@ public class WorldTimesTable extends UserIDTable {
     public WorldTimesTable(SQLDB db, boolean usingMySQL) {
         super("plan_world_times", db, usingMySQL);
         worldTable = db.getWorldTable();
-        worldIDColumn = worldTable + "." + worldTable.getColumnID();
-        worldNameColumn = worldTable.getColumnWorldName();
-
-        selectWorldIDsql = "(SELECT " + worldIDColumn + " FROM " + worldTable + " WHERE (" + worldNameColumn + "=?))";
+        sessionsTable = db.getSessionsTable();
     }
 
     @Override
     public boolean createTable() {
-        UsersTable usersTable = db.getUsersTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnWorldId, Sql.INT).notNull()
-                    .column(columnPlaytime, Sql.LONG).notNull()
-                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnWorldId, Sql.INT).notNull()
+                .column(columnSessionID, Sql.LONG).notNull()
+                .column(columnSurvival, Sql.LONG).notNull().defaultValue("0")
+                .column(columnCreative, Sql.LONG).notNull().defaultValue("0")
+                .column(columnAdventure, Sql.LONG).notNull().defaultValue("0")
+                .column(columnSpectator, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
+                .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
+                .toString()
+        );
+    }
+
+    public void saveWorldTimes(UUID uuid, long sessionID, WorldTimes worldTimes) throws SQLException {
+        if (Verify.isEmpty(worldTimes.getWorldTimes())) {
+            return;
         }
-    }
 
-    public boolean removeUserWorldTimes(int userId) {
-        return super.removeDataOf(userId);
-    }
-
-    /**
-     * @param userId
-     * @return
-     * @throws SQLException
-     */
-    public Map<String, Long> getWorldTimes(int userId) throws SQLException {
         PreparedStatement statement = null;
-        ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT "
-                    + columnPlaytime + ", "
-                    + worldNameColumn
-                    + " FROM " + tableName + ", " + worldTable
-                    + " WHERE (" + columnUserID + "=?)"
-                    + " AND (" + worldIDColumn + "=" + tableName + "." + columnWorldId + ")");
-            statement.setInt(1, userId);
-            set = statement.executeQuery();
-            HashMap<String, Long> times = new HashMap<>();
-            while (set.next()) {
-                times.put(set.getString(worldNameColumn), set.getLong(columnPlaytime));
+            statement = prepareStatement("INSERT INTO " + tableName + " (" +
+                    columnUserID + ", " +
+                    columnWorldId + ", " +
+                    columnSessionID + ", " +
+                    columnSurvival + ", " +
+                    columnCreative + ", " +
+                    columnAdventure + ", " +
+                    columnSpectator +
+                    ") VALUES (" +
+                    usersTable.statementSelectID + ", " +
+                    worldTable.statementSelectID + ", " +
+                    "?, ?, ?, ?, ?)");
+
+            for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+                String worldName = entry.getKey();
+                GMTimes gmTimes = entry.getValue();
+                statement.setString(1, uuid.toString());
+                statement.setString(2, worldName);
+                statement.setLong(3, sessionID);
+
+                String[] gms = GMTimes.getGMKeyArray();
+                statement.setLong(4, gmTimes.getTime(gms[0]));
+                statement.setLong(5, gmTimes.getTime(gms[1]));
+                statement.setLong(6, gmTimes.getTime(gms[2]));
+                statement.setLong(7, gmTimes.getTime(gms[3]));
+                statement.addBatch();
             }
-            return times;
+
+            statement.executeBatch();
         } finally {
             endTransaction(statement);
-            close(set, statement);
+            close(statement);
         }
     }
 
-    public Map<Integer, Map<String, Long>> getWorldTimes(Collection<Integer> userIds) throws SQLException {
+    public void addWorldTimesToSessions(UUID uuid, Map<Long, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        Map<Integer, Map<String, Long>> times = new HashMap<>();
-        for (Integer id : userIds) {
-            times.put(id, new HashMap<>());
-        }
         try {
-            statement = prepareStatement("SELECT "
-                    + columnUserID + ", "
-                    + columnPlaytime + ", "
-                    + worldNameColumn
-                    + " FROM " + tableName + ", " + worldTable
-                    + " WHERE (" + worldIDColumn + "=" + tableName + "." + columnWorldId + ")");
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            statement = prepareStatement("SELECT " +
+                    columnSessionID + ", " +
+                    columnSurvival + ", " +
+                    columnCreative + ", " +
+                    columnAdventure + ", " +
+                    columnSpectator + ", " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId // TODO TEST
+            );
+            statement.setString(1, uuid.toString());
             set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
             while (set.next()) {
-                int id = set.getInt(columnUserID);
-                if (!userIds.contains(id)) {
+                long sessionID = set.getLong(columnSessionID);
+                Session session = sessions.get(sessionID);
+
+                if (session == null) {
                     continue;
                 }
-                Map<String, Long> worldTimes = times.get(id);
-                worldTimes.put(set.getString(worldNameColumn), set.getLong(columnPlaytime));
+
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong(columnSurvival));
+                gmMap.put(gms[1], set.getLong(columnCreative));
+                gmMap.put(gms[2], set.getLong(columnAdventure));
+                gmMap.put(gms[3], set.getLong(columnSpectator));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
             }
-            return times;
         } finally {
             endTransaction(statement);
             close(set, statement);
         }
-    }
-
-    public void saveWorldTimes(int userId, Map<String, Long> worldTimes) throws SQLException {
-        if (Verify.isEmpty(worldTimes)) {
-            return;
-        }
-        Map<String, Long> saved = getWorldTimes(userId);
-
-        Map<String, Long> newData = new HashMap<>();
-        Map<String, Long> updateData = new HashMap<>();
-
-        for (Map.Entry<String, Long> entry : worldTimes.entrySet()) {
-            String world = entry.getKey();
-            long time = entry.getValue();
-            Long savedTime = saved.get(world);
-
-            if (savedTime == null) {
-                newData.put(world, time);
-            } else {
-                if (savedTime < time) {
-                    updateData.put(world, time);
-                }
-            }
-        }
-        insertWorlds(userId, newData);
-        updateWorlds(userId, updateData);
-    }
-
-    private void updateWorlds(int userId, Map<String, Long> updateData) throws SQLException {
-        if (Verify.isEmpty(updateData)) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "UPDATE " + tableName + " SET " + columnPlaytime + "=?" +
-                            " WHERE (" + selectWorldIDsql + "=" + columnWorldId + ")" +
-                            " AND (" + columnUserID + "=?)"
-            );
-            for (Map.Entry<String, Long> entry : updateData.entrySet()) {
-                String worldName = entry.getKey();
-                long time = entry.getValue();
-                statement.setLong(1, time);
-                statement.setString(2, worldName);
-                statement.setInt(3, userId);
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        } finally {
-            endTransaction(statement);
-            close(statement);
-        }
-    }
-
-    private void insertWorlds(int userId, Map<String, Long> newData) throws SQLException {
-        if (Verify.isEmpty(newData)) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "INSERT INTO " + tableName + " ("
-                            + columnUserID + ", "
-                            + columnWorldId + ", "
-                            + columnPlaytime
-                            + ") VALUES (?, " + selectWorldIDsql + ", ?)"
-            );
-            for (Map.Entry<String, Long> entry : newData.entrySet()) {
-                String worldName = entry.getKey();
-                long time = entry.getValue();
-                statement.setInt(1, userId);
-                statement.setString(2, worldName);
-                statement.setLong(3, time);
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        } finally {
-            endTransaction(statement);
-            close(statement);
-        }
-    }
-
-    public void saveWorldTimes(Map<Integer, Map<String, Long>> worldTimesMultiple) throws SQLException {
-        if (Verify.isEmpty(worldTimesMultiple)) {
-            return;
-        }
-        Map<Integer, Map<String, Long>> saved = getWorldTimes(worldTimesMultiple.keySet());
-
-        Map<Integer, Map<String, Long>> newData = new HashMap<>();
-        Map<Integer, Map<String, Long>> updateData = new HashMap<>();
-
-        for (Map.Entry<Integer, Map<String, Long>> entry : worldTimesMultiple.entrySet()) {
-            int userId = entry.getKey();
-            Map<String, Long> savedTimes = saved.get(userId);
-            Map<String, Long> worldTimes = entry.getValue();
-            Map<String, Long> newTimes = new HashMap<>(worldTimes);
-            newTimes.keySet().removeAll(savedTimes.keySet());
-
-            newData.put(userId, newTimes);
-
-            for (Map.Entry<String, Long> times : savedTimes.entrySet()) {
-                String world = times.getKey();
-                long savedTime = times.getValue();
-                Long toSave = worldTimes.get(world);
-                if (toSave != null && toSave <= savedTime) {
-                    worldTimes.remove(world);
-                }
-            }
-            updateData.put(userId, worldTimes);
-        }
-        insertWorlds(newData);
-        updateWorlds(updateData);
-    }
-
-    private void updateWorlds(Map<Integer, Map<String, Long>> updateData) throws SQLException {
-        if (Verify.isEmpty(updateData)) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "UPDATE " + tableName + " SET " + columnPlaytime + "=?" +
-                            " WHERE (" + selectWorldIDsql + "=" + columnWorldId + ")" +
-                            " AND (" + columnUserID + "=?)"
-            );
-            for (Map.Entry<Integer, Map<String, Long>> entry : updateData.entrySet()) {
-                int userId = entry.getKey();
-                for (Map.Entry<String, Long> times : entry.getValue().entrySet()) {
-                    String worldName = times.getKey();
-                    long time = times.getValue();
-                    statement.setLong(1, time);
-                    statement.setString(2, worldName);
-                    statement.setInt(3, userId);
-                    statement.addBatch();
-                }
-            }
-            statement.executeBatch();
-        } finally {
-            endTransaction(statement);
-            close(statement);
-        }
-    }
-
-    private void insertWorlds(Map<Integer, Map<String, Long>> newData) throws SQLException {
-        if (Verify.isEmpty(newData)) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "INSERT INTO " + tableName + " ("
-                            + columnUserID + ", "
-                            + columnWorldId + ", "
-                            + columnPlaytime
-                            + ") VALUES (?, " + selectWorldIDsql + ", ?)"
-            );
-            for (Map.Entry<Integer, Map<String, Long>> entry : newData.entrySet()) {
-                int userId = entry.getKey();
-                for (Map.Entry<String, Long> times : entry.getValue().entrySet()) {
-                    String worldName = times.getKey();
-                    long time = times.getValue();
-                    statement.setInt(1, userId);
-                    statement.setString(2, worldName);
-                    statement.setLong(3, time);
-                    statement.addBatch();
-                }
-            }
-            statement.executeBatch();
-        } finally {
-            endTransaction(statement);
-            close(statement);
-        }
-    }
-
-    public void saveWorldTimes(WorldTimes worldTimes) {
-        // TODO saveWorldTimes (INSERT)
     }
 }

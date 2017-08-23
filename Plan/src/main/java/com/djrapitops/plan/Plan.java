@@ -54,8 +54,6 @@ import org.bukkit.ChatColor;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -263,18 +261,11 @@ public class Plan extends BukkitPlugin<Plan> {
         getServer().getScheduler().cancelTasks(this);
 
         if (Verify.notNull(dataCache, db)) {
-            Benchmark.start("Disable: DataCache Save");
             // Saves the DataCache to the database without Bukkit's Schedulers.
             Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
 
-            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.execute(() -> {
-                dataCache.saveCacheOnDisable();
-                taskStatus().cancelAllKnownTasks();
-                Benchmark.stop("Disable: DataCache Save");
-            });
-
-            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
+            // TODO Process all leftover Processors.
+            taskStatus().cancelAllKnownTasks();
         }
 
         getPluginLogger().endAllDebugs();

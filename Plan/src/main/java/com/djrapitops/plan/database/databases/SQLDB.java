@@ -11,8 +11,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Class containing main logic for different data related save & load functionality.
@@ -22,28 +24,28 @@ import java.util.stream.Collectors;
  */
 public abstract class SQLDB extends Database {
 
-    private final boolean supportsModification;
     private final boolean usingMySQL;
 
     /**
      * @param plugin
-     * @param supportsModification
      */
-    public SQLDB(Plan plugin, boolean supportsModification) {
+    public SQLDB(Plan plugin) {
         super(plugin);
-        this.supportsModification = supportsModification;
         usingMySQL = getName().equals("MySQL");
 
+        versionTable = new VersionTable(this, usingMySQL);
         serverTable = new ServerTable(this, usingMySQL);
+        securityTable = new SecurityTable(this, usingMySQL);
+
+        commandUseTable = new CommandUseTable(this, usingMySQL);
+        tpsTable = new TPSTable(this, usingMySQL);
+
         usersTable = new UsersTable(this, usingMySQL);
-        sessionsTable = new SessionsTable(this, usingMySQL);
-        killsTable = new KillsTable(this, usingMySQL);
+        actionsTable = new ActionsTable(this, usingMySQL);
         ipsTable = new IPsTable(this, usingMySQL);
         nicknamesTable = new NicknamesTable(this, usingMySQL);
-        commandUseTable = new CommandUseTable(this, usingMySQL);
-        versionTable = new VersionTable(this, usingMySQL);
-        tpsTable = new TPSTable(this, usingMySQL);
-        securityTable = new SecurityTable(this, usingMySQL);
+        sessionsTable = new SessionsTable(this, usingMySQL);
+        killsTable = new KillsTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
 
@@ -151,18 +153,23 @@ public abstract class SQLDB extends Database {
         return new Table[]{
                 serverTable, usersTable, ipsTable,
                 nicknamesTable, sessionsTable, killsTable,
-                commandUseTable, tpsTable, worldTable,
-                worldTimesTable, securityTable};
+                commandUseTable, actionsTable, tpsTable,
+                worldTable, worldTimesTable, securityTable
+        };
     }
+
     /**
-     * @return
+     * Get all tables except securityTable for removal of user data.
+     *
+     * @return Tables in the order the data should be removed in.
      */
     public Table[] getAllTablesInRemoveOrder() {
         return new Table[]{
-                ipsTable,
-                nicknamesTable, sessionsTable, killsTable,
-                worldTimesTable, worldTable, usersTable,
-                commandUseTable, tpsTable, serverTable};
+                ipsTable, nicknamesTable, killsTable,
+                worldTimesTable, sessionsTable, actionsTable,
+                worldTable, usersTable, commandUseTable,
+                tpsTable, serverTable
+        };
     }
 
     /**
@@ -175,10 +182,7 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void close() throws SQLException {
-        /*if (!dataSource.isClosed()) {
-            dataSource.close();
-        }*/
-
+        dataSource.close();
         setStatus("Closed");
         Log.logDebug("Database"); // Log remaining Debug info if present
     }
@@ -210,7 +214,7 @@ public abstract class SQLDB extends Database {
             return false;
         }
         try {
-            return usersTable.getUserId(uuid.toString()) != -1;
+            return usersTable.isRegistered(uuid);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
             return false;
@@ -219,14 +223,8 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    /**
-     * @param uuid
-     * @return
-     * @throws SQLException
-     */
-    @Override
-    public boolean removeAccount(String uuid) throws SQLException {
-        if (uuid == null || uuid.isEmpty()) {
+    public boolean removeAccount(UUID uuid) throws SQLException {
+        if (uuid == null) {
             return false;
         }
         try {
@@ -238,14 +236,27 @@ public abstract class SQLDB extends Database {
                 Log.toLog(this.getClass().getName(), e);
                 return false;
             }
-            int userId = usersTable.getUserId(uuid);
-            return userId != -1
-                    && ipsTable.removeUserIPs(userId)
-                    && nicknamesTable.removeUserNicknames(userId)
-                    && sessionsTable.removeUserSessions(userId)
-                    && killsTable.removeUserKillsAndVictims(userId)
-                    && worldTimesTable.removeUserWorldTimes(userId)
-                    && usersTable.removeUser(uuid);
+
+            boolean success = true;
+            for (Table t : getAllTablesInRemoveOrder()) {
+                if (t instanceof UserIDTable) {
+                    UserIDTable table = (UserIDTable) t;
+                    success = table.removeUser(uuid);
+                    if (!success) {
+                        break;
+                    }
+                }
+            }
+
+            if (success) {
+                return true;
+            }
+
+            throw new IllegalStateException("Removal Failed");
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
+            rollback(); // TODO Test case
+            return false;
         } finally {
             Benchmark.stop("Database", "Remove Account");
             setAvailable();
@@ -272,9 +283,8 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean removeAllData() {
+        setStatus("Clearing all data");
         try {
-            setStatus("Clearing all data");
-
             for (Table table : getAllTablesInRemoveOrder()) {
                 if (!table.removeAllData()) {
                     return false;
@@ -287,39 +297,14 @@ public abstract class SQLDB extends Database {
         }
     }
 
+
     @Override
     public List<UserData> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
         if (uuidsCol == null || uuidsCol.isEmpty()) {
             return new ArrayList<>();
         }
-        setStatus("Get userdata (multiple) for: " + uuidsCol.size());
-        Benchmark.start("Get UserData for " + uuidsCol.size());
-        Map<UUID, Integer> userIds = usersTable.getAllUserIds();
-        Set<UUID> remove = uuidsCol.stream()
-                .filter(uuid -> !userIds.containsKey(uuid))
-                .collect(Collectors.toSet());
-        List<UUID> uuids = new ArrayList<>(uuidsCol);
-        Log.debug("Database", "Data not found for: " + remove.size());
-        uuids.removeAll(remove);
-        Benchmark.start("Create UserData objects for " + userIds.size());
-        List<UserData> data = usersTable.getUserData(uuids);
-        Benchmark.stop("Database", "Create UserData objects for " + userIds.size());
-        if (data.isEmpty()) {
-            return data;
-        }
-
         // TODO REWRITE
-
-        Benchmark.stop("Database", "Get UserData for " + uuidsCol.size());
-        setAvailable();
-        return data;
-    }
-
-    /**
-     * @return
-     */
-    public boolean supportsModification() {
-        return supportsModification;
+        return new ArrayList<>();
     }
 
     private void setStatus(String status) {

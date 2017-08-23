@@ -30,6 +30,11 @@ public abstract class Database {
     protected UsersTable usersTable;
 
     /**
+     * Table representing plan_actions in the database.
+     */
+    protected ActionsTable actionsTable;
+
+    /**
      * Table representing plan_kills in the database.
      */
     protected KillsTable killsTable;
@@ -190,7 +195,7 @@ public abstract class Database {
      * @return Success of the removal.
      * @throws SQLException If a database error occurs.
      */
-    public abstract boolean removeAccount(String uuid) throws SQLException;
+    public abstract boolean removeAccount(UUID uuid) throws SQLException;
 
     /**
      * Used to clear all data from the database.
@@ -324,6 +329,12 @@ public abstract class Database {
 
     public ServerTable getServerTable() {
         return serverTable;
+    }
+
+    public abstract void commit() throws SQLException;
+
+    public ActionsTable getActionsTable() {
+        return actionsTable;
     }
 
     public BasicDataSource getDataSource() {

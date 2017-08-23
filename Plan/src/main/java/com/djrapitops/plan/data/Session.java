@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.data;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,8 +58,8 @@ public class Session {
         this.sessionID = id;
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
-        this.worldTimes = worldTimes;
-        this.playerKills = playerKills;
+        this.worldTimes = new WorldTimes(new HashMap<>());
+        this.playerKills = new ArrayList<>();
         this.mobKills = mobKills;
         this.deaths = deaths;
     }
@@ -196,5 +197,9 @@ public class Session {
      */
     public long getSessionID() {
         return sessionID;
+    }
+
+    public void setSessionID(long sessionID) {
+        this.sessionID = sessionID;
     }
 }

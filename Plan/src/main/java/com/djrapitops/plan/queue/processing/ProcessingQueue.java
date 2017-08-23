@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.queue.processing;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.queue.Consumer;
 import main.java.com.djrapitops.plan.queue.Queue;
 import main.java.com.djrapitops.plan.queue.Setup;
@@ -47,7 +48,11 @@ class ProcessConsumer extends Consumer<Processor> {
         if (process == null) {
             return;
         }
-        process.process();
+        try {
+            process.process();
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+            Log.toLog(this.getTaskName() + ":" + process.getClass().getSimpleName(), e);
+        }
     }
 
     @Override

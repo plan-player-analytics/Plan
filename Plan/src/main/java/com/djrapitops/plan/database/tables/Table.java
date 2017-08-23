@@ -50,6 +50,17 @@ public abstract class Table {
      */
     public abstract boolean createTable();
 
+    protected boolean createTable(String sql) {
+        try {
+            execute(sql);
+            return true;
+        } catch (SQLException ex) {
+            Log.toLog(this.getClass().getName(), ex);
+            return false;
+        }
+    }
+
+
     /**
      * @return @throws SQLException
      */

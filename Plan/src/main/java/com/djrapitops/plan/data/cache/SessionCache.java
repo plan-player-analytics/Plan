@@ -1,7 +1,10 @@
 package main.java.com.djrapitops.plan.data.cache;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -16,11 +19,13 @@ import java.util.UUID;
 public class SessionCache {
 
     private static final Map<UUID, Session> activeSessions = new HashMap<>();
+    protected final Plan plugin;
 
     /**
      * Class Constructor.
      */
-    public SessionCache() {
+    public SessionCache(Plan plugin) {
+        this.plugin = plugin;
     }
 
     public void cacheSession(UUID uuid, Session session) {
@@ -33,25 +38,11 @@ public class SessionCache {
             return;
         }
         session.endSession(time);
-        // TODO DB Save the session.
-    }
-
-    /**
-     * Starts a session for a player at the current moment.
-     *
-     * @param uuid UUID of the player.
-     */
-    @Deprecated
-    public void startSession(UUID uuid) {
-    }
-
-    /**
-     * Ends a session for a player at the current moment.
-     *
-     * @param uuid UUID of the player.
-     */
-    @Deprecated
-    public void endSession(UUID uuid) {
+        try {
+            plugin.getDB().getSessionsTable().saveSession(uuid, session);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     /**

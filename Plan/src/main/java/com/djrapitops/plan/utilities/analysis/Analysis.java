@@ -298,7 +298,7 @@ public class Analysis {
                 activity.addBan(uuid);
             } else if (uData.getLoginTimes() == 1) {
                 activity.addJoinedOnce(uuid);
-//        TODO    } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getLoginTimes())) {
+//        TODO    } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getSessionCount())) {
 //                activity.addActive(uuid);
             } else {
                 activity.addInActive(uuid);

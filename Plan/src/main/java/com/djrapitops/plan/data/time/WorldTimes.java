@@ -132,4 +132,8 @@ public class WorldTimes {
     public Map<String, GMTimes> getWorldTimes() {
         return worldTimes;
     }
+
+    public void setGMTimesForWorld(String world, GMTimes gmTimes) {
+        worldTimes.put(world, gmTimes);
+    }
 }

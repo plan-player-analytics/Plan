@@ -19,4 +19,8 @@ public class Select extends WhereParser {
         parser.append(" FROM ").append(table);
         return parser;
     }
+
+    public static Select all(String table) {
+        return new Select("SELECT * FROM " + table);
+    }
 }

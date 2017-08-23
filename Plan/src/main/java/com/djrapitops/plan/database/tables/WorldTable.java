@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -23,9 +22,11 @@ import java.util.List;
  */
 public class WorldTable extends Table {
 
-    private final String columnWorldId;
-    private final String columnWorldName;
-    private final String columnServerID; //TODO
+    private final String columnWorldId = "id";
+    private final String columnWorldName = "world_name";
+    private final String columnServerID = "server_id";
+
+    public final String statementSelectID;
 
     /**
      * Constructor.
@@ -35,25 +36,17 @@ public class WorldTable extends Table {
      */
     public WorldTable(SQLDB db, boolean usingMySQL) {
         super("plan_worlds", db, usingMySQL);
-        columnWorldId = "world_id";
-        columnWorldName = "world_name";
-        columnServerID = "server_id";
+        statementSelectID = "(SELECT " + columnWorldId + " FROM " + tableName + " WHERE (" + columnWorldName + "=?))";
     }
 
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
-                    .column(columnWorldName, Sql.varchar(100)).notNull()
-                    .primaryKey(usingMySQL, columnWorldId)
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
+                .column(columnWorldName, Sql.varchar(100)).notNull()
+                .primaryKey(usingMySQL, columnWorldId)
+                .toString()
+        );
     }
 
     /**

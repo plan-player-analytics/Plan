@@ -1,21 +1,19 @@
 package main.java.com.djrapitops.plan.data.cache;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.utilities.player.IPlayer;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.queue.processing.Processor;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This Class contains the Cache.
@@ -30,8 +28,6 @@ import java.util.*;
  */
 public class DataCache extends SessionCache {
 
-    // Plan
-    private final Plan plugin;
     private final Database db;
 
     //Cache
@@ -53,9 +49,7 @@ public class DataCache extends SessionCache {
      * @param plugin Current instance of Plan
      */
     public DataCache(Plan plugin) {
-        super(); // Initializes Session & Location cache.
-
-        this.plugin = plugin;
+        super(plugin); // Initializes Session & Location cache.
         db = plugin.getDB();
 
         commandUse = new HashMap<>();
@@ -113,47 +107,6 @@ public class DataCache extends SessionCache {
                 }
             }
         }).runTaskTimerAsynchronously(60L * 20L * 5, 60L * 20L * 5);
-    }
-
-    /**
-     * Saves all data in the cache to Database and closes the database down.
-     * <p>
-     * Stops all tasks.
-     * <p>
-     * If processingQueue has unprocessed information, it will be processed.
-     */
-    @Deprecated
-    public void saveCacheOnDisable() { // TODO Rewrite
-        long time = MiscUtils.getTime();
-        Benchmark.start("Cache: SaveOnDisable");
-        Benchmark.start("Cache: ProcessOnlineHandlingInfo");
-        List<IPlayer> onlinePlayers = plugin.fetch().getOnlinePlayers();
-        Log.debug("Online: " + onlinePlayers.size());
-        for (IPlayer p : onlinePlayers) {
-            UUID uuid = p.getUuid();
-            endSession(uuid);
-            String worldName = ((Player) p.getWrappedPlayerClass()).getWorld().getName();
-        }
-        Benchmark.stop("Cache: ProcessOnlineHandlingInfo");
-        try {
-            db.saveCommandUse(commandUse);
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        saveUnsavedTPSHistory();
-        try {
-            db.close();
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        Benchmark.stop("Cache: SaveOnDisable");
-    }
-
-    private void processUnprocessedHandlingInfo(List<Processor> toProcess) {
-        Log.debug("PROCESS: " + toProcess.size());
-        for (Processor i : toProcess) {
-            i.process();
-        }
     }
 
     /**

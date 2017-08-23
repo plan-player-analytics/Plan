@@ -32,7 +32,6 @@ public class SessionCacheTest {
     @Before
     public void setUp() throws Exception {
         TestInit.init();
-        test = new SessionCache();
     }
 
     @Test

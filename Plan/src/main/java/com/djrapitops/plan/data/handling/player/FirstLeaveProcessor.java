@@ -6,31 +6,31 @@ package main.java.com.djrapitops.plan.data.handling.player;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.cache.GeolocationCacheHandler;
+import main.java.com.djrapitops.plan.data.Action;
+import main.java.com.djrapitops.plan.database.tables.Actions;
 
 import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Processor for inserting a FIRST_LOGOUT Action.
  *
  * @author Rsl1122
+ * @since 4.0.0
  */
-public class IPUpdateProcessor extends PlayerProcessor {
+public class FirstLeaveProcessor extends PlayerProcessor {
 
-    private final String ip;
+    private final Action leaveAction;
 
-    public IPUpdateProcessor(UUID uuid, String ip) {
+    public FirstLeaveProcessor(UUID uuid, long time, int messagesSent) {
         super(uuid);
-        this.ip = ip;
+        leaveAction = new Action(time, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent);
     }
 
     @Override
     public void process() {
-        UUID uuid = getUUID();
-        String country = GeolocationCacheHandler.getCountry(ip);
         try {
-            Plan.getInstance().getDB().getIpsTable().updateIP(uuid, ip, country);
+            Plan.getInstance().getDB().getActionsTable().insertAction(getUUID(), leaveAction);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }

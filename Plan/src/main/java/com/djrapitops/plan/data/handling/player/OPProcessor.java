@@ -4,10 +4,6 @@
  */
 package main.java.com.djrapitops.plan.data.handling.player;
 
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-
-import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -15,18 +11,18 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class KickProcessor extends PlayerProcessor {
-    public KickProcessor(UUID uuid) {
+public class OPProcessor extends PlayerProcessor {
+
+    private final boolean banned;
+
+    public OPProcessor(UUID uuid, boolean banned) {
         super(uuid);
+        this.banned = banned;
     }
 
     @Override
     public void process() {
         UUID uuid = getUUID();
-        try {
-            Plan.getInstance().getDB().getUsersTable().kicked(uuid);
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
+        // TODO DB Update Ban status
     }
 }
