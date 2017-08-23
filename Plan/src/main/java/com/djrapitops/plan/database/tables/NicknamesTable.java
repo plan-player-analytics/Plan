@@ -1,16 +1,17 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -18,8 +19,9 @@ import java.util.*;
 public class NicknamesTable extends UserIDTable {
 
     private final String columnNick = "nickname";
-    private final String columnCurrent = "current_nick";
-    private final String columnServerID = "server_id"; //TODO
+    private final String columnServerID = "server_id";
+
+    private ServerTable serverTable;
 
     /**
      * @param db         The database
@@ -27,6 +29,7 @@ public class NicknamesTable extends UserIDTable {
      */
     public NicknamesTable(SQLDB db, boolean usingMySQL) {
         super("plan_nicknames", db, usingMySQL);
+        serverTable = db.getServerTable();
     }
 
     /**
@@ -39,14 +42,11 @@ public class NicknamesTable extends UserIDTable {
             execute(TableSqlParser.createTable(tableName)
                     .column(columnUserID, Sql.INT).notNull()
                     .column(columnNick, Sql.varchar(75)).notNull()
-                    .column(columnCurrent, Sql.BOOL).notNull().defaultValue(false)
+                    .column(columnServerID, Sql.INT).notNull()
                     .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                    .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
                     .toString()
             );
-
-            if (getVersion() < 3) {
-                alterTablesV3();
-            }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -54,12 +54,8 @@ public class NicknamesTable extends UserIDTable {
         }
     }
 
-    private void alterTablesV3() {
-        addColumns(columnCurrent + " boolean NOT NULL DEFAULT 0");
-    }
-
     /**
-     * @param userId The User ID from which the nicknames should be removed from
+     * @param userId The User ID whose the nicknames should be removed
      * @return if the removal was successful
      */
     public boolean removeUserNicknames(int userId) {
@@ -67,36 +63,33 @@ public class NicknamesTable extends UserIDTable {
     }
 
     /**
-     * @param userId The User ID from which the nicknames should be retrieved from
+     * Get ALL nicknames of the user.
+     * <p>
+     * Get's nicknames from other servers as well.
+     *
+     * @param uuid UUID of the Player
      * @return The nicknames of the User
      * @throws SQLException when an error at retrieval happens
      */
-    public List<String> getNicknames(int userId) throws SQLException {
+    public List<String> getAllNicknames(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userId);
+            statement = prepareStatement("SELECT " + columnNick + " FROM " + tableName +
+                    " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")");
+            statement.setString(1, uuid.toString());
             set = statement.executeQuery();
 
             List<String> nicknames = new ArrayList<>();
-            String lastNick = "";
             while (set.next()) {
                 String nickname = set.getString(columnNick);
                 if (nickname.isEmpty()) {
                     continue;
                 }
-
-                nicknames.add(nickname);
-                if (set.getBoolean(columnCurrent)) {
-                    lastNick = nickname;
+                if (!nicknames.contains(nickname)) {
+                    nicknames.add(nickname);
                 }
             }
-
-            if (!lastNick.isEmpty()) {
-                nicknames.set(nicknames.size() - 1, lastNick);
-            }
-
             return nicknames;
         } finally {
             close(set, statement);
@@ -104,151 +97,78 @@ public class NicknamesTable extends UserIDTable {
     }
 
     /**
-     * @param userId   The User ID for which the nicknames should be saved for
-     * @param names    The nicknames
-     * @param lastNick The latest nickname
-     * @throws SQLException when an error at saving happens
+     * Get nicknames of the user on THIS server.
+     * <p>
+     * Get's nicknames from other servers as well.
+     *
+     * @param uuid UUID of the Player
+     * @return The nicknames of the User
+     * @throws SQLException when an error at retrieval happens
      */
-    public void saveNickList(int userId, Set<String> names, String lastNick) throws SQLException {
-        if (Verify.isEmpty(names)) {
-            return;
-        }
-
-        names.removeAll(getNicknames(userId));
-        if (names.isEmpty()) {
-            return;
-        }
-
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnCurrent + ", "
-                    + columnNick
-                    + ") VALUES (?, ?, ?)");
-
-            for (String name : names) {
-                statement.setInt(1, userId);
-                statement.setInt(2, name.equals(lastNick) ? 1 : 0);
-                statement.setString(3, name);
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
-        } finally {
-            close(statement);
-        }
+    public List<String> getNicknames(UUID uuid) throws SQLException {
+        return getNicknames(uuid, Plan.getServerUUID());
     }
 
     /**
-     * @param ids The User IDs for which the nicknames should be retrieved for
-     * @return The User ID corresponding with the nicknames
+     * Get nicknames of the user on a server.
+     * <p>
+     * Get's nicknames from other servers as well.
+     *
+     * @param uuid       UUID of the Player
+     * @param serverUUID UUID of the server
+     * @return The nicknames of the User
      * @throws SQLException when an error at retrieval happens
      */
-    public Map<Integer, List<String>> getNicknames(Collection<Integer> ids) throws SQLException {
-        if (Verify.isEmpty(ids)) {
-            return new HashMap<>();
-        }
-
-        Benchmark.start("Get Nicknames Multiple");
-
+    public List<String> getNicknames(UUID uuid, UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            Map<Integer, List<String>> nicks = new HashMap<>();
-            Map<Integer, String> lastNicks = new HashMap<>();
-
-            for (Integer id : ids) {
-                nicks.put(id, new ArrayList<>());
-            }
-
-            statement = prepareStatement("SELECT * FROM " + tableName);
+            statement = prepareStatement("SELECT " + columnNick + " FROM " + tableName +
+                    " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")" +
+                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID
+            );
+            statement.setString(1, uuid.toString());
+            statement.setString(2, serverUUID.toString());
             set = statement.executeQuery();
-            while (set.next()) {
-                Integer id = set.getInt(columnUserID);
-                String nickname = set.getString(columnNick);
 
-                if (!ids.contains(id) || nickname.isEmpty()) {
+            List<String> nicknames = new ArrayList<>();
+            while (set.next()) {
+                String nickname = set.getString(columnNick);
+                if (nickname.isEmpty()) {
                     continue;
                 }
-
-                nicks.get(id).add(nickname);
-                if (set.getBoolean(columnCurrent)) {
-                    lastNicks.put(id, nickname);
+                if (!nicknames.contains(nickname)) {
+                    nicknames.add(nickname);
                 }
             }
-
-            for (Map.Entry<Integer, String> entry : lastNicks.entrySet()) {
-                Integer id = entry.getKey();
-                String lastNick = entry.getValue();
-
-                List<String> list = nicks.get(id);
-
-                // Moves the last known nickname to the end of the List.
-                // This is due to the way nicknames are added to UserData,
-                // Nicknames are stored as a Set and last Nickname is a separate String.
-                list.set(list.size() - 1, lastNick);
-            }
-
-            return nicks;
+            return nicknames;
         } finally {
             close(set, statement);
-            Benchmark.stop("Database", "Get Nicknames Multiple");
         }
     }
 
-    /**
-     * @param nicknames The User ID corresponding to the nicknames
-     * @param lastNicks The User ID corresponding with the last nick they inherited
-     * @throws SQLException when an error at saving happens
-     */
-    public void saveNickLists(Map<Integer, Set<String>> nicknames, Map<Integer, String> lastNicks) throws SQLException {
-        if (Verify.isEmpty(nicknames)) {
+    public void saveUserName(UUID uuid, String displayName) throws SQLException {
+        List<String> saved = getNicknames(uuid);
+        if (saved.contains(displayName)) {
             return;
         }
 
-        Benchmark.start("Save Nicknames Multiple");
-
-        Map<Integer, List<String>> saved = getNicknames(nicknames.keySet());
         PreparedStatement statement = null;
         try {
-            boolean commitRequired = false;
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnCurrent + ", "
-                    + columnNick
-                    + ") VALUES (?, ?, ?)");
-
-            for (Map.Entry<Integer, Set<String>> entrySet : nicknames.entrySet()) {
-                Integer id = entrySet.getKey();
-                Set<String> newNicks = entrySet.getValue();
-
-                String lastNick = lastNicks.get(id);
-                List<String> s = saved.get(id);
-
-                if (s != null) {
-                    newNicks.removeAll(s);
-                }
-
-                if (newNicks.isEmpty()) {
-                    continue;
-                }
-
-                for (String name : newNicks) {
-                    statement.setInt(1, id);
-                    statement.setInt(2, (name.equals(lastNick)) ? 1 : 0);
-                    statement.setString(3, name);
-                    statement.addBatch();
-                    commitRequired = true;
-                }
-            }
-
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement = prepareStatement("INSERT INTO " + tableName + " (" +
+                    columnUserID + ", " +
+                    columnServerID + ", " +
+                    columnNick +
+                    ") VALUES (" +
+                    usersTable.statementSelectID + ", " +
+                    serverTable.statementSelectServerID + ", " +
+                    "?)");
+            statement.setString(1, uuid.toString());
+            statement.setString(2, Plan.getServerUUID().toString());
+            statement.setString(3, displayName);
+            statement.execute();
         } finally {
             close(statement);
-            Benchmark.stop("Database", "Save Nicknames Multiple");
         }
     }
 }

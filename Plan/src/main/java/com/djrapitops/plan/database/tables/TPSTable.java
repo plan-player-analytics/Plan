@@ -62,30 +62,11 @@ public class TPSTable extends Table {
                     .column(columnChunksLoaded, Sql.INT).notNull()
                     .toString()
             );
-            int version = getVersion();
-            if (version < 6) {
-                alterTablesV6();
-            }
-            if (version < 7) {
-                alterTablesV7();
-            }
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         }
-    }
-
-    private void alterTablesV6() {
-        addColumns(columnCPUUsage + " double NOT NULL DEFAULT 0");
-    }
-
-    private void alterTablesV7() {
-        addColumns(
-                columnRAMUsage + " bigint NOT NULL DEFAULT 0",
-                columnEntities + " integer NOT NULL DEFAULT 0",
-                columnChunksLoaded + " integer NOT NULL DEFAULT 0"
-        );
     }
 
     /**

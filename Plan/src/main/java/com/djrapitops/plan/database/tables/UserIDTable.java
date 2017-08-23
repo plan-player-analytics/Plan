@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Represents a Table that uses UsersTable IDs to get their data.
@@ -22,11 +23,28 @@ public abstract class UserIDTable extends Table {
         usersTable = db.getUsersTable();
     }
 
+    @Deprecated
     protected boolean removeDataOf(int userID) {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
             statement.setInt(1, userID);
+            statement.execute();
+            return true;
+        } catch (SQLException ex) {
+            Log.toLog(this.getClass().getName(), ex);
+            return false;
+        } finally {
+            close(statement);
+        }
+    }
+
+    protected boolean removeDataOf(UUID uuid) {
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("DELETE FROM " + tableName +
+                    " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")");
+            statement.setString(1, uuid.toString());
             statement.execute();
             return true;
         } catch (SQLException ex) {
