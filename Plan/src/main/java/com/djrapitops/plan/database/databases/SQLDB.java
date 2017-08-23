@@ -67,7 +67,7 @@ public abstract class SQLDB extends Database {
         String benchName = "Init " + getConfigName();
         Benchmark.start(benchName);
         try {
-            if (!setupDatabases()) {
+            if (!setupDatabase()) {
                 return false;
             }
             clean();
@@ -89,7 +89,7 @@ public abstract class SQLDB extends Database {
      * @return Is the connection usable?
      * @throws SQLException
      */
-    public boolean setupDatabases() throws SQLException {
+    public boolean setupDatabase() throws SQLException {
         boolean newDatabase = isNewDatabase();
 
         if (!versionTable.createTable()) {
@@ -233,7 +233,7 @@ public abstract class SQLDB extends Database {
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
             try {
-                setupDatabases();
+                setupDatabase();
             } catch (Exception e) {
                 Log.toLog(this.getClass().getName(), e);
                 return false;
@@ -259,7 +259,7 @@ public abstract class SQLDB extends Database {
     public void clean() {
         Log.info("Cleaning the database.");
         try {
-            setupDatabases();
+            setupDatabase();
             tpsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {
@@ -331,7 +331,7 @@ public abstract class SQLDB extends Database {
     }
 
     public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        return getDataSource().getConnection();
     }
 
     /**

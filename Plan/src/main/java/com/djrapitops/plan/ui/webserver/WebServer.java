@@ -312,7 +312,7 @@ public class WebServer {
 
         Plan plan = Plan.getInstance();
 
-        if (!checkKey(plan, key)) {
+        if (!checkKey(key)) {
             String error = "Server Key not given or invalid";
             return PageCacheHandler.loadPage(error, () -> {
                 ForbiddenResponse forbidden = new ForbiddenResponse();
@@ -336,8 +336,8 @@ public class WebServer {
         }
     }
 
-    private boolean checkKey(Plan plan, String key) {
-        UUID uuid = plan.getServerInfoManager().getServerUUID();
+    private boolean checkKey(String key) {
+        UUID uuid = Plan.getServerUUID();
         UUID keyUUID;
         try {
             keyUUID = UUID.fromString(key);

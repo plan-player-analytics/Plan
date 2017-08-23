@@ -28,12 +28,18 @@ public class MySQLDB extends SQLDB {
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 
-        dataSource.setUrl("jdbc:mysql://" + config.getString("Database.MySQL.Host") + ":" + config.getString("Database.MySQL.Port") + "/"
-                + config.getString("Database.MySQL.Database")
-                + "?rewriteBatchedStatements=true");
+        String host = config.getString("Database.MySQL.Host");
+        String port = config.getString("Database.MySQL.Port");
+        String database = config.getString("Database.MySQL.Database");
 
-        dataSource.setUsername(config.getString("Database.MySQL.User"));
-        dataSource.setPassword(config.getString("Database.MySQL.Password"));
+
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true");
+
+        String username = config.getString("Database.MySQL.User");
+        String password = config.getString("Database.MySQL.Password");
+
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         dataSource.setMaxTotal(-1);
     }
 

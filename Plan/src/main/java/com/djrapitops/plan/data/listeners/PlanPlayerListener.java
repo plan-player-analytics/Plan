@@ -4,7 +4,6 @@ import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.cache.DataCache;
-import main.java.com.djrapitops.plan.data.handling.DBCommitProcessor;
 import main.java.com.djrapitops.plan.data.handling.player.*;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
@@ -97,8 +96,7 @@ public class PlanPlayerListener implements Listener {
         plugin.addToProcessQueue(
                 new RegisterProcessor(uuid, time, playersOnline), //TODO Add required variables after UsersTable is done.
                 new IPUpdateProcessor(uuid, ip),
-                new NameProcessor(uuid, playerName, displayName),
-                new DBCommitProcessor(plugin.getDB())
+                new NameProcessor(uuid, playerName, displayName)
         );
     }
 
