@@ -23,7 +23,6 @@ import org.powermock.api.mockito.PowerMockito;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.logging.Logger;
 
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -63,17 +62,11 @@ public class TestInit {
 
     public static TestInit init() throws Exception {
         TestInit t = new TestInit();
-        t.setUp(true);
+        t.setUp();
         return t;
     }
 
-    public static TestInit init(boolean clearOnStart) throws Exception {
-        TestInit t = new TestInit();
-        t.setUp(clearOnStart);
-        return t;
-    }
-
-    private void setUp(boolean clearOnStart) throws Exception {
+    private void setUp() throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
@@ -82,9 +75,6 @@ public class TestInit {
         when(planMock.getConfig()).thenReturn(config);
 
         File testFolder = getTestFolder();
-        if (clearOnStart) {
-            clean(testFolder);
-        }
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
         // Html Files
@@ -119,7 +109,7 @@ public class TestInit {
     }
 
     private RunnableFactory<Plan> mockRunnableFactory() {
-        RunnableFactory<Plan> runnableFactory = new RunnableFactory<Plan>(planMock) {
+        return new RunnableFactory<Plan>(planMock) {
             @Override
             public IRunnable createNew(String name, final AbsRunnable runnable) {
                 return new IRunnable() {
@@ -170,25 +160,12 @@ public class TestInit {
                 };
             }
         };
-        return runnableFactory;
     }
 
-    private static File getTestFolder() {
+    static File getTestFolder() {
         File testFolder = new File("temporaryTestFolder");
         testFolder.mkdir();
         return testFolder;
-    }
-
-    public static void clean() throws IOException {
-        clean(getTestFolder());
-    }
-
-    public static void clean(File testFolder) throws IOException {
-        if (testFolder.exists() && testFolder.isDirectory()) {
-            for (File f : testFolder.listFiles()) {
-                Files.deleteIfExists(f.toPath());
-            }
-        }
     }
 
     private Server mockServer() {

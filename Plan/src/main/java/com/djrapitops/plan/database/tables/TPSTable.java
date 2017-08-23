@@ -79,8 +79,8 @@ public class TPSTable extends Table {
             }
             return data;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get TPS");
         }
     }
@@ -99,7 +99,6 @@ public class TPSTable extends Table {
             }
         });
         db.setAvailable();
-        commit();
     }
 
     private void saveTPSBatch(List<TPS> batch) throws SQLException {
@@ -129,7 +128,9 @@ public class TPSTable extends Table {
                 statement.setDouble(7, tps.getChunksLoaded());
                 statement.addBatch();
             }
+
             statement.executeBatch();
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
@@ -147,6 +148,7 @@ public class TPSTable extends Table {
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

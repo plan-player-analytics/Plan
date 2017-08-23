@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data.listeners;
 
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.handling.player.DeathProcessor;
 import main.java.com.djrapitops.plan.data.handling.player.KillProcessor;
@@ -15,8 +14,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.projectiles.ProjectileSource;
-
-import java.util.UUID;
 
 /**
  * Event Listener for EntityDeathEvents.
@@ -59,9 +56,6 @@ public class PlanDeathEventListener implements Listener {
         EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
         Entity killerEntity = entityDamageByEntityEvent.getDamager();
 
-        UUID killerUUID = null;
-        String weapon = null;
-
         if (killerEntity instanceof Player) {
             Player killer = (Player) killerEntity;
             Material itemInHand;
@@ -75,32 +69,38 @@ public class PlanDeathEventListener implements Listener {
                 }
             }
 
-            killerUUID = killer.getUniqueId();
-            weapon = normalizeMaterialName(itemInHand);
-        } else if (killerEntity instanceof Wolf) {
+            plugin.addToProcessQueue(new KillProcessor(killer.getUniqueId(), time, dead, normalizeMaterialName(itemInHand)));
+            return;
+        }
+
+        if (killerEntity instanceof Wolf) {
             Wolf wolf = (Wolf) killerEntity;
+
             if (!wolf.isTamed()) {
                 return;
             }
 
             AnimalTamer owner = wolf.getOwner();
-            if (owner instanceof Player) {
-                killerUUID = owner.getUniqueId();
-                weapon = "Wolf";
-            }
-        } else if (killerEntity instanceof Arrow) {
-            Arrow arrow = (Arrow) killerEntity;
-            ProjectileSource source = arrow.getShooter();
 
-            if (source instanceof Player) {
-                Player player = (Player) source;
-                killerUUID = player.getUniqueId();
-                weapon = "Bow";
+            if (!(owner instanceof Player)) {
+                return;
             }
+
+            plugin.addToProcessQueue(new KillProcessor(owner.getUniqueId(), time, dead, "Wolf"));
         }
 
-        if (Verify.notNull(killerUUID, weapon)) {
-            plugin.addToProcessQueue(new KillProcessor(killerUUID, time, dead, weapon));
+        if (killerEntity instanceof Arrow) {
+            Arrow arrow = (Arrow) killerEntity;
+
+            ProjectileSource source = arrow.getShooter();
+
+            if (!(source instanceof Player)) {
+                return;
+            }
+
+            Player player = (Player) source;
+
+            plugin.addToProcessQueue(new KillProcessor(player.getUniqueId(), time, dead, "Bow"));
         }
     }
 

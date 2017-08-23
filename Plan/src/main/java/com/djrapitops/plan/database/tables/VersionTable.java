@@ -50,8 +50,8 @@ public class VersionTable extends Table {
             Log.debug("Database", "DB Schema version: " + version);
             return version;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -65,9 +65,9 @@ public class VersionTable extends Table {
         try {
             statement = prepareStatement("INSERT INTO " + tableName + " (version) VALUES (" + version + ")");
             statement.executeUpdate();
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
     }
-
 }

@@ -99,6 +99,7 @@ public class WorldTimesTable extends UserIDTable {
 
             statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -144,6 +145,7 @@ public class WorldTimesTable extends UserIDTable {
                 session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
             }
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

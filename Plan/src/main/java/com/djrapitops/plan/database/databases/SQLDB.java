@@ -1,13 +1,12 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,8 +25,6 @@ import java.util.UUID;
 public abstract class SQLDB extends Database {
 
     private final boolean usingMySQL;
-
-    private Connection connection;
 
     /**
      * @param plugin
@@ -51,31 +48,6 @@ public abstract class SQLDB extends Database {
         killsTable = new KillsTable(this, usingMySQL);
         worldTable = new WorldTable(this, usingMySQL);
         worldTimesTable = new WorldTimesTable(this, usingMySQL);
-
-        startConnectionPingTask();
-    }
-
-    /**
-     * Starts repeating Async task that maintains the Database connection.
-     */
-    public void startConnectionPingTask() {
-        // Maintains Connection.
-        plugin.getRunnableFactory().createNew(new AbsRunnable("DBConnectionPingTask " + getName()) {
-            @Override
-            public void run() {
-                Statement statement = null;
-                try {
-                    if (connection != null && !connection.isClosed()) {
-                        statement = connection.createStatement();
-                        statement.execute("/* ping */ SELECT 1");
-                    }
-                } catch (SQLException e) {
-                    connection = getNewConnection();
-                } finally {
-                    MiscUtils.close(statement);
-                }
-            }
-        }).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
     }
 
     /**
@@ -95,7 +67,9 @@ public abstract class SQLDB extends Database {
         String benchName = "Init " + getConfigName();
         Benchmark.start(benchName);
         try {
-            if (!checkConnection()) {
+            setupDataSource();
+
+            if (!setupDatabase()) {
                 return false;
             }
             clean();
@@ -117,37 +91,29 @@ public abstract class SQLDB extends Database {
      * @return Is the connection usable?
      * @throws SQLException
      */
-    public boolean checkConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = getNewConnection();
+    public boolean setupDatabase() throws SQLException {
+        boolean newDatabase = isNewDatabase();
 
-            if (connection == null || connection.isClosed()) {
-                return false;
-            }
+        if (!versionTable.createTable()) {
+            Log.error("Failed to create table: " + versionTable.getTableName());
+            return false;
+        }
 
-            boolean newDatabase = isNewDatabase();
+        if (newDatabase) {
+            Log.info("New Database created.");
+        }
 
-            if (!versionTable.createTable()) {
-                Log.error("Failed to create table: " + versionTable.getTableName());
-                return false;
-            }
+        if (!createTables()) {
+            return false;
+        }
 
-            if (newDatabase) {
-                Log.info("New Database created.");
-                setVersion(8);
-            }
+        if (newDatabase || getVersion() < 8) {
+            setVersion(8);
+        }
 
-            if (!createTables()) {
-                return false;
-            }
-
-            if (!newDatabase && getVersion() < 8) {
-                setVersion(8);
-            }
-
-            try (Statement statement = connection.createStatement()) {
-                statement.execute("DROP TABLE IF EXISTS plan_locations");
-            }
+        try (Statement statement = getConnection().createStatement()) {
+            statement.execute("DROP TABLE IF EXISTS plan_locations");
+            endTransaction(statement.getConnection());
         }
         return true;
     }
@@ -207,18 +173,16 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     * @return
+     * Setups the {@link BasicDataSource}
      */
-    public abstract Connection getNewConnection();
+    public abstract void setupDataSource();
 
     /**
      * @throws SQLException
      */
     @Override
     public void close() throws SQLException {
-        if (connection != null) {
-            connection.close();
-        }
+        dataSource.close();
         setStatus("Closed");
         Log.logDebug("Database"); // Log remaining Debug info if present
     }
@@ -238,7 +202,6 @@ public abstract class SQLDB extends Database {
     @Override
     public void setVersion(int version) throws SQLException {
         versionTable.setVersion(version);
-        commit();
     }
 
     /**
@@ -264,29 +227,31 @@ public abstract class SQLDB extends Database {
         if (uuid == null) {
             return false;
         }
+
         try {
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
-            checkConnection();
+            try {
+                setupDatabase();
+            } catch (Exception e) {
+                Log.toLog(this.getClass().getName(), e);
+                return false;
+            }
 
-            boolean success = true;
             for (Table t : getAllTablesInRemoveOrder()) {
-                if (!success) {
+                if (!(t instanceof UserIDTable)) {
                     continue;
                 }
-                if (t instanceof UserIDTable) {
-                    UserIDTable table = (UserIDTable) t;
-                    success = table.removeUser(uuid);
+
+                UserIDTable table = (UserIDTable) t;
+                if (!table.removeUser(uuid)) {
+                    throw new IllegalStateException("Removal Failed");
                 }
             }
-            if (success) {
-                commit();
-                return true;
-            }
-            throw new IllegalStateException("Removal Failed");
+
+            return true;
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
-            rollback(); // TODO Test case
             return false;
         } finally {
             Benchmark.stop("Database", "Remove Account");
@@ -301,7 +266,7 @@ public abstract class SQLDB extends Database {
     public void clean() {
         Log.info("Cleaning the database.");
         try {
-            checkConnection();
+            setupDatabase();
             tpsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {
@@ -314,26 +279,20 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean removeAllData() {
-        boolean success = true;
         setStatus("Clearing all data");
         try {
             for (Table table : getAllTablesInRemoveOrder()) {
                 if (!table.removeAllData()) {
-                    success = false;
-                    break;
+                    return false;
                 }
             }
-            if (success) {
-                commit();
-            } else {
-                rollback(); // TODO Tests for this case
-            }
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+
+            return true;
+        } finally {
+            setAvailable();
         }
-        setAvailable();
-        return success;
     }
+
 
     @Override
     public List<UserData> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
@@ -344,13 +303,6 @@ public abstract class SQLDB extends Database {
         return new ArrayList<>();
     }
 
-    /**
-     * @return
-     */
-    public Connection getConnection() {
-        return connection;
-    }
-
     private void setStatus(String status) {
         Log.debug("Database", status);
     }
@@ -359,14 +311,23 @@ public abstract class SQLDB extends Database {
         Log.logDebug("Database");
     }
 
+    public Connection getConnection() throws SQLException {
+        return getDataSource().getConnection();
+    }
+
     /**
      * Commits changes to the .db file when using SQLite Database.
      * <p>
      * MySQL has Auto Commit enabled.
      */
-    public void commit() throws SQLException {
-        if (!usingMySQL) {
-            getConnection().commit();
+    @Override
+    public void commit(Connection connection) throws SQLException {
+        try {
+            if (!usingMySQL) {
+                connection.commit();
+            }
+        } finally {
+            endTransaction(connection);
         }
     }
 
@@ -375,9 +336,17 @@ public abstract class SQLDB extends Database {
      * <p>
      * MySQL has Auto Commit enabled.
      */
-    public void rollback() throws SQLException {
-        if (!usingMySQL) {
-            connection.rollback();
+    public void rollback(Connection connection) throws SQLException {
+        try {
+            if (!usingMySQL) {
+                connection.rollback();
+            }
+        } finally {
+            endTransaction(connection);
         }
+    }
+
+    public void endTransaction(Connection connection) throws SQLException {
+        connection.close();
     }
 }

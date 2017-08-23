@@ -111,6 +111,7 @@ public class SessionsTable extends UserIDTable {
             statement.setString(6, Plan.getServerUUID().toString());
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -139,6 +140,7 @@ public class SessionsTable extends UserIDTable {
             }
             return -1L;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -177,6 +179,7 @@ public class SessionsTable extends UserIDTable {
             }
             return sessionsByServer;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -241,6 +244,7 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -286,6 +290,7 @@ public class SessionsTable extends UserIDTable {
             }
             return playtimes;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -326,6 +331,7 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -393,6 +399,7 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

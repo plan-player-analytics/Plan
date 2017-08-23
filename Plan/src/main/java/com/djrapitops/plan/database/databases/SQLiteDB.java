@@ -1,11 +1,10 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import main.java.com.djrapitops.plan.Plan;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Collections;
 
 /**
  * @author Rsl1122
@@ -33,36 +32,28 @@ public class SQLiteDB extends SQLDB {
     }
 
     /**
-     * Creates a new connection to the database.
-     *
-     * @return the new Connection.
+     * Setups the {@link BasicDataSource}
      */
     @Override
-    public Connection getNewConnection() {
-        return getNewConnection(dbName);
+    public void setupDataSource() {
+        dataSource = new BasicDataSource();
+
+        String filePath = new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath();
+        dataSource.setUrl("jdbc:sqlite:" + filePath);
+
+        dataSource.setEnableAutoCommitOnReturn(false);
+        dataSource.setDefaultAutoCommit(false);
+
+        dataSource.setConnectionInitSqls(Collections.singletonList("PRAGMA JOURNAL_MODE=WAL"));
+        dataSource.setMaxTotal(-1);
     }
 
     /**
-     * @param dbName
-     * @return
-     */
-    public Connection getNewConnection(String dbName) {
-        try {
-            Class.forName("org.sqlite.JDBC");
-
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath());
-            connection.setAutoCommit(false);
-            return connection;
-        } catch (ClassNotFoundException | SQLException e) {
-            return null;
-        }
-    }
-
-    /**
-     * @return
+     * @return the name of the Database
      */
     @Override
     public String getName() {
         return "SQLite";
     }
+
 }
