@@ -70,6 +70,11 @@ public class KillsTable extends UserIDTable {
             Log.toLog(this.getClass().getName(), ex);
             return false;
         } finally {
+            try {
+                endTransaction(statement);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
             close(statement);
         }
     }
@@ -103,6 +108,7 @@ public class KillsTable extends UserIDTable {
             }
             statement.executeBatch();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -136,6 +142,7 @@ public class KillsTable extends UserIDTable {
                 session.getPlayerKills().add(new KillData(victim, weapon, date));
             }
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

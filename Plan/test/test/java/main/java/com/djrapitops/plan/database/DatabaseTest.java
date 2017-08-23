@@ -68,6 +68,8 @@ public class DatabaseTest {
         db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, t.getServerUUID(), "ServerName", ""));
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
+
+        db.init();
     }
 
     @After
@@ -105,22 +107,12 @@ public class DatabaseTest {
 
     @Test
     public void testMysqlGetConfigName() {
-        assertEquals("mysql", new MySQLDB(plan) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        }.getConfigName());
+        assertEquals("mysql", new MySQLDB(plan).getConfigName());
     }
 
     @Test
     public void testMysqlGetName() {
-        assertEquals("MySQL", new MySQLDB(plan) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        }.getName());
+        assertEquals("MySQL", new MySQLDB(plan).getName());
     }
 
     @Test
@@ -176,7 +168,6 @@ public class DatabaseTest {
     public void testTPSSaving() throws SQLException {
         db.init();
         TPSTable tpsTable = db.getTpsTable();
-        List<TPS> expected = new ArrayList<>();
         Random r = new Random();
 
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
@@ -186,6 +177,8 @@ public class DatabaseTest {
         final long usedMemory = 51231251254L;
         final int entityCount = 6123;
         final int chunksLoaded = 2134;
+
+        List<TPS> expected = new ArrayList<>();
 
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
         expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));

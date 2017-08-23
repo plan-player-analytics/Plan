@@ -32,7 +32,9 @@ public class ProcessingQueue extends Queue<Processor> {
      * @param processor processing object.
      */
     public void addToQueue(Processor processor) {
-        queue.offer(processor);
+        if (!queue.offer(processor)) {
+            Log.toLog("ProcessingQueue.addToQueue", new IllegalStateException("Processor was not added to Queue"));
+        }
     }
 }
 

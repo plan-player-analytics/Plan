@@ -76,6 +76,7 @@ public class NicknamesTable extends UserIDTable {
             }
             return nicknames;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -127,6 +128,7 @@ public class NicknamesTable extends UserIDTable {
             }
             return nicknames;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -152,6 +154,7 @@ public class NicknamesTable extends UserIDTable {
             statement.setString(3, displayName);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
