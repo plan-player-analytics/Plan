@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -48,25 +47,19 @@ public class WorldTimesTable extends UserIDTable {
 
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnWorldId, Sql.INT).notNull()
-                    .column(columnSessionID, Sql.LONG).notNull()
-                    .column(columnSurvival, Sql.LONG).notNull().defaultValue("0")
-                    .column(columnCreative, Sql.LONG).notNull().defaultValue("0")
-                    .column(columnAdventure, Sql.LONG).notNull().defaultValue("0")
-                    .column(columnSpectator, Sql.LONG).notNull().defaultValue("0")
-                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
-                    .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnWorldId, Sql.INT).notNull()
+                .column(columnSessionID, Sql.LONG).notNull()
+                .column(columnSurvival, Sql.LONG).notNull().defaultValue("0")
+                .column(columnCreative, Sql.LONG).notNull().defaultValue("0")
+                .column(columnAdventure, Sql.LONG).notNull().defaultValue("0")
+                .column(columnSpectator, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
+                .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
+                .toString()
+        );
     }
 
     public void saveWorldTimes(UUID uuid, long sessionID, WorldTimes worldTimes) throws SQLException {

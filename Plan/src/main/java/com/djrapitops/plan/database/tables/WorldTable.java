@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -42,18 +41,12 @@ public class WorldTable extends Table {
 
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
-                    .column(columnWorldName, Sql.varchar(100)).notNull()
-                    .primaryKey(usingMySQL, columnWorldId)
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
+                .column(columnWorldName, Sql.varchar(100)).notNull()
+                .primaryKey(usingMySQL, columnWorldId)
+                .toString()
+        );
     }
 
     /**

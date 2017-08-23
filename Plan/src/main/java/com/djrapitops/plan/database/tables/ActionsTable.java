@@ -4,7 +4,6 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -46,23 +45,16 @@ public class ActionsTable extends UserIDTable {
 
     @Override
     public boolean createTable() {
-
         ServerTable serverTable = db.getServerTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnServerID, Sql.INT).notNull()
-                    .column(columnDate, Sql.LONG).notNull()
-                    .column(columnActionID, Sql.INT).notNull()
-                    .column(columnAdditionalInfo, Sql.varchar(100))
-                    .foreignKey(columnUserID, usersTable.toString(), usersTable.getColumnID())
-                    .foreignKey(columnServerID, serverTable.toString(), serverTable.getColumnID())
-                    .toString());
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnServerID, Sql.INT).notNull()
+                .column(columnDate, Sql.LONG).notNull()
+                .column(columnActionID, Sql.INT).notNull()
+                .column(columnAdditionalInfo, Sql.varchar(100))
+                .foreignKey(columnUserID, usersTable.toString(), usersTable.getColumnID())
+                .foreignKey(columnServerID, serverTable.toString(), serverTable.getColumnID())
+                .toString());
     }
 
     public void insertAction(UUID uuid, Action action) throws SQLException {

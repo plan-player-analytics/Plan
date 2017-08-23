@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -37,21 +36,14 @@ public class NicknamesTable extends UserIDTable {
      */
     @Override
     public boolean createTable() {
-        UsersTable usersTable = db.getUsersTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnNick, Sql.varchar(75)).notNull()
-                    .column(columnServerID, Sql.INT).notNull()
-                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnNick, Sql.varchar(75)).notNull()
+                .column(columnServerID, Sql.INT).notNull()
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                .toString()
+        );
     }
 
     /**

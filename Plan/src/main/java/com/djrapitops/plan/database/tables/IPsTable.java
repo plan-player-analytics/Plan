@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -37,20 +36,13 @@ public class IPsTable extends UserIDTable {
      */
     @Override
     public boolean createTable() {
-        UsersTable usersTable = db.getUsersTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnIP, Sql.varchar(20)).notNull()
-                    .column(columnGeolocation, Sql.varchar(50)).notNull()
-                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnIP, Sql.varchar(20)).notNull()
+                .column(columnGeolocation, Sql.varchar(50)).notNull()
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .toString()
+        );
     }
 
     /**

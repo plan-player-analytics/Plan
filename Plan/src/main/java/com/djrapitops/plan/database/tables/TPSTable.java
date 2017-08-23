@@ -51,22 +51,16 @@ public class TPSTable extends Table {
 
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnDate, Sql.LONG).notNull()
-                    .column(columnTPS, Sql.DOUBLE).notNull()
-                    .column(columnPlayers, Sql.INT).notNull()
-                    .column(columnCPUUsage, Sql.DOUBLE).notNull()
-                    .column(columnRAMUsage, Sql.LONG).notNull()
-                    .column(columnEntities, Sql.INT).notNull()
-                    .column(columnChunksLoaded, Sql.INT).notNull()
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnDate, Sql.LONG).notNull()
+                .column(columnTPS, Sql.DOUBLE).notNull()
+                .column(columnPlayers, Sql.INT).notNull()
+                .column(columnCPUUsage, Sql.DOUBLE).notNull()
+                .column(columnRAMUsage, Sql.LONG).notNull()
+                .column(columnEntities, Sql.INT).notNull()
+                .column(columnChunksLoaded, Sql.INT).notNull()
+                .toString()
+        );
     }
 
     /**

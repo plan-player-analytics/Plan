@@ -34,18 +34,12 @@ public class SecurityTable extends Table {
 
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUser, Sql.varchar(100)).notNull().unique()
-                    .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()
-                    .column(columnPermLevel, Sql.INT).notNull()
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnUser, Sql.varchar(100)).notNull().unique()
+                .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()
+                .column(columnPermLevel, Sql.INT).notNull()
+                .toString()
+        );
     }
 
     public boolean removeUser(String user) {

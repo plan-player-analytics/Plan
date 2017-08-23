@@ -5,7 +5,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.server.ServerInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
@@ -49,20 +48,15 @@ public class ServerTable extends Table {
 
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnServerID, Sql.INT)
-                    .column(columnServerUUID, Sql.varchar(36)).notNull().unique()
-                    .column(columnServerName, Sql.varchar(100))
-                    .column(columnWebserverAddress, Sql.varchar(100))
-                    .column(columnInstalled, Sql.BOOL).notNull().defaultValue(false)
-                    .primaryKey(usingMySQL, columnServerID)
-                    .toString());
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnServerID, Sql.INT)
+                .column(columnServerUUID, Sql.varchar(36)).notNull().unique()
+                .column(columnServerName, Sql.varchar(100))
+                .column(columnWebserverAddress, Sql.varchar(100))
+                .column(columnInstalled, Sql.BOOL).notNull().defaultValue(false)
+                .primaryKey(usingMySQL, columnServerID)
+                .toString()
+        );
     }
 
     public void saveCurrentServerInfo(ServerInfo info) throws SQLException {

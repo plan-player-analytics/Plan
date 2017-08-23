@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 
@@ -37,21 +36,15 @@ public class UsersTable extends UserIDTable {
      */
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnID, Sql.INT)
-                    .column(columnUUID, Sql.varchar(36)).notNull().unique()
-                    .column(columnRegistered, Sql.LONG).notNull()
-                    .column(columnName, Sql.varchar(16)).notNull()
-                    .column(columnTimesKicked, Sql.INT).notNull().defaultValue("0")
-                    .primaryKey(usingMySQL, columnID)
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnID, Sql.INT)
+                .column(columnUUID, Sql.varchar(36)).notNull().unique()
+                .column(columnRegistered, Sql.LONG).notNull()
+                .column(columnName, Sql.varchar(16)).notNull()
+                .column(columnTimesKicked, Sql.INT).notNull().defaultValue("0")
+                .primaryKey(usingMySQL, columnID)
+                .toString()
+        );
     }
 
     /**

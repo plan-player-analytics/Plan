@@ -42,23 +42,17 @@ public class KillsTable extends UserIDTable {
      */
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnKillerUserID, Sql.INT).notNull()
-                    .column(columnVictimUserID, Sql.INT).notNull()
-                    .column(columnWeapon, Sql.varchar(30)).notNull()
-                    .column(columnDate, Sql.LONG).notNull()
-                    .column(columnSessionID, Sql.LONG).notNull()
-                    .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column(columnKillerUserID, Sql.INT).notNull()
+                .column(columnVictimUserID, Sql.INT).notNull()
+                .column(columnWeapon, Sql.varchar(30)).notNull()
+                .column(columnDate, Sql.LONG).notNull()
+                .column(columnSessionID, Sql.LONG).notNull()
+                .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
+                .toString()
+        );
     }
 
     @Override

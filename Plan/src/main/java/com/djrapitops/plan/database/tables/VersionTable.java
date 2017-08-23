@@ -27,16 +27,10 @@ public class VersionTable extends Table {
      */
     @Override
     public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column("version", Sql.INT).notNull()
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(tableName)
+                .column("version", Sql.INT).notNull()
+                .toString()
+        );
     }
 
     /**

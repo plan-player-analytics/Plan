@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -45,28 +44,19 @@ public class SessionsTable extends UserIDTable {
      */
     @Override
     public boolean createTable() {
-        try {
-            String serverTableName = serverTable.getTableName();
-            String serverTableID = serverTable.getColumnID();
-            String sql = TableSqlParser.createTable(this.tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnID, Sql.LONG)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnServerID, Sql.INT).notNull()
-                    .column(columnSessionStart, Sql.LONG).notNull()
-                    .column(columnSessionEnd, Sql.LONG).notNull()
-                    .column(columnMobKills, Sql.INT).notNull()
-                    .column(columnDeaths, Sql.INT).notNull()
-                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnServerID, serverTableName, serverTableID)
-                    .primaryKey(usingMySQL, columnID)
-                    .toString();
-            System.out.println(sql);
-            execute(sql);
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+        return createTable(TableSqlParser.createTable(this.tableName)
+                .primaryKeyIDColumn(usingMySQL, columnID, Sql.LONG)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnServerID, Sql.INT).notNull()
+                .column(columnSessionStart, Sql.LONG).notNull()
+                .column(columnSessionEnd, Sql.LONG).notNull()
+                .column(columnMobKills, Sql.INT).notNull()
+                .column(columnDeaths, Sql.INT).notNull()
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnServerID, serverTable.getTableName(), serverTable.getColumnID())
+                .primaryKey(usingMySQL, columnID)
+                .toString()
+        );
     }
 
     /**
