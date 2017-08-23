@@ -18,7 +18,7 @@ import java.util.Map;
 public class AnalyzeWebAPI implements WebAPI {
     @Override
     public Response onResponse(Plan plan, Map<String, String> variables) {
-        plan.getAnalysisCache().updateCache();
+        // TODO plan.getAnalysisCache().updateCache();
         return PageCacheHandler.loadPage("success", SuccessResponse::new);
     }
 }

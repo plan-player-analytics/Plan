@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
@@ -10,11 +9,9 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
-import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.ChatColor;
 
 /**
@@ -26,7 +23,6 @@ import org.bukkit.ChatColor;
 public class AnalyzeCommand extends SubCommand {
 
     private final Plan plugin;
-    private final AnalysisCacheHandler analysisCache;
 
     /**
      * Subcommand Constructor.
@@ -39,7 +35,6 @@ public class AnalyzeCommand extends SubCommand {
                 Permissions.ANALYZE.getPermission(),
                 Locale.get(Msg.CMD_USG_ANALYZE).parse());
         this.plugin = plugin;
-        analysisCache = plugin.getAnalysisCache();
     }
 
     @Override
@@ -53,10 +48,11 @@ public class AnalyzeCommand extends SubCommand {
             return true;
         }
 
-        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Locale.get(Msg.CMD_INFO_ANALYSIS_TEMP_DISABLE).toString(), sender)
-                && !analysisCache.isCached()) {
-            return true;
-        }
+        // TODO Check if analysis is enabled.
+//        if (!Check.isTrue(analysisCache.isAnalysisEnabled(), Locale.get(Msg.CMD_INFO_ANALYSIS_TEMP_DISABLE).toString(), sender)
+//                && !analysisCache.isCached()) {
+//            return true;
+//        }
 
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
         if (plugin.getUiServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
@@ -81,15 +77,16 @@ public class AnalyzeCommand extends SubCommand {
     }
 
     private void updateCache(ISender sender) {
-        if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
-            int bootAnID = plugin.getBootAnalysisTaskID();
-            if (bootAnID != -1) {
-                plugin.getServer().getScheduler().cancelTask(bootAnID);
-            }
-            analysisCache.addNotification(sender);
-            analysisCache.updateCache();
-        } else {
-            analysisCache.sendAnalysisMessage(sender);
-        }
+        // TODO
+//        if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
+//            int bootAnID = plugin.getBootAnalysisTaskID();
+//            if (bootAnID != -1) {
+//                plugin.getServer().getScheduler().cancelTask(bootAnID);
+//            }
+//            analysisCache.addNotification(sender);
+//            analysisCache.updateCache();
+//        } else {
+//            analysisCache.sendAnalysisMessage(sender);
+//        }
     }
 }

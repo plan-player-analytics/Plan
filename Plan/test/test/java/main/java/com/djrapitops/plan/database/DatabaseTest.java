@@ -150,7 +150,7 @@ public class DatabaseTest {
     @Test // TODO Rewrite
     public void testRemoveAll() throws SQLException {
         db.init();
-//        UserData data = MockUtils.mockUser();
+//        UserInfo data = MockUtils.mockUser();
 //        db.saveUserData(data);
         HashMap<String, Integer> c = new HashMap<>();
         c.put("/plan", 1);
@@ -196,7 +196,7 @@ public class DatabaseTest {
     @Test // TODO Rewrite
     public void testRemove() throws SQLException {
         db.init();
-//        UserData data = MockUtils.mockUser();
+//        UserInfo data = MockUtils.mockUser();
 //        db.saveUserData(data);
 //        assertTrue(db.removeAccount(data.getUuid().toString()));
 //        assertTrue("Contains the user", !db.wasSeenBefore(data.getUuid()));

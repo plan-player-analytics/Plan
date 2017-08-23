@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.tables.*;
 
 import java.sql.SQLException;
@@ -26,6 +26,11 @@ public abstract class Database {
      * Table representing plan_users in the database.
      */
     protected UsersTable usersTable;
+
+    /**
+     * Table representing plan_user_info in the database.
+     */
+    protected UserInfoTable userInfoTable;
 
     /**
      * Table representing plan_actions in the database.
@@ -116,7 +121,7 @@ public abstract class Database {
     }
 
     /**
-     * Used to get all UserData for multiple UUIDs.
+     * Used to get all UserInfo for multiple UUIDs.
      * <p>
      * Should only be called from async thread.
      *
@@ -124,7 +129,7 @@ public abstract class Database {
      * @return Data for matching UUIDs.
      * @throws SQLException If database error occurs.
      */
-    public abstract List<UserData> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException;
+    public abstract List<UserInfo> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException;
 
     /**
      * Check if the user is saved in the database.

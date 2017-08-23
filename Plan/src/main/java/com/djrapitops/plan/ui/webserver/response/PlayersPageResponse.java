@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.ui.webserver.response;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserDataNameComparator;
@@ -16,10 +16,10 @@ public class PlayersPageResponse extends Response {
 
     public PlayersPageResponse(Plan plugin) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(buildContent(plugin.getInspectCache().getCachedUserData()));
+//        super.setContent(buildContent(plugin.getInspectCache().getCachedUserData()));
     }
 
-    public static String buildContent(List<UserData> cached) {
+    public static String buildContent(List<UserInfo> cached) {
         StringBuilder html = new StringBuilder("<!DOCTYPE html><html><body><h1>Cached Players</h1><p>");
         int size = cached.size();
 
@@ -29,8 +29,8 @@ public class PlayersPageResponse extends Response {
         cached.sort(new UserDataNameComparator());
 
         int i = 1;
-        for (UserData userData : cached) {
-            String name = userData.getName();
+        for (UserInfo userInfo : cached) {
+            String name = userInfo.getName();
             String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
 
             html.append("<td>").append(link).append("</td>");

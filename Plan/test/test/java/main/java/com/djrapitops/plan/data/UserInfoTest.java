@@ -1,7 +1,7 @@
 package test.java.main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,16 +14,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
-public class UserDataTest {
+public class UserInfoTest {
     // TODO Rewrite
 
-    private UserData test;
+    private UserInfo test;
     private Plan plan;
 
     /**
      *
      */
-    public UserDataTest() {
+    public UserInfoTest() {
     }
 
     /**

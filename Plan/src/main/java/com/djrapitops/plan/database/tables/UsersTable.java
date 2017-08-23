@@ -224,4 +224,8 @@ public class UsersTable extends UserIDTable {
             close(statement);
         }
     }
+
+    public String getColumnName() {
+        return columnName;
+    }
 }

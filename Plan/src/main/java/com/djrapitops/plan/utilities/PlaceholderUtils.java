@@ -3,12 +3,12 @@ package main.java.com.djrapitops.plan.utilities;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.data.UserInfo;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -47,10 +47,10 @@ public class PlaceholderUtils {
     /**
      * Gets the Map that is used to replace placeholders.
      *
-     * @param data UserData used to replace the placeholders with
+     * @param data UserInfo used to replace the placeholders with
      * @return HashMap that contains string for each placeholder.
      */
-    public static Map<String, Serializable> getInspectReplaceRules(UserData data) {
+    public static Map<String, Serializable> getInspectReplaceRules(UserInfo data) {
 
         HashMap<String, Serializable> replaceMap = new HashMap<>();
         UUID uuid = data.getUuid();
@@ -64,18 +64,18 @@ public class PlaceholderUtils {
         replaceMap.put("geolocations", "TODO"); //TODO Geolocation list creator &#x2022; name<br>
 
         replaceMap.put("registered", FormatUtils.formatTimeStampYear(data.getRegistered()));
-        replaceMap.put("lastSeen", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
+//        replaceMap.put("lastSeen", FormatUtils.formatTimeStampYear(data.getLastPlayed()));
 
-        replaceMap.put("sessionCount", data.getSessions().size());
+//        replaceMap.put("sessionCount", data.getSessions().size());
         //TODO replaceMap.put("playtimeTotal", FormatUtils.formatTimeAmount(data.getPlayTime()));
 
-        replaceMap.put("kickCount", data.getTimesKicked());
+//        replaceMap.put("kickCount", data.getTimesKicked());
 //        replaceMap.put("playerKillCount", data.getPlayerKills().size()); //TODO
 //        replaceMap.put("mobKillCount", data.getMobKills());
 //        replaceMap.put("deathCount", data.getDeaths());
 
-        Set<Session> sessions = new HashSet<>(data.getSessions());
-        replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
+//        Set<Session> sessions = new HashSet<>(data.getSessions());
+//        replaceMap.put("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessions));
         //TODO    WorldTimes worldTimes = data.getWorldTimes();
 //    TODO    replaceMap.put("worldSeries", WorldPieCreator.createSeriesData(worldTimes.getTimes()));
 //        replaceMap.put("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));

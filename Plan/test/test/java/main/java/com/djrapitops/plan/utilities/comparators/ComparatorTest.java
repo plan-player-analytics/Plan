@@ -2,7 +2,7 @@ package test.java.main.java.com.djrapitops.plan.utilities.comparators;
 
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.locale.Message;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -52,23 +52,23 @@ public class ComparatorTest {
 
     @Test
     public void testUserDataLastPlayedComparator() {
-        List<UserData> test = RandomData.randomUserData();
-        List<Long> longValues = test.stream().map(UserData::getLastPlayed).collect(Collectors.toList());
+        List<UserInfo> test = RandomData.randomUserData();
+        List<Long> longValues = test.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
         longValues.sort(Long::compare);
         Collections.reverse(longValues);
         test.sort(new UserDataLastPlayedComparator());
-        List<Long> afterSort = test.stream().map(UserData::getLastPlayed).collect(Collectors.toList());
+        List<Long> afterSort = test.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
         assertEquals(longValues, afterSort);
     }
 
 
     @Test
     public void testUserDataNameComparator() {
-        List<UserData> test = RandomData.randomUserData();
-        List<String> stringValues = test.stream().map(UserData::getName).collect(Collectors.toList());
+        List<UserInfo> test = RandomData.randomUserData();
+        List<String> stringValues = test.stream().map(UserInfo::getName).collect(Collectors.toList());
         Collections.sort(stringValues);
         test.sort(new UserDataNameComparator());
-        List<String> afterSort = test.stream().map(UserData::getName).collect(Collectors.toList());
+        List<String> afterSort = test.stream().map(UserInfo::getName).collect(Collectors.toList());
         assertEquals(stringValues, afterSort);
     }
 
