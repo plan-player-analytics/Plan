@@ -56,6 +56,7 @@ public class UsersTable extends UserIDTable {
         try {
             Set<UUID> uuids = new HashSet<>();
             statement = prepareStatement(Select.from(tableName, columnUUID).toString());
+            statement.setFetchSize(2000);
             set = statement.executeQuery();
             while (set.next()) {
                 UUID uuid = UUID.fromString(set.getString(columnUUID));
