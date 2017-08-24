@@ -87,8 +87,8 @@ public class TPSTable extends Table {
             }
             return data;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
             Benchmark.stop("Database", "Get TPS");
         }
     }
@@ -135,6 +135,7 @@ public class TPSTable extends Table {
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

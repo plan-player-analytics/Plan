@@ -1,14 +1,8 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * @author Rsl1122
@@ -25,30 +19,32 @@ public class MySQLDB extends SQLDB {
     }
 
     /**
-     * Creates a new connection to the database.
-     *
-     * @return the new Connection.
+     * Setups the {@link BasicDataSource}
      */
     @Override
-    public Connection getNewConnection() {
+    public void setupDataSource() {
         FileConfiguration config = plugin.getConfig();
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
+        dataSource = new BasicDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 
-            String url = "jdbc:mysql://" + config.getString("mysql.host") + ":" + config.getString("mysql.port") + "/"
-                    + config.getString("mysql.database")
-                    + "?rewriteBatchedStatements=true";
+        String host = config.getString("Database.MySQL.Host");
+        String port = config.getString("Database.MySQL.Port");
+        String database = config.getString("Database.MySQL.Database");
 
-            return DriverManager.getConnection(url, config.getString("mysql.user"), config.getString("mysql.password"));
-        } catch (ClassNotFoundException | SQLException e) {
-            Log.error(Locale.get(Msg.ENABLE_FAIL_DB).parse(getConfigName(), e.getMessage()));
-            return null;
-        }
+
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true");
+
+        String username = config.getString("Database.MySQL.User");
+        String password = config.getString("Database.MySQL.Password");
+
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setMaxTotal(-1);
     }
 
     /**
-     * @return
+     * @return the name of the Database
      */
     @Override
     public String getName() {

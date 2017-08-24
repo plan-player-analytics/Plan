@@ -3,7 +3,6 @@ package test.java.main.java.com.djrapitops.plan.database;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
@@ -34,21 +33,18 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseCommitTest {
 
     private Plan plan;
-    private Database db;
+    private SQLiteDB db;
     private int rows;
 
     @Before
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        };
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
+
+        db.init();
     }
 
     /**
@@ -72,9 +68,10 @@ public class DatabaseCommitTest {
     @Test
     public void testNoExceptionWhenCommitEmpty() throws SQLException {
         db.init();
-        db.commit();
-        db.commit();
-        db.commit();
+
+        db.commit(db.getConnection());
+        db.commit(db.getConnection());
+        db.commit(db.getConnection());
     }
 
     @Ignore("//TODO")

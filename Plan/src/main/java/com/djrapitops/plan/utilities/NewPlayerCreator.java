@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.data.UserInfo;
 
 /**
  * @author Rsl1122
+ * @deprecated Will be removed once it's sure that it's unnecessary
  */
 @Deprecated // TODO Remove once sure that this is unnecessary.
 public class NewPlayerCreator {
