@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -63,9 +64,13 @@ public class WorldTimesTable extends UserIDTable {
     }
 
     public void saveWorldTimes(UUID uuid, long sessionID, WorldTimes worldTimes) throws SQLException {
-        if (Verify.isEmpty(worldTimes.getWorldTimes())) {
+        Map<String, GMTimes> worldTimesMap = worldTimes.getWorldTimes();
+        if (Verify.isEmpty(worldTimesMap)) {
             return;
         }
+
+        Set<String> worldNames = worldTimesMap.keySet();
+        db.getWorldTable().saveWorlds(worldNames);
 
         PreparedStatement statement = null;
         try {
@@ -82,7 +87,7 @@ public class WorldTimesTable extends UserIDTable {
                     worldTable.statementSelectID + ", " +
                     "?, ?, ?, ?, ?)");
 
-            for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+            for (Map.Entry<String, GMTimes> entry : worldTimesMap.entrySet()) {
                 String worldName = entry.getKey();
                 GMTimes gmTimes = entry.getValue();
                 statement.setString(1, uuid.toString());

@@ -352,7 +352,6 @@ public class DatabaseTest {
 
     @Test
     public void testSessionSaving() throws SQLException {
-        saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
 
