@@ -7,15 +7,19 @@ package main.java.com.djrapitops.plan.systems.processing.player;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.tables.NicknamesTable;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.processing.NickChangeActionProcessor;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Processor for updating name in the database if the player has changed it.
  *
  * @author Rsl1122
+ * @since 4.0.0
  */
 public class NameProcessor extends PlayerProcessor {
 
@@ -36,20 +40,38 @@ public class NameProcessor extends PlayerProcessor {
         String cachedName = dataCache.getName(uuid);
         String cachedDisplayName = dataCache.getDisplayName(uuid);
 
-        if (playerName.equals(cachedName) && displayName.equals(cachedDisplayName)) {
+        boolean sameAsCached = displayName.equals(cachedDisplayName);
+        if (playerName.equals(cachedName) && sameAsCached) {
             return;
         }
 
-
-
         Database db = plugin.getDB();
+        NicknamesTable nicknamesTable = db.getNicknamesTable();
+        cueNameChangeActionProcessor(uuid, plugin, sameAsCached, nicknamesTable);
+
         try {
             db.getUsersTable().updateName(uuid, playerName);
-            db.getNicknamesTable().saveUserName(uuid, displayName);
+
+            nicknamesTable.saveUserName(uuid, displayName);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
 
         dataCache.updateNames(uuid, playerName, displayName);
+    }
+
+    private void cueNameChangeActionProcessor(UUID uuid, Plan plugin, boolean sameAsCached, NicknamesTable nicknamesTable) {
+        try {
+            if (!sameAsCached) {
+                List<String> nicknames = nicknamesTable.getNicknames(uuid, Plan.getServerUUID());
+                if (!nicknames.isEmpty()) {
+                    plugin.addToProcessQueue(new NickChangeActionProcessor(uuid, displayName, nicknames.get(nicknames.size() - 1)));
+                } else {
+                    plugin.addToProcessQueue(new NickChangeActionProcessor(uuid, displayName, playerName));
+                }
+            }
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 }

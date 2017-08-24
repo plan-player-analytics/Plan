@@ -8,7 +8,6 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
@@ -70,7 +69,7 @@ public class API {
     }
 
     /**
-     * Used to get the link to InspectPage of a player.
+     * Used to get a relative link to InspectPage of a player.
      * <p>
      * This method is useful if you have a table and want to link to the inspect
      * page.
@@ -79,34 +78,46 @@ public class API {
      * {@code <a href="Link">PlayerName</a>}
      *
      * @param name Name of the player
-     * @return ip:port/security/player/PlayerName
+     * @return ./player/PlayerName
      */
     public String getPlayerInspectPageLink(String name) {
-        return HtmlUtils.getInspectUrlWithProtocol(name);
+        return plugin.getInfoManager().getLinkTo("/player/" + name).relative().toString();
     }
 
     /**
-     * Check if the UserInfo is cached to the InspectCache.
+     * Check if Players's Inspect page is cached to pagecache.
      *
      * @param uuid UUID of the player.
      * @return true/false
+     * @deprecated use {@code isPlayerHtmlCached}
      */
     @Deprecated
     public boolean isPlayersDataInspectCached(UUID uuid) {
+        return isPlayerHtmlCached(uuid);
+    }
+
+    public boolean isPlayerHtmlCached(UUID uuid) {
         return plugin.getInfoManager().isCached(uuid);
     }
 
     /**
-     * Cache the UserInfo to InspectCache.
-     * <p>
-     * Uses cache if data is cached or database if not. Call from an Asynchronous
-     * thread.
+     * Cache Players's Inspect page to the PageCache of the WebServer.
      *
      * @param uuid UUID of the player.
+     * @deprecated use {@code cachePlayerHtml}
      */
     @Deprecated
     public void cacheUserDataToInspectCache(UUID uuid) {
-        // TODO Run Inspect parse
+        cachePlayerHtml(uuid);
+    }
+
+    /**
+     * Cache Players's Inspect page to the PageCache of the WebServer.
+     *
+     * @param uuid UUID of the player.
+     */
+    public void cachePlayerHtml(UUID uuid) {
+        plugin.getInfoManager().cachePlayer(uuid);
     }
 
     /**
