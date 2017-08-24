@@ -40,7 +40,7 @@ public class MySQLDB extends SQLDB {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
-        dataSource.setMaxTotal(-1);
+        dataSource.setMaxTotal(8);
     }
 
     /**
