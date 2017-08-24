@@ -49,6 +49,7 @@ class ProcessConsumer extends Consumer<Processor> {
             return;
         }
         try {
+            Log.debug("Processed " + process.getClass().getSimpleName() + ".");
             process.process();
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
             Log.toLog(this.getTaskName() + ":" + process.getClass().getSimpleName(), e);
