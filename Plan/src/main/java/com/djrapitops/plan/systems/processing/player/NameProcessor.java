@@ -7,12 +7,13 @@ package main.java.com.djrapitops.plan.systems.processing.player;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 
 import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Processor for updating name in the database if the player has changed it.
  *
  * @author Rsl1122
  */
@@ -30,12 +31,23 @@ public class NameProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        Database db = Plan.getInstance().getDB();
+        Plan plugin = Plan.getInstance();
+        DataCache dataCache = plugin.getDataCache();
+        String cachedName = dataCache.getName(uuid);
+        String cachedDisplayName = dataCache.getDisplayName(uuid);
+
+        if (playerName.equals(cachedName) && displayName.equals(cachedDisplayName)) {
+            return;
+        }
+
+        Database db = plugin.getDB();
         try {
             db.getUsersTable().updateName(uuid, playerName);
             db.getNicknamesTable().saveUserName(uuid, displayName);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+
+        dataCache.updateNames(uuid, playerName, displayName);
     }
 }

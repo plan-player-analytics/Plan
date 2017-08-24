@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.Actions;
-import main.java.com.djrapitops.plan.systems.listeners.PlanPlayerListener;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -25,11 +24,8 @@ public class RegisterProcessor extends PlayerProcessor {
     private final int playersOnline;
     private final String name;
 
-    private final PlanPlayerListener listener;
-
-    public RegisterProcessor(PlanPlayerListener listener, UUID uuid, long time, String name, int playersOnline) {
+    public RegisterProcessor(UUID uuid, long time, String name, int playersOnline) {
         super(uuid);
-        this.listener = listener;
         this.time = time;
         this.playersOnline = playersOnline;
         this.name = name;
@@ -38,11 +34,12 @@ public class RegisterProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        Database db = Plan.getInstance().getDB();
+        Plan plugin = Plan.getInstance();
+        Database db = plugin.getDB();
         if (db.wasSeenBefore(uuid)) {
             return;
         }
-        listener.addFirstLeaveCheck(uuid);
+        plugin.getDataCache().addFirstLeaveCheck(uuid);
         try {
             db.getUsersTable().registerUser(uuid, time, name);
             db.getActionsTable().insertAction(uuid, new Action(time, Actions.REGISTERED, "Online: " + playersOnline + " Players"));

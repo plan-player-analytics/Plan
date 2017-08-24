@@ -3,6 +3,8 @@ package main.java.com.djrapitops.plan.systems.cache;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 
+import java.util.*;
+
 /**
  * This Class contains the Cache.
  * <p>
@@ -18,6 +20,11 @@ public class DataCache extends SessionCache {
 
     private final Database db;
 
+    private final Map<UUID, String> playerNames;
+    private final Map<UUID, String> displayNames;
+
+    private final Set<UUID> playersWithFirstSession;
+
     /**
      * Class Constructor.
      * <p>
@@ -27,8 +34,36 @@ public class DataCache extends SessionCache {
      * @param plugin Current instance of Plan
      */
     public DataCache(Plan plugin) {
-        super(plugin); // Initializes Session & Location cache.
+        super(plugin);
         db = plugin.getDB();
+
+        playerNames = new HashMap<>();
+        displayNames = new HashMap<>();
+        playersWithFirstSession = new HashSet<>();
     }
 
+    public void updateNames(UUID uuid, String playerName, String displayName) {
+        playerNames.put(uuid, playerName);
+        displayNames.put(uuid, displayName);
+    }
+
+    public String getName(UUID uuid) {
+        return playerNames.get(uuid);
+    }
+
+    public String getDisplayName(UUID uuid) {
+        return displayNames.get(uuid);
+    }
+
+    public void addFirstLeaveCheck(UUID uuid) {
+        playersWithFirstSession.add(uuid);
+    }
+
+    public boolean isFirstSession(UUID uuid) {
+        return playersWithFirstSession.contains(uuid);
+    }
+
+    public void clearFromFirstLeaveCheck(UUID uuid) {
+        playersWithFirstSession.remove(uuid);
+    }
 }
