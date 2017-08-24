@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
+import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 
 import java.util.UUID;
 
@@ -24,19 +25,20 @@ public class InformationManager {
     private final DataCache dataCache;
     private final SessionCache sessionCache;
 
-    private String bungeeWebAddress;
+    private boolean usingBungeeWebServer;
+    private String webServerAddress;
 
     public InformationManager(Plan plugin) {
         this.plugin = plugin;
         db = plugin.getDB();
 
         plugin.getServerInfoManager().getBungeeConnectionAddress()
-                .ifPresent(address -> bungeeWebAddress = address);
+                .ifPresent(address -> webServerAddress = address);
 
         dataCache = new DataCache(plugin);
         sessionCache = new SessionCache(plugin);
 
-        if (bungeeWebAddress != null) {
+        if (webServerAddress != null) {
             attemptBungeeConnection();
         }
     }
@@ -50,4 +52,23 @@ public class InformationManager {
         // TODO Player page plugin tab request
     }
 
+    public UrlParser getLinkTo(String target) {
+        if (webServerAddress != null) {
+            return new UrlParser(webServerAddress).target(target);
+        } else {
+            return new UrlParser("");
+        }
+    }
+
+    public void refreshAnalysis() {
+        plugin.addToProcessQueue(); // TODO Analysis, PluginData
+    }
+
+    public DataCache getDataCache() {
+        return dataCache;
+    }
+
+    public SessionCache getSessionCache() {
+        return sessionCache;
+    }
 }
