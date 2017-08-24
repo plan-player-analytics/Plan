@@ -1,6 +1,6 @@
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.systems.cache.GeolocationCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class GeolocationCacheTest {
 
     @Before
     public void setUp() {
-        GeolocationCacheHandler.clearCache();
+        GeolocationCache.clearCache();
         ipsToCountries.put("8.8.8.8", "United States");
         ipsToCountries.put("8.8.4.4", "United States");
         ipsToCountries.put("4.4.2.2", "United States");
@@ -45,7 +45,7 @@ public class GeolocationCacheTest {
             String ip = entry.getKey();
             String expCountry = entry.getValue();
 
-            String country = GeolocationCacheHandler.getCountry(ip);
+            String country = GeolocationCache.getCountry(ip);
 
             assertEquals(country, expCountry);
         }
@@ -59,11 +59,11 @@ public class GeolocationCacheTest {
             String ip = entry.getKey();
             String expIp = entry.getValue();
 
-            assertFalse(GeolocationCacheHandler.isCached(ip));
-            String countrySecondCall = GeolocationCacheHandler.getCountry(ip);
-            assertTrue(GeolocationCacheHandler.isCached(ip));
+            assertFalse(GeolocationCache.isCached(ip));
+            String countrySecondCall = GeolocationCache.getCountry(ip);
+            assertTrue(GeolocationCache.isCached(ip));
 
-            String countryThirdCall = GeolocationCacheHandler.getCountry(ip);
+            String countryThirdCall = GeolocationCache.getCountry(ip);
 
             assertEquals(countrySecondCall, countryThirdCall);
             assertEquals(countryThirdCall, expIp);

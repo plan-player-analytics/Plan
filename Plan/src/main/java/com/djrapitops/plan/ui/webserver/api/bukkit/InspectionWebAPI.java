@@ -22,24 +22,24 @@ public class InspectionWebAPI implements WebAPI {
 //
 //        if (playerString == null) {
 //            String error = "Player String not included";
-//            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+//            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
 //        }
 //
 //        UUID uuid = UUIDUtility.getUUIDOf(playerString);
 //
 //        if (uuid == null) {
 //            String error = "UUID not found";
-//            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+//            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
 //        }
 //
 //        UserInfo userInfo = plan.getInspectCache().getFromCache(uuid);
 //
 //        if (userInfo == null) {
 //            String error = "User not cached";
-//            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+//            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
 //        }
 //
-//        return PageCacheHandler.loadPage("inspectionJson: " + uuid, () -> new JsonResponse(plan.getInspectCache().getFromCache(uuid)));
+//        return PageCache.loadPage("inspectionJson: " + uuid, () -> new JsonResponse(plan.getInspectCache().getFromCache(uuid)));
         return new BadRequestResponse("Not implemented");
     }
 }

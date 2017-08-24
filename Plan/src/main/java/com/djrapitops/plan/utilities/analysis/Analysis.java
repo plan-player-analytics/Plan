@@ -15,7 +15,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
@@ -150,10 +150,10 @@ public class Analysis {
 
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
 
-            PageCacheHandler.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
-            PageCacheHandler.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
-            PageCacheHandler.cachePage("analysisJson", () -> new JsonResponse(analysisData));
-            PageCacheHandler.cachePage("players", () -> new PlayersPageResponse(plugin));
+            PageCache.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
+            PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
+            PageCache.cachePage("analysisJson", () -> new JsonResponse(analysisData));
+            PageCache.cachePage("players", () -> new PlayersPageResponse(plugin));
 
             // TODO Export
 //            ExportUtility.export(analysisData, rawData);

@@ -6,7 +6,7 @@ package main.java.com.djrapitops.plan.systems.processing.player;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.GeolocationCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class IPUpdateProcessor extends PlayerProcessor {
     @Override
     public void process() {
         UUID uuid = getUUID();
-        String country = GeolocationCacheHandler.getCountry(ip);
+        String country = GeolocationCache.getCountry(ip);
         try {
             Plan.getInstance().getDB().getIpsTable().saveIP(uuid, ip, country);
         } catch (SQLException e) {

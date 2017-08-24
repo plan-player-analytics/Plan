@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
@@ -295,7 +295,7 @@ public class WebServer {
 
         if (args.length < 3) {
             String error = "API Method not specified";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         String method = args[2];
@@ -304,7 +304,7 @@ public class WebServer {
         if (response == null) {
             String error = "Error at reading the POST request." +
                     "Note that the Encoding must be ISO-8859-1.";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         Map<String, String> variables = readVariables(response);
@@ -314,7 +314,7 @@ public class WebServer {
 
         if (!checkKey(plan, key)) {
             String error = "Server Key not given or invalid";
-            return PageCacheHandler.loadPage(error, () -> {
+            return PageCache.loadPage(error, () -> {
                 ForbiddenResponse forbidden = new ForbiddenResponse();
                 forbidden.setContent(error);
                 return forbidden;
@@ -325,7 +325,7 @@ public class WebServer {
 
         if (api == null) {
             String error = "API Method not found";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         try {
@@ -359,12 +359,12 @@ public class WebServer {
 
     private Response getResponse(String target, WebUser user) {
         if ("/favicon.ico".equals(target)) {
-            return PageCacheHandler.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+            return PageCache.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
 
         if (usingHttps) {
             if (user == null) {
-                return PageCacheHandler.loadPage("promptAuthorization", PromptAuthorizationResponse::new);
+                return PageCache.loadPage("promptAuthorization", PromptAuthorizationResponse::new);
             }
 
             int permLevel = user.getPermLevel(); // Lower number has higher clearance.
@@ -396,7 +396,7 @@ public class WebServer {
         String page = args[1];
         switch (page) {
             case "players":
-                return PageCacheHandler.loadPage("players", () -> new PlayersPageResponse(plugin));
+                return PageCache.loadPage("players", () -> new PlayersPageResponse(plugin));
             case "player":
                 return playerResponse(args);
             case "server":
@@ -415,7 +415,7 @@ public class WebServer {
     }
 
     private Response forbiddenResponse(int permLevel, int required) {
-        return PageCacheHandler.loadPage("forbidden", () -> {
+        return PageCache.loadPage("forbidden", () -> {
             ForbiddenResponse response403 = new ForbiddenResponse();
             String content = "<h1>403 Forbidden - Access Denied</h1>"
                     + "<p>Unauthorized User.<br>"
@@ -436,7 +436,7 @@ public class WebServer {
             case 0:
                 return serverResponse();
             case 1:
-                return PageCacheHandler.loadPage("players", () -> new PlayersPageResponse(plugin));
+                return PageCache.loadPage("players", () -> new PlayersPageResponse(plugin));
             case 2:
                 return playerResponse(new String[]{"", "", user.getName()});
             default:
@@ -447,15 +447,15 @@ public class WebServer {
     private Response serverResponse() {
         if (!dataReqHandler.checkIfAnalysisIsCached()) {
             String error = "Analysis Data was not cached.<br>Use /plan analyze to cache the Data.";
-            PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
+            PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCacheHandler.loadPage("analysisPage", () -> new AnalysisPageResponse(dataReqHandler));
+        return PageCache.loadPage("analysisPage", () -> new AnalysisPageResponse(dataReqHandler));
     }
 
     private Response playerResponse(String[] args) {
         if (args.length < 3) {
-            return PageCacheHandler.loadPage("notFound", NotFoundResponse::new);
+            return PageCache.loadPage("notFound", NotFoundResponse::new);
         }
 
         String playerName = args[2].trim();
@@ -463,15 +463,15 @@ public class WebServer {
 
         if (uuid == null) {
             String error = "Player has no UUID";
-            return PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
+            return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
         if (!dataReqHandler.checkIfCached(uuid)) {
             String error = "Player's data was not cached.<br>Use /plan inspect " + playerName + " to cache the Data.";
-            return PageCacheHandler.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
+            return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCacheHandler.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(dataReqHandler, uuid));
+        return PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(dataReqHandler, uuid));
     }
 
     private Response notFoundResponse() {
@@ -480,7 +480,7 @@ public class WebServer {
                 + "<p>" + getProtocol() + HtmlUtils.getInspectUrl("<player>") + " or<br>"
                 + getProtocol() + HtmlUtils.getServerAnalysisUrl() + "</p>";
 
-        return PageCacheHandler.loadPage("notFound: " + error, () -> {
+        return PageCache.loadPage("notFound: " + error, () -> {
             Response response404 = new NotFoundResponse();
             response404.setContent(error);
             return response404;

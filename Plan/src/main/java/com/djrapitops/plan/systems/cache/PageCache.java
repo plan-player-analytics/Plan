@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  * @author Fuzzlemann
  * @since 3.6.0
  */
-public class PageCacheHandler {
+public class PageCache {
 
     private static final Cache<String, Response> pageCache = CacheBuilder.newBuilder()
             .build();
@@ -27,7 +27,7 @@ public class PageCacheHandler {
     /**
      * Constructor used to hide the public constructor
      */
-    private PageCacheHandler() {
+    private PageCache() {
         throw new IllegalStateException("Utility class");
     }
 

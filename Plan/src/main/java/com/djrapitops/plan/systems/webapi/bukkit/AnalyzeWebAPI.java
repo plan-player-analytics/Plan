@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
@@ -19,6 +19,6 @@ public class AnalyzeWebAPI implements WebAPI {
     @Override
     public Response onResponse(Plan plan, Map<String, String> variables) {
         // TODO plan.getAnalysisCache().updateCache();
-        return PageCacheHandler.loadPage("success", SuccessResponse::new);
+        return PageCache.loadPage("success", SuccessResponse::new);
     }
 }

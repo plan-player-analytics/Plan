@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
@@ -20,10 +20,10 @@ public class AnalyticsWebAPI implements WebAPI {
     public Response onResponse(Plan plan, Map<String, String> variables) {
         String identifier = "analysisJson";
 
-        if (!PageCacheHandler.isCached(identifier)) {
-            return PageCacheHandler.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));
+        if (!PageCache.isCached(identifier)) {
+            return PageCache.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));
         }
 
-        return PageCacheHandler.loadPage(identifier);
+        return PageCache.loadPage(identifier);
     }
 }

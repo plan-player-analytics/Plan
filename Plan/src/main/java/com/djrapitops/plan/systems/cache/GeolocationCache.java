@@ -19,7 +19,7 @@ import java.net.URL;
  * @author Fuzzlemann
  * @since 3.5.5
  */
-public class GeolocationCacheHandler {
+public class GeolocationCache {
 
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
             .build();
@@ -27,7 +27,7 @@ public class GeolocationCacheHandler {
     /**
      * Constructor used to hide the public constructor
      */
-    private GeolocationCacheHandler() {
+    private GeolocationCache() {
         throw new IllegalStateException("Utility class");
     }
 

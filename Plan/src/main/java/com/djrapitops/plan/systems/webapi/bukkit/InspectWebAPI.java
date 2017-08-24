@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
@@ -25,18 +25,18 @@ public class InspectWebAPI implements WebAPI {
 
         if (playerString == null) {
             String error = "Player String not included";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         UUID uuid = UUIDUtility.getUUIDOf(playerString);
 
         if (uuid == null) {
             String error = "UUID not found";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         // TODO plan.getInspectCache().cache(uuid);
 
-        return PageCacheHandler.loadPage("success", SuccessResponse::new);
+        return PageCache.loadPage("success", SuccessResponse::new);
     }
 }

@@ -4,6 +4,13 @@
  */
 package main.java.com.djrapitops.plan.systems.info;
 
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
+
+import java.util.UUID;
+
 /**
  * //TODO Class Javadoc Comment
  *
@@ -11,4 +18,36 @@ package main.java.com.djrapitops.plan.systems.info;
  */
 public class InformationManager {
     // TODO Class that manages ALL information for API, WebAPI requests, Command Caching etc.
+    private final Plan plugin;
+    private final Database db;
+
+    private final DataCache dataCache;
+    private final SessionCache sessionCache;
+
+    private String bungeeWebAddress;
+
+    public InformationManager(Plan plugin) {
+        this.plugin = plugin;
+        db = plugin.getDB();
+
+        plugin.getServerInfoManager().getBungeeConnectionAddress()
+                .ifPresent(address -> bungeeWebAddress = address);
+
+        dataCache = new DataCache(plugin);
+        sessionCache = new SessionCache(plugin);
+
+        if (bungeeWebAddress != null) {
+            attemptBungeeConnection();
+        }
+    }
+
+    public void attemptBungeeConnection() {
+        // TODO WebAPI bungee connection check
+    }
+
+    public void cachePlayer(UUID uuid) {
+        plugin.addToProcessQueue(); // TODO Player page information parser
+        // TODO Player page plugin tab request
+    }
+
 }

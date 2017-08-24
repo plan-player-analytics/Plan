@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
@@ -24,14 +24,14 @@ public class ConfigureWebAPI implements WebAPI {
 
         if (key == null) {
             String error = "Config Key null";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         String value = variables.get("configValue");
 
         if (value == null) {
             String error = "Config Value null";
-            return PageCacheHandler.loadPage(error, () -> new BadRequestResponse(error));
+            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         if (value.equals("null")) {
@@ -42,6 +42,6 @@ public class ConfigureWebAPI implements WebAPI {
         config.set(key, value);
         plan.saveConfig();
 
-        return PageCacheHandler.loadPage("success", SuccessResponse::new);
+        return PageCache.loadPage("success", SuccessResponse::new);
     }
 }

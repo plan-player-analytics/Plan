@@ -1,6 +1,6 @@
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.cache.PageLoader;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import static junit.framework.TestCase.*;
 /**
  * @author Fuzzlemann
  */
-public class PageCacheHandlerTest {
+public class PageCacheTest {
     private final String IDENTIFIER = RandomData.randomString(10);
     private final String RESPONSE_STRING = RandomData.randomString(10);
     private final Response RESPONSE = new Response() {
@@ -34,29 +34,29 @@ public class PageCacheHandlerTest {
     public void testCache() {
         Response expResponse = LOADER.createResponse();
 
-        assertFalse(PageCacheHandler.isCached(IDENTIFIER));
+        assertFalse(PageCache.isCached(IDENTIFIER));
 
-        Response response = PageCacheHandler.loadPage(IDENTIFIER, LOADER);
-        assertTrue(PageCacheHandler.isCached(IDENTIFIER));
+        Response response = PageCache.loadPage(IDENTIFIER, LOADER);
+        assertTrue(PageCache.isCached(IDENTIFIER));
 
         assertEquals(expResponse, response);
     }
 
     @Test
     public void testClearCache() {
-        PageCacheHandler.cachePage(IDENTIFIER, LOADER);
-        assertTrue(PageCacheHandler.isCached(IDENTIFIER));
+        PageCache.cachePage(IDENTIFIER, LOADER);
+        assertTrue(PageCache.isCached(IDENTIFIER));
 
-        PageCacheHandler.clearCache();
-        assertFalse(PageCacheHandler.isCached(IDENTIFIER));
+        PageCache.clearCache();
+        assertFalse(PageCache.isCached(IDENTIFIER));
     }
 
     @Test
     public void testRemoveIf() {
-        PageCacheHandler.cachePage(IDENTIFIER, LOADER);
-        assertTrue(PageCacheHandler.isCached(IDENTIFIER));
+        PageCache.cachePage(IDENTIFIER, LOADER);
+        assertTrue(PageCache.isCached(IDENTIFIER));
 
-        PageCacheHandler.removeIf(identifier -> identifier.equals(IDENTIFIER));
-        assertFalse(PageCacheHandler.isCached(IDENTIFIER));
+        PageCache.removeIf(identifier -> identifier.equals(IDENTIFIER));
+        assertFalse(PageCache.isCached(IDENTIFIER));
     }
 }

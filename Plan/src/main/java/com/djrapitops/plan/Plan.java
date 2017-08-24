@@ -36,7 +36,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -274,7 +274,7 @@ public class Plan extends BukkitPlugin<Plan> {
     @Override
     public void onDisable() {
         //Clears the page cache
-        PageCacheHandler.clearCache();
+        PageCache.clearCache();
 
         // Stop the UI Server
         if (uiServer != null) {
