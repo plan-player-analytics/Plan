@@ -86,6 +86,7 @@ public class ServerTable extends Table {
             statement.setInt(5, info.getId());
             statement.executeUpdate();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -116,6 +117,7 @@ public class ServerTable extends Table {
             statement.setBoolean(4, true);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -143,6 +145,7 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -170,6 +173,7 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -189,6 +193,7 @@ public class ServerTable extends Table {
             }
             return names;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -218,6 +223,7 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -241,6 +247,7 @@ public class ServerTable extends Table {
             }
             return servers;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

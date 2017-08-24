@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 
@@ -63,6 +64,7 @@ public class UsersTable extends UserIDTable {
             }
             return uuids;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -82,6 +84,11 @@ public class UsersTable extends UserIDTable {
         } catch (SQLException ex) {
             return false;
         } finally {
+            try {
+                endTransaction(statement);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
             close(statement);
         }
     }
@@ -117,6 +124,7 @@ public class UsersTable extends UserIDTable {
             }
             return null;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -133,6 +141,7 @@ public class UsersTable extends UserIDTable {
             }
             return registerDates;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -160,6 +169,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(3, name);
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -175,6 +185,7 @@ public class UsersTable extends UserIDTable {
             set = statement.executeQuery();
             return set.next();
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -189,6 +200,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(2, uuid.toString());
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }
@@ -207,6 +219,7 @@ public class UsersTable extends UserIDTable {
             }
             return 0;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -220,6 +233,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             statement.execute();
         } finally {
+            endTransaction(statement);
             close(statement);
         }
     }

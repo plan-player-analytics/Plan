@@ -65,11 +65,7 @@ public abstract class Table {
      * @return @throws SQLException
      */
     protected Connection getConnection() throws SQLException {
-        Connection connection = db.getConnection();
-        if (connection == null || connection.isClosed()) {
-            connection = db.getNewConnection();
-        }
-        return connection;
+        return db.getConnection();
     }
 
     /**
@@ -89,11 +85,11 @@ public abstract class Table {
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            return statement.execute(statementString);
+            boolean b = statement.execute(statementString);
+            commit(statement.getConnection());
+            return b;
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            close(statement);
         }
     }
 
@@ -192,7 +188,19 @@ public abstract class Table {
      *
      * @throws SQLException If commit fails or there is nothing to commit.
      */
-    protected void commit() throws SQLException {
-        db.commit();
+    protected void commit(Connection connection) throws SQLException {
+        db.commit(connection);
+    }
+
+    protected void endTransaction(Connection connection) throws SQLException {
+        db.endTransaction(connection);
+    }
+
+    protected void endTransaction(Statement statement) throws SQLException {
+        if (statement == null) {
+            return;
+        }
+
+        endTransaction(statement.getConnection());
     }
 }
