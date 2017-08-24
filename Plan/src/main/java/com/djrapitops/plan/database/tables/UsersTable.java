@@ -251,6 +251,7 @@ public class UsersTable extends UserIDTable {
             }
             return null;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

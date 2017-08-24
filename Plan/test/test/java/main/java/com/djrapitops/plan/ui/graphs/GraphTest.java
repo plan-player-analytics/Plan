@@ -21,10 +21,10 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class GraphTest {
 
-    private List<TPS> tpsList = new ArrayList<>();
-    private List<Session> sessionList = new ArrayList<>();
-    private Map<String, Integer> geoList = new HashMap<>();
-    private Map<String, Long> worldTimes = new HashMap<>();
+    private final List<TPS> tpsList = new ArrayList<>();
+    private final List<Session> sessionList = new ArrayList<>();
+    private final Map<String, Integer> geoList = new HashMap<>();
+    private final Map<String, Long> worldTimes = new HashMap<>();
 
     private List<Point> points = new ArrayList<>();
 

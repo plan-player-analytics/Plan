@@ -19,7 +19,7 @@ public class WebAPIManager {
         throw new IllegalStateException("Utility class");
     }
 
-    private static Map<String, WebAPI> registry = new HashMap<>();
+    private static final Map<String, WebAPI> registry = new HashMap<>();
 
     public static void registerNewAPI(String method, WebAPI api) {
         registry.put(method.toLowerCase(), api);

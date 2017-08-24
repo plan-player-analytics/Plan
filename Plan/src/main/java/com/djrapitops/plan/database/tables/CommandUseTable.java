@@ -25,7 +25,7 @@ public class CommandUseTable extends Table {
     private final String columnCommand = "command";
     private final String columnTimesUsed = "times_used";
     private final String columnServerID = "server_id";
-    private ServerTable serverTable;
+    private final ServerTable serverTable;
 
     /**
      * @param db

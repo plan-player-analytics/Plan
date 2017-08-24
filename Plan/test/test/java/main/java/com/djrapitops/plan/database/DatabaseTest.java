@@ -47,9 +47,9 @@ public class DatabaseTest {
     private Database db;
     private Database backup;
     private int rows;
-    private UUID uuid = MockUtils.getPlayerUUID();
-    private List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
-    private UUID uuid2 = MockUtils.getPlayer2UUID();
+    private final UUID uuid = MockUtils.getPlayerUUID();
+    private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
+    private final UUID uuid2 = MockUtils.getPlayer2UUID();
 
     public DatabaseTest() {
     }
@@ -63,8 +63,6 @@ public class DatabaseTest {
         db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", ""));
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
-
-        db.init();
     }
 
     @After
@@ -497,12 +495,7 @@ public class DatabaseTest {
 
         assertTrue(usersTable.isRegistered(uuid));
 
-        System.out.println("0 " + uuid);
-        System.out.println("1 " + db.getUsersTable().getSavedUUIDs());
-
         db.removeAccount(uuid);
-
-        System.out.println("2 " + db.getUsersTable().getSavedUUIDs());
 
         assertFalse(usersTable.isRegistered(uuid));
         assertFalse(userInfoTable.isRegistered(uuid));
