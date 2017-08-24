@@ -21,7 +21,6 @@ import test.java.utils.TestInit;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
@@ -78,15 +77,6 @@ public class DatabaseCommitTest {
     @Test
     public void testCommitToDBFile() throws SQLException {
         db.init();
-        HashMap<String, Integer> c = new HashMap<>();
-        c.put("/plan", 1);
-        c.put("/tp", 4);
-        c.put("/pla", 7);
-        c.put("/help", 21);
-        db.saveCommandUse(c);
-        db.close();
-        db.init();
-        assertFalse(db.getCommandUse().isEmpty());
     }
 
     @Ignore("//TODO")

@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
@@ -25,6 +24,7 @@ public class CommandUseTable extends Table {
     private final String columnCommand = "command";
     private final String columnTimesUsed = "times_used";
     private final String columnServerID = "server_id";
+
     private final ServerTable serverTable;
 
     /**
@@ -71,7 +71,6 @@ public class CommandUseTable extends Table {
      * @throws SQLException
      */
     public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
-        ServerTable serverTable = db.getServerTable();
         Benchmark.start("Get CommandUse");
         Map<String, Integer> commandUse = new HashMap<>();
         PreparedStatement statement = null;
@@ -100,70 +99,31 @@ public class CommandUseTable extends Table {
         }
     }
 
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
-        if (Verify.isEmpty(data)) {
+    public void commandUsed(String command) throws SQLException {
+        if (command.length() > 20) {
             return;
         }
-
-        Benchmark.start("Save Commanduse");
-        Map<String, Integer> newData = new HashMap<>(data);
-        Map<String, Integer> saved = getCommandUse();
-        newData.keySet().removeAll(saved.keySet());
-
-        insertCommands(newData);
-
-        Map<String, Integer> updateData = new HashMap<>(data);
-        updateData.keySet().removeAll(newData.keySet());
-
-        for (Map.Entry<String, Integer> savedEntry : saved.entrySet()) {
-            String cmd = savedEntry.getKey();
-            // IMPORTANT - not using saved as value
-            Integer toSave = updateData.get(cmd);
-            if (toSave != null && toSave <= savedEntry.getValue()) {
-                updateData.remove(cmd);
-            }
-        }
-
-        updateCommands(updateData);
-        Benchmark.stop("Database", "Save Commanduse");
-        db.setAvailable();
-    }
-
-    private void updateCommands(Map<String, Integer> data) throws SQLException {
         PreparedStatement statement = null;
         try {
-            String updateStatement = "UPDATE " + tableName + " SET " +
-                    columnTimesUsed + "=? " +
-                    "WHERE (" + columnCommand + "=?) AND (" +
-                    columnServerID + "=" + serverTable.statementSelectServerID + ")";
-            statement = prepareStatement(updateStatement);
+            statement = prepareStatement("UPDATE " + tableName + " SET "
+                    + columnTimesUsed + "=" + columnTimesUsed + "+ 1" +
+                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID +
+                    " AND " + columnCommand + "=?");
+            statement.setString(1, Plan.getServerUUID().toString());
+            statement.setString(2, command);
+            int success = statement.executeUpdate();
 
-            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
-                String key = entrySet.getKey();
-                Integer amount = entrySet.getValue();
-
-                if (key.length() > 20) {
-                    continue;
-                }
-
-                statement.setInt(1, amount);
-                statement.setString(2, key);
-                statement.setString(3, Plan.getServerUUID().toString());
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
             commit(statement.getConnection());
+
+            if (success == 0) {
+                insertCommand(command);
+            }
         } finally {
             close(statement);
         }
     }
 
-    private void insertCommands(Map<String, Integer> data) throws SQLException {
+    private void insertCommand(String command) throws SQLException {
         PreparedStatement statement = null;
         try {
             String insertStatement = "INSERT INTO " + tableName + " ("
@@ -172,21 +132,11 @@ public class CommandUseTable extends Table {
                     + columnServerID
                     + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
             statement = prepareStatement(insertStatement);
-            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
-                String key = entrySet.getKey();
-                Integer amount = entrySet.getValue();
+            statement.setString(1, command);
+            statement.setInt(2, 1);
+            statement.setString(3, Plan.getServerUUID().toString());
+            statement.execute();
 
-                if (key.length() > 20) {
-                    continue;
-                }
-
-                statement.setString(1, key);
-                statement.setInt(2, amount);
-                statement.setString(3, Plan.getServerUUID().toString());
-                statement.addBatch();
-            }
-
-            statement.executeBatch();
             commit(statement.getConnection());
         } finally {
             close(statement);

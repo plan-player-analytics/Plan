@@ -110,28 +110,41 @@ public class DatabaseTest {
 
     @Test
     public void testSaveCommandUse() throws SQLException {
+        CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
 
         expected.put("plan", 1);
         expected.put("tp", 4);
         expected.put("pla", 7);
         expected.put("help", 21);
-        expected.put("roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
 
-        db.saveCommandUse(expected);
+        commandUseTable.commandUsed("plan");
+        for (int i = 0; i < 4; i++) {
+            commandUseTable.commandUsed("tp");
+        }
+        for (int i = 0; i < 7; i++) {
+            commandUseTable.commandUsed("pla");
+        }
+        for (int i = 0; i < 21; i++) {
+            commandUseTable.commandUsed("help");
+        }
+        for (int i = 0; i < 3; i++) {
+            commandUseTable.commandUsed("roiergbnougbierubieugbeigubeigubgierbgeugeg");
+        }
 
         expected.remove("roiergbnougbierubieugbeigubeigubgierbgeugeg");
 
         Map<String, Integer> commandUse = db.getCommandUse();
         assertEquals(expected, commandUse);
 
+        for (int i = 0; i < 3; i++) {
+            commandUseTable.commandUsed("test");
+        }
+        for (int i = 0; i < 2; i++) {
+            commandUseTable.commandUsed("tp");
+        }
         expected.put("test", 3);
         expected.put("tp", 6);
-        expected.put("pla", 4);
-
-        db.saveCommandUse(expected);
-
-        expected.put("pla", 7);
 
         commandUse = db.getCommandUse();
 
@@ -140,15 +153,20 @@ public class DatabaseTest {
 
     @Test
     public void testCommandUseTableIDSystem() throws SQLException {
-        Map<String, Integer> save = new HashMap<>();
-        save.put("plan", 1);
-        save.put("tp", 4);
-        save.put("pla", 7);
-        save.put("help", 21);
-        save.put("roiergbnougbierubieugbeigubeigubgierbgeugeg", 3);
-        db.saveCommandUse(save);
-
         CommandUseTable commandUseTable = db.getCommandUseTable();
+        commandUseTable.commandUsed("plan");
+        for (int i = 0; i < 4; i++) {
+            commandUseTable.commandUsed("tp");
+        }
+        for (int i = 0; i < 7; i++) {
+            commandUseTable.commandUsed("pla");
+        }
+        for (int i = 0; i < 21; i++) {
+            commandUseTable.commandUsed("help");
+        }
+        for (int i = 0; i < 3; i++) {
+            commandUseTable.commandUsed("roiergbnougbierubieugbeigubeigubgierbgeugeg");
+        }
         Optional<Integer> id = commandUseTable.getCommandID("plan");
         assertTrue(id.isPresent());
         Optional<String> commandByID = commandUseTable.getCommandByID(id.get());
@@ -532,12 +550,12 @@ public class DatabaseTest {
 
         assertTrue(usersTable.isRegistered(uuid));
 
-        Map<String, Integer> save = new HashMap<>();
-        save.put("plan", 1);
-        save.put("tp", 4);
-        save.put("pla", 7);
-        save.put("help", 21);
-        db.saveCommandUse(save);
+        db.getCommandUseTable().commandUsed("plan");
+        db.getCommandUseTable().commandUsed("plan");
+        db.getCommandUseTable().commandUsed("tp");
+        db.getCommandUseTable().commandUsed("help");
+        db.getCommandUseTable().commandUsed("help");
+        db.getCommandUseTable().commandUsed("help");
 
         TPSTable tpsTable = db.getTpsTable();
         List<TPS> expected = new ArrayList<>();
