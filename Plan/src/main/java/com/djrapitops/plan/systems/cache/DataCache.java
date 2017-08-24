@@ -1,8 +1,10 @@
 package main.java.com.djrapitops.plan.systems.cache;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -52,7 +54,17 @@ public class DataCache extends SessionCache {
     }
 
     public String getDisplayName(UUID uuid) {
-        return displayNames.get(uuid);
+        String cached = displayNames.get(uuid);
+        if (cached == null) {
+            List<String> nicknames = null;
+            try {
+                nicknames = db.getNicknamesTable().getNicknames(uuid);
+                return nicknames.get(nicknames.size() - 1);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        }
+        return cached;
     }
 
     public void addFirstLeaveCheck(UUID uuid) {

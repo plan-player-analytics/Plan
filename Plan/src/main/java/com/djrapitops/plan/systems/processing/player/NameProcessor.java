@@ -40,6 +40,8 @@ public class NameProcessor extends PlayerProcessor {
             return;
         }
 
+
+
         Database db = plugin.getDB();
         try {
             db.getUsersTable().updateName(uuid, playerName);
