@@ -59,7 +59,9 @@ public class DataCache extends SessionCache {
             List<String> nicknames = null;
             try {
                 nicknames = db.getNicknamesTable().getNicknames(uuid);
-                return nicknames.get(nicknames.size() - 1);
+                if (!nicknames.isEmpty()) {
+                    return nicknames.get(nicknames.size() - 1);
+                }
             } catch (SQLException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
