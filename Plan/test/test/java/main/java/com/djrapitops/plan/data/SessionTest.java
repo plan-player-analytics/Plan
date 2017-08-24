@@ -28,8 +28,5 @@ public class SessionTest {
     public void setUp() {
     }
 
-    /**
-     *
-     */
     // TODO Rewrite
 }

@@ -8,7 +8,7 @@ package main.java.com.djrapitops.plan.database.sql;
  */
 public class SqlParser {
 
-    private StringBuilder s;
+    private final StringBuilder s;
 
     public SqlParser() {
         s = new StringBuilder();

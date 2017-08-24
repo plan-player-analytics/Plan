@@ -27,10 +27,10 @@ import java.util.UUID;
  */
 public class ServerInfoManager {
 
-    private Plan plugin;
+    private final Plan plugin;
     private ServerInfo serverInfo;
     private ServerInfoFile serverInfoFile;
-    private ServerTable serverTable;
+    private final ServerTable serverTable;
 
     public ServerInfoManager(Plan plugin) {
         this.plugin = plugin;

@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -33,6 +32,26 @@ public class VersionTable extends Table {
         );
     }
 
+    public boolean isNewDatabase() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            if (usingMySQL) {
+                statement = prepareStatement("SHOW TABLES LIKE " + tableName);
+            } else {
+                statement = prepareStatement("SELECT tbl_name FROM sqlite_master WHERE tbl_name=?");
+                statement.setString(1, tableName);
+            }
+
+            set = statement.executeQuery();
+
+            return set.next();
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
     /**
      * @return @throws SQLException
      */
@@ -47,12 +66,15 @@ public class VersionTable extends Table {
             if (set.next()) {
                 version = set.getInt("version");
             }
-            Log.debug("Database", "DB Schema version: " + version);
             return version;
+        } catch (Exception exc) {
+            exc.printStackTrace();
         } finally {
             endTransaction(statement);
             close(set, statement);
         }
+
+        return 1;
     }
 
     /**

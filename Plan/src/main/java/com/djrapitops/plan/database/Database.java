@@ -168,6 +168,8 @@ public abstract class Database {
         return getName().toLowerCase().replace(" ", "");
     }
 
+    public abstract boolean isNewDatabase() throws SQLException;
+
     /**
      * Used to get the database schema version.
      *

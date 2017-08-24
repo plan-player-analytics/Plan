@@ -17,7 +17,7 @@
         </repository>
     </repositories>
     <dependencies>
-        <!--        PaperSpigot 1.12 built with Buildtools for Database classes.-->
+        <!--        PaperSpigot 1.12 built with BuildTools for Database classes.-->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper</artifactId>
