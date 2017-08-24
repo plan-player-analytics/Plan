@@ -3,14 +3,14 @@ package main.java.com.djrapitops.plan.data.analysis;
 import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.ui.html.graphs.CPUGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.RamGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.TPSGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.WorldLoadGraphCreator;
-import main.java.com.djrapitops.plan.ui.theme.Colors;
+import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import main.java.com.djrapitops.plan.utilities.html.graphs.CPUGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.RamGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.TPSGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldLoadGraphCreator;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
-import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 
 import java.util.HashMap;
 import java.util.Map;

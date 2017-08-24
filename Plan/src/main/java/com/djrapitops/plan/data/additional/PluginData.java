@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.data.additional;
 
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.Serializable;
 import java.util.*;

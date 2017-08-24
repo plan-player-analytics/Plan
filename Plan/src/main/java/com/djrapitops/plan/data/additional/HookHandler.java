@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.data.additional;
 import com.djrapitops.pluginbridge.plan.Bridge;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.*;

@@ -5,9 +5,9 @@
 package main.java.com.djrapitops.plan.ui.webserver.api.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.ui.webserver.response.Response;
-import main.java.com.djrapitops.plan.ui.webserver.response.api.BadRequestResponse;
-import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 
 import java.util.Map;
 

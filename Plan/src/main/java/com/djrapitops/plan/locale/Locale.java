@@ -7,11 +7,11 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.bukkit.ChatColor;
 
 import java.io.File;

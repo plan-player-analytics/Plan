@@ -24,27 +24,34 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.cache.DataCache;
-import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
-import main.java.com.djrapitops.plan.data.listeners.*;
-import main.java.com.djrapitops.plan.data.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.queue.processing.ProcessingQueue;
-import main.java.com.djrapitops.plan.queue.processing.Processor;
-import main.java.com.djrapitops.plan.ui.webserver.WebServer;
-import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.*;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.PageCacheHandler;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
+import main.java.com.djrapitops.plan.systems.listeners.*;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
+import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
+import main.java.com.djrapitops.plan.systems.tasks.PeriodicDBCommitTask;
+import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyticsWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyzeWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.ConfigureWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.InspectWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.InspectionWebAPI;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.webserver.api.WebAPIManager;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
 
@@ -155,27 +162,12 @@ public class Plan extends BukkitPlugin<Plan> {
             this.dataCache = new DataCache(this);
             Benchmark.stop("Enable", "Init DataCache");
 
-            tpsCountTimer = new TPSCountTimer(this);
-            super.getRunnableFactory().createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
             registerListeners();
-
             this.api = new API(this);
 
-            Benchmark.start("Analysis refresh task registration");
-            // Analysis refresh settings
-            int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
-            boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-
-            // Analysis refresh tasks
-            startBootAnalysisTask();
-            if (analysisRefreshTaskIsEnabled) {
-                startAnalysisRefreshTask(analysisRefreshMinutes);
-            }
-
-            Benchmark.stop("Enable", "Analysis refresh task registration");
+            registerTasks();
 
             Benchmark.start("WebServer Initialization");
-
             uiServer = new WebServer(this);
             registerWebAPIs(); // TODO Move to WebServer class
             uiServer.initServer();
@@ -222,6 +214,44 @@ public class Plan extends BukkitPlugin<Plan> {
             Log.toLog(this.getClass().getName(), e);
             disablePlugin();
         }
+    }
+
+    private void registerTasks() {
+        RunnableFactory runnableFactory = getRunnableFactory();
+        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
+        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
+
+        Benchmark.start("Task Registration");
+        tpsCountTimer = new TPSCountTimer(this);
+
+        long period = TimeAmount.MINUTE.ticks() * 5L;
+
+        runnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+        runnableFactory.createNew(new PeriodicDBCommitTask(this)).runTaskTimerAsynchronously(period, period);
+        // Analysis refresh settings
+        int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
+        boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
+        long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
+
+        Log.info(bootAnalysisMsg);
+        ITask bootAnalysisTask = runnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
+            @Override
+            public void run() {
+                Log.info(bootAnalysisRunMsg);
+                //TODO analysisCache.updateCache();
+                this.cancel();
+            }
+        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
+        bootAnalysisTaskID = bootAnalysisTask.getTaskId();
+        if (analysisRefreshTaskIsEnabled) {
+            runnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
+                @Override
+                public void run() {
+                    // TODO Update Analysis cache
+                }
+            }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
+        }
+        Benchmark.stop("Enable", "Task Registration");
     }
 
     private void initColorScheme() {
@@ -313,45 +343,6 @@ public class Plan extends BukkitPlugin<Plan> {
         }
 
         return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
-    }
-
-    private void startAnalysisRefreshTask(int everyXMinutes) {
-        Benchmark.start("Schedule PeriodicAnalysisTask");
-        if (everyXMinutes <= 0) {
-            return;
-        }
-        getRunnableFactory().createNew("PeriodicalAnalysisTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                Log.debug("Running PeriodicalAnalysisTask");
-                // TODO DataCacheMethod for checking analysis refresh date.
-                if (true) {
-//                 TODO   analysisCache.updateCache();
-                }
-            }
-        }).runTaskTimerAsynchronously(everyXMinutes * TimeAmount.MINUTE.ticks(), everyXMinutes * TimeAmount.MINUTE.ticks());
-        Benchmark.stop("Schedule PeriodicAnalysisTask");
-    }
-
-    private void startBootAnalysisTask() {
-        Benchmark.start("Schedule boot analysis task");
-        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
-        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
-
-        Log.info(bootAnalysisMsg);
-
-        ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                Log.debug("Running BootAnalysisTask");
-                Log.info(bootAnalysisRunMsg);
-
-                //TODO analysisCache.updateCache();
-                this.cancel();
-            }
-        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
-        bootAnalysisTaskID = bootAnalysisTask.getTaskId();
-        Benchmark.stop("Enable", "Schedule boot analysis task");
     }
 
     /**

@@ -7,8 +7,8 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;

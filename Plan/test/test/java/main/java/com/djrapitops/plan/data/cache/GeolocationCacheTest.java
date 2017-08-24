@@ -1,6 +1,6 @@
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.data.cache.GeolocationCacheHandler;
+import main.java.com.djrapitops.plan.systems.cache.GeolocationCacheHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;

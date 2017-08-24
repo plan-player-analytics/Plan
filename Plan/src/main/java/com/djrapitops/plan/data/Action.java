@@ -6,8 +6,8 @@ package main.java.com.djrapitops.plan.data;
 
 import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.database.tables.Actions;
-import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 
 /**
  * Class that represents an action made by a player.

@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 /**
  * Part responsible for all Gamemode usage related analysis.

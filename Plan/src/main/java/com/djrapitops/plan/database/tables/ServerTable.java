@@ -5,9 +5,9 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.data.server.ServerInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -5,7 +5,7 @@
  */
 package test.java.main.java.com.djrapitops.plan.ui;
 
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

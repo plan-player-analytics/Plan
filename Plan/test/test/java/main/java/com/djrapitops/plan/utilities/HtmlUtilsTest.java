@@ -6,7 +6,7 @@
 package test.java.main.java.com.djrapitops.plan.utilities;
 
 import com.google.common.collect.ImmutableMap;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,8 +5,8 @@
  */
 package test.java.main.java.com.djrapitops.plan.data.cache;
 
-import main.java.com.djrapitops.plan.data.cache.DataCache;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
 import org.junit.Before;

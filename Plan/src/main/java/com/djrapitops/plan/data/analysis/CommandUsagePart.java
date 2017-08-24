@@ -5,8 +5,8 @@
  */
 package main.java.com.djrapitops.plan.data.analysis;
 
-import main.java.com.djrapitops.plan.ui.html.tables.CommandUseTableCreator;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
 
 import java.util.Map;
 

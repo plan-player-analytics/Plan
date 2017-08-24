@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 /**
  * Command used to display link to the player list webpage.

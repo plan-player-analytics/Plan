@@ -5,10 +5,10 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserInfo;
-import main.java.com.djrapitops.plan.ui.webserver.response.PlayersPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
