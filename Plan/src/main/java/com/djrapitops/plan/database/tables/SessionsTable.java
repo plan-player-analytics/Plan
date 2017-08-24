@@ -45,7 +45,7 @@ public class SessionsTable extends UserIDTable {
     @Override
     public boolean createTable() {
         return createTable(TableSqlParser.createTable(this.tableName)
-                .primaryKeyIDColumn(usingMySQL, columnID, Sql.LONG)
+                .primaryKeyIDColumn(usingMySQL, columnID)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnServerID, Sql.INT).notNull()
                 .column(columnSessionStart, Sql.LONG).notNull()
@@ -70,7 +70,7 @@ public class SessionsTable extends UserIDTable {
      */
     public void saveSession(UUID uuid, Session session) throws SQLException {
         saveSessionInformation(uuid, session);
-        long sessionID = getSessionID(uuid, session);
+        int sessionID = getSessionID(uuid, session);
         if (sessionID == -1) {
             throw new IllegalStateException("Session was not Saved!");
         }
@@ -124,7 +124,7 @@ public class SessionsTable extends UserIDTable {
      * @param session session inserted.
      * @return ID of the inserted session or -1 if session has not been inserted.
      */
-    private long getSessionID(UUID uuid, Session session) throws SQLException {
+    private int getSessionID(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -137,9 +137,9 @@ public class SessionsTable extends UserIDTable {
             statement.setLong(3, session.getSessionEnd());
             set = statement.executeQuery();
             if (set.next()) {
-                return set.getLong(columnID);
+                return set.getInt(columnID);
             }
-            return -1L;
+            return -1;
         } finally {
             endTransaction(statement);
             close(set, statement);
@@ -168,7 +168,7 @@ public class SessionsTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
-                long id = set.getLong(columnID);
+                int id = set.getInt(columnID);
                 long start = set.getLong(columnSessionStart);
                 long end = set.getLong(columnSessionEnd);
                 String serverName = serverNames.get(set.getInt(columnServerID));
@@ -192,7 +192,7 @@ public class SessionsTable extends UserIDTable {
 
     public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
         Map<String, List<Session>> sessions = getSessionInformation(uuid);
-        Map<Long, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
+        Map<Integer, Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toMap(Session::getSessionID, Function.identity()));
 
         db.getKillsTable().addKillsToSessions(uuid, allSessions);
         db.getWorldTimesTable().addWorldTimesToSessions(uuid, allSessions);

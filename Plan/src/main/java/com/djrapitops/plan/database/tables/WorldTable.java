@@ -42,7 +42,7 @@ public class WorldTable extends Table {
     @Override
     public boolean createTable() {
         return createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
+                .primaryKeyIDColumn(usingMySQL, columnWorldId)
                 .column(columnWorldName, Sql.varchar(100)).notNull()
                 .primaryKey(usingMySQL, columnWorldId)
                 .toString()

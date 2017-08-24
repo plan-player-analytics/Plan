@@ -37,7 +37,7 @@ public class UsersTable extends UserIDTable {
     @Override
     public boolean createTable() {
         return createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, columnID, Sql.INT)
+                .primaryKeyIDColumn(usingMySQL, columnID)
                 .column(columnUUID, Sql.varchar(36)).notNull().unique()
                 .column(columnRegistered, Sql.LONG).notNull()
                 .column(columnName, Sql.varchar(16)).notNull()

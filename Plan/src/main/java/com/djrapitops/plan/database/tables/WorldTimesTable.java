@@ -51,7 +51,7 @@ public class WorldTimesTable extends UserIDTable {
         return createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnWorldId, Sql.INT).notNull()
-                .column(columnSessionID, Sql.LONG).notNull()
+                .column(columnSessionID, Sql.INT).notNull()
                 .column(columnSurvival, Sql.LONG).notNull().defaultValue("0")
                 .column(columnCreative, Sql.LONG).notNull().defaultValue("0")
                 .column(columnAdventure, Sql.LONG).notNull().defaultValue("0")
@@ -63,7 +63,7 @@ public class WorldTimesTable extends UserIDTable {
         );
     }
 
-    public void saveWorldTimes(UUID uuid, long sessionID, WorldTimes worldTimes) throws SQLException {
+    public void saveWorldTimes(UUID uuid, int sessionID, WorldTimes worldTimes) throws SQLException {
         Map<String, GMTimes> worldTimesMap = worldTimes.getWorldTimes();
         if (Verify.isEmpty(worldTimesMap)) {
             return;
@@ -92,7 +92,7 @@ public class WorldTimesTable extends UserIDTable {
                 GMTimes gmTimes = entry.getValue();
                 statement.setString(1, uuid.toString());
                 statement.setString(2, worldName);
-                statement.setLong(3, sessionID);
+                statement.setInt(3, sessionID);
 
                 String[] gms = GMTimes.getGMKeyArray();
                 statement.setLong(4, gmTimes.getTime(gms[0]));
@@ -109,7 +109,7 @@ public class WorldTimesTable extends UserIDTable {
         }
     }
 
-    public void addWorldTimesToSessions(UUID uuid, Map<Long, Session> sessions) throws SQLException {
+    public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -131,7 +131,7 @@ public class WorldTimesTable extends UserIDTable {
             String[] gms = GMTimes.getGMKeyArray();
 
             while (set.next()) {
-                long sessionID = set.getLong(columnSessionID);
+                int sessionID = set.getInt(columnSessionID);
                 Session session = sessions.get(sessionID);
 
                 if (session == null) {

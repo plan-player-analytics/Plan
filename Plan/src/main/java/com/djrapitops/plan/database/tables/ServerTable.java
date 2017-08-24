@@ -49,7 +49,7 @@ public class ServerTable extends Table {
     @Override
     public boolean createTable() {
         return createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, columnServerID, Sql.INT)
+                .primaryKeyIDColumn(usingMySQL, columnServerID)
                 .column(columnServerUUID, Sql.varchar(36)).notNull().unique()
                 .column(columnServerName, Sql.varchar(100))
                 .column(columnWebserverAddress, Sql.varchar(100))

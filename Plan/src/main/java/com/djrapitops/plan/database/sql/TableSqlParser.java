@@ -71,12 +71,12 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
-    public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column, String type) {
+    public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column) {
         if (columns > 0) {
             append(", ");
         }
         append(column).addSpace();
-        append(type).addSpace();
+        append(Sql.INT).addSpace();
         append((mySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY");
         columns++;
         return this;
