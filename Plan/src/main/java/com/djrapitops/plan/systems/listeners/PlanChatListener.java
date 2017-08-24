@@ -1,12 +1,15 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.player.NameProcessor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.UUID;
 
 /**
  * Event Listener for AsyncPlayerChatEvents.
@@ -16,6 +19,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class PlanChatListener implements Listener {
 
     private final Plan plugin;
+    private final DataCache dataCache;
 
     /**
      * Class Constructor.
@@ -24,6 +28,7 @@ public class PlanChatListener implements Listener {
      */
     public PlanChatListener(Plan plugin) {
         this.plugin = plugin;
+        dataCache = plugin.getDataCache();
     }
 
     /**
@@ -38,7 +43,10 @@ public class PlanChatListener implements Listener {
         }
 
         Player p = event.getPlayer();
-        // TODO NameCache to DataCache
-        plugin.addToProcessQueue(new NameProcessor(p.getUniqueId(), p.getName(), p.getDisplayName()));
+        UUID uuid = p.getUniqueId();
+        String name = p.getName();
+        String displayName = p.getDisplayName();
+
+        plugin.addToProcessQueue(new NameProcessor(uuid, name, displayName));
     }
 }

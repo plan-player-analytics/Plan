@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.systems.listeners;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.processing.CommandProcessor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +19,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class PlanCommandPreprocessListener implements Listener {
 
     private final Plan plugin;
-    private final DataCache dataCache;
 
     /**
      * Class Constructor.
@@ -28,7 +27,6 @@ public class PlanCommandPreprocessListener implements Listener {
      */
     public PlanCommandPreprocessListener(Plan plugin) {
         this.plugin = plugin;
-        dataCache = plugin.getDataCache();
     }
 
     /**
@@ -61,7 +59,6 @@ public class PlanCommandPreprocessListener implements Listener {
                 commandName = command.getName();
             }
         }
-        // TODO Command Usage -> DB Save Processor
-        dataCache.handleCommand(commandName);
+        plugin.addToProcessQueue(new CommandProcessor(commandName));
     }
 }

@@ -214,17 +214,6 @@ public abstract class Database {
     public abstract boolean removeAllData();
 
     /**
-     * Used to save CommandUse map.
-     *
-     * @param data String command (key), Integer times used
-     * @throws SQLException         If a database error occurs.
-     * @throws NullPointerException If the database has not initialized tables.
-     */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
-        commandUseTable.saveCommandUse(data);
-    }
-
-    /**
      * Used to fetch the saved UUIDs in the users table.
      *
      * @return Set of saved UUIDs

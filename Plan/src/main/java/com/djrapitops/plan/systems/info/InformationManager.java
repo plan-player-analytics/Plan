@@ -23,7 +23,6 @@ public class InformationManager {
     private final Database db;
 
     private final DataCache dataCache;
-    private final SessionCache sessionCache;
 
     private boolean usingBungeeWebServer;
     private String webServerAddress;
@@ -36,7 +35,6 @@ public class InformationManager {
                 .ifPresent(address -> webServerAddress = address);
 
         dataCache = new DataCache(plugin);
-        sessionCache = new SessionCache(plugin);
 
         if (webServerAddress != null) {
             attemptBungeeConnection();
@@ -69,6 +67,6 @@ public class InformationManager {
     }
 
     public SessionCache getSessionCache() {
-        return sessionCache;
+        return dataCache;
     }
 }

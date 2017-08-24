@@ -1,15 +1,9 @@
 package main.java.com.djrapitops.plan.systems.cache;
 
-import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This Class contains the Cache.
@@ -26,14 +20,10 @@ public class DataCache extends SessionCache {
 
     private final Database db;
 
-    //Cache
-    private Map<String, Integer> commandUse;
+    private final Map<UUID, String> playerNames;
+    private final Map<UUID, String> displayNames;
 
-    // Queues
-
-
-    // Variables
-    private boolean periodicTaskIsSaving = false;
+    private final Set<UUID> playersWithFirstSession;
 
     /**
      * Class Constructor.
@@ -44,94 +34,36 @@ public class DataCache extends SessionCache {
      * @param plugin Current instance of Plan
      */
     public DataCache(Plan plugin) {
-        super(plugin); // Initializes Session & Location cache.
+        super(plugin);
         db = plugin.getDB();
 
-        commandUse = new HashMap<>();
-        if (!getCommandUseFromDb()) {
-            Log.error(Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
-            plugin.disablePlugin();
-            return;
-        }
-        startAsyncPeriodicSaveTask();
+        playerNames = new HashMap<>();
+        displayNames = new HashMap<>();
+        playersWithFirstSession = new HashSet<>();
     }
 
-    /**
-     * Used to get the initial commandUse Map from the database.
-     *
-     * @return Was the fetch successful?
-     */
-    public boolean getCommandUseFromDb() {
-        try {
-            commandUse = db.getCommandUse();
-            return true;
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return false;
+    public void updateNames(UUID uuid, String playerName, String displayName) {
+        playerNames.put(uuid, playerName);
+        displayNames.put(uuid, displayName);
     }
 
-    /**
-     * Used to start the Asynchronous Save Task.
-     *
-     * @throws IllegalArgumentException BukkitRunnable was given wrong
-     *                                  parameters.
-     * @throws IllegalStateException    BukkitScheduler is in a wrong state.
-     */
-    public void startAsyncPeriodicSaveTask() {
-        DataCache dataCache = this;
-        plugin.getRunnableFactory().createNew(new AbsRunnable("PeriodicCacheSaveTask") {
-            private int timesSaved = 0;
-
-            @Override
-            public void run() {
-                if (periodicTaskIsSaving) {
-                    return;
-                }
-                try {
-                    periodicTaskIsSaving = true;
-                    Log.debug("Database", "Periodic Cache Save");
-                    saveCommandUse();
-                    timesSaved++;
-                } catch (Exception e) {
-                    Log.toLog(this.getClass().getName() + "(" + this.getName() + ")", e);
-                } finally {
-                    periodicTaskIsSaving = false;
-                }
-            }
-        }).runTaskTimerAsynchronously(60L * 20L * 5, 60L * 20L * 5);
+    public String getName(UUID uuid) {
+        return playerNames.get(uuid);
     }
 
-    /**
-     * Saves the cached CommandUse.
-     * <p>
-     * Should be only called from an Asynchronous Thread.
-     */
-    public void saveCommandUse() {
-        try {
-            db.saveCommandUse(new HashMap<>(commandUse));
-        } catch (SQLException | NullPointerException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
+    public String getDisplayName(UUID uuid) {
+        return displayNames.get(uuid);
     }
 
-    /**
-     * Used to get the cached commandUse.
-     *
-     * @return Map with key:value - "/command":4
-     */
-    public Map<String, Integer> getCommandUse() {
-        return commandUse;
+    public void addFirstLeaveCheck(UUID uuid) {
+        playersWithFirstSession.add(uuid);
     }
 
-    /**
-     * Used to handle a command's execution.
-     *
-     * @param command "/command"
-     */
-    public void handleCommand(String command) {
-        int amount = commandUse.getOrDefault(command, 0);
+    public boolean isFirstSession(UUID uuid) {
+        return playersWithFirstSession.contains(uuid);
+    }
 
-        commandUse.put(command, amount + 1);
+    public void clearFromFirstLeaveCheck(UUID uuid) {
+        playersWithFirstSession.remove(uuid);
     }
 }

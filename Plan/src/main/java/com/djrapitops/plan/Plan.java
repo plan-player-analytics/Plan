@@ -37,6 +37,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.PageCache;
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -73,7 +74,6 @@ public class Plan extends BukkitPlugin<Plan> {
     private API api;
 
     private ProcessingQueue processingQueue;
-    private DataCache dataCache;
     private HookHandler hookHandler; // Manages 3rd party data sources
 
     private Database db;
@@ -81,6 +81,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
     private WebServer uiServer;
 
+    private InformationManager infoManager;
     private ServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
@@ -158,15 +159,6 @@ public class Plan extends BukkitPlugin<Plan> {
             }
             Benchmark.stop("Enable", "Init Database");
 
-            Benchmark.start("Init DataCache");
-            this.dataCache = new DataCache(this);
-            Benchmark.stop("Enable", "Init DataCache");
-
-            registerListeners();
-            this.api = new API(this);
-
-            registerTasks();
-
             Benchmark.start("WebServer Initialization");
             uiServer = new WebServer(this);
             registerWebAPIs(); // TODO Move to WebServer class
@@ -176,10 +168,13 @@ public class Plan extends BukkitPlugin<Plan> {
                 Log.error("WebServer was not successfully initialized.");
             }
 
-            //TODO Re-Enable after DB ServerTable has been initialized properly.
-//            Benchmark.start("ServerInfo Registration");
-//            serverInfoManager = new ServerInfoManager(this);
-//            Benchmark.stop("Enable", "ServerInfo Registration");
+            serverInfoManager = new ServerInfoManager(this);
+            infoManager = new InformationManager(this);
+
+            registerListeners();
+            registerTasks();
+
+            this.api = new API(this);
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
 
@@ -283,7 +278,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
         getServer().getScheduler().cancelTasks(this);
 
-        if (Verify.notNull(dataCache, db)) {
+        if (Verify.notNull(infoManager, db)) {
             // Saves the DataCache to the database without Bukkit's Schedulers.
             Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
 
@@ -359,7 +354,7 @@ public class Plan extends BukkitPlugin<Plan> {
      * @return Current instance of the DataCache
      */
     public DataCache getDataCache() {
-        return dataCache;
+        return getInfoManager().getDataCache();
     }
 
     /**
@@ -446,5 +441,9 @@ public class Plan extends BukkitPlugin<Plan> {
 
     public static UUID getServerUUID() {
         return getInstance().getServerInfoManager().getServerUUID();
+    }
+
+    public InformationManager getInfoManager() {
+        return infoManager;
     }
 }

@@ -47,11 +47,7 @@ public class QueueTest {
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
         when(plan.getDB()).thenReturn(db);
-        dataCache = new DataCache(plan) {
-            @Override
-            public void startAsyncPeriodicSaveTask() {
-            }
-        };
+        dataCache = new DataCache(plan);
         when(plan.getDataCache()).thenReturn(dataCache);
     }
 

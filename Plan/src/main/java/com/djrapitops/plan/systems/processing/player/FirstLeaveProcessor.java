@@ -29,10 +29,14 @@ public class FirstLeaveProcessor extends PlayerProcessor {
 
     @Override
     public void process() {
+        Plan plugin = Plan.getInstance();
+        UUID uuid = getUUID();
         try {
-            Plan.getInstance().getDB().getActionsTable().insertAction(getUUID(), leaveAction);
+            plugin.getDB().getActionsTable().insertAction(uuid, leaveAction);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
+        } finally {
+            plugin.getDataCache().clearFromFirstLeaveCheck(uuid);
         }
     }
 }

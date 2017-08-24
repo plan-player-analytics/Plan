@@ -16,8 +16,6 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -31,8 +29,6 @@ public class PlanPlayerListener implements Listener {
     private final Plan plugin;
     private final DataCache cache;
 
-    private final Set<UUID> playersWithFirstSession;
-
     /**
      * Class Constructor.
      *
@@ -41,17 +37,17 @@ public class PlanPlayerListener implements Listener {
     public PlanPlayerListener(Plan plugin) {
         this.plugin = plugin;
         cache = plugin.getDataCache();
-        playersWithFirstSession = new HashSet<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
         PlayerLoginEvent.Result result = event.getResult();
         UUID uuid = event.getPlayer().getUniqueId();
+        boolean op = event.getPlayer().isOp();
         if (result == PlayerLoginEvent.Result.KICK_BANNED) {
-            plugin.addToProcessQueue(new BanProcessor(uuid, true));
+            plugin.addToProcessQueue(new BanAndOpProcessor(uuid, true, op));
         } else {
-            plugin.addToProcessQueue(new BanProcessor(uuid, false));
+            plugin.addToProcessQueue(new BanAndOpProcessor(uuid, false, op));
         }
     }
 
@@ -100,9 +96,9 @@ public class PlanPlayerListener implements Listener {
         cache.cacheSession(uuid, Session.start(time, world, gm));
 
         plugin.addToProcessQueue(
-                new RegisterProcessor(this, uuid, player.getFirstPlayed(), playerName, playersOnline),
+                new RegisterProcessor(uuid, player.getFirstPlayed(), playerName, playersOnline),
                 new IPUpdateProcessor(uuid, ip),
-                new NameProcessor(uuid, playerName, displayName), // TODO NameCache to DataCache
+                new NameProcessor(uuid, playerName, displayName),
                 new DBCommitProcessor(plugin.getDB())
         );
     }
@@ -122,19 +118,14 @@ public class PlanPlayerListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         plugin.addToProcessQueue(
-                new BanProcessor(uuid, player.isBanned()),
+                new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()),
                 new EndSessionProcessor(uuid, time)
         );
 
         int messagesSent = 0; // TODO messages Sent on first session
 
-        if (playersWithFirstSession.contains(uuid)) {
+        if (cache.isFirstSession(uuid)) {
             plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
         }
-    }
-
-    // TODO MOVE TO DATACACHE
-    public void addFirstLeaveCheck(UUID uuid) {
-        playersWithFirstSession.add(uuid);
     }
 }
