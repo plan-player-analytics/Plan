@@ -6,8 +6,8 @@ package test.java.main.java.com.djrapitops.plan.ui.graphs;
 
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.ui.html.graphs.*;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
+import main.java.com.djrapitops.plan.utilities.html.graphs.*;
 import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.RandomData;
