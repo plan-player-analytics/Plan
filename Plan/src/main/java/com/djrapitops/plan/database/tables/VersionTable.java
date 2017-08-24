@@ -37,11 +37,12 @@ public class VersionTable extends Table {
         ResultSet set = null;
         try {
             if (usingMySQL) {
-                statement = prepareStatement("SHOW TABLES LIKE " + tableName);
+                statement = prepareStatement("SHOW TABLES LIKE ?");
             } else {
                 statement = prepareStatement("SELECT tbl_name FROM sqlite_master WHERE tbl_name=?");
-                statement.setString(1, tableName);
             }
+
+            statement.setString(1, tableName);
 
             set = statement.executeQuery();
 

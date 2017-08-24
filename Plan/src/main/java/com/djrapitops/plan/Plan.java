@@ -151,6 +151,21 @@ public class Plan extends BukkitPlugin<Plan> {
             }
             Benchmark.stop("Enable", "Init Database");
 
+            Benchmark.start("WebServer Initialization");
+
+            uiServer = new WebServer(this);
+            registerWebAPIs(); // TODO Move to WebServer class
+            uiServer.initServer();
+
+            if (!uiServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+            }
+
+            //TODO Re-Enable after DB ServerTable has been initialized properly.
+            Benchmark.start("ServerInfo Registration");
+            serverInfoManager = new ServerInfoManager(this);
+            Benchmark.stop("Enable", "ServerInfo Registration");
+
             Benchmark.start("Init DataCache");
             this.dataCache = new DataCache(this);
             Benchmark.stop("Enable", "Init DataCache");
@@ -173,21 +188,6 @@ public class Plan extends BukkitPlugin<Plan> {
             }
 
             Benchmark.stop("Enable", "Analysis refresh task registration");
-
-            Benchmark.start("WebServer Initialization");
-
-            uiServer = new WebServer(this);
-            registerWebAPIs(); // TODO Move to WebServer class
-            uiServer.initServer();
-
-            if (!uiServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized.");
-            }
-
-            //TODO Re-Enable after DB ServerTable has been initialized properly.
-//            Benchmark.start("ServerInfo Registration");
-//            serverInfoManager = new ServerInfoManager(this);
-//            Benchmark.stop("Enable", "ServerInfo Registration");
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
 

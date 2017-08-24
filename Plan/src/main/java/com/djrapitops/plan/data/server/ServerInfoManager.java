@@ -60,7 +60,7 @@ public class ServerInfoManager {
         }
     }
 
-    private void updateDbInfo(UUID serverUUID) throws SQLException {
+    private void updateDbInfo(UUID serverUUID) throws SQLException, IOException {
         Optional<Integer> serverID = serverTable.getServerID(serverUUID);
         if (!serverID.isPresent()) {
             registerServer(serverUUID);
@@ -76,21 +76,24 @@ public class ServerInfoManager {
         serverTable.saveCurrentServerInfo(serverInfo);
     }
 
-    private void registerServer() throws SQLException {
+    private void registerServer() throws SQLException, IOException {
         registerServer(generateNewUUID(plugin.getServer()));
     }
 
-    private void registerServer(UUID serverUUID) throws SQLException {
+    private void registerServer(UUID serverUUID) throws SQLException, IOException {
         String webAddress = plugin.getUiServer().getAccessAddress();
         String name = Settings.SERVER_NAME.toString();
         serverInfo = new ServerInfo(-1, serverUUID, name, webAddress);
         serverTable.saveCurrentServerInfo(serverInfo);
         Optional<Integer> serverID = serverTable.getServerID(serverUUID);
-        if (serverID.isPresent()) {
-            serverInfo.setId(serverID.get());
-        } else {
+        if (!serverID.isPresent()) {
             throw new IllegalStateException("Failed to Register Server (ID not found)");
         }
+
+        int id = serverID.get();
+        serverInfo.setId(id);
+
+        serverInfoFile.saveInfo(serverInfo, new ServerInfo(id, serverUUID, name, webAddress));
     }
 
     private UUID generateNewUUID(Server server) {
