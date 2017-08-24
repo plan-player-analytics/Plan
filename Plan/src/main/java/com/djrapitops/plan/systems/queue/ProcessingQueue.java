@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.systems.queue;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
+import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -49,8 +50,10 @@ class ProcessConsumer extends Consumer<Processor> {
             return;
         }
         try {
-            Log.debug("Processed " + process.getClass().getSimpleName() + ".");
+            String benchName = "Processed " + process.getClass().getSimpleName() + ".";
+            Benchmark.start(benchName);
             process.process();
+            Benchmark.stop(benchName);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
             Log.toLog(this.getTaskName() + ":" + process.getClass().getSimpleName(), e);
         }
@@ -64,6 +67,15 @@ class ProcessConsumer extends Consumer<Processor> {
 class ProcessSetup extends Setup<Processor> {
 
     ProcessSetup(BlockingQueue<Processor> q) {
-        super(new ProcessConsumer(q), new ProcessConsumer(q));
+        super(
+                new ProcessConsumer(q),
+                new ProcessConsumer(q),
+                new ProcessConsumer(q),
+                new ProcessConsumer(q),
+                new ProcessConsumer(q),
+                new ProcessConsumer(q),
+                new ProcessConsumer(q),
+                new ProcessConsumer(q)
+        );
     }
 }

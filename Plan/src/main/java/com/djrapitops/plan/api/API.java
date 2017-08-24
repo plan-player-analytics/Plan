@@ -7,8 +7,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
@@ -17,7 +16,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * This class contains the API methods.
+ * This class contains the API methods for Bukkit version of the plugin.
  * <p>
  * Methods can be called from Asynchronous task and are thread safe unless
  * otherwise stated.
@@ -94,8 +93,7 @@ public class API {
      */
     @Deprecated
     public boolean isPlayersDataInspectCached(UUID uuid) {
-        // TODO Check PageCache
-        return false;
+        return plugin.getInfoManager().isCached(uuid);
     }
 
     /**
@@ -120,12 +118,7 @@ public class API {
      * @return player.html with all placeholders replaced.
      */
     public String getPlayerHtmlAsString(UUID uuid) {
-        WebServer server = plugin.getUiServer();
-        if (Verify.notNull(server)) {
-            return server.getDataReqHandler().getInspectHtml(uuid);
-        }
-        DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getInspectHtml(uuid);
+        return plugin.getInfoManager().getPlayerHtml(uuid);
     }
 
     /**
@@ -134,18 +127,23 @@ public class API {
      * @return true/false
      */
     public boolean isAnalysisCached() {
-        // TODO Check PageCache
-        return false;
+        return plugin.getInfoManager().isAnalysisCached();
     }
 
     /**
-     * Run's the analysis with the current data in the cache and fetches rest
-     * from the database.
-     * <p>
-     * Starts a new Asynchronous task to run the analysis.
+     * Run the analysis.
      */
     public void updateAnalysisCache() {
-        // TODO Run analysis
+        plugin.getInfoManager().refreshAnalysis();
+    }
+
+    /**
+     * Run the analysis and call the given processor.
+     *
+     * @param processor Processor to call after analysis has finished.
+     */
+    public void updateAnalysisCache(Processor processor) {
+        plugin.getInfoManager().refreshAnalysis();
     }
 
     /**
@@ -156,12 +154,7 @@ public class API {
      * @return server.html with all placeholders replaced.
      */
     public String getAnalysisHtmlAsString() {
-        WebServer server = plugin.getUiServer();
-        if (Verify.notNull(server)) {
-            return server.getDataReqHandler().getServerHtml();
-        }
-        DataRequestHandler reqH = new DataRequestHandler(plugin);
-        return reqH.getServerHtml();
+        return plugin.getInfoManager().getAnalysisHtml();
     }
 
     /**
@@ -173,23 +166,26 @@ public class API {
      * @see AnalysisData
      */
     public AnalysisData getAnalysisDataFromCache() {
-        // TODO Fix
-        return null;
+        return plugin.getInfoManager().getAnalysisData();
     }
 
     /**
      * Used to get the PlayerName of a player who has played on the server.
+     * Should be called from an Async thread.
      *
      * @param uuid UUID of the player.
      * @return PlayerName, eg "Rsl1122"
      * @throws IllegalArgumentException If uuid is null.
-     * @throws IllegalStateException    If the player has not played on the server
-     *                                  before.
+     * @throws IllegalStateException    If the player has not played on the server before.
      */
-    public String getPlayerName(UUID uuid) {
+    public String getPlayerName(UUID uuid) throws SQLException {
         Verify.nullCheck(uuid);
+        String playerName = plugin.getDB().getUsersTable().getPlayerName(uuid);
+        if (playerName != null) {
+            return playerName;
+        }
         IOfflinePlayer offlinePlayer = Fetch.getIOfflinePlayer(uuid);
-        if (Verify.notNull(offlinePlayer)) {
+        if (offlinePlayer != null) {
             return offlinePlayer.getName();
         }
         throw new IllegalStateException("Player has not played on this server before.");
