@@ -41,7 +41,7 @@ public class RegisterProcessor extends PlayerProcessor {
         }
         plugin.getDataCache().addFirstLeaveCheck(uuid);
         try {
-            db.getUsersTable().registerUser(uuid, time, name);
+            db.getUserInfoTable().registerUserInfo(uuid, time);
             db.getActionsTable().insertAction(uuid, new Action(time, Actions.REGISTERED, "Online: " + playersOnline + " Players"));
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);

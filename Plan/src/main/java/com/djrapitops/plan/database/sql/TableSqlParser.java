@@ -93,6 +93,14 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
+    public TableSqlParser charSetUTF8(boolean mySQL) {
+        if (mySQL) {
+            addSpace();
+            append("CHARACTER SET utf8 COLLATE utf8mb4_general_ci");
+        }
+        return this;
+    }
+
     /**
      * Used for ALTER TABLE sql statements.
      *

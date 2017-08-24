@@ -5,11 +5,14 @@
 package main.java.com.djrapitops.plan.systems.info;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -26,6 +29,9 @@ public class InformationManager {
 
     private boolean usingBungeeWebServer;
     private String webServerAddress;
+
+    private AnalysisData analysisData;
+    private Long refreshDate;
 
     public InformationManager(Plan plugin) {
         this.plugin = plugin;
@@ -68,5 +74,38 @@ public class InformationManager {
 
     public SessionCache getSessionCache() {
         return dataCache;
+    }
+
+    public boolean isCached(UUID uuid) {
+        // TODO
+        return false;
+    }
+
+    public String getPlayerHtml(UUID uuid) {
+        // TODO
+        return "";
+    }
+
+    public boolean isAnalysisCached() {
+        // TODO
+        return false;
+    }
+
+    public String getAnalysisHtml() {
+        // TODO
+        return "";
+    }
+
+    public void cacheAnalysisdata(AnalysisData analysisData) {
+        this.analysisData = analysisData;
+        refreshDate = MiscUtils.getTime();
+    }
+
+    public AnalysisData getAnalysisData() {
+        return analysisData;
+    }
+
+    public Optional<Long> getAnalysisRefreshDate() {
+        return refreshDate != null ? Optional.of(refreshDate) : Optional.empty();
     }
 }
