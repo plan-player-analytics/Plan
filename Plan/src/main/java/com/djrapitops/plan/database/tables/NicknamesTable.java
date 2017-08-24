@@ -20,7 +20,7 @@ public class NicknamesTable extends UserIDTable {
     private final String columnNick = "nickname";
     private final String columnServerID = "server_id";
 
-    private ServerTable serverTable;
+    private final ServerTable serverTable;
 
     /**
      * @param db         The database

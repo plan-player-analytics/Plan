@@ -15,7 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class PlanChatListener implements Listener {
 
-    private Plan plugin;
+    private final Plan plugin;
 
     /**
      * Class Constructor.

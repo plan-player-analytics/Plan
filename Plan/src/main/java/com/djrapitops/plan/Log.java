@@ -119,7 +119,7 @@ public class Log {
      * Logs trace of caught Exception to Errors.txt and notifies on console.
      *
      * @param source Class name the exception was caught in.
-     * @param e      Throwable, eg NullPointerException
+     * @param e      {@code Throwable}, eg NullPointerException
      */
     public static void toLog(String source, Throwable e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);
@@ -129,7 +129,7 @@ public class Log {
      * Logs multiple caught Errors to Errors.txt.
      *
      * @param source Class name the exception was caught in.
-     * @param e      Collection of Throwables, eg NullPointerException
+     * @param e      Collection of {@code Throwable}, eg NullPointerException
      */
     public static void toLog(String source, Collection<Throwable> e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);

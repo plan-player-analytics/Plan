@@ -89,6 +89,7 @@ public class UserInfoTable extends UserIDTable {
             set = statement.executeQuery();
             return set.next();
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -142,6 +143,7 @@ public class UserInfoTable extends UserIDTable {
             }
             return null;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

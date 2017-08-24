@@ -22,27 +22,31 @@ import java.io.IOException;
 public class DBTestSuite {
     @BeforeClass
     public static void setUp() throws IOException {
-        clean(true);
+        clean();
     }
 
     @AfterClass
     public static void tearDown() throws IOException {
-        clean(false);
+        clean();
     }
 
-    private static void clean(boolean dbOnly) throws IOException {
+    private static void clean() {
         File testFolder = TestInit.getTestFolder();
 
         if (!testFolder.exists() || !testFolder.isDirectory()) {
             return;
         }
 
-        for (File f : testFolder.listFiles()) {
-            if (dbOnly && !f.getName().contains(".db")) {
-                continue;
-            }
+        File[] files = testFolder.listFiles();
 
-            f.delete();
+        if (files == null) {
+            return;
+        }
+
+        for (File f : files) {
+            if (!f.delete()) {
+                f.deleteOnExit();
+            }
         }
     }
 }

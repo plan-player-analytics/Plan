@@ -21,7 +21,7 @@ import static junit.framework.TestCase.*;
 @PrepareForTest(JavaPlugin.class)
 public class GeolocationCacheTest {
 
-    private Map<String, String> ipsToCountries = new HashMap<>();
+    private final Map<String, String> ipsToCountries = new HashMap<>();
 
     @Before
     public void setUp() {

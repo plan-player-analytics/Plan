@@ -138,15 +138,6 @@ public abstract class SQLDB extends Database {
         return true;
     }
 
-    private boolean isNewDatabase() {
-        try {
-            getVersion();
-            return false;
-        } catch (Exception ignored) {
-            return true;
-        }
-    }
-
     /**
      * @return
      */
@@ -195,6 +186,11 @@ public abstract class SQLDB extends Database {
     @Override
     public int getVersion() throws SQLException {
         return versionTable.getVersion();
+    }
+
+    @Override
+    public boolean isNewDatabase() throws SQLException {
+        return versionTable.isNewDatabase();
     }
 
     /**

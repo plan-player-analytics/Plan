@@ -8,6 +8,7 @@ package test.java.main.java.com.djrapitops.plan.database;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import org.junit.Test;
+import test.java.utils.RandomData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +60,17 @@ public class DBUtilsTest {
         assertEquals(10192, result.get(0).size());
         assertEquals(10192, result.get(1).size());
         assertEquals(946, result.get(2).size());
+    }
+
+    @Test
+    public void testContainers() {
+        Object object = new Object();
+        int id = RandomData.randomInt(1, 100);
+
+        Container<Object> container = new Container<>(object, id);
+
+        assertEquals(id, container.getId());
+        assertEquals(object, container.getObject());
     }
 
 }
