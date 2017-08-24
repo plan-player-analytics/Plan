@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class KillPart extends RawData {
 
-    private final Map<UUID, List<KillData>> playerKills;
+    private final Map<UUID, List<PlayerKill>> playerKills;
     private long mobKills;
     private long deaths;
 
@@ -49,7 +49,7 @@ public class KillPart extends RawData {
      * @param kills all kills of a player
      * @throws IllegalArgumentException if kills is null
      */
-    public void addKills(UUID uuid, List<KillData> kills) {
+    public void addKills(UUID uuid, List<PlayerKill> kills) {
         Verify.nullCheck(kills);
         playerKills.put(uuid, kills);
     }
@@ -62,11 +62,11 @@ public class KillPart extends RawData {
         deaths += amount;
     }
 
-    public Map<UUID, List<KillData>> getPlayerKills() {
+    public Map<UUID, List<PlayerKill>> getPlayerKills() {
         return playerKills;
     }
 
-    public List<KillData> getAllPlayerKills() {
+    public List<PlayerKill> getAllPlayerKills() {
         return MiscUtils.flatMap(playerKills.values());
     }
 

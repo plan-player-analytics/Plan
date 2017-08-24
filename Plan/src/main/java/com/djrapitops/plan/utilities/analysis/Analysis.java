@@ -289,7 +289,7 @@ public class Analysis {
 //            } else {
 //                activity.addInActive(uuid);
 //            }
-        //TODO    List<KillData> playerKills = uData.getPlayerKills();
+        //TODO    List<PlayerKill> playerKills = uData.getPlayerKills();
 
 //            List<Session> sessions = uData.getSessions();
 //            joinInfo.addSessions(uuid, sessions);

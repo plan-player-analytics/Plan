@@ -11,20 +11,20 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class KillData {
+public class PlayerKill {
 
     private final UUID victim;
     private final long time;
     private final String weapon;
 
     /**
-     * Creates a KillData object with given parameters.
+     * Creates a PlayerKill object with given parameters.
      *
      * @param victim UUID of the victim.
      * @param weapon Weapon used.
      * @param time   Epoch millisecond at which the kill occurred.
      */
-    public KillData(UUID victim, String weapon, long time) {
+    public PlayerKill(UUID victim, String weapon, long time) {
         this.victim = victim;
         this.weapon = weapon;
         this.time = time;
@@ -74,7 +74,7 @@ public class KillData {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final KillData other = (KillData) obj;
+        final PlayerKill other = (PlayerKill) obj;
         return this.time == other.time
                 && Objects.equals(this.weapon, other.weapon)
                 && Objects.equals(this.victim, other.victim);

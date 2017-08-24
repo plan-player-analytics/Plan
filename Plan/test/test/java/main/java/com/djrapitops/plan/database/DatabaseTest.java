@@ -311,10 +311,10 @@ public class DatabaseTest {
         return new WorldTimes(times);
     }
 
-    private List<KillData> createKills() {
-        List<KillData> kills = new ArrayList<>();
-        kills.add(new KillData(uuid2, "Iron Sword", 4321L));
-        kills.add(new KillData(uuid2, "Gold Sword", 5321L));
+    private List<PlayerKill> createKills() {
+        List<PlayerKill> kills = new ArrayList<>();
+        kills.add(new PlayerKill(uuid2, "Iron Sword", 4321L));
+        kills.add(new PlayerKill(uuid2, "Gold Sword", 5321L));
         return kills;
     }
 

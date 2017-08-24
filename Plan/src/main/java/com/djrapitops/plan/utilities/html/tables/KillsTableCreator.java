@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
-import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -26,20 +26,20 @@ public class KillsTableCreator {
     }
 
     /**
-     * @param killData The list of the {@link KillData} Objects from which the kill table should be created
+     * @param playerKills The list of the {@link PlayerKill} Objects from which the kill table should be created
      * @return The created kills table
      */
-    public static String createKillsTable(List<KillData> killData) {
+    public static String createKillsTable(List<PlayerKill> playerKills) {
         StringBuilder html = new StringBuilder(Html.TABLE_KILLS_START.parse());
 
-        if (killData.isEmpty()) {
+        if (playerKills.isEmpty()) {
             html.append(Html.TABLELINE_3.parse(Locale.get(Msg.HTML_TABLE_NO_KILLS).parse(), "", ""));
         } else {
-            killData.sort(new KillDataComparator());
-            Collections.reverse(killData);
+            playerKills.sort(new KillDataComparator());
+            Collections.reverse(playerKills);
 
             int i = 0;
-            for (KillData kill : killData) {
+            for (PlayerKill kill : playerKills) {
                 if (i >= 20) {
                     break;
                 }

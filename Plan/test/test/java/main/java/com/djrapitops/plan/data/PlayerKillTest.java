@@ -5,7 +5,7 @@
  */
 package test.java.main.java.com.djrapitops.plan.data;
 
-import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.PlayerKill;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,21 +16,21 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Rsl1122
  */
-public class KillDataTest {
+public class PlayerKillTest {
 
-    private KillData test;
+    private PlayerKill test;
     private UUID testUUID;
 
     /**
      *
      */
-    public KillDataTest() {
+    public PlayerKillTest() {
     }
 
     @Before
     public void setUp() throws Exception {
         testUUID = UUID.fromString("71cfb6f0-c3ef-4954-8abe-13fa07afc340");
-        test = new KillData(testUUID, "TestWeapon", 100L);
+        test = new PlayerKill(testUUID, "TestWeapon", 100L);
     }
 
     /**

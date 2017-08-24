@@ -30,7 +30,7 @@ public class Session {
     private WorldTimes worldTimes;
     private final long sessionStart;
     private long sessionEnd;
-    private List<KillData> playerKills;
+    private List<PlayerKill> playerKills;
     private int mobKills;
     private int deaths;
 
@@ -87,7 +87,7 @@ public class Session {
         worldTimes.updateState(world, gm, time);
     }
 
-    public void playerKilled(KillData kill) {
+    public void playerKilled(PlayerKill kill) {
         playerKills.add(kill);
     }
 
@@ -130,7 +130,7 @@ public class Session {
         return worldTimes;
     }
 
-    public List<KillData> getPlayerKills() {
+    public List<PlayerKill> getPlayerKills() {
         return playerKills;
     }
 
@@ -185,7 +185,7 @@ public class Session {
         this.worldTimes = worldTimes;
     }
 
-    public void setPlayerKills(List<KillData> playerKills) {
+    public void setPlayerKills(List<PlayerKill> playerKills) {
         this.playerKills = playerKills;
     }
 

@@ -2,7 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -74,7 +74,7 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    public void savePlayerKills(UUID uuid, long sessionID, List<KillData> playerKills) throws SQLException {
+    public void savePlayerKills(UUID uuid, long sessionID, List<PlayerKill> playerKills) throws SQLException {
         if (Verify.isEmpty(playerKills)) {
             return;
         }
@@ -90,7 +90,7 @@ public class KillsTable extends UserIDTable {
                     + usersTable.statementSelectID + ", "
                     + usersTable.statementSelectID + ", "
                     + "?, ?, ?)");
-            for (KillData kill : playerKills) {
+            for (PlayerKill kill : playerKills) {
                 UUID victim = kill.getVictim();
                 long date = kill.getTime();
                 String weapon = kill.getWeapon();
@@ -133,7 +133,7 @@ public class KillsTable extends UserIDTable {
                 UUID victim = UUID.fromString(uuidS);
                 long date = set.getLong(columnDate);
                 String weapon = set.getString(columnWeapon);
-                session.getPlayerKills().add(new KillData(victim, weapon, date));
+                session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
             }
         } finally {
             close(set, statement);
