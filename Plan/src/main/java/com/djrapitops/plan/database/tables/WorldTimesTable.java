@@ -98,8 +98,8 @@ public class WorldTimesTable extends UserIDTable {
             }
 
             statement.executeBatch();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

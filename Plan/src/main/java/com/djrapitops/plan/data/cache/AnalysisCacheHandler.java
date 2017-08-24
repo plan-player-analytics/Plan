@@ -31,7 +31,7 @@ public class AnalysisCacheHandler {
     private AnalysisData cache;
     private boolean analysisEnabled;
 
-    private Set<UUID> notifyWhenCached;
+    private final Set<UUID> notifyWhenCached;
 
     /**
      * Class Constructor.

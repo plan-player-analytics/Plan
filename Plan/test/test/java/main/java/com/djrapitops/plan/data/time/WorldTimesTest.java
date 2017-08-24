@@ -35,7 +35,7 @@ public class WorldTimesTest {
     public void testWorldChange() {
         long changeTime = time + 1000L;
         test.updateState(worldTwo, gms[0], changeTime);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getWorldPlaytime(worldOne));
         assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
     }
 
@@ -43,7 +43,7 @@ public class WorldTimesTest {
     public void testGMChange() {
         long changeTime = time + 1000L;
         test.updateState(worldOne, gms[0], changeTime);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getWorldPlaytime(worldOne));
         assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
     }
 
@@ -52,10 +52,10 @@ public class WorldTimesTest {
         long changeTime = time + 1000L;
         long changeTime2 = changeTime + 1000L;
         test.updateState(worldTwo, gms[2], changeTime);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getWorldPlaytime(worldOne));
         assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
         test.updateState(worldOne, gms[1], changeTime2);
-        assertEquals(1000L, (long) test.getWorldPlaytime(worldOne));
+        assertEquals(1000L, test.getWorldPlaytime(worldOne));
         assertEquals(1000L, test.getGMTimes(worldOne).getTime(gms[0]));
         assertEquals(1000L, test.getGMTimes(worldTwo).getTime(gms[2]));
     }

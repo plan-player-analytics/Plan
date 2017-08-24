@@ -20,7 +20,7 @@ public class NicknamesTable extends UserIDTable {
     private final String columnNick = "nickname";
     private final String columnServerID = "server_id";
 
-    private ServerTable serverTable;
+    private final ServerTable serverTable;
 
     /**
      * @param db         The database
@@ -152,9 +152,10 @@ public class NicknamesTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             statement.setString(2, Plan.getServerUUID().toString());
             statement.setString(3, displayName);
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

@@ -32,7 +32,6 @@ public class MySQLDB extends SQLDB {
         String port = config.getString("Database.MySQL.Port");
         String database = config.getString("Database.MySQL.Database");
 
-
         dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true");
 
         String username = config.getString("Database.MySQL.User");
@@ -40,6 +39,7 @@ public class MySQLDB extends SQLDB {
 
         dataSource.setUsername(username);
         dataSource.setPassword(password);
+
         dataSource.setMaxTotal(-1);
     }
 

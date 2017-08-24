@@ -70,7 +70,9 @@ public class UserInfoTable extends UserIDTable {
             statement.setString(1, uuid.toString());
             statement.setLong(2, registered);
             statement.setString(3, Plan.getServerUUID().toString());
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
@@ -87,6 +89,7 @@ public class UserInfoTable extends UserIDTable {
             set = statement.executeQuery();
             return set.next();
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -100,7 +103,9 @@ public class UserInfoTable extends UserIDTable {
             statement.setBoolean(1, opped);
             statement.setBoolean(2, banned);
             statement.setString(3, uuid.toString());
+
             statement.execute();
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
@@ -138,6 +143,7 @@ public class UserInfoTable extends UserIDTable {
             }
             return null;
         } finally {
+            endTransaction(statement);
             close(set, statement);
         }
     }

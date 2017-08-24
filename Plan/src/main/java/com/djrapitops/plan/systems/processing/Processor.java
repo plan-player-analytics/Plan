@@ -10,7 +10,7 @@ package main.java.com.djrapitops.plan.systems.processing;
  * @author Rsl1122
  */
 public abstract class Processor<T> {
-    protected T object;
+    protected final T object;
 
     public Processor(T object) {
         this.object = object;

@@ -60,7 +60,7 @@ public enum Html {
     @Deprecated ERROR_TABLE_2(TABLELINE_2.parse("No data", "No data")),
     TABLE_END("</tbody></table>"); //    KILLDATA_NONE("No Kills"),
 
-    private String html;
+    private final String html;
 
     Html(String html) {
         this.html = html;

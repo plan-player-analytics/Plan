@@ -138,15 +138,6 @@ public abstract class SQLDB extends Database {
         return true;
     }
 
-    private boolean isNewDatabase() {
-        try {
-            getVersion();
-            return false;
-        } catch (Exception ignored) {
-            return true;
-        }
-    }
-
     /**
      * @return
      */
@@ -197,6 +188,11 @@ public abstract class SQLDB extends Database {
         return versionTable.getVersion();
     }
 
+    @Override
+    public boolean isNewDatabase() throws SQLException {
+        return versionTable.isNewDatabase();
+    }
+
     /**
      * @param version
      * @throws SQLException
@@ -233,12 +229,6 @@ public abstract class SQLDB extends Database {
         try {
             Benchmark.start("Remove Account");
             Log.debug("Database", "Removing Account: " + uuid);
-            try {
-                setupDatabase();
-            } catch (Exception e) {
-                Log.toLog(this.getClass().getName(), e);
-                return false;
-            }
 
             for (Table t : getAllTablesInRemoveOrder()) {
                 if (!(t instanceof UserIDTable)) {

@@ -47,9 +47,9 @@ public class DatabaseTest {
     private Database db;
     private Database backup;
     private int rows;
-    private UUID uuid = MockUtils.getPlayerUUID();
-    private List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
-    private UUID uuid2 = MockUtils.getPlayer2UUID();
+    private final UUID uuid = MockUtils.getPlayerUUID();
+    private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
+    private final UUID uuid2 = MockUtils.getPlayer2UUID();
 
     public DatabaseTest() {
     }
@@ -58,18 +58,11 @@ public class DatabaseTest {
     public void setUp() throws Exception {
         TestInit t = TestInit.init();
         plan = t.getPlanMock();
-        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime()) {
-            @Override
-            public void startConnectionPingTask() {
-
-            }
-        };
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
-        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, t.getServerUUID(), "ServerName", ""));
+        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", ""));
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
-
-        db.init();
     }
 
     @After
@@ -344,6 +337,7 @@ public class DatabaseTest {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
+
         Session session = new Session(12345L, "", "");
         session.endSession(22345L);
         session.setWorldTimes(createWorldTimes());

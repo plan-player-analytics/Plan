@@ -28,7 +28,7 @@ import static junit.framework.TestCase.assertNotNull;
 @PrepareForTest(JavaPlugin.class)
 public class HastebinTest {
 
-    private AtomicReference<String> testLink = new AtomicReference<>(null);
+    private final AtomicReference<String> testLink = new AtomicReference<>(null);
 
     @Before
     public void checkAvailability() throws Exception {

@@ -30,6 +30,8 @@ public class ReduceGapTriangles {
                 continue;
             }
 
+            assert lastPoint != null;
+
             long date = (long) point.getX();
             long lastDate = (long) lastPoint.getX();
             double y = point.getY();

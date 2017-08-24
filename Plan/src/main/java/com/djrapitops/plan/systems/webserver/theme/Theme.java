@@ -47,7 +47,7 @@ public enum Theme {
             "fff", "000", "267F00", "e5cc12", "b74343", "1E90FF",
             "e0d264", "7dcc24", "b58310", "ac69ef", "ddd", "565556");
 
-    private String[] colors;
+    private final String[] colors;
 
     Theme(String... colors) {
         int length = colors.length;
@@ -63,19 +63,17 @@ public enum Theme {
     }
 
     public String replaceThemeColors(String resourceString) {
-        Theme def = Theme.DEFAULT;
         String replaced = resourceString;
         for (Colors c : Colors.values()) {
-            replaced = replaced.replace("#" + def.getColor(c.getId()), "#" + this.getColor(c.getId()));
+            replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), "#" + this.getColor(c.getId()));
         }
         return replaced;
     }
 
     public static String replaceColors(String resourceString) {
-        Theme def = Theme.DEFAULT;
         String replaced = resourceString;
         for (Colors c : Colors.values()) {
-            replaced = replaced.replace("#" + def.getColor(c.getId()), c.getColor());
+            replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), c.getColor());
         }
         return replaced;
     }

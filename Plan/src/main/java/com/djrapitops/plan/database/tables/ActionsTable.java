@@ -39,7 +39,7 @@ public class ActionsTable extends UserIDTable {
     private final String columnActionID = "action_id";
     private final String columnAdditionalInfo = "additional_info";
 
-    private ServerTable serverTable;
+    private final ServerTable serverTable;
 
     public ActionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_actions", db, usingMySQL);
@@ -80,8 +80,9 @@ public class ActionsTable extends UserIDTable {
             statement.setLong(4, action.getDate());
             statement.setString(5, action.getAdditionalInfo());
             statement.execute();
+
+            commit(statement.getConnection());
         } finally {
-            endTransaction(statement);
             close(statement);
         }
     }

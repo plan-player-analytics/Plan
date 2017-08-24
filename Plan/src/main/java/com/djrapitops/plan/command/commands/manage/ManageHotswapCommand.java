@@ -69,6 +69,8 @@ public class ManageHotswapCommand extends SubCommand {
             return true;
         }
 
+        assert database != null;
+
         try {
             database.getVersion(); //Test db connection
         } catch (Exception e) {
