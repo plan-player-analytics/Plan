@@ -46,7 +46,7 @@ public class VersionTable extends Table {
 
             set = statement.executeQuery();
 
-            return set.next();
+            return !set.next();
         } finally {
             endTransaction(statement);
             close(set, statement);
