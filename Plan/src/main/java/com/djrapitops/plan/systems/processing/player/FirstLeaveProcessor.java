@@ -36,7 +36,7 @@ public class FirstLeaveProcessor extends PlayerProcessor {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
-            plugin.getDataCache().clearFromFirstLeaveCheck(uuid);
+            plugin.getDataCache().endFirstSessionActionTracking(uuid);
         }
     }
 }

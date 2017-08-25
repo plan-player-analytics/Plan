@@ -5,7 +5,10 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This Class contains the Cache.
@@ -25,7 +28,7 @@ public class DataCache extends SessionCache {
     private final Map<UUID, String> playerNames;
     private final Map<UUID, String> displayNames;
 
-    private final Set<UUID> playersWithFirstSession;
+    private final Map<UUID, Integer> firstSessionInformation;
 
     /**
      * Class Constructor.
@@ -41,7 +44,7 @@ public class DataCache extends SessionCache {
 
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
-        playersWithFirstSession = new HashSet<>();
+        firstSessionInformation = new HashMap<>();
     }
 
     public void updateNames(UUID uuid, String playerName, String displayName) {
@@ -70,14 +73,24 @@ public class DataCache extends SessionCache {
     }
 
     public void addFirstLeaveCheck(UUID uuid) {
-        playersWithFirstSession.add(uuid);
+        firstSessionInformation.put(uuid, 0);
     }
 
     public boolean isFirstSession(UUID uuid) {
-        return playersWithFirstSession.contains(uuid);
+        return firstSessionInformation.containsKey(uuid);
     }
 
-    public void clearFromFirstLeaveCheck(UUID uuid) {
-        playersWithFirstSession.remove(uuid);
+    public void endFirstSessionActionTracking(UUID uuid) {
+        firstSessionInformation.remove(uuid);
+    }
+
+    public void firstSessionMessageSent(UUID uuid) {
+        Integer msgCount = firstSessionInformation.getOrDefault(uuid, 0);
+        msgCount++;
+        firstSessionInformation.put(uuid, msgCount);
+    }
+
+    public int getFirstSessionMsgCount(UUID uuid) {
+        return firstSessionInformation.getOrDefault(uuid, 0);
     }
 }
