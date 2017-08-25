@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plugin.command.ISender;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.database.Database;
@@ -27,16 +28,16 @@ import java.util.UUID;
  */
 public class InformationManager {
     // TODO Class that manages ALL information for API, WebAPI requests, Command Caching etc.
-    private final Plan plugin;
-    private final Database db;
+    private Plan plugin;
+    private Database db;
 
-    private final DataCache dataCache;
+    private DataCache dataCache;
 
     private boolean usingBungeeWebServer;
     private String webServerAddress;
 
-    private final Set<ISender> analysisNotification;
-    private final Analysis analysis;
+    private Set<ISender> analysisNotification;
+    private Analysis analysis;
     private AnalysisData analysisData;
     private String analysisPluginsTab;
     private Long refreshDate;
@@ -55,6 +56,10 @@ public class InformationManager {
         if (webServerAddress != null) {
             attemptBungeeConnection();
         }
+    }
+
+    public InformationManager(PlanBungee plugin) {
+        // TODO Init info manager.
     }
 
     public void attemptBungeeConnection() {

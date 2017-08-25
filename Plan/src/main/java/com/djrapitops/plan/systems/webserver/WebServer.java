@@ -5,6 +5,7 @@ import com.sun.net.httpserver.*;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -47,7 +48,7 @@ import java.util.zip.GZIPOutputStream;
  */
 public class WebServer {
 
-    private final Plan plugin;
+    private final IPlan plugin;
     private InformationManager infoManager;
 
     private final int port;
@@ -57,11 +58,10 @@ public class WebServer {
     private boolean usingHttps = false;
 
     /**
-     * Class Constructor.
      *
-     * @param plugin Current instance of Plan
+     * @param plugin
      */
-    public WebServer(Plan plugin) {
+    public WebServer(IPlan plugin) {
         this.plugin = plugin;
         this.port = Settings.WEBSERVER_PORT.getNumber();
 
@@ -411,7 +411,7 @@ public class WebServer {
         String page = args[1];
         switch (page) {
             case "players":
-                return PageCache.loadPage("players", () -> new PlayersPageResponse(plugin));
+                return PageCache.loadPage("players", PlayersPageResponse::new);
             case "player":
                 return playerResponse(args);
             case "server":
@@ -451,7 +451,7 @@ public class WebServer {
             case 0:
                 return serverResponse();
             case 1:
-                return PageCache.loadPage("players", () -> new PlayersPageResponse(plugin));
+                return PageCache.loadPage("players", PlayersPageResponse::new);
             case 2:
                 return playerResponse(new String[]{"", "", user.getName()});
             default:

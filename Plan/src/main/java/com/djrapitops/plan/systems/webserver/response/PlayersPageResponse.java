@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.utilities.comparators.UserDataNameComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
@@ -14,7 +13,7 @@ import java.util.List;
  */
 public class PlayersPageResponse extends Response {
 
-    public PlayersPageResponse(Plan plugin) {
+    public PlayersPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
 //        super.setContent(buildContent(plugin.getInspectCache().getCachedUserData()));
     }

@@ -7,10 +7,12 @@ package main.java.com.djrapitops.plan.systems.info.server;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
-import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
@@ -27,7 +29,7 @@ import java.util.UUID;
  */
 public class ServerInfoManager {
 
-    private final Plan plugin;
+    private final IPlan plugin;
     private ServerInfo serverInfo;
     private ServerInfoFile serverInfoFile;
     private final ServerTable serverTable;
@@ -60,6 +62,11 @@ public class ServerInfoManager {
         }
     }
 
+    public ServerInfoManager(PlanBungee plugin) {
+        this.plugin = plugin;
+        serverTable = plugin.getDB().getServerTable();
+    }
+
     private void updateDbInfo(UUID serverUUID) throws SQLException, IOException {
         Optional<Integer> serverID = serverTable.getServerID(serverUUID);
         if (!serverID.isPresent()) {
@@ -77,7 +84,7 @@ public class ServerInfoManager {
     }
 
     private void registerServer() throws SQLException, IOException {
-        registerServer(generateNewUUID(plugin.getServer()));
+        registerServer(generateNewUUID(plugin.getVariable()));
     }
 
     private void registerServer(UUID serverUUID) throws SQLException, IOException {
@@ -96,8 +103,8 @@ public class ServerInfoManager {
         serverInfoFile.saveInfo(serverInfo, new ServerInfo(id, serverUUID, name, webAddress));
     }
 
-    private UUID generateNewUUID(Server server) {
-        String seed = server.getName() + server.getIp() + server.getPort() + server.getVersion() + server.getBukkitVersion();
+    private UUID generateNewUUID(ServerVariableHolder variableHolder) {
+        String seed = variableHolder.getName() + variableHolder.getIp() + variableHolder.getPort() + variableHolder.getVersion() + variableHolder.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 

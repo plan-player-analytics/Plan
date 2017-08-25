@@ -1,7 +1,5 @@
 package main.java.com.djrapitops.plan;
 
-import org.bukkit.Server;
-
 /**
  * Class responsible for holding server variable values that do not change
  * without a reload.
@@ -11,6 +9,10 @@ import org.bukkit.Server;
  */
 public class ServerVariableHolder {
 
+    private final String name;
+    private final int port;
+    private final String version;
+    private final String implVersion;
     private final String ip;
     private final boolean usingPaper;
 
@@ -19,12 +21,27 @@ public class ServerVariableHolder {
      *
      * @param server instance the plugin is running on.
      */
-    public ServerVariableHolder(Server server) {
+    public ServerVariableHolder(org.bukkit.Server server) {
         ip = server.getIp();
+        name = server.getName();
+        port = server.getPort();
+        version = server.getVersion();
+        implVersion = server.getBukkitVersion();
 
         String serverName = server.getName();
         usingPaper = serverName.equals("Paper")
                 || serverName.equals("TacoSpigot"); //Fork of Paper
+    }
+
+    public ServerVariableHolder(net.md_5.bungee.api.ProxyServer server) {
+        ip = "";
+        name = server.getName();
+        port = -1;
+        version = server.getVersion();
+        implVersion = server.getVersion();
+
+        String serverName = "BungeeCord";
+        usingPaper = false;
     }
 
     /**
@@ -43,5 +60,21 @@ public class ServerVariableHolder {
      */
     public boolean isUsingPaper() {
         return usingPaper;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getImplVersion() {
+        return implVersion;
     }
 }
