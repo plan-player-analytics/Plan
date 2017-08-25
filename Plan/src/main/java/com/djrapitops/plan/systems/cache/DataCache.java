@@ -13,13 +13,15 @@ import java.util.UUID;
 /**
  * This Class contains the Cache.
  * <p>
- * It is used to store command use, active sessions and Unsaved TPS objects
- * objects in memory.
- * <p>
- * Its methods can be used to access all the data it stores and to clear them.
+ * Contains:
+ * <ul>
+ *     <li>PlayerName cache, used for reducing database calls on chat events</li>
+ *     <li>DisplayName cache, used for reducing database calls on chat events</li>
+ *     <li>FirstSession MessageCount Map, used for tracking first session & message count on that session.</li>
+ * </ul>
  *
  * @author Rsl1122
- * @since 2.0.0
+ * @since 4.0.0
  */
 public class DataCache extends SessionCache {
 
@@ -28,13 +30,10 @@ public class DataCache extends SessionCache {
     private final Map<UUID, String> playerNames;
     private final Map<UUID, String> displayNames;
 
-    private final Map<UUID, Integer> firstSessionInformation;
+    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
 
     /**
      * Class Constructor.
-     * <p>
-     * Gets the Database from the plugin. Starts the queues. Registers
-     * Asynchronous Periodic Save Task
      *
      * @param plugin Current instance of Plan
      */
@@ -44,18 +43,38 @@ public class DataCache extends SessionCache {
 
         playerNames = new HashMap<>();
         displayNames = new HashMap<>();
-        firstSessionInformation = new HashMap<>();
     }
 
+    /**
+     * Used to update PlayerName and DisplayName caches.
+     *
+     * @param uuid UUID of the player.
+     * @param playerName Name of the player.
+     * @param displayName DisplayName of the player.
+     */
     public void updateNames(UUID uuid, String playerName, String displayName) {
         playerNames.put(uuid, playerName);
         displayNames.put(uuid, displayName);
     }
 
+    /**
+     * Used to get the player name in the cache.
+     *
+     * @param uuid UUID of the player.
+     * @return name or null if not cached.
+     */
     public String getName(UUID uuid) {
         return playerNames.get(uuid);
     }
 
+    /**
+     * Used to get the player display name in the cache.
+     *
+     * If not cached, one from the database will be cached.
+     *
+     * @param uuid UUID of the player.
+     * @return latest displayName or null if none are saved.
+     */
     public String getDisplayName(UUID uuid) {
         String cached = displayNames.get(uuid);
         if (cached == null) {
@@ -72,10 +91,20 @@ public class DataCache extends SessionCache {
         return cached;
     }
 
-    public void addFirstLeaveCheck(UUID uuid) {
+    /**
+     * Used for marking first Session Actions to be saved.
+     *
+     * @param uuid UUID of the new player.
+     */
+    public void markFirstSession(UUID uuid) {
         firstSessionInformation.put(uuid, 0);
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public boolean isFirstSession(UUID uuid) {
         return firstSessionInformation.containsKey(uuid);
     }

@@ -216,8 +216,8 @@ public class DatabaseTest {
         saveUserOne();
         ActionsTable actionsTable = db.getActionsTable();
 
-        Action save = new Action(234567890L, Actions.REGISTERED, "Additional Info");
-        Action expected = new Action(234567890L, Actions.REGISTERED, "Additional Info", 1);
+        Action save = new Action(234567890L, Actions.FIRST_SESSION, "Additional Info");
+        Action expected = new Action(234567890L, Actions.FIRST_SESSION, "Additional Info", 1);
 
         actionsTable.insertAction(uuid, save);
 
@@ -508,7 +508,7 @@ public class DatabaseTest {
         sessionsTable.saveSession(uuid, session);
         nicknamesTable.saveUserName(uuid, "TestNick");
         ipsTable.saveIP(uuid, "1.2.3.4", "TestLoc");
-        actionsTable.insertAction(uuid, new Action(1324L, Actions.REGISTERED, "Add"));
+        actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(uuid));
 
@@ -545,7 +545,7 @@ public class DatabaseTest {
         sessionsTable.saveSession(uuid, session);
         nicknamesTable.saveUserName(uuid, "TestNick");
         ipsTable.saveIP(uuid, "1.2.3.4", "TestLoc");
-        actionsTable.insertAction(uuid, new Action(1324L, Actions.REGISTERED, "Add"));
+        actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
 
         assertTrue(usersTable.isRegistered(uuid));
 

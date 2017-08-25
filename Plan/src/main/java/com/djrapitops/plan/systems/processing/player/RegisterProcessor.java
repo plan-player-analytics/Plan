@@ -20,12 +20,14 @@ import java.util.UUID;
  */
 public class RegisterProcessor extends PlayerProcessor {
 
+    private final long registered;
     private final long time;
     private final int playersOnline;
     private final String name;
 
-    public RegisterProcessor(UUID uuid, long time, String name, int playersOnline) {
+    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline) {
         super(uuid);
+        this.registered = registered;
         this.time = time;
         this.playersOnline = playersOnline;
         this.name = name;
@@ -39,10 +41,10 @@ public class RegisterProcessor extends PlayerProcessor {
         if (db.wasSeenBefore(uuid)) {
             return;
         }
-        plugin.getDataCache().addFirstLeaveCheck(uuid);
+        plugin.getDataCache().markFirstSession(uuid);
         try {
-            db.getUserInfoTable().registerUserInfo(uuid, time);
-            db.getActionsTable().insertAction(uuid, new Action(time, Actions.REGISTERED, "Online: " + playersOnline + " Players"));
+            db.getUserInfoTable().registerUserInfo(uuid, registered);
+            db.getActionsTable().insertAction(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
