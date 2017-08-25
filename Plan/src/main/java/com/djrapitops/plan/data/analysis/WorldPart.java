@@ -1,9 +1,10 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Part responsible for all World Playtime related analysis.
@@ -21,21 +22,23 @@ import java.util.Map;
  */
 public class WorldPart extends RawData {
 
-    private final Map<String, Long> worldTimes;
+    private WorldTimes worldTimes;
 
     public WorldPart() {
-        worldTimes = new HashMap<>();
+        worldTimes = new WorldTimes(new HashMap<>());
     }
 
     @Override
     protected void analyse() {
-//   TODO     WorldTimes t = new WorldTimes(worldTimes);
-//        addValue("worldTotal", FormatUtils.formatTimeAmount(t.getTotal()));
+        addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
         addValue("worldSeries", WorldPieCreator.createSeriesData(worldTimes));
     }
 
-    public void addToWorld(String worldName, long playTime) {
-        Long value = worldTimes.getOrDefault(worldName, 0L);
-        worldTimes.put(worldName, value + playTime);
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
+    }
+
+    public WorldTimes getWorldTimes() {
+        return worldTimes;
     }
 }

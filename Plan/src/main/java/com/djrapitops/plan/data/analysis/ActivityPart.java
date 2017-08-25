@@ -107,6 +107,10 @@ public class ActivityPart extends RawData {
         addValue("banned", counts[3]);
     }
 
+    public void addBans(Collection<UUID> uuids) {
+        bans.addAll(uuids);
+    }
+
     public void addBan(UUID uuid) {
         Verify.nullCheck(uuid);
         bans.add(uuid);

@@ -44,6 +44,11 @@ public class PlayerCountPart extends RawData {
         this.uuids.addAll(uuids);
     }
 
+    public void addOPs(Collection<UUID> uuids) {
+        Verify.nullCheck(uuids);
+        this.ops.addAll(uuids);
+    }
+
     public void addOP(UUID uuid) {
         Verify.nullCheck(uuid);
         ops.add(uuid);

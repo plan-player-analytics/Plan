@@ -66,7 +66,6 @@ public class SessionCache {
      *
      * @return key:value UUID:Session
      */
-    @Deprecated
     public Map<UUID, Session> getActiveSessions() {
         return activeSessions;
     }

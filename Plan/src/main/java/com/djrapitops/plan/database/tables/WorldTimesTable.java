@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -149,6 +150,53 @@ public class WorldTimesTable extends UserIDTable {
 
                 session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
             }
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public WorldTimes getWorldTimesOfServer() throws SQLException {
+        return getWorldTimesOfServer(Plan.getServerUUID());
+    }
+
+    public WorldTimes getWorldTimesOfServer(UUID serverUUID) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            String sessionIDColumn = sessionsTable + "." + sessionsTable.getColumnID();
+            String sessionServerIDColumn = sessionsTable + ".server_id";
+            statement = prepareStatement("SELECT " +
+                    "SUM(" + columnSurvival + ") as survival, " +
+                    "SUM(" + columnCreative + ") as creative, " +
+                    "SUM(" + columnAdventure + ") as adventure, " +
+                    "SUM(" + columnSpectator + ") as spectator, " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                    " JOIN " + sessionsTable + " on " + sessionIDColumn + "=" + columnSessionID +
+                    " WHERE " + sessionServerIDColumn + "=" + db.getServerTable().statementSelectServerID
+            );
+            statement.setString(1, serverUUID.toString());
+            set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
+            WorldTimes worldTimes = new WorldTimes(new HashMap<>());
+            while (set.next()) {
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong("survival"));
+                gmMap.put(gms[1], set.getLong("creative"));
+                gmMap.put(gms[2], set.getLong("adventure"));
+                gmMap.put(gms[3], set.getLong("spectator"));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                worldTimes.setGMTimesForWorld(worldName, gmTimes);
+            }
+            return worldTimes;
         } finally {
             endTransaction(statement);
             close(set, statement);

@@ -1,15 +1,19 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -24,6 +28,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,7 +96,7 @@ public class Analysis {
             Log.toLog(this.getClass().getName(), ex);
         }
 
-        return analyzeData(tpsData, infoManager);
+        return analyzeData(tpsData, infoManager, db);
     }
 
     /**
@@ -99,7 +104,7 @@ public class Analysis {
      * @param infoManager InformationManager of the plugin.
      * @return
      */
-    public boolean analyzeData(List<TPS> tpsData, InformationManager infoManager) {
+    public boolean analyzeData(List<TPS> tpsData, InformationManager infoManager, Database db) {
         try {
 //            rawData.sort(new UserDataLastPlayedComparator());
 //            List<UUID> uuids = rawData.stream().map(UserInfo::getUuid).collect(Collectors.toList());
@@ -130,7 +135,7 @@ public class Analysis {
 //            String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
 //            analysisData.setPlayersTable(playersTable);
 
-            fillDataset(analysisData);
+            fillDataset(analysisData, db);
             // Analyze
             analysisData.analyseData();
             Benchmark.stop("Analysis", "Analysis Phase");
@@ -235,60 +240,64 @@ public class Analysis {
         taskId = id;
     }
 
-    private void fillDataset(AnalysisData analysisData) {
+    private void fillDataset(AnalysisData analysisData, Database db) {
         ActivityPart activity = analysisData.getActivityPart();
         GeolocationPart geolocPart = analysisData.getGeolocationPart();
         JoinInfoPart joinInfo = analysisData.getJoinInfoPart();
-        KillPart killPart = analysisData.getKillPart();
         PlayerCountPart playerCount = analysisData.getPlayerCountPart();
         PlaytimePart playtime = analysisData.getPlaytimePart();
         WorldPart worldPart = analysisData.getWorldPart();
 
         long now = MiscUtils.getTime();
 
-        Benchmark.start("Fill Dataset");
-        List<PluginData> banSources = plugin.getHookHandler().getAdditionalDataSources()
-                .stream().filter(PluginData::isBanData).collect(Collectors.toList());
-//        rawData.forEach(uData -> {
-//        TODO    Map<String, Long> worldTimes = uData.getWorldTimes().getTimes();
+        Benchmark.start("Fetch Phase");
+        try {
+            List<UserInfo> userInfo = db.getUserInfoTable().getAllUserInfo();
+            playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-        // TODO     playtime.addToPlaytime(playTime);
-//            joinInfo.addToLoginTimes(uData.getLoginTimes());
-//            joinInfo.addRegistered(uData.getRegistered());
+            Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));
+            joinInfo.addRegistered(registered);
+            activity.addBans(userInfo.stream().filter(UserInfo::isBanned).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-        //TODO      geolocPart.addGeolocation(uData.getGeolocation());
+            playerCount.addOPs(userInfo.stream().filter(UserInfo::isOpped).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-//            final UUID uuid = uData.getUuid();
-//            if (uData.isOp()) {
-//                playerCount.addOP(uuid);
-//            }
+            Map<UUID, Session> activeSessions = plugin.getDataCache().getActiveSessions();
+            Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessionInfoOfServer();
+            joinInfo.addActiveSessions(activeSessions);
+            joinInfo.addSessions(sessions);
 
-//            boolean banned = uData.isBanned();
-//            if (!banned) {
-//                banned = banSources.stream()
-//                        .anyMatch(banData -> {
-//                            Serializable value = banData.getValue(uuid);
-//                            if (value instanceof Boolean) {
-//                                return (Boolean) value;
-//                            }
-//                            return false;
-//                        });
-//            }
-//
-//            if (banned) {
-//                activity.addBan(uuid);
-//            } else if (uData.getLoginTimes() == 1) {
-//                activity.addJoinedOnce(uuid);
-//        TODO    } else if (AnalysisUtils.isActive(now, uData.getLastPlayed(), playTime, uData.getSessionCount())) {
-//                activity.addActive(uuid);
-//            } else {
-//                activity.addInActive(uuid);
-//            }
-        //TODO    List<PlayerKill> playerKills = uData.getPlayerKills();
+            Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
+            geolocPart.addGeoLocations(geolocations);
 
-//            List<Session> sessions = uData.getSessions();
-//            joinInfo.addSessions(uuid, sessions);
-//        });
-        Benchmark.stop("Analysis", "Fill Dataset");
+            WorldTimes worldTimes = db.getWorldTimesTable().getWorldTimesOfServer();
+            worldPart.setWorldTimes(worldTimes);
+
+            playtime.setTotalPlaytime(db.getSessionsTable().getPlaytimeOfServer());
+            playtime.setPlaytime30d(db.getSessionsTable().getPlaytimeOfServer(now - TimeAmount.MONTH.ms()));
+            playtime.setPlaytime7d(db.getSessionsTable().getPlaytimeOfServer(now - TimeAmount.WEEK.ms()));
+            playtime.setPlaytime24h(db.getSessionsTable().getPlaytimeOfServer(now - TimeAmount.DAY.ms()));
+
+            List<PluginData> banSources = plugin.getHookHandler().getAdditionalDataSources()
+                    .stream().filter(PluginData::isBanData).collect(Collectors.toList());
+
+            for (UUID uuid : playerCount.getUuids()) {
+                boolean banned = banSources.stream().anyMatch(pluginData -> {
+                    try {
+                        Serializable value = pluginData.getValue(uuid);
+                        return value instanceof Boolean
+                                && (boolean) value;
+                    } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+                        Log.toLog(pluginData.getSourcePlugin() + pluginData.getPlaceholder("") + " (Cause) ", e);
+                        return false;
+                    }
+                });
+                if (banned) {
+                    activity.addBan(uuid);
+                }
+            }
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        Benchmark.stop("Analysis", "Fetch Phase");
     }
 }

@@ -314,6 +314,16 @@ public class SessionsTable extends UserIDTable {
     }
 
     /**
+     * Used to get the Total Playtime of THIS Server.
+     *
+     * @return Milliseconds played on the server. 0 if server not found.
+     * @throws SQLException
+     */
+    public long getPlaytimeOfServer() throws SQLException {
+        return getPlaytimeOfServer(Plan.getServerUUID());
+    }
+
+    /**
      * Used to get the Total Playtime of a Server.
      *
      * @param serverUUID UUID of the server.
@@ -322,6 +332,17 @@ public class SessionsTable extends UserIDTable {
      */
     public long getPlaytimeOfServer(UUID serverUUID) throws SQLException {
         return getPlaytimeOfServer(serverUUID, 0L);
+    }
+
+    /**
+     * Used to get Playtime after a date of THIS Server.
+     *
+     * @param afterDate Epoch ms (Playtime after this date is calculated)
+     * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
+     * @throws SQLException
+     */
+    public long getPlaytimeOfServer(long afterDate) throws SQLException {
+        return getPlaytimeOfServer(Plan.getServerUUID(), afterDate);
     }
 
     /**
@@ -424,5 +445,53 @@ public class SessionsTable extends UserIDTable {
 
     public String getColumnID() {
         return columnID;
+    }
+
+    public Map<UUID, List<Session>> getSessionInfoOfServer() throws SQLException {
+        return getSessionInfoOfServer(Plan.getServerUUID());
+    }
+
+    public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {
+        Optional<Integer> id = serverTable.getServerID(serverUUID);
+        if (!id.isPresent()) {
+            return new HashMap<>();
+        }
+        int serverID = id.get();
+        Map<UUID, List<Session>> sessionsByUser = new HashMap<>();
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+
+            statement = prepareStatement("SELECT " +
+                    columnSessionStart + ", " +
+                    columnSessionEnd + ", " +
+                    columnDeaths + ", " +
+                    columnMobKills + ", " +
+                    usersUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID
+            );
+            statement.setFetchSize(5000);
+            statement.setString(1, serverUUID.toString());
+            set = statement.executeQuery();
+            while (set.next()) {
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+                long start = set.getLong(columnSessionStart);
+                long end = set.getLong(columnSessionEnd);
+
+                int deaths = set.getInt(columnDeaths);
+                int mobKills = set.getInt(columnMobKills);
+                List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
+                sessions.add(new Session(serverID, start, end, deaths, mobKills));
+                sessionsByUser.put(uuid, sessions);
+            }
+            return sessionsByUser;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
     }
 }
