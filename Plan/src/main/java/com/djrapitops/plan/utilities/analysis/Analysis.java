@@ -10,12 +10,12 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
-import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.PageCache;
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
@@ -46,14 +46,10 @@ public class Analysis {
 
     /**
      * Analyzes the data of all offline players on the server.
-     * <p>
-     * First retrieves all offline players and checks those that are in the
-     * database. Then runs a new Analysis Task asynchronously. Saves AnalysisData
-     * to the provided Cache. Saves all UserInfo to InspectCache for 15 minutes.
      *
-     * @param analysisCache Cache that the data is saved to.
+     * @param infoManager InformationManager of the plugin.
      */
-    public void runAnalysis(AnalysisCacheHandler analysisCache) {
+    public void runAnalysis(InformationManager infoManager) {
         if (isAnalysisBeingRun()) {
             return;
         }
@@ -65,7 +61,7 @@ public class Analysis {
             @Override
             public void run() {
                 taskId = this.getTaskId();
-                analyze(analysisCache, plugin.getDB());
+                analyze(infoManager, plugin.getDB());
                 taskId = -1;
                 this.cancel();
             }
@@ -75,12 +71,12 @@ public class Analysis {
     /**
      * Caches analyzed data of db to the provided cache analysisCache.
      *
-     * @param analysisCache Cache that will contain AnalysisData result of this
+     * @param infoManager InformationManager of the plugin.
      *                      method.
      * @param db            Database which data will be analyzed.
      * @return Whether or not analysis was successful.
      */
-    public boolean analyze(AnalysisCacheHandler analysisCache, Database db) {
+    public boolean analyze(InformationManager infoManager, Database db) {
         log(Locale.get(Msg.ANALYSIS_FETCH).toString());
         Benchmark.start("Fetch Phase");
         Log.debug("Database", "Analysis Fetch");
@@ -95,15 +91,15 @@ public class Analysis {
             Log.toLog(this.getClass().getName(), ex);
         }
 
-        return analyzeData(tpsData, analysisCache);
+        return analyzeData(tpsData, infoManager);
     }
 
     /**
      * @param tpsData
-     * @param analysisCache
+     * @param infoManager InformationManager of the plugin.
      * @return
      */
-    public boolean analyzeData(List<TPS> tpsData, AnalysisCacheHandler analysisCache) {
+    public boolean analyzeData(List<TPS> tpsData, InformationManager infoManager) {
         try {
 //            rawData.sort(new UserDataLastPlayedComparator());
 //            List<UUID> uuids = rawData.stream().map(UserInfo::getUuid).collect(Collectors.toList());
@@ -143,7 +139,7 @@ public class Analysis {
             Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
 //    TODO        analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
 
-            analysisCache.cache(analysisData);
+            infoManager.cacheAnalysisdata(analysisData);
             long time = Benchmark.stop("Analysis", "Analysis");
 
             Log.logDebug("Analysis", time);
