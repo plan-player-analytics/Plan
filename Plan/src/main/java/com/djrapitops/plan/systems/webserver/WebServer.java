@@ -13,6 +13,10 @@ import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyticsWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyzeWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.ConfigureWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.InspectWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
@@ -60,10 +64,19 @@ public class WebServer {
     public WebServer(Plan plugin) {
         this.plugin = plugin;
         this.port = Settings.WEBSERVER_PORT.getNumber();
+
+        registerWebAPIs();
     }
 
     public void setInfoManager(InformationManager infoManager) {
         this.infoManager = infoManager;
+    }
+
+    private void registerWebAPIs() {
+        WebAPIManager.registerNewAPI("analytics", new AnalyticsWebAPI());
+        WebAPIManager.registerNewAPI("analyze", new AnalyzeWebAPI());
+        WebAPIManager.registerNewAPI("configure", new ConfigureWebAPI());
+        WebAPIManager.registerNewAPI("inspect", new InspectWebAPI());
     }
 
     /**

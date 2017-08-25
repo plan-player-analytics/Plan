@@ -44,13 +44,7 @@ import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.PeriodicDBCommitTask;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
-import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyticsWebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyzeWebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.ConfigureWebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.InspectWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.ui.webserver.api.bukkit.InspectionWebAPI;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.Check;
 import org.apache.logging.log4j.LogManager;
@@ -161,7 +155,6 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
-            registerWebAPIs(); // TODO Move to WebServer class
             webServer.initServer();
 
             if (!webServer.isEnabled()) {
@@ -301,14 +294,6 @@ public class Plan extends BukkitPlugin<Plan> {
         registerListener(new PlanCommandPreprocessListener(this));
         registerListener(new PlanDeathEventListener(this));
         Benchmark.stop("Enable", "Register Listeners");
-    }
-
-    private void registerWebAPIs() {
-        WebAPIManager.registerNewAPI("analytics", new AnalyticsWebAPI());
-        WebAPIManager.registerNewAPI("analyze", new AnalyzeWebAPI());
-        WebAPIManager.registerNewAPI("configure", new ConfigureWebAPI());
-        WebAPIManager.registerNewAPI("inspection", new InspectionWebAPI());
-        WebAPIManager.registerNewAPI("inspect", new InspectWebAPI());
     }
 
     /**
