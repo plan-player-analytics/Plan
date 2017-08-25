@@ -72,8 +72,8 @@ public class Analysis {
      * Caches analyzed data of db to the provided cache analysisCache.
      *
      * @param infoManager InformationManager of the plugin.
-     *                      method.
-     * @param db            Database which data will be analyzed.
+     *                    method.
+     * @param db          Database which data will be analyzed.
      * @return Whether or not analysis was successful.
      */
     public boolean analyze(InformationManager infoManager, Database db) {
@@ -237,7 +237,6 @@ public class Analysis {
 
     private void fillDataset(AnalysisData analysisData) {
         ActivityPart activity = analysisData.getActivityPart();
-        GamemodePart gmPart = analysisData.getGamemodePart();
         GeolocationPart geolocPart = analysisData.getGeolocationPart();
         JoinInfoPart joinInfo = analysisData.getJoinInfoPart();
         KillPart killPart = analysisData.getKillPart();
