@@ -94,8 +94,8 @@ public class TPSCountTimer extends AbsRunnable {
             entityCount = getEntityCount();
 
             // 40ms removed because the run appears to take 40-50ms, screwing the tps.
-            long fourtyMsAsNs = TimeAmount.MILLISECOND.ns() * 40L;
-            return getTPS(diff - fourtyMsAsNs, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
+            long fortyMsAsNs = TimeAmount.MILLISECOND.ns() * 40L;
+            return getTPS(diff - fortyMsAsNs, now, averageCPUUsage, usedMemory, entityCount, loadedChunks, playersOnline);
         }
     }
 
