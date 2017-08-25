@@ -67,7 +67,7 @@ public class ServerInfoManager {
             return;
         }
         String name = Settings.SERVER_NAME.toString();
-        String webAddress = plugin.getUiServer().getAccessAddress();
+        String webAddress = plugin.getWebServer().getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
             name = "Server" + serverID.get();
         }
@@ -81,7 +81,7 @@ public class ServerInfoManager {
     }
 
     private void registerServer(UUID serverUUID) throws SQLException, IOException {
-        String webAddress = plugin.getUiServer().getAccessAddress();
+        String webAddress = plugin.getWebServer().getAccessAddress();
         String name = Settings.SERVER_NAME.toString();
         serverInfo = new ServerInfo(-1, serverUUID, name, webAddress);
         serverTable.saveCurrentServerInfo(serverInfo);

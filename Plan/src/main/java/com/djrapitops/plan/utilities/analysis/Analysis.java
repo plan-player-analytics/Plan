@@ -151,7 +151,7 @@ public class Analysis {
             Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
 
             PageCache.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
-            PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getUiServer().getDataReqHandler()));
+            PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getInfoManager()));
             PageCache.cachePage("analysisJson", () -> new JsonResponse(analysisData));
             PageCache.cachePage("players", () -> new PlayersPageResponse(plugin));
 

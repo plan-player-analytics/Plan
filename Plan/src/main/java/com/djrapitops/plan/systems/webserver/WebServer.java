@@ -10,12 +10,12 @@ import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.PageCache;
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
-import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
@@ -44,7 +44,8 @@ import java.util.zip.GZIPOutputStream;
 public class WebServer {
 
     private final Plan plugin;
-    private final DataRequestHandler dataReqHandler;
+    private InformationManager infoManager;
+
     private final int port;
     private boolean enabled = false;
     private HttpServer server;
@@ -53,15 +54,16 @@ public class WebServer {
 
     /**
      * Class Constructor.
-     * <p>
-     * Initializes DataRequestHandler
      *
      * @param plugin Current instance of Plan
      */
     public WebServer(Plan plugin) {
         this.plugin = plugin;
         this.port = Settings.WEBSERVER_PORT.getNumber();
-        dataReqHandler = new DataRequestHandler(plugin);
+    }
+
+    public void setInfoManager(InformationManager infoManager) {
+        this.infoManager = infoManager;
     }
 
     /**
@@ -445,12 +447,12 @@ public class WebServer {
     }
 
     private Response serverResponse() {
-        if (!dataReqHandler.checkIfAnalysisIsCached()) {
+        if (!infoManager.isAnalysisCached()) {
             String error = "Analysis Data was not cached.<br>Use /plan analyze to cache the Data.";
             PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCache.loadPage("analysisPage", () -> new AnalysisPageResponse(dataReqHandler));
+        return PageCache.loadPage("analysisPage", () -> new AnalysisPageResponse(infoManager));
     }
 
     private Response playerResponse(String[] args) {
@@ -466,12 +468,12 @@ public class WebServer {
             return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        if (!dataReqHandler.checkIfCached(uuid)) {
+        if (!infoManager.isCached(uuid)) {
             String error = "Player's data was not cached.<br>Use /plan inspect " + playerName + " to cache the Data.";
             return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(dataReqHandler, uuid));
+        return PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(infoManager, uuid));
     }
 
     private Response notFoundResponse() {
@@ -502,15 +504,6 @@ public class WebServer {
         if (server != null) {
             server.stop(0);
         }
-    }
-
-    /**
-     * Used to get the handler for Html content requests.
-     *
-     * @return DataRequestHandler used by the WebServer.
-     */
-    public DataRequestHandler getDataReqHandler() {
-        return dataReqHandler;
     }
 
     private int getRequiredPermLevel(String target, String user) {

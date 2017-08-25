@@ -33,7 +33,7 @@ public class BStats {
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
-        addStringSettingPie("web_protocol", plugin.getUiServer().getProtocol().toUpperCase());
+        addStringSettingPie("web_protocol", plugin.getWebServer().getProtocol().toUpperCase());
     }
 
     private void addEnabledDisabledPie(String id, boolean setting) {

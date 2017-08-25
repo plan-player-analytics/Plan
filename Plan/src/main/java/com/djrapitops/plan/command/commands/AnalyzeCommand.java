@@ -55,7 +55,7 @@ public class AnalyzeCommand extends SubCommand {
 //        }
 
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
-        if (plugin.getUiServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
+        if (plugin.getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
             plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
                 @Override
                 public void run() {

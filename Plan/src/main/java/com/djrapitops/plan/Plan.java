@@ -79,7 +79,7 @@ public class Plan extends BukkitPlugin<Plan> {
     private Database db;
     private Set<Database> databases;
 
-    private WebServer uiServer;
+    private WebServer webServer;
 
     private InformationManager infoManager;
     private ServerInfoManager serverInfoManager;
@@ -160,16 +160,17 @@ public class Plan extends BukkitPlugin<Plan> {
             Benchmark.stop("Enable", "Init Database");
 
             Benchmark.start("WebServer Initialization");
-            uiServer = new WebServer(this);
+            webServer = new WebServer(this);
             registerWebAPIs(); // TODO Move to WebServer class
-            uiServer.initServer();
+            webServer.initServer();
 
-            if (!uiServer.isEnabled()) {
+            if (!webServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized.");
             }
 
             serverInfoManager = new ServerInfoManager(this);
             infoManager = new InformationManager(this);
+            webServer.setInfoManager(infoManager);
 
             registerListeners();
             registerTasks();
@@ -272,8 +273,8 @@ public class Plan extends BukkitPlugin<Plan> {
         PageCache.clearCache();
 
         // Stop the UI Server
-        if (uiServer != null) {
-            uiServer.stop();
+        if (webServer != null) {
+            webServer.stop();
         }
 
         getServer().getScheduler().cancelTasks(this);
@@ -371,8 +372,8 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return the Webserver
      */
-    public WebServer getUiServer() {
-        return uiServer;
+    public WebServer getWebServer() {
+        return webServer;
     }
 
     /**

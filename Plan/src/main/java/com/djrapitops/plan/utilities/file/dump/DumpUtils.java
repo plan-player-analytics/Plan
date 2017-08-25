@@ -198,7 +198,7 @@ public class DumpUtils {
      * @param plan The Plan instance
      */
     private static void addConfigurationDetails(DumpLog log, Plan plan) {
-        boolean usingHTTPS = plan.getUiServer().isUsingHTTPS();
+        boolean usingHTTPS = plan.getWebServer().isUsingHTTPS();
         boolean analysisExport = Settings.ANALYSIS_EXPORT.isTrue();
         boolean usingAlternativeServerIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
