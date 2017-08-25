@@ -31,18 +31,21 @@ import java.util.stream.Collectors;
  * ${playersNewAverageWeek} - (Number)
  * ${playersNewAverageMonth} - (Number)
  * //TODO ${tableBodySessions}, ${sessionCount}, ${lastPeakTime}, ${playersLastPeak}, ${bestPeakTime}, ${playersBestPeak}
+ *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class JoinInfoPart extends RawData {
 
+    private final Map<UUID, Session> activeSessions;
     private final Map<UUID, List<Session>> sessions;
-    private final List<Long> registered;
+    private final Map<UUID, Long> registered;
     private long loginTimes;
 
     public JoinInfoPart() {
+        activeSessions = new HashMap<>();
         sessions = new HashMap<>();
-        registered = new ArrayList<>();
+        registered = new HashMap<>();
         loginTimes = 0;
     }
 
@@ -77,18 +80,19 @@ public class JoinInfoPart extends RawData {
 
     private void newPlayers() {
         long now = MiscUtils.getTime();
-        long newDay = AnalysisUtils.getNewPlayers(registered, TimeAmount.DAY.ms(), now);
-        long newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), now);
-        long newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), now);
+        List<Long> registeredList = getRegisteredList();
+        long newDay = AnalysisUtils.getNewPlayers(registeredList, TimeAmount.DAY.ms(), now);
+        long newWeek = AnalysisUtils.getNewPlayers(registeredList, TimeAmount.WEEK.ms(), now);
+        long newMonth = AnalysisUtils.getNewPlayers(registeredList, TimeAmount.MONTH.ms(), now);
 
         addValue("playersNewDay", newDay);
         addValue("playersNewWeek", newWeek);
         addValue("playersNewMonth", newMonth);
 
-        long newPerDay = AnalysisUtils.getNewUsersPerDay(registered, -1);
-        long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.DAY.ms());
-        long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.WEEK.ms());
-        long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.MONTH.ms());
+        long newPerDay = AnalysisUtils.getNewUsersPerDay(registeredList, -1);
+        long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registeredList, TimeAmount.DAY.ms());
+        long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registeredList, TimeAmount.WEEK.ms());
+        long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registeredList, TimeAmount.MONTH.ms());
 
         addValue("playersNewAverage", newPerDay);
         addValue("playersNewAverageDay", newPerDayDay);
@@ -116,17 +120,34 @@ public class JoinInfoPart extends RawData {
         return MiscUtils.flatMap(sessions.values());
     }
 
-    public void addRegistered(long registerDate) {
-        registered.add(registerDate);
+    public void addRegistered(UUID uuid, long registerDate) {
+        registered.put(uuid, registerDate);
     }
 
-    public List<Long> getRegistered() {
+    public void addRegistered(Map<UUID, Long> registerDates) {
+        registered.putAll(registerDates);
+    }
+
+    public Map<UUID, Long> getRegistered() {
         return registered;
+    }
+
+    public List<Long> getRegisteredList() {
+        return new ArrayList<>(registered.values());
+    }
+
+    public void addSessions(Map<UUID, List<Session>> sessions) {
+        Verify.nullCheck(sessions);
+        this.sessions.putAll(sessions);
     }
 
     public void addSessions(UUID uuid, List<Session> sessions) {
         Verify.nullCheck(uuid);
         Verify.nullCheck(sessions);
         this.sessions.put(uuid, sessions.stream().distinct().collect(Collectors.toList()));
+    }
+
+    public void addActiveSessions(Map<UUID, Session> activeSessions) {
+        this.activeSessions.putAll(activeSessions);
     }
 }

@@ -47,7 +47,7 @@ public class KillsTable extends UserIDTable {
                 .column(columnVictimUserID, Sql.INT).notNull()
                 .column(columnWeapon, Sql.varchar(30)).notNull()
                 .column(columnDate, Sql.LONG).notNull()
-                .column(columnSessionID, Sql.LONG).notNull()
+                .column(columnSessionID, Sql.INT).notNull()
                 .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
                 .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
                 .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
@@ -76,7 +76,7 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    public void savePlayerKills(UUID uuid, long sessionID, List<PlayerKill> playerKills) throws SQLException {
+    public void savePlayerKills(UUID uuid, int sessionID, List<PlayerKill> playerKills) throws SQLException {
         if (Verify.isEmpty(playerKills)) {
             return;
         }
@@ -98,7 +98,7 @@ public class KillsTable extends UserIDTable {
                 String weapon = kill.getWeapon();
                 statement.setString(1, uuid.toString());
                 statement.setString(2, victim.toString());
-                statement.setLong(3, sessionID);
+                statement.setInt(3, sessionID);
                 statement.setLong(4, date);
                 statement.setString(5, weapon);
                 statement.addBatch();
@@ -111,7 +111,7 @@ public class KillsTable extends UserIDTable {
         }
     }
 
-    public void addKillsToSessions(UUID uuid, Map<Long, Session> sessions) throws SQLException {
+    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -131,7 +131,7 @@ public class KillsTable extends UserIDTable {
             commit(statement.getConnection());
 
             while (set.next()) {
-                long sessionID = set.getLong(columnSessionID);
+                int sessionID = set.getInt(columnSessionID);
                 Session session = sessions.get(sessionID);
                 if (session == null) {
                     continue;

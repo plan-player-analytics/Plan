@@ -2,8 +2,6 @@ package main.java.com.djrapitops.plan.utilities.html;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.apache.commons.lang.text.StrSubstitutor;
@@ -79,7 +77,7 @@ public class HtmlUtils {
     }
 
     public static String getProtocol() {
-        WebServer uiServer = Plan.getInstance().getUiServer();
+        WebServer uiServer = Plan.getInstance().getWebServer();
         return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.EXTERNAL_WEBSERVER_LINK_PROTOCOL.toString();
     }
 
@@ -120,7 +118,7 @@ public class HtmlUtils {
      * @param placeholders
      * @return
      */
-    // TODO REWRITE
+    @Deprecated // TODO Move to HtmlStructure
     public static String getPluginsTabLayout(List<String> pluginNames, Map<String, List<String>> placeholders) {
         boolean sizeIsEvenNumber = pluginNames.size() % 2 == 0;
         StringBuilder html = new StringBuilder();
@@ -129,33 +127,34 @@ public class HtmlUtils {
         for (int i = 0; i < evenSize; i++) {
             String name = pluginNames.get(i);
             if (i % 2 == 0) {
-                temp = Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)));
+                // temp = Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)));
             } else {
-                html.append(Html.COLUMNS_DIV_WRAPPER.parse(temp + Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)))));
+                // html.append(Html.COLUMNS_DIV_WRAPPER.parse(temp + Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)))));
             }
         }
         if (!sizeIsEvenNumber) {
             int lastIndex = pluginNames.size() - 1;
             String name = pluginNames.get(lastIndex);
-            html.append(Html.COLUMNS_DIV_WRAPPER.parse(Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name))) + Html.COLUMN_DIV_WRAPPER.parse("")));
+            // html.append(Html.COLUMNS_DIV_WRAPPER.parse(Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name))) + Html.COLUMN_DIV_WRAPPER.parse("")));
         }
         String returnValue = html.toString();
         if (returnValue.isEmpty()) {
-            return Html.COLUMNS_DIV_WRAPPER.parse(
-                    Html.COLUMN_DIV_WRAPPER.parse(
-                            Html.PLUGIN_DATA_WRAPPER.parse(
-                                    Locale.get(Msg.HTML_NO_PLUGINS).toString()
-                            )
-                    )
-            );
+//            return Html.COLUMNS_DIV_WRAPPER.parse(
+//                    Html.COLUMN_DIV_WRAPPER.parse(
+//                            Html.PLUGIN_DATA_WRAPPER.parse(
+//                                    Locale.get(Msg.HTML_NO_PLUGINS).toString()
+//                            )
+//                    )
+//            );
         }
         return returnValue;
     }
 
+    @Deprecated // TODO Move to HtmlStructure
     private static String getContent(String name, List<String> placeholders) {
         StringBuilder html = new StringBuilder();
-        html.append(Html.HEADER.parse(name));
-        html.append(Html.PLUGIN_CONTAINER_START.parse());
+//        html.append(Html.HEADER.parse(name));
+//        html.append(Html.PLUGIN_CONTAINER_START.parse());
         placeholders.forEach(html::append);
         html.append("</div>");
         return html.toString();

@@ -4,15 +4,20 @@
  */
 package main.java.com.djrapitops.plan.systems.info;
 
+import com.djrapitops.plugin.command.ISender;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -30,7 +35,10 @@ public class InformationManager {
     private boolean usingBungeeWebServer;
     private String webServerAddress;
 
+    private final Set<ISender> analysisNotification;
+    private final Analysis analysis;
     private AnalysisData analysisData;
+    private String analysisPluginsTab;
     private Long refreshDate;
 
     public InformationManager(Plan plugin) {
@@ -41,6 +49,8 @@ public class InformationManager {
                 .ifPresent(address -> webServerAddress = address);
 
         dataCache = new DataCache(plugin);
+        analysis = new Analysis(plugin);
+        analysisNotification = new HashSet<>();
 
         if (webServerAddress != null) {
             attemptBungeeConnection();
@@ -65,7 +75,7 @@ public class InformationManager {
     }
 
     public void refreshAnalysis() {
-        plugin.addToProcessQueue(); // TODO Analysis, PluginData
+        analysis.runAnalysis(this);
     }
 
     public DataCache getDataCache() {
@@ -99,6 +109,13 @@ public class InformationManager {
     public void cacheAnalysisdata(AnalysisData analysisData) {
         this.analysisData = analysisData;
         refreshDate = MiscUtils.getTime();
+        // TODO Web Caching
+        AnalyzeCommand.sendAnalysisMessage(analysisNotification);
+        analysisNotification.clear();
+    }
+
+    public void addAnalysisNotification(ISender sender) {
+        analysisNotification.add(sender);
     }
 
     public AnalysisData getAnalysisData() {

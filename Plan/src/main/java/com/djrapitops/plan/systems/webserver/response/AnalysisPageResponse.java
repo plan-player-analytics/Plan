@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
-import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
 
 /**
  * @author Rsl1122
@@ -9,8 +9,8 @@ import main.java.com.djrapitops.plan.ui.html.DataRequestHandler;
  */
 public class AnalysisPageResponse extends Response {
 
-    public AnalysisPageResponse(DataRequestHandler h) {
+    public AnalysisPageResponse(InformationManager informationManager) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(Theme.replaceColors(h.getServerHtml()));
+        super.setContent(Theme.replaceColors(informationManager.getAnalysisHtml()));
     }
 }

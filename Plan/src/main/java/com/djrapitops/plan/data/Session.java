@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class Session {
 
-    private Long sessionID;
+    private Integer sessionID;
     private WorldTimes worldTimes;
     private final long sessionStart;
     private long sessionEnd;
@@ -54,7 +54,7 @@ public class Session {
      * @param sessionStart Epoch millisecond the session was started.
      * @param sessionEnd   Epoch millisecond the session ended.
      */
-    public Session(long id, long sessionStart, long sessionEnd, int mobKills, int deaths) {
+    public Session(int id, long sessionStart, long sessionEnd, int mobKills, int deaths) {
         this.sessionID = id;
         this.sessionStart = sessionStart;
         this.sessionEnd = sessionEnd;
@@ -195,11 +195,11 @@ public class Session {
      * @return ID if present.
      * @throws NullPointerException if Session was not fetched from DB. Check using {@code isFetchedFromDB}
      */
-    public long getSessionID() {
+    public int getSessionID() {
         return sessionID;
     }
 
-    public void setSessionID(long sessionID) {
+    public void setSessionID(int sessionID) {
         this.sessionID = sessionID;
     }
 }

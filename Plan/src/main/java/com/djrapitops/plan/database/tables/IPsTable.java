@@ -8,10 +8,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -67,6 +64,7 @@ public class IPsTable extends UserIDTable {
             statement = prepareStatement(Select.from(tableName, column)
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
+            statement.setFetchSize(50);
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -123,6 +121,37 @@ public class IPsTable extends UserIDTable {
                 return Optional.of(set.getString(columnGeolocation));
             }
             return Optional.empty();
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public Map<UUID, List<String>> getAllGeolocations() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            Map<UUID, List<String>> geoLocations = new HashMap<>();
+
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+
+            statement = prepareStatement("SELECT " +
+                    columnGeolocation + ", " +
+                    usersUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            while (set.next()) {
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                List<String> userGeoLocs = geoLocations.getOrDefault(uuid, new ArrayList<>());
+                userGeoLocs.add(set.getString(columnGeolocation));
+                geoLocations.put(uuid, userGeoLocs);
+            }
+            return geoLocations;
         } finally {
             endTransaction(statement);
             close(set, statement);

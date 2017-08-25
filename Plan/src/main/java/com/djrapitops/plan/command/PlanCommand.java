@@ -46,7 +46,7 @@ public class PlanCommand extends TreeCommand<Plan> {
         commands.add(new ManageCommand(plugin));
         commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission()));
 
-        if (plugin.getUiServer().isEnabled()) {
+        if (plugin.getWebServer().isEnabled()) {
             commands.add(new ListCommand());
             RegisterCommand registerCommand = new RegisterCommand(plugin);
             commands.add(registerCommand);

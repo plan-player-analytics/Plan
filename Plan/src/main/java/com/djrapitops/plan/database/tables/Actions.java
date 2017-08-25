@@ -13,7 +13,7 @@ import org.apache.commons.lang3.text.WordUtils;
  */
 public enum Actions {
     UNKNOWN(-1),
-    REGISTERED(1),
+    FIRST_SESSION(1),
     FIRST_LOGOUT(2),
     CHANGED_NAME(3),
     KILLED(-2), // Not stored in ActionsTable.

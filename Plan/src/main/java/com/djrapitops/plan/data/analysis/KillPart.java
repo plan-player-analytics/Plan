@@ -1,14 +1,5 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
-import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.data.PlayerKill;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 /**
  * Part responsible for all Death related analysis.
  * <p>
@@ -24,12 +15,12 @@ import java.util.UUID;
  */
 public class KillPart extends RawData {
 
-    private final Map<UUID, List<PlayerKill>> playerKills;
+    private long playerKills;
     private long mobKills;
     private long deaths;
 
     public KillPart() {
-        playerKills = new HashMap<>();
+        playerKills = 0;
         mobKills = 0;
         deaths = 0;
     }
@@ -38,20 +29,17 @@ public class KillPart extends RawData {
     public void analyse() {
         addValue("deathCount", deaths);
         addValue("mobKillCount", mobKills);
-        int playerKillAmount = getAllPlayerKills().size();
-        addValue("killCount", playerKillAmount);
+        addValue("killCount", playerKills);
     }
 
     /**
      * Adds kills to the dataset.
      *
-     * @param uuid  Player whose kills are being added
-     * @param kills all kills of a player
+     * @param amount amount of kills
      * @throws IllegalArgumentException if kills is null
      */
-    public void addKills(UUID uuid, List<PlayerKill> kills) {
-        Verify.nullCheck(kills);
-        playerKills.put(uuid, kills);
+    public void addKills(long amount) {
+        playerKills += amount;
     }
 
     public void addMobKills(long amount) {
@@ -62,12 +50,8 @@ public class KillPart extends RawData {
         deaths += amount;
     }
 
-    public Map<UUID, List<PlayerKill>> getPlayerKills() {
+    public long getPlayerKills() {
         return playerKills;
-    }
-
-    public List<PlayerKill> getAllPlayerKills() {
-        return MiscUtils.flatMap(playerKills.values());
     }
 
     public long getMobKills() {

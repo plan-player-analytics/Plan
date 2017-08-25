@@ -43,7 +43,7 @@ public class CommandUseTable extends Table {
     public boolean createTable() {
         ServerTable serverTable = db.getServerTable();
         return createTable(TableSqlParser.createTable(tableName)
-                .primaryKeyIDColumn(usingMySQL, columnCommandId, Sql.INT)
+                .primaryKeyIDColumn(usingMySQL, columnCommandId)
                 .column(columnCommand, Sql.varchar(20)).notNull()
                 .column(columnTimesUsed, Sql.INT).notNull()
                 .column(columnServerID, Sql.INT).notNull()
