@@ -15,7 +15,7 @@ public enum Settings {
     BUNGEE_OVERRIDE_STANDALONE_MODE("Bungee-Override.StandaloneMode"),
     ANALYSIS_EXPORT("Analysis.Export.Enabled"),
     SHOW_ALTERNATIVE_IP("Commands.AlternativeIP.Enabled"),
-    LOG_UNKNOWN_COMMANDS("DAta.Commands.LogUnknownCommands"),
+    LOG_UNKNOWN_COMMANDS("Data.Commands.LogUnknownCommands"),
     COMBINE_COMMAND_ALIASES("Data.Commands.CombineCommandAliases"),
     WRITE_NEW_LOCALE("Plugin.WriteNewLocaleFileOnStart"),
 
