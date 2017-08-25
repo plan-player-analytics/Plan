@@ -3,6 +3,7 @@ package test.java.main.java.com.djrapitops.plan.database;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.WebUser;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
@@ -32,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseCommitTest {
 
     private Plan plan;
-    private SQLiteDB db;
+    private SQLDB db;
     private int rows;
 
     @Before

@@ -63,7 +63,6 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public boolean init() {
-        super.init();
         setStatus("Init");
         String benchName = "Init " + getConfigName();
         Benchmark.start(benchName);
@@ -73,6 +72,7 @@ public abstract class SQLDB extends Database {
             if (!setupDatabase()) {
                 return false;
             }
+
             clean();
             return true;
         } catch (SQLException e) {
@@ -108,14 +108,20 @@ public abstract class SQLDB extends Database {
             return false;
         }
 
-        if (newDatabase || getVersion() < 8) {
+        int version = getVersion();
+        boolean newVersion = version < 8;
+
+        if (newDatabase || newVersion) {
             setVersion(8);
         }
 
-        try (Statement statement = getConnection().createStatement()) {
-            statement.execute("DROP TABLE IF EXISTS plan_locations");
-            endTransaction(statement.getConnection());
+        if (newVersion) {
+            try (Statement statement = getConnection().createStatement()) {
+                statement.execute("DROP TABLE IF EXISTS plan_locations");
+                endTransaction(statement.getConnection());
+            }
         }
+
         return true;
     }
 
@@ -258,7 +264,6 @@ public abstract class SQLDB extends Database {
     public void clean() {
         Log.info("Cleaning the database.");
         try {
-            setupDatabase();
             tpsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -46,7 +47,7 @@ public class VersionTable extends Table {
 
             set = statement.executeQuery();
 
-            return set.next();
+            return !set.next();
         } finally {
             endTransaction(statement);
             close(set, statement);
@@ -69,7 +70,7 @@ public class VersionTable extends Table {
             }
             return version;
         } catch (Exception exc) {
-            exc.printStackTrace();
+            Log.toLog("VersionsTable.getVersion", exc);
         } finally {
             endTransaction(statement);
             close(set, statement);
