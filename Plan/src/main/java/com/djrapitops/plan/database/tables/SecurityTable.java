@@ -74,7 +74,7 @@ public class SecurityTable extends Table {
             statement.setString(2, saltPassHash);
             statement.setInt(3, permLevel);
             statement.execute();
-            
+
             commit(statement.getConnection());
         } finally {
             close(statement);

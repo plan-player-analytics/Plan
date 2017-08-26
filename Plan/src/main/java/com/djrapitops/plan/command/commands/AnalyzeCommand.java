@@ -47,6 +47,23 @@ public class AnalyzeCommand extends SubCommand {
         infoManager = plugin.getInfoManager();
     }
 
+    public static void sendAnalysisMessage(Collection<ISender> senders) {
+        for (ISender sender : senders) {
+            sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
+            // Link
+            String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
+            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
+            boolean console = !CommandUtils.isPlayer(sender);
+            if (console) {
+                sender.sendMessage(message + url);
+            } else {
+                sender.sendMessage(message);
+                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+            }
+            sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
+        }
+    }
+
     @Override
     public String[] addHelp() {
         return Locale.get(Msg.CMD_HELP_ANALYZE).toArray();
@@ -99,23 +116,6 @@ public class AnalyzeCommand extends SubCommand {
             infoManager.refreshAnalysis();
         } else {
             sendAnalysisMessage(Collections.singletonList(sender));
-        }
-    }
-
-    public static void sendAnalysisMessage(Collection<ISender> senders) {
-        for (ISender sender : senders) {
-            sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
-            // Link
-            String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
-            String message = Locale.get(Msg.CMD_INFO_LINK).toString();
-            boolean console = !CommandUtils.isPlayer(sender);
-            if (console) {
-                sender.sendMessage(message + url);
-            } else {
-                sender.sendMessage(message);
-                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
-            }
-            sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
         }
     }
 }

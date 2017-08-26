@@ -25,10 +25,6 @@ public enum Actions {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public static Actions getById(int id) {
         for (Actions a : values()) {
             if (a.getId() == id) {
@@ -36,6 +32,10 @@ public enum Actions {
             }
         }
         return UNKNOWN;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

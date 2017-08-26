@@ -22,6 +22,16 @@ public class TableSqlParser extends SqlParser {
         return "DROP TABLE IF EXISTS " + tableName;
     }
 
+    /**
+     * Used for ALTER TABLE sql statements.
+     *
+     * @param column column to modify
+     * @return TableSqlParser object
+     */
+    public static TableSqlParser newColumn(String column, String type) {
+        return new TableSqlParser("").column(column, type);
+    }
+
     public TableSqlParser column(String column, String type) {
         if (columns > 0) {
             append(", ");
@@ -32,7 +42,6 @@ public class TableSqlParser extends SqlParser {
         columns++;
         return this;
     }
-
 
     public TableSqlParser foreignKey(String column, String refrencedTable, String referencedColumn) {
         if (columns > 0) {
@@ -99,16 +108,6 @@ public class TableSqlParser extends SqlParser {
             append("CHARACTER SET utf8 COLLATE utf8mb4_general_ci");
         }
         return this;
-    }
-
-    /**
-     * Used for ALTER TABLE sql statements.
-     *
-     * @param column column to modify
-     * @return TableSqlParser object
-     */
-    public static TableSqlParser newColumn(String column, String type) {
-        return new TableSqlParser("").column(column, type);
     }
 
     @Override

@@ -32,6 +32,7 @@ public class GMTimes extends TimeKeeper {
     public GMTimes(Map<String, Long> times) {
         super(times);
     }
+
     public GMTimes() {
         super();
     }

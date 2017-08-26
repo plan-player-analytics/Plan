@@ -58,6 +58,14 @@ public enum Theme {
         this.colors = colors;
     }
 
+    public static String replaceColors(String resourceString) {
+        String replaced = resourceString;
+        for (Colors c : Colors.values()) {
+            replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), c.getColor());
+        }
+        return replaced;
+    }
+
     public String getColor(int i) {
         return colors[i];
     }
@@ -66,14 +74,6 @@ public enum Theme {
         String replaced = resourceString;
         for (Colors c : Colors.values()) {
             replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), "#" + this.getColor(c.getId()));
-        }
-        return replaced;
-    }
-
-    public static String replaceColors(String resourceString) {
-        String replaced = resourceString;
-        for (Colors c : Colors.values()) {
-            replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), c.getColor());
         }
         return replaced;
     }

@@ -148,25 +148,21 @@ public class UserImportData {
     }
 
     public static final class UserImportDataBuilder {
-        private String name;
-        private String uuid;
-
-        private long registered;
-        private boolean op;
         private final List<String> nicknames = new ArrayList<>();
-
-        private boolean banned;
-        private int timesKicked;
-
         private final List<String> ips = new ArrayList<>();
         private final Map<String, GMTimes> worldTimes = new HashMap<>();
-
         private final List<PlayerKill> kills = new ArrayList<>();
+        private String name;
+        private String uuid;
+        private long registered;
+        private boolean op;
+        private boolean banned;
+        private int timesKicked;
         private int mobKills;
         private int deaths;
 
         private UserImportDataBuilder() {
-            throw new IllegalStateException("Builder class");
+            /* Private Constructor */
         }
 
         public UserImportDataBuilder name(String name) {
@@ -202,7 +198,7 @@ public class UserImportData {
             return this;
         }
 
-        public UserImportDataBuilder nickNames(Collection<String> nicknames) {
+        public UserImportDataBuilder nicknames(Collection<String> nicknames) {
             this.nicknames.addAll(nicknames);
             return this;
         }

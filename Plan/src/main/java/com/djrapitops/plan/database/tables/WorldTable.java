@@ -22,11 +22,10 @@ import java.util.List;
  */
 public class WorldTable extends Table {
 
+    public final String statementSelectID;
     private final String columnWorldId = "id";
     private final String columnWorldName = "world_name";
     private final String columnServerID = "server_id";
-
-    public final String statementSelectID;
 
     /**
      * Constructor.

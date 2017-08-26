@@ -46,7 +46,7 @@ public class ServerImportData {
         private final List<TPS> tpsData = new ArrayList<>();
 
         private ServerImportDataBuilder() {
-            throw new IllegalStateException("Builder class");
+            /* Private Constructor */
         }
 
         public ServerImportDataBuilder commandUsage(String command, Integer usages) {

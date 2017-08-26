@@ -31,12 +31,10 @@ public class InformationManager {
     private final Database db;
 
     private final DataCache dataCache;
-
-    private boolean usingBungeeWebServer;
-    private String webServerAddress;
-
     private final Set<ISender> analysisNotification;
     private final Analysis analysis;
+    private boolean usingBungeeWebServer;
+    private String webServerAddress;
     private AnalysisData analysisData;
     private String analysisPluginsTab;
     private Long refreshDate;

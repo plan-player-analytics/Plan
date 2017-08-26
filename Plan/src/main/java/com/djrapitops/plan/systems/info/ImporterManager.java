@@ -14,14 +14,14 @@ import java.util.List;
  */
 public class ImporterManager {
 
+    private static final List<Importer> registry = new ArrayList<>();
+
     /**
      * Constructor used to hide the public constructor
      */
     private ImporterManager() {
         throw new IllegalStateException("Utility class");
     }
-
-    private static final List<Importer> registry = new ArrayList<>();
 
     public static void registerImporter(Importer importer) {
         String firstName = importer.getNames().get(0);

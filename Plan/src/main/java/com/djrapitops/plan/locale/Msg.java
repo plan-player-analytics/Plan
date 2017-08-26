@@ -139,8 +139,7 @@ public enum Msg {
     HTML_OFFLINE("Html - Offline"),
     HTML_ACTIVE("Html - Active"),
     HTML_INACTIVE("Html - Inactive"),
-    HTML_TABLE_NO_KILLS("Html - Table No Kills"),
-    ;
+    HTML_TABLE_NO_KILLS("Html - Table No Kills"),;
 
     private final String identifier;
 

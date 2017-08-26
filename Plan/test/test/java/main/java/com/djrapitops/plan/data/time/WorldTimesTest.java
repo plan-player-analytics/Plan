@@ -18,12 +18,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class WorldTimesTest {
 
-    private long time;
-    private WorldTimes test;
     private final String worldOne = "ONE";
     private final String worldTwo = "TWO";
-
     private final String[] gms = GMTimes.getGMKeyArray();
+    private long time;
+    private WorldTimes test;
 
     @Before
     public void setUp() throws Exception {

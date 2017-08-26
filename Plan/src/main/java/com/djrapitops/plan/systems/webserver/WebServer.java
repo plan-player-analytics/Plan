@@ -48,9 +48,8 @@ import java.util.zip.GZIPOutputStream;
 public class WebServer {
 
     private final Plan plugin;
-    private InformationManager infoManager;
-
     private final int port;
+    private InformationManager infoManager;
     private boolean enabled = false;
     private HttpServer server;
 
@@ -559,6 +558,6 @@ public class WebServer {
     }
 
     public String getAccessAddress() {
-        return getProtocol()+":/"+ HtmlUtils.getIP();
+        return getProtocol() + ":/" + HtmlUtils.getIP();
     }
 }

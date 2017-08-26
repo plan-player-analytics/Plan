@@ -31,14 +31,13 @@ import java.util.*;
  */
 public class ServerTable extends Table {
 
+    public final String statementSelectServerID;
+    public final String statementSelectServerNameID;
     private final String columnServerID = "id";
     private final String columnServerUUID = "uuid";
     private final String columnServerName = "name";
     private final String columnWebserverAddress = "web_address";
     private final String columnInstalled = "is_installed";
-
-    public final String statementSelectServerID;
-    public final String statementSelectServerNameID;
 
     public ServerTable(SQLDB db, boolean usingMySQL) {
         super("plan_servers", db, usingMySQL);
