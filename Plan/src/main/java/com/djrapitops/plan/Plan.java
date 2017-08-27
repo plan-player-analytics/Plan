@@ -27,6 +27,7 @@ import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -51,6 +52,7 @@ import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,7 +65,7 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class Plan extends BukkitPlugin<Plan> {
+public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
     private API api;
 
@@ -141,7 +143,7 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Copy default config");
             getConfig().options().copyDefaults(true);
-            getConfig().options().header("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/");
+            getConfig().options().header("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
             saveConfig();
             Benchmark.stop("Enable", "Copy default config");
 
@@ -168,6 +170,8 @@ public class Plan extends BukkitPlugin<Plan> {
             serverInfoManager = new ServerInfoManager(this);
             infoManager = new InformationManager(this);
             webServer.setInfoManager(infoManager);
+
+            Benchmark.stop("Enable", "WebServer Initialization");
 
             registerListeners();
             registerTasks();
@@ -272,6 +276,12 @@ public class Plan extends BukkitPlugin<Plan> {
         // Stop the UI Server
         if (webServer != null) {
             webServer.stop();
+        }
+
+        List<Processor> processors = processingQueue.stopAndReturnLeftovers();
+        Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
+        for (Processor processor : processors) {
+            processor.process();
         }
 
         getServer().getScheduler().cancelTasks(this);

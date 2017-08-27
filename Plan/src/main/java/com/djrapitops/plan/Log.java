@@ -1,6 +1,9 @@
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.plugin.utilities.Compatibility;
 import com.djrapitops.plugin.utilities.log.DebugInfo;
+import com.djrapitops.plugin.utilities.log.PluginLog;
+import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.Collection;
@@ -28,7 +31,7 @@ public class Log {
      * @param message "Message" will show up as [INFO][Plan]: Message
      */
     public static void info(String message) {
-        Plan.getInstance().getPluginLogger().info(message);
+        getPluginLogger().info(message);
     }
 
     /**
@@ -37,7 +40,7 @@ public class Log {
      * @param message Message to send.
      */
     public static void infoColor(String message) {
-        Plan.getInstance().getPluginLogger().infoColor(message);
+        getPluginLogger().infoColor(message);
     }
 
     /**
@@ -46,7 +49,7 @@ public class Log {
      * @param message "Message" will show up as [ERROR][Plan]: Message
      */
     public static void error(String message) {
-        Plan.getInstance().getPluginLogger().error(message);
+        getPluginLogger().error(message);
     }
 
     /**
@@ -55,7 +58,7 @@ public class Log {
      * @param message "Message" will show up as [INFO][Plan]: [DEBUG] Message
      */
     public static void debug(String message) {
-        Plan.getInstance().getPluginLogger().debug(message);
+        getPluginLogger().debug(message);
     }
 
 
@@ -93,7 +96,7 @@ public class Log {
      * @return full debug complex so far.
      */
     public static DebugInfo getDebug(String task) {
-        return Plan.getInstance().getPluginLogger().getDebug(task);
+        return getPluginLogger().getDebug(task);
     }
 
     /**
@@ -122,7 +125,7 @@ public class Log {
      * @param e      {@code Throwable}, eg NullPointerException
      */
     public static void toLog(String source, Throwable e) {
-        Plan.getInstance().getPluginLogger().toLog(source, e);
+        getPluginLogger().toLog(source, e);
     }
 
     /**
@@ -133,5 +136,13 @@ public class Log {
      */
     public static void toLog(String source, Collection<Throwable> e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);
+    }
+
+    private static PluginLog getPluginLogger() {
+        if (Compatibility.isBukkitAvailable()) {
+            return Plan.getInstance().getPluginLogger();
+        } else {
+            return PlanBungee.getInstance().getPluginLogger();
+        }
     }
 }

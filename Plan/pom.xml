@@ -15,20 +15,32 @@
             <id>plan-snapshot-repo</id>
             <url>http://repo.fuzzlemann.de/artifactory/libs-snapshot/</url>
         </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
     </repositories>
     <dependencies>
-        <!--        PaperSpigot 1.12 built with BuildTools for Database classes.-->
+        <!--        PaperSpigot 1.12 -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper</artifactId>
             <version>1.12-R0.1-20170725.202533-1</version>
             <scope>provided</scope>
         </dependency>
+        <!--        BungeeCord -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
         <!--        Framework for easier plugin development-->
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>abstract-plugin-framework</artifactId>
-            <version>2.0.4</version>
+            <version>2.0.5</version>
             <scope>compile</scope>
         </dependency>
         <!--         Connection Pool-->

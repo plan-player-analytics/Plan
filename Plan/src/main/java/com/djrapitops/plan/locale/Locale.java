@@ -5,8 +5,8 @@ import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
  */
 public class Locale {
 
-    private final Plan plugin;
+    private final IPlan plugin;
     private final Map<Msg, Message> messages;
 
-    public Locale(Plan plugin) {
+    public Locale(IPlan plugin) {
         LocaleHolder.setLocale(this);
         this.plugin = plugin;
         messages = new EnumMap<>(Msg.class);
@@ -98,7 +98,7 @@ public class Locale {
                 .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
                 .collect(Collectors.toList());
         Files.write(new File(plugin.getDataFolder(), "locale.txt").toPath(), lines, StandardCharsets.UTF_8);
-        plugin.getConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
+        plugin.getIConfig().getConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
     }
 
     private String getSpacedIdentifier(String identifier, int length) {

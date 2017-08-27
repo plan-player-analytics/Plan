@@ -1,5 +1,11 @@
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.plugin.config.fileconfig.BukkitFileConfig;
+import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import com.djrapitops.plugin.utilities.Compatibility;
+import main.java.com.djrapitops.plan.bungee.PlanBungee;
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -78,7 +84,13 @@ public enum Settings {
     THEME_GRAPH_ENTITIES("Theme.Graphs.Entities"),
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),
-    HIDE_TOWNS("Plugins.Towny.HideTowns");
+    HIDE_TOWNS("Plugins.Towny.HideTowns"),
+    //
+    // Bungee
+    BUNGEE_IP("Server.IP"),
+    BUNGEE_PORT("Server.Port")
+    ;
+
 
     private final String configPath;
     private Boolean value;
@@ -96,7 +108,7 @@ public enum Settings {
         if (value != null) {
             return value;
         }
-        return Plan.getInstance().getConfig().getBoolean(configPath);
+        return getConfig().getBoolean(configPath);
     }
 
     public void setValue(Boolean value) {
@@ -110,7 +122,7 @@ public enum Settings {
      */
     @Override
     public String toString() {
-        return Plan.getInstance().getConfig().getString(configPath);
+        return getConfig().getString(configPath);
     }
 
     /**
@@ -119,11 +131,11 @@ public enum Settings {
      * @return Integer value of the config setting
      */
     public int getNumber() {
-        return Plan.getInstance().getConfig().getInt(configPath);
+        return getConfig().getInt(configPath);
     }
 
     public List<String> getStringList() {
-        return Plan.getInstance().getConfig().getStringList(configPath);
+        return getConfig().getStringList(configPath);
     }
 
     /**
@@ -134,5 +146,17 @@ public enum Settings {
      */
     public String getPath() {
         return configPath;
+    }
+
+    private IFileConfig getConfig() {
+        try {
+            if (Compatibility.isBukkitAvailable()) {
+                return new BukkitFileConfig(Plan.getInstance().getConfig());
+            } else {
+                return PlanBungee.getInstance().getIConfig().getConfig();
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Config could not be loaded.", e);
+        }
     }
 }

@@ -154,7 +154,7 @@ public class Analysis {
             PageCache.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
             PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getInfoManager()));
             PageCache.cachePage("analysisJson", () -> new JsonResponse(analysisData));
-            PageCache.cachePage("players", () -> new PlayersPageResponse(plugin));
+            PageCache.cachePage("players", PlayersPageResponse::new);
 
             // TODO Export
 //            ExportUtility.export(analysisData, rawData);
