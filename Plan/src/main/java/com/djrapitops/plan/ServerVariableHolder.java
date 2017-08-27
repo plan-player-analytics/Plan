@@ -28,19 +28,21 @@ public class ServerVariableHolder {
         version = server.getVersion();
         implVersion = server.getBukkitVersion();
 
-        String serverName = server.getName();
-        usingPaper = serverName.equals("Paper")
-                || serverName.equals("TacoSpigot"); //Fork of Paper
+        usingPaper = name.equals("Paper")
+                || name.equals("TacoSpigot"); //Fork of Paper
     }
 
+    /**
+     * Constructor, grabs the variables.
+     *
+     * @param server instance the plugin is running on.
+     */
     public ServerVariableHolder(net.md_5.bungee.api.ProxyServer server) {
-        ip = "";
-        name = server.getName();
-        port = -1;
+        ip = Settings.BUNGEE_IP.toString();
+        name = "BungeeCord";
+        port = Settings.BUNGEE_PORT.getNumber();
         version = server.getVersion();
         implVersion = server.getVersion();
-
-        String serverName = "BungeeCord";
         usingPaper = false;
     }
 

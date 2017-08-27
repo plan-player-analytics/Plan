@@ -48,7 +48,11 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
         super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
         super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
 
+        super.copyDefaultConfig("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
+
         super.onEnableDefaultTasks();
+
+        variableHolder = new ServerVariableHolder(getProxy());
 
         Benchmark.start("WebServer Initialization");
         webServer = new WebServer(this);

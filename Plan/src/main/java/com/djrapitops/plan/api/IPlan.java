@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.plugin.IPlugin;
+import com.djrapitops.plugin.config.IConfig;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
@@ -12,9 +13,9 @@ import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -41,5 +42,5 @@ public interface IPlan extends IPlugin {
 
     public InputStream getResource(String resource);
 
-    public FileConfiguration getConfig(); // TODO Abstract Config to APF
+    public IConfig getIConfig() throws IOException;
 }

@@ -1,6 +1,8 @@
 package test.java.utils;
 
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.config.BukkitConfig;
+import com.djrapitops.plugin.config.IConfig;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.IRunnable;
@@ -71,11 +73,14 @@ public class TestInit {
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
 
-        YamlConfiguration config = mockConfig();
-        when(planMock.getConfig()).thenReturn(config);
-
         File testFolder = getTestFolder();
         when(planMock.getDataFolder()).thenReturn(testFolder);
+
+        YamlConfiguration config = mockConfig();
+        when(planMock.getConfig()).thenReturn(config);
+        IConfig iConfig = new BukkitConfig(planMock, "config.yml");
+        iConfig.copyFromStream(getClass().getResource("/config.yml").openStream());
+        when(planMock.getIConfig()).thenReturn(iConfig);
 
         // Html Files
         File analysis = new File(getClass().getResource("/server.html").getPath());

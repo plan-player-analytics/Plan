@@ -98,7 +98,7 @@ public class Locale {
                 .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
                 .collect(Collectors.toList());
         Files.write(new File(plugin.getDataFolder(), "locale.txt").toPath(), lines, StandardCharsets.UTF_8);
-        plugin.getConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
+        plugin.getIConfig().getConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
     }
 
     private String getSpacedIdentifier(String identifier, int length) {

@@ -139,7 +139,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             Benchmark.start("Copy default config");
             getConfig().options().copyDefaults(true);
-            getConfig().options().header("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/");
+            getConfig().options().header("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
             saveConfig();
             Benchmark.stop("Enable", "Copy default config");
 
