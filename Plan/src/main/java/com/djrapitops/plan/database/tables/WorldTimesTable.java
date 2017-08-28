@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -48,8 +49,8 @@ public class WorldTimesTable extends UserIDTable {
     }
 
     @Override
-    public boolean createTable() {
-        return createTable(TableSqlParser.createTable(tableName)
+    public void createTable() throws DbCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnWorldId, Sql.INT).notNull()
                 .column(columnSessionID, Sql.INT).notNull()

@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.IOException;
@@ -24,9 +25,13 @@ public class MySQLDB extends SQLDB {
      * Setups the {@link BasicDataSource}
      */
     @Override
-    public void setupDataSource() throws IOException {
+    public void setupDataSource() throws DatabaseInitException {
         IFileConfig config = null;
-        config = plugin.getIConfig().getConfig();
+        try {
+            config = plugin.getIConfig().getConfig();
+        } catch (IOException e) {
+            throw new DatabaseInitException("Failed to read config.", e);
+        }
 
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");

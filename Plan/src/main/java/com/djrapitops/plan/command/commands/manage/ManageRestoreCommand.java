@@ -90,10 +90,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
 
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
-                    if (!backupDB.init()) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
-                        return;
-                    }
+                    backupDB.init();
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 

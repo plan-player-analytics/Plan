@@ -28,6 +28,7 @@ import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -47,7 +48,6 @@ import main.java.com.djrapitops.plan.systems.tasks.PeriodicDBCommitTask;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.Check;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
 
@@ -147,12 +147,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            if (Check.errorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
-                Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
-            } else {
-                disablePlugin();
-                return;
-            }
+            initDatabase();
             Benchmark.stop("Enable", "Init Database");
 
             Benchmark.start("WebServer Initialization");
@@ -204,7 +199,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             Log.info(Locale.get(Msg.ENABLED).toString());
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
-            Log.toLog(this.getClass().getName(), e);
+            Log.logStackTrace(e);
             disablePlugin();
         }
     }
@@ -313,7 +308,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
      *
      * @return true if init was successful, false if not.
      */
-    private boolean initDatabase() {
+    private void initDatabase() throws DatabaseInitException {
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
@@ -328,12 +323,11 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             }
         }
 
-        if (!Verify.notNull(db)) {
-            Log.info(Locale.get(Msg.ENABLE_FAIL_WRONG_DB).toString() + " " + dbType);
-            return false;
+        if (db == null) {
+            throw new DatabaseInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB).toString() + " " + dbType);
         }
 
-        return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
+        db.init();
     }
 
     /**

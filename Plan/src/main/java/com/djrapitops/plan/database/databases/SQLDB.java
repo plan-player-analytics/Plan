@@ -2,16 +2,15 @@ package main.java.com.djrapitops.plan.database.databases;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,22 +62,14 @@ public abstract class SQLDB extends Database {
      * @return Was the Initialization successful.
      */
     @Override
-    public boolean init() {
+    public void init() throws DatabaseInitException {
         setStatus("Init");
         String benchName = "Init " + getConfigName();
         Benchmark.start(benchName);
         try {
             setupDataSource();
-
-            if (!setupDatabase()) {
-                return false;
-            }
-
+            setupDatabase();
             clean();
-            return true;
-        } catch (IOException | SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
-            return false;
         } finally {
             Benchmark.stop("Database", benchName);
             Log.logDebug("Database");
@@ -90,40 +81,29 @@ public abstract class SQLDB extends Database {
      * <p>
      * Updates to latest schema.
      *
-     * @return Is the connection usable?
-     * @throws SQLException
+     * @throws DatabaseInitException if something goes wrong.
      */
-    public boolean setupDatabase() throws SQLException {
-        boolean newDatabase = isNewDatabase();
+    public void setupDatabase() throws DatabaseInitException {
+        try {
+            boolean newDatabase = isNewDatabase();
 
-        if (!versionTable.createTable()) {
-            Log.error("Failed to create table: " + versionTable.getTableName());
-            return false;
-        }
+            versionTable.createTable();
+            createTables();
 
-        if (newDatabase) {
-            Log.info("New Database created.");
-        }
-
-        if (!createTables()) {
-            return false;
-        }
-
-        int version = getVersion();
-        boolean newVersion = version < 8;
-
-        if (newDatabase || newVersion) {
-            setVersion(8);
-        }
-
-        if (newVersion) {
-            try (Statement statement = getConnection().createStatement()) {
-                statement.execute("DROP TABLE IF EXISTS plan_locations");
-                endTransaction(statement.getConnection());
+            if (newDatabase) {
+                Log.info("New Database created.");
             }
-        }
 
-        return true;
+            int version = getVersion();
+            boolean newVersion = version < 8;
+
+            if (newDatabase || newVersion) {
+                setVersion(8);
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseInitException("Failed to set-up Database", e);
+        }
     }
 
     /**
@@ -133,16 +113,12 @@ public abstract class SQLDB extends Database {
      *
      * @return true if successful.
      */
-    private boolean createTables() {
+    private void createTables() throws DatabaseInitException {
         Benchmark.start("Create tables");
         for (Table table : getAllTables()) {
-            if (!table.createTable()) {
-                Log.error("Failed to create table: " + table.getTableName());
-                return false;
-            }
+            table.createTable();
         }
         Benchmark.stop("Database", "Create tables");
-        return true;
     }
 
     /**
@@ -175,7 +151,7 @@ public abstract class SQLDB extends Database {
     /**
      * Setups the {@link BasicDataSource}
      */
-    public abstract void setupDataSource() throws IOException;
+    public abstract void setupDataSource() throws DatabaseInitException;
 
     /**
      * @throws SQLException
@@ -258,17 +234,13 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    /**
-     *
-     */
-    @Override
-    public void clean() {
+    private void clean() throws DatabaseInitException {
         Log.info("Cleaning the database.");
         try {
             tpsTable.clean();
             Log.info("Clean complete.");
         } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+            throw new DatabaseInitException("Database Clean failed", e);
         }
     }
 

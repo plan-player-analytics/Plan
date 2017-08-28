@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 public class ServerInfoFile extends BukkitConfig {
     public ServerInfoFile(Plan plugin) throws IOException {
-        super(plugin, "ServerInfoFile");
+        super(plugin, "ServerInfoFile.yml");
         IFileConfig config = super.getConfig();
         config.copyDefaults();
         config.addDefault("Server.UUID", "");

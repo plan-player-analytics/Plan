@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 
@@ -28,7 +29,7 @@ public class ManageUtils {
      * @param copyFromDB Database you want to backup.
      * @return success?
      */
-    public static boolean backup(String dbName, Database copyFromDB) {
+    public static boolean backup(String dbName, Database copyFromDB) throws DatabaseInitException {
         Plan plugin = Plan.getInstance();
         String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
@@ -79,15 +80,13 @@ public class ManageUtils {
         return true;
     }
 
-    public static Database getDB(Plan plugin, String dbName) {
+    public static Database getDB(Plan plugin, String dbName) throws DatabaseInitException {
         Database database = null;
         for (Database sqldb : plugin.getDatabases()) {
             String dbConfigName = sqldb.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database = sqldb;
-                if (!database.init()) {
-                    return null;
-                }
+                database.init();
                 break;
             }
         }

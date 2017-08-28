@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -48,15 +49,13 @@ public abstract class Table {
     /**
      * @return
      */
-    public abstract boolean createTable();
+    public abstract void createTable() throws DbCreateTableException;
 
-    protected boolean createTable(String sql) {
+    protected void createTable(String sql) throws DbCreateTableException {
         try {
             execute(sql);
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+        } catch (SQLException e) {
+            throw new DbCreateTableException(tableName, "Failed to create table", e);
         }
     }
 

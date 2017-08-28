@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.Actions;
+import main.java.com.djrapitops.plan.database.tables.UserInfoTable;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -38,12 +39,13 @@ public class RegisterProcessor extends PlayerProcessor {
         UUID uuid = getUUID();
         Plan plugin = Plan.getInstance();
         Database db = plugin.getDB();
-        if (db.wasSeenBefore(uuid)) {
-            return;
-        }
-        plugin.getDataCache().markFirstSession(uuid);
+        UserInfoTable userInfoTable = db.getUserInfoTable();
         try {
-            db.getUserInfoTable().registerUserInfo(uuid, registered);
+            if (userInfoTable.isRegistered(uuid)) {
+                return;
+            }
+            plugin.getDataCache().markFirstSession(uuid);
+            userInfoTable.registerUserInfo(uuid, registered);
             db.getActionsTable().insertAction(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);

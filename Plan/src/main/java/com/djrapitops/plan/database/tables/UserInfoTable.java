@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
@@ -40,8 +41,8 @@ public class UserInfoTable extends UserIDTable {
     }
 
     @Override
-    public boolean createTable() {
-        return createTable(TableSqlParser.createTable(tableName)
+    public void createTable() throws DbCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnRegistered, Sql.LONG).notNull()
                 .column(columnOP, Sql.BOOL).notNull().defaultValue(false)

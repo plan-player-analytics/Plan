@@ -5,11 +5,11 @@
 package main.java.com.djrapitops.plan.systems.info.server;
 
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
@@ -33,7 +33,7 @@ public class ServerInfoManager {
     private ServerInfoFile serverInfoFile;
     private final ServerTable serverTable;
 
-    public ServerInfoManager(Plan plugin) {
+    public ServerInfoManager(Plan plugin) throws PlanEnableException {
         this.plugin = plugin;
         Database db = plugin.getDB();
         serverTable = db.getServerTable();
@@ -41,9 +41,7 @@ public class ServerInfoManager {
         try {
             serverInfoFile = new ServerInfoFile(plugin);
         } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-            Log.error("Failed to read server info from local file, disabling plugin.");
-            plugin.disablePlugin();
+            throw new PlanEnableException("Failed to read ServerInfoFile.yml", e);
         }
 
         Optional<UUID> serverUUID = serverInfoFile.getUUID();
@@ -54,10 +52,10 @@ public class ServerInfoManager {
             } else {
                 registerServer();
             }
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-            Log.error("Failed to register server info to database, disabling plugin.");
-            plugin.disablePlugin();
+        } catch (SQLException e) {
+            throw new PlanEnableException("Failed to update Database server info", e);
+        } catch (IOException e) {
+            throw new PlanEnableException("Failed to write to ServerInfoFile.yml", e);
         }
     }
 
