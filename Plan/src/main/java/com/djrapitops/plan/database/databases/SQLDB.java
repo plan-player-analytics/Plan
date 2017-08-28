@@ -1,13 +1,14 @@
 package main.java.com.djrapitops.plan.database.databases;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,7 +30,7 @@ public abstract class SQLDB extends Database {
     /**
      * @param plugin
      */
-    public SQLDB(Plan plugin) {
+    public SQLDB(IPlan plugin) {
         super(plugin);
         usingMySQL = getName().equals("MySQL");
 
@@ -75,7 +76,7 @@ public abstract class SQLDB extends Database {
 
             clean();
             return true;
-        } catch (SQLException e) {
+        } catch (IOException | SQLException e) {
             Log.toLog(this.getClass().getName(), e);
             return false;
         } finally {
@@ -174,7 +175,7 @@ public abstract class SQLDB extends Database {
     /**
      * Setups the {@link BasicDataSource}
      */
-    public abstract void setupDataSource();
+    public abstract void setupDataSource() throws IOException;
 
     /**
      * @throws SQLException

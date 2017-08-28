@@ -12,7 +12,6 @@ import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator
 import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -112,9 +111,9 @@ public class Locale {
     private void loadDefault() {
         String analysis = "Analysis | ";
         String prefix = "[Plan] ";
-        String green = ChatColor.GREEN.toString();
-        String yellow = ChatColor.YELLOW.toString();
-        String red = ChatColor.RED.toString();
+        String green = "§a";
+        String yellow = "§e";
+        String red = "§c";
         String arrowsRight = DefaultMessages.ARROWS_RIGHT.parse();
         ColorScheme cs = plugin.getColorScheme();
         String mCol = cs.getMainColor();

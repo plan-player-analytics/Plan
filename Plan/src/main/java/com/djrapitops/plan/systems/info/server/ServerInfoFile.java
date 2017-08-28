@@ -8,7 +8,6 @@ import com.djrapitops.plugin.config.BukkitConfig;
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,7 +25,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public class ServerInfoFile extends BukkitConfig {
-    public ServerInfoFile(Plan plugin) throws IOException, InvalidConfigurationException {
+    public ServerInfoFile(Plan plugin) throws IOException {
         super(plugin, "ServerInfoFile");
         IFileConfig config = super.getConfig();
         config.copyDefaults();

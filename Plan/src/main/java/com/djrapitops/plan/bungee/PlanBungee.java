@@ -8,14 +8,19 @@ import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.MySQLDB;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.Check;
 import net.md_5.bungee.api.ChatColor;
 
 import java.io.InputStream;
@@ -42,7 +47,8 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     @Override
     public void onEnable() {
         super.setInstance(this);
-
+        super.setDebugMode(Settings.DEBUG.toString());
+        super.getPluginLogger().setFolder(getDataFolder());
         super.setColorScheme(new ColorScheme(ChatColor.GREEN, ChatColor.GRAY, ChatColor.WHITE));
         super.setLogPrefix("[Plan]");
         super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
@@ -54,12 +60,29 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
         variableHolder = new ServerVariableHolder(getProxy());
 
+        new Locale(this).loadLocale();
+
+        processingQueue = new ProcessingQueue();
+
+        Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
+        if (!initDatabase()) {
+            disablePlugin();
+            return;
+        }
+
+        String ip = variableHolder.getIp();
+        if ("0.0.0.0".equals(ip)) {
+            Log.error("IP setting still 0.0.0.0 - Set up AlternativeIP/IP that connects to the Proxy server.");
+        }
+
         Benchmark.start("WebServer Initialization");
         webServer = new WebServer(this);
         webServer.initServer();
 
         if (!webServer.isEnabled()) {
             Log.error("WebServer was not successfully initialized.");
+            disablePlugin();
+            return;
         }
 
         serverInfoManager = new ServerInfoManager(this);
@@ -67,8 +90,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
         webServer.setInfoManager(infoManager);
 
         Benchmark.stop("Enable", "WebServer Initialization");
-
-        processingQueue = new ProcessingQueue();
+        Log.info(Locale.get(Msg.ENABLED).toString());
     }
 
     public static PlanBungee getInstance() {
@@ -82,6 +104,12 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
         for (Processor processor : processors) {
             processor.process();
         }
+        Log.info(Locale.get(Msg.DISABLED).toString());
+    }
+
+    private boolean initDatabase() {
+        db = new MySQLDB(this);
+        return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
     }
 
     @Override

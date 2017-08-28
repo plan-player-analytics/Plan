@@ -40,7 +40,7 @@ public class ServerVariableHolder {
     public ServerVariableHolder(net.md_5.bungee.api.ProxyServer server) {
         ip = Settings.BUNGEE_IP.toString();
         name = "BungeeCord";
-        port = Settings.BUNGEE_PORT.getNumber();
+        port = -1;
         version = server.getVersion();
         implVersion = server.getVersion();
         usingPaper = false;

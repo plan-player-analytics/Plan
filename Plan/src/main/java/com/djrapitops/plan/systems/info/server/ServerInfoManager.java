@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
-import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -41,7 +40,7 @@ public class ServerInfoManager {
 
         try {
             serverInfoFile = new ServerInfoFile(plugin);
-        } catch (IOException | InvalidConfigurationException e) {
+        } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
             Log.error("Failed to read server info from local file, disabling plugin.");
             plugin.disablePlugin();

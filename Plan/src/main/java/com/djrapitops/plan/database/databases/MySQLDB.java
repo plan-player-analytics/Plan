@@ -1,8 +1,10 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import main.java.com.djrapitops.plan.Plan;
+import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import main.java.com.djrapitops.plan.api.IPlan;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.IOException;
 
 /**
  * @author Rsl1122
@@ -14,7 +16,7 @@ public class MySQLDB extends SQLDB {
      *
      * @param plugin Current instance of Plan
      */
-    public MySQLDB(Plan plugin) {
+    public MySQLDB(IPlan plugin) {
         super(plugin);
     }
 
@@ -22,14 +24,15 @@ public class MySQLDB extends SQLDB {
      * Setups the {@link BasicDataSource}
      */
     @Override
-    public void setupDataSource() {
-        FileConfiguration config = plugin.getConfig();
+    public void setupDataSource() throws IOException {
+        IFileConfig config = null;
+        config = plugin.getIConfig().getConfig();
 
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 
         String host = config.getString("Database.MySQL.Host");
-        String port = config.getString("Database.MySQL.Port");
+        String port = config.getInt("Database.MySQL.Port").toString();
         String database = config.getString("Database.MySQL.Database");
 
         dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true");
