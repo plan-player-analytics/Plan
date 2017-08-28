@@ -61,17 +61,18 @@ public class ManageHotswapCommand extends SubCommand {
             return true;
         }
 
-        final Database database = ManageUtils.getDB(plugin, dbName);
-
-        // If DB is null return
-        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(dbName + " was null!");
-            return true;
-        }
-
-        assert database != null;
-
         try {
+            final Database database = ManageUtils.getDB(plugin, dbName);
+
+            // If DB is null return
+            if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
+                Log.error(dbName + " was null!");
+                return true;
+            }
+
+            assert database != null;
+
+
             database.getVersion(); //Test db connection
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);

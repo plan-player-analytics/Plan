@@ -1,0 +1,97 @@
+Server:
+  IP: 0.0.0.0
+
+Plugin:
+  Debug: 'false'
+  Locale: default
+  WriteNewLocaleFileOnEnable: false
+
+WebServer:
+  Port: 8804
+  InternalIP: 0.0.0.0
+  Security:
+    SSL-Certificate:
+      KeyStorePath: 'SSLCertificate.keystore'
+      KeyPass: 'default'
+      StorePass: 'default'
+      Alias: 'alias'
+  Servers:
+    TODO: TODO AUTO GENERATE
+    Server1:
+      Port: 8805
+    Server2:
+      Port: 8806
+
+Database:
+  MySQL:
+    Host: localhost
+    Port: 3306
+    User: root
+    Password: minecraft
+    Database: Plan
+
+Commands:
+  AlternativeIP:
+    Enabled: false
+    Link: your.domain.here:%port%
+  Colors:
+    Main: '&2'
+    Secondary: '&7'
+    Highlight: '&f'
+
+Analysis:
+  AutoRefreshPeriod: 60
+  Export:
+    Enabled: false
+    ExternalWebServerLinkProtocol: http
+    DestinationFolder: 'Analysis Results'
+
+Data:
+  Commands:
+    LogUnknownCommands: false
+    CombineCommandAliases: true
+
+Customization:
+  Formatting:
+    DecimalPoints: '#.##'
+    TimeAmount:
+      Year: '1 year, '
+      Years: '%years% years, '
+      Month: '1 month, '
+      Months: '%months% months, '
+      Day: '1d '
+      Days: '%days%d '
+      Hours: '%hours%h '
+      Minutes: '%minutes%m '
+      Seconds: '%seconds%s'
+
+Theme:
+  Base: Default
+  Font:
+    FontStyleSheet: https://fonts.googleapis.com/css?family=Quicksand:300,400
+    FontFamily: "'Quicksand', sans-serif"
+    Color:
+      Dark: Base
+      Light: Base
+  Colors:
+    Main: Base
+    Main-Dark: Base
+    Secondary: Base
+    Secondary-Dark: Base
+    Tertiary: Base
+    Background: Base
+    Table-Light: Base
+    Table-Dark: Base
+  Graphs:
+    PunchCard: Base
+    PlayersOnline: Base
+    TPS:
+      High-Threshold: 18
+      Medium-Threshold: 10
+      High: Base
+      Medium: Base
+      Low: Base
+    CPU: Base
+    RAM: Base
+    Chunks: Base
+    Entities: Base

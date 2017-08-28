@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -32,8 +33,8 @@ public class IPsTable extends UserIDTable {
      * @return if the table was created successfully
      */
     @Override
-    public boolean createTable() {
-        return createTable(TableSqlParser.createTable(tableName)
+    public void createTable() throws DbCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnIP, Sql.varchar(20)).notNull()
                 .column(columnGeolocation, Sql.varchar(50)).notNull()

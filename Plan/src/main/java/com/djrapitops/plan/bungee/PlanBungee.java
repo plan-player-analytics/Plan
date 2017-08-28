@@ -8,8 +8,14 @@ import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.bungee.systems.BungeePlayerListener;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.databases.MySQLDB;
+import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -41,34 +47,58 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
     @Override
     public void onEnable() {
-        super.setInstance(this);
+        try {
 
-        super.setColorScheme(new ColorScheme(ChatColor.GREEN, ChatColor.GRAY, ChatColor.WHITE));
-        super.setLogPrefix("[Plan]");
-        super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
-        super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
 
-        super.copyDefaultConfig("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
+            super.setInstance(this);
+            super.setDebugMode(Settings.DEBUG.toString());
+            super.getPluginLogger().setFolder(getDataFolder());
+            super.setColorScheme(new ColorScheme(ChatColor.GREEN, ChatColor.GRAY, ChatColor.WHITE));
+            super.setLogPrefix("[Plan]");
+            super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
+            super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
 
-        super.onEnableDefaultTasks();
+            super.copyDefaultConfig("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
 
-        variableHolder = new ServerVariableHolder(getProxy());
+            super.onEnableDefaultTasks();
 
-        Benchmark.start("WebServer Initialization");
-        webServer = new WebServer(this);
-        webServer.initServer();
+            variableHolder = new ServerVariableHolder(getProxy());
 
-        if (!webServer.isEnabled()) {
-            Log.error("WebServer was not successfully initialized.");
+            new Locale(this).loadLocale();
+
+            processingQueue = new ProcessingQueue();
+
+            Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
+            initDatabase();
+
+            String ip = variableHolder.getIp();
+            if ("0.0.0.0".equals(ip)) {
+                Log.error("IP setting still 0.0.0.0 - Set up AlternativeIP/IP that connects to the Proxy server.");
+            }
+
+            Benchmark.start("WebServer Initialization");
+            webServer = new WebServer(this);
+            webServer.initServer();
+
+            if (!webServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+                disablePlugin();
+                return;
+            }
+
+            serverInfoManager = new ServerInfoManager(this);
+            infoManager = new InformationManager(this);
+            webServer.setInfoManager(infoManager);
+
+            registerListener(new BungeePlayerListener(this));
+
+            Benchmark.stop("Enable", "WebServer Initialization");
+            Log.info(Locale.get(Msg.ENABLED).toString());
+        } catch (Exception e) {
+            Log.error("Plugin Failed to Initialize Correctly.");
+            Log.logStackTrace(e);
+            disablePlugin();
         }
-
-        serverInfoManager = new ServerInfoManager(this);
-        infoManager = new InformationManager(this);
-        webServer.setInfoManager(infoManager);
-
-        Benchmark.stop("Enable", "WebServer Initialization");
-
-        processingQueue = new ProcessingQueue();
     }
 
     public static PlanBungee getInstance() {
@@ -82,6 +112,12 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
         for (Processor processor : processors) {
             processor.process();
         }
+        Log.info(Locale.get(Msg.DISABLED).toString());
+    }
+
+    private void initDatabase() throws DatabaseInitException {
+        db = new MySQLDB(this);
+        db.init();
     }
 
     @Override

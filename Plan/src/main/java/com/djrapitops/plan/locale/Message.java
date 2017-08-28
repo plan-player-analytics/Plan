@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.locale;
 
 import com.djrapitops.plugin.utilities.Verify;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
 import java.util.HashMap;

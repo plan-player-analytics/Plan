@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database;
 
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.tables.*;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -22,7 +23,7 @@ public abstract class Database {
     /**
      * Instance of Plan used with this database.
      */
-    protected final Plan plugin;
+    protected final IPlan plugin;
 
     /**
      * Table representing plan_users in the database.
@@ -109,7 +110,7 @@ public abstract class Database {
      *
      * @param plugin current instance of Plan.
      */
-    public Database(Plan plugin) {
+    public Database(IPlan plugin) {
         this.plugin = plugin;
     }
 
@@ -120,8 +121,7 @@ public abstract class Database {
      *
      * @return Was the initiation successful?
      */
-    public boolean init() {
-        return false;
+    public void init() throws DatabaseInitException {
     }
 
     /**
@@ -142,11 +142,6 @@ public abstract class Database {
      * @return true/false
      */
     public abstract boolean wasSeenBefore(UUID uuid);
-
-    /**
-     * Cleans the database of excess data.
-     */
-    public abstract void clean();
 
     /**
      * Used to get the name of the database type.

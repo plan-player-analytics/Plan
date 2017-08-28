@@ -145,4 +145,26 @@ public class Log {
             return PlanBungee.getInstance().getPluginLogger();
         }
     }
+
+    public static void logStackTrace(Throwable e) {
+        error(e.toString());
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            error("  " + stackTraceElement);
+        }
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            logCause(cause);
+        }
+    }
+
+    private static void logCause(Throwable e) {
+        error("caused by: " + e.toString());
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            error("  " + stackTraceElement);
+        }
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            logCause(cause);
+        }
+    }
 }

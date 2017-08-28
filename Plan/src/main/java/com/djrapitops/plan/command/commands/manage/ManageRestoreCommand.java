@@ -61,14 +61,15 @@ public class ManageRestoreCommand extends SubCommand {
             return true;
         }
 
-        final Database database = ManageUtils.getDB(plugin, db);
-
-        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(db + " was null!");
-            return true;
-        }
-
-        runRestoreTask(args, sender, database);
+        // TODO Restore command
+//        final Database database = ManageUtils.getDB(plugin, db);
+//
+//        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
+//            Log.error(db + " was null!");
+//            return true;
+//        }
+//
+//        runRestoreTask(args, sender, database);
         return true;
     }
 
@@ -90,10 +91,7 @@ public class ManageRestoreCommand extends SubCommand {
                     }
 
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
-                    if (!backupDB.init()) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
-                        return;
-                    }
+                    backupDB.init();
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 

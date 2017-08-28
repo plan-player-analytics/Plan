@@ -6,6 +6,7 @@
 package test.java.main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
@@ -84,8 +85,8 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testInit() {
-        assertTrue("Database failed to init.", db.init());
+    public void testInit() throws DatabaseInitException {
+        db.init();
     }
 
     @Test
@@ -176,8 +177,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testTPSSaving() throws SQLException {
-        db.init();
+    public void testTPSSaving() throws Exception {
         TPSTable tpsTable = db.getTpsTable();
         Random r = new Random();
 

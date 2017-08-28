@@ -72,21 +72,22 @@ public class ManageMoveCommand extends SubCommand {
             return true;
         }
 
-        final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
+        // TODO Move command.
+//        final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
 
-        if (!Check.isTrue(Verify.notNull(fromDatabase), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(fromDB + " was null!");
-            return true;
-        }
+//        if (!Check.isTrue(Verify.notNull(fromDatabase), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
+//            Log.error(fromDB + " was null!");
+//            return true;
+//        }
 
-        final Database toDatabase = ManageUtils.getDB(plugin, toDB);
+//        final Database toDatabase = ManageUtils.getDB(plugin, toDB);
 
-        if (!Check.isTrue(Verify.notNull(toDatabase), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(toDB + " was null!");
-            return true;
-        }
+//        if (!Check.isTrue(Verify.notNull(toDatabase), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
+//            Log.error(toDB + " was null!");
+//            return true;
+//        }
 
-        runMoveTask(fromDatabase, toDatabase, sender);
+//        runMoveTask(fromDatabase, toDatabase, sender);
         return true;
     }
 

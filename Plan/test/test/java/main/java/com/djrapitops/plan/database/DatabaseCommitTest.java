@@ -6,7 +6,6 @@ import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.After;
@@ -66,7 +65,7 @@ public class DatabaseCommitTest {
     }
 
     @Test
-    public void testNoExceptionWhenCommitEmpty() throws SQLException {
+    public void testNoExceptionWhenCommitEmpty() throws Exception {
         db.init();
 
         db.commit(db.getConnection());
@@ -76,13 +75,13 @@ public class DatabaseCommitTest {
 
     @Ignore("//TODO")
     @Test
-    public void testCommitToDBFile() throws SQLException {
+    public void testCommitToDBFile() throws Exception {
         db.init();
     }
 
     @Ignore("//TODO")
     @Test
-    public void testCommitToDBFile2() throws SQLException {
+    public void testCommitToDBFile2() throws Exception {
         db.init();
         List<TPS> tps = RandomData.randomTPS();
 //        db.getTpsTable().saveTPSData(tps);
@@ -94,7 +93,7 @@ public class DatabaseCommitTest {
     // TODO Commit tests for new Login save features.
 
     @Test
-    public void testCommitToDBFile5() throws SQLException, PassEncryptUtil.CannotPerformOperationException {
+    public void testCommitToDBFile5() throws Exception {
         db.init();
         WebUser webUser = new WebUser("Test", "SHA1:rioegnorgiengoieng:oiegnoeigneo:352", 0);
         db.getSecurityTable().addNewUser(webUser);

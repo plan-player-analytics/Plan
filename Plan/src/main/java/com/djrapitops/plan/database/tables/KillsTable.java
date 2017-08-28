@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -41,8 +42,8 @@ public class KillsTable extends UserIDTable {
      * @return
      */
     @Override
-    public boolean createTable() {
-        return createTable(TableSqlParser.createTable(tableName)
+    public void createTable() throws DbCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
                 .column(columnKillerUserID, Sql.INT).notNull()
                 .column(columnVictimUserID, Sql.INT).notNull()
                 .column(columnWeapon, Sql.varchar(30)).notNull()

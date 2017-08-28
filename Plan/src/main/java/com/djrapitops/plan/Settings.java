@@ -87,8 +87,7 @@ public enum Settings {
     HIDE_TOWNS("Plugins.Towny.HideTowns"),
     //
     // Bungee
-    BUNGEE_IP("Server.IP"),
-    BUNGEE_PORT("Server.Port")
+    BUNGEE_IP("Server.IP")
     ;
 
 

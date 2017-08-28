@@ -25,7 +25,6 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
-import org.bukkit.ChatColor;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -95,7 +94,7 @@ public class WebServer {
             Log.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
 
             if (!usingHttps) {
-                Log.infoColor(ChatColor.YELLOW + "User Authorization Disabled! (Not possible over http)");
+                Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
                 server = HttpServer.create(new InetSocketAddress(port), 10);
             }
 
@@ -273,7 +272,7 @@ public class WebServer {
             Log.error("WebServer: SSL Context Initialization Failed.");
             Log.toLog(this.getClass().getName(), e);
         } catch (FileNotFoundException e) {
-            Log.infoColor(ChatColor.YELLOW + "WebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
+            Log.infoColor("§eWebServer: SSL Certificate KeyStore File not Found: " + keyStorePath);
             Log.info("No Certificate -> Using Http server for Visualization.");
         } catch (IOException e) {
             Log.error("WebServer: " + e);

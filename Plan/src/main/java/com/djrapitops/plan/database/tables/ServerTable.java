@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
@@ -46,8 +47,8 @@ public class ServerTable extends Table {
     }
 
     @Override
-    public boolean createTable() {
-        return createTable(TableSqlParser.createTable(tableName)
+    public void createTable() throws DbCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnServerID)
                 .column(columnServerUUID, Sql.varchar(36)).notNull().unique()
                 .column(columnServerName, Sql.varchar(100))

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -40,9 +41,9 @@ public class CommandUseTable extends Table {
      * @return
      */
     @Override
-    public boolean createTable() {
+    public void createTable() throws DbCreateTableException {
         ServerTable serverTable = db.getServerTable();
-        return createTable(TableSqlParser.createTable(tableName)
+        createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnCommandId)
                 .column(columnCommand, Sql.varchar(20)).notNull()
                 .column(columnTimesUsed, Sql.INT).notNull()
