@@ -36,8 +36,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 public class TestInit {
 
-    private Plan planMock;
     private static final UUID serverUUID = UUID.fromString("9a27457b-f1a2-4b71-be7f-daf2170a1b66");
+    private Plan planMock;
 
     public TestInit() {
     }
@@ -66,6 +66,16 @@ public class TestInit {
         TestInit t = new TestInit();
         t.setUp();
         return t;
+    }
+
+    static File getTestFolder() {
+        File testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
+    }
+
+    public static UUID getServerUUID() {
+        return serverUUID;
     }
 
     private void setUp() throws Exception {
@@ -171,12 +181,6 @@ public class TestInit {
         };
     }
 
-    static File getTestFolder() {
-        File testFolder = new File("temporaryTestFolder");
-        testFolder.mkdir();
-        return testFolder;
-    }
-
     private Server mockServer() {
         Server mockServer = PowerMockito.mock(Server.class);
 
@@ -201,9 +205,5 @@ public class TestInit {
      */
     public Plan getPlanMock() {
         return planMock;
-    }
-
-    public static UUID getServerUUID() {
-        return serverUUID;
     }
 }

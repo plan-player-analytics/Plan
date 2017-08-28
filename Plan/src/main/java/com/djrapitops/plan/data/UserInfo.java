@@ -58,12 +58,12 @@ public class UserInfo {
         this.lastSeen = lastSeen;
     }
 
-    public void setBanned(boolean banned) {
-        this.banned = banned;
-    }
-
     public boolean isBanned() {
         return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     public boolean isOpped() {

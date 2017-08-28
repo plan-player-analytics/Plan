@@ -26,9 +26,9 @@ import java.util.List;
  */
 public class Session {
 
+    private final long sessionStart;
     private Integer sessionID;
     private WorldTimes worldTimes;
-    private final long sessionStart;
     private long sessionEnd;
     private List<PlayerKill> playerKills;
     private int mobKills;
@@ -62,6 +62,18 @@ public class Session {
         this.playerKills = new ArrayList<>();
         this.mobKills = mobKills;
         this.deaths = deaths;
+    }
+
+    /**
+     * Starts a new Session.
+     *
+     * @param time  Time the session started.
+     * @param world World the session started in.
+     * @param gm    GameMode the session started in.
+     * @return a new Session object.
+     */
+    public static Session start(long time, String world, String gm) {
+        return new Session(time, world, gm);
     }
 
     /**
@@ -130,8 +142,16 @@ public class Session {
         return worldTimes;
     }
 
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
+    }
+
     public List<PlayerKill> getPlayerKills() {
         return playerKills;
+    }
+
+    public void setPlayerKills(List<PlayerKill> playerKills) {
+        this.playerKills = playerKills;
     }
 
     public int getMobKills() {
@@ -165,28 +185,8 @@ public class Session {
         return hash;
     }
 
-    /**
-     * Starts a new Session.
-     *
-     * @param time  Time the session started.
-     * @param world World the session started in.
-     * @param gm    GameMode the session started in.
-     * @return a new Session object.
-     */
-    public static Session start(long time, String world, String gm) {
-        return new Session(time, world, gm);
-    }
-
     public boolean isFetchedFromDB() {
         return sessionID != null;
-    }
-
-    public void setWorldTimes(WorldTimes worldTimes) {
-        this.worldTimes = worldTimes;
-    }
-
-    public void setPlayerKills(List<PlayerKill> playerKills) {
-        this.playerKills = playerKills;
     }
 
     /**

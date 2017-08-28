@@ -9,6 +9,8 @@ package main.java.com.djrapitops.plan.database.sql;
  */
 public abstract class WhereParser extends SqlParser {
 
+    private int conditions = 0;
+
     public WhereParser() {
         super();
     }
@@ -16,8 +18,6 @@ public abstract class WhereParser extends SqlParser {
     public WhereParser(String start) {
         super(start);
     }
-
-    private int conditions = 0;
 
     public WhereParser where(String... conditions) {
         append(" WHERE ");

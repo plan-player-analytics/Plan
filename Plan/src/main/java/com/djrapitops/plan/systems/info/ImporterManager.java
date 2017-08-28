@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class ImporterManager {
 
+    private static final List<Importer> registry = new ArrayList<>();
+
     /**
      * Constructor used to hide the public constructor
      */
@@ -21,10 +23,16 @@ public class ImporterManager {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final List<Importer> registry = new ArrayList<>();
-
     public static void registerImporter(Importer importer) {
+        if (importer == null) {
+            throw new NullPointerException("Importer cannot be null");
+        }
+
         String firstName = importer.getNames().get(0);
+
+        if (firstName == null) {
+            throw new IllegalArgumentException("No Importer name given");
+        }
 
         if (getImporter(firstName) != null) {
             removeImporter(firstName);

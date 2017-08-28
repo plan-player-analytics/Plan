@@ -36,6 +36,12 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+            <scope>compile</scope>
+        </dependency>
         <!--        Framework for easier plugin development-->
         <dependency>
             <groupId>com.djrapitops</groupId>
@@ -48,16 +54,19 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
             <version>2.1.1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
             <version>2.4.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
+            <scope>compile</scope>
         </dependency>
         <!--        SoftDepended Plugins-->
         <dependency>
@@ -180,6 +189,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <minimizeJar>true</minimizeJar>
                     <artifactSet>
                         <excludes>
                             <exclude>org.powermock:*</exclude>
@@ -189,7 +199,8 @@
                             <exclude>xpp3:*</exclude>
                             <exclude>org.objenesis:*</exclude>
                             <exclude>cglib:*</exclude>
-                            <exclude>org.*:*</exclude>
+                            <exclude>org.bukkit:*</exclude>
+                            <exclude>org.mockito:*</exclude>
                             <exclude>org.easymock:*</exclude>
                             <exclude>junit:*</exclude>
                         </excludes>

@@ -34,11 +34,11 @@ public class WorldPart extends RawData {
         addValue("worldSeries", WorldPieCreator.createSeriesData(worldTimes));
     }
 
-    public void setWorldTimes(WorldTimes worldTimes) {
-        this.worldTimes = worldTimes;
-    }
-
     public WorldTimes getWorldTimes() {
         return worldTimes;
+    }
+
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
     }
 }

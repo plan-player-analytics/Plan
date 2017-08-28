@@ -558,6 +558,6 @@ public class WebServer {
     }
 
     public String getAccessAddress() {
-        return getProtocol()+":/"+ HtmlUtils.getIP();
+        return getProtocol() + ":/" + HtmlUtils.getIP();
     }
 }

@@ -109,6 +109,10 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         return (Plan) getPluginInstance(Plan.class);
     }
 
+    public static UUID getServerUUID() {
+        return getInstance().getServerInfoManager().getServerUUID();
+    }
+
     /**
      * OnEnable method.
      * <p>
@@ -427,10 +431,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         for (Processor processor : processors) {
             processingQueue.addToQueue(processor);
         }
-    }
-
-    public static UUID getServerUUID() {
-        return getInstance().getServerInfoManager().getServerUUID();
     }
 
     public InformationManager getInfoManager() {

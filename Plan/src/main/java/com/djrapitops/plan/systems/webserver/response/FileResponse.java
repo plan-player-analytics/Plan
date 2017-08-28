@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 
 /**
  * Response class for returning file contents.
- *
+ * <p>
  * Created to remove copy-paste.
  *
  * @author Rsl1122
