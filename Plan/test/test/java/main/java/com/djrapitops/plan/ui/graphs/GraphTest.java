@@ -55,15 +55,13 @@ public class GraphTest {
 
     @Test
     public void testSeriesCreator() {
-        String result = SeriesCreator.seriesGraph(points, false, false);
+        String result = SeriesCreator.seriesGraph(points, false, false).replaceAll("[\\[\\]]", "");
         String[] splittedResult = result.split(",");
 
         Map<String, String> expected = new LinkedHashMap<>();
 
         String key = null;
         for (String resultString : splittedResult) {
-            resultString = resultString.replaceAll("[\\[\\]]", "");
-
             if (key == null) {
                 key = resultString;
             } else {

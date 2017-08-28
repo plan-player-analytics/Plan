@@ -27,7 +27,7 @@ public class UserImportRefiner {
     private final Plan plugin;
     private final boolean onlineMode;
 
-    private final Vector<UserImportData> importers = new Vector<>();
+    private final List<UserImportData> importers = new Vector<>();
 
     private final Map<String, Boolean> worlds = new Hashtable<>();
 
@@ -92,7 +92,7 @@ public class UserImportRefiner {
 
         Benchmark.start(benchmarkName);
 
-        Vector<UserImportData> invalidData = new Vector<>();
+        List<UserImportData> invalidData = new Vector<>();
 
         importers.parallelStream().forEach(importer -> {
             String name = importer.getName();
@@ -173,7 +173,7 @@ public class UserImportRefiner {
     }
 
     private void addFoundUUIDs(Map<String, String> foundUUIDs) {
-        Vector<UserImportData> found = new Vector<>();
+        List<UserImportData> found = new Vector<>();
 
         uuidsMissing.entrySet().parallelStream().forEach((entry) -> {
             UserImportData importer = entry.getKey();
@@ -226,7 +226,7 @@ public class UserImportRefiner {
     }
 
     private void addFoundNames(Map<String, String> foundNames) {
-        Vector<UserImportData> found = new Vector<>();
+        List<UserImportData> found = new Vector<>();
 
         namesMissing.entrySet().parallelStream().forEach(entry -> {
             UserImportData importer = entry.getKey();

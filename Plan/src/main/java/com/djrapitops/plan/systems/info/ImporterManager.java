@@ -24,7 +24,15 @@ public class ImporterManager {
     }
 
     public static void registerImporter(Importer importer) {
+        if (importer == null) {
+            throw new NullPointerException("Importer cannot be null");
+        }
+
         String firstName = importer.getNames().get(0);
+
+        if (firstName == null) {
+            throw new IllegalArgumentException("No Importer name given");
+        }
 
         if (getImporter(firstName) != null) {
             removeImporter(firstName);
