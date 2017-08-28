@@ -5,14 +5,12 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
 /**
  * This manage subcommand is used to clear a database of all data.
@@ -62,15 +60,16 @@ public class ManageClearCommand extends SubCommand {
             return true;
         }
 
-        final Database database = ManageUtils.getDB(plugin, dbName);
+//    TODO CLEAR COMMAND
+//    final Database database = ManageUtils.getDB(plugin, dbName);
+//
+//        // If DB is null return
+//        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
+//            Log.error(dbName + " was null!");
+//            return true;
+//        }
 
-        // If DB is null return
-        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(dbName + " was null!");
-            return true;
-        }
-
-        runClearTask(sender, database);
+//        runClearTask(sender, database);
         return true;
     }
 

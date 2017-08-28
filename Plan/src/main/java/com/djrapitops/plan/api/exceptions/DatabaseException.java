@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * //TODO Class Javadoc Comment
+ * Thrown when something goes wrong in the database, generic exception.
  *
  * @author Rsl1122
  */
