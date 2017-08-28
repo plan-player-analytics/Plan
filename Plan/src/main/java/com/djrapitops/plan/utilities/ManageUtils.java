@@ -68,11 +68,11 @@ public class ManageUtils {
      */
     public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) {
 //        try {
-            clearAndCopyToDB.removeAllData();
-            //TODO  List<UserInfo> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
-            //  clearAndCopyToDB.saveMultipleUserData(allUserData);
+        clearAndCopyToDB.removeAllData();
+        //TODO  List<UserInfo> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
+        //  clearAndCopyToDB.saveMultipleUserData(allUserData);
 //        TODO    clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());
-            //TODO   clearAndCopyToDB.getTpsTable().saveTPSData(copyFromDB.getTpsTable().getTPSData());
+        //TODO   clearAndCopyToDB.getTpsTable().saveTPSData(copyFromDB.getTpsTable().getTPSData());
 //        } catch (SQLException | NullPointerException e) {
 //            Log.toLog("ManageUtils.move", e);
 //            return false;

@@ -24,23 +24,23 @@ import java.io.InputStream;
  * @author Rsl1122
  */
 public interface IPlan extends IPlugin {
-    public Database getDB();
+    Database getDB();
 
-    public ServerVariableHolder getVariable();
+    ServerVariableHolder getVariable();
 
-    public ServerInfoManager getServerInfoManager();
+    ServerInfoManager getServerInfoManager();
 
-    public InformationManager getInfoManager();
+    InformationManager getInfoManager();
 
-    public WebServer getWebServer();
+    WebServer getWebServer();
 
-    public File getDataFolder();
+    File getDataFolder();
 
-    public ProcessingQueue getProcessingQueue();
+    ProcessingQueue getProcessingQueue();
 
-    public void addToProcessQueue(Processor... processors);
+    void addToProcessQueue(Processor... processors);
 
-    public InputStream getResource(String resource);
+    InputStream getResource(String resource);
 
-    public IConfig getIConfig() throws IOException;
+    IConfig getIConfig() throws IOException;
 }

@@ -10,6 +10,7 @@ import java.util.*;
 
 /**
  * @author Fuzzlemann
+ * @since 4.0.0
  */
 public class ServerImportData {
 
@@ -46,7 +47,7 @@ public class ServerImportData {
         private final List<TPS> tpsData = new ArrayList<>();
 
         private ServerImportDataBuilder() {
-            throw new IllegalStateException("Builder class");
+            /* Private Constructor */
         }
 
         public ServerImportDataBuilder commandUsage(String command, Integer usages) {

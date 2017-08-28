@@ -30,7 +30,7 @@ public class OfflinePlayerImporter extends Importer {
 
     @Override
     public List<UserImportData> getUserImportData() {
-        Vector<UserImportData> dataList = new Vector<>();
+        List<UserImportData> dataList = new Vector<>();
 
         Arrays.stream(Bukkit.getOfflinePlayers()).parallel().forEach(player -> {
             UserImportData.UserImportDataBuilder builder = UserImportData.builder();

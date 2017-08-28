@@ -171,11 +171,6 @@ public abstract class SQLDB extends Database {
         return versionTable.getVersion();
     }
 
-    @Override
-    public boolean isNewDatabase() throws SQLException {
-        return versionTable.isNewDatabase();
-    }
-
     /**
      * @param version
      * @throws SQLException
@@ -183,6 +178,11 @@ public abstract class SQLDB extends Database {
     @Override
     public void setVersion(int version) throws SQLException {
         versionTable.setVersion(version);
+    }
+
+    @Override
+    public boolean isNewDatabase() throws SQLException {
+        return versionTable.isNewDatabase();
     }
 
     /**

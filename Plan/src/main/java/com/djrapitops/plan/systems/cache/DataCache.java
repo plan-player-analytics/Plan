@@ -15,9 +15,9 @@ import java.util.UUID;
  * <p>
  * Contains:
  * <ul>
- *     <li>PlayerName cache, used for reducing database calls on chat events</li>
- *     <li>DisplayName cache, used for reducing database calls on chat events</li>
- *     <li>FirstSession MessageCount Map, used for tracking first session & message count on that session.</li>
+ * <li>PlayerName cache, used for reducing database calls on chat events</li>
+ * <li>DisplayName cache, used for reducing database calls on chat events</li>
+ * <li>FirstSession MessageCount Map, used for tracking first session & message count on that session.</li>
  * </ul>
  *
  * @author Rsl1122
@@ -25,12 +25,10 @@ import java.util.UUID;
  */
 public class DataCache extends SessionCache {
 
+    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
     private final Database db;
-
     private final Map<UUID, String> playerNames;
     private final Map<UUID, String> displayNames;
-
-    private static final Map<UUID, Integer> firstSessionInformation = new HashMap<>();
 
     /**
      * Class Constructor.
@@ -48,8 +46,8 @@ public class DataCache extends SessionCache {
     /**
      * Used to update PlayerName and DisplayName caches.
      *
-     * @param uuid UUID of the player.
-     * @param playerName Name of the player.
+     * @param uuid        UUID of the player.
+     * @param playerName  Name of the player.
      * @param displayName DisplayName of the player.
      */
     public void updateNames(UUID uuid, String playerName, String displayName) {
@@ -69,7 +67,7 @@ public class DataCache extends SessionCache {
 
     /**
      * Used to get the player display name in the cache.
-     *
+     * <p>
      * If not cached, one from the database will be cached.
      *
      * @param uuid UUID of the player.
@@ -101,7 +99,6 @@ public class DataCache extends SessionCache {
     }
 
     /**
-     *
      * @param uuid
      * @return
      */

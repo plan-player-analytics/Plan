@@ -26,7 +26,7 @@ public abstract class Importer {
 
     public abstract List<UserImportData> getUserImportData();
 
-    public void processImport() {
+    public final void processImport() {
         String benchmarkName = "Import processing";
         String serverBenchmarkName = "Server Data processing";
         String userDataBenchmarkName = "User Data processing";

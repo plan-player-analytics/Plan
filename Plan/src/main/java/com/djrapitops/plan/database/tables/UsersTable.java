@@ -15,13 +15,12 @@ import java.util.*;
  */
 public class UsersTable extends UserIDTable {
 
+    public final String statementSelectID;
     private final String columnID = "id";
     private final String columnUUID = "uuid";
     private final String columnRegistered = "registered";
     private final String columnName = "name";
     private final String columnTimesKicked = "times_kicked";
-
-    public final String statementSelectID;
 
     /**
      * @param db

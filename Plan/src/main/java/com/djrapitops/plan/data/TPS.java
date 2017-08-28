@@ -26,13 +26,13 @@ public class TPS {
     /**
      * Constructor.
      *
-     * @param date         time of the TPS calculation.
-     * @param ticksPerSecond          average ticksPerSecond for the last minute.
-     * @param players      players for the minute.
-     * @param cpuUsage     CPU usage for the minute
-     * @param usedMemory   used memory at the time of fetching
-     * @param entityCount  amount of entities at the time of fetching
-     * @param chunksLoaded amount of chunks loaded at the time of fetching
+     * @param date           time of the TPS calculation.
+     * @param ticksPerSecond average ticksPerSecond for the last minute.
+     * @param players        players for the minute.
+     * @param cpuUsage       CPU usage for the minute
+     * @param usedMemory     used memory at the time of fetching
+     * @param entityCount    amount of entities at the time of fetching
+     * @param chunksLoaded   amount of chunks loaded at the time of fetching
      */
     public TPS(long date, double ticksPerSecond, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
         this.date = date;

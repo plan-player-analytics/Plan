@@ -44,13 +44,13 @@ import static org.junit.Assert.*;
 @PrepareForTest(JavaPlugin.class)
 public class DatabaseTest {
 
+    private final UUID uuid = MockUtils.getPlayerUUID();
+    private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
+    private final UUID uuid2 = MockUtils.getPlayer2UUID();
     private Plan plan;
     private Database db;
     private Database backup;
     private int rows;
-    private final UUID uuid = MockUtils.getPlayerUUID();
-    private final List<String> worlds = Arrays.asList("TestWorld", "TestWorld2");
-    private final UUID uuid2 = MockUtils.getPlayer2UUID();
 
     public DatabaseTest() {
     }

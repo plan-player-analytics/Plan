@@ -42,28 +42,26 @@ public class GraphTest {
 
     @Test
     public void testGraphCreators() {
-        assertEquals(CPUGraphCreator.buildSeriesDataString(tpsList), "[[0,0.0],[9,9.0]]");
-        assertEquals(PlayerActivityGraphCreator.buildSeriesDataString(tpsList), "[[0,0.0],[9,9.0]]");
-        assertEquals(PunchCardGraphCreator.createDataSeries(sessionList), "[{x:3600000, y:3, z:14, marker: { radius:14}},]");
-        assertEquals(RamGraphCreator.buildSeriesDataString(tpsList), "[[0,0.0],[9,9.0]]");
-        assertEquals(TPSGraphCreator.buildSeriesDataString(tpsList), "[[0,0.0],[9,9.0]]");
-        assertEquals(WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList), "[[0,0.0],[9,9.0]]");
-        assertEquals(WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList), "[[0,0.0],[9,9.0]]");
-        assertEquals(WorldMapCreator.createDataSeries(geoList), "[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]");
-//      TODO  assertEquals(WorldPieCreator.createSeriesData(new WorldTimes(worldTimes)), "[{name:'0',y:0},{name:'1',y:1, sliced: true, selected: true},{name:'2',y:2},{name:'3',y:3},{name:'4',y:4},{name:'5',y:5},{name:'6',y:6},{name:'7',y:7},{name:'8',y:8},{name:'9',y:9}]");
+        assertEquals("[[0,0.0],[9,9.0]]", CPUGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals("[[0,0.0],[9,9.0]]", PlayerActivityGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals("[{x:3600000, y:3, z:14, marker: { radius:14}},]", PunchCardGraphCreator.createDataSeries(sessionList));
+        assertEquals("[[0,0.0],[9,9.0]]", RamGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals("[[0,0.0],[9,9.0]]", TPSGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
+        assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
+        assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMapCreator.createDataSeries(geoList));
+        //assertEquals(WorldPieCreator.createSeriesData(worldTimes), "[{name:'0',y:0},{name:'1',y:1, sliced: true, selected: true},{name:'2',y:2},{name:'3',y:3},{name:'4',y:4},{name:'5',y:5},{name:'6',y:6},{name:'7',y:7},{name:'8',y:8},{name:'9',y:9}]");
     }
 
     @Test
     public void testSeriesCreator() {
-        String result = SeriesCreator.seriesGraph(points, false, false);
+        String result = SeriesCreator.seriesGraph(points, false, false).replaceAll("[\\[\\]]", "");
         String[] splittedResult = result.split(",");
 
         Map<String, String> expected = new LinkedHashMap<>();
 
         String key = null;
         for (String resultString : splittedResult) {
-            resultString = resultString.replaceAll("[\\[\\]]", "");
-
             if (key == null) {
                 key = resultString;
             } else {
