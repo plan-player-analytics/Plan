@@ -56,7 +56,6 @@ public class WebServer {
     private boolean usingHttps = false;
 
     /**
-     *
      * @param plugin
      */
     public WebServer(IPlan plugin) {
@@ -429,14 +428,10 @@ public class WebServer {
 
     private Response forbiddenResponse(int permLevel, int required) {
         return PageCache.loadPage("forbidden", () -> {
-            ForbiddenResponse response403 = new ForbiddenResponse();
-            String content = "<h1>403 Forbidden - Access Denied</h1>"
-                    + "<p>Unauthorized User.<br>"
+            return new ForbiddenResponse("Unauthorized User.<br>"
                     + "Make sure your user has the correct access level.<br>"
                     + "This page requires permission level of " + required + ",<br>"
-                    + "This user has permission level of " + permLevel + "</p>";
-            response403.setContent(content);
-            return response403;
+                    + "This user has permission level of " + permLevel);
         });
     }
 
@@ -488,16 +483,12 @@ public class WebServer {
     }
 
     private Response notFoundResponse() {
-        String error = "<h1>404 Not Found</h1>"
-                + "<p>Make sure you're accessing a link given by a command, Examples:</p>"
-                + "<p>" + getProtocol() + HtmlUtils.getInspectUrl("<player>") + " or<br>"
-                + getProtocol() + HtmlUtils.getServerAnalysisUrl() + "</p>";
-
-        return PageCache.loadPage("notFound: " + error, () -> {
-            Response response404 = new NotFoundResponse();
-            response404.setContent(error);
-            return response404;
-        });
+        String error = "404 Not Found";
+        return PageCache.loadPage("notFound: " + error, () ->
+                new NotFoundResponse("Make sure you're accessing a link given by a command, Examples:</p>"
+                        + "<p>" + getProtocol() + ":" + HtmlUtils.getInspectUrl("<player>") + " or<br>"
+                        + getProtocol() + ":" + HtmlUtils.getServerAnalysisUrl())
+        );
     }
 
     /**
@@ -557,6 +548,6 @@ public class WebServer {
     }
 
     public String getAccessAddress() {
-        return getProtocol()+":/"+ HtmlUtils.getIP();
+        return getProtocol() + ":/" + HtmlUtils.getIP();
     }
 }

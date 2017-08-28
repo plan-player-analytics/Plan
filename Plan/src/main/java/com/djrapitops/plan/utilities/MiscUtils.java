@@ -3,8 +3,10 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -122,6 +124,14 @@ public class MiscUtils {
                     /* Ignored */
                 }
             }
+        }
+    }
+
+    public static String getPlanVersion() {
+        if (Compatibility.isBukkitAvailable()) {
+            return Plan.getInstance().getDescription().getVersion();
+        } else {
+            return PlanBungee.getInstance().getDescription().getVersion();
         }
     }
 }
