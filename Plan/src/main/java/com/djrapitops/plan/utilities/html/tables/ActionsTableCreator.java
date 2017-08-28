@@ -36,7 +36,7 @@ public class ActionsTableCreator {
                 long date = action.getDate();
 
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
-                        String.valueOf(date), FormatUtils.formatTimeStamp(date),
+                        String.valueOf(date), FormatUtils.formatTimeStampYear(date),
                         action.getDoneAction().toString(),
                         action.getAdditionalInfo()
                 ));

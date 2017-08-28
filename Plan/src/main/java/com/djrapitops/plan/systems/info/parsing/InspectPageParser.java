@@ -101,9 +101,12 @@ public class InspectPageParser {
                 .collect(Collectors.toList());
 
         int sessionCountDay = sessionsDay.size();
-        int sessionCountWeek = sessionsDay.size();
+        int sessionCountWeek = sessionsWeek.size();
         long playtimeDay = AnalysisUtils.getTotalPlaytime(sessionsDay);
         long playtimeWeek = AnalysisUtils.getTotalPlaytime(sessionsWeek);
+
+        addValue("sessionLengthLongestDay", FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()));
+        addValue("sessionLengthLongestWeek", FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()));
 
         addValue("sessionCountDay", sessionCountDay);
         addValue("sessionCountWeek", sessionCountWeek);
@@ -130,7 +133,9 @@ public class InspectPageParser {
         addValue("lastSeen", FormatUtils.formatTimeAmount(playTime));
 
         String puchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
-        List<Session> sessionsInLengthOrder = allSessions.stream().sorted(new SessionLengthComparator()).collect(Collectors.toList());
+        List<Session> sessionsInLengthOrder = allSessions.stream()
+                .sorted(new SessionLengthComparator())
+                .collect(Collectors.toList());
         if (sessionsInLengthOrder.isEmpty()) {
             addValue("sessionLengthMedian", "No Sessions");
             addValue("sessionLengthLongest", "No Sessions");
@@ -163,7 +168,7 @@ public class InspectPageParser {
         String banned = isBanned ? "Banned" : "";
         String op = isOP ? "Operator (OP)" : "";
 
-        addValue("playerclassification", HtmlStructure.separateWithDots(active, banned, op));
+        addValue("playerClassification", HtmlStructure.separateWithDots(active, banned, op));
     }
 
     private void addValue(String placeholder, Serializable value) {

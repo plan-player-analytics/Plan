@@ -295,7 +295,7 @@ public class SessionsTable extends UserIDTable {
         try {
             statement = prepareStatement("SELECT " +
                     "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
-                    columnServerID + "," +
+                    columnServerID +
                     " FROM " + tableName +
                     " WHERE " + columnSessionStart + ">?" +
                     " AND " + columnUserID + "=" + usersTable.statementSelectID);

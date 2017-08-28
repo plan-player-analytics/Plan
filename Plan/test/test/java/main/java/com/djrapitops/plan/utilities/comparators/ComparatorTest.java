@@ -35,6 +35,7 @@ public class ComparatorTest {
         List<Session> test = RandomData.randomSessions();
         List<Long> longValues = test.stream().map(Session::getSessionStart).collect(Collectors.toList());
         longValues.sort(Long::compare);
+        Collections.reverse(longValues);
         test.sort(new SessionStartComparator());
         List<Long> afterSort = test.stream().map(Session::getSessionStart).collect(Collectors.toList());
         assertEquals(longValues, afterSort);

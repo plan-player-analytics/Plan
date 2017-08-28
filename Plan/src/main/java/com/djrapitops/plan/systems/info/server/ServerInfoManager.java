@@ -73,7 +73,7 @@ public class ServerInfoManager {
         String name = Settings.SERVER_NAME.toString();
         String webAddress = plugin.getWebServer().getAccessAddress();
         if ("plan".equalsIgnoreCase(name)) {
-            name = "Server" + serverID.get();
+            name = "Server " + serverID.get();
         }
 
         serverInfo = new ServerInfo(serverID.get(), serverUUID, name, webAddress);

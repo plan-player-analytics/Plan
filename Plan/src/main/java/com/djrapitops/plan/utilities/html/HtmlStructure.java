@@ -48,9 +48,7 @@ public class HtmlStructure {
             }
             builder.append("&#x2022; ");
             builder.append(element);
-            if (i < elements.length - 1) {
-                builder.append("<br>");
-            }
+            builder.append("<br>");
         }
         return builder.toString();
     }

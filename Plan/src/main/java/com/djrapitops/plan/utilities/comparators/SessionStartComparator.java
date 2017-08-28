@@ -11,6 +11,6 @@ public class SessionStartComparator implements Comparator<Session> {
 
     @Override
     public int compare(Session s1, Session s2) {
-        return Long.compare(s1.getSessionStart(), s2.getSessionStart());
+        return -Long.compare(s1.getSessionStart(), s2.getSessionStart());
     }
 }

@@ -11,6 +11,6 @@ public class SessionLengthComparator implements Comparator<Session> {
 
     @Override
     public int compare(Session s1, Session s2) {
-        return Long.compare(s1.getLength(), s2.getLength());
+        return -Long.compare(s1.getLength(), s2.getLength());
     }
 }
