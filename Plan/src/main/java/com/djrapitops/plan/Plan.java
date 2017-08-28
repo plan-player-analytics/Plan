@@ -186,8 +186,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
             }
 
-            Benchmark.stop("Enable", "WebServer Initialization");
-
             registerCommand(new PlanCommand(this));
 
             Benchmark.start("Hook to 3rd party plugins");

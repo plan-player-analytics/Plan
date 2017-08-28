@@ -98,12 +98,11 @@ public class WebServer {
 
             server.createContext("/", new HttpHandler() {
                 @Override
-                public void handle(HttpExchange exchange) throws IOException {
+                public void handle(HttpExchange exchange) {
+                    Headers responseHeaders = exchange.getResponseHeaders();
+                    URI uri = exchange.getRequestURI();
+                    String target = uri.toString();
                     try {
-                        Headers responseHeaders = exchange.getResponseHeaders();
-                        URI uri = exchange.getRequestURI();
-                        String target = uri.toString();
-
                         boolean apiRequest = "POST".equals(exchange.getRequestMethod());
                         Response response = null;
 
@@ -141,8 +140,7 @@ public class WebServer {
                         }
                         sendData(responseHeaders, exchange, response);
                     } catch (Exception e) {
-                        Log.toLog(this.getClass().getName(), e);
-                        throw e;
+                        internalErrorResponse(exchange, responseHeaders, target, e);
                     } finally {
                         exchange.close();
                     }
@@ -172,6 +170,14 @@ public class WebServer {
             while ((count = bis.read(buffer)) != -1) {
                 out.write(buffer, 0, count);
             }
+        }
+    }
+
+    private void internalErrorResponse(HttpExchange exchange, Headers responseHeaders, String target, Exception e) {
+        try {
+            sendData(responseHeaders, exchange, new InternalErrorResponse(e, target));
+        } catch (IOException e1) {
+            Log.toLog(this.getClass().getName(), e1);
         }
     }
 
