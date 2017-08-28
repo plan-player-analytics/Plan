@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plugin.command.ISender;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
@@ -12,10 +13,14 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
+import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
+import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -92,12 +97,19 @@ public class InformationManager {
     }
 
     public boolean isCached(UUID uuid) {
-        // TODO
-        return false;
+        if (usingBungeeWebServer) {
+            // TODO bungee part
+        }
+        return PageCache.isCached("inspectPage: " + uuid);
     }
 
     public String getPlayerHtml(UUID uuid) {
-        // TODO
+        // TODO Bungee part.
+        try {
+            return new InspectPageParser(uuid, plugin).parse();
+        } catch (SQLException | FileNotFoundException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
         return "";
     }
 

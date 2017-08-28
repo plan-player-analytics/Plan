@@ -29,7 +29,7 @@ public class KillsTableCreator {
      * @param playerKills The list of the {@link PlayerKill} Objects from which the kill table should be created
      * @return The created kills table
      */
-    public static String createKillsTable(List<PlayerKill> playerKills) {
+    public static String createTable(List<PlayerKill> playerKills) {
         StringBuilder html = new StringBuilder(Html.TABLE_KILLS_START.parse());
 
         if (playerKills.isEmpty()) {

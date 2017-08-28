@@ -42,7 +42,7 @@ public enum Html {
     TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
     TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
-    TABLE_KILLS_START(TABLE_START_3.parse("Date", "Killed", "With")),
+    TABLE_KILLS_START(TABLE_START_3.parse(FONT_AWESOME_ICON.parse("clock-o") + " Time", "Killed", "With")),
     TABLE_FACTIONS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("flag") + " Faction", FONT_AWESOME_ICON.parse("bolt") + " Power", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Leader")),
     TABLE_TOWNS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("bank") + " Town", FONT_AWESOME_ICON.parse("users") + " Residents", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Mayor")),
     TABLELINE_2("<tr><td><b>${0}</b></td><td>${1}</td></tr>"),

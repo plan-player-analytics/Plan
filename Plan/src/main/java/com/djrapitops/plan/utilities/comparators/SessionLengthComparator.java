@@ -7,10 +7,10 @@ import java.util.Comparator;
 /**
  * @author Rsl1122
  */
-public class SessionDataComparator implements Comparator<Session> {
+public class SessionLengthComparator implements Comparator<Session> {
 
     @Override
     public int compare(Session s1, Session s2) {
-        return Long.compare(s1.getSessionStart(), s2.getSessionStart());
+        return Long.compare(s1.getLength(), s2.getLength());
     }
 }

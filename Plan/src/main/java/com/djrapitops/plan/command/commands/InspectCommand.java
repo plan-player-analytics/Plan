@@ -13,6 +13,9 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
+import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
@@ -87,8 +90,14 @@ public class InspectCommand extends SubCommand {
                             sender.sendMessage(ChatColor.YELLOW + "[Plan] You might not have a web user, use /plan register <password>");
                         }
                     }
-                    //TODO Inspect Request.
-                    runMessageSenderTask(uuid, sender, playerName);
+
+                    plugin.addToProcessQueue(new Processor<UUID>(uuid) {
+                        @Override
+                        public void process() {
+                            PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
+                            sendInspectMsg(sender, playerName);
+                        }
+                    });
                 } catch (SQLException ex) {
                     Log.toLog(this.getClass().getName(), ex);
                 } finally {
@@ -116,7 +125,7 @@ public class InspectCommand extends SubCommand {
         }).runTaskTimer(TimeAmount.SECOND.ticks(), 5 * TimeAmount.SECOND.ticks());
     }
 
-    private void sendInspectMsg(ISender sender, String playerName, UUID uuid) {
+    private void sendInspectMsg(ISender sender, String playerName) {
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
         // Link
         String url = HtmlUtils.getInspectUrlWithProtocol(playerName);

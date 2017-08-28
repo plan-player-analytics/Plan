@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -32,7 +33,6 @@ public class AnalysisUtils {
      * @return
      */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
-
         int timeToActive = 10;
         long twoWeeks = 1209600000;
         return now - lastPlayed < twoWeeks
@@ -317,5 +317,14 @@ public class AnalysisUtils {
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(date);
         return day.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static long getTotalPlaytime(List<Session> sessions) {
+        return sessions.stream().mapToLong(Session::getLength).sum();
+    }
+
+    public static long getLongestSessionLength(List<Session> sessions) {
+        Optional<Session> longest = sessions.stream().sorted(new SessionLengthComparator()).findFirst();
+        return longest.map(Session::getLength).orElse(0L);
     }
 }
