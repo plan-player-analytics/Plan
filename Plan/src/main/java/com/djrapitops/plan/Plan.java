@@ -38,7 +38,6 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
@@ -46,6 +45,7 @@ import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.PeriodicDBCommitTask;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.apache.logging.log4j.LogManager;
@@ -269,10 +269,12 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             webServer.stop();
         }
 
-        List<Processor> processors = processingQueue.stopAndReturnLeftovers();
-        Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
-        for (Processor processor : processors) {
-            processor.process();
+        if (processingQueue != null) {
+            List<Processor> processors = processingQueue.stopAndReturnLeftovers();
+            Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
+            for (Processor processor : processors) {
+                processor.process();
+            }
         }
 
         getServer().getScheduler().cancelTasks(this);

@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;

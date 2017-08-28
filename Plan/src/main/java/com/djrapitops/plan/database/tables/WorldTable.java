@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -41,7 +41,7 @@ public class WorldTable extends Table {
     }
 
     @Override
-    public void createTable() throws DbCreateTableException {
+    public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnWorldId)
                 .column(columnWorldName, Sql.varchar(100)).notNull()

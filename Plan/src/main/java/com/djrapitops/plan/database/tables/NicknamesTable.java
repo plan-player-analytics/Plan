@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
@@ -36,7 +36,7 @@ public class NicknamesTable extends UserIDTable {
      * @return if the table was created successfully
      */
     @Override
-    public void createTable() throws DbCreateTableException {
+    public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
                 .column(columnNick, Sql.varchar(75)).notNull()

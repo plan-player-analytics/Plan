@@ -5,8 +5,8 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.cache.PageCache;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;

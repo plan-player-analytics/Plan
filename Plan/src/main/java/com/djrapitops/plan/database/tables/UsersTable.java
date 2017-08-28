@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 
@@ -36,7 +36,7 @@ public class UsersTable extends UserIDTable {
      * @return
      */
     @Override
-    public void createTable() throws DbCreateTableException {
+    public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
                 .primaryKeyIDColumn(usingMySQL, columnID)
                 .column(columnUUID, Sql.varchar(36)).notNull().unique()

@@ -6,7 +6,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Insert;
@@ -34,7 +34,7 @@ public class SecurityTable extends Table {
     }
 
     @Override
-    public void createTable() throws DbCreateTableException {
+    public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUser, Sql.varchar(100)).notNull().unique()
                 .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()

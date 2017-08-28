@@ -1,4 +1,4 @@
-package main.java.com.djrapitops.plan.systems.cache;
+package main.java.com.djrapitops.plan.systems.webserver;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

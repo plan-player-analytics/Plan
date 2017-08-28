@@ -9,13 +9,13 @@ package main.java.com.djrapitops.plan.api.exceptions;
  *
  * @author Rsl1122
  */
-public class DbCreateTableException extends DatabaseInitException {
+public class DBCreateTableException extends DatabaseInitException {
 
-    public DbCreateTableException(String tableName, String message, Throwable cause) {
+    public DBCreateTableException(String tableName, String message, Throwable cause) {
         super(tableName + ": " + message, cause);
     }
 
-    public DbCreateTableException(Throwable cause) {
+    public DBCreateTableException(Throwable cause) {
         super(cause);
     }
 }

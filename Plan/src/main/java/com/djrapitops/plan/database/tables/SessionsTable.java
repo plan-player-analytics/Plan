@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.DbCreateTableException;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
@@ -44,7 +44,7 @@ public class SessionsTable extends UserIDTable {
      * @return
      */
     @Override
-    public void createTable() throws DbCreateTableException {
+    public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(this.tableName)
                 .primaryKeyIDColumn(usingMySQL, columnID)
                 .column(columnUserID, Sql.INT).notNull()
