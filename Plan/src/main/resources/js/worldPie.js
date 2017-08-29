@@ -25,8 +25,10 @@ function worldPie(id, worldSeries, gmSeries) {
                 return '<b>'+this.point.name+':</b> ' + formatTimeAmount(this.y) + '<br>('+this.percentage.toFixed(2)+'%)';
             }
         },
-        series: [worldSeries]
-        drilldown: {series: [gmSeries]}
+        series: [worldSeries],
+        drilldown: {
+            series: [gmSeries]
+        }
     });
 }
 

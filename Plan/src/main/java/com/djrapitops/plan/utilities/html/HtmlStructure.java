@@ -7,8 +7,10 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +84,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    public static String createSessionsTabContent(Map<String, List<Session>> sessions, List<Session> allSessions) {
+    public static String createSessionsTabContent(Map<String, List<Session>> sessions, List<Session> allSessions) throws FileNotFoundException {
         Map<Integer, String> serverNameIDRelationMap = new HashMap<>();
 
         for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
@@ -144,6 +146,21 @@ public class HtmlStructure {
             builder.append("</div>")
                     .append("<div class=\"session-col\">");
 
+            String id = "worldPie" + session.getSessionStart();
+
+            builder.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
+
+            String[] worldData = WorldPieCreator.createSeriesData(session.getWorldTimes());
+
+            builder.append("<script>")
+                    .append("var ").append(id).append("series = {name:'World Playtime',colorByPoint:true,data:").append(worldData[0]).append("};")
+                    .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
+                    .append("$( document ).ready(function() {worldPie(")
+                    .append(id).append(", ")
+                    .append(id).append("series,")
+                    .append(id).append("gmseries")
+                    .append(");})")
+                    .append("</script>");
             // TODO WorldTimes Pie
 
             // Session-col, Row, Session-Content, Session-column ends.

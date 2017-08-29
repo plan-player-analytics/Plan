@@ -26,8 +26,10 @@ public class WorldPieCreator {
 
         int size = playtimePerWorld.size();
         for (Map.Entry<String, Long> world : playtimePerWorld.entrySet()) {
-            seriesBuilder.append("{name:'").append(world.getKey())
-                    .append("',y:").append(world.getValue());
+            String worldName = world.getKey();
+            seriesBuilder.append("{name:'").append(worldName)
+                    .append("',y:").append(world.getValue())
+                    .append(", drilldown: '").append(worldName).append("'");
 
             seriesBuilder.append("}");
             if (i < size - 1) {
@@ -45,7 +47,7 @@ public class WorldPieCreator {
     }
 
     private static String createDrilldownData(WorldTimes worldTimes) {
-        StringBuilder drilldownBuilder = new StringBuilder("[");
+        StringBuilder drilldownBuilder = new StringBuilder();
         int i = 0;
 
         Map<String, GMTimes> gmTimesMap = worldTimes.getWorldTimes();
@@ -63,7 +65,6 @@ public class WorldPieCreator {
             }
             i++;
         }
-        drilldownBuilder.append("]");
         return drilldownBuilder.toString();
     }
 

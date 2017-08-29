@@ -105,8 +105,16 @@ public class InspectPageParser {
         long playtimeDay = AnalysisUtils.getTotalPlaytime(sessionsDay);
         long playtimeWeek = AnalysisUtils.getTotalPlaytime(sessionsWeek);
 
-        addValue("sessionLengthLongestDay", FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()));
-        addValue("sessionLengthLongestWeek", FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()));
+        if (!sessionsDay.isEmpty()) {
+            addValue("sessionLengthLongestDay", FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()));
+        } else {
+            addValue("sessionLengthLongestDay", "-");
+        }
+        if (!sessionsWeek.isEmpty()) {
+            addValue("sessionLengthLongestWeek", FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()));
+        } else {
+            addValue("sessionLengthLongestWeek", "-");
+        }
 
         addValue("sessionCountDay", sessionCountDay);
         addValue("sessionCountWeek", sessionCountWeek);
@@ -137,8 +145,8 @@ public class InspectPageParser {
                 .sorted(new SessionLengthComparator())
                 .collect(Collectors.toList());
         if (sessionsInLengthOrder.isEmpty()) {
-            addValue("sessionLengthMedian", "No Sessions");
-            addValue("sessionLengthLongest", "No Sessions");
+            addValue("sessionLengthMedian", "-");
+            addValue("sessionLengthLongest", "-");
         } else {
             Session medianSession = sessionsInLengthOrder.get(sessionsInLengthOrder.size() / 2);
             addValue("sessionLengthMedian", FormatUtils.formatTimeAmount(medianSession.getLength()));
