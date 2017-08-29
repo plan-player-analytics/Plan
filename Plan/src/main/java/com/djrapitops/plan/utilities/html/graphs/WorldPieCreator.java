@@ -29,7 +29,7 @@ public class WorldPieCreator {
             String worldName = world.getKey();
             seriesBuilder.append("{name:'").append(worldName)
                     .append("',y:").append(world.getValue())
-                    .append(", drilldown: '").append(worldName).append("'");
+                    .append(",drilldown: '").append(worldName).append("'");
 
             seriesBuilder.append("}");
             if (i < size - 1) {

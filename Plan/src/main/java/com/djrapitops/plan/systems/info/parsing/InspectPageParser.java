@@ -138,7 +138,6 @@ public class InspectPageParser {
 
         addValue("sessionCount", sessionCount);
         addValue("playtimeTotal", FormatUtils.formatTimeAmount(playTime));
-        addValue("lastSeen", FormatUtils.formatTimeAmount(playTime));
 
         String puchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
         List<Session> sessionsInLengthOrder = allSessions.stream()

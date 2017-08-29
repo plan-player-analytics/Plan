@@ -157,7 +157,7 @@ public class HtmlStructure {
                     .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
                     .append("$( document ).ready(function() {worldPie(")
                     .append(id).append(", ")
-                    .append(id).append("series,")
+                    .append(id).append("series, ")
                     .append(id).append("gmseries")
                     .append(");})")
                     .append("</script>");
