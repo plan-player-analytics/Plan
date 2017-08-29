@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.database.databases;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -11,9 +10,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -261,16 +257,6 @@ public abstract class SQLDB extends Database {
         } finally {
             setAvailable();
         }
-    }
-
-
-    @Override
-    public List<UserInfo> getUserDataForUUIDS(Collection<UUID> uuidsCol) throws SQLException {
-        if (uuidsCol == null || uuidsCol.isEmpty()) {
-            return new ArrayList<>();
-        }
-        // TODO REWRITE
-        return new ArrayList<>();
     }
 
     private void setStatus(String status) {

@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
  */
 public class SessionsTable extends UserIDTable {
 
-    // TODO getLastPlayed(UUID, UUID)
-
     private final String columnID = "id";
     private final String columnSessionStart = "session_start";
     private final String columnSessionEnd = "session_end";

@@ -160,6 +160,4 @@ public class WorldTimesTest {
         assertEquals(2000L, worldTwoGMTimes.getTime("CREATIVE"));
         assertEquals(2000L, worldOneGMTimes.getTime("ADVENTURE"));
     }
-
-    // TODO Test where Session is ended, check if worldTimes & session length add up.
 }

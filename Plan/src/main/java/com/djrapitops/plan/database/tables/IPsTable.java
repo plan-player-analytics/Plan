@@ -16,8 +16,6 @@ import java.util.*;
  */
 public class IPsTable extends UserIDTable {
 
-    // TODO Write tests
-
     private final String columnIP = "ip";
     private final String columnGeolocation = "geolocation";
 

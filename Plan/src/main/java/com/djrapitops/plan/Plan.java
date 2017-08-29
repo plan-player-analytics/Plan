@@ -43,7 +43,6 @@ import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
-import main.java.com.djrapitops.plan.systems.tasks.PeriodicDBCommitTask;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
@@ -214,10 +213,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         Benchmark.start("Task Registration");
         tpsCountTimer = new TPSCountTimer(this);
 
-        long period = TimeAmount.MINUTE.ticks() * 5L;
-
         runnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
-        runnableFactory.createNew(new PeriodicDBCommitTask(this)).runTaskTimerAsynchronously(period, period);
         // Analysis refresh settings
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;

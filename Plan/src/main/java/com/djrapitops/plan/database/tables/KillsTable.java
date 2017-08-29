@@ -147,6 +147,4 @@ public class KillsTable extends UserIDTable {
             close(set, statement);
         }
     }
-
-    // TODO getPlayerKills (UUID)
 }

@@ -21,13 +21,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Server Specific user information table.
+ *
+ * Represents plan_user_info.
  *
  * @author Rsl1122
  */
 public class UserInfoTable extends UserIDTable {
 
-    //TODO Server Specific Table
     private final String columnRegistered = "registered";
     private final String columnOP = "opped";
     private final String columnBanned = "banned";

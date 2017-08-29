@@ -2,13 +2,14 @@ package main.java.com.djrapitops.plan.database;
 
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.tables.*;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Abstract class representing a Database.
@@ -123,17 +124,6 @@ public abstract class Database {
      */
     public void init() throws DatabaseInitException {
     }
-
-    /**
-     * Used to get all UserInfo for multiple UUIDs.
-     * <p>
-     * Should only be called from async thread.
-     *
-     * @param uuids UUIDs to fetch data for.
-     * @return Data for matching UUIDs.
-     * @throws SQLException If database error occurs.
-     */
-    public abstract List<UserInfo> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException;
 
     /**
      * Check if the user is saved in the database.
