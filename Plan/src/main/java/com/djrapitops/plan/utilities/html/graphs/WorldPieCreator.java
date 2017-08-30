@@ -73,10 +73,14 @@ public class WorldPieCreator {
         int smallSize = gmTimes.size();
         int j = 0;
         for (Map.Entry<String, Long> entry : gmTimes.entrySet()) {
+            Long time = entry.getValue();
+            if (time == 0) {
+                continue;
+            }
             drilldownBuilder.append("['")
                     .append(entry.getKey())
                     .append("',")
-                    .append(entry.getValue())
+                    .append(time)
                     .append("]");
 
             if (j < smallSize - 1) {

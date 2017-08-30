@@ -203,4 +203,45 @@ public class WorldTimesTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    public WorldTimes getWorldTimesOfUser(UUID uuid) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            String sessionIDColumn = sessionsTable + "." + sessionsTable.getColumnID();
+            statement = prepareStatement("SELECT " +
+                    "SUM(" + columnSurvival + ") as survival, " +
+                    "SUM(" + columnCreative + ") as creative, " +
+                    "SUM(" + columnAdventure + ") as adventure, " +
+                    "SUM(" + columnSpectator + ") as spectator, " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID
+            );
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
+            WorldTimes worldTimes = new WorldTimes(new HashMap<>());
+            while (set.next()) {
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong("survival"));
+                gmMap.put(gms[1], set.getLong("creative"));
+                gmMap.put(gms[2], set.getLong("adventure"));
+                gmMap.put(gms[3], set.getLong("spectator"));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                worldTimes.setGMTimesForWorld(worldName, gmTimes);
+            }
+            return worldTimes;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

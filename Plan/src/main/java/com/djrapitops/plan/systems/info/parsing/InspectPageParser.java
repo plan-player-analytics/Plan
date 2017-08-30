@@ -25,6 +25,7 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 
 import java.io.FileNotFoundException;
@@ -139,7 +140,15 @@ public class InspectPageParser {
         addValue("sessionCount", sessionCount);
         addValue("playtimeTotal", FormatUtils.formatTimeAmount(playTime));
 
-        String puchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
+        String punchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
+        String[] worldPieData = WorldPieCreator.createSeriesData(db.getWorldTimesTable().getWorldTimesOfUser(uuid));
+
+        addValue("worldPieSeries", worldPieData[0]);
+        addValue("gmSeries", worldPieData[1]);
+
+
+        addValue("punchCardData", punchCardData);
+
         List<Session> sessionsInLengthOrder = allSessions.stream()
                 .sorted(new SessionLengthComparator())
                 .collect(Collectors.toList());
