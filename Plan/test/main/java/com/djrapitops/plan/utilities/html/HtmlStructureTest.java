@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.html;
 
 import main.java.com.djrapitops.plan.data.Session;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;

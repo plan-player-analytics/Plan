@@ -5,10 +5,12 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
 
 import java.util.Map;
 
@@ -18,12 +20,12 @@ import java.util.Map;
 public class AnalyticsWebAPI implements WebAPI {
     @Override
     public Response onResponse(Plan plan, Map<String, String> variables) {
-        String identifier = "analysisJson";
+        InformationManager infoManager = plan.getInfoManager();
 
-        if (!PageCache.isCached(identifier)) {
+        if (!infoManager.isAnalysisCached()) {
             return PageCache.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));
         }
 
-        return PageCache.loadPage(identifier);
+        return new JsonResponse(infoManager.getAnalysisHtml());
     }
 }

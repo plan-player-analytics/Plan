@@ -35,7 +35,7 @@ public class InspectWebAPI implements WebAPI {
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
-        // TODO plan.getInspectCache().cache(uuid);
+        plan.getInfoManager().cachePlayer(uuid);
 
         return PageCache.loadPage("success", SuccessResponse::new);
     }
