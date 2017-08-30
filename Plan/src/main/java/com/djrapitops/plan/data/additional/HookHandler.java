@@ -125,12 +125,13 @@ public class HookHandler {
                 continue;
             }
             String pluginName = source.getSourcePlugin();
-            if (!placeholders.containsKey(pluginName)) {
-                placeholders.put(pluginName, new ArrayList<>());
-            }
+            List<String> pluginPlaceholderList = placeholders.getOrDefault(pluginName, new ArrayList<>());
+
             for (AnalysisType t : analysisTypes) {
-                placeholders.get(pluginName).add(source.getPlaceholder(t.getPlaceholderModifier()));
+                pluginPlaceholderList.add(source.getPlaceholder(t.getPlaceholderModifier()));
             }
+
+            placeholders.put(pluginName, pluginPlaceholderList);
         }
         return placeholders;
     }
