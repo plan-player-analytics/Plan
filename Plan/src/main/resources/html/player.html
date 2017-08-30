@@ -71,7 +71,7 @@
                             <h2><i class="fa fa-drivers-license" aria-hidden="true"></i> ${playerName}</h2>
                         </div>
                         <div class="box-footer scrollbar" style="padding: 2px;">
-                            <div class="row">
+                            <div class="row" style="flex-direction: row;">
                                 <div class="column" style="padding: 5px 0 5px 10px;"><p>Times Kicked: ${kickCount}<br>
                                 </p></div>
                                 <div class="column"><img style="padding: 10px 100px; height: 100px; width: 100px;"
@@ -101,13 +101,13 @@
                             <h2><i class="fa fa-braille" aria-hidden="true"></i> Join PunchCard</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="punchcard" style="width: 100%; height: 400px;"></div>
+                            <div id="punchcard" style="width: 75%; height: 400px;"></div>
                         </div>
                         <div class="box-header">
                             <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Server Preference</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="serverPie" style="width: 100%; height: 400px;"></div>
+                            <div id="serverPie" style="width: 75%; height: 400px;"></div>
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                                 <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> World Playtime</h2>
                             </div>
                             <div class="box-footer">
-                                <div id="worldPie" style="width: 100%; height: 400px;"></div>
+                                <div id="worldPie" style="height: 400px;"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -189,6 +189,11 @@
              data: ${worldPieSeries}
         };
         var gmSeries = ${gmSeries};
+        var punchcardSeries = {
+            name: 'Relative Activity',
+            color: '#222',
+            data: ${punchCardSeries}
+        };
     </script>
     <script>
             var navButtons = document.getElementsByClassName("nav-button");
@@ -207,6 +212,7 @@
             x.style.opacity = "1";
 
             worldPie('worldPie', worldSeries, gmSeries);
+            punchCard('punchcard', punchcardSeries);
 
             openFunc(slideIndex)();
 

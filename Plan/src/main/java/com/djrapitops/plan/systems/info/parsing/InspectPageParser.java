@@ -147,7 +147,7 @@ public class InspectPageParser {
         addValue("gmSeries", worldPieData[1]);
 
 
-        addValue("punchCardData", punchCardData);
+        addValue("punchCardSeries", punchCardData);
 
         List<Session> sessionsInLengthOrder = allSessions.stream()
                 .sorted(new SessionLengthComparator())
