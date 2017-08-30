@@ -106,7 +106,6 @@ public class AnalyzeCommand extends SubCommand {
     }
 
     private void updateCache(ISender sender, boolean refresh) {
-        // TODO
         if (refresh) {
             int bootAnID = plugin.getBootAnalysisTaskID();
             if (bootAnID != -1) {

@@ -224,7 +224,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             @Override
             public void run() {
                 Log.info(bootAnalysisRunMsg);
-                //TODO analysisCache.updateCache();
+                infoManager.refreshAnalysis();
                 this.cancel();
             }
         }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
@@ -233,7 +233,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             runnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
                 @Override
                 public void run() {
-                    // TODO Update Analysis cache
+                    infoManager.refreshAnalysis();
                 }
             }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }

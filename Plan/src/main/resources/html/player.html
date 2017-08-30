@@ -21,7 +21,7 @@
             <i style="padding: 0; color: #348e0f; font-size: 30px;" class="fa fa-bar-chart fa-stack-1x"></i>
         </p>
         <p class="right">Player Analytics v.${version}</p>
-        <h1>${serverName} | ${playerName}</h1>
+        <h1>Player | ${playerName}</h1>
     </div>
 </header>
 <div class="content-server">
@@ -188,6 +188,11 @@
     <script src="./js/pluginsTabExpand.js"></script>
     <script src="./js/sessionTabExpand.js"></script>
     <script>
+        Highcharts.setOptions({
+            global: {
+                timezoneOffset: ${timeZone} *  60
+            }
+        });
         var worldSeries = {
              name:'World Playtime',
              colorByPoint:true,

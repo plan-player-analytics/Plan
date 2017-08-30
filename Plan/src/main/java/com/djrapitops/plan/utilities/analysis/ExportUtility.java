@@ -7,8 +7,7 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.PlaceholderUtils;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,7 +73,7 @@ public class ExportUtility {
             Log.debug("Export", "Player html files.");
             Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
 
-            String playerHtml = HtmlUtils.getStringFromResource("player.html");
+            String playerHtml = FileUtil.getStringFromResource("player.html");
 
             Benchmark.start("Exporting Player pages");
             rawData.forEach(userData -> writeInspectHtml(userData, playersFolder, playerHtml));
@@ -116,18 +115,18 @@ public class ExportUtility {
             name = name.replace(" ", "%20");
         }
 
-        try {
-            String inspectHtml = HtmlUtils.replacePlaceholders(playerHtml,
-                    PlaceholderUtils.getInspectReplaceRules(userInfo));
+//        try {
+//            String inspectHtml = HtmlUtils.replacePlaceholders(playerHtml,
+//                    PlaceholderUtils.getInspectReplaceRules(userInfo));
 
-            File playerFolder = new File(playersFolder, name);
-            playerFolder.mkdirs();
-
-            File inspectHtmlFile = new File(playerFolder, "index.html");
-            Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
-        } catch (IOException e) {
-            Log.toLog("Export.writeInspectHtml: " + name, e);
-        }
+//            File playerFolder = new File(playersFolder, name);
+//            playerFolder.mkdirs();
+//
+//            File inspectHtmlFile = new File(playerFolder, "index.html");
+//            Files.write(inspectHtmlFile.toPath(), Collections.singletonList(inspectHtml));
+//        } catch (IOException e) {
+//            Log.toLog("Export.writeInspectHtml: " + name, e);
+//        }
     }
 
     /**
@@ -141,12 +140,12 @@ public class ExportUtility {
             return;
         }
         serverFolder.mkdirs();
-        String analysisHtml = HtmlUtils.replacePlaceholders(HtmlUtils.getStringFromResource("server.html"),
-                PlaceholderUtils.getAnalysisReplaceRules(analysisData))
-                .replace(HtmlUtils.getInspectUrl(""), "../player/");
-        File analysisHtmlFile = new File(serverFolder, "index.html");
-        Log.debug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
-        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
+//        String analysisHtml = HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("server.html"),
+//                PlaceholderUtils.getAnalysisReplaceRules(analysisData))
+//                .replace(HtmlUtils.getInspectUrl(""), "../player/");
+//        File analysisHtmlFile = new File(serverFolder, "index.html");
+//        Log.debug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
+//        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
     private static void writePlayersPageHtml(List<UserInfo> rawData, File playersFolder) throws IOException {

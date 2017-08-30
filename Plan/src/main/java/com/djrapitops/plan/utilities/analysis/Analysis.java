@@ -26,6 +26,7 @@ import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
+import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
@@ -116,7 +117,8 @@ public class Analysis {
             Map<String, Integer> commandUse = plugin.getDB().getCommandUse();
 
             AnalysisData analysisData = new AnalysisData(commandUse, tpsData);
-            analysisData.setPluginsTabLayout(plugin.getHookHandler().getPluginsTabLayoutForAnalysis());
+            List<PluginData> thirdPartyPlugins = plugin.getHookHandler().getAdditionalDataSources();
+            analysisData.setPluginsTabLayout(HtmlStructure.createAnalysisPluginsTabLayout(thirdPartyPlugins));
             analysisData.setPlanVersion(plugin.getVersion());
             ActivityPart activityPart = analysisData.getActivityPart();
             // TODO GetRecentPlayers

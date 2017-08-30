@@ -3,12 +3,9 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,17 +18,6 @@ public class HtmlUtils {
      */
     private HtmlUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * @param fileName
-     * @return
-     * @throws FileNotFoundException
-     * @deprecated Use FileUtil
-     */
-    @Deprecated
-    public static String getStringFromResource(String fileName) throws FileNotFoundException {
-        return FileUtil.getStringFromResource(fileName);
     }
 
     /**
@@ -111,53 +97,6 @@ public class HtmlUtils {
                 .replace("-->", "")
                 .replace("<script>", "")
                 .replace("</script>", "");
-    }
-
-    /**
-     * @param pluginNames
-     * @param placeholders
-     * @return
-     */
-    @Deprecated // TODO Move to HtmlStructure
-    public static String getPluginsTabLayout(List<String> pluginNames, Map<String, List<String>> placeholders) {
-        boolean sizeIsEvenNumber = pluginNames.size() % 2 == 0;
-        StringBuilder html = new StringBuilder();
-        String temp = "";
-        int evenSize = pluginNames.size() - (pluginNames.size() % 2);
-        for (int i = 0; i < evenSize; i++) {
-            String name = pluginNames.get(i);
-            if (i % 2 == 0) {
-                // temp = Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)));
-            } else {
-                // html.append(Html.COLUMNS_DIV_WRAPPER.parse(temp + Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name)))));
-            }
-        }
-        if (!sizeIsEvenNumber) {
-            int lastIndex = pluginNames.size() - 1;
-            String name = pluginNames.get(lastIndex);
-            // html.append(Html.COLUMNS_DIV_WRAPPER.parse(Html.COLUMN_DIV_WRAPPER.parse(getContent(name, placeholders.get(name))) + Html.COLUMN_DIV_WRAPPER.parse("")));
-        }
-        String returnValue = html.toString();
-        if (returnValue.isEmpty()) {
-//            return Html.COLUMNS_DIV_WRAPPER.parse(
-//                    Html.COLUMN_DIV_WRAPPER.parse(
-//                            Html.PLUGIN_DATA_WRAPPER.parse(
-//                                    Locale.get(Msg.HTML_NO_PLUGINS).toString()
-//                            )
-//                    )
-//            );
-        }
-        return returnValue;
-    }
-
-    @Deprecated // TODO Move to HtmlStructure
-    private static String getContent(String name, List<String> placeholders) {
-        StringBuilder html = new StringBuilder();
-//        html.append(Html.HEADER.parse(name));
-//        html.append(Html.PLUGIN_CONTAINER_START.parse());
-        placeholders.forEach(html::append);
-        html.append("</div>");
-        return html.toString();
     }
 
     /**
