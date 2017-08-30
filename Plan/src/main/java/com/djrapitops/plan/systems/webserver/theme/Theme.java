@@ -61,7 +61,14 @@ public enum Theme {
     public static String replaceColors(String resourceString) {
         String replaced = resourceString;
         for (Colors c : Colors.values()) {
-            replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), c.getColor());
+            String color = c.getColor();
+            if (!color.contains("url")) {
+                replaced = replaced.replace("#" + Theme.DEFAULT.getColor(c.getId()), color);
+            } else {
+                String[] colorAndUrl = color.split(" ");
+                replaced = replaced.replace("color: #" + Theme.DEFAULT.getColor(c.getId()), "color: " + colorAndUrl[0]);
+                replaced = replaced.replace("background: #" + Theme.DEFAULT.getColor(c.getId()), "background: " + colorAndUrl[1]);
+            }
         }
         return replaced;
     }
