@@ -265,6 +265,9 @@ public class Analysis {
             }
             userInfo.sort(new UserInfoLastPlayedComparator());
 
+            activity.setRecentPlayersUUIDs(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toList()));
+            activity.setRecentPlayers(userInfo.stream().map(UserInfo::getName).collect(Collectors.toList()));
+
             analysisData.setPlayersTable(PlayersTableCreator.createSortablePlayersTable(userInfo, joinInfo, geolocPart));
 
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));

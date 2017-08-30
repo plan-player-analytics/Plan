@@ -25,6 +25,8 @@ public class KillPart extends RawData {
         deaths = 0;
     }
 
+    // TODO JoinInfo Part, sessions for kills.
+
     @Override
     public void analyse() {
         addValue("deathCount", deaths);
