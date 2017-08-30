@@ -174,7 +174,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             setupFilter(); // TODO Move to RegisterCommand Constructor
 
-            // Data view settings // TODO Rewrite. (TextUI removed & webserver might be running on bungee
+            // Data view settings // TODO Rewrite. (TextUI removed & webServer might be running on bungee
             boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
             boolean hasDataViewCapability = usingAlternativeIP;
 
@@ -255,7 +255,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     /**
      * Disables the plugin.
      * <p>
-     * Stops the webserver, cancels all tasks and saves cache to the database.
+     * Stops the webServer, cancels all tasks and saves cache to the database.
      */
     @Override
     public void onDisable() {
@@ -357,9 +357,9 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     }
 
     /**
-     * Used to access Webserver.
+     * Used to access WebServer.
      *
-     * @return the Webserver
+     * @return the WebServer
      */
     public WebServer getWebServer() {
         return webServer;

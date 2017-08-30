@@ -76,7 +76,7 @@ public class DataCache extends SessionCache {
     public String getDisplayName(UUID uuid) {
         String cached = displayNames.get(uuid);
         if (cached == null) {
-            List<String> nicknames = null;
+            List<String> nicknames;
             try {
                 nicknames = db.getNicknamesTable().getNicknames(uuid);
                 if (!nicknames.isEmpty()) {

@@ -80,9 +80,8 @@ public class AnalyzeCommand extends SubCommand {
         boolean refresh = !analysisRefreshDate.isPresent()
                 || analysisRefreshDate.get() < MiscUtils.getTime() - TimeAmount.MINUTE.ms()
                 || forcedRefresh;
-        if (refresh) {
-            updateCache(sender, refresh);
-        }
+
+        updateCache(sender, refresh);
 
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
         if (plugin.getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {

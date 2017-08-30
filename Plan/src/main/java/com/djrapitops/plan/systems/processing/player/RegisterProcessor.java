@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.database.tables.UserInfoTable;
+import main.java.com.djrapitops.plan.database.tables.UsersTable;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -39,8 +40,12 @@ public class RegisterProcessor extends PlayerProcessor {
         UUID uuid = getUUID();
         Plan plugin = Plan.getInstance();
         Database db = plugin.getDB();
+        UsersTable usersTable = db.getUsersTable();
         UserInfoTable userInfoTable = db.getUserInfoTable();
         try {
+            if (!usersTable.isRegistered(uuid)) {
+                usersTable.registerUser(uuid, registered, name);
+            }
             if (userInfoTable.isRegistered(uuid)) {
                 return;
             }

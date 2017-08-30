@@ -5,7 +5,6 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.TPSInsertProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -24,7 +23,6 @@ import java.util.List;
 public class TPSCountTimer extends AbsRunnable {
 
     private final Plan plugin;
-    private final DataCache dataCache;
     private final List<TPS> history;
     private long lastCheckNano;
 
@@ -33,7 +31,6 @@ public class TPSCountTimer extends AbsRunnable {
     public TPSCountTimer(Plan plugin) {
         super("TPSCountTimer");
         lastCheckNano = -1;
-        this.dataCache = plugin.getDataCache();
         this.plugin = plugin;
         history = new ArrayList<>();
     }

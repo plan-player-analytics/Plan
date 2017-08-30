@@ -44,8 +44,7 @@ public class HtmlStructure {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < elements.length; i++) {
-            String element = elements[i];
+        for (String element : elements) {
             if (element.isEmpty()) {
                 continue;
             }
@@ -74,7 +73,7 @@ public class HtmlStructure {
             builder.append("Playtime: ").append(FormatUtils.formatTimeAmount(playTime)).append("<br>");
             builder.append("<br>");
             long longestSessionLength = AnalysisUtils.getLongestSessionLength(serverSessions);
-            builder.append("Longest Session: " + FormatUtils.formatTimeAmount(longestSessionLength));
+            builder.append("Longest Session: ").append(FormatUtils.formatTimeAmount(longestSessionLength));
 
             // Content and box end
             builder.append("</p></div>");
