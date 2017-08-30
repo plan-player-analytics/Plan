@@ -12,9 +12,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.command.ConditionUtils;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.processing.info.InspectCacheRequestProcessor;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
@@ -90,13 +88,7 @@ public class InspectCommand extends SubCommand {
                         }
                     }
 
-                    plugin.addToProcessQueue(new Processor<UUID>(uuid) {
-                        @Override
-                        public void process() {
-                            PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(plugin.getInfoManager(), uuid));
-                            sendInspectMsg(sender, playerName);
-                        }
-                    });
+                    plugin.addToProcessQueue(new InspectCacheRequestProcessor(uuid, sender, playerName));
                 } catch (SQLException ex) {
                     Log.toLog(this.getClass().getName(), ex);
                 } finally {

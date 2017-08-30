@@ -18,6 +18,7 @@ import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
@@ -72,7 +73,7 @@ public class InformationManager {
     }
 
     public void cachePlayer(UUID uuid) {
-        plugin.addToProcessQueue(); // TODO Player page information parser
+        PageCache.loadPage("inspectPage: "+uuid, () -> new InspectPageResponse(this, uuid));
         // TODO Player page plugin tab request
     }
 

@@ -6,6 +6,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -132,6 +133,14 @@ public class MiscUtils {
             return Plan.getInstance().getDescription().getVersion();
         } else {
             return PlanBungee.getInstance().getDescription().getVersion();
+        }
+    }
+
+    public static IPlan getIPlan() {
+        if (Compatibility.isBukkitAvailable()) {
+            return Plan.getInstance();
+        } else {
+            return PlanBungee.getInstance();
         }
     }
 }

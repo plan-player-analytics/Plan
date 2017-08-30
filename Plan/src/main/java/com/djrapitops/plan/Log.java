@@ -1,9 +1,7 @@
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.plugin.utilities.Compatibility;
 import com.djrapitops.plugin.utilities.log.DebugInfo;
 import com.djrapitops.plugin.utilities.log.PluginLog;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.Collection;
@@ -139,11 +137,7 @@ public class Log {
     }
 
     private static PluginLog getPluginLogger() {
-        if (Compatibility.isBukkitAvailable()) {
-            return Plan.getInstance().getPluginLogger();
-        } else {
-            return PlanBungee.getInstance().getPluginLogger();
-        }
+        return MiscUtils.getIPlan().getPluginLogger();
     }
 
     public static void logStackTrace(Throwable e) {
