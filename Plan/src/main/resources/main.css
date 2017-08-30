@@ -51,7 +51,8 @@
 
 body {
     font-family: 'Quicksand', sans-serif;
-    background-color: #ddd;
+    background: #ddd;
+    background-repeat: repeat;
     color: #fff;
     font-weight: 400;
 }
@@ -62,7 +63,8 @@ header {
     width: 100%;
     height: 80px;
     padding: 0;
-    background-color: #348e0f;
+    background: #348e0f;
+    background-repeat: repeat;
     z-index: 1;    
 }
 header h1 {    
@@ -86,27 +88,32 @@ header div {
     float: left;
 }
 .button {
-    background-color: #5da341;
+    background: #5da341;
+    background-repeat: repeat;
     text-decoration: none!important;
     color: #fff;
     padding: 10px 20px;    
     text-align: center;    
 }
 .button:hover {
-    background-color: #348e0f;
+    background: #348e0f;
+    background-repeat: repeat;
 }
 .link {
     color: #5da341;
     text-decoration: none!important; 
 }
 .button:hover {
-    background-color: #348e0f;
+    background: #348e0f;
+    background-repeat: repeat;
 }
 .disabled {
-    background-color: #89c471;
+    background: #89c471;
+    background-repeat: repeat;
 }
 .disabled:hover {
-    background-color: #89c471;
+    background: #89c471;
+    background-repeat: repeat;
 }
 
 .content {
@@ -123,13 +130,15 @@ header div {
 }
 .box-header {
     color: #fff;
-    background-color: #5da341;
+    background: #5da341;
+    background-repeat: repeat;
      padding: 5px 20px;
     text-align: left;
     margin: 5px 5px 0 5px;
 }
 .box {
-    background-color: #fff;
+    background: #fff;
+    background-repeat: repeat;
     padding: 5px 20px;
     color: #000;
     text-align: left;
@@ -138,7 +147,8 @@ header div {
 .box-footer {
     vertical-align: middle;
     display: inline-block;
-    background-color: #fff;
+    background: #fff;
+    background-repeat: repeat;
     padding: 5px 10px 5px 20px;
     color: #000;
     text-align: left;
@@ -178,13 +188,16 @@ header div {
     margin: 5px;
     text-decoration: none!important;
     color: #fff;
-    background-color: #5da341;
+    background: #5da341;
+    background-repeat: repeat;
 }
 .nav-button:hover {
-    background-color: #348e0f;
+    background: #348e0f;
+    background-repeat: repeat;
 }
 .active {
-    background-color: #348e0f;
+    background: #348e0f;
+    background-repeat: repeat;
 }
 
 table {
@@ -193,7 +206,8 @@ table {
 
 thead th {
     color: #fff;
-	background-color: #5da341;
+	background: #5da341;
+	background-repeat: repeat;
     font-weight: 600;
 }
 th {

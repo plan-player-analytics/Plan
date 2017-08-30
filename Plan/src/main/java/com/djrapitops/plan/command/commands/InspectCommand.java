@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
@@ -105,24 +104,6 @@ public class InspectCommand extends SubCommand {
                 }
             }
         }).runTaskAsynchronously();
-    }
-
-    private void runMessageSenderTask(UUID uuid, ISender sender, String playerName) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("InspectMessageSenderTask") {
-            private int timesrun = 0;
-
-            @Override
-            public void run() {
-                timesrun++;
-                // TODO better message sending.
-                if (timesrun > 10) {
-                    Log.debug("Command Timeout Message, Inspect.");
-                    sender.sendMessage(Locale.get(Msg.CMD_FAIL_TIMEOUT).parse("Inspect"));
-                    this.cancel();
-                }
-            }
-
-        }).runTaskTimer(TimeAmount.SECOND.ticks(), 5 * TimeAmount.SECOND.ticks());
     }
 
     private void sendInspectMsg(ISender sender, String playerName) {

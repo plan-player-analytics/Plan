@@ -42,20 +42,33 @@ public enum Colors {
         this.setting = setting;
     }
 
+    /**
+     * Method responsible for parsing the setting into a usable css background property.
+     *
+     * @return #HEXCOD or url("url") for images.
+     */
     public String getColor() {
         String settingValue = setting.toString();
         try {
+            String returnValue = "";
             if ("base".equalsIgnoreCase(settingValue)) {
-                return "#" + Theme.valueOf(Settings.THEME_BASE.toString().toUpperCase()).getColor(id);
+                returnValue = "#" + Theme.valueOf(Settings.THEME_BASE.toString().toUpperCase()).getColor(id);
             } else if ('#' == settingValue.charAt(0)) {
-                return settingValue;
+                returnValue = settingValue;
             } else {
                 for (Theme t : Theme.values()) {
                     if (t.name().equalsIgnoreCase(settingValue)) {
-                        return "#" + t.getColor(id);
+                        returnValue = "#" + t.getColor(id);
                     }
                 }
             }
+            if (returnValue.isEmpty()) {
+                returnValue = "#" + Theme.valueOf(Settings.THEME_BASE.toString().toUpperCase()).getColor(id);
+            }
+            if (settingValue.contains(".")) {
+                returnValue += " url(\"" + settingValue + "\")";
+            }
+            return returnValue;
         } catch (Exception | NoSuchFieldError e) {
             Log.error("Something went wrong with getting color " + id + " for theme: " + settingValue);
         }
