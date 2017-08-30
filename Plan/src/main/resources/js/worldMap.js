@@ -3,6 +3,7 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
 		chart: {
 			animation: true
 		},
+		title: {text: ''},
 		colorAxis: {
 			min: 1,
 			type: 'logarithmic',

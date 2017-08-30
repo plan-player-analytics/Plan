@@ -49,6 +49,7 @@ function resourceChart(id, cpuSeries, ramSeries) {
 		tooltip: {
 			split: true
 		},
+		title: {text: ''},
 		plotOptions: {
 			areaspline: {
 				fillOpacity: 0.4

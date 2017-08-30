@@ -49,6 +49,7 @@ function worldChart(id, entitySeries, chunkSeries) {
 		tooltip: {
 			split: true
 		},
+		title: {text: ''},
 		plotOptions: {
 			areaspline: {
 				fillOpacity: 0.4

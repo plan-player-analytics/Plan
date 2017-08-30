@@ -6,7 +6,7 @@ function activityPie(id, activitySeries, activityTotal, activityColors) {
 			plotShadow: false,
 			type: 'pie'
 		},
-		subtitle: {text: 'Total Players:' + activityTotal},
+		title: {text: ''},
 		tooltip: {
 			pointFormat: '{series.name}: <b>{point.y}</b>'
 		},

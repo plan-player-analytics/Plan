@@ -23,6 +23,7 @@ function playersChart(id, playersOnlineSeries, sel) {
 				text: 'All'
 			}]
 		},
+		title: {text: ''},
 		plotOptions: {
 			areaspline: {
 				fillOpacity: 0.4

@@ -48,6 +48,7 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
 		tooltip: {
 			split: true
 		},
+		title: {text: ''},
 		plotOptions: {
 			areaspline: {
 				fillOpacity: 0.4

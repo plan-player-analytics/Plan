@@ -3,6 +3,7 @@ function punchCard(id, punchcardSeries) {
 		chart: {
 			defaultSeriesType: 'scatter'
 		},
+		title: {text: ''},
 		xAxis: {
 			type: 'datetime',
 			dateTimeLabelFormats: {
