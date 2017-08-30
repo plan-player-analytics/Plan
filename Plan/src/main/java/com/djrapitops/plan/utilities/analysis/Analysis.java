@@ -25,11 +25,14 @@ import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageRespo
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -106,7 +109,7 @@ public class Analysis {
      */
     public boolean analyzeData(List<TPS> tpsData, InformationManager infoManager, Database db) {
         try {
-//            rawData.sort(new UserDataLastPlayedComparator());
+//            rawData.sort(new UserInfoLastPlayedComparator());
 //            List<UUID> uuids = rawData.stream().map(UserInfo::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
             DataCache dataCache = plugin.getDataCache();
@@ -130,10 +133,6 @@ public class Analysis {
 
             //TODO Fetch Size
             log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(0, fetchPhaseLength));
-
-            // TODO Create playersTable
-//            String playersTable = PlayersTableCreator.createSortablePlayersTable(rawData);
-//            analysisData.setPlayersTable(playersTable);
 
             fillDataset(analysisData, db);
             // Analyze
@@ -253,6 +252,19 @@ public class Analysis {
         Benchmark.start("Fetch Phase");
         try {
             List<UserInfo> userInfo = db.getUserInfoTable().getAllUserInfo();
+            Map<UUID, UserInfo> mappedUserInfo = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, Function.identity()));
+            Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
+            for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {
+                UserInfo user = mappedUserInfo.get(entry.getKey());
+                if (user == null) {
+                    continue;
+                }
+                user.setLastSeen(entry.getValue());
+            }
+            userInfo.sort(new UserInfoLastPlayedComparator());
+
+            analysisData.setPlayersTable(PlayersTableCreator.createSortablePlayersTable(userInfo, joinInfo, geolocPart));
+
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
             Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));

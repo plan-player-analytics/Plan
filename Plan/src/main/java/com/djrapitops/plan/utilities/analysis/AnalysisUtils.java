@@ -327,4 +327,12 @@ public class AnalysisUtils {
         Optional<Session> longest = sessions.stream().sorted(new SessionLengthComparator()).findFirst();
         return longest.map(Session::getLength).orElse(0L);
     }
+
+    public static long getLastSeen(List<Session> userSessions) {
+        OptionalLong max = userSessions.stream().mapToLong(Session::getSessionEnd).max();
+        if (max.isPresent()) {
+            return max.getAsLong();
+        }
+        return 0;
+    }
 }
