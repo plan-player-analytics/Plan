@@ -22,7 +22,6 @@ import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
@@ -154,7 +153,6 @@ public class Analysis {
 
             PageCache.removeIf(identifier -> identifier.startsWith("inspectPage: ") || identifier.startsWith("inspectionJson: "));
             PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(plugin.getInfoManager()));
-            PageCache.cachePage("analysisJson", () -> new JsonResponse(analysisData));
             PageCache.cachePage("players", PlayersPageResponse::new);
 
             // TODO Export

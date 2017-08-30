@@ -6,6 +6,7 @@ package test.java.main.java.com.djrapitops.plan.ui.graphs;
 
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.html.graphs.*;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class GraphTest {
     private final List<TPS> tpsList = new ArrayList<>();
     private final List<Session> sessionList = new ArrayList<>();
     private final Map<String, Integer> geoList = new HashMap<>();
-    private final Map<String, Long> worldTimes = new HashMap<>();
+    private final WorldTimes worldTimes = new WorldTimes("WORLD", "SURVIVAL");
 
     private List<Point> points = new ArrayList<>();
 
@@ -34,7 +35,6 @@ public class GraphTest {
             tpsList.add(new TPS(i, i, i, i, i, i, i));
             sessionList.add(new Session(i, (long) i, (long) i, i, i));
             geoList.put(String.valueOf(i), i);
-            worldTimes.put(String.valueOf(i), (long) i);
         }
 
         points = RandomData.randomPoints();
@@ -50,7 +50,7 @@ public class GraphTest {
         assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
         assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
         assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMapCreator.createDataSeries(geoList));
-        //assertEquals(WorldPieCreator.createSeriesData(worldTimes), "[{name:'0',y:0},{name:'1',y:1, sliced: true, selected: true},{name:'2',y:2},{name:'3',y:3},{name:'4',y:4},{name:'5',y:5},{name:'6',y:6},{name:'7',y:7},{name:'8',y:8},{name:'9',y:9}]");
+        assertEquals(Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)), "[[{name:'WORLD',y:0,drilldown: 'WORLD'}], {name:'WORLD', id:'WORLD',data: []}]");
     }
 
     @Test

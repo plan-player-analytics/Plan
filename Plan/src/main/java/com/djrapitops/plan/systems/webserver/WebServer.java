@@ -13,10 +13,7 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyticsWebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.AnalyzeWebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.ConfigureWebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.InspectWebAPI;
+import main.java.com.djrapitops.plan.systems.webapi.bukkit.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
@@ -74,6 +71,7 @@ public class WebServer {
         WebAPIManager.registerNewAPI("analyze", new AnalyzeWebAPI());
         WebAPIManager.registerNewAPI("configure", new ConfigureWebAPI());
         WebAPIManager.registerNewAPI("inspect", new InspectWebAPI());
+        WebAPIManager.registerNewAPI("onlineplayers", new OnlinePlayersWebAPI());
     }
 
     /**

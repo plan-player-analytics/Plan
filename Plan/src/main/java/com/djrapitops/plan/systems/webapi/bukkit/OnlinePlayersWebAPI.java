@@ -6,19 +6,20 @@ package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
+import org.bukkit.Server;
 
 import java.util.Map;
 
 /**
  * @author Fuzzlemann
  */
-public class AnalyzeWebAPI implements WebAPI {
+public class OnlinePlayersWebAPI implements WebAPI {
     @Override
     public Response onResponse(Plan plan, Map<String, String> variables) {
-        plan.getInfoManager().refreshAnalysis();
-        return PageCache.loadPage("success", SuccessResponse::new);
+        Server server = plan.getServer();
+
+        return new JsonResponse(server.getOnlinePlayers() + "/" + server.getMaxPlayers());
     }
 }
