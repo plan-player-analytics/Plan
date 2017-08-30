@@ -493,4 +493,24 @@ public class SessionsTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    public long getLastSeen(UUID uuid) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT" +
+                    " MAX(" + columnSessionEnd + ") as last_seen" +
+                    " FROM " + tableName +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID);
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getLong("last_seen");
+            }
+            return 0;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

@@ -53,9 +53,12 @@ public class InspectPageParser {
     }
 
     public String parse() throws SQLException, FileNotFoundException {
+        // TODO Player is online parts
         Log.debug("Database", "Inspect Parse Fetch");
         Benchmark.start("Inspect Parse, Fetch");
         Database db = plugin.getDB();
+        SessionsTable sessionsTable = db.getSessionsTable();
+
         UserInfo userInfo = db.getUserInfoTable().getUserInfo(uuid);
         int timesKicked = db.getUsersTable().getTimesKicked(uuid);
 
@@ -64,11 +67,14 @@ public class InspectPageParser {
 
         addValue("playerName", userInfo.getName());
         addValue("registered", FormatUtils.formatTimeStampYear(userInfo.getRegistered()));
-        long lastSeen = userInfo.getLastSeen();
-        addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
+        long lastSeen = sessionsTable.getLastSeen(uuid);
+        if (lastSeen != 0) {
+            addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
+        } else {
+            addValue("lastSeen", "-");
+        }
         addValue("kickCount", timesKicked);
 
-        SessionsTable sessionsTable = db.getSessionsTable();
         Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
 
         List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
