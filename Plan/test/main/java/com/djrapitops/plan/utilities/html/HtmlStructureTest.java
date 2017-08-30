@@ -3,14 +3,17 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.data.Session;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import test.java.utils.RandomData;
 import test.java.utils.TestInit;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -24,37 +27,34 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest(JavaPlugin.class)
 public class HtmlStructureTest {
 
-    private Map<String, List<Session>> sessions;
+    private Map<String, List<Session>> sessions = new HashMap<>();
 
-    @Before
-    public void setUp() throws Exception {
-        TestInit t = TestInit.init();
-        sessions = new HashMap<>();
-        sessions.put("World 1", new ArrayList<>());
-        sessions.get("World 1").add(new Session(1, 12345L, 23455L, 1, 2));
-        sessions.get("World 1").add(new Session(2, 23455L, 23457L, 1, 2));
-        sessions.put("World 2", new ArrayList<>());
-        sessions.get("World 2").add(new Session(3, 23455L, 23457L, 1, 2));
+    public HtmlStructureTest() throws Exception {
+        TestInit.init();
+
+        for (int i = 0; i < RandomData.randomInt(0, 5); i++) {
+            sessions.put(RandomData.randomString(10), RandomData.randomSessions());
+        }
     }
 
     @Test
     public void createServerOverviewColumn() throws Exception {
         String serverOverviewColumn = HtmlStructure.createServerOverviewColumn(sessions);
+
         int opened = StringUtils.countMatches(serverOverviewColumn, "<div");
         int closed = StringUtils.countMatches(serverOverviewColumn, "</div");
-        System.out.println(opened + " / " + closed);
+
         assertEquals(opened, closed);
     }
 
     @Test
     public void createSessionsTabContent() throws Exception {
-
         List<Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
         String sessionsTab = HtmlStructure.createSessionsTabContent(sessions, allSessions);
+
         int opened = StringUtils.countMatches(sessionsTab, "<div");
         int closed = StringUtils.countMatches(sessionsTab, "</div");
-        System.out.println(opened + " / " + closed);
+
         assertEquals(opened, closed);
     }
-
 }

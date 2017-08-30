@@ -39,9 +39,6 @@ public class TestInit {
     private static final UUID serverUUID = UUID.fromString("9a27457b-f1a2-4b71-be7f-daf2170a1b66");
     private Plan planMock;
 
-    public TestInit() {
-    }
-
     /**
      * Init locale with empty messages.
      * <p>
