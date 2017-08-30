@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.data.additional;
 import com.djrapitops.pluginbridge.plan.Bridge;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -71,32 +70,6 @@ public class HookHandler {
         return additionalDataSources;
     }
 
-    /**
-     * Used to get the Layout with PluginData placeholders to replace %plugins%
-     * placeholder on server.html.
-     *
-     * @return html, getPluginsTabLayout-method
-     * @see HtmlUtils
-     */
-    public String getPluginsTabLayoutForAnalysis() {
-        List<String> pluginNames = getPluginNamesAnalysis();
-        Map<String, List<String>> placeholders = getPlaceholdersAnalysis();
-        return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
-    }
-
-    /**
-     * Used to get the Layout with PluginData placeholders to replace ${plugins}
-     * placeholder on player.html.
-     *
-     * @return html, getPluginsTabLayout-method
-     * @see HtmlUtils
-     */
-    public String getPluginsTabLayoutForInspect() {
-        List<String> pluginNames = getPluginNamesInspect();
-        Map<String, List<String>> placeholders = getPlaceholdersInspect();
-        return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
-    }
-
     private List<String> getPluginNamesAnalysis() {
         List<String> pluginNames = additionalDataSources.stream()
                 .filter(source -> !source.getAnalysisTypes().isEmpty())
@@ -115,39 +88,6 @@ public class HookHandler {
                 .collect(Collectors.toList());
         Collections.sort(pluginNames);
         return pluginNames;
-    }
-
-    private Map<String, List<String>> getPlaceholdersAnalysis() {
-        Map<String, List<String>> placeholders = new HashMap<>();
-        for (PluginData source : additionalDataSources) {
-            List<AnalysisType> analysisTypes = source.getAnalysisTypes();
-            if (analysisTypes.isEmpty()) {
-                continue;
-            }
-            String pluginName = source.getSourcePlugin();
-            if (!placeholders.containsKey(pluginName)) {
-                placeholders.put(pluginName, new ArrayList<>());
-            }
-            for (AnalysisType t : analysisTypes) {
-                placeholders.get(pluginName).add(source.getPlaceholder(t.getPlaceholderModifier()));
-            }
-        }
-        return placeholders;
-    }
-
-    private Map<String, List<String>> getPlaceholdersInspect() {
-        Map<String, List<String>> placeholders = new HashMap<>();
-        for (PluginData source : additionalDataSources) {
-            if (source.analysisOnly()) {
-                continue;
-            }
-            String pluginName = source.getSourcePlugin();
-            if (!placeholders.containsKey(pluginName)) {
-                placeholders.put(pluginName, new ArrayList<>());
-            }
-            placeholders.get(pluginName).add(source.getPlaceholder(""));
-        }
-        return placeholders;
     }
 
     /**

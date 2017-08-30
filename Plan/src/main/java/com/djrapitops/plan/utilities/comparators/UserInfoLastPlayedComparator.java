@@ -12,7 +12,7 @@ import java.util.Comparator;
 /**
  * @author Risto
  */
-public class UserDataLastPlayedComparator implements Comparator<UserInfo> {
+public class UserInfoLastPlayedComparator implements Comparator<UserInfo> {
 
     @Override
     public int compare(UserInfo u1, UserInfo u2) {

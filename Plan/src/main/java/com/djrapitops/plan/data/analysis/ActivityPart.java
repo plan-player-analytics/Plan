@@ -12,7 +12,6 @@ import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.utilities.html.graphs.SessionLengthDistributionGraphCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -82,7 +81,6 @@ public class ActivityPart extends RawData {
                 .filter(s -> s.getSessionStart() > MiscUtils.getTime() - TimeAmount.MONTH.ms())
                 .collect(Collectors.toList());
         addValue("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
-        addValue("sessionLengthSeries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
     }
 
     private void playerActivityGraphs() {

@@ -13,12 +13,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.RandomData;
-import test.java.utils.TestInit;
 
 import java.io.Serializable;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -27,16 +25,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class HtmlUtilsTest {
-
-    @Test
-    public void testGetHtmlStringFromResource() throws Exception {
-        TestInit.init();
-
-        String fileName = "player.html";
-        String result = HtmlUtils.getStringFromResource(fileName);
-
-        assertFalse("Result empty", result.isEmpty());
-    }
 
     @Test
     public void testReplacePlaceholders() {

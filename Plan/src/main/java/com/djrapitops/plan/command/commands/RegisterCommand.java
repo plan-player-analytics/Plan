@@ -14,7 +14,6 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.bukkit.ChatColor;
 
 /**
  * Command for registering web users.
@@ -50,8 +49,8 @@ public class RegisterCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         String notEnoughArgsMsg = Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse("(3) " + super.getArguments());
-        String hashErrorMsg = ChatColor.RED + "Password hash error.";
-        String permLvlErrorMsg = ChatColor.RED + "Incorrect perm level, not a number: ";
+        String hashErrorMsg = "§cPassword hash error.";
+        String permLvlErrorMsg = "§cIncorrect perm level, not a number: ";
         try {
             if (CommandUtils.isPlayer(sender)) {
                 Log.info(sender.getName() + " issued WebUser register command.");
@@ -114,9 +113,9 @@ public class RegisterCommand extends SubCommand {
         plugin.getRunnableFactory().createNew(new AbsRunnable("Register WebUser Task") {
             @Override
             public void run() {
-                final String existsMsg = ChatColor.RED + "User Already Exists!";
+                final String existsMsg = "§cUser Already Exists!";
                 final String userName = webUser.getName();
-                final String successMsg = ChatColor.GREEN + "Added a new user (" + userName + ") successfully!";
+                final String successMsg = "§aAdded a new user (" + userName + ") successfully!";
                 try {
                     SecurityTable securityTable = plugin.getDB().getSecurityTable();
                     boolean userExists = securityTable.userExists(userName);

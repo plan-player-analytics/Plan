@@ -1,10 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.utilities.BenchUtil;
-import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
 
 /**
  * @author Rsl1122
@@ -49,10 +46,6 @@ public class Benchmark {
     }
 
     private static BenchUtil getBenchUtil() {
-        if (Compatibility.isBukkitAvailable()) {
-            return Plan.getInstance().benchmark();
-        } else {
-            return PlanBungee.getInstance().benchmark();
-        }
+        return MiscUtils.getIPlan().benchmark();
     }
 }

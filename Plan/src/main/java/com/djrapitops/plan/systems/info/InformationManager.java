@@ -7,20 +7,21 @@ package main.java.com.djrapitops.plan.systems.info;
 import com.djrapitops.plugin.command.ISender;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
+import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -72,7 +73,7 @@ public class InformationManager {
     }
 
     public void cachePlayer(UUID uuid) {
-        plugin.addToProcessQueue(); // TODO Player page information parser
+        PageCache.loadPage("inspectPage: "+uuid, () -> new InspectPageResponse(this, uuid));
         // TODO Player page plugin tab request
     }
 
@@ -107,26 +108,31 @@ public class InformationManager {
         // TODO Bungee part.
         try {
             return new InspectPageParser(uuid, plugin).parse();
-        } catch (SQLException | FileNotFoundException e) {
+        } catch (ParseException e) {
             Log.toLog(this.getClass().getName(), e);
         }
         return "";
     }
 
     public boolean isAnalysisCached() {
-        // TODO
-        return false;
+        // TODO Bungee part
+        return PageCache.isCached("analysisPage");
     }
 
     public String getAnalysisHtml() {
-        // TODO
+        // TODO Bungee part.
+        try {
+            return new AnalysisPageParser(analysisData, plugin).parse();
+        } catch (ParseException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
         return "";
     }
 
     public void cacheAnalysisdata(AnalysisData analysisData) {
         this.analysisData = analysisData;
         refreshDate = MiscUtils.getTime();
-        // TODO Web Caching
+        // TODO Web Caching (Move from Analysis)
         AnalyzeCommand.sendAnalysisMessage(analysisNotification);
         analysisNotification.clear();
     }

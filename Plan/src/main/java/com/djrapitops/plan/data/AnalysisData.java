@@ -151,8 +151,7 @@ public class AnalysisData extends RawData {
     }
 
     public String replacePluginsTabLayout() {
-        String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabLayout, additionalDataReplaceMap);
-        return HtmlUtils.replacePlaceholders(replacedOnce, additionalDataReplaceMap);
+        return HtmlUtils.replacePlaceholders(pluginsTabLayout, additionalDataReplaceMap);
     }
 
     public long getRefreshDate() {

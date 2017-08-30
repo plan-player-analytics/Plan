@@ -26,7 +26,7 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     public void setupDataSource() throws DatabaseInitException {
-        IFileConfig config = null;
+        IFileConfig config;
         try {
             config = plugin.getIConfig().getConfig();
         } catch (IOException e) {

@@ -57,7 +57,7 @@ public class ComparatorTest {
         List<Long> longValues = test.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
         longValues.sort(Long::compare);
         Collections.reverse(longValues);
-        test.sort(new UserDataLastPlayedComparator());
+        test.sort(new UserInfoLastPlayedComparator());
         List<Long> afterSort = test.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
         assertEquals(longValues, afterSort);
     }

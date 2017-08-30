@@ -6,8 +6,8 @@ package main.java.com.djrapitops.plan.systems.info.parsing;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
@@ -28,10 +28,10 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 
-import java.io.FileNotFoundException;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -39,146 +39,147 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
-public class InspectPageParser {
+public class InspectPageParser extends PageParser {
 
     private final UUID uuid;
     private final IPlan plugin;
 
-    private final Map<String, Serializable> placeHolders;
-
     public InspectPageParser(UUID uuid, IPlan plugin) {
         this.uuid = uuid;
         this.plugin = plugin;
-        placeHolders = new HashMap<>();
     }
 
-    public String parse() throws SQLException, FileNotFoundException {
-        // TODO Player is online parts
-        Log.debug("Database", "Inspect Parse Fetch");
-        Benchmark.start("Inspect Parse, Fetch");
-        Database db = plugin.getDB();
-        SessionsTable sessionsTable = db.getSessionsTable();
+    public String parse() throws ParseException {
+        try {
+            // TODO Player is online parts
+            Log.debug("Database", "Inspect Parse Fetch");
+            Benchmark.start("Inspect Parse, Fetch");
+            Database db = plugin.getDB();
+            SessionsTable sessionsTable = db.getSessionsTable();
 
-        UserInfo userInfo = db.getUserInfoTable().getUserInfo(uuid);
-        int timesKicked = db.getUsersTable().getTimesKicked(uuid);
+            UserInfo userInfo = db.getUserInfoTable().getUserInfo(uuid);
+            int timesKicked = db.getUsersTable().getTimesKicked(uuid);
 
-        addValue("version", MiscUtils.getPlanVersion());
-        addValue("serverName", Settings.SERVER_NAME.toString());
+            addValue("version", MiscUtils.getPlanVersion());
+            addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
-        addValue("playerName", userInfo.getName());
-        addValue("registered", FormatUtils.formatTimeStampYear(userInfo.getRegistered()));
-        long lastSeen = sessionsTable.getLastSeen(uuid);
-        if (lastSeen != 0) {
-            addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
-        } else {
-            addValue("lastSeen", "-");
+            addValue("playerName", userInfo.getName());
+            addValue("registered", FormatUtils.formatTimeStampYear(userInfo.getRegistered()));
+            long lastSeen = sessionsTable.getLastSeen(uuid);
+            if (lastSeen != 0) {
+                addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
+            } else {
+                addValue("lastSeen", "-");
+            }
+            addValue("kickCount", timesKicked);
+
+            Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
+
+            List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
+            List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()
+                    .map(HtmlUtils::swapColorsToSpan)
+                    .collect(Collectors.toList());
+
+            addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
+            addValue("geolocations", HtmlStructure.createDotList(geolocations.toArray(new String[geolocations.size()])));
+
+            Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
+            List<Session> allSessions = sessions.values().stream()
+                    .flatMap(Collection::stream)
+                    .sorted(new SessionStartComparator())
+                    .collect(Collectors.toList());
+
+            addValue("contentSessions", HtmlStructure.createSessionsTabContent(sessions, allSessions));
+            addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
+
+            long now = MiscUtils.getTime();
+            long dayAgo = now - TimeAmount.DAY.ms();
+            long weekAgo = now - TimeAmount.WEEK.ms();
+
+            List<Session> sessionsDay = allSessions.stream()
+                    .filter(s -> s.getSessionStart() > dayAgo)
+                    .sorted(new SessionLengthComparator())
+                    .collect(Collectors.toList());
+            List<Session> sessionsWeek = allSessions.stream()
+                    .filter(s -> s.getSessionStart() > weekAgo)
+                    .sorted(new SessionLengthComparator())
+                    .collect(Collectors.toList());
+
+            int sessionCountDay = sessionsDay.size();
+            int sessionCountWeek = sessionsWeek.size();
+            long playtimeDay = AnalysisUtils.getTotalPlaytime(sessionsDay);
+            long playtimeWeek = AnalysisUtils.getTotalPlaytime(sessionsWeek);
+
+            if (!sessionsDay.isEmpty()) {
+                addValue("sessionLengthLongestDay", FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()));
+            } else {
+                addValue("sessionLengthLongestDay", "-");
+            }
+            if (!sessionsWeek.isEmpty()) {
+                addValue("sessionLengthLongestWeek", FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()));
+            } else {
+                addValue("sessionLengthLongestWeek", "-");
+            }
+
+            addValue("sessionCountDay", sessionCountDay);
+            addValue("sessionCountWeek", sessionCountWeek);
+            addValue("playtimeDay", FormatUtils.formatTimeAmount(playtimeDay));
+            addValue("playtimeWeek", FormatUtils.formatTimeAmount(playtimeWeek));
+
+            List<Action> actions = db.getActionsTable().getActions(uuid);
+            actions.addAll(allSessions.stream()
+                    .map(Session::getPlayerKills)
+                    .flatMap(Collection::stream)
+                    .map(PlayerKill::convertToAction)
+                    .collect(Collectors.toList()));
+            actions.sort(new ActionComparator());
+
+            addValue("tableBodyActions", ActionsTableCreator.createTableContent(actions));
+
+            Benchmark.stop("Inspect Parse, Fetch");
+
+            long playTime = AnalysisUtils.getTotalPlaytime(allSessions);
+            int sessionCount = allSessions.size();
+
+            addValue("sessionCount", sessionCount);
+            addValue("playtimeTotal", FormatUtils.formatTimeAmount(playTime));
+
+            String punchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
+            String[] worldPieData = WorldPieCreator.createSeriesData(db.getWorldTimesTable().getWorldTimesOfUser(uuid));
+
+            addValue("worldPieSeries", worldPieData[0]);
+            addValue("gmSeries", worldPieData[1]);
+
+
+            addValue("punchCardSeries", punchCardData);
+
+            List<Session> sessionsInLengthOrder = allSessions.stream()
+                    .sorted(new SessionLengthComparator())
+                    .collect(Collectors.toList());
+            if (sessionsInLengthOrder.isEmpty()) {
+                addValue("sessionLengthMedian", "-");
+                addValue("sessionLengthLongest", "-");
+            } else {
+                Session medianSession = sessionsInLengthOrder.get(sessionsInLengthOrder.size() / 2);
+                addValue("sessionLengthMedian", FormatUtils.formatTimeAmount(medianSession.getLength()));
+                addValue("sessionLengthLongest", FormatUtils.formatTimeAmount(sessionsInLengthOrder.get(0).getLength()));
+            }
+
+            long playerKillCount = allSessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();
+            long mobKillCount = allSessions.stream().mapToLong(Session::getMobKills).sum();
+            long deathCount = allSessions.stream().mapToLong(Session::getDeaths).sum();
+
+            addValue("playerKillCount", playerKillCount);
+            addValue("mobKillCount", mobKillCount);
+            addValue("deathCount", deathCount);
+
+
+            playerClassification(userInfo, lastSeen, playTime, sessionCount);
+
+            return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);
+        } catch (Exception e) {
+            throw new ParseException(e);
         }
-        addValue("kickCount", timesKicked);
-
-        Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
-
-        List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
-        List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()
-                .map(HtmlUtils::swapColorsToSpan)
-                .collect(Collectors.toList());
-
-        addValue("nicknames", HtmlStructure.createDotList(nicknames.toArray(new String[nicknames.size()])));
-        addValue("geolocations", HtmlStructure.createDotList(geolocations.toArray(new String[geolocations.size()])));
-
-        Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
-        List<Session> allSessions = sessions.values().stream()
-                .flatMap(Collection::stream)
-                .sorted(new SessionStartComparator())
-                .collect(Collectors.toList());
-
-        addValue("contentSessions", HtmlStructure.createSessionsTabContent(sessions, allSessions));
-        addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
-
-        long now = MiscUtils.getTime();
-        long dayAgo = now - TimeAmount.DAY.ms();
-        long weekAgo = now - TimeAmount.WEEK.ms();
-
-        List<Session> sessionsDay = allSessions.stream()
-                .filter(s -> s.getSessionStart() > dayAgo)
-                .sorted(new SessionLengthComparator())
-                .collect(Collectors.toList());
-        List<Session> sessionsWeek = allSessions.stream()
-                .filter(s -> s.getSessionStart() > weekAgo)
-                .sorted(new SessionLengthComparator())
-                .collect(Collectors.toList());
-
-        int sessionCountDay = sessionsDay.size();
-        int sessionCountWeek = sessionsWeek.size();
-        long playtimeDay = AnalysisUtils.getTotalPlaytime(sessionsDay);
-        long playtimeWeek = AnalysisUtils.getTotalPlaytime(sessionsWeek);
-
-        if (!sessionsDay.isEmpty()) {
-            addValue("sessionLengthLongestDay", FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()));
-        } else {
-            addValue("sessionLengthLongestDay", "-");
-        }
-        if (!sessionsWeek.isEmpty()) {
-            addValue("sessionLengthLongestWeek", FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()));
-        } else {
-            addValue("sessionLengthLongestWeek", "-");
-        }
-
-        addValue("sessionCountDay", sessionCountDay);
-        addValue("sessionCountWeek", sessionCountWeek);
-        addValue("playtimeDay", FormatUtils.formatTimeAmount(playtimeDay));
-        addValue("playtimeWeek", FormatUtils.formatTimeAmount(playtimeWeek));
-
-        List<Action> actions = db.getActionsTable().getActions(uuid);
-        actions.addAll(allSessions.stream()
-                .map(Session::getPlayerKills)
-                .flatMap(Collection::stream)
-                .map(PlayerKill::convertToAction)
-                .collect(Collectors.toList()));
-        actions.sort(new ActionComparator());
-
-        addValue("tableBodyActions", ActionsTableCreator.createTableContent(actions));
-
-        Benchmark.stop("Inspect Parse, Fetch");
-
-        long playTime = AnalysisUtils.getTotalPlaytime(allSessions);
-        int sessionCount = allSessions.size();
-
-        addValue("sessionCount", sessionCount);
-        addValue("playtimeTotal", FormatUtils.formatTimeAmount(playTime));
-
-        String punchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
-        String[] worldPieData = WorldPieCreator.createSeriesData(db.getWorldTimesTable().getWorldTimesOfUser(uuid));
-
-        addValue("worldPieSeries", worldPieData[0]);
-        addValue("gmSeries", worldPieData[1]);
-
-
-        addValue("punchCardSeries", punchCardData);
-
-        List<Session> sessionsInLengthOrder = allSessions.stream()
-                .sorted(new SessionLengthComparator())
-                .collect(Collectors.toList());
-        if (sessionsInLengthOrder.isEmpty()) {
-            addValue("sessionLengthMedian", "-");
-            addValue("sessionLengthLongest", "-");
-        } else {
-            Session medianSession = sessionsInLengthOrder.get(sessionsInLengthOrder.size() / 2);
-            addValue("sessionLengthMedian", FormatUtils.formatTimeAmount(medianSession.getLength()));
-            addValue("sessionLengthLongest", FormatUtils.formatTimeAmount(sessionsInLengthOrder.get(0).getLength()));
-        }
-
-        long playerKillCount = allSessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();
-        long mobKillCount = allSessions.stream().mapToLong(Session::getMobKills).sum();
-        long deathCount = allSessions.stream().mapToLong(Session::getDeaths).sum();
-
-        addValue("playerKillCount", playerKillCount);
-        addValue("mobKillCount", mobKillCount);
-        addValue("deathCount", deathCount);
-
-
-        playerClassification(userInfo, lastSeen, playTime, sessionCount);
-
-        return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);
     }
 
     private void playerClassification(UserInfo userInfo, long lastPlayed, long playTime, int loginTimes) {
@@ -193,7 +194,5 @@ public class InspectPageParser {
         addValue("playerClassification", HtmlStructure.separateWithDots(active, banned, op));
     }
 
-    private void addValue(String placeholder, Serializable value) {
-        placeHolders.put(placeholder, value);
-    }
+
 }

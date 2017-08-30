@@ -513,4 +513,31 @@ public class SessionsTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    public Map<UUID, Long> getLastSeenForAllPlayers() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+
+            statement = prepareStatement("SELECT" +
+                    " MAX(" + columnSessionEnd + ") as last_seen, " +
+                    usersUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID);
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Long> lastSeenMap = new HashMap<>();
+            while (set.next()) {
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+                long lastSeen = set.getLong("last_seen");
+                lastSeenMap.put(uuid, lastSeen);
+            }
+            return lastSeenMap;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

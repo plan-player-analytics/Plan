@@ -94,54 +94,51 @@ public class WebServer {
                 server = HttpServer.create(new InetSocketAddress(port), 10);
             }
 
-            server.createContext("/", new HttpHandler() {
-                @Override
-                public void handle(HttpExchange exchange) {
-                    Headers responseHeaders = exchange.getResponseHeaders();
-                    URI uri = exchange.getRequestURI();
-                    String target = uri.toString();
-                    try {
-                        boolean apiRequest = "POST".equals(exchange.getRequestMethod());
-                        Response response = null;
+            server.createContext("/", exchange -> {
+                Headers responseHeaders = exchange.getResponseHeaders();
+                URI uri = exchange.getRequestURI();
+                String target = uri.toString();
+                try {
+                    boolean apiRequest = "POST".equals(exchange.getRequestMethod());
+                    Response response = null;
 
-                        String type = "text/html;";
+                    String type = "text/html;";
 
-                        if (apiRequest) {
-                            response = getAPIResponse(target, exchange);
+                    if (apiRequest) {
+                        response = getAPIResponse(target, exchange);
 
-                            if (response instanceof JsonResponse) {
-                                type = "application/json;";
-                            }
+                        if (response instanceof JsonResponse) {
+                            type = "application/json;";
                         }
-
-                        responseHeaders.set("Content-Type", type);
-
-                        if (apiRequest) {
-                            sendData(responseHeaders, exchange, response);
-                            return;
-                        }
-
-                        WebUser user = null;
-
-                        if (usingHttps) {
-                            user = getUser(exchange.getRequestHeaders());
-
-                            // Prompt authorization
-                            if (user == null) {
-                                responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
-                            }
-                        }
-
-                        response = getResponse(target, user);
-                        if (response instanceof CSSResponse) {
-                            responseHeaders.set("Content-Type", "text/css");
-                        }
-                        sendData(responseHeaders, exchange, response);
-                    } catch (Exception e) {
-                        internalErrorResponse(exchange, responseHeaders, target, e);
-                    } finally {
-                        exchange.close();
                     }
+
+                    responseHeaders.set("Content-Type", type);
+
+                    if (apiRequest) {
+                        sendData(responseHeaders, exchange, response);
+                        return;
+                    }
+
+                    WebUser user = null;
+
+                    if (usingHttps) {
+                        user = getUser(exchange.getRequestHeaders());
+
+                        // Prompt authorization
+                        if (user == null) {
+                            responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
+                        }
+                    }
+
+                    response = getResponse(target, user);
+                    if (response instanceof CSSResponse) {
+                        responseHeaders.set("Content-Type", "text/css");
+                    }
+                    sendData(responseHeaders, exchange, response);
+                } catch (Exception e) {
+                    internalErrorResponse(exchange, responseHeaders, target, e);
+                } finally {
+                    exchange.close();
                 }
             });
 
@@ -433,12 +430,11 @@ public class WebServer {
     }
 
     private Response forbiddenResponse(int permLevel, int required) {
-        return PageCache.loadPage("forbidden", () -> {
-            return new ForbiddenResponse("Unauthorized User.<br>"
-                    + "Make sure your user has the correct access level.<br>"
-                    + "This page requires permission level of " + required + ",<br>"
-                    + "This user has permission level of " + permLevel);
-        });
+        return PageCache.loadPage("forbidden", () ->
+                new ForbiddenResponse("Unauthorized User.<br>"
+                + "Make sure your user has the correct access level.<br>"
+                + "This page requires permission level of " + required + ",<br>"
+                + "This user has permission level of " + permLevel));
     }
 
     private Response rootPageResponse(WebUser user) {

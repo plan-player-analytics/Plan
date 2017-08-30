@@ -47,7 +47,6 @@ public class PlanChatListener implements Listener {
         String name = p.getName();
         String displayName = p.getDisplayName();
 
-        DataCache dataCache = plugin.getDataCache();
         if (dataCache.isFirstSession(uuid)) {
             dataCache.firstSessionMessageSent(uuid);
         }
