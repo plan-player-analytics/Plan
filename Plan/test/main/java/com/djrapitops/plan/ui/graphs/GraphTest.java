@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.html.graphs.*;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.RandomData;
@@ -57,7 +58,7 @@ public class GraphTest {
 
     @Test
     public void testSeriesCreator() {
-        String result = SeriesCreator.seriesGraph(points, false, false).replaceAll("[\\[\\]]", "");
+        String result = StringUtils.removeAll(SeriesCreator.seriesGraph(points, false, false), "[\\[\\]]");
         String[] splittedResult = result.split(",");
 
         Map<String, String> expected = new LinkedHashMap<>();

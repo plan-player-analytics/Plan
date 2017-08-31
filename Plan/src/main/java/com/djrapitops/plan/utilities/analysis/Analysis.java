@@ -28,6 +28,7 @@ import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedCom
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -191,7 +192,7 @@ public class Analysis {
         Log.debug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().filter(Verify::notNull).forEach(source -> {
             try {
-                Benchmark.start("Source " + source.getPlaceholder("").replace("%", ""));
+                Benchmark.start("Source " + StringUtils.remove(source.getPlaceholder(""), '%'));
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
                     return;
@@ -217,11 +218,11 @@ public class Analysis {
                     replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
+                Log.error("A PluginData-source caused an exception: " + StringUtils.remove(source.getPlaceholder(""), '%'));
 
                 Log.toLog(this.getClass().getName(), e);
             } finally {
-                Benchmark.stop("Analysis", "Source " + source.getPlaceholder("").replace("%", ""));
+                Benchmark.stop("Analysis", "Source " + StringUtils.remove(source.getPlaceholder(""), '%'));
             }
         });
         Benchmark.stop("Analysis", "3rd party");

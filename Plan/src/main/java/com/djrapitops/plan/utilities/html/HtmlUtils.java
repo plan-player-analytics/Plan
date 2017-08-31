@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
@@ -93,7 +94,7 @@ public class HtmlUtils {
      * @return
      */
     public static String removeXSS(String string) {
-        return string.replaceAll("(<!--)|(-->)|(</?script>)", "");
+        return StringUtils.removeAll(string,"(<!--)|(-->)|(</?script>)");
     }
 
     /**
@@ -114,7 +115,7 @@ public class HtmlUtils {
             string = Html.SPAN.parse(string);
         }
 
-        return string.replace("§r", "");
+        return StringUtils.remove(string, "§r");
     }
 
     public static String separateWithQuotes(String... strings) {
