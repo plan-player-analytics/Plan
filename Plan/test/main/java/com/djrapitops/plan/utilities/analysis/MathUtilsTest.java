@@ -6,12 +6,13 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import org.junit.Test;
+import test.java.utils.RandomData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
 
@@ -22,45 +23,41 @@ public class MathUtilsTest {
 
     @Test
     public void testAverageInt() {
-        List<Integer> l = new ArrayList<>();
+        List<Integer> integers = Arrays.asList(0, 20, 5, 15);
+
         double exp = 10;
-        l.add(0);
-        l.add(20);
-        l.add(5);
-        l.add(15);
-        double result = MathUtils.averageInt(l.stream());
+        double result = MathUtils.averageInt(integers.stream());
+
         assertTrue(Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testAverageIntEmpty() {
-        List<Integer> l = Collections.emptyList();
+        List<Integer> integers = Collections.emptyList();
+
         double exp = 0;
-        double result = MathUtils.averageInt(l.stream());
+        double result = MathUtils.averageInt(integers.stream());
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testAverageLongCollection() {
-        List<Long> l = new ArrayList<>();
+        List<Long> longs = Arrays.asList(0L, 20L, 5L, 15L);
+
         double exp = 10;
-        l.add(0L);
-        l.add(20L);
-        l.add(5L);
-        l.add(15L);
-        double result = MathUtils.averageLong(l);
+        double result = MathUtils.averageLong(longs);
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testAverageDouble() {
-        List<Double> l = new ArrayList<>();
+        List<Double> doubles = Arrays.asList(0.0, 20.5, 4.5, 15.0);
+
         double exp = 10;
-        l.add(0.0);
-        l.add(20.5);
-        l.add(4.5);
-        l.add(15.0);
-        double result = MathUtils.averageDouble(l.stream());
+        double result = MathUtils.averageDouble(doubles.stream());
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
 
     }
@@ -69,64 +66,63 @@ public class MathUtilsTest {
     public void testAverage() {
         double exp = 10;
         double result = MathUtils.average(40, 4);
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testCountTrueBoolean() {
-        List<Boolean> l = new ArrayList<>();
-        int exp = new Random().nextInt(1000);
+        List<Boolean> booleans = new ArrayList<>();
+
+        int exp = RandomData.randomInt(0, 1000);
         for (int i = 0; i < exp; i++) {
-            l.add(true);
+            booleans.add(true);
         }
-        for (int i = exp; i < 1000; i++) {
-            l.add(false);
+
+        for (int i = exp; i < RandomData.randomInt(100, 1000); i++) {
+            booleans.add(false);
         }
-        long result = MathUtils.countTrueBoolean(l.stream());
+
+        long result = MathUtils.countTrueBoolean(booleans.stream());
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testSumInt() {
-        List<Serializable> l = new ArrayList<>();
+        List<Serializable> serializable = Arrays.asList(0, 20, 5, 15);
+
         double exp = 40;
-        l.add(0);
-        l.add(20);
-        l.add(5);
-        l.add(15);
-        double result = MathUtils.sumInt(l.stream());
+        double result = MathUtils.sumInt(serializable.stream());
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testSumLong() {
-        List<Serializable> l = new ArrayList<>();
+        List<Serializable> serializable = Arrays.asList(0L, 20L, 5L, 15L);
+
         long exp = 40;
-        l.add(0L);
-        l.add(20L);
-        l.add(5L);
-        l.add(15L);
-        long result = MathUtils.sumLong(l.stream());
+        long result = MathUtils.sumLong(serializable.stream());
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testSumDouble() {
-        List<Serializable> l = new ArrayList<>();
+        List<Serializable> serializable = Arrays.asList(0.0, 50.4, 45.0, 5.0531541);
+
         double exp = 100.4531541;
-        l.add(0.0);
-        l.add(50.4);
-        l.add(45.0);
-        l.add(5.0531541);
-        double result = MathUtils.sumDouble(l.stream());
+        double result = MathUtils.sumDouble(serializable.stream());
+
         assertTrue(result + "/" + exp, Double.compare(exp, result) == 0);
     }
 
     @Test
     public void testRoundDouble() {
         double exp = 412.5123125123;
-        double roundedExp = MathUtils.round(exp);
+        double result = MathUtils.round(exp);
 
-        assertTrue("", Double.compare(412.51, roundedExp) == 0);
+        assertTrue(result + "/" + exp, Double.compare(412.51, result) == 0);
     }
 }

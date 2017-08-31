@@ -19,8 +19,8 @@ public class PassEncryptTest {
 
     @Before
     public void setUp() throws Exception {
-        for (int i = 0; i < 20; i++) {
-            String password = RandomData.randomString(RandomData.randomInt(1, 20));
+        for (int i = 0; i < RandomData.randomInt(1, 10); i++) {
+            String password = RandomData.randomString(RandomData.randomInt(5, 16));
             PASSWORD_MAP.put(password, PassEncryptUtil.createHash(password));
         }
     }

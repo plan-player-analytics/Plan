@@ -62,14 +62,8 @@ public class GraphTest {
 
         Map<String, String> expected = new LinkedHashMap<>();
 
-        String key = null;
-        for (String resultString : splittedResult) {
-            if (key == null) {
-                key = resultString;
-            } else {
-                expected.put(key, resultString);
-                key = null;
-            }
+        for (int i = 0; i < splittedResult.length; i++) {
+            expected.put(splittedResult[i++], splittedResult[i]);
         }
 
         int i2 = 0;

@@ -59,6 +59,7 @@ public class DatabaseCommitTest {
                 System.out.println(line);
             }
         }
+
         assertTrue("Errors were caught.", rows == rowsAgain);
     }
 

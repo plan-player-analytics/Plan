@@ -26,6 +26,8 @@ import org.powermock.api.mockito.PowerMockito;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -129,49 +131,69 @@ public class TestInit {
             @Override
             public IRunnable createNew(String name, final AbsRunnable runnable) {
                 return new IRunnable() {
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            runnable.run();
+                        }
+                    };
+
                     @Override
                     public String getTaskName() {
-                        return "Test";
+                        return name;
                     }
 
                     @Override
                     public void cancel() {
+                        timer.cancel();
+                        task.cancel();
+                        runnable.cancel();
                     }
 
                     @Override
                     public int getTaskId() {
-                        return 0;
+                        return runnable.getTaskId();
                     }
 
                     @Override
                     public ITask runTask() {
-                        new Thread(runnable::run).start();
+                        task.run();
                         return null;
                     }
 
                     @Override
                     public ITask runTaskAsynchronously() {
-                        return runTask();
+                        new Thread(this::runTask).start();
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskLater(long l) {
-                        return runTask();
+                        timer.schedule(task, convertTicksToMillis(l));
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskLaterAsynchronously(long l) {
-                        return runTask();
+                        new Thread(() -> timer.schedule(task, convertTicksToMillis(l))).start();
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskTimer(long l, long l1) {
-                        return runTask();
+                        timer.scheduleAtFixedRate(task, convertTicksToMillis(l), convertTicksToMillis(l1));
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskTimerAsynchronously(long l, long l1) {
-                        return runTask();
+                        new Thread(() -> timer.scheduleAtFixedRate(task, convertTicksToMillis(l), convertTicksToMillis(l1)));
+                        return null;
+                    }
+
+                    private long convertTicksToMillis(long ticks) {
+                        return ticks * 50;
                     }
                 };
             }

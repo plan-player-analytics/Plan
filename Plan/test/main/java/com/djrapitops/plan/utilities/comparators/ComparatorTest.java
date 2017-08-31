@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.comparators;
 
+import com.google.common.collect.Ordering;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.data.UserInfo;
@@ -20,101 +21,117 @@ public class ComparatorTest {
 
     @Test
     public void testPointComparator() {
-        List<Point> test = RandomData.randomPoints();
+        List<Point> points = RandomData.randomPoints();
 
-        List<Long> longValues = test.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
+        List<Long> longValues = points.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
         longValues.sort(Long::compare);
-        test.sort(new PointComparator());
-        List<Long> afterSort = test.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
+
+        points.sort(new PointComparator());
+
+        List<Long> afterSort = points.stream().map(Point::getX).map(i -> (long) (double) i).collect(Collectors.toList());
         assertEquals(longValues, afterSort);
     }
 
     @Test
     public void testSessionDataComparator() {
-        List<Session> test = RandomData.randomSessions();
-        List<Long> longValues = test.stream().map(Session::getSessionStart).collect(Collectors.toList());
+        List<Session> sessions = RandomData.randomSessions();
+
+        List<Long> longValues = sessions.stream().map(Session::getSessionStart).collect(Collectors.toList());
         longValues.sort(Long::compare);
+
         Collections.reverse(longValues);
-        test.sort(new SessionStartComparator());
-        List<Long> afterSort = test.stream().map(Session::getSessionStart).collect(Collectors.toList());
+        sessions.sort(new SessionStartComparator());
+        List<Long> afterSort = sessions.stream().map(Session::getSessionStart).collect(Collectors.toList());
+
         assertEquals(longValues, afterSort);
     }
 
     @Test
     public void testTPSComparator() {
-        List<TPS> test = RandomData.randomTPS();
-        List<Long> longValues = test.stream().map(TPS::getDate).collect(Collectors.toList());
+        List<TPS> tpsList = RandomData.randomTPS();
+
+        List<Long> longValues = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
         longValues.sort(Long::compare);
-        test.sort(new TPSComparator());
-        List<Long> afterSort = test.stream().map(TPS::getDate).collect(Collectors.toList());
+
+        tpsList.sort(new TPSComparator());
+        List<Long> afterSort = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
+
         assertEquals(longValues, afterSort);
     }
 
     @Test
     public void testUserDataLastPlayedComparator() {
-        List<UserInfo> test = RandomData.randomUserData();
-        List<Long> longValues = test.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
+        List<UserInfo> userInfo = RandomData.randomUserData();
+
+        List<Long> longValues = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
         longValues.sort(Long::compare);
+
         Collections.reverse(longValues);
-        test.sort(new UserInfoLastPlayedComparator());
-        List<Long> afterSort = test.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
+        userInfo.sort(new UserInfoLastPlayedComparator());
+        List<Long> afterSort = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
+
         assertEquals(longValues, afterSort);
     }
 
 
     @Test
     public void testUserDataNameComparator() {
-        List<UserInfo> test = RandomData.randomUserData();
-        List<String> stringValues = test.stream().map(UserInfo::getName).collect(Collectors.toList());
+        List<UserInfo> userInfo = RandomData.randomUserData();
+
+        List<String> stringValues = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
         Collections.sort(stringValues);
-        test.sort(new UserDataNameComparator());
-        List<String> afterSort = test.stream().map(UserInfo::getName).collect(Collectors.toList());
+
+        userInfo.sort(new UserDataNameComparator());
+        List<String> afterSort = userInfo.stream().map(UserInfo::getName).collect(Collectors.toList());
+
         assertEquals(stringValues, afterSort);
     }
 
     @Test
     public void testWebUserComparator() throws PassEncryptUtil.CannotPerformOperationException {
-        List<WebUser> test = RandomData.randomWebUsers();
-        List<Integer> intValues = test.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
+        List<WebUser> webUsers = RandomData.randomWebUsers();
+
+        List<Integer> intValues = webUsers.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
         intValues.sort(Integer::compare);
         Collections.reverse(intValues);
-        test.sort(new WebUserComparator());
-        List<Integer> afterSort = test.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
+
+        webUsers.sort(new WebUserComparator());
+        List<Integer> afterSort = webUsers.stream().map(WebUser::getPermLevel).collect(Collectors.toList());
+
         assertEquals(intValues, afterSort);
     }
 
     @Test
     public void testStringLengthComparator() {
-        List<String> test = new ArrayList<>();
-        test.add(RandomData.randomString(10));
-        test.add(RandomData.randomString(3));
-        test.add(RandomData.randomString(20));
-        test.add(RandomData.randomString(7));
-        test.add(RandomData.randomString(4));
-        test.add(RandomData.randomString(86));
-        test.add(RandomData.randomString(6));
+        List<String> strings = Ordering.from(new StringLengthComparator())
+                .sortedCopy(Arrays.asList(
+                        RandomData.randomString(10),
+                        RandomData.randomString(3),
+                        RandomData.randomString(20),
+                        RandomData.randomString(7),
+                        RandomData.randomString(4),
+                        RandomData.randomString(86),
+                        RandomData.randomString(6)));
 
-        test.sort(new StringLengthComparator());
-
-        assertEquals(86, test.get(0).length());
-        assertEquals(20, test.get(1).length());
-        assertEquals(3, test.get(test.size() - 1).length());
+        assertEquals(86, strings.get(0).length());
+        assertEquals(20, strings.get(1).length());
+        assertEquals(3, strings.get(strings.size() - 1).length());
     }
 
     @Test
     public void testLocaleEntryComparator() {
-        Map<Msg, Message> test = new HashMap<>();
-        test.put(Msg.CMD_CONSTANT_FOOTER, new Message(""));
-        test.put(Msg.ANALYSIS_3RD_PARTY, new Message(""));
-        test.put(Msg.MANAGE_FAIL_NO_PLAYERS, new Message(""));
+        Map<Msg, Message> messageMap = new HashMap<>();
+        messageMap.put(Msg.CMD_CONSTANT_FOOTER, new Message(RandomData.randomString(10)));
+        messageMap.put(Msg.ANALYSIS_3RD_PARTY, new Message(RandomData.randomString(10)));
+        messageMap.put(Msg.MANAGE_FAIL_NO_PLAYERS, new Message(RandomData.randomString(10)));
 
-        List<String> sorted = test.entrySet().stream()
+        List<String> sorted = messageMap.entrySet().stream()
                 .sorted(new LocaleEntryComparator())
                 .map(entry -> entry.getKey().name())
                 .collect(Collectors.toList());
 
-        assertEquals("ANALYSIS_3RD_PARTY", sorted.get(0));
-        assertEquals("CMD_CONSTANT_FOOTER", sorted.get(1));
-        assertEquals("MANAGE_FAIL_NO_PLAYERS", sorted.get(2));
+        assertEquals(Msg.ANALYSIS_3RD_PARTY.name(), sorted.get(0));
+        assertEquals(Msg.CMD_CONSTANT_FOOTER.name(), sorted.get(1));
+        assertEquals(Msg.MANAGE_FAIL_NO_PLAYERS.name(), sorted.get(2));
     }
 }

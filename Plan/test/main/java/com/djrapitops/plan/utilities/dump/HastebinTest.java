@@ -15,7 +15,7 @@ import test.java.utils.RandomData;
 import test.java.utils.TestInit;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -28,25 +28,26 @@ import static junit.framework.TestCase.assertNotNull;
 @PrepareForTest(JavaPlugin.class)
 public class HastebinTest {
 
-    private final AtomicReference<String> testLink = new AtomicReference<>(null);
+    private final AtomicBoolean testLink = new AtomicBoolean(false);
 
     @Before
     public void checkAvailability() throws Exception {
         TestInit.init();
 
         Thread thread = new Thread(() -> {
-            String link = null;
             try {
-                link = Hastebin.upload(RandomData.randomString(10));
+                Hastebin.upload(RandomData.randomString(10));
             } catch (IOException e) {
                 if (e.getMessage().contains("503")) {
                     return;
                 }
+
+                Log.toLog("checkAvailability()", e);
             } catch (ParseException e) {
                 /* Ignored */
             }
 
-            testLink.set(link);
+            testLink.set(true);
         });
 
         thread.start();
@@ -57,7 +58,7 @@ public class HastebinTest {
             Log.info("Hastebin timed out");
         }
 
-        Log.info("Hastebin Availability Test Link: " + testLink.get());
+        Log.info("Hastebin Available: " + testLink.get());
     }
 
     @Test
@@ -72,7 +73,7 @@ public class HastebinTest {
 
     @Test
     public void testUpload() throws Exception {
-        if (testLink.get() == null) {
+        if (!testLink.get()) {
             Log.info("Hastebin not available, skipping testUpload()");
             return;
         }

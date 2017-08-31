@@ -57,7 +57,7 @@ public class HtmlUtilsTest {
     public void testRemoveXSS() {
         String randomString = RandomData.randomString(10);
 
-        String xss = "<script>" + randomString + "</script><!--";
+        String xss = "<script>" + randomString + "</script><!---->";
         String result = HtmlUtils.removeXSS(xss);
 
         assertEquals(randomString, result);

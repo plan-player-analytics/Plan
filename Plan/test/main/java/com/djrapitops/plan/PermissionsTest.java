@@ -5,8 +5,8 @@
  */
 package main.java.com.djrapitops.plan;
 
-import main.java.com.djrapitops.plan.Permissions;
 import org.junit.Test;
+import test.java.utils.TestUtils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,17 +15,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class PermissionsTest {
 
-    /**
-     *
-     */
-    public PermissionsTest() {
-    }
-
-    /**
-     *
-     */
     @Test
-    public void testGetPermission() {
-        assertEquals("plan.inspect.other", Permissions.INSPECT_OTHER.getPerm());
+    public void testGetPermission() throws NoSuchFieldException, IllegalAccessException {
+        for (Permissions type : Permissions.values()) {
+            String exp = TestUtils.getStringFieldValue(type, "permission");
+
+            assertEquals(exp, type.getPermission());
+            assertEquals(exp, type.getPerm());
+        }
     }
 }

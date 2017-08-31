@@ -29,47 +29,59 @@ import static org.junit.Assert.assertEquals;
 public class MiscUtilsTest {
 
     @Test
-    public void testGetPlayerDisplaynameArgsPerm() {
+    public void testGetPlayerDisplayNameArgsPerm() {
         String[] args = new String[]{"Rsl1122", "Test"};
         ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
+
         String expResult = "Rsl1122";
         String result = MiscUtils.getPlayerName(args, sender);
+
         assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetPlayerDisplaynameArgsNoPerm() {
+    public void testGetPlayerDisplayNameArgsNoPerm() throws Exception {
+        TestInit.init();
+
         String[] args = new String[]{"Rsl1122", "Test"};
-        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
+
         String expResult = "Rsl1122";
         String result = MiscUtils.getPlayerName(args, sender);
+
         assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetPlayerDisplaynameNoArgsPerm() {
+    public void testGetPlayerDisplayNameNoArgsPerm() {
         String[] args = new String[]{};
         ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
+
         String expResult = "TestName";
         String result = MiscUtils.getPlayerName(args, sender);
+
         assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetPlayerDisplaynameNoArgsNoPerm() {
+    public void testGetPlayerDisplayNameNoArgsNoPerm() {
         String[] args = new String[]{};
         ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
+
         String expResult = "TestName2";
         String result = MiscUtils.getPlayerName(args, sender);
+
         assertEquals(expResult, result);
     }
 
     @Test
-    public void testGetPlayerDisplaynameOwnNameNoPerm() {
+    public void testGetPlayerDisplayNameOwnNameNoPerm() {
         String[] args = new String[]{"testname2"};
         ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
+
         String expResult = "TestName2";
         String result = MiscUtils.getPlayerName(args, sender);
+
         assertEquals(expResult, result);
     }
 
@@ -77,19 +89,23 @@ public class MiscUtilsTest {
     public void testGetPlayerDisplaynameConsole() {
         String[] args = new String[]{"TestConsoleSender"};
         ISender sender = new BukkitCMDSender(MockUtils.mockConsoleSender());
+
         String expResult = "TestConsoleSender";
         String result = MiscUtils.getPlayerName(args, sender);
+
         assertEquals(expResult, result);
     }
 
     @Test
     @Ignore("DB mock")
-    public void testGetMatchingDisplaynames() throws Exception {
+    public void testGetMatchingDisplayNames() throws Exception {
         TestInit.init();
         String search = "testname";
+
         String exp1 = "TestName";
         String exp2 = "TestName2";
         List<String> result = MiscUtils.getMatchingPlayerNames(search);
+
         assertEquals(2, result.size());
         assertEquals(exp1, result.get(0));
         assertEquals(exp2, result.get(1));
@@ -97,11 +113,14 @@ public class MiscUtilsTest {
 
     @Test
     @Ignore("DB mock")
-    public void testGetMatchingDisplaynames2() throws Exception {
+    public void testGetMatchingDisplayNames2() throws Exception {
         TestInit.init();
+
         String search = "2";
         String exp2 = "TestName2";
+
         List<String> result = MiscUtils.getMatchingPlayerNames(search);
+
         assertEquals(1, result.size());
         assertEquals(exp2, result.get(0));
     }

@@ -26,7 +26,9 @@ public class DBUtilsTest {
         for (int i = 0; i < 21336; i++) {
             list.add(i);
         }
+
         List<List<Integer>> result = DBUtils.splitIntoBatches(list);
+
         assertEquals(3, result.size());
         assertEquals(10192, result.get(0).size());
         assertEquals(10192, result.get(1).size());
@@ -39,7 +41,9 @@ public class DBUtilsTest {
         for (int i = 0; i < 10192; i++) {
             list.add(i);
         }
+
         List<List<Integer>> result = DBUtils.splitIntoBatches(list);
+
         assertEquals(1, result.size());
         assertEquals(10192, result.get(0).size());
     }
@@ -53,7 +57,9 @@ public class DBUtilsTest {
                 map.get(i).add(j);
             }
         }
+
         List<List<Container<Integer>>> result = DBUtils.splitIntoBatchesId(map);
+
         assertEquals(3, result.size());
         assertEquals(10192, result.get(0).size());
         assertEquals(10192, result.get(1).size());

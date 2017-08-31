@@ -13,7 +13,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.TestInit;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -24,9 +24,6 @@ import static org.junit.Assert.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class SettingsTest {
-
-    public SettingsTest() {
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +36,7 @@ public class SettingsTest {
     }
 
     @Test
-    public void testIsTrue2() {
+    public void testSetValue() {
         Settings gatherCommands = Settings.LOG_UNKNOWN_COMMANDS;
 
         gatherCommands.setValue(false);
@@ -61,9 +58,9 @@ public class SettingsTest {
 
     @Test
     public void testGetStringList() {
-        List<String> exp = new ArrayList<>();
-        exp.add("ExampleTown");
+        List<String> exp = Collections.singletonList("ExampleTown");
         List<String> result = Settings.HIDE_TOWNS.getStringList();
+
         assertEquals(exp, result);
     }
 

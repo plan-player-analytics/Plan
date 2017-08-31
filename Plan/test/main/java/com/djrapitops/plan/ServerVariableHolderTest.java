@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan;
 
-import main.java.com.djrapitops.plan.Plan;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -18,14 +18,17 @@ import static junit.framework.TestCase.assertFalse;
 @PrepareForTest(JavaPlugin.class)
 public class ServerVariableHolderTest {
 
-    @Test
-    public void testServerVariable() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         TestInit.init();
+    }
 
+    @Test
+    public void testServerVariable() {
         boolean usingPaper = Plan.getInstance().getVariable().isUsingPaper();
         assertFalse(usingPaper);
 
-        String ip = Plan.getInstance().getVariable().getIp();
-        assertEquals(ip, "0.0.0.0");
+        String exp = Plan.getInstance().getVariable().getIp();
+        assertEquals(exp, "0.0.0.0");
     }
 }

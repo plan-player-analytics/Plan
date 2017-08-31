@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.data.Session;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -29,7 +30,8 @@ public class HtmlStructureTest {
 
     private Map<String, List<Session>> sessions = new HashMap<>();
 
-    public HtmlStructureTest() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         TestInit.init();
 
         for (int i = 0; i < RandomData.randomInt(0, 5); i++) {
