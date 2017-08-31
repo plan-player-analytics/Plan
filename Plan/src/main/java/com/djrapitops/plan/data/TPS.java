@@ -5,7 +5,9 @@
  */
 package main.java.com.djrapitops.plan.data;
 
-import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Objects;
 
 /**
  * Class containing single datapoint of TPS / Players online / CPU Usage / Used Memory / Entity Count / Chunks loaded.
@@ -123,19 +125,19 @@ public class TPS {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
+        return Objects.hash(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }
 
     @Override
     public String toString() {
-        return "TPS{" +
-                "date=" + date +
-                ", ticksPerSecond=" + ticksPerSecond +
-                ", players=" + players +
-                ", cpuUsage=" + cpuUsage +
-                ", usedMemory=" + usedMemory +
-                ", entityCount=" + entityCount +
-                ", chunksLoaded=" + chunksLoaded +
-                '}';
+        return new ToStringBuilder(this)
+                .append("date", date)
+                .append("ticksPerSecond", ticksPerSecond)
+                .append("players", players)
+                .append("cpuUsage", cpuUsage)
+                .append("usedMemory", usedMemory)
+                .append("entityCount", entityCount)
+                .append("chunksLoaded", chunksLoaded)
+                .toString();
     }
 }

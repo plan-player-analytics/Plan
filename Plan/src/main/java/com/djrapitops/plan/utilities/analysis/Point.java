@@ -1,6 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Objects;
 
 /**
  * @author Rsl1122
@@ -24,11 +26,6 @@ public class Point {
     }
 
     @Override
-    public String toString() {
-        return "{x:" + x + " y:" + y + '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -39,6 +36,14 @@ public class Point {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(x, y);
+        return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("x", x)
+                .append("y", y)
+                .toString();
     }
 }

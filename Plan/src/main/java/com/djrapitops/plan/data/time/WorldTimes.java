@@ -111,19 +111,6 @@ public class WorldTimes {
         return worldTimes.getOrDefault(world, new GMTimes());
     }
 
-    @Override
-    public String toString() {
-        StringBuilder b = new StringBuilder("WorldTimes (Current: " + currentWorld + "){\n");
-        for (Map.Entry<String, GMTimes> entry : worldTimes.entrySet()) {
-            b.append("World '").append(entry.getKey()).append("':\n");
-            GMTimes value = entry.getValue();
-            b.append("  Total: ").append(value.getTotal()).append("\n");
-            b.append("  ").append(value.toString()).append("\n");
-        }
-        b.append("}");
-        return b.toString();
-    }
-
     /**
      * Used to get the Map for saving.
      *
@@ -135,5 +122,20 @@ public class WorldTimes {
 
     public void setGMTimesForWorld(String world, GMTimes gmTimes) {
         worldTimes.put(world, gmTimes);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder("WorldTimes (Current: " + currentWorld + "){\n");
+
+        for (Map.Entry<String, GMTimes> entry : worldTimes.entrySet()) {
+            GMTimes value = entry.getValue();
+            b.append("World '").append(entry.getKey()).append("':\n")
+                    .append("  Total: ").append(value.getTotal()).append("\n")
+                    .append("  ").append(value.toString()).append("\n");
+        }
+
+        b.append("}");
+        return b.toString();
     }
 }

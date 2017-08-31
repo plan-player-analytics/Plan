@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Object for storing various information about a player's play session.
@@ -162,29 +163,6 @@ public class Session {
         return deaths;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Session other = (Session) obj;
-        return this.sessionStart == other.sessionStart && this.sessionEnd == other.sessionEnd;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + (int) (this.sessionStart ^ (this.sessionStart >>> 32));
-        hash = 97 * hash + (int) (this.sessionEnd ^ (this.sessionEnd >>> 32));
-        return hash;
-    }
-
     public boolean isFetchedFromDB() {
         return sessionID != null;
     }
@@ -201,5 +179,24 @@ public class Session {
 
     public void setSessionID(int sessionID) {
         this.sessionID = sessionID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return sessionStart == session.sessionStart &&
+                sessionEnd == session.sessionEnd &&
+                mobKills == session.mobKills &&
+                deaths == session.deaths &&
+                Objects.equals(sessionID, session.sessionID) &&
+                Objects.equals(worldTimes, session.worldTimes) &&
+                Objects.equals(playerKills, session.playerKills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sessionStart, sessionID, worldTimes, sessionEnd, playerKills, mobKills, deaths);
     }
 }

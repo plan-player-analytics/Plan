@@ -14,15 +14,6 @@ public class SessionTest {
 
     private Session session;
 
-    /**
-     *
-     */
-    public SessionTest() {
-    }
-
-    /**
-     *
-     */
     @Before
     public void setUp() {
     }

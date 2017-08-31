@@ -73,7 +73,6 @@ public class ComparatorTest {
         assertEquals(longValues, afterSort);
     }
 
-
     @Test
     public void testUserDataNameComparator() {
         List<UserInfo> userInfo = RandomData.randomUserData();
@@ -111,7 +110,8 @@ public class ComparatorTest {
                         RandomData.randomString(7),
                         RandomData.randomString(4),
                         RandomData.randomString(86),
-                        RandomData.randomString(6)));
+                        RandomData.randomString(6))
+                );
 
         assertEquals(86, strings.get(0).length());
         assertEquals(20, strings.get(1).length());
