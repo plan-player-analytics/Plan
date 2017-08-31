@@ -1,10 +1,10 @@
 package main.java.com.djrapitops.plan.data.time;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import test.java.utils.RandomData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,9 +61,7 @@ public class WorldTimesTest {
         long amount = 1000L;
         String[] worlds = new String[]{worldOne, worldTwo};
 
-        Map<String, List<String>> testedW = new HashMap<>();
-        testedW.put(worldOne, new ArrayList<>());
-        testedW.put(worldTwo, new ArrayList<>());
+        Map<String, List<String>> testedW = ImmutableMap.of(worldOne, new ArrayList<>(), worldTwo, new ArrayList<>());
 
         String lastWorld = worldOne;
         String lastGM = gms[0];

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,5 +199,18 @@ public class Session {
     @Override
     public int hashCode() {
         return Objects.hash(sessionStart, sessionID, worldTimes, sessionEnd, playerKills, mobKills, deaths);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("sessionStart", sessionStart)
+                .append("sessionID", sessionID)
+                .append("worldTimes", worldTimes)
+                .append("sessionEnd", sessionEnd)
+                .append("playerKills", playerKills)
+                .append("mobKills", mobKills)
+                .append("deaths", deaths)
+                .toString();
     }
 }

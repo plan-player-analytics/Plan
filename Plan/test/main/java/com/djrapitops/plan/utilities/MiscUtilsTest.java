@@ -46,7 +46,7 @@ public class MiscUtilsTest {
         String[] args = new String[]{"Rsl1122", "Test"};
         ISender sender = new BukkitCMDSender(MockUtils.mockPlayer2());
 
-        String expResult = "Rsl1122";
+        String expResult = "";
         String result = MiscUtils.getPlayerName(args, sender);
 
         assertEquals(expResult, result);
