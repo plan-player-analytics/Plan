@@ -4,6 +4,7 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.tables.*;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -150,7 +151,7 @@ public abstract class Database {
      * @return sqlite/mysql
      */
     public String getConfigName() {
-        return getName().toLowerCase().replace(" ", "");
+        return StringUtils.remove(getName().toLowerCase(), ' ');
     }
 
     public abstract boolean isNewDatabase() throws SQLException;

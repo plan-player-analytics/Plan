@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
 import main.java.com.djrapitops.plan.database.tables.Actions;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -57,39 +58,31 @@ public class PlayerKill {
         return weapon;
     }
 
-
-    @Override
-    public String toString() {
-        return "{victim:" + victim + "|time:" + time + "|weapon:" + weapon + '}';
+    public Action convertToAction() {
+        return new Action(time, Actions.KILLED, "name with " + weapon); // TODO Name Cache.
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PlayerKill other = (PlayerKill) obj;
-        return this.time == other.time
-                && Objects.equals(this.weapon, other.weapon)
-                && Objects.equals(this.victim, other.victim);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerKill that = (PlayerKill) o;
+        return time == that.time &&
+                Objects.equals(victim, that.victim) &&
+                Objects.equals(weapon, that.weapon);
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.victim);
-        hash = 89 * hash + (int) (this.time ^ (this.time >>> 32));
-        hash = 89 * hash + Objects.hashCode(this.weapon);
-        return hash;
+        return Objects.hash(victim, time, weapon);
     }
 
-    public Action convertToAction() {
-        return new Action(time, Actions.KILLED, "name with " + weapon); // TODO Name Cache.
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("victim", victim)
+                .append("time", time)
+                .append("weapon", weapon)
+                .toString();
     }
 }

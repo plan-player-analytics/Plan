@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.data.additional;
 import com.djrapitops.pluginbridge.plan.Bridge;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -52,7 +53,7 @@ public class HookHandler {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
-                Log.debug("Registered a new datasource: " + dataSource.getPlaceholder("").replace("%", ""));
+                Log.debug("Registered a new datasource: " + StringUtils.remove(dataSource.getPlaceholder(""), '%'));
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {

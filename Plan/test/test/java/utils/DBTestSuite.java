@@ -8,8 +8,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import test.java.main.java.com.djrapitops.plan.database.DatabaseCommitTest;
-import test.java.main.java.com.djrapitops.plan.database.DatabaseTest;
+import main.java.com.djrapitops.plan.database.DatabaseCommitTest;
+import main.java.com.djrapitops.plan.database.DatabaseTest;
 
 import java.io.File;
 import java.io.IOException;

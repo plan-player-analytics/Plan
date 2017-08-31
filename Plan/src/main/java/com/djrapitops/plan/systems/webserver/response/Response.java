@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import java.util.Objects;
+
 /**
  * @author Rsl1122
  * @since 3.5.2
@@ -43,17 +45,13 @@ public abstract class Response {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Response response = (Response) o;
-
-        return (header != null ? header.equals(response.header) : response.header == null)
-                && (content != null ? content.equals(response.content) : response.content == null);
+        return Objects.equals(header, response.header) &&
+                Objects.equals(content, response.content);
     }
 
     @Override
     public int hashCode() {
-        int result = header != null ? header.hashCode() : 0;
-        result = 31 * result + (content != null ? content.hashCode() : 0);
-        return result;
+        return Objects.hash(header, content);
     }
 }

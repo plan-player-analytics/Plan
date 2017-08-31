@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.utilities.Format;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import main.java.com.djrapitops.plan.Settings;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 
 import java.text.DecimalFormat;
@@ -136,7 +137,7 @@ public class FormatUtils {
             }
             builder.append(s);
         }
-        String formattedTime = builder.toString().replace("%zero%", "");
+        String formattedTime = StringUtils.remove(builder.toString(), "%zero%");
         if (formattedTime.isEmpty()) {
             return Settings.FORMAT_SECONDS.toString().replace("%seconds%", "0");
         }

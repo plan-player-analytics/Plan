@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.data;
 
+import java.util.Objects;
+
 /**
  * Object containing webserver security user information.
  *
@@ -34,19 +36,14 @@ public class WebUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         WebUser webUser = (WebUser) o;
-
-        return permLevel == webUser.permLevel
-                && user.equals(webUser.user)
-                && saltedPassHash.equals(webUser.saltedPassHash);
+        return permLevel == webUser.permLevel &&
+                Objects.equals(user, webUser.user) &&
+                Objects.equals(saltedPassHash, webUser.saltedPassHash);
     }
 
     @Override
     public int hashCode() {
-        int result = user.hashCode();
-        result = 31 * result + saltedPassHash.hashCode();
-        result = 31 * result + permLevel;
-        return result;
+        return Objects.hash(user, saltedPassHash, permLevel);
     }
 }

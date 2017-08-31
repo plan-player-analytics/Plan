@@ -1,9 +1,11 @@
 package main.java.com.djrapitops.plan.data.time;
 
 import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Abstract class for keeping track of time spent in each state.
@@ -140,28 +142,23 @@ public abstract class TimeKeeper {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         TimeKeeper that = (TimeKeeper) o;
-
-        return lastStateChange == that.lastStateChange
-                && (times != null ? times.equals(that.times) : that.times == null)
-                && (state != null ? state.equals(that.state) : that.state == null);
+        return lastStateChange == that.lastStateChange &&
+                Objects.equals(times, that.times) &&
+                Objects.equals(state, that.state);
     }
 
     @Override
     public int hashCode() {
-        int result = times != null ? times.hashCode() : 0;
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (int) (lastStateChange ^ (lastStateChange >>> 32));
-        return result;
+        return Objects.hash(times, state, lastStateChange);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{" +
-                "times=" + times +
-                ", state='" + state + '\'' +
-                ", lastStateChange=" + lastStateChange +
-                '}';
+        return new ToStringBuilder(this)
+                .append("times", times)
+                .append("state", state)
+                .append("lastStateChange", lastStateChange)
+                .toString();
     }
 }

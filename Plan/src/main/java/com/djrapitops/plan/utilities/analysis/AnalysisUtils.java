@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -194,8 +195,10 @@ public class AnalysisUtils {
     }
 
     private static String logPluginDataCausedError(PluginData source, Throwable e) {
-        Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
-        Log.toLog("PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""), e);
+        String placeholder = StringUtils.remove(source.getPlaceholder(""), '%');
+
+        Log.error("A PluginData-source caused an exception: " + placeholder);
+        Log.toLog("PluginData-source caused an exception: " + placeholder, e);
         return source.parseContainer("", "Exception during calculation.");
     }
 

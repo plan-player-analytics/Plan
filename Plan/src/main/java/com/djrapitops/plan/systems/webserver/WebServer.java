@@ -323,8 +323,6 @@ public class WebServer {
         Map<String, String> variables = readVariables(response);
         String key = variables.get("key");
 
-        Plan plan = Plan.getInstance();
-
         if (!checkKey(key)) {
             String error = "Server Key not given or invalid";
             return PageCache.loadPage(error, () -> {
@@ -342,7 +340,7 @@ public class WebServer {
         }
 
         try {
-            return api.onResponse(plan, variables);
+            return api.onResponse(Plan.getInstance(), variables);
         } catch (Exception ex) {
             Log.toLog("WebServer.getAPIResponse", ex);
             return new InternalErrorResponse(ex, "An error while processing the request happened");
@@ -350,6 +348,10 @@ public class WebServer {
     }
 
     private boolean checkKey(String key) {
+        if (key == null) {
+            return false;
+        }
+
         UUID uuid = Plan.getServerUUID();
         UUID keyUUID;
         try {

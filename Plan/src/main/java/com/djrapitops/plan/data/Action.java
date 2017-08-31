@@ -4,10 +4,11 @@
  */
 package main.java.com.djrapitops.plan.data;
 
-import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
+
+import java.util.Objects;
 
 /**
  * Class that represents an action made by a player.
@@ -55,11 +56,6 @@ public class Action {
     }
 
     @Override
-    public String toString() {
-        return Html.TABLELINE_3.parse(FormatUtils.formatTimeStampYear(date), doneAction.toString(), additionalInfo);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -67,11 +63,16 @@ public class Action {
         return date == action.date &&
                 serverID == action.serverID &&
                 doneAction == action.doneAction &&
-                Objects.equal(additionalInfo, action.additionalInfo);
+                Objects.equals(additionalInfo, action.additionalInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(date, doneAction, additionalInfo, serverID);
+        return Objects.hash(date, doneAction, additionalInfo, serverID);
+    }
+
+    @Override
+    public String toString() {
+        return Html.TABLELINE_3.parse(FormatUtils.formatTimeStampYear(date), doneAction.toString(), additionalInfo);
     }
 }
