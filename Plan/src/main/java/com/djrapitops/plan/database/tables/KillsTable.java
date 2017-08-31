@@ -126,10 +126,10 @@ public class KillsTable extends UserIDTable {
                     " FROM " + tableName +
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
                     " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID);
+
             statement.setString(1, uuid.toString());
 
             set = statement.executeQuery();
-            commit(statement.getConnection());
 
             while (set.next()) {
                 int sessionID = set.getInt(columnSessionID);

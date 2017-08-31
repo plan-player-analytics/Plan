@@ -191,7 +191,6 @@ public class Session {
                 sessionEnd == session.sessionEnd &&
                 mobKills == session.mobKills &&
                 deaths == session.deaths &&
-                Objects.equals(sessionID, session.sessionID) &&
                 Objects.equals(worldTimes, session.worldTimes) &&
                 Objects.equals(playerKills, session.playerKills);
     }

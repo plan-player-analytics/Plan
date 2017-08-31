@@ -4,6 +4,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class that tracks the time spent in each World based on GMTimes.
@@ -122,6 +123,21 @@ public class WorldTimes {
 
     public void setGMTimesForWorld(String world, GMTimes gmTimes) {
         worldTimes.put(world, gmTimes);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorldTimes that = (WorldTimes) o;
+        return Objects.equals(worldTimes, that.worldTimes) &&
+                Objects.equals(currentWorld, that.currentWorld) &&
+                Objects.equals(currentGamemode, that.currentGamemode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(worldTimes, currentWorld, currentGamemode);
     }
 
     @Override
