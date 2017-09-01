@@ -53,7 +53,7 @@ public class HookHandler {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
-                Log.debug("Registered a new datasource: " + StringUtils.remove(dataSource.getPlaceholder(""), '%'));
+                Log.debug("Registered a new datasource: " + StringUtils.remove(dataSource.getPlaceholder(), '%'));
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {
@@ -104,9 +104,9 @@ public class HookHandler {
                 continue;
             }
             try {
-                addReplace.put(source.getPlaceholder(""), source.getHtmlReplaceValue("", uuid));
+                addReplace.put(source.getPlaceholder(), source.getHtmlReplaceValue("", uuid));
             } catch (Exception e) {
-                addReplace.put(source.getPlaceholder(""), "Error occurred: " + e);
+                addReplace.put(source.getPlaceholder(), "Error occurred: " + e);
                 Log.error("PluginDataSource caused an exception: " + source.getSourcePlugin());
                 Log.toLog("PluginDataSource " + source.getSourcePlugin(), e);
             }

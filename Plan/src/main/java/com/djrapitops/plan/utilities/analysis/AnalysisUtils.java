@@ -195,7 +195,7 @@ public class AnalysisUtils {
     }
 
     private static String logPluginDataCausedError(PluginData source, Throwable e) {
-        String placeholder = StringUtils.remove(source.getPlaceholder(""), '%');
+        String placeholder = StringUtils.remove(source.getPlaceholder(), '%');
 
         Log.error("A PluginData-source caused an exception: " + placeholder);
         Log.toLog("PluginData-source caused an exception: " + placeholder, e);

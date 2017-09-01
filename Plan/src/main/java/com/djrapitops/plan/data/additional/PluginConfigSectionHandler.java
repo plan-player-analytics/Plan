@@ -27,7 +27,7 @@ public class PluginConfigSectionHandler {
         }
 
         ConfigurationSection pluginSection = section.getConfigurationSection(pluginName);
-        return pluginSection.contains(dataSource.getPlaceholder(""));
+        return pluginSection.contains(dataSource.getPlaceholder());
     }
 
     private ConfigurationSection getPluginsSection() {
