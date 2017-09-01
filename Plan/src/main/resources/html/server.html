@@ -443,6 +443,7 @@
             colorByPoint: true,
             data: ${worldSeries}
         };
+        var gmSeries = ${gmSeries};
         var mapSeries = {
             name: 'Players',
             type: 'map',
@@ -474,7 +475,7 @@
             x.style.opacity = "1";
             openFunc(slideIndex)();
             activityPie('activityPie', activitySeries, ${playersTotal}, [${activityColors}]);
-            worldPie('worldPie', worldSeries, '${worldTotal}');
+            worldPie('worldPie', worldSeries, gmSeries);
             playersChart('playerChartDay', playersOnlineSeries, 1);
             playersChart('playerChartMonth', playersOnlineSeries, 4);
             tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);

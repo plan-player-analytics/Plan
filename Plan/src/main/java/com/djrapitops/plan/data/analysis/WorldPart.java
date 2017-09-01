@@ -31,7 +31,9 @@ public class WorldPart extends RawData {
     @Override
     protected void analyse() {
         addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
-        addValue("worldSeries", WorldPieCreator.createSeriesData(worldTimes));
+        String[] seriesData = WorldPieCreator.createSeriesData(worldTimes);
+        addValue("worldSeries", seriesData[0]);
+        addValue("gmSeries", seriesData[1]);
     }
 
     public WorldTimes getWorldTimes() {
