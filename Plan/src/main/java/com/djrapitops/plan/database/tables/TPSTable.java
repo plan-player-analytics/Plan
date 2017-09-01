@@ -16,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Class representing database table plan_tps
@@ -73,7 +75,7 @@ public class TPSTable extends Table {
             statement = prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
-            statement.setFetchSize(5000);
+            statement.setFetchSize(10000);
             statement.setString(1, Plan.getServerUUID().toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -132,7 +134,10 @@ public class TPSTable extends Table {
     public void clean() throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnDate + "<?)");
+            statement = prepareStatement("DELETE FROM " + tableName +
+                    " WHERE (" + columnDate + "<?)" +
+                    " AND (" + columnPlayers + ")" +
+                    " != MAX(" + columnPlayers + ")");
             // More than 2 Months ago.
             long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
@@ -141,6 +146,47 @@ public class TPSTable extends Table {
             commit(statement.getConnection());
         } finally {
             close(statement);
+        }
+    }
+
+    public Optional<TPS> getAllTimePeak(UUID serverUUID) throws SQLException {
+        return getPeakPlayerCount(serverUUID, 0);
+    }
+
+    public Optional<TPS> getAllTimePeak() throws SQLException {
+        return getPeakPlayerCount(0);
+    }
+
+    public Optional<TPS> getPeakPlayerCount(long afterDate) throws SQLException {
+        return getPeakPlayerCount(Plan.getServerUUID(), afterDate);
+    }
+
+    public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.all(tableName)
+                    .where(columnServerID + "=" + serverTable.statementSelectServerID)
+                    .and(columnPlayers + "= MAX(" + columnPlayers + ")")
+                    .and(columnDate + ">= ?")
+                    .toString());
+            statement.setString(1, serverUUID.toString());
+            statement.setLong(2, afterDate);
+            set = statement.executeQuery();
+            if (set.next()) {
+                long date = set.getLong(columnDate);
+                double tps = set.getDouble(columnTPS);
+                int players = set.getInt(columnPlayers);
+                double cpuUsage = set.getDouble(columnCPUUsage);
+                long ramUsage = set.getLong(columnRAMUsage);
+                int entities = set.getInt(columnEntities);
+                int chunksLoaded = set.getInt(columnChunksLoaded);
+                return Optional.of(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
+            }
+            return Optional.empty();
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 }

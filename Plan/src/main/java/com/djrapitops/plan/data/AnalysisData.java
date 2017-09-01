@@ -43,14 +43,14 @@ public class AnalysisData extends RawData {
     private Map<String, Serializable> additionalDataReplaceMap;
     private String playersTable;
 
-    public AnalysisData(Map<String, Integer> commandUsage, List<TPS> tpsData) {
-        commandUsagePart = new CommandUsagePart(commandUsage);
+    public AnalysisData() {
+        commandUsagePart = new CommandUsagePart();
         geolocationPart = new GeolocationPart();
         joinInfoPart = new JoinInfoPart();
         playerCountPart = new PlayerCountPart();
         playtimePart = new PlaytimePart();
         killPart = new KillPart();
-        tpsPart = new TPSPart(tpsData);
+        tpsPart = new TPSPart();
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
         worldPart = new WorldPart();
     }

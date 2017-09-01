@@ -8,6 +8,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,10 +26,10 @@ import java.util.Map;
  */
 public class CommandUsagePart extends RawData {
 
-    private final Map<String, Integer> commandUsage;
+    private Map<String, Integer> commandUsage;
 
-    public CommandUsagePart(Map<String, Integer> commandUsage) {
-        this.commandUsage = commandUsage;
+    public CommandUsagePart() {
+        this.commandUsage = new HashMap<>();
     }
 
     @Override
@@ -37,6 +38,14 @@ public class CommandUsagePart extends RawData {
         addValue("commandCount", String.valueOf(getCommandTotal()));
         String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
         addValue("tableBodyCommands", HtmlUtils.removeXSS(commandUsageTable));
+    }
+
+    public void setCommandUsage(Map<String, Integer> commandUsage) {
+        this.commandUsage = commandUsage;
+    }
+
+    public void addCommands(Map<String, Integer> commandUsage) {
+        this.commandUsage.putAll(commandUsage);
     }
 
     public int getUniqueCommands() {

@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
@@ -12,6 +13,8 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.RamGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.TPSGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldLoadGraphCreator;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -49,9 +52,11 @@ import java.util.List;
 public class TPSPart extends RawData {
 
     private final List<TPS> tpsData;
+    private TPS allTimePeak;
+    private TPS lastPeak;
 
-    public TPSPart(List<TPS> tpsData) {
-        this.tpsData = tpsData;
+    public TPSPart() {
+        this.tpsData = new ArrayList<>();
     }
 
     @Override
@@ -60,18 +65,34 @@ public class TPSPart extends RawData {
         List<TPS> week = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.WEEK.ms());
         List<TPS> day = TPSGraphCreator.filterTPS(tpsData, now - TimeAmount.DAY.ms());
 
-        addValue("tpsHighColor", Colors.TPS_HIGH.getColor());
-        addValue("tpsMediumColor", Colors.TPS_MED.getColor());
-        addValue("tpsLowColor", Colors.TPS_LOW.getColor());
-        addValue("tpsMedium", Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
-        addValue("tpsHigh", Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
+        tpsGraphOptions();
 
-        addValue("tpsSeries", TPSGraphCreator.buildSeriesDataString(tpsData));
-        addValue("cpuSeries", CPUGraphCreator.buildSeriesDataString(tpsData));
-        addValue("ramSeries", RamGraphCreator.buildSeriesDataString(tpsData));
-        addValue("entitySeries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
-        addValue("chunkSeries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
+        chartData();
 
+        averages(week, day);
+
+        peaks();
+    }
+
+    private void peaks() {
+        if (lastPeak != null) {
+            addValue("lastPeakTime", FormatUtils.formatTimeStampYear(lastPeak.getDate()));
+            addValue("playersLastPeak", lastPeak.getPlayers());
+        } else {
+            addValue("lastPeakTime", "No Data");
+            addValue("playersLastPeak", "-");
+        }
+
+        if (allTimePeak != null) {
+            addValue("bestPeakTime", FormatUtils.formatTimeStampYear(allTimePeak.getDate()));
+            addValue("bestPeakTime", allTimePeak.getPlayers());
+        } else {
+            addValue("bestPeakTime", "No Data");
+            addValue("bestPeakTime", "-");
+        }
+    }
+
+    private void averages(List<TPS> week, List<TPS> day) {
         double averageTPSWeek = MathUtils.averageDouble(week.stream().map(TPS::getTicksPerSecond));
         double averageTPSDay = MathUtils.averageDouble(day.stream().map(TPS::getTicksPerSecond));
 
@@ -103,7 +124,35 @@ public class TPSPart extends RawData {
         addValue("chunkAverageDay", FormatUtils.cutDecimals(averageChunksLoadedDay));
     }
 
+    private void chartData() {
+        addValue("tpsSeries", TPSGraphCreator.buildSeriesDataString(tpsData));
+        addValue("cpuSeries", CPUGraphCreator.buildSeriesDataString(tpsData));
+        addValue("ramSeries", RamGraphCreator.buildSeriesDataString(tpsData));
+        addValue("entitySeries", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsData));
+        addValue("chunkSeries", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsData));
+    }
+
+    private void tpsGraphOptions() {
+        addValue("tpsHighColor", Colors.TPS_HIGH.getColor());
+        addValue("tpsMediumColor", Colors.TPS_MED.getColor());
+        addValue("tpsLowColor", Colors.TPS_LOW.getColor());
+        addValue("tpsMedium", Settings.THEME_GRAPH_TPS_THRESHOLD_MED.getNumber());
+        addValue("tpsHigh", Settings.THEME_GRAPH_TPS_THRESHOLD_HIGH.getNumber());
+    }
+
     public List<TPS> getTpsData() {
         return tpsData;
+    }
+
+    public void addTpsData(Collection<TPS> data) {
+        tpsData.addAll(Verify.nullCheck(data));
+    }
+
+    public void setAllTimePeak(TPS allTimePeak) {
+        this.allTimePeak = allTimePeak;
+    }
+
+    public void setLastPeak(TPS lastPeak) {
+        this.lastPeak = lastPeak;
     }
 }
