@@ -36,7 +36,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({JavaPlugin.class, Bukkit.class})
 public class MiscUtilsTest {
 
-    private Plan plan;
     private SQLDB db;
 
     @Test
@@ -152,7 +151,7 @@ public class MiscUtilsTest {
         TestInit.init();
 
         TestInit t = TestInit.init();
-        plan = t.getPlanMock();
+        Plan plan = t.getPlanMock();
 
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();

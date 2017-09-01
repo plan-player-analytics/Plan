@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webapi.bukkit.*;
+import main.java.com.djrapitops.plan.systems.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
@@ -72,6 +73,7 @@ public class WebServer {
         WebAPIManager.registerNewAPI("configure", new ConfigureWebAPI());
         WebAPIManager.registerNewAPI("inspect", new InspectWebAPI());
         WebAPIManager.registerNewAPI("onlineplayers", new OnlinePlayersWebAPI());
+        WebAPIManager.registerNewAPI("ping", new PingWebAPI());
     }
 
     /**
