@@ -7,19 +7,27 @@ package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.database.tables.UsersTable;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import test.java.utils.MockUtils;
+import test.java.utils.RandomData;
 import test.java.utils.TestInit;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * @author Rsl1122
@@ -27,6 +35,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JavaPlugin.class, Bukkit.class})
 public class MiscUtilsTest {
+
+    private Plan plan;
+    private SQLDB db;
 
     @Test
     public void testGetPlayerDisplayNameArgsPerm() {
@@ -86,7 +97,7 @@ public class MiscUtilsTest {
     }
 
     @Test
-    public void testGetPlayerDisplaynameConsole() {
+    public void testGetPlayerDisplayNameConsole() {
         String[] args = new String[]{"TestConsoleSender"};
         ISender sender = new BukkitCMDSender(MockUtils.mockConsoleSender());
 
@@ -97,31 +108,57 @@ public class MiscUtilsTest {
     }
 
     @Test
-    @Ignore("DB mock")
-    public void testGetMatchingDisplayNames() throws Exception {
-        TestInit.init();
-        String search = "testname";
+    public void testGetMatchingNames() throws Exception {
+        setupDatabase();
 
         String exp1 = "TestName";
         String exp2 = "TestName2";
+
+        UsersTable usersTable = db.getUsersTable();
+        usersTable.registerUser(UUID.randomUUID(), 0L, exp1);
+        usersTable.registerUser(UUID.randomUUID(), 0L, exp2);
+
+        String search = "testname";
+
         List<String> result = MiscUtils.getMatchingPlayerNames(search);
 
+        assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(exp1, result.get(0));
         assertEquals(exp2, result.get(1));
     }
 
     @Test
-    @Ignore("DB mock")
-    public void testGetMatchingDisplayNames2() throws Exception {
-        TestInit.init();
+    public void testGetMatchingNickNames() throws Exception {
+        setupDatabase();
+
+        UUID uuid = UUID.randomUUID();
+        String userName = RandomData.randomString(10);
+        db.getUsersTable().registerUser(uuid, 0L, userName);
+
+        String nickname = "2" + RandomData.randomString(10);
+        db.getNicknamesTable().saveUserName(uuid, nickname);
 
         String search = "2";
-        String exp2 = "TestName2";
 
         List<String> result = MiscUtils.getMatchingPlayerNames(search);
 
+        assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(exp2, result.get(0));
+        assertEquals(userName, result.get(0));
+    }
+
+    private void setupDatabase() throws Exception {
+        TestInit.init();
+
+        TestInit t = TestInit.init();
+        plan = t.getPlanMock();
+
+        db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
+        db.init();
+
+        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", ""));
+
+        when(plan.getDB()).thenReturn(db);
     }
 }

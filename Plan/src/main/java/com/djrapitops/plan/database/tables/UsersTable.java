@@ -48,15 +48,18 @@ public class UsersTable extends UserIDTable {
     }
 
     /**
-     * @return @throws SQLException
+     * @return a {@link Set} of the saved UUIDs.
+     * @throws SQLException when an error at retrieving the UUIDs happens
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
+        Set<UUID> uuids = new HashSet<>();
+
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            Set<UUID> uuids = new HashSet<>();
             statement = prepareStatement(Select.from(tableName, columnUUID).toString());
             statement.setFetchSize(2000);
+
             set = statement.executeQuery();
             while (set.next()) {
                 UUID uuid = UUID.fromString(set.getString(columnUUID));
@@ -70,8 +73,8 @@ public class UsersTable extends UserIDTable {
     }
 
     /**
-     * @param uuid
-     * @return
+     * @param uuid the UUID of the user that should be removed.
+     * @return if the removal was successful.
      */
     @Override
     public boolean removeUser(UUID uuid) {
@@ -91,12 +94,15 @@ public class UsersTable extends UserIDTable {
     }
 
     /**
-     * @return
+     * @return the name of the column that inherits the ID.
      */
     public String getColumnID() {
         return columnID;
     }
 
+    /**
+     * @return the name of the column that inherits the UUID.
+     */
     public String getColumnUUID() {
         return columnUUID;
     }
@@ -251,6 +257,37 @@ public class UsersTable extends UserIDTable {
                 return set.getString(columnName);
             }
             return null;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    /**
+     * Gets the names of the players which names or nicknames match {@code name}.
+     *
+     * @param name the name / nickname.
+     * @return a list of distinct names.
+     * @throws SQLException when an error at fetching the names happens.
+     */
+    public List<String> getMatchingNames(String name) throws SQLException {
+        String searchString = "%" + name + "%";
+        List<String> matchingNames = new ArrayList<>();
+
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(
+                    "SELECT name FROM plan_users WHERE name LIKE LOWER(?) UNION SELECT name FROM plan_users WHERE id = (SELECT user_id FROM plan_nicknames WHERE nickname LIKE LOWER(?))"
+            );
+            statement.setString(1, searchString);
+            statement.setString(2, searchString);
+
+            set = statement.executeQuery();
+            while (set.next()) {
+                matchingNames.add(set.getString("name"));
+            }
+            return matchingNames;
         } finally {
             endTransaction(statement);
             close(set, statement);

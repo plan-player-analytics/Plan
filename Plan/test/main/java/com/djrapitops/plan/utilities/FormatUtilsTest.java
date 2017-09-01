@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,10 +33,8 @@ public class FormatUtilsTest {
 
     @Test
     public void testFormatTimeAmount() {
-        long ms = 1000L;
-
         String expResult = "1s";
-        String result = FormatUtils.formatTimeAmount(ms);
+        String result = FormatUtils.formatTimeAmount(TimeAmount.SECOND.ms());
 
         assertEquals(expResult, result);
     }
