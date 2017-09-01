@@ -28,7 +28,7 @@ public class PlayersTableCreator {
 
     public static String createSortablePlayersTable(List<UserInfo> userInfo, JoinInfoPart joinInfoPart, GeolocationPart geolocationPart) {
         if (userInfo.isEmpty()) {
-            return Html.TABLELINE_PLAYERS.parse("No Players", "", "", "", "", "", "", "", "", "");
+            return Html.TABLELINE_PLAYERS.parse("<b>No Players</b>", "", "", "", "", "", "", "", "", "");
         }
 
         StringBuilder html = new StringBuilder();
