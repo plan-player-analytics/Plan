@@ -54,6 +54,8 @@ public class JoinInfoPart extends RawData {
         newPlayers();
         uniquePlayers();
         uniquePlayersPerDay();
+
+        addValue("sessionCount", getAllSessions().size());
     }
 
     private void uniquePlayers() {
@@ -117,7 +119,9 @@ public class JoinInfoPart extends RawData {
     }
 
     public List<Session> getAllSessions() {
-        return MiscUtils.flatMap(sessions.values());
+        List<Session> sessions = MiscUtils.flatMap(this.sessions.values());
+        sessions.addAll(activeSessions.values());
+        return sessions;
     }
 
     public void addRegistered(UUID uuid, long registerDate) {
@@ -137,8 +141,7 @@ public class JoinInfoPart extends RawData {
     }
 
     public void addSessions(Map<UUID, List<Session>> sessions) {
-        Verify.nullCheck(sessions);
-        this.sessions.putAll(sessions);
+        this.sessions.putAll(Verify.nullCheck(sessions));
     }
 
     public void addSessions(UUID uuid, List<Session> sessions) {

@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
@@ -32,7 +33,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -90,33 +94,24 @@ public class Analysis {
         Benchmark.start("Fetch Phase");
         Log.debug("Database", "Analysis Fetch");
         Log.debug("Analysis", "Analysis Fetch Phase");
-        //TODO Rewrite FETCH
-        List<TPS> tpsData = new ArrayList<>();
 
-        try {
-            tpsData = db.getTpsTable().getTPSData();
-            Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
-        } catch (Exception ex) {
-            Log.toLog(this.getClass().getName(), ex);
-        }
 
-        return analyzeData(tpsData, infoManager, db);
+        return analyzeData(infoManager, db);
     }
 
     /**
-     * @param tpsData
      * @param infoManager InformationManager of the plugin.
      * @return
      */
-    public boolean analyzeData(List<TPS> tpsData, InformationManager infoManager, Database db) {
+    public boolean analyzeData(InformationManager infoManager, Database db) {
         try {
 //            rawData.sort(new UserInfoLastPlayedComparator());
 //            List<UUID> uuids = rawData.stream().map(UserInfo::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
             DataCache dataCache = plugin.getDataCache();
-            Map<String, Integer> commandUse = plugin.getDB().getCommandUse();
 
-            AnalysisData analysisData = new AnalysisData(commandUse, tpsData);
+
+            AnalysisData analysisData = new AnalysisData();
             List<PluginData> thirdPartyPlugins = plugin.getHookHandler().getAdditionalDataSources();
             analysisData.setPluginsTabLayout(HtmlStructure.createAnalysisPluginsTabLayout(thirdPartyPlugins));
             analysisData.setPlanVersion(plugin.getVersion());
@@ -242,16 +237,29 @@ public class Analysis {
 
     private void fillDataset(AnalysisData analysisData, Database db) {
         ActivityPart activity = analysisData.getActivityPart();
+        CommandUsagePart commandUsagePart = analysisData.getCommandUsagePart();
         GeolocationPart geolocPart = analysisData.getGeolocationPart();
         JoinInfoPart joinInfo = analysisData.getJoinInfoPart();
         PlayerCountPart playerCount = analysisData.getPlayerCountPart();
         PlaytimePart playtime = analysisData.getPlaytimePart();
+        TPSPart tpsPart = analysisData.getTpsPart();
         WorldPart worldPart = analysisData.getWorldPart();
 
         long now = MiscUtils.getTime();
 
         Benchmark.start("Fetch Phase");
         try {
+            Map<String, Integer> commandUse = plugin.getDB().getCommandUse();
+            commandUsagePart.setCommandUsage(commandUse);
+
+            TPSTable tpsTable = db.getTpsTable();
+            List<TPS> tpsData = tpsTable.getTPSData();
+            tpsTable.getAllTimePeak().ifPresent(tpsPart::setAllTimePeak);
+            tpsTable.getPeakPlayerCount(now - (TimeAmount.DAY.ms() * 2)).ifPresent(tpsPart::setLastPeak);
+
+            tpsPart.addTpsData(tpsData);
+            Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
+
             List<UserInfo> userInfo = db.getUserInfoTable().getAllUserInfo();
             Map<UUID, UserInfo> mappedUserInfo = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, Function.identity()));
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();

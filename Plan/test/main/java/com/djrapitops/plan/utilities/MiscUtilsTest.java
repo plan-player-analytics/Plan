@@ -156,7 +156,7 @@ public class MiscUtilsTest {
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
 
-        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", ""));
+        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 
         when(plan.getDB()).thenReturn(db);
     }

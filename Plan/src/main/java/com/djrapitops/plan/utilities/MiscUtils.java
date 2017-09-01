@@ -16,10 +16,7 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -99,7 +96,7 @@ public class MiscUtils {
             matches = db.getUsersTable().getMatchingNames(search);
         } catch (SQLException e) {
             Log.toLog("MiscUtils.getMatchingPlayerNames", e);
-            return null;
+            return new ArrayList<>();
         }
         Collections.sort(matches);
         return matches;

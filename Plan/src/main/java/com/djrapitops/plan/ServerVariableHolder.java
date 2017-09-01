@@ -14,6 +14,7 @@ public class ServerVariableHolder {
     private final String version;
     private final String implVersion;
     private final String ip;
+    private final int maxPlayers;
     private final boolean usingPaper;
 
     /**
@@ -27,6 +28,8 @@ public class ServerVariableHolder {
         port = server.getPort();
         version = server.getVersion();
         implVersion = server.getBukkitVersion();
+
+        maxPlayers = server.getMaxPlayers();
 
         usingPaper = name.equals("Paper")
                 || name.equals("TacoSpigot"); //Fork of Paper
@@ -43,6 +46,9 @@ public class ServerVariableHolder {
         port = -1;
         version = server.getVersion();
         implVersion = server.getVersion();
+
+        maxPlayers = server.getConfig().getPlayerLimit();
+
         usingPaper = false;
     }
 
@@ -78,5 +84,9 @@ public class ServerVariableHolder {
 
     public String getImplVersion() {
         return implVersion;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 }

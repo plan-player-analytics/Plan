@@ -27,6 +27,10 @@ public class PlayersTableCreator {
     }
 
     public static String createSortablePlayersTable(List<UserInfo> userInfo, JoinInfoPart joinInfoPart, GeolocationPart geolocationPart) {
+        if (userInfo.isEmpty()) {
+            return Html.TABLELINE_PLAYERS.parse("<b>No Players</b>", "", "", "", "", "", "", "", "", "");
+        }
+
         StringBuilder html = new StringBuilder();
 
         Map<UUID, List<Session>> sessions = joinInfoPart.getSessions();
@@ -45,16 +49,17 @@ public class PlayersTableCreator {
                 boolean isBanned = user.isBanned();
                 List<Session> userSessions = sessions.get(uuid);
                 int loginTimes = 0;
+                long playtime = 0;
                 if (userSessions != null) {
                     loginTimes = userSessions.size();
+                    playtime = AnalysisUtils.getTotalPlaytime(userSessions);
                 }
                 boolean isUnknown = loginTimes == 1;
                 long registered = user.getRegistered();
-                long playtime = AnalysisUtils.getTotalPlaytime(userSessions);
 
                 boolean isActive = AnalysisUtils.isActive(now, user.getLastSeen(), playtime, loginTimes);
 
-                long lastSeen = AnalysisUtils.getLastSeen(userSessions);
+                long lastSeen = user.getLastSeen();
 
                 String activityString = getActivityString(isBanned, isUnknown, isActive);
 
@@ -73,6 +78,7 @@ public class PlayersTableCreator {
                         String.valueOf(geoLocation)
                 ));
             } catch (NullPointerException ignored) {
+                ignored.printStackTrace(); // TODO IGNORE AGAIN
             }
 
             i++;

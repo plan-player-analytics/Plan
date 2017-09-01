@@ -179,7 +179,7 @@ public class SessionsTable extends UserIDTable {
                 int deaths = set.getInt(columnDeaths);
                 int mobKills = set.getInt(columnMobKills);
                 List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
-                sessions.add(new Session(id, start, end, deaths, mobKills));
+                sessions.add(new Session(id, start, end, mobKills, deaths));
                 sessionsByServer.put(serverName, sessions);
             }
             return sessionsByServer;
@@ -450,6 +450,7 @@ public class SessionsTable extends UserIDTable {
         return getSessionInfoOfServer(Plan.getServerUUID());
     }
 
+    // TODO Write tests for this method
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {
         Optional<Integer> id = serverTable.getServerID(serverUUID);
         if (!id.isPresent()) {
@@ -484,7 +485,7 @@ public class SessionsTable extends UserIDTable {
                 int deaths = set.getInt(columnDeaths);
                 int mobKills = set.getInt(columnMobKills);
                 List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                sessions.add(new Session(serverID, start, end, deaths, mobKills));
+                sessions.add(new Session(serverID, start, end, mobKills, deaths));
                 sessionsByUser.put(uuid, sessions);
             }
             return sessionsByUser;
@@ -494,6 +495,7 @@ public class SessionsTable extends UserIDTable {
         }
     }
 
+    // TODO Write tests for this method
     public long getLastSeen(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -514,6 +516,7 @@ public class SessionsTable extends UserIDTable {
         }
     }
 
+    // TODO Write tests for this method
     public Map<UUID, Long> getLastSeenForAllPlayers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -525,7 +528,8 @@ public class SessionsTable extends UserIDTable {
                     " MAX(" + columnSessionEnd + ") as last_seen, " +
                     usersUUIDColumn +
                     " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID);
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " GROUP BY uuid");
             statement.setFetchSize(5000);
             set = statement.executeQuery();
             Map<UUID, Long> lastSeenMap = new HashMap<>();
