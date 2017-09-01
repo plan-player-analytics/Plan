@@ -264,4 +264,8 @@ public class ServerTable extends Table {
     public String getColumnID() {
         return columnServerID;
     }
+
+    public String getColumnUUID() {
+        return columnServerUUID;
+    }
 }

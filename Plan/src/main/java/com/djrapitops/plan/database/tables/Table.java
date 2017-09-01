@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseException;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -134,13 +134,11 @@ public abstract class Table {
     /**
      * @return
      */
-    public boolean removeAllData() {
+    public void removeAllData() throws DatabaseException {
         try {
             execute("DELETE FROM " + tableName);
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to delete", e);
         }
     }
 

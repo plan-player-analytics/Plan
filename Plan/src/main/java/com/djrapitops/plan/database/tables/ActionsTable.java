@@ -15,9 +15,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Table that is in charge of storing actions.
@@ -41,10 +39,21 @@ public class ActionsTable extends UserIDTable {
     private final String columnAdditionalInfo = "additional_info";
 
     private final ServerTable serverTable;
+    private String insertStatement;
 
     public ActionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_actions", db, usingMySQL);
         serverTable = db.getServerTable();
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnUserID + ", "
+                + columnServerID + ", "
+                + columnActionID + ", "
+                + columnDate + ", "
+                + columnAdditionalInfo
+                + ") VALUES ("
+                + usersTable.statementSelectID + ", "
+                + serverTable.statementSelectServerID + ", "
+                + "?, ?, ?)";
     }
 
     @Override
@@ -64,17 +73,8 @@ public class ActionsTable extends UserIDTable {
     public void insertAction(UUID uuid, Action action) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnServerID + ", "
-                    + columnActionID + ", "
-                    + columnDate + ", "
-                    + columnAdditionalInfo
-                    + ") VALUES ("
-                    + usersTable.statementSelectID + ", "
-                    + serverTable.statementSelectServerID + ", "
-                    + "?, ?, ?)"
-            );
+
+            statement = prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setString(2, Plan.getServerUUID().toString());
             statement.setInt(3, action.getDoneAction().getId());
@@ -103,6 +103,7 @@ public class ActionsTable extends UserIDTable {
             statement = prepareStatement(Select.from(tableName, "*")
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
+            statement.setFetchSize(5000);
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -116,6 +117,83 @@ public class ActionsTable extends UserIDTable {
         } finally {
             endTransaction(statement);
             close(set, statement);
+        }
+    }
+
+    public Map<UUID, Map<UUID, List<Action>>> getAllActions() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            statement = prepareStatement("SELECT " +
+                    columnActionID + ", " +
+                    columnDate + ", " +
+                    columnAdditionalInfo + ", " +
+                    usersUUIDColumn + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Map<UUID, List<Action>>> map = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                Map<UUID, List<Action>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+                List<Action> actions = serverMap.getOrDefault(uuid, new ArrayList<>());
+
+                long date = set.getLong(columnDate);
+                Actions doneAction = Actions.getById(set.getInt(columnActionID));
+                String additionalInfo = set.getString(columnAdditionalInfo);
+
+                actions.add(new Action(date, doneAction, additionalInfo, -1));
+
+                serverMap.put(uuid, actions);
+                map.put(serverUUID, serverMap);
+            }
+            return map;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertActions(Map<UUID, Map<UUID, List<Action>>> allActions) throws SQLException {
+        if (allActions.isEmpty()) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+
+            // Every Server
+            for (UUID serverUUID : allActions.keySet()) {
+                // Every User
+                for (Map.Entry<UUID, List<Action>> entry : allActions.get(serverUUID).entrySet()) {
+                    UUID uuid = entry.getKey();
+                    // Every Action
+                    List<Action> actions = entry.getValue();
+                    for (Action action : actions) {
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, serverUUID.toString());
+                        statement.setInt(3, action.getDoneAction().getId());
+                        statement.setLong(4, action.getDate());
+                        statement.setString(5, action.getAdditionalInfo());
+                        statement.addBatch();
+                    }
+                }
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
         }
     }
 }
