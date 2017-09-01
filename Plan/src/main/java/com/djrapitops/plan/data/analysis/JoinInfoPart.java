@@ -141,8 +141,7 @@ public class JoinInfoPart extends RawData {
     }
 
     public void addSessions(Map<UUID, List<Session>> sessions) {
-        Verify.nullCheck(sessions);
-        this.sessions.putAll(sessions);
+        this.sessions.putAll(Verify.nullCheck(sessions));
     }
 
     public void addSessions(UUID uuid, List<Session> sessions) {
