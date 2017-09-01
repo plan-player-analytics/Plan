@@ -631,4 +631,10 @@ public class DatabaseTest {
         List<ServerInfo> bukkitServers = serverTable.getBukkitServers();
         assertEquals(1, bukkitServers.size());
     }
+
+    @Test
+    public void testSessionTableNPEWhenNoPlayers() throws SQLException {
+        Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
+        assertTrue(lastSeen.isEmpty());
+    }
 }

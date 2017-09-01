@@ -136,8 +136,8 @@ public class TPSTable extends Table {
         try {
             statement = prepareStatement("DELETE FROM " + tableName +
                     " WHERE (" + columnDate + "<?)" +
-                    " AND (" + columnPlayers + ")" +
-                    " != MAX(" + columnPlayers + ")");
+                    " AND (" + columnPlayers + "" +
+                    " != (SELECT MAX(" + columnPlayers + ") FROM " + tableName + "))");
             // More than 2 Months ago.
             long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
@@ -167,7 +167,7 @@ public class TPSTable extends Table {
         try {
             statement = prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
-                    .and(columnPlayers + "= MAX(" + columnPlayers + ")")
+                    .and(columnPlayers + "= (SELECT MAX(" + columnPlayers + ") FROM " + tableName+")")
                     .and(columnDate + ">= ?")
                     .toString());
             statement.setString(1, serverUUID.toString());

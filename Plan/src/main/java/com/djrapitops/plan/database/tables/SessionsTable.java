@@ -525,7 +525,8 @@ public class SessionsTable extends UserIDTable {
                     " MAX(" + columnSessionEnd + ") as last_seen, " +
                     usersUUIDColumn +
                     " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID);
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " GROUP BY uuid");
             statement.setFetchSize(5000);
             set = statement.executeQuery();
             Map<UUID, Long> lastSeenMap = new HashMap<>();

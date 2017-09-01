@@ -85,10 +85,10 @@ public class TPSPart extends RawData {
 
         if (allTimePeak != null) {
             addValue("bestPeakTime", FormatUtils.formatTimeStampYear(allTimePeak.getDate()));
-            addValue("bestPeakTime", allTimePeak.getPlayers());
+            addValue("playersBestPeak", allTimePeak.getPlayers());
         } else {
             addValue("bestPeakTime", "No Data");
-            addValue("bestPeakTime", "-");
+            addValue("playersBestPeak", "-");
         }
     }
 
