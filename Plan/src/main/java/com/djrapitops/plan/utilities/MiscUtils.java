@@ -4,6 +4,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Compatibility;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -14,7 +15,11 @@ import main.java.com.djrapitops.plan.locale.Msg;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 /**
@@ -88,14 +93,14 @@ public class MiscUtils {
      * @return Alphabetically sorted list of matching player names.
      */
     public static List<String> getMatchingPlayerNames(String search) {
-        final String searchFor = search.toLowerCase();
         Database db = Plan.getInstance().getDB();
-        List<String> matches = new ArrayList<>();
-//        try {
-        // TODO GetMatchingPlayerNamesFromDB
-//        } catch (SQLException e) {
-//            Log.toLog("MiscUtils.getMatchingPlayerNames", e);
-//        }
+        List<String> matches;
+        try {
+            matches = db.getUsersTable().getMatchingNames(search);
+        } catch (SQLException e) {
+            Log.toLog("MiscUtils.getMatchingPlayerNames", e);
+            return null;
+        }
         Collections.sort(matches);
         return matches;
     }

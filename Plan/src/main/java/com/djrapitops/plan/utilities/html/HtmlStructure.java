@@ -336,7 +336,7 @@ public class HtmlStructure {
             String pluginName = source.getSourcePlugin();
             List<String> pluginPlaceholderList = placeholders.getOrDefault(pluginName, new ArrayList<>());
 
-            pluginPlaceholderList.add(source.getPlaceholder(""));
+            pluginPlaceholderList.add(source.getPlaceholder());
 
             placeholders.put(pluginName, pluginPlaceholderList);
         }

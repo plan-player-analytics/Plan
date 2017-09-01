@@ -150,11 +150,21 @@ public abstract class PluginData {
      *
      * @param modifier Modifier determined by AnalysisType's
      *                 placeholderModifier-variable.
-     * @return for example "%StepCounter_stepsTaken_total%"
+     * @return for example "${StepCounter_stepsTaken_total}"
      * @see AnalysisType
      */
     public final String getPlaceholder(String modifier) {
         return "${" + sourcePlugin + "_" + placeholder + modifier + "}";
+    }
+
+    /**
+     * Used to get the placeholder without the modifier.
+     *
+     * @return for example "${StepCounter_stepsTaken}"
+     * @see #getPlaceholder(String)
+     */
+    public final String getPlaceholder() {
+        return "${" + sourcePlugin + "_" + placeholder + "}";
     }
 
     /**

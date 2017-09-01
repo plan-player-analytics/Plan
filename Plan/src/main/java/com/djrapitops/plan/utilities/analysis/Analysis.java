@@ -192,7 +192,7 @@ public class Analysis {
         Log.debug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().filter(Verify::notNull).forEach(source -> {
             try {
-                Benchmark.start("Source " + StringUtils.remove(source.getPlaceholder(""), '%'));
+                Benchmark.start("Source " + StringUtils.remove(source.getPlaceholder(), '%'));
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
                     return;
@@ -218,11 +218,11 @@ public class Analysis {
                     replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-                Log.error("A PluginData-source caused an exception: " + StringUtils.remove(source.getPlaceholder(""), '%'));
+                Log.error("A PluginData-source caused an exception: " + StringUtils.remove(source.getPlaceholder(), '%'));
 
                 Log.toLog(this.getClass().getName(), e);
             } finally {
-                Benchmark.stop("Analysis", "Source " + StringUtils.remove(source.getPlaceholder(""), '%'));
+                Benchmark.stop("Analysis", "Source " + StringUtils.remove(source.getPlaceholder(), '%'));
             }
         });
         Benchmark.stop("Analysis", "3rd party");
@@ -303,7 +303,7 @@ public class Analysis {
                         return value instanceof Boolean
                                 && (boolean) value;
                     } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                        Log.toLog(pluginData.getSourcePlugin() + pluginData.getPlaceholder("") + " (Cause) ", e);
+                        Log.toLog(pluginData.getSourcePlugin() + pluginData.getPlaceholder() + " (Cause) ", e);
                         return false;
                     }
                 });
