@@ -60,7 +60,7 @@ public class DatabaseTest {
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
 
-        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", ""));
+        db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 
         File f = new File(plan.getDataFolder(), "Errors.txt");
         rows = FileUtil.lines(f).size();
@@ -609,7 +609,7 @@ public class DatabaseTest {
         assertFalse(bungeeInfo.isPresent());
 
         UUID bungeeUUID = UUID.randomUUID();
-        ServerInfo bungeeCord = new ServerInfo(-1, bungeeUUID, "BungeeCord", "Random:1234");
+        ServerInfo bungeeCord = new ServerInfo(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
         serverTable.saveCurrentServerInfo(bungeeCord);
 
         bungeeCord.setId(2);

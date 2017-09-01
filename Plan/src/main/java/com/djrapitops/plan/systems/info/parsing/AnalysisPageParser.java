@@ -4,9 +4,11 @@
  */
 package main.java.com.djrapitops.plan.systems.info.parsing;
 
+import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
+import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -35,10 +37,20 @@ public class AnalysisPageParser extends PageParser {
         addValue("tabContentPlugins", data.replacePluginsTabLayout());
         addValue("serverName", Settings.SERVER_NAME.toString());
         addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
+
+        addValue("playersMax", plugin.getVariable().getMaxPlayers());
+        addValue("playersOnline", getPlayersOnline());
         try {
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("server.html"), placeHolders);
         } catch (FileNotFoundException e) {
             throw new ParseException(e);
         }
+    }
+
+    private int getPlayersOnline() {
+        if (Compatibility.isBukkitAvailable()) {
+            return plugin.fetch().getOnlinePlayers().size();
+        }
+        return ((PlanBungee) plugin).getProxy().getOnlineCount();
     }
 }
