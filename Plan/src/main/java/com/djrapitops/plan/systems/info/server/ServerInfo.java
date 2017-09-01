@@ -17,12 +17,14 @@ public class ServerInfo {
     private int id;
     private String name;
     private String webAddress;
+    private int maxPlayers = -1;
 
-    public ServerInfo(int id, UUID uuid, String name, String webAddress) {
+    public ServerInfo(int id, UUID uuid, String name, String webAddress, int maxPlayers) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
         this.webAddress = webAddress;
+        this.maxPlayers = maxPlayers;
     }
 
     public int getId() {
@@ -51,6 +53,10 @@ public class ServerInfo {
 
     public void setWebAddress(String webAddress) {
         this.webAddress = webAddress;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 
     @Override

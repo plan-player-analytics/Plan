@@ -59,7 +59,7 @@ public class ServerInfoManager {
         }
     }
 
-    public ServerInfoManager(PlanBungee plugin) {
+    public ServerInfoManager(PlanBungee plugin) throws PlanEnableException {
         this.plugin = plugin;
         serverTable = plugin.getDB().getServerTable();
     }
@@ -75,8 +75,9 @@ public class ServerInfoManager {
         if ("plan".equalsIgnoreCase(name)) {
             name = "Server " + serverID.get();
         }
+        int maxPlayers = plugin.getVariable().getMaxPlayers();
 
-        serverInfo = new ServerInfo(serverID.get(), serverUUID, name, webAddress);
+        serverInfo = new ServerInfo(serverID.get(), serverUUID, name, webAddress, maxPlayers);
         serverTable.saveCurrentServerInfo(serverInfo);
     }
 
@@ -87,7 +88,8 @@ public class ServerInfoManager {
     private void registerServer(UUID serverUUID) throws SQLException, IOException {
         String webAddress = plugin.getWebServer().getAccessAddress();
         String name = Settings.SERVER_NAME.toString();
-        serverInfo = new ServerInfo(-1, serverUUID, name, webAddress);
+        int maxPlayers = plugin.getVariable().getMaxPlayers();
+        serverInfo = new ServerInfo(-1, serverUUID, name, webAddress, maxPlayers);
         serverTable.saveCurrentServerInfo(serverInfo);
         Optional<Integer> serverID = serverTable.getServerID(serverUUID);
         if (!serverID.isPresent()) {
@@ -97,7 +99,7 @@ public class ServerInfoManager {
         int id = serverID.get();
         serverInfo.setId(id);
 
-        serverInfoFile.saveInfo(serverInfo, new ServerInfo(id, serverUUID, name, webAddress));
+        serverInfoFile.saveInfo(serverInfo, new ServerInfo(id, serverUUID, name, webAddress, maxPlayers));
     }
 
     private UUID generateNewUUID(ServerVariableHolder variableHolder) {
@@ -117,8 +119,14 @@ public class ServerInfoManager {
         return Optional.empty();
     }
 
+    /**
+     * Saves Bungee connection information to local file on Bukkit servers.
+     *
+     * @param address
+     * @throws IOException
+     */
     public void saveBungeeConnectionAddress(String address) throws IOException {
-        serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, "Bungee", address));
+        serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, "Bungee", address, -1));
     }
 
     public int getServerID() {

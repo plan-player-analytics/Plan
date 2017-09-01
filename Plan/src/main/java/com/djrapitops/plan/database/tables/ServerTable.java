@@ -39,6 +39,7 @@ public class ServerTable extends Table {
     private final String columnServerName = "name";
     private final String columnWebserverAddress = "web_address";
     private final String columnInstalled = "is_installed";
+    private final String columnMaxPlayers = "max_players";
 
     public ServerTable(SQLDB db, boolean usingMySQL) {
         super("plan_servers", db, usingMySQL);
@@ -54,6 +55,7 @@ public class ServerTable extends Table {
                 .column(columnServerName, Sql.varchar(100))
                 .column(columnWebserverAddress, Sql.varchar(100))
                 .column(columnInstalled, Sql.BOOL).notNull().defaultValue(false)
+                .column(columnMaxPlayers, Sql.BOOL).notNull().defaultValue("-1")
                 .primaryKey(usingMySQL, columnServerID)
                 .toString()
         );
@@ -74,7 +76,8 @@ public class ServerTable extends Table {
                     columnServerUUID,
                     columnServerName,
                     columnWebserverAddress,
-                    columnInstalled)
+                    columnInstalled,
+                    columnMaxPlayers)
                     .where(columnServerID + "=?")
                     .toString()
             );
@@ -82,7 +85,8 @@ public class ServerTable extends Table {
             statement.setString(2, info.getName());
             statement.setString(3, info.getWebAddress());
             statement.setBoolean(4, true);
-            statement.setInt(5, info.getId());
+            statement.setInt(5, info.getMaxPlayers());
+            statement.setInt(6, info.getId());
             statement.executeUpdate();
 
             commit(statement.getConnection());
@@ -109,12 +113,14 @@ public class ServerTable extends Table {
                     columnServerUUID,
                     columnServerName,
                     columnWebserverAddress,
-                    columnInstalled));
+                    columnInstalled,
+                    columnMaxPlayers));
 
             statement.setString(1, uuid.toString());
             statement.setString(2, name);
             statement.setString(3, webAddress);
             statement.setBoolean(4, true);
+            statement.setInt(5, info.getMaxPlayers());
             statement.execute();
 
             commit(statement.getConnection());
@@ -219,7 +225,8 @@ public class ServerTable extends Table {
                         set.getInt(columnServerID),
                         UUID.fromString(set.getString(columnServerUUID)),
                         set.getString(columnServerName),
-                        set.getString(columnWebserverAddress)));
+                        set.getString(columnWebserverAddress),
+                        set.getInt(columnMaxPlayers)));
             } else {
                 return Optional.empty();
             }
@@ -244,7 +251,8 @@ public class ServerTable extends Table {
                         set.getInt(columnServerID),
                         UUID.fromString(set.getString(columnServerUUID)),
                         set.getString(columnServerName),
-                        set.getString(columnWebserverAddress)));
+                        set.getString(columnWebserverAddress),
+                        set.getInt(columnMaxPlayers)));
             }
             return servers;
         } finally {
