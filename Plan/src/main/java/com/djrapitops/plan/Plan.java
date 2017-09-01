@@ -30,7 +30,6 @@ import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
-import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
@@ -47,7 +46,6 @@ import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import org.apache.logging.log4j.LogManager;
 import org.bukkit.ChatColor;
 
 import java.util.HashSet;
@@ -172,8 +170,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             this.api = new API(this);
 
-            setupFilter(); // TODO Move to RegisterCommand Constructor
-
             // Data view settings // TODO Rewrite. (TextUI removed & webServer might be running on bungee
             boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
             boolean hasDataViewCapability = usingAlternativeIP;
@@ -212,14 +208,15 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
         Benchmark.start("Task Registration");
         tpsCountTimer = new TPSCountTimer(this);
-
         runnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+
         // Analysis refresh settings
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
         boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
         long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
 
         Log.info(bootAnalysisMsg);
+
         ITask bootAnalysisTask = runnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
             @Override
             public void run() {
@@ -228,7 +225,9 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 this.cancel();
             }
         }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
+
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
+
         if (analysisRefreshTaskIsEnabled) {
             runnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
                 @Override
@@ -237,6 +236,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 }
             }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
+
         Benchmark.stop("Enable", "Task Registration");
     }
 
@@ -328,14 +328,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         }
 
         db.init();
-    }
-
-    /**
-     * Setups the command console output filter
-     */
-    private void setupFilter() {
-        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
-        logger.addFilter(new RegisterCommandFilter());
     }
 
     /**

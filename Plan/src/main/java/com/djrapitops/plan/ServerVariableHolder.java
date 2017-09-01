@@ -1,5 +1,8 @@
 package main.java.com.djrapitops.plan;
 
+import net.md_5.bungee.api.ProxyServer;
+import org.bukkit.Server;
+
 /**
  * Class responsible for holding server variable values that do not change
  * without a reload.
@@ -22,7 +25,7 @@ public class ServerVariableHolder {
      *
      * @param server instance the plugin is running on.
      */
-    public ServerVariableHolder(org.bukkit.Server server) {
+    public ServerVariableHolder(Server server) {
         ip = server.getIp();
         name = server.getName();
         port = server.getPort();
@@ -40,7 +43,7 @@ public class ServerVariableHolder {
      *
      * @param server instance the plugin is running on.
      */
-    public ServerVariableHolder(net.md_5.bungee.api.ProxyServer server) {
+    public ServerVariableHolder(ProxyServer server) {
         ip = Settings.BUNGEE_IP.toString();
         name = "BungeeCord";
         port = -1;
