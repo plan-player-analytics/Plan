@@ -4,12 +4,11 @@
  */
 package test.java.utils;
 
+import main.java.com.djrapitops.plan.database.DatabaseTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import main.java.com.djrapitops.plan.database.DatabaseCommitTest;
-import main.java.com.djrapitops.plan.database.DatabaseTest;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.io.IOException;
  * @author Fuzzlemann
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({DatabaseCommitTest.class, DatabaseTest.class})
+@Suite.SuiteClasses({DatabaseTest.class})
 public class DBTestSuite {
     @BeforeClass
     public static void setUp() throws IOException {
