@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.TPS;
@@ -14,10 +15,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Class representing database table plan_tps
@@ -37,6 +35,7 @@ public class TPSTable extends Table {
     private final String columnChunksLoaded = "chunks_loaded";
 
     private final ServerTable serverTable;
+    private String insertStatement;
 
     /**
      * @param db
@@ -45,6 +44,18 @@ public class TPSTable extends Table {
     public TPSTable(SQLDB db, boolean usingMySQL) {
         super("plan_tps", db, usingMySQL);
         serverTable = db.getServerTable();
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnServerID + ", "
+                + columnDate + ", "
+                + columnTPS + ", "
+                + columnPlayers + ", "
+                + columnCPUUsage + ", "
+                + columnRAMUsage + ", "
+                + columnEntities + ", "
+                + columnChunksLoaded
+                + ") VALUES ("
+                + serverTable.statementSelectServerID + ", "
+                + "?, ?, ?, ?, ?, ?, ?)";
     }
 
     @Override
@@ -75,7 +86,7 @@ public class TPSTable extends Table {
             statement = prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
-            statement.setFetchSize(10000);
+            statement.setFetchSize(20000);
             statement.setString(1, Plan.getServerUUID().toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -99,18 +110,7 @@ public class TPSTable extends Table {
     public void insertTPS(TPS tps) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnServerID + ", "
-                    + columnDate + ", "
-                    + columnTPS + ", "
-                    + columnPlayers + ", "
-                    + columnCPUUsage + ", "
-                    + columnRAMUsage + ", "
-                    + columnEntities + ", "
-                    + columnChunksLoaded
-                    + ") VALUES ("
-                    + serverTable.statementSelectServerID + ", "
-                    + "?, ?, ?, ?, ?, ?, ?)");
+            statement = prepareStatement(insertStatement);
 
             statement.setString(1, Plan.getServerUUID().toString());
             statement.setLong(2, tps.getDate());
@@ -167,7 +167,7 @@ public class TPSTable extends Table {
         try {
             statement = prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
-                    .and(columnPlayers + "= (SELECT MAX(" + columnPlayers + ") FROM " + tableName+")")
+                    .and(columnPlayers + "= (SELECT MAX(" + columnPlayers + ") FROM " + tableName + ")")
                     .and(columnDate + ">= ?")
                     .toString());
             statement.setString(1, serverUUID.toString());
@@ -187,6 +187,83 @@ public class TPSTable extends Table {
         } finally {
             endTransaction(statement);
             close(set, statement);
+        }
+    }
+
+    public Map<UUID, List<TPS>> getAllTPS() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            statement = prepareStatement("SELECT " +
+                    columnDate + ", " +
+                    columnTPS + ", " +
+                    columnPlayers + ", " +
+                    columnCPUUsage + ", " +
+                    columnRAMUsage + ", " +
+                    columnEntities + ", " +
+                    columnChunksLoaded + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(20000);
+            set = statement.executeQuery();
+            Map<UUID, List<TPS>> serverMap = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+
+                List<TPS> tpsList = serverMap.getOrDefault(serverUUID, new ArrayList<>());
+
+                long date = set.getLong(columnDate);
+                double tps = set.getDouble(columnTPS);
+                int players = set.getInt(columnPlayers);
+                double cpuUsage = set.getDouble(columnCPUUsage);
+                long ramUsage = set.getLong(columnRAMUsage);
+                int entities = set.getInt(columnEntities);
+                int chunksLoaded = set.getInt(columnChunksLoaded);
+
+                tpsList.add(new TPS(date, tps, players, cpuUsage, ramUsage, entities, chunksLoaded));
+                serverMap.put(serverUUID, tpsList);
+            }
+            return serverMap;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertAllTPS(Map<UUID, List<TPS>> allTPS) throws SQLException {
+        if (Verify.isEmpty(allTPS)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+
+            // Every Server
+            for (Map.Entry<UUID, List<TPS>> entry : allTPS.entrySet()) {
+                UUID serverUUID = entry.getKey();
+                // Every TPS Data point
+                List<TPS> tpsList = entry.getValue();
+                for (TPS tps : tpsList) {
+                    statement.setString(1, serverUUID.toString());
+                    statement.setLong(2, tps.getDate());
+                    statement.setDouble(3, tps.getTicksPerSecond());
+                    statement.setInt(4, tps.getPlayers());
+                    statement.setDouble(5, tps.getCPUUsage());
+                    statement.setLong(6, tps.getUsedMemory());
+                    statement.setDouble(7, tps.getEntityCount());
+                    statement.setDouble(8, tps.getChunksLoaded());
+                    statement.addBatch();
+                }
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
         }
     }
 }

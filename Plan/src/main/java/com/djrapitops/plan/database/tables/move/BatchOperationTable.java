@@ -78,4 +78,8 @@ public class BatchOperationTable extends Table {
         serverTable.getBungeeInfo().ifPresent(servers::add);
         toDB.db.getServerTable().insertAllServers(servers);
     }
+
+    public void copyTPS(BatchOperationTable toDB) throws SQLException {
+        toDB.db.getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
+    }
 }
