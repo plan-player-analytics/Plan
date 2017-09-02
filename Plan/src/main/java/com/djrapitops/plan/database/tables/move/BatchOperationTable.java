@@ -12,9 +12,16 @@ import main.java.com.djrapitops.plan.database.tables.Table;
 import java.sql.SQLException;
 
 /**
- * //TODO Class Javadoc Comment
+ * A Fake table used to store a lot of big table operations.
+ * <p>
+ * To use this table create a new BatchOperationTable with both SQLDB objects.
+ * {@code SQLDB from; SQLDB to;}
+ * {@code fromT = new BatchOperationTable(from);}
+ * {@code toT = new BatchOperationTable(to);}
+ * {@code fromT.copy(toT);}
  *
  * @author Rsl1122
+ * @since 4.0.0
  */
 public class BatchOperationTable extends Table {
     public BatchOperationTable(SQLDB db, boolean usingMySQL) {
@@ -36,5 +43,9 @@ public class BatchOperationTable extends Table {
 
     public void copyCommandUse(BatchOperationTable toDB) throws SQLException {
         toDB.db.getCommandUseTable().insertCommandUsage(db.getCommandUseTable().getAllCommandUsages());
+    }
+
+    public void copyIPsAndGeolocs(BatchOperationTable toDB) throws SQLException {
+        toDB.db.getIpsTable().insertIPsAndGeolocations(db.getIpsTable().getAllIPsAndGeolocations());
     }
 }
