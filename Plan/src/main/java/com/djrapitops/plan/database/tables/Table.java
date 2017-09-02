@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
+import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
@@ -193,5 +194,20 @@ public abstract class Table {
         }
 
         endTransaction(statement.getConnection());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return usingMySQL == table.usingMySQL &&
+                Objects.equal(tableName, table.tableName) &&
+                Objects.equal(db, table.db);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(tableName, db, usingMySQL);
     }
 }
