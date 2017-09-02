@@ -7,10 +7,13 @@ package main.java.com.djrapitops.plan.database.tables.move;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.tables.ServerTable;
 import main.java.com.djrapitops.plan.database.tables.Table;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -67,5 +70,12 @@ public class BatchOperationTable extends Table {
 
     public void copyWebUsers(BatchOperationTable toDB) throws SQLException {
         toDB.db.getSecurityTable().addUsers(db.getSecurityTable().getUsers());
+    }
+
+    public void copyServers(BatchOperationTable toDB) throws SQLException {
+        ServerTable serverTable = db.getServerTable();
+        List<ServerInfo> servers = serverTable.getBukkitServers();
+        serverTable.getBungeeInfo().ifPresent(servers::add);
+        toDB.db.getServerTable().insertAllServers(servers);
     }
 }
