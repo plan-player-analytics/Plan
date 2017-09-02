@@ -156,17 +156,18 @@ public class KillsTable extends UserIDTable {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
-            String usersUUIDColumn2 = usersTable + "." + usersTable.getColumnUUID() + " as killer_uuid";
+            String usersVictimIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersKillerIDColumn = "a." + usersTable.getColumnID();
+            String usersVictimUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            String usersKillerUUIDColumn = "a." + usersTable.getColumnUUID() + " as killer_uuid";
             statement = prepareStatement("SELECT " +
                     columnDate + ", " +
                     columnWeapon + ", " +
-                    usersUUIDColumn + ", " +
-                    usersUUIDColumn2 +
+                    usersVictimUUIDColumn + ", " +
+                    usersKillerUUIDColumn +
                     " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnKillerUserID);
+                    " JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + columnVictimUserID +
+                    " JOIN " + usersTable + " a on " + usersKillerIDColumn + "=" + columnKillerUserID);
 
             statement.setFetchSize(10000);
             set = statement.executeQuery();

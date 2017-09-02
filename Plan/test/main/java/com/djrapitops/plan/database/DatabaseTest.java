@@ -704,4 +704,23 @@ public class DatabaseTest {
         assertFalse(sSessions.isEmpty());
         assertEquals(session, sSessions.get(0));
     }
+
+    @Test
+    public void testKillTableGetKillsOfServer() throws SQLException, DatabaseInitException {
+        saveUserOne();
+        saveUserTwo();
+
+        KillsTable killsTable = db.getKillsTable();
+        List<PlayerKill> expected = createKills();
+        killsTable.savePlayerKills(uuid, 1, expected);
+
+        commitTest();
+
+        Map<UUID, List<PlayerKill>> playerKills = killsTable.getPlayerKills();
+        List<PlayerKill> kills = playerKills.get(uuid);
+        assertFalse(playerKills.isEmpty());
+        assertNotNull(kills);
+        assertFalse(kills.isEmpty());
+        assertEquals(expected, kills);
+    }
 }
