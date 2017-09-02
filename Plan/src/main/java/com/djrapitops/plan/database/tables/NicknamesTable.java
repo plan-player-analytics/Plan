@@ -230,4 +230,8 @@ public class NicknamesTable extends UserIDTable {
             close(statement);
         }
     }
+
+    public String getColumnNick() {
+        return columnNick;
+    }
 }

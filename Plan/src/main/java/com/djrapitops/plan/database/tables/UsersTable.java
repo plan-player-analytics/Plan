@@ -277,8 +277,14 @@ public class UsersTable extends UserIDTable {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
+            NicknamesTable nicknamesTable = db.getNicknamesTable();
             statement = prepareStatement(
-                    "SELECT name FROM plan_users WHERE name LIKE LOWER(?) UNION SELECT name FROM plan_users WHERE id = (SELECT user_id FROM plan_nicknames WHERE nickname LIKE LOWER(?))"
+                    "SELECT " + columnName + " FROM " + tableName +
+                            " WHERE " + columnName + " LIKE LOWER(?)" +
+                            " UNION SELECT " + columnName + " FROM " + tableName +
+                            " WHERE " + columnID + " =" +
+                            " (SELECT " + columnID + " FROM " + nicknamesTable +
+                            " WHERE " + nicknamesTable.getColumnNick() + " LIKE LOWER(?))"
             );
             statement.setString(1, searchString);
             statement.setString(2, searchString);
