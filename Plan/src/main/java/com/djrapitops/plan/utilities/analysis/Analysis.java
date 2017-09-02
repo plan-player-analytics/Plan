@@ -260,7 +260,7 @@ public class Analysis {
             tpsPart.addTpsData(tpsData);
             Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
 
-            List<UserInfo> userInfo = db.getUserInfoTable().getAllUserInfo();
+            List<UserInfo> userInfo = db.getUserInfoTable().getServerUserInfo();
             Map<UUID, UserInfo> mappedUserInfo = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, Function.identity()));
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
             for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {

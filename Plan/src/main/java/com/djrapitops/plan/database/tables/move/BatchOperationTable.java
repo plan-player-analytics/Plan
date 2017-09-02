@@ -82,4 +82,8 @@ public class BatchOperationTable extends Table {
     public void copyTPS(BatchOperationTable toDB) throws SQLException {
         toDB.db.getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
     }
+
+    public void copyUserInfo(BatchOperationTable toDB) throws SQLException {
+        toDB.db.getUserInfoTable().insertUserInfo(db.getUserInfoTable().getAllUserInfo());
+    }
 }

@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.UserInfo;
@@ -16,13 +17,11 @@ import main.java.com.djrapitops.plan.database.sql.Update;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Server Specific user information table.
- *
+ * <p>
  * Represents plan_user_info.
  *
  * @author Rsl1122
@@ -155,11 +154,11 @@ public class UserInfoTable extends UserIDTable {
      *
      * @return List of UserInfo objects.
      */
-    public List<UserInfo> getAllUserInfo() throws SQLException {
-        return getAllUserInfo(Plan.getServerUUID());
+    public List<UserInfo> getServerUserInfo() throws SQLException {
+        return getServerUserInfo(Plan.getServerUUID());
     }
 
-    public List<UserInfo> getAllUserInfo(UUID serverUUID) throws SQLException {
+    public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -191,6 +190,86 @@ public class UserInfoTable extends UserIDTable {
             return userInfo;
         } finally {
             close(set, statement);
+        }
+    }
+
+    public Map<UUID, List<UserInfo>> getAllUserInfo() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            statement = prepareStatement("SELECT " +
+                    tableName + "." + columnRegistered + ", " +
+                    columnBanned + ", " +
+                    columnOP + ", " +
+                    usersUUIDColumn + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, List<UserInfo>> serverMap = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                List<UserInfo> userInfos = serverMap.getOrDefault(serverUUID, new ArrayList<>());
+
+                long registered = set.getLong(columnRegistered);
+                boolean banned = set.getBoolean(columnBanned);
+                boolean op = set.getBoolean(columnOP);
+
+                userInfos.add(new UserInfo(uuid, "", registered, op, banned));
+
+                serverMap.put(uuid, userInfos);
+            }
+            return serverMap;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertUserInfo(Map<UUID, List<UserInfo>> allUserInfos) throws SQLException {
+        if (Verify.isEmpty(allUserInfos)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("INSERT INTO " + tableName + " (" +
+                    columnUserID + ", " +
+                    columnRegistered + ", " +
+                    columnServerID + ", " +
+                    columnBanned + ", " +
+                    columnOP +
+                    ") VALUES (" +
+                    usersTable.statementSelectID + ", " +
+                    "?, " +
+                    serverTable.statementSelectServerID + ", ?, ?)");
+
+            // Every Server
+            for (Map.Entry<UUID, List<UserInfo>> entry : allUserInfos.entrySet()) {
+                UUID serverUUID = entry.getKey();
+                // Every User
+                for (UserInfo user : entry.getValue()) {
+                    statement.setString(1, user.getUuid().toString());
+                    statement.setLong(2, user.getRegistered());
+                    statement.setString(3, serverUUID.toString());
+                    statement.setBoolean(4, user.isBanned());
+                    statement.setBoolean(5, user.isOpped());
+                    statement.addBatch();
+                }
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
         }
     }
 }

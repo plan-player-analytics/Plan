@@ -436,7 +436,7 @@ public class DatabaseTest {
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
 
-        assertEquals(userInfo, userInfoTable.getAllUserInfo().get(0));
+        assertEquals(userInfo, userInfoTable.getServerUserInfo().get(0));
     }
 
     @Test
