@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.Action;
@@ -165,7 +166,7 @@ public class ActionsTable extends UserIDTable {
     }
 
     public void insertActions(Map<UUID, Map<UUID, List<Action>>> allActions) throws SQLException {
-        if (allActions.isEmpty()) {
+        if (Verify.isEmpty(allActions)) {
             return;
         }
         PreparedStatement statement = null;

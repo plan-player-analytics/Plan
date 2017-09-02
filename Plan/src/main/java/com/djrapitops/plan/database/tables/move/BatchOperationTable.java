@@ -25,6 +25,8 @@ import java.util.UUID;
  * The copy methods assume that the table has been cleared, or that no duplicate data will be entered for a user.
  * <p>
  * clearTable methods can be used to clear the table beforehand.
+ * <p>
+ * Server & User tables should be copied first.
  *
  * @author Rsl1122
  * @since 4.0.0
@@ -61,5 +63,9 @@ public class BatchOperationTable extends Table {
 
     public void copyNicknames(BatchOperationTable toDB) throws SQLException {
         toDB.db.getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
+    }
+
+    public void copyWebUsers(BatchOperationTable toDB) throws SQLException {
+        toDB.db.getSecurityTable().addUsers(db.getSecurityTable().getUsers());
     }
 }

@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
@@ -196,7 +197,7 @@ public class IPsTable extends UserIDTable {
     }
 
     public void insertIPsAndGeolocations(Map<UUID, Map<String, String>> allIPsAndGeolocations) throws SQLException {
-        if (allIPsAndGeolocations.isEmpty()) {
+        if (Verify.isEmpty(allIPsAndGeolocations)) {
             return;
         }
         PreparedStatement statement = null;

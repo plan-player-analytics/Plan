@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -200,7 +201,7 @@ public class NicknamesTable extends UserIDTable {
     }
 
     public void insertNicknames(Map<UUID, Map<UUID, List<String>>> allNicknames) throws SQLException {
-        if (allNicknames.isEmpty()) {
+        if (Verify.isEmpty(allNicknames)) {
             return;
         }
         PreparedStatement statement = null;
