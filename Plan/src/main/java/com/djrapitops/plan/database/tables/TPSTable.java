@@ -132,12 +132,18 @@ public class TPSTable extends Table {
      * @throws SQLException
      */
     public void clean() throws SQLException {
+        Optional<TPS> allTimePeak = getAllTimePeak();
+        int p = -1;
+        if (allTimePeak.isPresent()) {
+            p = allTimePeak.get().getPlayers();
+        }
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName +
                     " WHERE (" + columnDate + "<?)" +
                     " AND (" + columnPlayers + "" +
-                    " != (SELECT MAX(" + columnPlayers + ") FROM " + tableName + "))");
+                    " != ?)");
+            statement.setInt(1, p);
             // More than 2 Months ago.
             long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
             statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
