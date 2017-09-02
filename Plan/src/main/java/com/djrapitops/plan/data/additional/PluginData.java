@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.data.additional;
 
 import main.java.com.djrapitops.plan.utilities.html.Html;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 import java.util.*;
@@ -289,40 +290,35 @@ public abstract class PluginData {
                 && analysisTypes.contains(AnalysisType.BOOLEAN_TOTAL);
     }
 
-    /**
-     * If a PluginData object has same placeholder, sourcePlugin and
-     * analysisTypes, it is considered equal.
-     *
-     * @param obj Another Object.
-     * @return Is current object equal to given object.
-     */
     @Override
-    public final boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PluginData other = (PluginData) obj;
-        return this.analysisOnly == other.analysisOnly
-                && Objects.equals(this.placeholder, other.placeholder)
-                && Objects.equals(this.sourcePlugin, other.sourcePlugin)
-                && Objects.equals(this.analysisTypes, other.analysisTypes);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PluginData that = (PluginData) o;
+        return analysisOnly == that.analysisOnly &&
+                Objects.equals(analysisTypes, that.analysisTypes) &&
+                Objects.equals(placeholder, that.placeholder) &&
+                Objects.equals(sourcePlugin, that.sourcePlugin) &&
+                Objects.equals(icon, that.icon) &&
+                Objects.equals(prefix, that.prefix) &&
+                Objects.equals(suffix, that.suffix);
     }
 
     @Override
-    public final int hashCode() {
-        int hash = 5;
-        hash = 47 * hash + Objects.hashCode(this.placeholder);
-        hash = 47 * hash + Objects.hashCode(this.sourcePlugin);
-        hash = 47 * hash + (this.analysisOnly ? 1 : 0);
-        hash = 47 * hash + Objects.hashCode(this.prefix);
-        hash = 47 * hash + Objects.hashCode(this.suffix);
-        hash = 47 * hash + Objects.hashCode(this.analysisTypes);
-        return hash;
+    public int hashCode() {
+        return Objects.hash(analysisTypes, placeholder, sourcePlugin, analysisOnly, icon, prefix, suffix);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("analysisTypes", analysisTypes)
+                .append("placeholder", placeholder)
+                .append("sourcePlugin", sourcePlugin)
+                .append("analysisOnly", analysisOnly)
+                .append("icon", icon)
+                .append("prefix", prefix)
+                .append("suffix", suffix)
+                .toString();
     }
 }

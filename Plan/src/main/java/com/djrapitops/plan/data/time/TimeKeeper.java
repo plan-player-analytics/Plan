@@ -81,10 +81,7 @@ public abstract class TimeKeeper {
         if (state == null) {
             state = newState;
         }
-        Long currentTime = times.get(state);
-        if (currentTime == null) {
-            currentTime = 0L;
-        }
+        Long currentTime = times.getOrDefault(state, 0L);
         long diff = playTime - lastStateChange;
         times.put(state, currentTime + Math.abs(diff));
         state = newState;

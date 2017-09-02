@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.systems.processing.importing.importers;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportRefiner;
@@ -59,6 +60,8 @@ public abstract class Importer {
             Log.debug("Server Import Data null, skipping");
             return;
         }
+
+        Database db = Plan.getInstance().getDB();
 
         //TODO
 
