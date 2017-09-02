@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
@@ -65,11 +67,26 @@ public abstract class SQLDB extends Database {
         try {
             setupDataSource();
             setupDatabase();
-            clean();
+            scheduleClean(10L);
         } finally {
             Benchmark.stop("Database", benchName);
             Log.logDebug("Database");
         }
+    }
+
+    public void scheduleClean(long secondsDelay) {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("DB Clean Task") {
+            @Override
+            public void run() {
+                try {
+                    clean();
+                } catch (SQLException e) {
+                    Log.toLog(this.getClass().getName(), e);
+                } finally {
+                    cancel();
+                }
+            }
+        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay);
     }
 
     /**
@@ -223,14 +240,10 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    private void clean() throws DatabaseInitException {
+    private void clean() throws SQLException {
         Log.info("Cleaning the database.");
-        try {
-            tpsTable.clean();
-            Log.info("Clean complete.");
-        } catch (SQLException e) {
-            throw new DatabaseInitException("Database Clean failed", e);
-        }
+        tpsTable.clean();
+        Log.info("Clean complete.");
     }
 
     /**
