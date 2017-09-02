@@ -77,7 +77,7 @@ public class UsersTable extends UserIDTable {
      * @return if the removal was successful.
      */
     @Override
-    public boolean removeUser(UUID uuid) {
+    public void removeUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)");
@@ -85,9 +85,6 @@ public class UsersTable extends UserIDTable {
 
             statement.execute();
             commit(statement.getConnection());
-            return true;
-        } catch (SQLException ex) {
-            return false;
         } finally {
             close(statement);
         }

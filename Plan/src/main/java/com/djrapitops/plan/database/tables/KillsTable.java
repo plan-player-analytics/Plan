@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.PlayerKill;
@@ -56,7 +55,7 @@ public class KillsTable extends UserIDTable {
     }
 
     @Override
-    public boolean removeUser(UUID uuid) {
+    public void removeUser(UUID uuid) throws SQLException{
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName +
@@ -67,10 +66,6 @@ public class KillsTable extends UserIDTable {
 
             statement.execute();
             commit(statement.getConnection());
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
         } finally {
             close(statement);
         }

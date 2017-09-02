@@ -185,10 +185,9 @@ public abstract class Database {
      * Removes all data related to an account from the database.
      *
      * @param uuid UUID of the account.
-     * @return Success of the removal.
      * @throws SQLException If a database error occurs.
      */
-    public abstract boolean removeAccount(UUID uuid) throws SQLException;
+    public abstract void removeAccount(UUID uuid) throws SQLException;
 
     /**
      * Used to clear all data from the database.

@@ -200,9 +200,9 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public boolean removeAccount(UUID uuid) throws SQLException {
+    public void removeAccount(UUID uuid) throws SQLException {
         if (uuid == null) {
-            return false;
+            return;
         }
 
         try {
@@ -215,15 +215,8 @@ public abstract class SQLDB extends Database {
                 }
 
                 UserIDTable table = (UserIDTable) t;
-                if (!table.removeUser(uuid)) {
-                    throw new IllegalStateException("Removal Failed");
-                }
+                table.removeUser(uuid);
             }
-
-            return true;
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-            return false;
         } finally {
             Benchmark.stop("Database", "Remove Account");
             setAvailable();
