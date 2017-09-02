@@ -195,9 +195,9 @@ public abstract class Database {
      * <p>
      * Uses DELETE * FROM table.
      *
-     * @return Success of removal.
+     * @throws SQLException if remove fails.
      */
-    public abstract boolean removeAllData();
+    public abstract void removeAllData() throws SQLException;
 
     /**
      * Used to fetch the saved UUIDs in the users table.

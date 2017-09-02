@@ -68,7 +68,7 @@ public class ManageUtils {
      */
     public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) {
 //        try {
-        clearAndCopyToDB.removeAllData();
+        //clearAndCopyToDB.removeAllData();
         //TODO  List<UserInfo> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
         //  clearAndCopyToDB.saveMultipleUserData(allUserData);
 //        TODO    clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());

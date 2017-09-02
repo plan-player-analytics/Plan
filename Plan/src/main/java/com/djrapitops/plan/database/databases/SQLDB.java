@@ -244,16 +244,12 @@ public abstract class SQLDB extends Database {
      * @return
      */
     @Override
-    public boolean removeAllData() {
+    public void removeAllData() throws SQLException {
         setStatus("Clearing all data");
         try {
             for (Table table : getAllTablesInRemoveOrder()) {
-                if (!table.removeAllData()) {
-                    return false;
-                }
+                table.removeAllData();
             }
-
-            return true;
         } finally {
             setAvailable();
         }

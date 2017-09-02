@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.database.tables.UserInfoTable;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -26,13 +27,15 @@ public class RegisterProcessor extends PlayerProcessor {
     private final long time;
     private final int playersOnline;
     private final String name;
+    private final Processor[] afterProcess;
 
-    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline) {
+    public RegisterProcessor(UUID uuid, long registered, long time, String name, int playersOnline, Processor... afterProcess) {
         super(uuid);
         this.registered = registered;
         this.time = time;
         this.playersOnline = playersOnline;
         this.name = name;
+        this.afterProcess = afterProcess;
     }
 
     @Override
@@ -55,5 +58,6 @@ public class RegisterProcessor extends PlayerProcessor {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        plugin.addToProcessQueue(afterProcess);
     }
 }

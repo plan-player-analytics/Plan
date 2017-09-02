@@ -5,7 +5,6 @@
 package main.java.com.djrapitops.plan.database.tables.move;
 
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.api.exceptions.DatabaseException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
 import main.java.com.djrapitops.plan.database.tables.Table;
@@ -44,7 +43,7 @@ public class BatchOperationTable extends Table {
         throw new IllegalStateException("Method not supposed to be used on this table.");
     }
 
-    public void clearTable(Table table) throws DatabaseException {
+    public void clearTable(Table table) throws SQLException {
         table.removeAllData();
     }
 
