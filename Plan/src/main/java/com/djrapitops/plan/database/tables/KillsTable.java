@@ -127,6 +127,7 @@ public class KillsTable extends UserIDTable {
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
                     " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID);
 
+            statement.setFetchSize(10000);
             statement.setString(1, uuid.toString());
 
             set = statement.executeQuery();

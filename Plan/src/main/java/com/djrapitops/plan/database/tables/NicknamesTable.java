@@ -9,9 +9,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -22,6 +20,7 @@ public class NicknamesTable extends UserIDTable {
     private final String columnServerID = "server_id";
 
     private final ServerTable serverTable;
+    private String insertStatement;
 
     /**
      * @param db         The database
@@ -30,6 +29,14 @@ public class NicknamesTable extends UserIDTable {
     public NicknamesTable(SQLDB db, boolean usingMySQL) {
         super("plan_nicknames", db, usingMySQL);
         serverTable = db.getServerTable();
+        insertStatement = "INSERT INTO " + tableName + " (" +
+                columnUserID + ", " +
+                columnServerID + ", " +
+                columnNick +
+                ") VALUES (" +
+                usersTable.statementSelectID + ", " +
+                serverTable.statementSelectServerID + ", " +
+                "?)";
     }
 
     /**
@@ -142,19 +149,81 @@ public class NicknamesTable extends UserIDTable {
 
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " (" +
-                    columnUserID + ", " +
-                    columnServerID + ", " +
-                    columnNick +
-                    ") VALUES (" +
-                    usersTable.statementSelectID + ", " +
-                    serverTable.statementSelectServerID + ", " +
-                    "?)");
+            statement = prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setString(2, Plan.getServerUUID().toString());
             statement.setString(3, displayName);
 
             statement.execute();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<UUID, Map<UUID, List<String>>> getAllNicknames() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            statement = prepareStatement("SELECT " +
+                    columnNick + ", " +
+                    usersUUIDColumn + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Map<UUID, List<String>>> map = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                Map<UUID, List<String>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+                List<String> nicknames = serverMap.getOrDefault(uuid, new ArrayList<>());
+
+                nicknames.add(set.getString(columnNick));
+
+                serverMap.put(uuid, nicknames);
+                map.put(serverUUID, serverMap);
+            }
+            return map;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertNicknames(Map<UUID, Map<UUID, List<String>>> allNicknames) throws SQLException {
+        if (allNicknames.isEmpty()) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+
+            // Every Server
+            for (UUID serverUUID : allNicknames.keySet()) {
+                // Every User
+                for (Map.Entry<UUID, List<String>> entry : allNicknames.get(serverUUID).entrySet()) {
+                    UUID uuid = entry.getKey();
+                    // Every Nickname
+                    List<String> nicknames = entry.getValue();
+                    for (String nickname : nicknames) {
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, serverUUID.toString());
+                        statement.setString(3, nickname);
+                        statement.addBatch();
+                    }
+                }
+            }
+
+            statement.executeBatch();
             commit(statement.getConnection());
         } finally {
             close(statement);

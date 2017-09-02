@@ -10,6 +10,8 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.Table;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  * A Fake table used to store a lot of big table operations.
@@ -19,6 +21,10 @@ import java.sql.SQLException;
  * {@code fromT = new BatchOperationTable(from);}
  * {@code toT = new BatchOperationTable(to);}
  * {@code fromT.copy(toT);}
+ * <p>
+ * The copy methods assume that the table has been cleared, or that no duplicate data will be entered for a user.
+ * <p>
+ * clearTable methods can be used to clear the table beforehand.
  *
  * @author Rsl1122
  * @since 4.0.0
@@ -37,6 +43,10 @@ public class BatchOperationTable extends Table {
         table.removeAllData();
     }
 
+    public void clearTable(Collection<UUID> uuids, Table table) {
+        // TODO
+    }
+
     public void copyActions(BatchOperationTable toDB) throws SQLException {
         toDB.db.getActionsTable().insertActions(db.getActionsTable().getAllActions());
     }
@@ -47,5 +57,9 @@ public class BatchOperationTable extends Table {
 
     public void copyIPsAndGeolocs(BatchOperationTable toDB) throws SQLException {
         toDB.db.getIpsTable().insertIPsAndGeolocations(db.getIpsTable().getAllIPsAndGeolocations());
+    }
+
+    public void copyNicknames(BatchOperationTable toDB) throws SQLException {
+        toDB.db.getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
     }
 }
