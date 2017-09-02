@@ -270,7 +270,7 @@ public class DatabaseTest {
         assertEquals(expectedGeoLoc, result.get());
     }
 
-    @Test // Does not test getting sessions from another server.
+    @Test
     public void testNicknamesTable() throws SQLException, DatabaseInitException {
         saveUserOne();
         NicknamesTable nickTable = db.getNicknamesTable();
@@ -676,5 +676,32 @@ public class DatabaseTest {
     private void commitTest() throws DatabaseInitException, SQLException {
         db.close();
         db.init();
+    }
+
+    @Test
+    public void testSessionTableGetInfoOfServer() throws SQLException, DatabaseInitException {
+        saveUserOne();
+        saveUserTwo();
+
+        Session session = new Session(12345L, "", "");
+        session.endSession(22345L);
+        session.setWorldTimes(createWorldTimes());
+        session.setPlayerKills(createKills());
+
+        SessionsTable sessionsTable = db.getSessionsTable();
+        sessionsTable.saveSession(uuid, session);
+
+        commitTest();
+
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer();
+
+        session.setPlayerKills(new ArrayList<>());
+        session.setWorldTimes(new WorldTimes(new HashMap<>()));
+
+        List<Session> sSessions = sessions.get(uuid);
+        assertFalse(sessions.isEmpty());
+        assertNotNull(sSessions);
+        assertFalse(sSessions.isEmpty());
+        assertEquals(session, sSessions.get(0));
     }
 }
