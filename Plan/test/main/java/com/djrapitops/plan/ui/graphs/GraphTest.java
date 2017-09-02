@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
 import main.java.com.djrapitops.plan.utilities.html.graphs.*;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import test.java.utils.RandomData;
@@ -53,7 +54,30 @@ public class GraphTest {
         assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
         assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
         assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMapCreator.createDataSeries(geoList));
-        assertEquals(Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)), "[[{name:'WORLD',y:0,drilldown: 'WORLD'}], {name:'WORLD', id:'WORLD',data: []}]");
+        assertEquals("[[{name:'WORLD',y:0,drilldown: 'WORLD'}], {name:'WORLD', id:'WORLD',data: []}]", Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)));
+    }
+
+    @Test
+    public void testGraphCreatorsForBracketMistakes() {
+        String[] series = new String[]{
+                CPUGraphCreator.buildSeriesDataString(tpsList),
+                PlayerActivityGraphCreator.buildSeriesDataString(tpsList),
+                PunchCardGraphCreator.createDataSeries(sessionList),
+                RamGraphCreator.buildSeriesDataString(tpsList),
+                TPSGraphCreator.buildSeriesDataString(tpsList),
+                WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList),
+                WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList),
+                WorldMapCreator.createDataSeries(geoList),
+                Arrays.toString(WorldPieCreator.createSeriesData(worldTimes))
+        };
+        for (String test : series) {
+            int opened = StringUtils.countMatches(test, "{");
+            int closed = StringUtils.countMatches(test, "}");
+            Assert.assertEquals(opened, closed);
+            opened = StringUtils.countMatches(test, "[");
+            closed = StringUtils.countMatches(test, "]");
+            Assert.assertEquals(opened, closed);
+        }
     }
 
     @Test

@@ -13,7 +13,7 @@ import java.util.UUID;
  * Placeholder values can be retrieved using the get method.
  * <p>
  * Contains following placeholders after analyzed:
- * ${playersTotal}
+ * ${playersTotal}, ${ops}
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -30,6 +30,7 @@ public class PlayerCountPart extends RawData {
 
     @Override
     public void analyse() {
+        addValue("ops", ops.size());
         addValue("playersTotal", uuids.size());
     }
 
