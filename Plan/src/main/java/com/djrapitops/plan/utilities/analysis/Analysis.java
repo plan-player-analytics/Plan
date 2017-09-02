@@ -5,10 +5,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.data.Session;
-import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -240,6 +237,7 @@ public class Analysis {
         CommandUsagePart commandUsagePart = analysisData.getCommandUsagePart();
         GeolocationPart geolocPart = analysisData.getGeolocationPart();
         JoinInfoPart joinInfo = analysisData.getJoinInfoPart();
+        KillPart killPart = analysisData.getKillPart();
         PlayerCountPart playerCount = analysisData.getPlayerCountPart();
         PlaytimePart playtime = analysisData.getPlaytimePart();
         TPSPart tpsPart = analysisData.getTpsPart();
@@ -289,6 +287,9 @@ public class Analysis {
             Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessionInfoOfServer();
             joinInfo.addActiveSessions(activeSessions);
             joinInfo.addSessions(sessions);
+
+            Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
+            killPart.addKills(playerKills);
 
             Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
             geolocPart.addGeoLocations(geolocations);

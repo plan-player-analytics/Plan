@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
@@ -12,9 +13,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -144,6 +143,45 @@ public class KillsTable extends UserIDTable {
                 String weapon = set.getString(columnWeapon);
                 session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
             }
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public Map<UUID, List<PlayerKill>> getPlayerKills() throws SQLException {
+        return getPlayerKills(Plan.getServerUUID());
+    }
+
+    public Map<UUID, List<PlayerKill>> getPlayerKills(UUID serverUUID) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            String usersUUIDColumn2 = usersTable + "." + usersTable.getColumnUUID() + " as killer_uuid";
+            statement = prepareStatement("SELECT " +
+                    columnDate + ", " +
+                    columnWeapon + ", " +
+                    usersUUIDColumn + ", " +
+                    usersUUIDColumn2 +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnKillerUserID);
+
+            statement.setFetchSize(10000);
+            set = statement.executeQuery();
+
+            Map<UUID, List<PlayerKill>> allKills = new HashMap<>();
+            while (set.next()) {
+                UUID killer = UUID.fromString(set.getString("killer_uuid"));
+                UUID victim = UUID.fromString(set.getString("victim_uuid"));
+                long date = set.getLong(columnDate);
+                String weapon = set.getString(columnWeapon);
+                List<PlayerKill> kills = allKills.getOrDefault(killer, new ArrayList<>());
+                kills.add(new PlayerKill(victim, weapon, date));
+                allKills.put(killer, kills);
+            }
+            return allKills;
         } finally {
             close(set, statement);
         }

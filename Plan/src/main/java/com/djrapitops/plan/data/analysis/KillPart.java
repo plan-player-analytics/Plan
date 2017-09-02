@@ -1,9 +1,12 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
+import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Part responsible for all Death related analysis.
@@ -56,5 +59,9 @@ public class KillPart extends RawData {
 
     public long getDeaths() {
         return deaths;
+    }
+
+    public void addKills(Map<UUID, List<PlayerKill>> playerKills) {
+        this.playerKills += playerKills.values().stream().mapToLong(Collection::size).sum();
     }
 }
