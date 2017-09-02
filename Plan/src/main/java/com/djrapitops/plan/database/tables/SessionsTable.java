@@ -450,7 +450,6 @@ public class SessionsTable extends UserIDTable {
         return getSessionInfoOfServer(Plan.getServerUUID());
     }
 
-    // TODO Write tests for this method
     public Map<UUID, List<Session>> getSessionInfoOfServer(UUID serverUUID) throws SQLException {
         Optional<Integer> id = serverTable.getServerID(serverUUID);
         if (!id.isPresent()) {

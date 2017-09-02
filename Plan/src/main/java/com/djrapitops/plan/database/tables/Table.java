@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
@@ -135,14 +135,8 @@ public abstract class Table {
     /**
      * @return
      */
-    public boolean removeAllData() {
-        try {
-            execute("DELETE FROM " + tableName);
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void removeAllData() throws SQLException {
+        execute("DELETE FROM " + tableName);
     }
 
     /**
@@ -201,5 +195,20 @@ public abstract class Table {
         }
 
         endTransaction(statement.getConnection());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return usingMySQL == table.usingMySQL &&
+                Objects.equal(tableName, table.tableName) &&
+                Objects.equal(db, table.db);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(tableName, db, usingMySQL);
     }
 }

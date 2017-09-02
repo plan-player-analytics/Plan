@@ -40,11 +40,18 @@ public class ServerTable extends Table {
     private final String columnWebserverAddress = "web_address";
     private final String columnInstalled = "is_installed";
     private final String columnMaxPlayers = "max_players";
+    private String insertStatement;
 
     public ServerTable(SQLDB db, boolean usingMySQL) {
         super("plan_servers", db, usingMySQL);
         statementSelectServerID = "(" + Select.from(tableName, tableName + "." + columnServerID).where(columnServerUUID + "=?").toString() + ")";
         statementSelectServerNameID = "(" + Select.from(tableName, tableName + "." + columnServerName).where(columnServerID + "=?").toString() + ")";
+        insertStatement = Insert.values(tableName,
+                columnServerUUID,
+                columnServerName,
+                columnWebserverAddress,
+                columnInstalled,
+                columnMaxPlayers);
     }
 
     @Override
@@ -109,12 +116,7 @@ public class ServerTable extends Table {
         Verify.nullCheck(uuid, name, webAddress);
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement(Insert.values(tableName,
-                    columnServerUUID,
-                    columnServerName,
-                    columnWebserverAddress,
-                    columnInstalled,
-                    columnMaxPlayers));
+            statement = prepareStatement(insertStatement);
 
             statement.setString(1, uuid.toString());
             statement.setString(2, name);
@@ -263,5 +265,41 @@ public class ServerTable extends Table {
 
     public String getColumnID() {
         return columnServerID;
+    }
+
+    public String getColumnUUID() {
+        return columnServerUUID;
+    }
+
+    public void insertAllServers(List<ServerInfo> allServerInfo) throws SQLException {
+        if (Verify.isEmpty(allServerInfo)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+
+            for (ServerInfo info : allServerInfo) {
+                UUID uuid = info.getUuid();
+                String name = info.getName();
+                String webAddress = info.getWebAddress();
+
+                if (Verify.notNull(uuid, name, webAddress)) {
+                    continue;
+                }
+
+                statement.setString(1, uuid.toString());
+                statement.setString(2, name);
+                statement.setString(3, webAddress);
+                statement.setBoolean(4, true);
+                statement.setInt(5, info.getMaxPlayers());
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
+        }
     }
 }

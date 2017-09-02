@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
@@ -92,6 +93,15 @@ public class DatabaseTest {
     }
 
     @Test
+    public void testNoExceptionWhenCommitEmpty() throws Exception {
+        db.init();
+
+        db.commit(((SQLDB) db).getConnection());
+        db.commit(((SQLDB) db).getConnection());
+        db.commit(((SQLDB) db).getConnection());
+    }
+
+    @Test
     public void testSQLiteGetConfigName() {
         assertEquals("sqlite", db.getConfigName());
     }
@@ -112,7 +122,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSaveCommandUse() throws SQLException {
+    public void testSaveCommandUse() throws SQLException, DatabaseInitException {
         CommandUseTable commandUseTable = db.getCommandUseTable();
         Map<String, Integer> expected = new HashMap<>();
 
@@ -139,7 +149,7 @@ public class DatabaseTest {
             commandUseTable.commandUsed("roiergbnougbierubieugbeigubeigubgierbgeugeg");
         }
 
-        expected.remove("roiergbnougbierubieugbeigubeigubgierbgeugeg");
+        commitTest();
 
         Map<String, Integer> commandUse = db.getCommandUse();
         assertEquals(expected, commandUse);
@@ -207,6 +217,8 @@ public class DatabaseTest {
             tpsTable.insertTPS(tps);
         }
 
+        commitTest();
+
         assertEquals(expected, tpsTable.getTPSData());
     }
 
@@ -233,7 +245,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testIPTable() throws SQLException {
+    public void testIPTable() throws SQLException, DatabaseInitException {
         saveUserOne();
         IPsTable ipsTable = db.getIpsTable();
 
@@ -242,6 +254,7 @@ public class DatabaseTest {
 
         ipsTable.saveIP(uuid, expectedIP, expectedGeoLoc);
         ipsTable.saveIP(uuid, expectedIP, expectedGeoLoc);
+        commitTest();
 
         List<String> ips = ipsTable.getIps(uuid);
         assertEquals(1, ips.size());
@@ -257,14 +270,15 @@ public class DatabaseTest {
         assertEquals(expectedGeoLoc, result.get());
     }
 
-    @Test // Does not test getting sessions from another server.
-    public void testNicknamesTable() throws SQLException {
+    @Test
+    public void testNicknamesTable() throws SQLException, DatabaseInitException {
         saveUserOne();
         NicknamesTable nickTable = db.getNicknamesTable();
 
         String expected = "TestNickname";
         nickTable.saveUserName(uuid, expected);
         nickTable.saveUserName(uuid, expected);
+        commitTest();
 
         List<String> nicknames = nickTable.getNicknames(uuid);
         assertEquals(1, nicknames.size());
@@ -275,10 +289,12 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSecurityTable() throws SQLException {
+    public void testSecurityTable() throws SQLException, DatabaseInitException {
         SecurityTable securityTable = db.getSecurityTable();
         WebUser expected = new WebUser("Test", "RandomGarbageBlah", 0);
         securityTable.addNewUser(expected);
+        commitTest();
+
         assertTrue(securityTable.userExists("Test"));
         WebUser test = securityTable.getWebUser("Test");
         assertEquals(expected, test);
@@ -296,10 +312,12 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testWorldTable() throws SQLException {
+    public void testWorldTable() throws SQLException, DatabaseInitException {
         WorldTable worldTable = db.getWorldTable();
         List<String> worlds = Arrays.asList("Test", "Test2", "Test3");
         worldTable.saveWorlds(worlds);
+
+        commitTest();
 
         List<String> saved = worldTable.getWorlds();
         assertEquals(worlds, saved);
@@ -330,7 +348,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSessionPlaytimeSaving() throws SQLException {
+    public void testSessionPlaytimeSaving() throws SQLException, DatabaseInitException {
         saveTwoWorlds();
         saveUserOne();
         saveUserTwo();
@@ -346,6 +364,8 @@ public class DatabaseTest {
         SessionsTable sessionsTable = db.getSessionsTable();
         sessionsTable.saveSession(uuid, session);
 
+        commitTest();
+
         assertEquals(expectedLength, sessionsTable.getPlaytime(uuid));
         assertEquals(0L, sessionsTable.getPlaytime(uuid, 30000L));
 
@@ -358,7 +378,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testSessionSaving() throws SQLException {
+    public void testSessionSaving() throws SQLException, DatabaseInitException {
         saveUserOne();
         saveUserTwo();
 
@@ -369,6 +389,8 @@ public class DatabaseTest {
 
         SessionsTable sessionsTable = db.getSessionsTable();
         sessionsTable.saveSession(uuid, session);
+
+        commitTest();
 
         Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
 
@@ -394,13 +416,15 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterUnRegistered() throws SQLException {
+    public void testUserInfoTableRegisterUnRegistered() throws SQLException, DatabaseInitException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         assertFalse(userInfoTable.isRegistered(uuid));
         UsersTable usersTable = db.getUsersTable();
         assertFalse(usersTable.isRegistered(uuid));
 
         userInfoTable.registerUserInfo(uuid, 123456789L);
+
+        commitTest();
 
         assertTrue(usersTable.isRegistered(uuid));
         assertTrue(userInfoTable.isRegistered(uuid));
@@ -415,7 +439,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUserInfoTableRegisterRegistered() throws SQLException {
+    public void testUserInfoTableRegisterRegistered() throws SQLException, DatabaseInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
         assertTrue(usersTable.isRegistered(uuid));
@@ -424,6 +448,7 @@ public class DatabaseTest {
         assertFalse(userInfoTable.isRegistered(uuid));
 
         userInfoTable.registerUserInfo(uuid, 223456789L);
+        commitTest();
 
         assertTrue(usersTable.isRegistered(uuid));
         assertTrue(userInfoTable.isRegistered(uuid));
@@ -436,28 +461,33 @@ public class DatabaseTest {
         assertFalse(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
 
-        assertEquals(userInfo, userInfoTable.getAllUserInfo().get(0));
+        assertEquals(userInfo, userInfoTable.getServerUserInfo().get(0));
     }
 
     @Test
-    public void testUserInfoTableUpdateBannedOpped() throws SQLException {
+    public void testUserInfoTableUpdateBannedOpped() throws SQLException, DatabaseInitException {
         UserInfoTable userInfoTable = db.getUserInfoTable();
         userInfoTable.registerUserInfo(uuid, 223456789L);
         assertTrue(userInfoTable.isRegistered(uuid));
 
         userInfoTable.updateOpAndBanStatus(uuid, true, true);
+        commitTest();
 
         UserInfo userInfo = userInfoTable.getUserInfo(uuid);
         assertTrue(userInfo.isBanned());
         assertTrue(userInfo.isOpped());
 
         userInfoTable.updateOpAndBanStatus(uuid, false, true);
+        commitTest();
+
         userInfo = userInfoTable.getUserInfo(uuid);
 
         assertTrue(userInfo.isBanned());
         assertFalse(userInfo.isOpped());
 
         userInfoTable.updateOpAndBanStatus(uuid, false, false);
+        commitTest();
+
         userInfo = userInfoTable.getUserInfo(uuid);
 
         assertFalse(userInfo.isBanned());
@@ -465,13 +495,16 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUsersTableUpdateName() throws SQLException {
+    public void testUsersTableUpdateName() throws SQLException, DatabaseInitException {
         saveUserOne();
 
         UsersTable usersTable = db.getUsersTable();
 
         assertEquals(uuid, usersTable.getUuidOf("Test"));
         usersTable.updateName(uuid, "NewName");
+
+        commitTest();
+
         assertNull(usersTable.getUuidOf("Test"));
 
         assertEquals("NewName", usersTable.getPlayerName(uuid));
@@ -479,7 +512,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testUsersTableKickSaving() throws SQLException {
+    public void testUsersTableKickSaving() throws SQLException, DatabaseInitException {
         saveUserOne();
         UsersTable usersTable = db.getUsersTable();
         assertEquals(0, usersTable.getTimesKicked(uuid));
@@ -489,7 +522,7 @@ public class DatabaseTest {
         for (int i = 0; i < random + 1; i++) {
             usersTable.kicked(uuid);
         }
-
+        commitTest();
         assertEquals(random + 1, usersTable.getTimesKicked(uuid));
     }
 
@@ -602,7 +635,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testServerTableBungeeSave() throws SQLException {
+    public void testServerTableBungeeSave() throws SQLException, DatabaseInitException {
         ServerTable serverTable = db.getServerTable();
 
         Optional<ServerInfo> bungeeInfo = serverTable.getBungeeInfo();
@@ -611,6 +644,8 @@ public class DatabaseTest {
         UUID bungeeUUID = UUID.randomUUID();
         ServerInfo bungeeCord = new ServerInfo(-1, bungeeUUID, "BungeeCord", "Random:1234", 20);
         serverTable.saveCurrentServerInfo(bungeeCord);
+
+        commitTest();
 
         bungeeCord.setId(2);
 
@@ -624,7 +659,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testServerTableBungee() throws SQLException {
+    public void testServerTableBungee() throws SQLException, DatabaseInitException {
         testServerTableBungeeSave();
         ServerTable serverTable = db.getServerTable();
 
@@ -636,5 +671,56 @@ public class DatabaseTest {
     public void testSessionTableNPEWhenNoPlayers() throws SQLException {
         Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
         assertTrue(lastSeen.isEmpty());
+    }
+
+    private void commitTest() throws DatabaseInitException, SQLException {
+        db.close();
+        db.init();
+    }
+
+    @Test
+    public void testSessionTableGetInfoOfServer() throws SQLException, DatabaseInitException {
+        saveUserOne();
+        saveUserTwo();
+
+        Session session = new Session(12345L, "", "");
+        session.endSession(22345L);
+        session.setWorldTimes(createWorldTimes());
+        session.setPlayerKills(createKills());
+
+        SessionsTable sessionsTable = db.getSessionsTable();
+        sessionsTable.saveSession(uuid, session);
+
+        commitTest();
+
+        Map<UUID, List<Session>> sessions = sessionsTable.getSessionInfoOfServer();
+
+        session.setPlayerKills(new ArrayList<>());
+        session.setWorldTimes(new WorldTimes(new HashMap<>()));
+
+        List<Session> sSessions = sessions.get(uuid);
+        assertFalse(sessions.isEmpty());
+        assertNotNull(sSessions);
+        assertFalse(sSessions.isEmpty());
+        assertEquals(session, sSessions.get(0));
+    }
+
+    @Test
+    public void testKillTableGetKillsOfServer() throws SQLException, DatabaseInitException {
+        saveUserOne();
+        saveUserTwo();
+
+        KillsTable killsTable = db.getKillsTable();
+        List<PlayerKill> expected = createKills();
+        killsTable.savePlayerKills(uuid, 1, expected);
+
+        commitTest();
+
+        Map<UUID, List<PlayerKill>> playerKills = killsTable.getPlayerKills();
+        List<PlayerKill> kills = playerKills.get(uuid);
+        assertFalse(playerKills.isEmpty());
+        assertNotNull(kills);
+        assertFalse(kills.isEmpty());
+        assertEquals(expected, kills);
     }
 }

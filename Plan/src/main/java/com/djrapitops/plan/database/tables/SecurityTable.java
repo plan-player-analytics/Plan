@@ -5,6 +5,7 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.WebUser;
@@ -28,9 +29,14 @@ public class SecurityTable extends Table {
     private final String columnUser = "username";
     private final String columnSaltedHash = "salted_pass_hash";
     private final String columnPermLevel = "permission_level";
+    private String insertStatement;
 
     public SecurityTable(SQLDB db, boolean usingMySQL) {
         super("plan_security", db, usingMySQL);
+        insertStatement = Insert.values(tableName,
+                columnUser,
+                columnSaltedHash,
+                columnPermLevel);
     }
 
     @Override
@@ -67,10 +73,7 @@ public class SecurityTable extends Table {
     public void addNewUser(String user, String saltPassHash, int permLevel) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement(Insert.values(tableName,
-                    columnUser,
-                    columnSaltedHash,
-                    columnPermLevel));
+            statement = prepareStatement(insertStatement);
             statement.setString(1, user);
             statement.setString(2, saltPassHash);
             statement.setInt(3, permLevel);
@@ -110,6 +113,7 @@ public class SecurityTable extends Table {
         ResultSet set = null;
         try {
             statement = prepareStatement(Select.all(tableName).toString());
+            statement.setFetchSize(5000);
             set = statement.executeQuery();
             List<WebUser> list = new ArrayList<>();
             while (set.next()) {
@@ -123,6 +127,31 @@ public class SecurityTable extends Table {
         } finally {
             endTransaction(statement);
             close(set, statement);
+        }
+    }
+
+    public void addUsers(List<WebUser> users) throws SQLException {
+        if (Verify.isEmpty(users)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+            for (WebUser user : users) {
+                String userName = user.getName();
+                String pass = user.getSaltedPassHash();
+                int permLvl = user.getPermLevel();
+
+                statement.setString(1, userName);
+                statement.setString(2, pass);
+                statement.setInt(3, permLvl);
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
         }
     }
 }

@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
@@ -12,9 +12,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -57,7 +55,7 @@ public class KillsTable extends UserIDTable {
     }
 
     @Override
-    public boolean removeUser(UUID uuid) {
+    public void removeUser(UUID uuid) throws SQLException{
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName +
@@ -68,10 +66,6 @@ public class KillsTable extends UserIDTable {
 
             statement.execute();
             commit(statement.getConnection());
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
         } finally {
             close(statement);
         }
@@ -127,6 +121,7 @@ public class KillsTable extends UserIDTable {
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
                     " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID);
 
+            statement.setFetchSize(10000);
             statement.setString(1, uuid.toString());
 
             set = statement.executeQuery();
@@ -143,6 +138,46 @@ public class KillsTable extends UserIDTable {
                 String weapon = set.getString(columnWeapon);
                 session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
             }
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public Map<UUID, List<PlayerKill>> getPlayerKills() throws SQLException {
+        return getPlayerKills(Plan.getServerUUID());
+    }
+
+    public Map<UUID, List<PlayerKill>> getPlayerKills(UUID serverUUID) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersVictimIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersKillerIDColumn = "a." + usersTable.getColumnID();
+            String usersVictimUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            String usersKillerUUIDColumn = "a." + usersTable.getColumnUUID() + " as killer_uuid";
+            statement = prepareStatement("SELECT " +
+                    columnDate + ", " +
+                    columnWeapon + ", " +
+                    usersVictimUUIDColumn + ", " +
+                    usersKillerUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + columnVictimUserID +
+                    " JOIN " + usersTable + " a on " + usersKillerIDColumn + "=" + columnKillerUserID);
+
+            statement.setFetchSize(10000);
+            set = statement.executeQuery();
+
+            Map<UUID, List<PlayerKill>> allKills = new HashMap<>();
+            while (set.next()) {
+                UUID killer = UUID.fromString(set.getString("killer_uuid"));
+                UUID victim = UUID.fromString(set.getString("victim_uuid"));
+                long date = set.getLong(columnDate);
+                String weapon = set.getString(columnWeapon);
+                List<PlayerKill> kills = allKills.getOrDefault(killer, new ArrayList<>());
+                kills.add(new PlayerKill(victim, weapon, date));
+                allKills.put(killer, kills);
+            }
+            return allKills;
         } finally {
             close(set, statement);
         }

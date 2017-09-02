@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * ${playersNewAverageDay} - (Number)
  * ${playersNewAverageWeek} - (Number)
  * ${playersNewAverageMonth} - (Number)
- * //TODO ${tableBodySessions}, ${sessionCount}, ${lastPeakTime}, ${playersLastPeak}, ${bestPeakTime}, ${playersBestPeak}
+ * //TODO ${tableBodySessions}
  *
  * @author Rsl1122
  * @since 3.5.2

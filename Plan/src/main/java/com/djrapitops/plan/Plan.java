@@ -144,7 +144,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             saveConfig();
             Benchmark.stop("Enable", "Copy default config");
 
-            processingQueue = new ProcessingQueue();
 
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
@@ -158,6 +157,8 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             if (!webServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized.");
             }
+
+            processingQueue = new ProcessingQueue();
 
             serverInfoManager = new ServerInfoManager(this);
             infoManager = new InformationManager(this);

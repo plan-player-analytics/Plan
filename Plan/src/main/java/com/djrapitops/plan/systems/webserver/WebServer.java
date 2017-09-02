@@ -434,9 +434,9 @@ public class WebServer {
     private Response forbiddenResponse(int permLevel, int required) {
         return PageCache.loadPage("forbidden", () ->
                 new ForbiddenResponse("Unauthorized User.<br>"
-                + "Make sure your user has the correct access level.<br>"
-                + "This page requires permission level of " + required + ",<br>"
-                + "This user has permission level of " + permLevel));
+                        + "Make sure your user has the correct access level.<br>"
+                        + "This page requires permission level of " + required + ",<br>"
+                        + "This user has permission level of " + permLevel));
     }
 
     private Response rootPageResponse(WebUser user) {
@@ -475,11 +475,6 @@ public class WebServer {
 
         if (uuid == null) {
             String error = "Player has no UUID";
-            return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
-        }
-
-        if (!infoManager.isCached(uuid)) {
-            String error = "Player's data was not cached.<br>Use /plan inspect " + playerName + " to cache the Data.";
             return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 

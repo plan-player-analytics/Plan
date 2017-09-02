@@ -73,7 +73,7 @@ public class InformationManager {
     }
 
     public void cachePlayer(UUID uuid) {
-        PageCache.loadPage("inspectPage: "+uuid, () -> new InspectPageResponse(this, uuid));
+        PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
         // TODO Player page plugin tab request
     }
 

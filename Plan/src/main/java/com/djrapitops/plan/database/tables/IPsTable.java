@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
@@ -18,6 +19,7 @@ public class IPsTable extends UserIDTable {
 
     private final String columnIP = "ip";
     private final String columnGeolocation = "geolocation";
+    private String insertStatement;
 
     /**
      * @param db         The database
@@ -25,6 +27,13 @@ public class IPsTable extends UserIDTable {
      */
     public IPsTable(SQLDB db, boolean usingMySQL) {
         super("plan_ips", db, usingMySQL);
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnUserID + ", "
+                + columnIP + ", "
+                + columnGeolocation
+                + ") VALUES ("
+                + usersTable.statementSelectID + ", "
+                + "?, ?)";
     }
 
     /**
@@ -89,13 +98,8 @@ public class IPsTable extends UserIDTable {
     private void insertIp(UUID uuid, String ip, String geolocation) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnIP + ", "
-                    + columnGeolocation
-                    + ") VALUES ("
-                    + usersTable.statementSelectID + ", "
-                    + "?, ?)");
+
+            statement = prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setString(2, ip);
             statement.setString(3, geolocation);
@@ -154,6 +158,71 @@ public class IPsTable extends UserIDTable {
         } finally {
             endTransaction(statement);
             close(set, statement);
+        }
+    }
+
+    public Map<UUID, Map<String, String>> getAllIPsAndGeolocations() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+
+            statement = prepareStatement("SELECT " +
+                    columnGeolocation + ", " +
+                    columnIP + ", " +
+                    usersUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Map<String, String>> map = new HashMap<>();
+            while (set.next()) {
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                Map<String, String> userMap = map.getOrDefault(uuid, new HashMap<>());
+
+                String geoLocation = set.getString(columnGeolocation);
+                String ip = set.getString(columnIP);
+
+                userMap.put(ip, geoLocation);
+                map.put(uuid, userMap);
+            }
+            return map;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertIPsAndGeolocations(Map<UUID, Map<String, String>> allIPsAndGeolocations) throws SQLException {
+        if (Verify.isEmpty(allIPsAndGeolocations)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+
+            // Every User
+            for (UUID uuid : allIPsAndGeolocations.keySet()) {
+                // Every IP & Geolocation
+                for (Map.Entry<String, String> entry : allIPsAndGeolocations.get(uuid).entrySet()) {
+                    String ip = entry.getKey();
+                    String geoLocation = entry.getValue();
+
+                    statement.setString(1, uuid.toString());
+                    statement.setString(2, ip);
+                    statement.setString(3, geoLocation);
+
+                    statement.addBatch();
+                }
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
         }
     }
 }

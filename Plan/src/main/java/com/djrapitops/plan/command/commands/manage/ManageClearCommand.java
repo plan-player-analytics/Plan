@@ -5,12 +5,15 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
+
+import java.sql.SQLException;
 
 /**
  * This manage subcommand is used to clear a database of all data.
@@ -80,12 +83,12 @@ public class ManageClearCommand extends SubCommand {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    if (database.removeAllData()) {
-                        // TODO Clear active session of all users & start new ones
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    }
+                    database.removeAllData();
+                    // TODO Clear active session of all users & start new ones
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
+                } catch (SQLException e) {
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
+                    Log.toLog(this.getClass().getSimpleName() + "/" + this.getTaskName(), e);
                 } finally {
                     this.cancel();
                 }

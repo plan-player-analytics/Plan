@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
 import java.sql.PreparedStatement;
@@ -23,7 +22,7 @@ public abstract class UserIDTable extends Table {
         usersTable = db.getUsersTable();
     }
 
-    public boolean removeUser(UUID uuid) {
+    public void removeUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = prepareStatement("DELETE FROM " + tableName +
@@ -32,10 +31,6 @@ public abstract class UserIDTable extends Table {
 
             statement.execute();
             commit(statement.getConnection());
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
         } finally {
             close(statement);
         }

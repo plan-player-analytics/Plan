@@ -1,5 +1,7 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
@@ -65,11 +67,26 @@ public abstract class SQLDB extends Database {
         try {
             setupDataSource();
             setupDatabase();
-            clean();
+            scheduleClean(10L);
         } finally {
             Benchmark.stop("Database", benchName);
             Log.logDebug("Database");
         }
+    }
+
+    public void scheduleClean(long secondsDelay) {
+        plugin.getRunnableFactory().createNew(new AbsRunnable("DB Clean Task") {
+            @Override
+            public void run() {
+                try {
+                    clean();
+                } catch (SQLException e) {
+                    Log.toLog(this.getClass().getName(), e);
+                } finally {
+                    cancel();
+                }
+            }
+        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay);
     }
 
     /**
@@ -200,9 +217,9 @@ public abstract class SQLDB extends Database {
         }
     }
 
-    public boolean removeAccount(UUID uuid) throws SQLException {
+    public void removeAccount(UUID uuid) throws SQLException {
         if (uuid == null) {
-            return false;
+            return;
         }
 
         try {
@@ -215,45 +232,30 @@ public abstract class SQLDB extends Database {
                 }
 
                 UserIDTable table = (UserIDTable) t;
-                if (!table.removeUser(uuid)) {
-                    throw new IllegalStateException("Removal Failed");
-                }
+                table.removeUser(uuid);
             }
-
-            return true;
-        } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
-            return false;
         } finally {
             Benchmark.stop("Database", "Remove Account");
             setAvailable();
         }
     }
 
-    private void clean() throws DatabaseInitException {
+    private void clean() throws SQLException {
         Log.info("Cleaning the database.");
-        try {
-            tpsTable.clean();
-            Log.info("Clean complete.");
-        } catch (SQLException e) {
-            throw new DatabaseInitException("Database Clean failed", e);
-        }
+        tpsTable.clean();
+        Log.info("Clean complete.");
     }
 
     /**
      * @return
      */
     @Override
-    public boolean removeAllData() {
+    public void removeAllData() throws SQLException {
         setStatus("Clearing all data");
         try {
             for (Table table : getAllTablesInRemoveOrder()) {
-                if (!table.removeAllData()) {
-                    return false;
-                }
+                table.removeAllData();
             }
-
-            return true;
         } finally {
             setAvailable();
         }

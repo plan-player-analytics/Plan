@@ -210,7 +210,6 @@ public class WorldTimesTable extends UserIDTable {
         try {
             String worldIDColumn = worldTable + "." + worldTable.getColumnID();
             String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
-            String sessionIDColumn = sessionsTable + "." + sessionsTable.getColumnID();
             statement = prepareStatement("SELECT " +
                     "SUM(" + columnSurvival + ") as survival, " +
                     "SUM(" + columnCreative + ") as creative, " +

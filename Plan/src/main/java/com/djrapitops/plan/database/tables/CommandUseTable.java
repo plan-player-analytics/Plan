@@ -6,7 +6,6 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +26,7 @@ public class CommandUseTable extends Table {
     private final String columnServerID = "server_id";
 
     private final ServerTable serverTable;
+    private String insertStatement;
 
     /**
      * @param db
@@ -35,6 +35,11 @@ public class CommandUseTable extends Table {
     public CommandUseTable(SQLDB db, boolean usingMySQL) {
         super("plan_commandusages", db, usingMySQL);
         serverTable = db.getServerTable();
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnCommand + ", "
+                + columnTimesUsed + ", "
+                + columnServerID
+                + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
     }
 
     /**
@@ -72,7 +77,6 @@ public class CommandUseTable extends Table {
      * @throws SQLException
      */
     public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
-        Benchmark.start("Get CommandUse");
         Map<String, Integer> commandUse = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -96,7 +100,6 @@ public class CommandUseTable extends Table {
         } finally {
             endTransaction(statement);
             close(set, statement);
-            Benchmark.stop("Database", "Get CommandUse");
         }
     }
 
@@ -127,11 +130,6 @@ public class CommandUseTable extends Table {
     private void insertCommand(String command) throws SQLException {
         PreparedStatement statement = null;
         try {
-            String insertStatement = "INSERT INTO " + tableName + " ("
-                    + columnCommand + ", "
-                    + columnTimesUsed + ", "
-                    + columnServerID
-                    + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
             statement = prepareStatement(insertStatement);
             statement.setString(1, command);
             statement.setInt(2, 1);
@@ -175,6 +173,69 @@ public class CommandUseTable extends Table {
         } finally {
             endTransaction(statement);
             close(set, statement);
+        }
+    }
+
+    public Map<UUID, Map<String, Integer>> getAllCommandUsages() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            statement = prepareStatement("SELECT " +
+                    columnCommand + ", " +
+                    columnTimesUsed + ", " +
+                    serverUUIDColumn + ", " +
+                    " FROM " + tableName +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Map<String, Integer>> map = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+
+                Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+
+                String command = set.getString(columnCommand);
+                int timesUsed = set.getInt(columnTimesUsed);
+
+                serverMap.put(command, timesUsed);
+                map.put(serverUUID, serverMap);
+            }
+            return map;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) throws SQLException {
+        if (allCommandUsages.isEmpty()) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+
+            // Every Server
+            for (UUID serverUUID : allCommandUsages.keySet()) {
+                // Every Command
+                for (Map.Entry<String, Integer> entry : allCommandUsages.get(serverUUID).entrySet()) {
+                    String command = entry.getKey();
+                    int timesUsed = entry.getValue();
+
+                    statement.setString(1, command);
+                    statement.setInt(2, timesUsed);
+                    statement.setString(3, serverUUID.toString());
+                    statement.addBatch();
+                }
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
         }
     }
 }
