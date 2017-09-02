@@ -14,7 +14,6 @@ import java.util.UUID;
  * <p>
  * Contains following placeholders after analyzed:
  * ${playersTotal}
- * //TODO ${playersOnline}, ${playersMax}
  *
  * @author Rsl1122
  * @since 3.5.2

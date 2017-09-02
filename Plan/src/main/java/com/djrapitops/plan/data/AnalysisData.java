@@ -49,7 +49,7 @@ public class AnalysisData extends RawData {
         joinInfoPart = new JoinInfoPart();
         playerCountPart = new PlayerCountPart();
         playtimePart = new PlaytimePart();
-        killPart = new KillPart();
+        killPart = new KillPart(joinInfoPart);
         tpsPart = new TPSPart();
         activityPart = new ActivityPart(joinInfoPart, tpsPart);
         worldPart = new WorldPart();

@@ -1,5 +1,10 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
+import main.java.com.djrapitops.plan.data.Session;
+
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Part responsible for all Death related analysis.
  * <p>
@@ -15,41 +20,30 @@ package main.java.com.djrapitops.plan.data.analysis;
  */
 public class KillPart extends RawData {
 
+    private final JoinInfoPart joinInfoPart;
+
     private long playerKills;
     private long mobKills;
     private long deaths;
 
-    public KillPart() {
+    public KillPart(JoinInfoPart joinInfoPart) {
+        this.joinInfoPart = joinInfoPart;
+
         playerKills = 0;
         mobKills = 0;
         deaths = 0;
     }
 
-    // TODO JoinInfo Part, sessions for kills.
-
     @Override
     public void analyse() {
-        addValue("deathCount", deaths);
+        List<Session> sessions = joinInfoPart.getAllSessions();
+        deaths += sessions.stream().mapToLong(Session::getDeaths).sum();
+        mobKills += sessions.stream().mapToLong(Session::getMobKills).sum();
+        playerKills += sessions.stream().map(Session::getPlayerKills).mapToLong(Collection::size).sum();
+
+        addValue("deathCount", this.deaths);
         addValue("mobKillCount", mobKills);
         addValue("killCount", playerKills);
-    }
-
-    /**
-     * Adds kills to the dataset.
-     *
-     * @param amount amount of kills
-     * @throws IllegalArgumentException if kills is null
-     */
-    public void addKills(long amount) {
-        playerKills += amount;
-    }
-
-    public void addMobKills(long amount) {
-        mobKills += amount;
-    }
-
-    public void addDeaths(long amount) {
-        deaths += amount;
     }
 
     public long getPlayerKills() {
