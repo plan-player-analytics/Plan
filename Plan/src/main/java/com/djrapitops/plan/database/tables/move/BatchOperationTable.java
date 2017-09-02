@@ -52,26 +52,44 @@ public class BatchOperationTable extends Table {
     }
 
     public void copyActions(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getActionsTable().insertActions(db.getActionsTable().getAllActions());
     }
 
     public void copyCommandUse(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getCommandUseTable().insertCommandUsage(db.getCommandUseTable().getAllCommandUsages());
     }
 
     public void copyIPsAndGeolocs(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getIpsTable().insertIPsAndGeolocations(db.getIpsTable().getAllIPsAndGeolocations());
     }
 
     public void copyNicknames(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
     }
 
     public void copyWebUsers(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getSecurityTable().addUsers(db.getSecurityTable().getUsers());
     }
 
     public void copyServers(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         ServerTable serverTable = db.getServerTable();
         List<ServerInfo> servers = serverTable.getBukkitServers();
         serverTable.getBungeeInfo().ifPresent(servers::add);
@@ -79,14 +97,23 @@ public class BatchOperationTable extends Table {
     }
 
     public void copyTPS(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
     }
 
     public void copyUserInfo(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getUserInfoTable().insertUserInfo(db.getUserInfoTable().getAllUserInfo());
     }
 
     public void copyWorlds(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
         toDB.db.getWorldTable().saveWorlds(db.getWorldTable().getWorlds());
     }
 }
