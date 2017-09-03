@@ -547,7 +547,7 @@ public class SessionsTable extends UserIDTable {
         }
     }
 
-    public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean includeExtraData) throws SQLException {
+    public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -592,7 +592,7 @@ public class SessionsTable extends UserIDTable {
                 sessionsByUser.put(uuid, sessions);
                 map.put(serverUUID, sessionsByUser);
             }
-            if (includeExtraData) {
+            if (getKillsAndWorldTimes) {
                 db.getKillsTable().addKillsToSessions(map);
                 db.getWorldTimesTable().addWorldTimesToSessions(map);
             }
@@ -603,7 +603,7 @@ public class SessionsTable extends UserIDTable {
         }
     }
 
-    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean containsExtraData) throws SQLException {
+    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean saveKillsAndWorldTimes) throws SQLException {
         if (Verify.isEmpty(allSessions)) {
             return;
         }
@@ -632,7 +632,7 @@ public class SessionsTable extends UserIDTable {
         } finally {
             close(statement);
         }
-        if (containsExtraData) {
+        if (saveKillsAndWorldTimes) {
             Map<UUID, Map<UUID, List<Session>>> savedSessions = getAllSessions(false);
             matchSessionIDs(allSessions, savedSessions);
             db.getKillsTable().savePlayerKills(allSessions);

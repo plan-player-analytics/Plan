@@ -72,7 +72,7 @@ public class BatchOperationTable extends Table {
         copyNicknames(toDB);
         copyTPS(toDB);
         copyWebUsers(toDB);
-        // TODO WorldTimes, Sessions, PlayerKills
+        copySessions(toDB);
     }
 
     public void copyActions(BatchOperationTable toDB) throws SQLException {
@@ -149,5 +149,12 @@ public class BatchOperationTable extends Table {
         UsersTable toTable = toDB.db.getUsersTable();
         toTable.insertUsers(fromTable.getUsers());
         toTable.updateKicked(fromTable.getAllTimesKicked());
+    }
+
+    public void copySessions(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
+        toDB.db.getSessionsTable().insertSessions(db.getSessionsTable().getAllSessions(true), true);
     }
 }

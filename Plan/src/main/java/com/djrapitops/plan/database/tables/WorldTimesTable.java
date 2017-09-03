@@ -284,7 +284,6 @@ public class WorldTimesTable extends UserIDTable {
                 for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
                     UUID uuid = entry.getKey();
                     List<Session> sessions = entry.getValue();
-
                     for (Session session : sessions) {
                         int sessionID = session.getSessionID();
                         for (Map.Entry<String, GMTimes> worldTimesEntry : session.getWorldTimes().getWorldTimes().entrySet()) {
@@ -293,7 +292,6 @@ public class WorldTimesTable extends UserIDTable {
                             statement.setString(1, uuid.toString());
                             statement.setString(2, worldName);
                             statement.setInt(3, sessionID);
-
                             statement.setLong(4, gmTimes.getTime(gms[0]));
                             statement.setLong(5, gmTimes.getTime(gms[1]));
                             statement.setLong(6, gmTimes.getTime(gms[2]));
