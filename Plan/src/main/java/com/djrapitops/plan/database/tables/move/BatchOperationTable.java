@@ -69,7 +69,8 @@ public class BatchOperationTable extends Table {
             return;
         }
         Log.debug("Start Batch Copy Everything");
-        toDB.getDb().removeAllData();
+        toDB.removeAllData();
+
         copyServers(toDB);
         System.out.println(toDB.getDb().getServerTable().getServerNames().toString());
         copyUsers(toDB);

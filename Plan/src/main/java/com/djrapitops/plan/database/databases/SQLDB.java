@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.databases;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.ITask;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
@@ -24,6 +25,7 @@ public abstract class SQLDB extends Database {
 
     private final boolean usingMySQL;
     private boolean open = false;
+    private ITask dbCleanTask;
 
     /**
      * @param plugin
@@ -77,7 +79,7 @@ public abstract class SQLDB extends Database {
     }
 
     public void scheduleClean(long secondsDelay) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("DB Clean Task") {
+        dbCleanTask = plugin.getRunnableFactory().createNew("DB Clean Task", new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -85,7 +87,7 @@ public abstract class SQLDB extends Database {
                 } catch (SQLException e) {
                     Log.toLog(this.getClass().getName(), e);
                 } finally {
-                    super.cancel();
+                    cancel();
                 }
             }
         }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay);
@@ -177,6 +179,9 @@ public abstract class SQLDB extends Database {
         setStatus("Closed");
         open = false;
         Log.logDebug("Database"); // Log remaining Debug info if present
+        if (dbCleanTask != null) {
+            dbCleanTask.cancel();
+        }
     }
 
     /**

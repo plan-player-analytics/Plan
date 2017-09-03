@@ -147,8 +147,6 @@ public class TestInit {
                     @Override
                     public void cancel() {
                         timer.cancel();
-                        task.cancel();
-                        runnable.cancel();
                     }
 
                     @Override
