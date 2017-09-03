@@ -215,9 +215,7 @@ public class KillsTable extends UserIDTable {
 
                     for (Session session : sessions) {
                         int sessionID = session.getSessionID();
-                        System.out.println(usersTable.getSavedUUIDs());
                         for (PlayerKill kill : session.getPlayerKills()) {
-                            System.out.println(kill);
                             UUID victim = kill.getVictim();
                             long date = kill.getTime();
                             String weapon = kill.getWeapon();

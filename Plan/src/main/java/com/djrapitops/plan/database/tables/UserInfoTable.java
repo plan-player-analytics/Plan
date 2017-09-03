@@ -228,7 +228,6 @@ public class UserInfoTable extends UserIDTable {
 
                 serverMap.put(serverUUID, userInfos);
             }
-            System.out.println(serverMap);
             return serverMap;
         } finally {
             endTransaction(statement);

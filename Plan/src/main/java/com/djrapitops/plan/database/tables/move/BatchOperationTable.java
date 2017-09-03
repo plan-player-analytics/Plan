@@ -134,7 +134,6 @@ public class BatchOperationTable extends Table {
         Log.debug("Batch Copy Servers");
         ServerTable serverTable = db.getServerTable();
         List<ServerInfo> servers = serverTable.getBukkitServers();
-        System.out.println(servers.toString());
         serverTable.getBungeeInfo().ifPresent(servers::add);
         toDB.getDb().getServerTable().insertAllServers(servers);
     }
