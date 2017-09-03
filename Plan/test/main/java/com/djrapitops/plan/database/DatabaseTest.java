@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -565,56 +566,16 @@ public class DatabaseTest {
 
     @Test
     public void testRemovalEverything() throws SQLException {
-        saveUserTwo();
-
         UserInfoTable userInfoTable = db.getUserInfoTable();
         UsersTable usersTable = db.getUsersTable();
         SessionsTable sessionsTable = db.getSessionsTable();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
         IPsTable ipsTable = db.getIpsTable();
         ActionsTable actionsTable = db.getActionsTable();
-
-        userInfoTable.registerUserInfo(uuid, 223456789L);
-        saveTwoWorlds();
-
-        Session session = new Session(12345L, "", "");
-        session.endSession(22345L);
-        session.setWorldTimes(createWorldTimes());
-        session.setPlayerKills(createKills());
-
-        sessionsTable.saveSession(uuid, session);
-        nicknamesTable.saveUserName(uuid, "TestNick");
-        ipsTable.saveIP(uuid, "1.2.3.4", "TestLoc");
-        actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
-
-        assertTrue(usersTable.isRegistered(uuid));
-
-        db.getCommandUseTable().commandUsed("plan");
-        db.getCommandUseTable().commandUsed("plan");
-        db.getCommandUseTable().commandUsed("tp");
-        db.getCommandUseTable().commandUsed("help");
-        db.getCommandUseTable().commandUsed("help");
-        db.getCommandUseTable().commandUsed("help");
-
         TPSTable tpsTable = db.getTpsTable();
-        List<TPS> expected = new ArrayList<>();
-        Random r = new Random();
-        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
-        int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
-        final double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
-        final long usedMemory = 51231251254L;
-        final int entityCount = 6123;
-        final int chunksLoaded = 2134;
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
-        for (TPS tps : expected) {
-            tpsTable.insertTPS(tps);
-        }
-
         SecurityTable securityTable = db.getSecurityTable();
-        securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
+
+        saveAllData(db);
 
         db.removeAllData();
 
@@ -632,6 +593,60 @@ public class DatabaseTest {
         assertTrue(tpsTable.getTPSData().isEmpty());
         assertTrue(db.getServerTable().getBukkitServers().isEmpty());
         assertTrue(securityTable.getUsers().isEmpty());
+    }
+
+    private void saveAllData(Database database) throws SQLException {
+        UserInfoTable userInfoTable = database.getUserInfoTable();
+        UsersTable usersTable = database.getUsersTable();
+        SessionsTable sessionsTable = database.getSessionsTable();
+        NicknamesTable nicknamesTable = database.getNicknamesTable();
+        IPsTable ipsTable = database.getIpsTable();
+        ActionsTable actionsTable = database.getActionsTable();
+        TPSTable tpsTable = database.getTpsTable();
+        SecurityTable securityTable = database.getSecurityTable();
+
+        saveUserTwo();
+
+        userInfoTable.registerUserInfo(uuid, 223456789L);
+        saveTwoWorlds();
+
+        Session session = new Session(12345L, "", "");
+        session.endSession(22345L);
+        session.setWorldTimes(createWorldTimes());
+        session.setPlayerKills(createKills());
+
+        sessionsTable.saveSession(uuid, session);
+        nicknamesTable.saveUserName(uuid, "TestNick");
+        ipsTable.saveIP(uuid, "1.2.3.4", "TestLoc");
+        actionsTable.insertAction(uuid, new Action(1324L, Actions.FIRST_SESSION, "Add"));
+
+        assertTrue(usersTable.isRegistered(uuid));
+
+        CommandUseTable commandUseTable = database.getCommandUseTable();
+        commandUseTable.commandUsed("plan");
+        commandUseTable.commandUsed("plan");
+        commandUseTable.commandUsed("tp");
+        commandUseTable.commandUsed("help");
+        commandUseTable.commandUsed("help");
+        commandUseTable.commandUsed("help");
+
+        List<TPS> expected = new ArrayList<>();
+        Random r = new Random();
+        OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
+        int availableProcessors = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
+        final double averageCPUUsage = MathUtils.round(operatingSystemMXBean.getSystemLoadAverage() / availableProcessors * 100.0);
+        final long usedMemory = 51231251254L;
+        final int entityCount = 6123;
+        final int chunksLoaded = 2134;
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
+        expected.add(new TPS(r.nextLong(), r.nextDouble(), r.nextInt(100000000), averageCPUUsage, usedMemory, entityCount, chunksLoaded));
+        for (TPS tps : expected) {
+            tpsTable.insertTPS(tps);
+        }
+
+        securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
     }
 
     @Test
@@ -722,5 +737,39 @@ public class DatabaseTest {
         assertNotNull(kills);
         assertFalse(kills.isEmpty());
         assertEquals(expected, kills);
+    }
+
+    @Test // TODO Fix all issues with this test.
+    public void testBackupAndRestore() throws SQLException, DatabaseInitException {
+        SQLiteDB backup = new SQLiteDB(plan, "debug-backup" + MiscUtils.getTime());
+        backup.init();
+
+        saveAllData(db);
+
+        ManageUtils.clearAndCopy(backup, db);
+
+        UserInfoTable userInfoTable = backup.getUserInfoTable();
+        UsersTable usersTable = backup.getUsersTable();
+        SessionsTable sessionsTable = backup.getSessionsTable();
+        NicknamesTable nicknamesTable = backup.getNicknamesTable();
+        IPsTable ipsTable = backup.getIpsTable();
+        ActionsTable actionsTable = backup.getActionsTable();
+        TPSTable tpsTable = backup.getTpsTable();
+        SecurityTable securityTable = backup.getSecurityTable();
+
+        assertTrue(usersTable.isRegistered(uuid));
+        assertTrue(usersTable.isRegistered(uuid2));
+        assertTrue(userInfoTable.isRegistered(uuid));
+
+        assertFalse(nicknamesTable.getNicknames(uuid).isEmpty());
+        assertFalse(ipsTable.getGeolocations(uuid).isEmpty());
+        assertFalse(ipsTable.getIps(uuid).isEmpty());
+        assertFalse(sessionsTable.getSessions(uuid).isEmpty());
+        assertFalse(actionsTable.getActions(uuid).isEmpty());
+        assertFalse(backup.getCommandUse().isEmpty());
+        assertFalse(backup.getWorldTable().getWorlds().isEmpty());
+        assertFalse(tpsTable.getTPSData().isEmpty());
+        assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
+        assertFalse(securityTable.getUsers().isEmpty());
     }
 }
