@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.database.tables.move;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -67,92 +68,105 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.removeAllData();
+        Log.debug("Start Batch Copy Everything");
+        toDB.getDb().removeAllData();
         copyServers(toDB);
+        System.out.println(toDB.getDb().getServerTable().getServerNames().toString());
         copyUsers(toDB);
+        System.out.println(toDB.getDb().getSavedUUIDs().toString());
         copyWorlds(toDB);
-        copyUserInfo(toDB);
-        copyActions(toDB);
-        copyCommandUse(toDB);
-        copyIPsAndGeolocs(toDB);
-        copyNicknames(toDB);
         copyTPS(toDB);
         copyWebUsers(toDB);
+        copyCommandUse(toDB);
+        copyActions(toDB);
+        copyIPsAndGeolocs(toDB);
+        copyNicknames(toDB);
         copySessions(toDB);
+        copyUserInfo(toDB);
     }
 
     public void copyActions(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getActionsTable().insertActions(db.getActionsTable().getAllActions());
+        Log.debug("Batch Copy Actions");
+        toDB.getDb().getActionsTable().insertActions(db.getActionsTable().getAllActions());
     }
 
     public void copyCommandUse(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getCommandUseTable().insertCommandUsage(db.getCommandUseTable().getAllCommandUsages());
+        Log.debug("Batch Copy Commands");
+        toDB.getDb().getCommandUseTable().insertCommandUsage(db.getCommandUseTable().getAllCommandUsages());
     }
 
     public void copyIPsAndGeolocs(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getIpsTable().insertIPsAndGeolocations(db.getIpsTable().getAllIPsAndGeolocations());
+        Log.debug("Batch Copy IPs & Geolocations");
+        toDB.getDb().getIpsTable().insertIPsAndGeolocations(db.getIpsTable().getAllIPsAndGeolocations());
     }
 
     public void copyNicknames(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
+        Log.debug("Batch Copy Nicknames");
+        toDB.getDb().getNicknamesTable().insertNicknames(db.getNicknamesTable().getAllNicknames());
     }
 
     public void copyWebUsers(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getSecurityTable().addUsers(db.getSecurityTable().getUsers());
+        Log.debug("Batch Copy WebUsers");
+        toDB.getDb().getSecurityTable().addUsers(db.getSecurityTable().getUsers());
     }
 
     public void copyServers(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
+        Log.debug("Batch Copy Servers");
         ServerTable serverTable = db.getServerTable();
         List<ServerInfo> servers = serverTable.getBukkitServers();
         serverTable.getBungeeInfo().ifPresent(servers::add);
-        toDB.db.getServerTable().insertAllServers(servers);
+        toDB.getDb().getServerTable().insertAllServers(servers);
     }
 
     public void copyTPS(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
+        Log.debug("Batch Copy TPS");
+        toDB.getDb().getTpsTable().insertAllTPS(db.getTpsTable().getAllTPS());
     }
 
     public void copyUserInfo(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getUserInfoTable().insertUserInfo(db.getUserInfoTable().getAllUserInfo());
+        Log.debug("Batch Copy UserInfo");
+        toDB.getDb().getUserInfoTable().insertUserInfo(db.getUserInfoTable().getAllUserInfo());
     }
 
     public void copyWorlds(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getWorldTable().saveWorlds(db.getWorldTable().getWorlds());
+        Log.debug("Batch Copy Worlds");
+        toDB.getDb().getWorldTable().saveWorlds(db.getWorldTable().getWorlds());
     }
 
     public void copyUsers(BatchOperationTable toDB) throws SQLException {
         if (toDB.equals(this)) {
             return;
         }
+        Log.debug("Batch Copy Users");
         UsersTable fromTable = db.getUsersTable();
-        UsersTable toTable = toDB.db.getUsersTable();
+        UsersTable toTable = toDB.getDb().getUsersTable();
         toTable.insertUsers(fromTable.getUsers());
         toTable.updateKicked(fromTable.getAllTimesKicked());
     }
@@ -161,6 +175,7 @@ public class BatchOperationTable extends Table {
         if (toDB.equals(this)) {
             return;
         }
-        toDB.db.getSessionsTable().insertSessions(db.getSessionsTable().getAllSessions(true), true);
+        Log.debug("Batch Copy Sessions");
+        toDB.getDb().getSessionsTable().insertSessions(db.getSessionsTable().getAllSessions(true), true);
     }
 }

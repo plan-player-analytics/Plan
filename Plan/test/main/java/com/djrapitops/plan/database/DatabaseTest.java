@@ -596,6 +596,7 @@ public class DatabaseTest {
     }
 
     private void saveAllData(Database database) throws SQLException {
+        System.out.println("Saving all possible data to the Database..");
         UserInfoTable userInfoTable = database.getUserInfoTable();
         UsersTable usersTable = database.getUsersTable();
         SessionsTable sessionsTable = database.getSessionsTable();
@@ -647,6 +648,7 @@ public class DatabaseTest {
         }
 
         securityTable.addNewUser(new WebUser("Test", "RandomGarbageBlah", 0));
+        System.out.println("Done!\n");
     }
 
     @Test

@@ -86,4 +86,16 @@ public class UserInfo {
     public int hashCode() {
         return Objects.hash(uuid, name, registered, lastSeen, banned, opped);
     }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", registered=" + registered +
+                ", lastSeen=" + lastSeen +
+                ", banned=" + banned +
+                ", opped=" + opped +
+                '}';
+    }
 }

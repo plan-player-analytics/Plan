@@ -85,7 +85,7 @@ public abstract class SQLDB extends Database {
                 } catch (SQLException e) {
                     Log.toLog(this.getClass().getName(), e);
                 } finally {
-                    cancel();
+                    super.cancel();
                 }
             }
         }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * secondsDelay);

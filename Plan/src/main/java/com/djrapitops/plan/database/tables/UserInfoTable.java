@@ -226,8 +226,9 @@ public class UserInfoTable extends UserIDTable {
 
                 userInfos.add(new UserInfo(uuid, "", registered, op, banned));
 
-                serverMap.put(uuid, userInfos);
+                serverMap.put(serverUUID, userInfos);
             }
+            System.out.println(serverMap);
             return serverMap;
         } finally {
             endTransaction(statement);

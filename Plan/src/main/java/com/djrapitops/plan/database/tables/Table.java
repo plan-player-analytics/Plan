@@ -114,6 +114,7 @@ public abstract class Table {
      * @throws SQLException
      */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
+        System.out.println(sql);
         return getConnection().prepareStatement(sql);
     }
 
@@ -209,5 +210,9 @@ public abstract class Table {
     @Override
     public int hashCode() {
         return Objects.hashCode(tableName, db, usingMySQL);
+    }
+
+    public SQLDB getDb() {
+        return db;
     }
 }
