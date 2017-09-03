@@ -13,10 +13,8 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Table class representing database table plan_world_times.
@@ -35,6 +33,7 @@ public class WorldTimesTable extends UserIDTable {
 
     private final WorldTable worldTable;
     private final SessionsTable sessionsTable;
+    private String insertStatement;
 
     /**
      * Constructor.
@@ -46,6 +45,18 @@ public class WorldTimesTable extends UserIDTable {
         super("plan_world_times", db, usingMySQL);
         worldTable = db.getWorldTable();
         sessionsTable = db.getSessionsTable();
+        insertStatement = "INSERT INTO " + tableName + " (" +
+                columnUserID + ", " +
+                columnWorldId + ", " +
+                columnSessionID + ", " +
+                columnSurvival + ", " +
+                columnCreative + ", " +
+                columnAdventure + ", " +
+                columnSpectator +
+                ") VALUES (" +
+                usersTable.statementSelectID + ", " +
+                worldTable.statementSelectID + ", " +
+                "?, ?, ?, ?, ?)";
     }
 
     @Override
@@ -76,18 +87,7 @@ public class WorldTimesTable extends UserIDTable {
 
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " (" +
-                    columnUserID + ", " +
-                    columnWorldId + ", " +
-                    columnSessionID + ", " +
-                    columnSurvival + ", " +
-                    columnCreative + ", " +
-                    columnAdventure + ", " +
-                    columnSpectator +
-                    ") VALUES (" +
-                    usersTable.statementSelectID + ", " +
-                    worldTable.statementSelectID + ", " +
-                    "?, ?, ?, ?, ?)");
+            statement = prepareStatement(insertStatement);
 
             for (Map.Entry<String, GMTimes> entry : worldTimesMap.entrySet()) {
                 String worldName = entry.getKey();
@@ -237,6 +237,115 @@ public class WorldTimesTable extends UserIDTable {
                 GMTimes gmTimes = new GMTimes(gmMap);
 
                 worldTimes.setGMTimesForWorld(worldName, gmTimes);
+            }
+            return worldTimes;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void addWorldTimesToSessions(Map<UUID, Map<UUID, List<Session>>> map) throws SQLException {
+        Map<Integer, WorldTimes> worldTimesBySessionID = getAllWorldTimesBySessionID();
+
+        for (UUID serverUUID : map.keySet()) {
+            for (List<Session> sessions : map.get(serverUUID).values()) {
+                for (Session session : sessions) {
+                    WorldTimes worldTimes = worldTimesBySessionID.get(session.getSessionID());
+                    if (worldTimes != null) {
+                        session.setWorldTimes(worldTimes);
+                    }
+                }
+            }
+        }
+    }
+
+    public void saveWorldTimes(Map<UUID, Map<UUID, List<Session>>> allSessions) throws SQLException {
+        if (Verify.isEmpty(allSessions)) {
+            return;
+        }
+        List<String> worldNames = allSessions.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .flatMap(Collection::stream)
+                .map(Session::getWorldTimes)
+                .map(WorldTimes::getWorldTimes)
+                .map(Map::keySet)
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
+        db.getWorldTable().saveWorlds(worldNames);
+
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+            String[] gms = GMTimes.getGMKeyArray();
+            for (UUID serverUUID : allSessions.keySet()) {
+                for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
+                    UUID uuid = entry.getKey();
+                    List<Session> sessions = entry.getValue();
+
+                    for (Session session : sessions) {
+                        int sessionID = session.getSessionID();
+                        for (Map.Entry<String, GMTimes> worldTimesEntry : session.getWorldTimes().getWorldTimes().entrySet()) {
+                            String worldName = worldTimesEntry.getKey();
+                            GMTimes gmTimes = worldTimesEntry.getValue();
+                            statement.setString(1, uuid.toString());
+                            statement.setString(2, worldName);
+                            statement.setInt(3, sessionID);
+
+                            statement.setLong(4, gmTimes.getTime(gms[0]));
+                            statement.setLong(5, gmTimes.getTime(gms[1]));
+                            statement.setLong(6, gmTimes.getTime(gms[2]));
+                            statement.setLong(7, gmTimes.getTime(gms[3]));
+                            statement.addBatch();
+                        }
+                    }
+                }
+            }
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            statement = prepareStatement("SELECT " +
+                    columnSessionID + ", " +
+                    columnSurvival + ", " +
+                    columnCreative + ", " +
+                    columnAdventure + ", " +
+                    columnSpectator + ", " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId
+            );
+            statement.setFetchSize(10000);
+            set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
+            Map<Integer, WorldTimes> worldTimes = new HashMap<>();
+            while (set.next()) {
+                int sessionID = set.getInt(columnSessionID);
+
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong(columnSurvival));
+                gmMap.put(gms[1], set.getLong(columnCreative));
+                gmMap.put(gms[2], set.getLong(columnAdventure));
+                gmMap.put(gms[3], set.getLong(columnSpectator));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                WorldTimes worldTOfSession = worldTimes.getOrDefault(sessionID, new WorldTimes(new HashMap<>()));
+                worldTOfSession.setGMTimesForWorld(worldName, gmTimes);
+                worldTimes.put(sessionID, worldTOfSession);
             }
             return worldTimes;
         } finally {

@@ -182,4 +182,12 @@ public class KillsTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) {
+        // TODO
+    }
+
+    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) {
+        // TODO
+    }
 }

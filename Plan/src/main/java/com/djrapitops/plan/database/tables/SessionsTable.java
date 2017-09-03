@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.Session;
@@ -28,6 +29,7 @@ public class SessionsTable extends UserIDTable {
     private final String columnDeaths = "deaths";
 
     private final ServerTable serverTable;
+    private String insertStatement;
 
     /**
      * @param db
@@ -36,6 +38,17 @@ public class SessionsTable extends UserIDTable {
     public SessionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_sessions", db, usingMySQL);
         serverTable = db.getServerTable();
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnUserID + ", "
+                + columnSessionStart + ", "
+                + columnSessionEnd + ", "
+                + columnDeaths + ", "
+                + columnMobKills + ", "
+                + columnServerID
+                + ") VALUES ("
+                + usersTable.statementSelectID + ", "
+                + "?, ?, ?, ?, "
+                + serverTable.statementSelectServerID + ")";
     }
 
     /**
@@ -90,17 +103,7 @@ public class SessionsTable extends UserIDTable {
     private void saveSessionInformation(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUserID + ", "
-                    + columnSessionStart + ", "
-                    + columnSessionEnd + ", "
-                    + columnDeaths + ", "
-                    + columnMobKills + ", "
-                    + columnServerID
-                    + ") VALUES ("
-                    + usersTable.statementSelectID + ", "
-                    + "?, ?, ?, ?, "
-                    + serverTable.statementSelectServerID + ")");
+            statement = prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
 
             statement.setLong(2, session.getSessionStart());
@@ -541,6 +544,147 @@ public class SessionsTable extends UserIDTable {
         } finally {
             endTransaction(statement);
             close(set, statement);
+        }
+    }
+
+    public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean includeExtraData) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+
+            statement = prepareStatement("SELECT " +
+                    columnID + ", " +
+                    columnSessionStart + ", " +
+                    columnSessionEnd + ", " +
+                    columnDeaths + ", " +
+                    columnMobKills + ", " +
+                    usersUUIDColumn + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(20000);
+            set = statement.executeQuery();
+
+            Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
+                List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
+
+                long start = set.getLong(columnSessionStart);
+                long end = set.getLong(columnSessionEnd);
+
+                int deaths = set.getInt(columnDeaths);
+                int mobKills = set.getInt(columnMobKills);
+                int id = set.getInt(columnID);
+
+                Session session = new Session(id, start, end, mobKills, deaths);
+                sessions.add(session);
+
+                sessionsByUser.put(uuid, sessions);
+                map.put(serverUUID, sessionsByUser);
+            }
+            if (includeExtraData) {
+                db.getKillsTable().addKillsToSessions(map);
+                db.getWorldTimesTable().addWorldTimesToSessions(map);
+            }
+            return map;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean containsExtraData) throws SQLException {
+        if (Verify.isEmpty(allSessions)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+            for (UUID serverUUID : allSessions.keySet()) {
+                for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
+                    UUID uuid = entry.getKey();
+                    List<Session> sessions = entry.getValue();
+
+                    for (Session session : sessions) {
+                        statement.setString(1, uuid.toString());
+                        statement.setLong(2, session.getSessionStart());
+                        statement.setLong(3, session.getSessionEnd());
+                        statement.setInt(4, session.getDeaths());
+                        statement.setInt(5, session.getMobKills());
+                        statement.setString(6, serverUUID.toString());
+                        statement.addBatch();
+                    }
+                }
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
+        }
+        if (containsExtraData) {
+            Map<UUID, Map<UUID, List<Session>>> savedSessions = getAllSessions(false);
+            matchSessionIDs(allSessions, savedSessions);
+            db.getKillsTable().savePlayerKills(allSessions);
+            db.getWorldTimesTable().saveWorldTimes(allSessions);
+        }
+    }
+
+    /**
+     * Sessions should be saved before calling this method.
+     *
+     * @param allSessions      Sessions to match IDs to (contain extra data)
+     * @param allSavedSessions Sessions in the Database.
+     */
+    private void matchSessionIDs(Map<UUID, Map<UUID, List<Session>>> allSessions, Map<UUID, Map<UUID, List<Session>>> allSavedSessions) {
+        for (UUID serverUUID : allSessions.keySet()) {
+            Map<UUID, List<Session>> serverSessions = allSessions.get(serverUUID);
+            Map<UUID, List<Session>> savedServerSessions = allSavedSessions.get(serverUUID);
+
+            for (Map.Entry<UUID, List<Session>> entry : serverSessions.entrySet()) {
+                UUID uuid = entry.getKey();
+                List<Session> sessions = entry.getValue();
+
+                List<Session> savedSessions = savedServerSessions.get(uuid);
+                if (savedSessions == null) {
+                    throw new IllegalStateException("Some of the sessions being matched were not saved.");
+                }
+
+                matchSessions(sessions, savedSessions);
+            }
+        }
+    }
+
+    /**
+     * Used by matchSessionIDs method.
+     * <p>
+     * Matches IDs of Sessions with by sessionStart.
+     * Assumes that both lists are from the same user and server.
+     *
+     * @param sessions      Sessions of Player in a Server.
+     * @param savedSessions Sessions of Player in a Server in the db.
+     */
+    private void matchSessions(List<Session> sessions, List<Session> savedSessions) {
+        Map<Long, Session> sessionsByStart = sessions.stream().collect(Collectors.toMap(Session::getSessionStart, Function.identity()));
+        Map<Long, Session> savedSessionsByStart = savedSessions.stream().collect(Collectors.toMap(Session::getSessionStart, Function.identity()));
+        for (Map.Entry<Long, Session> sessionEntry : sessionsByStart.entrySet()) {
+            long start = sessionEntry.getKey();
+            Session savedSession = savedSessionsByStart.get(start);
+            if (savedSession == null) {
+                throw new IllegalStateException("Some of the sessions being matched were not saved.");
+            }
+            Session session = sessionEntry.getValue();
+            session.setSessionID(savedSession.getSessionID());
         }
     }
 }
