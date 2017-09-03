@@ -128,6 +128,7 @@ public class WorldTimesTable extends UserIDTable {
                     " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
                     " WHERE " + columnUserID + "=" + usersTable.statementSelectID
             );
+            statement.setFetchSize(2000);
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             String[] gms = GMTimes.getGMKeyArray();

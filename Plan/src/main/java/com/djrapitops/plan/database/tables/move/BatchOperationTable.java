@@ -12,9 +12,7 @@ import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * A Fake table used to store a lot of big table operations.
@@ -35,8 +33,19 @@ import java.util.UUID;
  * @since 4.0.0
  */
 public class BatchOperationTable extends Table {
+
+    /**
+     * Constructor, call to access copy functionality.
+     *
+     * @param db
+     * @param usingMySQL
+     * @throws IllegalStateException if db.init has not been called.
+     */
     public BatchOperationTable(SQLDB db, boolean usingMySQL) {
         super("", db, usingMySQL);
+        if (!db.isOpen()) {
+            throw new IllegalStateException("Given Database had not been initialized.");
+        }
     }
 
     @Override
@@ -48,8 +57,22 @@ public class BatchOperationTable extends Table {
         table.removeAllData();
     }
 
-    public void clearTable(Collection<UUID> uuids, Table table) {
-        // TODO
+    public void copyEverything(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
+        toDB.db.removeAllData();
+        copyServers(toDB);
+        copyUsers(toDB);
+        copyWorlds(toDB);
+        copyUserInfo(toDB);
+        copyActions(toDB);
+        copyCommandUse(toDB);
+        copyIPsAndGeolocs(toDB);
+        copyNicknames(toDB);
+        copyTPS(toDB);
+        copyWebUsers(toDB);
+        // TODO WorldTimes, Sessions, PlayerKills
     }
 
     public void copyActions(BatchOperationTable toDB) throws SQLException {

@@ -23,6 +23,7 @@ import java.util.UUID;
 public abstract class SQLDB extends Database {
 
     private final boolean usingMySQL;
+    private boolean open = false;
 
     /**
      * @param plugin
@@ -68,6 +69,7 @@ public abstract class SQLDB extends Database {
             setupDataSource();
             setupDatabase();
             scheduleClean(10L);
+            open = true;
         } finally {
             Benchmark.stop("Database", benchName);
             Log.logDebug("Database");
@@ -173,6 +175,7 @@ public abstract class SQLDB extends Database {
     public void close() throws SQLException {
         dataSource.close();
         setStatus("Closed");
+        open = false;
         Log.logDebug("Database"); // Log remaining Debug info if present
     }
 
@@ -306,5 +309,9 @@ public abstract class SQLDB extends Database {
 
     public void endTransaction(Connection connection) throws SQLException {
         connection.close();
+    }
+
+    public boolean isOpen() {
+        return open;
     }
 }
