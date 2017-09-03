@@ -110,16 +110,8 @@ public class InspectPageParser extends PageParser {
             long playtimeDay = AnalysisUtils.getTotalPlaytime(sessionsDay);
             long playtimeWeek = AnalysisUtils.getTotalPlaytime(sessionsWeek);
 
-            if (!sessionsDay.isEmpty()) {
-                addValue("sessionLengthLongestDay", FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()));
-            } else {
-                addValue("sessionLengthLongestDay", "-");
-            }
-            if (!sessionsWeek.isEmpty()) {
-                addValue("sessionLengthLongestWeek", FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()));
-            } else {
-                addValue("sessionLengthLongestWeek", "-");
-            }
+            addValue("sessionLengthLongestDay", !sessionsDay.isEmpty() ? FormatUtils.formatTimeAmount(sessionsDay.get(0).getLength()) : "-");
+            addValue("sessionLengthLongestWeek", !sessionsWeek.isEmpty() ? FormatUtils.formatTimeAmount(sessionsWeek.get(0).getLength()) : "-");
 
             addValue("sessionCountDay", sessionCountDay);
             addValue("sessionCountWeek", sessionCountWeek);

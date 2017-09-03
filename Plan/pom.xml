@@ -42,14 +42,20 @@
             <version>3.6</version>
             <scope>compile</scope>
         </dependency>
-        <!--        Framework for easier plugin development-->
+        <!--        Geo IP -->
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <!--        Framework for easier plugin development -->
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>abstract-plugin-framework</artifactId>
             <version>2.0.5</version>
             <scope>compile</scope>
         </dependency>
-        <!--         Connection Pool-->
+        <!--         Connection Pool -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
@@ -68,14 +74,14 @@
             <version>1.2</version>
             <scope>compile</scope>
         </dependency>
-        <!--        SoftDepended Plugins-->
+        <!--        SoftDepended Plugins -->
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
             <version>3.7.0</version>
             <scope>compile</scope>
         </dependency>
-        <!--         -->
+        <!--        Testing -->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock</artifactId>

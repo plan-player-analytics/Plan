@@ -2,12 +2,20 @@ package main.java.com.djrapitops.plan.systems.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import main.java.com.djrapitops.plan.Log;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CountryResponse;
+import com.maxmind.geoip2.record.Country;
+import main.java.com.djrapitops.plan.Plan;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.zip.GZIPInputStream;
 
 /**
  * This class contains the geolocation cache.
@@ -20,6 +28,8 @@ import java.net.URL;
  * @since 3.5.5
  */
 public class GeolocationCache {
+
+    private static File geolocationDB = new File(Plan.getInstance().getDataFolder(), "GeoIP.dat");
 
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
             .build();
@@ -59,39 +69,48 @@ public class GeolocationCache {
     /**
      * Retrieves the country in full length (e.g. United States) from the IP Address.
      * <p>
-     * This method uses the free service of freegeoip.net. The maximum amount of requests is 15.000 per hour.
-     *
+     * This product includes GeoLite2 data created by MaxMind, available from
+     * <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
      * @param ipAddress The IP Address from which the country is retrieved
      * @return The name of the country in full length.
      * <p>
      * An exception from that rule is when the country is unknown or the retrieval of the country failed in any way,
      * if that happens, "Not Known" will be returned.
-     * @see <a href="http://freegeoip.net">http://freegeoip.net</a>
+     * @see <a href="http://maxmind.com">http://maxmind.com</a>
      * @see #getCountry(String)
      */
     private static String getUncachedCountry(String ipAddress) {
-        URL url;
-
-        String urlString = "http://freegeoip.net/csv/" + ipAddress;
-        String unknownString = "Not Known";
-
         try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            Log.error("The URL \"" + urlString + "\" couldn't be converted to URL: " + e.getCause()); //Shouldn't ever happen
-            return unknownString;
+            checkDB();
+
+            try (DatabaseReader reader = new DatabaseReader.Builder(geolocationDB).build()) {
+                InetAddress inetAddress = InetAddress.getByName(ipAddress);
+
+                CountryResponse response = reader.country(inetAddress);
+                Country country = response.getCountry();
+
+                return country.getName();
+            }
+
+        } catch (IOException | GeoIp2Exception e) {
+            return "Not Known";
+        }
+    }
+
+    /**
+     * Checks if the DB exists, if not, it downloads it
+     *
+     * @throws IOException when an error at download or saving the DB happens
+     */
+    public static void checkDB() throws IOException {
+        if (geolocationDB.exists()) {
+            return;
         }
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            String resultLine = in.readLine();
-            Log.debug("Result for country request for " + ipAddress + ": " + resultLine);
-
-            String[] results = resultLine.split(",");
-            String result = results[2];
-
-            return result.isEmpty() ? unknownString : result;
-        } catch (Exception exc) {
-            return unknownString;
+        URL downloadSite = new URL("http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz");
+        try (ReadableByteChannel rbc = Channels.newChannel(new GZIPInputStream(downloadSite.openStream()));
+             FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())) {
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
     }
 
@@ -115,6 +134,9 @@ public class GeolocationCache {
         return geolocationCache.asMap().containsKey(ipAddress);
     }
 
+    /**
+     * Clears the cache
+     */
     public static void clearCache() {
         geolocationCache.invalidateAll();
     }

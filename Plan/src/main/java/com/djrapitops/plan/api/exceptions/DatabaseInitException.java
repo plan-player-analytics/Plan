@@ -10,6 +10,7 @@ package main.java.com.djrapitops.plan.api.exceptions;
  * @author Rsl1122
  */
 public class DatabaseInitException extends DatabaseException {
+
     public DatabaseInitException(String message, Throwable cause) {
         super(message, cause);
     }

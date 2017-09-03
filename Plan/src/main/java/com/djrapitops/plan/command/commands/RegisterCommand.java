@@ -14,6 +14,8 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 
 /**
  * Command for registering web users.
@@ -38,7 +40,7 @@ public class RegisterCommand extends SubCommand {
                 Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
                 "<password> [name] [access lvl]");
         this.plugin = plugin;
-
+        setupFilter();
     }
 
     @Override
@@ -132,5 +134,13 @@ public class RegisterCommand extends SubCommand {
                 }
             }
         }).runTaskAsynchronously();
+    }
+
+    /**
+     * Setups the command console output filter
+     */
+    private void setupFilter() {
+        Logger logger = (Logger) LogManager.getRootLogger();
+        logger.addFilter(new RegisterCommandFilter());
     }
 }

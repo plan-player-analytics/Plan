@@ -42,14 +42,9 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
     private ProcessingQueue processingQueue;
 
-    public PlanBungee() {
-    }
-
     @Override
     public void onEnable() {
         try {
-
-
             super.setInstance(this);
             super.setDebugMode(Settings.DEBUG.toString());
             super.getPluginLogger().setFolder(getDataFolder());

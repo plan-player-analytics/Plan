@@ -59,16 +59,17 @@ public abstract class Table {
         }
     }
 
-
     /**
-     * @return @throws SQLException
+     * @return
+     * @throws SQLException
      */
     protected Connection getConnection() throws SQLException {
         return db.getConnection();
     }
 
     /**
-     * @return @throws SQLException
+     * @return
+     * @throws SQLException
      */
     public int getVersion() throws SQLException {
         return db.getVersion();

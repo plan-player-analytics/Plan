@@ -40,7 +40,7 @@ public class MySQLDB extends SQLDB {
         String port = config.getInt("Database.MySQL.Port").toString();
         String database = config.getString("Database.MySQL.Database");
 
-        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true");
+        dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true&useSSL=false");
 
         String username = config.getString("Database.MySQL.User");
         String password = config.getString("Database.MySQL.Password");
