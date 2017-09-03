@@ -44,9 +44,6 @@ public class PunchCardGraphCreator {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 24; j++) {
                 int value = scaled[i][j];
-//                if (value == 0) {
-//                    continue;
-//                }
                 if (j == 0) {
                     arrayBuilder.append("{x:").append(24 * 3600000);
                 } else {
