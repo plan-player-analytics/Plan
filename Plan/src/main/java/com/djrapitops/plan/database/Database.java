@@ -325,4 +325,8 @@ public abstract class Database {
     }
 
     public abstract void commit(Connection connection) throws SQLException;
+
+    public boolean isUsingMySQL() {
+        return "mysql".equals(getConfigName());
+    }
 }

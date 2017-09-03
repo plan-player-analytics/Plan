@@ -73,11 +73,8 @@ public class ManageBackupCommand extends SubCommand {
             public void run() {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
-                    if (ManageUtils.backup(args[0], database)) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    }
+                    ManageUtils.backup(args[0], database);
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

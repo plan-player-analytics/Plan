@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.database.tables.move;
 
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
 import main.java.com.djrapitops.plan.database.tables.Table;
@@ -37,12 +38,12 @@ public class BatchOperationTable extends Table {
     /**
      * Constructor, call to access copy functionality.
      *
-     * @param db
-     * @param usingMySQL
-     * @throws IllegalStateException if db.init has not been called.
+     * @param database
+     * @throws IllegalStateException if database.init has not been called.
+     * @throws ClassCastException    if database is not SQLDB.
      */
-    public BatchOperationTable(SQLDB db, boolean usingMySQL) {
-        super("", db, usingMySQL);
+    public BatchOperationTable(Database database) {
+        super("", (SQLDB) database, false);
         if (!db.isOpen()) {
             throw new IllegalStateException("Given Database had not been initialized.");
         }
@@ -55,6 +56,11 @@ public class BatchOperationTable extends Table {
 
     public void clearTable(Table table) throws SQLException {
         table.removeAllData();
+    }
+
+    @Override
+    public void removeAllData() throws SQLException {
+        db.removeAllData();
     }
 
     public void copyEverything(BatchOperationTable toDB) throws SQLException {
