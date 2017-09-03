@@ -130,7 +130,7 @@ public class TestInit {
         return new RunnableFactory<Plan>(planMock) {
             @Override
             public IRunnable createNew(String name, final AbsRunnable runnable) {
-                return new IRunnable() {
+                IRunnable iRunnable = new IRunnable() {
                     Timer timer = new Timer();
                     TimerTask task = new TimerTask() {
                         @Override
@@ -194,6 +194,8 @@ public class TestInit {
                         return ticks * 50;
                     }
                 };
+                runnable.setCancellable(iRunnable);
+                return iRunnable;
             }
         };
     }
