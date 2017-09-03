@@ -273,8 +273,6 @@ public class Analysis {
             activity.setRecentPlayersUUIDs(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toList()));
             activity.setRecentPlayers(userInfo.stream().map(UserInfo::getName).collect(Collectors.toList()));
 
-            analysisData.setPlayersTable(PlayersTableCreator.createSortablePlayersTable(userInfo, joinInfo, geolocPart));
-
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
             Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));
@@ -287,6 +285,8 @@ public class Analysis {
             Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessionInfoOfServer();
             joinInfo.addActiveSessions(activeSessions);
             joinInfo.addSessions(sessions);
+
+            analysisData.setPlayersTable(PlayersTableCreator.createSortablePlayersTable(userInfo, joinInfo, geolocPart));
 
             Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
             killPart.addKills(playerKills);
