@@ -16,7 +16,7 @@ import java.util.*;
 public class UserImportData {
 
     private String name;
-    private String uuid;
+    private UUID uuid;
     private List<String> nicknames;
 
     private long registered;
@@ -32,7 +32,7 @@ public class UserImportData {
     private int mobKills;
     private int deaths;
 
-    private UserImportData(String name, String uuid, List<String> nicknames, long registered, boolean op, boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills, int mobKills, int deaths) {
+    private UserImportData(String name, UUID uuid, List<String> nicknames, long registered, boolean op, boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills, int mobKills, int deaths) {
         this.name = name;
         this.uuid = uuid;
         this.nicknames = nicknames;
@@ -59,11 +59,11 @@ public class UserImportData {
         this.name = name;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -153,7 +153,7 @@ public class UserImportData {
         private final Map<String, GMTimes> worldTimes = new HashMap<>();
         private final List<PlayerKill> kills = new ArrayList<>();
         private String name;
-        private String uuid;
+        private UUID uuid;
         private long registered;
         private boolean op;
         private boolean banned;
@@ -171,12 +171,12 @@ public class UserImportData {
         }
 
         public UserImportDataBuilder uuid(UUID uuid) {
-            return uuid(uuid.toString());
+            this.uuid = uuid;
+            return this;
         }
 
         public UserImportDataBuilder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
+            return uuid(UUID.fromString(uuid));
         }
 
         public UserImportDataBuilder registered(long registered) {

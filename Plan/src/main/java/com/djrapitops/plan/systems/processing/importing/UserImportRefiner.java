@@ -96,17 +96,15 @@ public class UserImportRefiner {
 
         importers.parallelStream().forEach(importer -> {
             String name = importer.getName();
-            String uuid = importer.getUuid();
+            UUID uuid = importer.getUuid();
 
             boolean nameNull = name == null;
             boolean uuidNull = uuid == null;
 
             if (nameNull && uuidNull) {
                 invalidData.add(importer);
-            }
-
-            if (nameNull) {
-                namesMissing.put(importer, uuid);
+            } else if (nameNull) {
+                namesMissing.put(importer, uuid.toString());
             } else if (uuidNull) {
                 uuidsMissing.put(importer, name);
             }
@@ -133,7 +131,13 @@ public class UserImportRefiner {
             addMissingUUIDsOverFetcher();
         }
 
-        foundUUIDs.entrySet().parallelStream().forEach(entry -> entry.getKey().setUuid(entry.getValue()));
+        foundUUIDs.entrySet().parallelStream()
+                .forEach(entry -> {
+                    UserImportData userImportData = entry.getKey();
+                    UUID uuid = UUID.fromString(entry.getValue());
+
+                    userImportData.setUuid(uuid);
+                });
 
         importers.removeAll(uuidsMissing.keySet());
 
