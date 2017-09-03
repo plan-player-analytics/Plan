@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 
@@ -21,6 +22,7 @@ public class UsersTable extends UserIDTable {
     private final String columnRegistered = "registered";
     private final String columnName = "name";
     private final String columnTimesKicked = "times_kicked";
+    private String insertStatement;
 
     /**
      * @param db
@@ -29,6 +31,10 @@ public class UsersTable extends UserIDTable {
     public UsersTable(SQLDB db, boolean usingMySQL) {
         super("plan_users", db, usingMySQL);
         statementSelectID = "(" + Select.from(tableName, tableName + "." + columnID).where(columnUUID + "=?").toString() + ")";
+        insertStatement = Insert.values(tableName,
+                columnUUID,
+                columnRegistered,
+                columnName);
     }
 
     /**
@@ -58,7 +64,7 @@ public class UsersTable extends UserIDTable {
         ResultSet set = null;
         try {
             statement = prepareStatement(Select.from(tableName, columnUUID).toString());
-            statement.setFetchSize(2000);
+            statement.setFetchSize(5000);
 
             set = statement.executeQuery();
             while (set.next()) {
@@ -160,10 +166,7 @@ public class UsersTable extends UserIDTable {
 
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement(Insert.values(tableName,
-                    columnUUID,
-                    columnRegistered,
-                    columnName));
+            statement = prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setLong(2, registered);
             statement.setString(3, name);
@@ -299,5 +302,109 @@ public class UsersTable extends UserIDTable {
 
     public String getColumnName() {
         return columnName;
+    }
+
+    /**
+     * Inserts UUIDs, Register dates and Names to the table.
+     * <p>
+     * This method is for batch operations, and should not be used to add information of users.
+     * Use UserInfoTable instead.
+     *
+     * @param users
+     * @throws SQLException
+     */
+    public void insertUsers(Map<UUID, UserInfo> users) throws SQLException {
+        if (Verify.isEmpty(users)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement(insertStatement);
+            for (Map.Entry<UUID, UserInfo> entry : users.entrySet()) {
+                UUID uuid = entry.getKey();
+                UserInfo info = entry.getValue();
+                long registered = info.getRegistered();
+                String name = info.getName();
+
+                statement.setString(1, uuid.toString());
+                statement.setLong(2, registered);
+                statement.setString(3, name);
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<UUID, UserInfo> getUsers() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.all(tableName)
+                    .toString());
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, UserInfo> users = new HashMap<>();
+            if (set.next()) {
+                UUID uuid = UUID.fromString(set.getString(columnUUID));
+                String name = set.getString(columnName);
+                long registered = set.getLong(columnRegistered);
+
+                users.put(uuid, new UserInfo(uuid, name, registered, false, false));
+            }
+            return users;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public void updateKicked(Map<UUID, Integer> timesKicked) throws SQLException {
+        if (Verify.isEmpty(timesKicked)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try {
+            statement = prepareStatement("UPDATE " + tableName + " SET "
+                    + columnTimesKicked + "=?" +
+                    " WHERE " + columnUUID + "=?");
+            for (Map.Entry<UUID, Integer> entry : timesKicked.entrySet()) {
+                UUID uuid = entry.getKey();
+                int kickCount = entry.getValue();
+                statement.setInt(1, kickCount);
+                statement.setString(2, uuid.toString());
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+            commit(statement.getConnection());
+        } finally {
+            close(statement);
+        }
+    }
+
+    public Map<UUID, Integer> getAllTimesKicked() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName, columnUUID, columnTimesKicked)
+                    .toString());
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Integer> timesKicked = new HashMap<>();
+            while (set.next()) {
+                UUID uuid = UUID.fromString(set.getString(columnUUID));
+                int kickCount = set.getInt(columnTimesKicked);
+
+                timesKicked.put(uuid, kickCount);
+            }
+            return timesKicked;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
     }
 }

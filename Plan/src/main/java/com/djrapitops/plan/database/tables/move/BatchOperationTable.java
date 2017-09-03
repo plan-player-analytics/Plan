@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
 import main.java.com.djrapitops.plan.database.tables.Table;
+import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
 import java.sql.SQLException;
@@ -115,5 +116,15 @@ public class BatchOperationTable extends Table {
             return;
         }
         toDB.db.getWorldTable().saveWorlds(db.getWorldTable().getWorlds());
+    }
+
+    public void copyUsers(BatchOperationTable toDB) throws SQLException {
+        if (toDB.equals(this)) {
+            return;
+        }
+        UsersTable fromTable = db.getUsersTable();
+        UsersTable toTable = toDB.db.getUsersTable();
+        toTable.insertUsers(fromTable.getUsers());
+        toTable.updateKicked(fromTable.getAllTimesKicked());
     }
 }
