@@ -8,7 +8,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.PlayerKill;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -106,40 +105,46 @@ public abstract class Importer {
         UUID serverUUID = plan.getServerInfoManager().getServerUUID();
         Database db = plan.getDB();
 
-        Map<UUID, List<String>> nickNames = new Hashtable<>();
+        Set<UUID> existingUUIDs = db.getSavedUUIDs();
+        Map<UUID, UserInfo> users = new Hashtable<>();
         List<UserInfo> userInfo = new Vector<>();
-        Map<UUID, WorldTimes> worldTimes = new Hashtable<>();
+        Map<UUID, List<String>> nickNames = new Hashtable<>();
+        Map<UUID, Session> sessions = new Hashtable<>();
         Map<UUID, Map<String, String>> ips = new Hashtable<>();
-        Map<UUID, List<PlayerKill>> playerKills = new Hashtable<>();
-        Map<UUID, Integer> mobKills = new Hashtable<>();
-        Map<UUID, Integer> deaths = new Hashtable<>();
         Map<UUID, Integer> timesKicked = new Hashtable<>();
 
         userImportData.parallelStream().forEach(data -> {
             UUID uuid = data.getUuid();
+            UserInfo info = toUserInfo(data);
 
+            if (!existingUUIDs.contains(uuid)) {
+                userInfo.add(info);
+            }
+
+            users.put(uuid, info);
             nickNames.put(uuid, data.getNicknames());
-            userInfo.add(toUserInfo(data));
-            worldTimes.put(uuid, new WorldTimes(data.getWorldTimes()));
             ips.put(uuid, convertIPs(data));
-            playerKills.put(uuid, data.getKills());
-            mobKills.put(uuid, data.getMobKills());
-            deaths.put(uuid, data.getDeaths());
             timesKicked.put(uuid, data.getTimesKicked());
+            sessions.put(uuid, toSession(data));
         });
 
-        new RecursiveAction() {
-            @Override
-            protected void compute() {
-                try {
-                    db.getUserInfoTable().insertUserInfo(ImmutableMap.of(serverUUID, userInfo));
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
-                }
-            }
-        };
-
         ExecutorService service = Executors.newCachedThreadPool();
+
+        db.getUsersTable().insertUsers(users);
+
+        new ImportExecutorHelper() {
+            @Override
+            void execute() throws SQLException {
+                // TODO db.getSessionsTable().insertSessions(ImmutableMap.of(serverUUID, sessions));
+            }
+        }.submit(service);
+
+        new ImportExecutorHelper() {
+            @Override
+            void execute() throws SQLException {
+                db.getUsersTable().updateKicked(timesKicked);
+            }
+         }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
@@ -162,8 +167,6 @@ public abstract class Importer {
             }
         }.submit(service);
 
-        //TODO deaths, mobkills, worldTimes, timesKicked & playerKills insertion
-
         service.shutdown();
 
         try {
@@ -183,6 +186,18 @@ public abstract class Importer {
         boolean banned = userImportData.isBanned();
 
         return new UserInfo(uuid, name, registered, op, banned);
+    }
+
+    private Session toSession(UserImportData userImportData) {
+        int mobKills = userImportData.getMobKills();
+        int deaths = userImportData.getDeaths();
+
+        Session session = new Session(0, 0L, 0L, mobKills, deaths);
+
+        session.setPlayerKills(userImportData.getKills());
+        session.setWorldTimes(new WorldTimes(userImportData.getWorldTimes()));
+
+        return session;
     }
 
     private Map<String, String> convertIPs(UserImportData userImportData) {

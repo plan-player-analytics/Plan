@@ -37,6 +37,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
@@ -130,6 +131,8 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             super.onEnableDefaultTasks();
 
             Benchmark.start("Enable");
+
+            GeolocationCache.checkDB();
 
             // Initialize Locale
             new Locale(this).loadLocale();

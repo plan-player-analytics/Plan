@@ -133,7 +133,7 @@ public class ImportBuilderTest {
         assertEquals(3, data.getNicknames().size());
         assertEquals(randomInt, data.getTimesKicked());
 
-        assertEquals(uuid.toString(), data.getUuid());
+        assertEquals(uuid, data.getUuid());
         assertEquals(randomString, data.getName());
     }
 }
