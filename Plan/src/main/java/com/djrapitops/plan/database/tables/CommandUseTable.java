@@ -185,7 +185,7 @@ public class CommandUseTable extends Table {
             statement = prepareStatement("SELECT " +
                     columnCommand + ", " +
                     columnTimesUsed + ", " +
-                    serverUUIDColumn + ", " +
+                    serverUUIDColumn +
                     " FROM " + tableName +
                     " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
             );

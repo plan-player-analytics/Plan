@@ -194,7 +194,6 @@ public abstract class Table {
         if (statement == null) {
             return;
         }
-
         endTransaction(statement.getConnection());
     }
 

@@ -72,7 +72,7 @@ public class BatchOperationTable extends Table {
         toDB.removeAllData();
 
         copyServers(toDB);
-        System.out.println(toDB.getDb().getServerTable().getServerNames().toString());
+        System.out.println(toDB.getDb().getServerTable().getBukkitServers().toString());
         copyUsers(toDB);
         System.out.println(toDB.getDb().getSavedUUIDs().toString());
         copyWorlds(toDB);
@@ -133,6 +133,7 @@ public class BatchOperationTable extends Table {
         Log.debug("Batch Copy Servers");
         ServerTable serverTable = db.getServerTable();
         List<ServerInfo> servers = serverTable.getBukkitServers();
+        System.out.println(servers.toString());
         serverTable.getBungeeInfo().ifPresent(servers::add);
         toDB.getDb().getServerTable().insertAllServers(servers);
     }

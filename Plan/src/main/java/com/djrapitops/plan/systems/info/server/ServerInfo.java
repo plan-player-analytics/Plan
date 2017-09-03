@@ -74,4 +74,15 @@ public class ServerInfo {
     public int hashCode() {
         return Objects.hash(uuid, id, name, webAddress);
     }
+
+    @Override
+    public String toString() {
+        return "ServerInfo{" +
+                "uuid=" + uuid +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", webAddress='" + webAddress + '\'' +
+                ", maxPlayers=" + maxPlayers +
+                '}';
+    }
 }

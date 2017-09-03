@@ -284,7 +284,7 @@ public class ServerTable extends Table {
                 String name = info.getName();
                 String webAddress = info.getWebAddress();
 
-                if (Verify.notNull(uuid, name, webAddress)) {
+                if (uuid == null) {
                     continue;
                 }
 
