@@ -348,7 +348,7 @@ public class UsersTable extends UserIDTable {
             statement.setFetchSize(5000);
             set = statement.executeQuery();
             Map<UUID, UserInfo> users = new HashMap<>();
-            if (set.next()) {
+            while (set.next()) {
                 UUID uuid = UUID.fromString(set.getString(columnUUID));
                 String name = set.getString(columnName);
                 long registered = set.getLong(columnRegistered);

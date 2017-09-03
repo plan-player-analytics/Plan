@@ -83,7 +83,9 @@ public abstract class SQLDB extends Database {
             @Override
             public void run() {
                 try {
-                    clean();
+                    if (isOpen()) {
+                        clean();
+                    }
                 } catch (SQLException e) {
                     Log.toLog(this.getClass().getName(), e);
                 } finally {

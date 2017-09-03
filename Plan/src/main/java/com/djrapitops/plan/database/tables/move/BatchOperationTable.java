@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.database.tables.move;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
@@ -15,6 +16,8 @@ import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * A Fake table used to store a lot of big table operations.
@@ -72,9 +75,7 @@ public class BatchOperationTable extends Table {
         toDB.removeAllData();
 
         copyServers(toDB);
-        System.out.println(toDB.getDb().getServerTable().getBukkitServers().toString());
         copyUsers(toDB);
-        System.out.println(toDB.getDb().getSavedUUIDs().toString());
         copyWorlds(toDB);
         copyTPS(toDB);
         copyWebUsers(toDB);
@@ -169,7 +170,8 @@ public class BatchOperationTable extends Table {
         Log.debug("Batch Copy Users");
         UsersTable fromTable = db.getUsersTable();
         UsersTable toTable = toDB.getDb().getUsersTable();
-        toTable.insertUsers(fromTable.getUsers());
+        Map<UUID, UserInfo> users = fromTable.getUsers();
+        toTable.insertUsers(users);
         toTable.updateKicked(fromTable.getAllTimesKicked());
     }
 

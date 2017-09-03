@@ -557,7 +557,7 @@ public class SessionsTable extends UserIDTable {
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
 
             statement = prepareStatement("SELECT " +
-                    columnID + ", " +
+                    tableName + "." + columnID + ", " +
                     columnSessionStart + ", " +
                     columnSessionEnd + ", " +
                     columnDeaths + ", " +

@@ -210,16 +210,18 @@ public class KillsTable extends UserIDTable {
             String[] gms = GMTimes.getGMKeyArray();
             for (UUID serverUUID : allSessions.keySet()) {
                 for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
-                    UUID uuid = entry.getKey();
+                    UUID killer = entry.getKey();
                     List<Session> sessions = entry.getValue();
 
                     for (Session session : sessions) {
                         int sessionID = session.getSessionID();
+                        System.out.println(usersTable.getSavedUUIDs());
                         for (PlayerKill kill : session.getPlayerKills()) {
+                            System.out.println(kill);
                             UUID victim = kill.getVictim();
                             long date = kill.getTime();
                             String weapon = kill.getWeapon();
-                            statement.setString(1, uuid.toString());
+                            statement.setString(1, killer.toString());
                             statement.setString(2, victim.toString());
                             statement.setInt(3, sessionID);
                             statement.setLong(4, date);

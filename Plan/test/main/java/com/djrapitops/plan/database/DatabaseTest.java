@@ -224,11 +224,19 @@ public class DatabaseTest {
     }
 
     private void saveUserOne() throws SQLException {
-        db.getUsersTable().registerUser(uuid, 123456789L, "Test");
+        saveUserOne(db);
+    }
+
+    private void saveUserOne(Database database) throws SQLException {
+        database.getUsersTable().registerUser(uuid, 123456789L, "Test");
     }
 
     private void saveUserTwo() throws SQLException {
-        db.getUsersTable().registerUser(uuid2, 123456789L, "Test");
+        saveUserTwo(db);
+    }
+
+    private void saveUserTwo(Database database) throws SQLException {
+        database.getUsersTable().registerUser(uuid2, 123456789L, "Test");
     }
 
     @Test
@@ -325,7 +333,11 @@ public class DatabaseTest {
     }
 
     private void saveTwoWorlds() throws SQLException {
-        db.getWorldTable().saveWorlds(worlds);
+        saveTwoWorlds(db);
+    }
+
+    private void saveTwoWorlds(Database database) throws SQLException {
+        database.getWorldTable().saveWorlds(worlds);
     }
 
     private WorldTimes createWorldTimes() {
@@ -606,10 +618,11 @@ public class DatabaseTest {
         TPSTable tpsTable = database.getTpsTable();
         SecurityTable securityTable = database.getSecurityTable();
 
-        saveUserTwo();
+        saveUserOne(database);
+        saveUserTwo(database);
 
         userInfoTable.registerUserInfo(uuid, 223456789L);
-        saveTwoWorlds();
+        saveTwoWorlds(database);
 
         Session session = new Session(12345L, "", "");
         session.endSession(22345L);
