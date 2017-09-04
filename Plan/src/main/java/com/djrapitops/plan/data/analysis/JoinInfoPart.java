@@ -5,6 +5,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,6 +57,12 @@ public class JoinInfoPart extends RawData {
         uniquePlayersPerDay();
 
         addValue("sessionCount", getAllSessions().size());
+
+        sessionTables();
+    }
+
+    private void sessionTables() {
+        addValue("tableBodyRecentLogins", SessionsTableCreator.createTable(this));
     }
 
     private void uniquePlayers() {

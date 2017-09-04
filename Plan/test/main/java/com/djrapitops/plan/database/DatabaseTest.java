@@ -754,7 +754,7 @@ public class DatabaseTest {
         assertEquals(expected, kills);
     }
 
-    @Test // TODO Fix all issues with this test.
+    @Test
     public void testBackupAndRestore() throws SQLException, DatabaseInitException {
         SQLiteDB backup = new SQLiteDB(plan, "debug-backup" + MiscUtils.getTime());
         backup.init();
@@ -786,5 +786,67 @@ public class DatabaseTest {
         assertFalse(tpsTable.getTPSData().isEmpty());
         assertFalse(backup.getServerTable().getBukkitServers().isEmpty());
         assertFalse(securityTable.getUsers().isEmpty());
+    }
+
+    @Test
+    public void testSaveWorldTimes() throws SQLException {
+        saveUserOne();
+        WorldTimes worldTimes = createWorldTimes();
+        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
+        worldTimesTable.saveWorldTimes(uuid, 1, worldTimes);
+
+        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        Map<Integer, Session> sessions = new HashMap<>();
+        sessions.put(1, session);
+        worldTimesTable.addWorldTimesToSessions(uuid, sessions);
+
+        assertEquals(worldTimes, session.getWorldTimes());
+    }
+
+    @Test
+    public void testSaveAllWorldTimes() throws SQLException {
+        saveUserOne();
+        WorldTimes worldTimes = createWorldTimes();
+        System.out.println(worldTimes);
+        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
+        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        session.setWorldTimes(worldTimes);
+
+        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+        Map<UUID, List<Session>> sessionMap = new HashMap<>();
+        List<Session> sessions = new ArrayList<>();
+        sessions.add(session);
+        sessionMap.put(uuid, sessions);
+        map.put(Plan.getServerUUID(), sessionMap);
+
+        worldTimesTable.saveWorldTimes(map);
+
+        Map<Integer, WorldTimes> worldTimesBySessionID = worldTimesTable.getAllWorldTimesBySessionID();
+        assertEquals(worldTimes, worldTimesBySessionID.get(1));
+    }
+
+    @Test
+    public void testSaveSessionsWorldTimes() throws SQLException {
+        SessionsTable sessionsTable = db.getSessionsTable();
+
+        saveUserOne();
+        WorldTimes worldTimes = createWorldTimes();
+        System.out.println(worldTimes);
+        Session session = new Session(1, 12345L, 23456L, 0, 0);
+        session.setWorldTimes(worldTimes);
+
+        Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+        Map<UUID, List<Session>> sessionMap = new HashMap<>();
+        List<Session> sessions = new ArrayList<>();
+        sessions.add(session);
+        sessionMap.put(uuid, sessions);
+        UUID serverUUID = Plan.getServerUUID();
+        map.put(serverUUID, sessionMap);
+
+        sessionsTable.insertSessions(map, true);
+
+        Map<UUID, Map<UUID, List<Session>>> allSessions = sessionsTable.getAllSessions(true);
+
+        assertEquals(worldTimes, allSessions.get(serverUUID).get(uuid).get(0).getWorldTimes());
     }
 }

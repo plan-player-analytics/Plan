@@ -272,4 +272,38 @@ public class UserInfoTable extends UserIDTable {
             close(statement);
         }
     }
+
+    public Map<UUID, Set<UUID>> getSavedUUIDs() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            statement = prepareStatement("SELECT " +
+                    usersUUIDColumn + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Set<UUID>> serverMap = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                UUID uuid = UUID.fromString(set.getString("uuid"));
+
+                Set<UUID> uuids = serverMap.getOrDefault(serverUUID, new HashSet<>());
+                uuids.add(uuid);
+
+                serverMap.put(serverUUID, uuids);
+            }
+            return serverMap;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }
