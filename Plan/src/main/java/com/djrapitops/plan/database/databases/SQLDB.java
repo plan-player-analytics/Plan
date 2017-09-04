@@ -8,6 +8,7 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
+import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -114,10 +115,26 @@ public abstract class SQLDB extends Database {
             }
 
             int version = getVersion();
-            boolean newVersion = version < 8;
+
+            final SQLDB db = this;
+            if (version < 10) {
+                plugin.getRunnableFactory().createNew("DB v8 -> v10 Task", new AbsRunnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new Version8TransferTable(db, isUsingMySQL()).alterTablesToV10();
+                        } catch (DatabaseInitException | SQLException e) {
+                            Log.toLog(this.getClass().getName(), e);
+                        }
+                    }
+                }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks()*5L);
+                return;
+            }
+
+            boolean newVersion = version < 10;
 
             if (newDatabase || newVersion) {
-                setVersion(8);
+                setVersion(10);
             }
 
         } catch (SQLException e) {
