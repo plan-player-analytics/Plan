@@ -119,6 +119,7 @@ public abstract class Importer {
         try {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             Log.toLog(this.getClass().getName(), e);
         }
 
@@ -152,6 +153,7 @@ public abstract class Importer {
         Database db = plan.getDB();
 
         Set<UUID> existingUUIDs = db.getSavedUUIDs();
+        Set<UUID> existingUserInfoTableUUIDs = db.getUserInfoTable().getSavedUUIDs().get(serverUUID);
 
         Benchmark.start(insertDataIntoCollectionsBenchmarkName);
 
@@ -167,10 +169,13 @@ public abstract class Importer {
             UserInfo info = toUserInfo(data);
 
             if (!existingUUIDs.contains(uuid)) {
+                users.put(uuid, info);
+            }
+
+            if (!existingUserInfoTableUUIDs.contains(uuid)) {
                 userInfo.add(info);
             }
 
-            users.put(uuid, info);
             nickNames.put(uuid, data.getNicknames());
             ips.put(uuid, convertIPs(data));
             timesKicked.put(uuid, data.getTimesKicked());
@@ -225,6 +230,7 @@ public abstract class Importer {
         try {
             service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             Log.toLog(this.getClass().getName(), e);
         }
 
