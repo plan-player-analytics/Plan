@@ -29,8 +29,6 @@ public class PlanWorldChangeListener implements Listener {
         long time = MiscUtils.getTime();
 
         Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
-        cachedSession.ifPresent(session -> {
-            session.changeState(worldName, gameMode, time);
-        });
+        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 }

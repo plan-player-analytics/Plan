@@ -44,13 +44,33 @@ public abstract class Importer {
 
         Benchmark.start(benchmarkName);
 
-        Benchmark.start(serverBenchmarkName);
-        processServerData();
-        Benchmark.stop(serverBenchmarkName);
+        ExecutorService service = Executors.newCachedThreadPool();
 
-        Benchmark.start(userDataBenchmarkName);
-        processUserData();
-        Benchmark.stop(userDataBenchmarkName);
+        new ImportExecutorHelper() {
+            @Override
+            void execute() throws SQLException {
+                Benchmark.start(serverBenchmarkName);
+                processServerData();
+                Benchmark.stop(serverBenchmarkName);
+            }
+        }.submit(service);
+
+        new ImportExecutorHelper() {
+            @Override
+            void execute() throws SQLException {
+                Benchmark.start(userDataBenchmarkName);
+                processUserData();
+                Benchmark.stop(userDataBenchmarkName);
+            }
+        }.submit(service);
+
+        service.shutdown();
+
+        try {
+            service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
 
         Benchmark.stop(benchmarkName);
     }
@@ -58,6 +78,7 @@ public abstract class Importer {
     private void processServerData() throws SQLException {
         String benchmarkName = "Processing Server Data";
         String getDataBenchmarkName = "Getting Server Data";
+        String insertDataIntoDatabaseBenchmarkName = "Insert Server Data into Database";
 
         Benchmark.start(benchmarkName);
         Benchmark.start(getDataBenchmarkName);
@@ -75,21 +96,46 @@ public abstract class Importer {
         UUID uuid = plan.getServerInfoManager().getServerUUID();
         Database db = plan.getDB();
 
-        db.getTpsTable().insertAllTPS(ImmutableMap.of(uuid, serverImportData.getTpsData()));
-        db.getCommandUseTable().insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages()));
+        ExecutorService service = Executors.newCachedThreadPool();
 
-        Benchmark.start(benchmarkName);
+        Benchmark.start(insertDataIntoDatabaseBenchmarkName);
+
+        new ImportExecutorHelper() {
+            @Override
+            void execute() throws SQLException {
+                db.getTpsTable().insertAllTPS(ImmutableMap.of(uuid, serverImportData.getTpsData()));
+            }
+        }.submit(service);
+
+        new ImportExecutorHelper() {
+            @Override
+            void execute() throws SQLException {
+                db.getCommandUseTable().insertCommandUsage(ImmutableMap.of(uuid, serverImportData.getCommandUsages()));
+            }
+        }.submit(service);
+
+        service.shutdown();
+
+        try {
+            service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+
+        Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
+        Benchmark.stop(benchmarkName);
     }
 
     private void processUserData() throws SQLException {
         String benchmarkName = "Processing User Data";
         String getDataBenchmarkName = "Getting User Data";
+        String insertDataIntoCollectionsBenchmarkName = "Insert User Data into Collections";
+        String insertDataIntoDatabaseBenchmarkName = "Insert User Data into Database";
 
         Benchmark.start(benchmarkName);
         Benchmark.start(getDataBenchmarkName);
 
         List<UserImportData> userImportData = getUserImportData();
-
         Benchmark.stop(getDataBenchmarkName);
 
         if (Verify.isEmpty(userImportData)) {
@@ -106,10 +152,13 @@ public abstract class Importer {
         Database db = plan.getDB();
 
         Set<UUID> existingUUIDs = db.getSavedUUIDs();
+
+        Benchmark.start(insertDataIntoCollectionsBenchmarkName);
+
         Map<UUID, UserInfo> users = new Hashtable<>();
         List<UserInfo> userInfo = new Vector<>();
         Map<UUID, List<String>> nickNames = new Hashtable<>();
-        Map<UUID, Session> sessions = new Hashtable<>();
+        Map<UUID, List<Session>> sessions = new Hashtable<>();
         Map<UUID, Map<String, String>> ips = new Hashtable<>();
         Map<UUID, Integer> timesKicked = new Hashtable<>();
 
@@ -125,17 +174,21 @@ public abstract class Importer {
             nickNames.put(uuid, data.getNicknames());
             ips.put(uuid, convertIPs(data));
             timesKicked.put(uuid, data.getTimesKicked());
-            sessions.put(uuid, toSession(data));
+            sessions.put(uuid, Collections.singletonList(toSession(data)));
         });
 
+        Benchmark.stop(insertDataIntoCollectionsBenchmarkName);
+
         ExecutorService service = Executors.newCachedThreadPool();
+
+        Benchmark.start(insertDataIntoDatabaseBenchmarkName);
 
         db.getUsersTable().insertUsers(users);
 
         new ImportExecutorHelper() {
             @Override
             void execute() throws SQLException {
-                // TODO db.getSessionsTable().insertSessions(ImmutableMap.of(serverUUID, sessions));
+                db.getSessionsTable().insertSessions(ImmutableMap.of(serverUUID, sessions), true);
             }
         }.submit(service);
 
@@ -144,7 +197,7 @@ public abstract class Importer {
             void execute() throws SQLException {
                 db.getUsersTable().updateKicked(timesKicked);
             }
-         }.submit(service);
+        }.submit(service);
 
         new ImportExecutorHelper() {
             @Override
@@ -175,6 +228,7 @@ public abstract class Importer {
             Log.toLog(this.getClass().getName(), e);
         }
 
+        Benchmark.stop(insertDataIntoDatabaseBenchmarkName);
         Benchmark.stop(benchmarkName);
     }
 

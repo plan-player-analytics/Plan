@@ -47,8 +47,6 @@ public class PlanGamemodeChangeListener implements Listener {
         String worldName = p.getWorld().getName();
 
         Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
-        cachedSession.ifPresent(session -> {
-            session.changeState(worldName, gameMode, time);
-        });
+        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 }
