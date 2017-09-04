@@ -280,8 +280,8 @@ public class WorldTimesTable extends UserIDTable {
         try {
             statement = prepareStatement(insertStatement);
             String[] gms = GMTimes.getGMKeyArray();
-            for (UUID serverUUID : allSessions.keySet()) {
-                for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
+            for (Map<UUID, List<Session>> serverSessions : allSessions.values()) {
+                for (Map.Entry<UUID, List<Session>> entry : serverSessions.entrySet()) {
                     UUID uuid = entry.getKey();
                     List<Session> sessions = entry.getValue();
                     for (Session session : sessions) {
