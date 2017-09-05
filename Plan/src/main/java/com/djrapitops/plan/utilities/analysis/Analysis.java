@@ -259,6 +259,13 @@ public class Analysis {
             Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
 
             List<UserInfo> userInfo = db.getUserInfoTable().getServerUserInfo();
+
+            for (UserInfo user : userInfo) {
+                if (user.isBanned()) {
+                    activity.addBan(user.getUuid());
+                }
+            }
+
             Map<UUID, UserInfo> mappedUserInfo = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, Function.identity()));
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
             for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {

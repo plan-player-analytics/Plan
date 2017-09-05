@@ -97,12 +97,36 @@ public class ActivityPart extends RawData {
         );
         addValue("activityColors", activityColors);
 
-//        addValue("activitydata", Arrays.toString(counts)); // TODO Check if needed
+        calculateActivityAmounts();
+
         addValue("playersActive", counts[0]);
         addValue("active", counts[0]);
         addValue("inactive", counts[1]);
         addValue("joinLeaver", counts[2]);
         addValue("banned", counts[3]);
+    }
+
+    private void calculateActivityAmounts() {
+        for (Map.Entry<UUID, List<Session>> entry : joins.getSessions().entrySet()) {
+            UUID uuid = entry.getKey();
+            if (bans.contains(uuid)) {
+                continue;
+            }
+            List<Session> sessions = entry.getValue();
+            long lastSeen = AnalysisUtils.getLastSeen(sessions);
+            long playtime = AnalysisUtils.getTotalPlaytime(sessions);
+            int sessionCount = sessions.size();
+            if (sessionCount <= 1) {
+                addJoinedOnce(uuid);
+                continue;
+            }
+            boolean isActive = AnalysisUtils.isActive(MiscUtils.getTime(), lastSeen, playtime, sessionCount);
+            if (isActive) {
+                addActive(uuid);
+            } else {
+                addInActive(uuid);
+            }
+        }
     }
 
     public void addBans(Collection<UUID> uuids) {

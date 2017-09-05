@@ -74,6 +74,7 @@ public class InspectPageParser extends PageParser {
             addValue("kickCount", timesKicked);
 
             Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
+            // TODO Server preference pie
 
             List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()
