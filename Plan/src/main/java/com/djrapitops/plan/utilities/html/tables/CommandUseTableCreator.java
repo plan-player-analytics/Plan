@@ -24,7 +24,7 @@ public class CommandUseTableCreator {
      * @param commandUse The commands and the amount of times casted
      * @return The created command use table
      */
-    public static String createSortedCommandUseTable(Map<String, Integer> commandUse) {
+    public static String createTable(Map<String, Integer> commandUse) {
         List<String[]> sorted = MapComparator.sortByValue(commandUse);
 
         StringBuilder html = new StringBuilder();

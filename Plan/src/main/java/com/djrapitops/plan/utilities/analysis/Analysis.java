@@ -286,7 +286,7 @@ public class Analysis {
             joinInfo.addActiveSessions(activeSessions);
             joinInfo.addSessions(sessions);
 
-            analysisData.setPlayersTable(PlayersTableCreator.createSortablePlayersTable(userInfo, joinInfo, geolocPart));
+            analysisData.setPlayersTable(PlayersTableCreator.createTable(userInfo, joinInfo, geolocPart));
 
             Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
             killPart.addKills(playerKills);

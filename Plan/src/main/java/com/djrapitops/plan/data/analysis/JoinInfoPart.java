@@ -62,7 +62,9 @@ public class JoinInfoPart extends RawData {
     }
 
     private void sessionTables() {
-        addValue("tableBodyRecentLogins", SessionsTableCreator.createTable(this));
+        String[] tables = SessionsTableCreator.createTables(this);
+        addValue("tableBodySessions", tables[0]);
+        addValue("tableBodyRecentLogins", tables[1]);
     }
 
     private void uniquePlayers() {

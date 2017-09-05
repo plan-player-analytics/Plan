@@ -36,7 +36,7 @@ public class CommandUsagePart extends RawData {
     public void analyse() {
         addValue("commandUniqueCount", String.valueOf(getUniqueCommands()));
         addValue("commandCount", String.valueOf(getCommandTotal()));
-        String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
+        String commandUsageTable = CommandUseTableCreator.createTable(commandUsage);
         addValue("tableBodyCommands", HtmlUtils.removeXSS(commandUsageTable));
     }
 

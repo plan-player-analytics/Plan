@@ -57,12 +57,13 @@ public class Version8TransferTable extends Table {
         execute(dropTableSql("plan_sessions"));
         db.getSessionsTable().createTable();
 
-        execute(dropTableSql("plan_worldtimes"));
+        execute(dropTableSql("plan_world_times"));
+        execute(dropTableSql("plan_worlds"));
+        db.getWorldTable().createTable();
         db.getWorldTimesTable().createTable();
         execute(dropTableSql("plan_gamemodetimes"));
-
-        execute(dropTableSql("plan_kills"));
-        db.getKillsTable().createTable();
+        execute(dropTableSql("plan_sessions"));
+        db.getSessionsTable().createTable();
 
         db.setVersion(10);
         Benchmark.stop("Schema copy from 8 to 10");
@@ -71,32 +72,55 @@ public class Version8TransferTable extends Table {
     private void copyUsers() throws SQLException, DBCreateTableException {
         String tempTableName = "temp_users";
         UsersTable usersTable = db.getUsersTable();
-        UserInfoTable userInfoTable = db.getUserInfoTable();
-
         execute(tableRenameSql("plan_users", tempTableName));
 
+        String tempNickTableName = "temp_nicks";
+        NicknamesTable nicknamesTable = db.getNicknamesTable();
+        execute(tableRenameSql(nicknamesTable.toString(), tempNickTableName));
+
+        String tempKillsTableName = "temp_kills";
+        KillsTable killsTable = db.getKillsTable();
+        execute(tableRenameSql(killsTable.toString(), tempKillsTableName));
+
+        nicknamesTable.createTable();
         usersTable.createTable();
+        killsTable.createTable();
+
+        UserInfoTable userInfoTable = db.getUserInfoTable();
         userInfoTable.createTable();
 
         String statement = "INSERT INTO plan_users " +
                 "(" +
-                "uuid, registered, name" +
+                "id, uuid, registered, name" +
                 ") SELECT " +
-                "uuid, registered, name" +
+                "id, uuid, registered, name" +
                 " FROM " + tempTableName;
         execute(statement);
-        statement = "(SELECT plan_users.id as a FROM plan_users JOIN temp_users on temp_users.uuid=plan_users.uuid" +
-                " WHERE plan_users.uuid=temp_users.uuid); INSERT INTO plan_user_info " +
+        statement = "INSERT INTO plan_user_info " +
                 "(" +
                 "user_id, registered, opped, banned, server_id" +
                 ") SELECT " +
-                "a, registered, opped, banned, '" + serverID + "'" +
+                "id, registered, opped, banned, '" + serverID + "'" +
                 " FROM " + tempTableName;
         execute(statement);
-
-        copyNicknames();
+        statement = "INSERT INTO plan_nicknames " +
+                "(" +
+                "user_id, nickname, server_id" +
+                ") SELECT " +
+                "user_id, nickname, '" + serverID + "'" +
+                " FROM " + tempNickTableName;
+        execute(statement);
+        statement = "INSERT INTO plan_kills " +
+                "(" +
+                "killer_id, victim_id, weapon, date, session_id" +
+                ") SELECT " +
+                "killer_id, victim_id, weapon, date, '0'" +
+                " FROM " + tempKillsTableName;
+        execute(statement);
 
         execute(dropTableSql(tempTableName));
+        execute(dropTableSql(tempNickTableName));
+        execute(dropTableSql(tempKillsTableName));
     }
 
     private void copyCommandUsage() throws SQLException, DBCreateTableException {
@@ -116,26 +140,6 @@ public class Version8TransferTable extends Table {
         execute(statement);
 
         execute(dropTableSql(tempTableName));
-    }
-
-    private void copyNicknames() throws SQLException, DBCreateTableException {
-        String tempTableName = "temp_nicks";
-        NicknamesTable nicknamesTable = db.getNicknamesTable();
-
-        execute(tableRenameSql(nicknamesTable.toString(), tempTableName));
-
-        nicknamesTable.createTable();
-
-        // TODO ID Of user
-        String statement = "INSERT INTO plan_nicknames " +
-                "(" +
-                "user_id, nickname" +
-                ") SELECT " +
-                "(SELECT plan_users.id FROM plan_users JOIN temp_users on temp_users.uuid=plan_users.uuid" +
-                " WHERE plan_users.uuid=temp_users.uuid), " +
-                "nickname" +
-                " FROM " + tempTableName;
-        execute(statement);
     }
 
     private void copyTPS() throws SQLException, DBCreateTableException {

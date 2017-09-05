@@ -126,7 +126,7 @@ public class InspectPageParser extends PageParser {
                     .collect(Collectors.toList()));
             actions.sort(new ActionComparator());
 
-            addValue("tableBodyActions", ActionsTableCreator.createTableContent(actions));
+            addValue("tableBodyActions", ActionsTableCreator.createTable(actions));
 
             Benchmark.stop("Inspect Parse, Fetch");
 

@@ -51,6 +51,9 @@ public class WorldPieCreator {
         int i = 0;
 
         Map<String, GMTimes> gmTimesMap = worldTimes.getWorldTimes();
+        if (gmTimesMap.isEmpty()) {
+            return "{[]}";
+        }
         int size = gmTimesMap.size();
         for (Map.Entry<String, GMTimes> world : gmTimesMap.entrySet()) {
             drilldownBuilder.append("{name:'").append(world.getKey())

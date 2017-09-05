@@ -11,10 +11,7 @@ import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparato
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * //TODO Class Javadoc Comment
@@ -23,7 +20,7 @@ import java.util.UUID;
  */
 public class SessionsTableCreator {
 
-    public static String createTable(JoinInfoPart joinInfoPart) {
+    public static String[] createTables(JoinInfoPart joinInfoPart) {
         Map<Integer, UUID> uuidByID = new HashMap<>();
         for (Map.Entry<UUID, List<Session>> entry : joinInfoPart.getSessions().entrySet()) {
             List<Session> sessions = entry.getValue();
@@ -34,14 +31,17 @@ public class SessionsTableCreator {
 
         List<Session> allSessions = joinInfoPart.getAllSessions();
         if (allSessions.isEmpty()) {
-            return Html.TABLELINE_4.parse("<b>No Sessions</b>", "", "", "");
+            return new String[]{Html.TABLELINE_4.parse("<b>No Sessions</b>", "", "", ""),
+                    Html.TABLELINE_2.parse("<b>No Sessions</b>", "")};
         }
 
         allSessions.sort(new SessionStartComparator());
 
-        StringBuilder html = new StringBuilder();
+        StringBuilder sessionTableBuilder = new StringBuilder();
+        StringBuilder recentLoginsBuilder = new StringBuilder();
 
         int i = 0;
+        Set<String> recentLoginsNames = new HashSet<>();
         for (Session session : allSessions) {
             if (i >= 50) {
                 break;
@@ -54,15 +54,19 @@ public class SessionsTableCreator {
             String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
 //            getLongestWorldPlayed()
 
-            html.append(Html.TABLELINE_4.parse(
-                    HtmlUtils.getRelativeInspectUrl(name)
+            String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
+            sessionTableBuilder.append(Html.TABLELINE_4.parse(
+                    inspectUrl
 
-                    ));
+            ));
+
+            if (recentLoginsNames.size() < 20 && !recentLoginsNames.contains(name)) {
+                recentLoginsBuilder.append(Html.TABLELINE_2.parse(inspectUrl, start));
+                recentLoginsNames.add(name);
+            }
 
             i++;
         }
-
-
-        return html.toString();
+        return new String[]{sessionTableBuilder.toString(), recentLoginsBuilder.toString()};
     }
 }
