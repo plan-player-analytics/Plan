@@ -35,7 +35,7 @@ public class Version8TransferTable extends Table {
 
     private String tableRenameSql(String from, String to) {
         return usingMySQL ?
-                "RENAME " + from + " TO " + to :
+                "RENAME TABLE " + from + " TO " + to :
                 "ALTER TABLE " + from + " RENAME TO " + to;
     }
 
