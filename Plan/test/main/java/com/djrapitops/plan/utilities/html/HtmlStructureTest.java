@@ -52,10 +52,10 @@ public class HtmlStructureTest {
     @Test
     public void createSessionsTabContent() throws Exception {
         List<Session> allSessions = sessions.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-        String sessionsTab = HtmlStructure.createSessionsTabContent(sessions, allSessions);
+        String[] sessionsTab = HtmlStructure.createSessionsTabContent(sessions, allSessions);
 
-        int opened = StringUtils.countMatches(sessionsTab, "<div");
-        int closed = StringUtils.countMatches(sessionsTab, "</div");
+        int opened = StringUtils.countMatches(sessionsTab[0], "<div");
+        int closed = StringUtils.countMatches(sessionsTab[0], "</div");
 
         assertEquals(opened, closed);
     }

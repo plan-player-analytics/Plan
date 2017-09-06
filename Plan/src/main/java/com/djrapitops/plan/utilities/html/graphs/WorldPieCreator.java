@@ -52,9 +52,10 @@ public class WorldPieCreator {
 
         Map<String, GMTimes> gmTimesMap = worldTimes.getWorldTimes();
         if (gmTimesMap.isEmpty()) {
-            return "{[]}";
+            return "[{[]}]";
         }
         int size = gmTimesMap.size();
+        drilldownBuilder.append("[");
         for (Map.Entry<String, GMTimes> world : gmTimesMap.entrySet()) {
             drilldownBuilder.append("{name:'").append(world.getKey())
                     .append("', id:'").append(world.getKey())
@@ -68,6 +69,7 @@ public class WorldPieCreator {
             }
             i++;
         }
+        drilldownBuilder.append("]");
         return drilldownBuilder.toString();
     }
 
@@ -78,6 +80,7 @@ public class WorldPieCreator {
         for (Map.Entry<String, Long> entry : gmTimes.entrySet()) {
             Long time = entry.getValue();
             if (time == 0) {
+                j++;
                 continue;
             }
             drilldownBuilder.append("['")
