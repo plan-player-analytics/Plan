@@ -4,8 +4,12 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
@@ -42,31 +46,55 @@ public class SessionsTableCreator {
 
         int i = 0;
         Set<String> recentLoginsNames = new HashSet<>();
+
+        DataCache dataCache = Plan.getInstance().getDataCache();
+
         for (Session session : allSessions) {
             if (i >= 50) {
                 break;
             }
 
             UUID uuid = uuidByID.get(session.getSessionID());
-            // TODO Name cache
-            String name = "TODO";
+
+            String name = dataCache.getName(uuid);
             String start = FormatUtils.formatTimeStamp(session.getSessionStart());
             String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
-//            getLongestWorldPlayed()
+            String world = getLongestWorldPlayed(session);
 
             String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
             sessionTableBuilder.append(Html.TABLELINE_4.parse(
-                    inspectUrl
-
+                    Html.LINK.parse(inspectUrl, name),
+                    start,
+                    length,
+                    world
             ));
 
             if (recentLoginsNames.size() < 20 && !recentLoginsNames.contains(name)) {
-                recentLoginsBuilder.append(Html.TABLELINE_2.parse(inspectUrl, start));
+                recentLoginsBuilder.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), start));
                 recentLoginsNames.add(name);
             }
 
             i++;
         }
         return new String[]{sessionTableBuilder.toString(), recentLoginsBuilder.toString()};
+    }
+
+    private static String getLongestWorldPlayed(Session session) {
+        WorldTimes worldTimes = session.getWorldTimes();
+        long total = worldTimes.getTotal();
+        long longest = 0;
+        String theWorld = "-";
+        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+            String world = entry.getKey();
+            long time = entry.getValue().getTotal();
+            if (time > longest) {
+                longest = time;
+                theWorld = world;
+            }
+        }
+
+        double percentage = longest * 1.0 / total;
+
+        return theWorld + " (" + FormatUtils.cutDecimals(percentage) + "%)";
     }
 }
