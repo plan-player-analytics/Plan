@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
  * ${punchCardSeries} - Data for HighCharts
  * <p>
  * ${sessionAverage} - Formatted Time amount
- * //TODO ${tableBodyRecentLogins}
  *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class ActivityPart extends RawData {
 
+    private final PlayerCountPart playerCount;
     private final JoinInfoPart joins;
     private final TPSPart tpsPart;
     private final Set<UUID> bans;
@@ -50,7 +50,8 @@ public class ActivityPart extends RawData {
     private List<String> recentPlayers;
     private List<UUID> recentPlayersUUIDs;
 
-    public ActivityPart(JoinInfoPart joins, TPSPart tps) {
+    public ActivityPart(PlayerCountPart playerCount, JoinInfoPart joins, TPSPart tps) {
+        this.playerCount = playerCount;
         this.joins = joins;
         tpsPart = tps;
         bans = new HashSet<>();
@@ -63,9 +64,6 @@ public class ActivityPart extends RawData {
     public void analyse() {
         Verify.nullCheck(recentPlayers);
         Verify.nullCheck(recentPlayersUUIDs);
-
-        // TODO Recent logins table
-        addValue("recentlogins", "");
 
         activityPiechart();
 
@@ -90,15 +88,14 @@ public class ActivityPart extends RawData {
     }
 
     private void activityPiechart() {
+        calculateActivityAmounts();
+
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
 
         String activityColors = HtmlUtils.separateWithQuotes(
                 "#55ffff", "#ff55ff", "#ff5555", "#ffff55" //TODO Write Colors (enums) for Activity pie.
         );
         addValue("activityColors", activityColors);
-
-        calculateActivityAmounts();
-
         addValue("playersActive", counts[0]);
         addValue("active", counts[0]);
         addValue("inactive", counts[1]);
@@ -107,12 +104,12 @@ public class ActivityPart extends RawData {
     }
 
     private void calculateActivityAmounts() {
-        for (Map.Entry<UUID, List<Session>> entry : joins.getSessions().entrySet()) {
-            UUID uuid = entry.getKey();
+        Map<UUID, List<Session>> allSessions = joins.getSessions();
+        for (UUID uuid : playerCount.getUuids()) {
             if (bans.contains(uuid)) {
                 continue;
             }
-            List<Session> sessions = entry.getValue();
+            List<Session> sessions = allSessions.getOrDefault(uuid, new ArrayList<>());
             long lastSeen = AnalysisUtils.getLastSeen(sessions);
             long playtime = AnalysisUtils.getTotalPlaytime(sessions);
             int sessionCount = sessions.size();
@@ -134,23 +131,19 @@ public class ActivityPart extends RawData {
     }
 
     public void addBan(UUID uuid) {
-        Verify.nullCheck(uuid);
-        bans.add(uuid);
+        bans.add(Verify.nullCheck(uuid));
     }
 
     public void addActive(UUID uuid) {
-        Verify.nullCheck(uuid);
-        active.add(uuid);
+        active.add(Verify.nullCheck(uuid));
     }
 
     public void addInActive(UUID uuid) {
-        Verify.nullCheck(uuid);
-        inactive.add(uuid);
+        inactive.add(Verify.nullCheck(uuid));
     }
 
     public void addJoinedOnce(UUID uuid) {
-        Verify.nullCheck(uuid);
-        joinedOnce.add(uuid);
+        joinedOnce.add(Verify.nullCheck(uuid));
     }
 
     public Map<Long, Integer> getPlayersOnline() {

@@ -90,10 +90,6 @@ public class CommandUseTable extends Table {
             while (set.next()) {
                 String cmd = set.getString(columnCommand).toLowerCase();
                 int amountUsed = set.getInt(columnTimesUsed);
-                Integer get = commandUse.get(cmd);
-                if (get != null && get > amountUsed) {
-                    continue;
-                }
                 commandUse.put(cmd, amountUsed);
             }
             return commandUse;
