@@ -179,7 +179,8 @@ public class WorldTimesTable extends UserIDTable {
                     " FROM " + tableName +
                     " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
                     " JOIN " + sessionsTable + " on " + sessionIDColumn + "=" + columnSessionID +
-                    " WHERE " + sessionServerIDColumn + "=" + db.getServerTable().statementSelectServerID
+                    " WHERE " + sessionServerIDColumn + "=" + db.getServerTable().statementSelectServerID +
+                    " GROUP BY " + columnWorldId
             );
             statement.setString(1, serverUUID.toString());
             set = statement.executeQuery();
@@ -219,7 +220,8 @@ public class WorldTimesTable extends UserIDTable {
                     worldNameColumn +
                     " FROM " + tableName +
                     " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
-                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
+                    " GROUP BY " + columnWorldId
             );
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
