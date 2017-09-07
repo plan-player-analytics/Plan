@@ -93,7 +93,7 @@ public class SessionsTableCreator {
             }
         }
 
-        double percentage = longest * 1.0 / total;
+        double percentage = longest * 100.0 / total;
 
         return theWorld + " (" + FormatUtils.cutDecimals(percentage) + "%)";
     }

@@ -18,7 +18,8 @@
             <i style="padding: 0; color: #348e0f; font-size: 95px;" class="fa fa-square fa-stack-1x"></i>
             <i style="padding: 0; color: #fff; font-size: 60px;" class="fa fa-circle fa-stack-1x"></i>
             <div style="margin: 0px; padding: 0px; width: 100%; height: 100%; position: relative; overflow: hidden; top: -6px;">
-                <i style="position: absolute; left: -4px; top: 8px; color: #348e0f; font-size: 40px;" class="fa fa-bar-chart fa-stack-1x"></i>
+                <i style="position: absolute; left: -4px; top: 8px; color: #348e0f; font-size: 40px;"
+                   class="fa fa-bar-chart fa-stack-1x"></i>
             </div>
         </div>
         <p class="right">Player Analytics v.${version}</p>
@@ -71,7 +72,8 @@
                         <div class="box" style="margin-bottom: 5px;">
                             <div class="row">
                                 <div class="column">
-                                    <p>${playersOnline}/${playersMax} Players Online<br>${playersNewDay} New Players Today<br>
+                                    <p>${playersOnline}/${playersMax} Players Online<br>${playersNewDay} New Players
+                                        Today<br>
                                         <br>
                                         ${playersActive} Active Players<br>
                                         ${playersTotal} Total Players<br>
@@ -85,16 +87,16 @@
                                 </div>
                                 <div class="column">
                                     <p><b>Averages:</b><br>
-                                    &#x2022; Session Length: ${sessionAverage}<br>
-                                    &#x2022; Players / Day: ${playersAverage}<br>
-                                    &#x2022; New Players / Day: ${playersNewAverage}<br>
-                                    <br>
-                                    <b>Total:</b><br>
-                                    &#x2022; Playtime: ${playtimeTotal}<br>
-                                    &#x2022; Sessions: ${sessionCount}<br>
-                                    &#x2022; Kills: ${killCount}<br>
-                                    &#x2022; Mob Kills: ${mobKillCount}<br>
-                                    &#x2022; Deaths: ${deathCount}<br></p>
+                                        &#x2022; Session Length: ${sessionAverage}<br>
+                                        &#x2022; Players / Day: ${playersAverage}<br>
+                                        &#x2022; New Players / Day: ${playersNewAverage}<br>
+                                        <br>
+                                        <b>Total:</b><br>
+                                        &#x2022; Playtime: ${playtimeTotal}<br>
+                                        &#x2022; Sessions: ${sessionCount}<br>
+                                        &#x2022; Kills: ${killCount}<br>
+                                        &#x2022; Mob Kills: ${mobKillCount}<br>
+                                        &#x2022; Deaths: ${deathCount}<br></p>
                                 </div>
                             </div>
                         </div>
@@ -214,34 +216,16 @@
             </div>
             <div id="tab-performance" class="tab">
                 <div class="column">
-                    <div class="row"> 
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-bar-chart"></i> Ticks Per Second</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="tpsGraph" style="width: 100%; height: 350px;"></div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="box-header">
-                                <h2><i class="fa fa-bar-chart"></i> Resource Usage</h2>
-                            </div>
-                            <div class="box-footer">
-                                <div id="resourceGraph" style="width: 100%; height: 350px;"></div>
-                            </div>
-                        </div>
-                    </div> 
                     <div class="row">
-                        <div class="column">
+                        <div class="column" style="width: 200%;">
                             <div class="box-header">
-                                <h2><i class="fa fa-bar-chart"></i> World Load</h2>
+                                <h2><i class="fa fa-cogs"></i> Performance</h2>
                             </div>
                             <div class="box-footer">
-                                <div id="worldGraph" style="width: 100%; height: 350px;"></div>
+                                <div id="tpsGraph" style="width: 100%; height: 600px;"></div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="column">
                             <div class="column">
                                 <div class="box-header">
                                     <h2><i class="fa fa-cogs"></i> Last 24 Hours</h2>
@@ -348,6 +332,7 @@
     <script src="./js/resourceGraph.js"></script>
     <script src="./js/tpsGraph.js"></script>
     <script src="./js/worldGraph.js"></script>
+    <script src="./js/performanceGraph.js"></script>
     <script src="./js/worldMap.js"></script>
     <script src="./js/worldPie.js"></script>
     <script>
@@ -383,46 +368,43 @@
             }],
             tooltip: {
                 valueDecimals: 2
-            },
-            yAxis: 1
+            }
         };
         var cpuSeries = {
-            name: 'CPU Usage',
+            name: 'CPU Usage (%)',
             data: ${cpuSeries},
-            type: 'areaspline',
+            type: 'spline',
             color: '#e0d264',
             tooltip: {
-            pointFormat: '{series.name}: <b>{point.y:.2f}%</b>'
-        }
+                valueDecimals: 2
+            }
         };
         var ramSeries = {
-            name: 'RAM Usage',
+            name: 'RAM Usage (MB)',
             data: ${ramSeries},
-            type: 'areaspline',
+            type: 'spline',
             color: '#7dcc24',
             tooltip: {
-            valueDecimals: 0
-        },
-        yAxis: 1
+                valueDecimals: 0
+            }
         };
         var entitySeries = {
             name: 'Loaded Entities',
             data: ${entitySeries},
-            type: 'areaspline',
+            type: 'spline',
             color: '#ac69ef',
             tooltip: {
-            valueDecimals: 0
-        },
-        yAxis: 1
+                valueDecimals: 0
+            }
         };
         var chunkSeries = {
             name: 'Loaded Chunks',
             data: ${chunkSeries},
-            type: 'areaspline',
+            type: 'spline',
             color: '#b58310',
             tooltip: {
-            valueDecimals: 0
-        }
+                valueDecimals: 0
+            }
         };
         var activitySeries = {
             name: 'Players',
@@ -462,6 +444,7 @@
             data: ${punchCardSeries}
         };
 
+
     </script>
     <script>
             var navButtons = document.getElementsByClassName("nav-button");
@@ -483,9 +466,10 @@
             worldPie('worldPie', worldSeries, gmSeries);
             playersChart('playerChartDay', playersOnlineSeries, 1);
             playersChart('playerChartMonth', playersOnlineSeries, 4);
-            tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
-            resourceChart('resourceGraph', cpuSeries, ramSeries);
-            worldChart('worldGraph', entitySeries, chunkSeries);
+            performanceChart('tpsGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
+            <!--tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);-->
+            <!--resourceChart('resourceGraph', cpuSeries, ramSeries);-->
+            <!--worldChart('worldGraph', entitySeries, chunkSeries);-->
             worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
             punchCard('punchcard', punchcardSeries);
             /*countUpTimer();*/
@@ -516,6 +500,7 @@
                     x.style.transform = "translate3d(" + value + "%,0px,0)";
                 };
             }
+
 
     </script>
 </div>

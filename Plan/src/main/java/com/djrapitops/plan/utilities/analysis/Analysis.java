@@ -289,7 +289,7 @@ public class Analysis {
             playerCount.addOPs(userInfo.stream().filter(UserInfo::isOpped).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
             Map<UUID, Session> activeSessions = plugin.getDataCache().getActiveSessions();
-            Map<UUID, List<Session>> sessions = db.getSessionsTable().getSessionInfoOfServer();
+            Map<UUID, List<Session>> sessions = db.getSessionsTable().getAllSessions(true).get(Plan.getServerUUID());
             joinInfo.addActiveSessions(activeSessions);
             joinInfo.addSessions(sessions);
 
