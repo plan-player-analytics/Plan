@@ -345,7 +345,7 @@ public class UsersTable extends UserIDTable {
         try {
             statement = prepareStatement(Select.all(tableName)
                     .toString());
-            statement.setFetchSize(5000);
+            statement.setFetchSize(20000);
             set = statement.executeQuery();
             Map<UUID, UserInfo> users = new HashMap<>();
             while (set.next()) {
@@ -392,7 +392,7 @@ public class UsersTable extends UserIDTable {
         try {
             statement = prepareStatement(Select.from(tableName, columnUUID, columnTimesKicked)
                     .toString());
-            statement.setFetchSize(5000);
+            statement.setFetchSize(20000);
             set = statement.executeQuery();
             Map<UUID, Integer> timesKicked = new HashMap<>();
             while (set.next()) {
@@ -402,6 +402,28 @@ public class UsersTable extends UserIDTable {
                 timesKicked.put(uuid, kickCount);
             }
             return timesKicked;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
+
+    public Map<UUID, String> getPlayerNames() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName, columnUUID, columnName)
+                    .toString());
+            statement.setFetchSize(20000);
+            set = statement.executeQuery();
+            Map<UUID, String> names = new HashMap<>();
+            while (set.next()) {
+                UUID uuid = UUID.fromString(set.getString(columnUUID));
+                String name = set.getString(columnName);
+
+                names.put(uuid, name);
+            }
+            return names;
         } finally {
             endTransaction(statement);
             close(set, statement);

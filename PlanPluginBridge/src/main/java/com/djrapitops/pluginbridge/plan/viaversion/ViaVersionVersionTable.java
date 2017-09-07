@@ -5,14 +5,15 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
+import main.java.com.djrapitops.plan.data.additional.AnalysisType;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.utilities.html.Html;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.data.additional.AnalysisType;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
 
 /**
  * PluginData class for Vault-plugin.

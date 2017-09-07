@@ -1,17 +1,14 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -54,20 +51,15 @@ public class LiteBansBansTable extends PluginData {
         StringBuilder html = new StringBuilder();
         try {
             List<BanObject> bans = db.getBans();
-            Map<UUID, UserData> users = Plan.getPlanAPI().getInspectCachedUserDataMap();
             for (BanObject ban : bans) {
                 UUID uuid = ban.getUuid();
-                UserData userData = users.get(uuid);
-                if (userData == null) {
-                    continue;
-                }
-                String name = userData.getName();
+                String name = getNameOf(uuid);
                 String tableLine = "<tr><td>REPLACE0</td><td>REPLACE1</td><td>REPLACE2</td><td sorttable_customkey=\"REPLACE3\">REPLACE4</td></tr>";
                 long expiry = ban.getExpiry();
                 String expires = expiry <= 0 ? "Never" : FormatUtils.formatTimeStampSecond(expiry);
                 html.append(tableLine
-                        .replace("REPLACE0", Html.LINK.parse(HtmlUtils.getInspectUrl(name), name))
-                        .replace("REPLACE1", Html.LINK.parse(HtmlUtils.getInspectUrl(ban.getBannedBy()), ban.getBannedBy()))
+                        .replace("REPLACE0", Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name))
+                        .replace("REPLACE1", Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(ban.getBannedBy()), ban.getBannedBy()))
                         .replace("REPLACE2", ban.getReason())
                         .replace("REPLACE3", expiry <= 0 ? "0" : Long.toString(expiry))
                         .replace("REPLACE4", expires

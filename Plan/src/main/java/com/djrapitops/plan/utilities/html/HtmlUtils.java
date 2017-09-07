@@ -3,11 +3,13 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -79,7 +81,9 @@ public class HtmlUtils {
     /**
      * @param playerName
      * @return
+     * @deprecated Use getRelativeInspectUrl instead.
      */
+    @Deprecated
     public static String getInspectUrl(String playerName) {
         String ip = getIP();
         return "//" + ip + "/player/" + playerName.replace(" ", "%20").replace(".", "%2E");
@@ -89,12 +93,16 @@ public class HtmlUtils {
         return "../player/" + playerName;
     }
 
+    public static String getRelativeInspectUrl(UUID uuid) {
+        return getRelativeInspectUrl(Plan.getInstance().getDataCache().getName(uuid));
+    }
+
     /**
      * @param string
      * @return
      */
     public static String removeXSS(String string) {
-        return StringUtils.removeAll(string,"(<!--)|(-->)|(</?script>)");
+        return StringUtils.removeAll(string, "(<!--)|(-->)|(</?script>)");
     }
 
     /**

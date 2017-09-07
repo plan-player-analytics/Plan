@@ -4,7 +4,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Warps;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.Serializable;
 import java.util.*;

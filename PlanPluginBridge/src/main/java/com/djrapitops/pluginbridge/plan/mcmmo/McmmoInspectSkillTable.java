@@ -9,9 +9,8 @@ import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.player.PlayerProfile;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -25,12 +24,12 @@ import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * PluginData class for McMMO-plugin.
- *
+ * <p>
  * Registered to the plugin by McmmoHook
  *
  * @author Rsl1122
- * @since 3.2.1
  * @see McmmoHook
+ * @since 3.2.1
  */
 public class McmmoInspectSkillTable extends PluginData {
 
@@ -49,9 +48,6 @@ public class McmmoInspectSkillTable extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        if (!Plan.getInstance().getHandler().getDataCache().containsKey(uuid)) {
-            return parseContainer("", Html.TABLELINE_2.parse("User not known/online", ""));
-        }
         McMMOPlayer user = UserManager.getOfflinePlayer(getOfflinePlayer(uuid));
         if (user == null) {
             return parseContainer("", Html.TABLELINE_2.parse("User not known/online", ""));

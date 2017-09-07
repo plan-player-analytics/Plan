@@ -86,6 +86,7 @@ public class InformationManager {
     }
 
     public void refreshAnalysis() {
+        plugin.getDataCache().cacheSavedNames();
         analysis.runAnalysis(this);
     }
 

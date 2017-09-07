@@ -52,7 +52,7 @@ public class WorldPieCreator {
 
         Map<String, GMTimes> gmTimesMap = worldTimes.getWorldTimes();
         if (gmTimesMap.isEmpty()) {
-            return "[{[]}]";
+            return "[]";
         }
         int size = gmTimesMap.size();
         drilldownBuilder.append("[");

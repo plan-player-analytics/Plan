@@ -1,6 +1,7 @@
 package com.djrapitops.pluginbridge.plan.litebans;
 
 import litebans.api.Database;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.tables.Table;
 
 import java.sql.PreparedStatement;
@@ -66,13 +67,8 @@ public class LiteBansDatabaseQueries extends Table {
         }
     }
 
-    /**
-     * @return false
-     * @deprecated Not in use.
-     */
     @Override
-    @Deprecated
-    public boolean createTable() {
-        return false;
+    public void createTable() throws DBCreateTableException {
+        throw new IllegalStateException("Not Supposed to be called.");
     }
 }

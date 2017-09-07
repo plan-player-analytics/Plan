@@ -1,7 +1,6 @@
 package com.djrapitops.pluginbridge.plan;
 
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
 
 /**
  * @author Rsl1122
@@ -23,7 +22,7 @@ public class Bridge {
             try {
                 String className = "com.djrapitops.pluginbridge.plan." + pluginName + "Hook";
                 Class<Hook> clazz = (Class<Hook>) Hook.class.forName(className);
-                clazz.getConstructor(DataCacheHandler.class).newInstance(handler);
+                clazz.getConstructor(HookHandler.class).newInstance(handler);
             } catch (Exception | NoClassDefFoundError ignore) {
             }
         }

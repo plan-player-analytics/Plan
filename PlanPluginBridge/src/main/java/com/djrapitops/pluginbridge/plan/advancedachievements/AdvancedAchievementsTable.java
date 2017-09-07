@@ -2,14 +2,14 @@ package com.djrapitops.pluginbridge.plan.advancedachievements;
 
 import com.hm.achievement.api.AdvancedAchievementsAPI;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -48,38 +48,34 @@ public class AdvancedAchievementsTable extends PluginData {
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuidUnused) {
         StringBuilder html = new StringBuilder();
-        Map<UUID, UserData> cachedUserData = Plan.getPlanAPI().getInspectCachedUserDataMap();
-        if (cachedUserData.isEmpty()) {
+        Set<UUID> users = Plan.getInstance().getDataCache().getUuids();
+        if (users.isEmpty()) {
             html.append(Html.TABLELINE_2.parse("No Players.", ""));
         } else if (aaAPI.getAdvancedAchievementsVersionCode() >= 520) {
-            appendTableLinesForV520Plus(cachedUserData, html);
+            appendTableLinesForV520Plus(users, html);
         } else {
-            appendTableLinesForLessThanV520(cachedUserData, html);
+            appendTableLinesForLessThanV520(users, html);
         }
         return parseContainer("", html.toString());
     }
 
-    private void appendTableLinesForLessThanV520(Map<UUID, UserData> cachedUserData, StringBuilder html) {
-        cachedUserData.values().forEach(uData -> {
-            String inspectUrl = HtmlUtils.getRelativeInspectUrl(uData.getName());
-            int achievements = aaAPI.getPlayerTotalAchievements(uData.getUuid());
-            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
+    private void appendTableLinesForLessThanV520(Set<UUID> users, StringBuilder html) {
+        users.forEach(uuid -> {
+            String name = super.getNameOf(uuid);
+            String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
+            int achievements = aaAPI.getPlayerTotalAchievements(uuid);
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), achievements));
         });
     }
 
-    private void appendTableLinesForV520Plus(Map<UUID, UserData> cachedUserData, StringBuilder html) {
+    private void appendTableLinesForV520Plus(Set<UUID> users, StringBuilder html) {
         Map<UUID, Integer> achievementsMap = aaAPI.getPlayersTotalAchievements();
         for (Map.Entry<UUID, Integer> entry : achievementsMap.entrySet()) {
             UUID uuid = entry.getKey();
             int achievements = entry.getValue();
-
-            UserData uData = cachedUserData.get(uuid);
-            if (uData == null) {
-                continue;
-            }
-
-            String inspectUrl = HtmlUtils.getInspectUrl(uData.getName());
-            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, uData.getName()), achievements));
+            String name = getNameOf(uuid);
+            String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
+            html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), achievements));
         }
     }
 

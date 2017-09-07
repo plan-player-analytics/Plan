@@ -5,15 +5,16 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.tables.Table;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.tables.Table;
 
 /**
  * Class responsible for version protocol information in Plan database.
@@ -27,24 +28,18 @@ public class ProtocolTable extends Table {
     private final String columnProtocolVersion;
 
     public ProtocolTable(SQLDB db) {
-        super("plan_viaversion_protocol", db, db.supportsModification());
+        super("plan_viaversion_protocol", db, db.isUsingMySQL());
         columnUUID = "uuid";
         columnProtocolVersion = "protocol_version";
     }
 
     @Override
-    public boolean createTable() {
-        try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUUID + " varchar(36) NOT NULL UNIQUE, "
-                    + columnProtocolVersion + " integer NOT NULL"
-                    + ")"
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void createTable() throws DBCreateTableException {
+        createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
+                + columnUUID + " varchar(36) NOT NULL UNIQUE, "
+                + columnProtocolVersion + " integer NOT NULL"
+                + ")"
+        );
     }
 
     public void saveProtocolVersion(UUID uuid, int version) throws SQLException {
@@ -115,9 +110,9 @@ public class ProtocolTable extends Table {
         try {
             statement = prepareStatement(
                     "INSERT INTO " + tableName + " ("
-                    + columnUUID + ", "
-                    + columnProtocolVersion
-                    + ") VALUES (?, ?)");
+                            + columnUUID + ", "
+                            + columnProtocolVersion
+                            + ") VALUES (?, ?)");
             statement.setString(1, uuid.toString());
             statement.setInt(2, version);
             statement.execute();
