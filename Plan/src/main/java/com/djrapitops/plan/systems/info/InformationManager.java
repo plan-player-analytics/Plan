@@ -5,25 +5,12 @@
 package main.java.com.djrapitops.plan.systems.info;
 
 import com.djrapitops.plugin.command.ISender;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
-import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
-import main.java.com.djrapitops.plan.data.AnalysisData;
-import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
-import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,50 +19,18 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class InformationManager {
-    // TODO Class that manages ALL information for API, WebAPI requests, Command Caching etc.
-    private Plan plugin;
-    private Database db;
+public abstract class InformationManager {
+    boolean usingBungeeWebServer;
+    String webServerAddress;
+    Set<ISender> analysisNotification;
 
-    private DataCache dataCache;
-
-    private boolean usingBungeeWebServer;
-    private String webServerAddress;
-
-    private Set<ISender> analysisNotification;
-    private Analysis analysis;
-    private AnalysisData analysisData;
-    private String analysisPluginsTab;
-    private Long refreshDate;
-
-    public InformationManager(Plan plugin) {
-        this.plugin = plugin;
-        db = plugin.getDB();
-
-        plugin.getServerInfoManager().getBungeeConnectionAddress()
-                .ifPresent(address -> webServerAddress = address);
-
-        dataCache = new DataCache(plugin);
-        analysis = new Analysis(plugin);
+    public InformationManager() {
         analysisNotification = new HashSet<>();
-
-        if (webServerAddress != null) {
-            attemptBungeeConnection();
-        }
     }
 
-    public InformationManager(PlanBungee plugin) {
-        // TODO Init info manager.
-    }
+    public abstract void attemptConnection();
 
-    public void attemptBungeeConnection() {
-        // TODO WebAPI bungee connection check
-    }
-
-    public void cachePlayer(UUID uuid) {
-        PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
-        // TODO Player page plugin tab request
-    }
+    public abstract void cachePlayer(UUID uuid);
 
     public UrlParser getLinkTo(String target) {
         if (webServerAddress != null) {
@@ -85,68 +40,37 @@ public class InformationManager {
         }
     }
 
-    public void refreshAnalysis() {
-        plugin.getDataCache().cacheSavedNames();
-        analysis.runAnalysis(this);
-    }
+    public abstract void refreshAnalysis();
 
-    public DataCache getDataCache() {
-        return dataCache;
-    }
+    public abstract DataCache getDataCache();
 
     public SessionCache getSessionCache() {
-        return dataCache;
+        return getDataCache();
     }
 
     public boolean isCached(UUID uuid) {
-        if (usingBungeeWebServer) {
-            // TODO bungee part
-        }
         return PageCache.isCached("inspectPage: " + uuid);
     }
 
-    public String getPlayerHtml(UUID uuid) {
-        // TODO Bungee part.
-        try {
-            return new InspectPageParser(uuid, plugin).parse();
-        } catch (ParseException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return "";
-    }
+    public abstract String getPlayerHtml(UUID uuid);
 
-    public boolean isAnalysisCached() {
-        // TODO Bungee part
-        return PageCache.isCached("analysisPage");
-    }
+    /**
+     * Used for /server on Bukkit and /network on Bungee
+     *
+     * @return Is page cached.
+     */
+    public abstract boolean isAnalysisCached();
 
-    public String getAnalysisHtml() {
-        // TODO Bungee part.
-        try {
-            return new AnalysisPageParser(analysisData, plugin).parse();
-        } catch (ParseException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return "";
-    }
-
-    public void cacheAnalysisdata(AnalysisData analysisData) {
-        this.analysisData = analysisData;
-        refreshDate = MiscUtils.getTime();
-        // TODO Web Caching (Move from Analysis)
-        AnalyzeCommand.sendAnalysisMessage(analysisNotification);
-        analysisNotification.clear();
-    }
+    /**
+     * Used for /server on Bukkit and /network on Bungee
+     *
+     * @return Html of a page.
+     */
+    public abstract String getAnalysisHtml();
 
     public void addAnalysisNotification(ISender sender) {
         analysisNotification.add(sender);
     }
 
-    public AnalysisData getAnalysisData() {
-        return analysisData;
-    }
 
-    public Optional<Long> getAnalysisRefreshDate() {
-        return refreshDate != null ? Optional.of(refreshDate) : Optional.empty();
-    }
 }

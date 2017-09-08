@@ -77,7 +77,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType == null) {
             return source.parseContainer("Err ", "Null Analysistype. ");
         }
@@ -105,7 +105,7 @@ public class AnalysisUtils {
         }
     }
 
-    private static Stream<Serializable> getCorrectValues(List<UUID> uuids, PluginData source) {
+    private static Stream<Serializable> getCorrectValues(Collection<UUID> uuids, PluginData source) {
         return uuids.stream()
                 .map(source::getValue)
                 .filter(value -> !value.equals(-1))
@@ -118,7 +118,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getAverage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getAverage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType == null) {
             return source.parseContainer("Err ", "Null Analysistype. ");
         }
@@ -156,7 +156,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType != AnalysisType.BOOLEAN_PERCENTAGE) {
             return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
         }
@@ -178,7 +178,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getBooleanTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getBooleanTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType != AnalysisType.BOOLEAN_TOTAL) {
             return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
         }

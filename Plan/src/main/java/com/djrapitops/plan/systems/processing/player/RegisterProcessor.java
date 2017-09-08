@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Registers the user to the database and marks first session if the user has no actions.
  *
  * @author Rsl1122
  */
@@ -49,7 +49,7 @@ public class RegisterProcessor extends PlayerProcessor {
             if (!usersTable.isRegistered(uuid)) {
                 usersTable.registerUser(uuid, registered, name);
             }
-            if (userInfoTable.isRegistered(uuid)) {
+            if (db.getActionsTable().getActions(uuid).size() > 0) {
                 return;
             }
             plugin.getDataCache().markFirstSession(uuid);

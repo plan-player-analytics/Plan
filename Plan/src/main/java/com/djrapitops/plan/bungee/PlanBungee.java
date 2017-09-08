@@ -16,6 +16,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -28,7 +29,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * //TODO Class Javadoc Comment
+ * Bungee Main class.
  *
  * @author Rsl1122
  */
@@ -82,7 +83,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             }
 
             serverInfoManager = new ServerInfoManager(this);
-            infoManager = new InformationManager(this);
+            infoManager = new BungeeInformationManager(this);
             webServer.setInfoManager(infoManager);
 
             registerListener(new BungeePlayerListener(this));

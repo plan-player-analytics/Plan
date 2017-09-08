@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.command.commands;
 
-import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
@@ -14,13 +13,11 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import org.bukkit.ChatColor;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.
@@ -75,13 +72,15 @@ public class AnalyzeCommand extends SubCommand {
             return true;
         }
 
-        Optional<Long> analysisRefreshDate = infoManager.getAnalysisRefreshDate();
-        boolean forcedRefresh = args.length >= 1 && "-r".equals(args[0]);
-        boolean refresh = !analysisRefreshDate.isPresent()
-                || analysisRefreshDate.get() < MiscUtils.getTime() - TimeAmount.MINUTE.ms()
-                || forcedRefresh;
+        // TODO Rewrite so that a server can be specified
+        // TODO Write a command for listing servers.
+//        Optional<Long> analysisRefreshDate = infoManager.getAnalysisRefreshDate();
+//        boolean forcedRefresh = args.length >= 1 && "-r".equals(args[0]);
+//        boolean refresh = !analysisRefreshDate.isPresent()
+//                || analysisRefreshDate.get() < MiscUtils.getTime() - TimeAmount.MINUTE.ms()
+//                || forcedRefresh;
 
-        updateCache(sender, refresh);
+        updateCache(sender, true);
 
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
         if (plugin.getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {

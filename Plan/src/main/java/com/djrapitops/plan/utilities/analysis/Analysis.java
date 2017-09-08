@@ -15,7 +15,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
@@ -30,10 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,42 +99,28 @@ public class Analysis {
      */
     public boolean analyzeData(InformationManager infoManager, Database db) {
         try {
-//            rawData.sort(new UserInfoLastPlayedComparator());
-//            List<UUID> uuids = rawData.stream().map(UserInfo::getUuid).collect(Collectors.toList());
             Benchmark.start("Create Empty dataset");
-            DataCache dataCache = plugin.getDataCache();
-
 
             AnalysisData analysisData = new AnalysisData();
             List<PluginData> thirdPartyPlugins = plugin.getHookHandler().getAdditionalDataSources();
             analysisData.setPluginsTabLayout(HtmlStructure.createAnalysisPluginsTabLayout(thirdPartyPlugins));
             analysisData.setPlanVersion(plugin.getVersion());
-            ActivityPart activityPart = analysisData.getActivityPart();
-            // TODO GetRecentPlayers
-//            activityPart.setRecentPlayersUUIDs(uuids);
-//            analysisData.getPlayerCountPart().addPlayers(uuids);
-
-//            activityPart.setRecentPlayers(rawData.stream().map(UserInfo::getName).collect(Collectors.toList()));
 
             Benchmark.stop("Analysis", "Create Empty dataset");
+            fillDataset(analysisData, db);
             long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             Benchmark.start("Analysis Phase");
             Log.debug("Analysis", "Analysis Phase");
 
-            //TODO Fetch Size
-            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(0, fetchPhaseLength));
-
-            fillDataset(analysisData, db);
-            // Analyze
+            log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(analysisData.getPlayerCountPart().getPlayerCount(), fetchPhaseLength));
             analysisData.analyseData();
             Benchmark.stop("Analysis", "Analysis Phase");
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
-//    TODO        analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(uuids));
-
-            infoManager.cacheAnalysisdata(analysisData);
+            analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(analysisData.getPlayerCountPart().getUuids()));
+            ((BukkitInformationManager) infoManager).cacheAnalysisdata(analysisData);
             long time = Benchmark.stop("Analysis", "Analysis");
 
             Log.logDebug("Analysis", time);
@@ -160,12 +143,10 @@ public class Analysis {
     }
 
     private void log(String msg) {
-        // TODO Send info to the command sender. (Needs a new system)
         Log.info(msg);
     }
 
-    private Map<String, Serializable> analyzeAdditionalPluginData(List<UUID> uuids) {
-        // TODO Rewrite
+    private Map<String, Serializable> analyzeAdditionalPluginData(Set<UUID> uuids) {
         Benchmark.start("3rd party");
         final Map<String, Serializable> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
@@ -190,7 +171,7 @@ public class Analysis {
                     return;
                 }
                 if (analysisTypes.contains(AnalysisType.HTML)) {
-                    replaceMap.put(source.getPlaceholder(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), uuids.get(0)));
+                    replaceMap.put(source.getPlaceholder(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), UUID.randomUUID()));
                     return;
                 }
                 for (AnalysisType type : totalTypes) {
