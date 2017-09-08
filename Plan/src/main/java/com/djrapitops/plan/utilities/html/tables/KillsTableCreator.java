@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
-import com.djrapitops.plugin.utilities.player.Fetch;
-import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -46,8 +45,7 @@ public class KillsTableCreator {
 
                 long date = kill.getTime();
 
-                IOfflinePlayer victim = Fetch.getIOfflinePlayer(kill.getVictim());
-                String name = victim.getName();
+                String name = Plan.getInstance().getDataCache().getName(kill.getVictim());
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         String.valueOf(date), FormatUtils.formatTimeStamp(date),
                         Html.LINK.parse(HtmlUtils.getInspectUrl(name), name),

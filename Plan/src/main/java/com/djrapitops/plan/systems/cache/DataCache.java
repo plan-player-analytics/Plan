@@ -67,7 +67,17 @@ public class DataCache extends SessionCache {
      * @return name or null if not cached.
      */
     public String getName(UUID uuid) {
-        return playerNames.get(uuid);
+        String name = playerNames.get(uuid);
+        if (name == null) {
+            try {
+                name = db.getUsersTable().getPlayerName(uuid);
+                playerNames.put(uuid, name);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+                name = "Error occurred";
+            }
+        }
+        return name;
     }
 
     /**

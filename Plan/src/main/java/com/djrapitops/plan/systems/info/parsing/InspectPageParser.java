@@ -145,7 +145,6 @@ public class InspectPageParser extends PageParser {
             addValue("worldPieSeries", worldPieData[0]);
             addValue("gmSeries", worldPieData[1]);
 
-
             addValue("punchCardSeries", punchCardData);
 
             List<Session> sessionsInLengthOrder = allSessions.stream()
@@ -167,7 +166,6 @@ public class InspectPageParser extends PageParser {
             addValue("playerKillCount", playerKillCount);
             addValue("mobKillCount", mobKillCount);
             addValue("deathCount", deathCount);
-
 
             playerClassification(userInfo, lastSeen, playTime, sessionCount);
 
