@@ -9,9 +9,7 @@ import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Table class representing database table plan_worlds.
@@ -83,9 +81,10 @@ public class WorldTable extends Table {
      */
     public void saveWorlds(Collection<String> worlds) throws SQLException {
         Verify.nullCheck(worlds);
+        Set<String> worldsToSave = new HashSet<>(worlds);
 
         List<String> saved = getWorlds();
-        worlds.removeAll(saved);
+        worldsToSave.removeAll(saved);
         if (Verify.isEmpty(worlds)) {
             return;
         }
@@ -95,7 +94,7 @@ public class WorldTable extends Table {
             statement = prepareStatement("INSERT INTO " + tableName + " ("
                     + columnWorldName
                     + ") VALUES (?)");
-            for (String world : worlds) {
+            for (String world : worldsToSave) {
                 statement.setString(1, world);
                 statement.addBatch();
             }
