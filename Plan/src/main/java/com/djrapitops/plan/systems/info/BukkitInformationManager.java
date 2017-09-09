@@ -9,16 +9,21 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
+import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * //TODO Class Javadoc Comment
@@ -35,11 +40,13 @@ public class BukkitInformationManager extends InformationManager {
     private String analysisPluginsTab;
     private Long refreshDate;
 
+    private final Map<UUID, String> pluginsTabContents;
 
     public BukkitInformationManager(Plan plugin) {
         this.plugin = plugin;
         dataCache = new DataCache(plugin);
         analysis = new Analysis(plugin);
+        pluginsTabContents = new HashMap<>();
 
         Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
         if (bungeeConnectionAddress.isPresent()) {
@@ -60,7 +67,38 @@ public class BukkitInformationManager extends InformationManager {
     @Override
     public void cachePlayer(UUID uuid) {
         PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
-        // TODO Player page plugin tab request
+        plugin.addToProcessQueue(new Processor<UUID>(uuid) {
+            @Override
+            public void process() {
+                cacheInspectPluginsTab(object);
+            }
+        });
+    }
+
+    public void cacheInspectPluginsTab(UUID uuid) {
+        if (usingBungeeWebServer) {
+            // TODO plugin tab request on bungee
+        }
+        String serverName = plugin.getServerInfoManager().getServerName();
+        HookHandler hookHandler = plugin.getHookHandler();
+        List<PluginData> plugins = hookHandler.getAdditionalDataSources();
+        Map<String, Serializable> replaceMap = hookHandler.getAdditionalInspectReplaceRules(uuid);
+        String contents = HtmlStructure.createInspectPageTabContent(serverName, plugins, replaceMap);
+        cacheInspectPluginsTab(uuid, contents);
+    }
+
+    public void cacheInspectPluginsTab(UUID uuid, String contents) {
+        pluginsTabContents.put(uuid, contents);
+        Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
+        if (inspectResponse != null) {
+            ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
+        }
+    }
+
+    @Override
+    public String getPluginsTabContent(UUID uuid) {
+        String calculating = HtmlStructure.createInspectPageTabContentCalculating();
+        return pluginsTabContents.getOrDefault(uuid, calculating);
     }
 
     @Override

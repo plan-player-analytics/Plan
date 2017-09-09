@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -175,7 +176,7 @@ public class HtmlStructure {
         return new String[]{html.toString(), viewScript.toString()};
     }
 
-    public static String createInspectPageTabContent(String serverName, List<PluginData> plugins, Map<String, String> replaceMap) {
+    public static String createInspectPageTabContent(String serverName, List<PluginData> plugins, Map<String, Serializable> replaceMap) {
         if (plugins.isEmpty()) {
             return "";
         }
@@ -343,5 +344,18 @@ public class HtmlStructure {
             placeholders.put(pluginName, pluginPlaceholderList);
         }
         return placeholders;
+    }
+
+    public static String createInspectPageTabContentCalculating() {
+        StringBuilder html = new StringBuilder();
+        html.append("<div class=\"row\">")
+                .append("<div class=\"column\">")
+                .append("<div class=\"box-header\">")
+                .append("<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> No Plugins</h2></div>")
+                .append("<div class=\"box plugin\">")
+                .append("<p><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Plugins tab is still being calculated, please refresh the page after a while (F5)</p>")
+                .append("</div></div>")
+                .append("</div>");
+        return html.toString();
     }
 }

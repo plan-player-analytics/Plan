@@ -15,21 +15,24 @@ public class ASkyBlockHook extends Hook {
 
     /**
      * Hooks the plugin and registers it's PluginData objects.
-     *
+     * <p>
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
+     * @see API
      */
     public ASkyBlockHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("com.wasteofplastic.askyblock.ASkyBlock");
+        super("com.wasteofplastic.askyblock.ASkyBlock", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
             ASkyBlockAPI api = ASkyBlockAPI.getInstance();
-            hookH.addPluginDataSource(new ASkyBlockIslandName(api));
-            hookH.addPluginDataSource(new ASkyBlockIslandLevel(api));
-            hookH.addPluginDataSource(new ASkyBlockIslandResets(api));
-            hookH.addPluginDataSource(new ASkyBlockIslands(api));
+            addPluginDataSource(new ASkyBlockIslandName(api));
+            addPluginDataSource(new ASkyBlockIslandLevel(api));
+            addPluginDataSource(new ASkyBlockIslandResets(api));
+            addPluginDataSource(new ASkyBlockIslands(api));
         }
     }
 }
