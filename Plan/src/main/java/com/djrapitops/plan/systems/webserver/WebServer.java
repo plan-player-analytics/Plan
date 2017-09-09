@@ -478,6 +478,7 @@ public class WebServer {
             return PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
+        plugin.getInfoManager().cachePlayer(uuid);
         return PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(infoManager, uuid));
     }
 

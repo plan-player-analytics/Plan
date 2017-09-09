@@ -104,9 +104,9 @@ public class HookHandler {
                 continue;
             }
             try {
-                addReplace.put(source.getPlaceholder(), source.getHtmlReplaceValue("", uuid));
+                addReplace.put(source.getPlaceholderName(), source.getHtmlReplaceValue("", uuid));
             } catch (Exception e) {
-                addReplace.put(source.getPlaceholder(), "Error occurred: " + e);
+                addReplace.put(source.getPlaceholderName(), "Error occurred: " + e);
                 Log.error("PluginDataSource caused an exception: " + source.getSourcePlugin());
                 Log.toLog("PluginDataSource " + source.getSourcePlugin(), e);
             }

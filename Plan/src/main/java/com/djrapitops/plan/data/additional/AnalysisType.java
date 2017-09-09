@@ -20,56 +20,56 @@ public enum AnalysisType {
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    INT_AVG("avgInt_", "Average "),
+    INT_AVG("_avgInt", "Average "),
     /**
      * Used when the getValue() method returns a long and average should be
      * calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_AVG("avgLong_", "Average "),
+    LONG_AVG("_avgLong", "Average "),
     /**
      * Used when the getValue() method returns double and average should be
      * calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    DOUBLE_AVG("avgDouble_", "Average "),
+    DOUBLE_AVG("_avgDouble", "Average "),
     /**
      * Used when the getValue() method returns an integer and total should be
      * calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    INT_TOTAL("totalInt_", "Total "),
+    INT_TOTAL("_totalInt", "Total "),
     /**
      * Used when the getValue() method returns a long and total should be
      * calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_TOTAL("totalLong_", "Total "),
+    LONG_TOTAL("_totalLong", "Total "),
     /**
      * Used when the getValue() method returns a double and total should be
      * calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    DOUBLE_TOTAL("totalDouble_", "Total "),
+    DOUBLE_TOTAL("_totalDouble", "Total "),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
      * and average should be calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_TIME_MS_AVG("avgTimeMs_", "Average "),
+    LONG_TIME_MS_AVG("_avgTimeMs", "Average "),
     /**
      * Used when the getValue() method returns an amount of milliseconds as long
      * and total should be calculated.
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_TIME_MS_TOTAL("totalTimeMs_"),
+    LONG_TIME_MS_TOTAL("_totalTimeMs"),
     /**
      * Used when the getValue() method returns an Epoch Millisecond as long and
      * average of differences between the millisecond and current millisecond
@@ -81,18 +81,18 @@ public enum AnalysisType {
      * <p>
      * -1 values will be disregarded from the calculation (size will not grow).
      */
-    LONG_EPOCH_MS_MINUS_NOW_AVG("avgEpochMsMinusNow_", "Average "),
+    LONG_EPOCH_MS_MINUS_NOW_AVG("_avgEpochMsMinusNow", "Average "),
     /**
      * Used to calculate %-true for the returned boolean values of getValue().
      */
-    BOOLEAN_PERCENTAGE("perchBool_", "Percentage "),
+    BOOLEAN_PERCENTAGE("_perchBool", "Percentage "),
     /**
      * Used to calculate number of true values for the returned boolean values
      * of getValue().
      * <p>
      * Will be presented as "n / total".
      */
-    BOOLEAN_TOTAL("totalBool_"),
+    BOOLEAN_TOTAL("_totalBool"),
     /**
      * Used to add html tags to the plugins tab.
      * <p>
