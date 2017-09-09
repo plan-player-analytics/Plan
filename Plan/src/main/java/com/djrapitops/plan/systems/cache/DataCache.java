@@ -138,4 +138,8 @@ public class DataCache extends SessionCache {
     public Set<UUID> getUuids() {
         return playerNames.keySet();
     }
+
+    public Map<UUID, Integer> getFirstSessionMsgCounts() {
+        return firstSessionInformation;
+    }
 }

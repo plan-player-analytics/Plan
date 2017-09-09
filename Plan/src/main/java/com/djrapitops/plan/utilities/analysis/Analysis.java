@@ -171,7 +171,14 @@ public class Analysis {
                     return;
                 }
                 if (analysisTypes.contains(AnalysisType.HTML)) {
-                    replaceMap.put(source.getPlaceholderName(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), UUID.randomUUID()));
+                    String html = source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), UUID.randomUUID());
+                    String placeholderName = source.getPlaceholderName(AnalysisType.HTML.getPlaceholderModifier());
+                    int length = html.length();
+                    if (length < 20000) {
+                        replaceMap.put(placeholderName, html);
+                    } else {
+                        replaceMap.put(placeholderName, "<p>Html was removed because it contained too many characters to be responsive (" + length + "/20000)</p>");
+                    }
                     return;
                 }
                 for (AnalysisType type : totalTypes) {

@@ -48,6 +48,7 @@ import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
 
 import java.util.HashSet;
@@ -192,13 +193,13 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             hookHandler = new HookHandler(this);
             Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
-//Analytics temporarily disabled TODO enable before release
-//            BStats bStats = new BStats(this);
-//            bStats.registerMetrics();
+            BStats bStats = new BStats(this);
+            bStats.registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
             Log.info(Locale.get(Msg.ENABLED).toString());
+            new ShutdownHook(this);
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
             Log.logStackTrace(e);
