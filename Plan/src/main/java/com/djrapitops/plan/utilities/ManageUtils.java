@@ -41,6 +41,7 @@ public class ManageUtils {
         }
         backupDB.init();
         clearAndCopy(backupDB, copyFromDB);
+        backupDB.close();
     }
 
     /**

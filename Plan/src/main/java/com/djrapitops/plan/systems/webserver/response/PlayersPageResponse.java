@@ -1,11 +1,17 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.data.UserInfo;
-import main.java.com.djrapitops.plan.utilities.comparators.UserDataNameComparator;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * @author Rsl1122
@@ -15,21 +21,29 @@ public class PlayersPageResponse extends Response {
 
     public PlayersPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
-//        super.setContent(buildContent(plugin.getInspectCache().getCachedUserData()));
+        List<String> names = null;
+        try {
+            IPlan plugin = MiscUtils.getIPlan();
+            names = new ArrayList<>(plugin.getDB().getUsersTable().getPlayerNames().values());
+            Collections.sort(names);
+            Map<String, String> replace = new HashMap<>();
+            replace.put("content", buildContent(names));
+            replace.put("version", plugin.getVersion());
+            super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("players.html"), replace)));
+        } catch (SQLException | FileNotFoundException e) {
+            Log.toLog(this.getClass().getName(), e);
+            setContent(new InternalErrorResponse(e, "/players").getContent());
+        }
     }
 
-    public static String buildContent(List<UserInfo> cached) {
-        StringBuilder html = new StringBuilder("<!DOCTYPE html><html><body><h1>Cached Players</h1><p>");
-        int size = cached.size();
+    public static String buildContent(List<String> names) {
+        StringBuilder html = new StringBuilder("<p>");
+        int size = names.size();
 
-        html.append(size)
-                .append(" players. Use browser's Search to find players by name. (Chrome Ctrl+F)</p><table><tr>");
-
-        cached.sort(new UserDataNameComparator());
+        html.append(size).append(" players. Use browser's Search to find players by name. (Ctrl+F)</p><table><tr>");
 
         int i = 1;
-        for (UserInfo userInfo : cached) {
-            String name = userInfo.getName();
+        for (String name : names) {
             String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
 
             html.append("<td>").append(link).append("</td>");
@@ -40,7 +54,7 @@ public class PlayersPageResponse extends Response {
             i++;
         }
 
-        html.append("</tr></table></body></html>");
+        html.append("</tr></table>");
         return html.toString();
     }
 }

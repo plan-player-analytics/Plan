@@ -172,6 +172,7 @@ public class WebServer {
 
     private void internalErrorResponse(HttpExchange exchange, Headers responseHeaders, String target, Exception e) {
         try {
+            Log.toLog(target, e);
             sendData(responseHeaders, exchange, new InternalErrorResponse(e, target));
         } catch (IOException e1) {
             Log.toLog(this.getClass().getName(), e1);

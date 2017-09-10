@@ -6,8 +6,6 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,36 +52,36 @@ public class ExportUtility {
 
     /**
      * @param analysisData
-     * @param rawData
+     * @param playerNames
      */
-    public static void export(AnalysisData analysisData, List<UserInfo> rawData) {
+    public static void export(AnalysisData analysisData, List<String> playerNames) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }
 
-        Benchmark.start("Exporting Html pages");
-        try {
-            File folder = getFolder();
-            Log.debug("Export", "Folder: " + folder.getAbsolutePath());
-
-            writePlayersPageHtml(rawData, new File(folder, "players"));
-            writeAnalysisHtml(analysisData, new File(folder, "server"));
-
-            File playersFolder = getPlayersFolder(folder);
-            Log.debug("Export", "Player html files.");
-            Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
-
-            String playerHtml = FileUtil.getStringFromResource("player.html");
-
-            Benchmark.start("Exporting Player pages");
-            rawData.forEach(userData -> writeInspectHtml(userData, playersFolder, playerHtml));
-            Benchmark.stop("Export", "Exporting Player pages");
-        } catch (IOException ex) {
-            Log.toLog("ExportUtils.export", ex);
-        } finally {
-            Benchmark.stop("Export", "Exporting Html pages");
-            Log.logDebug("Export");
-        }
+//        Benchmark.start("Exporting Html pages");
+//        try {
+//            File folder = getFolder();
+//            Log.debug("Export", "Folder: " + folder.getAbsolutePath());
+//
+//            writePlayersPageHtml(playerNames, new File(folder, "players"));
+//            writeAnalysisHtml(analysisData, new File(folder, "server"));
+//
+//            File playersFolder = getPlayersFolder(folder);
+//            Log.debug("Export", "Player html files.");
+//            Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
+//
+//            String playerHtml = FileUtil.getStringFromResource("player.html");
+//
+//            Benchmark.start("Exporting Player pages");
+//            playerNames.forEach(userData -> writeInspectHtml(userData, playersFolder, playerHtml));
+//            Benchmark.stop("Export", "Exporting Player pages");
+//        } catch (IOException ex) {
+//            Log.toLog("ExportUtils.export", ex);
+//        } finally {
+//            Benchmark.stop("Export", "Exporting Html pages");
+//            Log.logDebug("Export");
+//        }
     }
 
     /**
@@ -148,8 +146,8 @@ public class ExportUtility {
 //        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
-    private static void writePlayersPageHtml(List<UserInfo> rawData, File playersFolder) throws IOException {
-        String playersHtml = PlayersPageResponse.buildContent(rawData);
+    private static void writePlayersPageHtml(List<String> names, File playersFolder) throws IOException {
+        String playersHtml = PlayersPageResponse.buildContent(names);
         playersFolder.mkdirs();
         File playersHtmlFile = new File(playersFolder, "index.html");
         Log.debug("Export", "Players Page File: " + playersHtmlFile.getAbsolutePath());

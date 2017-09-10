@@ -43,12 +43,13 @@ public class ManageBackupCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         try {
+
             if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
                 return true;
             }
             String dbName = args[0].toLowerCase();
             boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
-            if (Check.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
+            if (!Check.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
                 return true;
             }
 
@@ -59,10 +60,12 @@ public class ManageBackupCommand extends SubCommand {
                 Log.error(dbName + " was null!");
                 return true;
             }
-
+            Log.debug("Backup", "Start");
             runBackupTask(sender, args, database);
         } catch (DatabaseInitException | NullPointerException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+        } finally {
+            Log.logDebug("Backup");
         }
         return true;
     }

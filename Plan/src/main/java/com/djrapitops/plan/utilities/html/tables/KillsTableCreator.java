@@ -48,7 +48,7 @@ public class KillsTableCreator {
                 String name = Plan.getInstance().getDataCache().getName(kill.getVictim());
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         String.valueOf(date), FormatUtils.formatTimeStamp(date),
-                        Html.LINK.parse(HtmlUtils.getInspectUrl(name), name),
+                        Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name),
                         kill.getWeapon()
                 ));
 
