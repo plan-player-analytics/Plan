@@ -84,6 +84,8 @@ public class Version8TransferTable extends Table {
         nicknamesTable.createTable();
         execute(dropTableSql("plan_sessions"));
         db.getSessionsTable().createTable();
+        execute("INSERT INTO plan_sessions (id, user_id, server_id, session_start, session_end, mob_kills, deaths) " +
+                "VALUES (0, 1, 1, 0, 0, 0, 0)");
         killsTable.createTable();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
