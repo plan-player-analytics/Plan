@@ -53,15 +53,18 @@ public class Version8TransferTable extends Table {
 
         execute(dropTableSql("plan_ips"));
         db.getIpsTable().createTable();
-
-        execute(dropTableSql("plan_sessions"));
-        db.getSessionsTable().createTable();
-
         execute(dropTableSql("plan_world_times"));
         execute(dropTableSql("plan_worlds"));
         db.getWorldTable().createTable();
         db.getWorldTimesTable().createTable();
+        execute(dropTableSql("plan_user_info"));
+        execute(dropTableSql("plan_actions"));
+        db.getActionsTable().createTable();
+        db.getUserInfoTable().createTable();
         execute(dropTableSql("plan_gamemodetimes"));
+        execute(dropTableSql("temp_nicks"));
+        execute(dropTableSql("temp_kills"));
+        execute(dropTableSql("temp_users"));
 
         db.setVersion(10);
         Benchmark.stop("Schema copy from 8 to 10");
@@ -84,8 +87,6 @@ public class Version8TransferTable extends Table {
         nicknamesTable.createTable();
         execute(dropTableSql("plan_sessions"));
         db.getSessionsTable().createTable();
-        execute("INSERT INTO plan_sessions (id, user_id, server_id, session_start, session_end, mob_kills, deaths) " +
-                "VALUES (0, 1, 1, 0, 0, 0, 0)");
         killsTable.createTable();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
@@ -112,17 +113,22 @@ public class Version8TransferTable extends Table {
                 "user_id, nickname, '" + serverID + "'" +
                 " FROM " + tempNickTableName;
         execute(statement);
-        statement = "INSERT INTO plan_kills " +
-                "(" +
-                "killer_id, victim_id, weapon, date, session_id" +
-                ") SELECT " +
-                "killer_id, victim_id, weapon, date, '0'" +
-                " FROM " + tempKillsTableName;
-        execute(statement);
-
-        execute(dropTableSql(tempTableName));
-        execute(dropTableSql(tempNickTableName));
-        execute(dropTableSql(tempKillsTableName));
+        try {
+            if (usingMySQL) {
+                execute("SET foreign_key_checks = 0");
+            }
+            statement = "INSERT INTO plan_kills " +
+                    "(" +
+                    "killer_id, victim_id, weapon, date, session_id" +
+                    ") SELECT " +
+                    "killer_id, victim_id, weapon, date, '0'" +
+                    " FROM " + tempKillsTableName;
+            execute(statement);
+        } finally {
+            if (usingMySQL) {
+                execute("SET foreign_key_checks = 1");
+            }
+        }
     }
 
     private void copyCommandUsage() throws SQLException, DBCreateTableException {
