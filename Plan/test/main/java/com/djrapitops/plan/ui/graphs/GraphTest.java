@@ -44,15 +44,16 @@ public class GraphTest {
 
     @Test
     public void testGraphCreators() {
-        assertEquals("[[0,0.0],[9,9.0]]", CPUGraphCreator.buildSeriesDataString(tpsList));
-        assertEquals("[[0,0.0],[9,9.0]]", PlayerActivityGraphCreator.buildSeriesDataString(tpsList));
+        String expected = "[[0,0.0],[1,1.0],[2,2.0],[3,3.0],[4,4.0],[5,5.0],[6,6.0],[7,7.0],[8,8.0],[9,9.0]]";
+        assertEquals(expected, CPUGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals(expected, PlayerActivityGraphCreator.buildSeriesDataString(tpsList));
         // TODO Fix TimeZone Dependency of this test
         // assertEquals("[{x:3600000, y:3, z:14, marker: { radius:14}},]", PunchCardGraphCreator.createDataSeries(sessionList));
 
-        assertEquals("[[0,0.0],[9,9.0]]", RamGraphCreator.buildSeriesDataString(tpsList));
-        assertEquals("[[0,0.0],[9,9.0]]", TPSGraphCreator.buildSeriesDataString(tpsList));
-        assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
-        assertEquals("[[0,0.0],[9,9.0]]", WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
+        assertEquals(expected, RamGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals(expected, TPSGraphCreator.buildSeriesDataString(tpsList));
+        assertEquals(expected, WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
+        assertEquals(expected, WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
         assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMapCreator.createDataSeries(geoList));
         assertEquals("[[{name:'WORLD',y:0,drilldown: 'WORLD'}], [{name:'WORLD', id:'WORLD',data: []}]]", Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)));
     }

@@ -329,7 +329,7 @@ public class DatabaseTest {
         commitTest();
 
         List<String> saved = worldTable.getWorlds();
-        assertEquals(worlds, saved);
+        assertEquals(new HashSet<>(worlds), new HashSet<>(saved));
     }
 
     private void saveTwoWorlds() throws SQLException {
