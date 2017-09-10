@@ -146,7 +146,7 @@ public class TPSTable extends Table {
             statement.setInt(1, p);
             // More than 2 Months ago.
             long fiveWeeks = TimeAmount.MONTH.ms() * 2L;
-            statement.setLong(1, MiscUtils.getTime() - fiveWeeks);
+            statement.setLong(2, MiscUtils.getTime() - fiveWeeks);
 
             statement.execute();
             commit(statement.getConnection());

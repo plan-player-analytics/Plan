@@ -7,9 +7,11 @@ package main.java.com.djrapitops.plan.systems.processing.importing.importers;
 import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -32,13 +34,23 @@ public class OfflinePlayerImporter extends Importer {
     public List<UserImportData> getUserImportData() {
         List<UserImportData> dataList = new Vector<>();
 
+        Set<OfflinePlayer> operators = Bukkit.getOperators();
+        Set<OfflinePlayer> banned = Bukkit.getBannedPlayers();
+
         Arrays.stream(Bukkit.getOfflinePlayers()).parallel().forEach(player -> {
             UserImportData.UserImportDataBuilder builder = UserImportData.builder();
             builder.name(player.getName())
                     .uuid(player.getUniqueId())
-                    .op(player.isOp())
-                    .registered(player.getFirstPlayed())
-                    .banned(player.isBanned());
+                    .registered(player.getFirstPlayed());
+
+            if (operators.contains(player)) {
+                builder.op();
+            }
+
+            if (banned.contains(player)) {
+                builder.banned();
+            }
+
             dataList.add(builder.build());
         });
 

@@ -219,9 +219,6 @@ public class TestInit {
         return configuration;
     }
 
-    /**
-     * @return
-     */
     public Plan getPlanMock() {
         return planMock;
     }

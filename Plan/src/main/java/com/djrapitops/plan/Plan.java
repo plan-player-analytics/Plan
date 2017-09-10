@@ -43,6 +43,7 @@ import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
+import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
@@ -191,6 +192,8 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             Benchmark.start("Hook to 3rd party plugins");
             hookHandler = new HookHandler(this);
             Benchmark.stop("Enable", "Hook to 3rd party plugins");
+
+            ImporterManager.registerImporter(new OfflinePlayerImporter());
 
             BStats bStats = new BStats(this);
             bStats.registerMetrics();
