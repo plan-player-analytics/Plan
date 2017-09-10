@@ -279,7 +279,9 @@ public class Analysis {
             Map<UUID, Session> activeSessions = plugin.getDataCache().getActiveSessions();
             Map<UUID, List<Session>> sessions = db.getSessionsTable().getAllSessions(true).get(Plan.getServerUUID());
             joinInfo.addActiveSessions(activeSessions);
-            joinInfo.addSessions(sessions);
+            if (sessions != null) {
+                joinInfo.addSessions(sessions);
+            }
 
             analysisData.setPlayersTable(PlayersTableCreator.createTable(userInfo, joinInfo, geolocPart));
 
