@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
@@ -177,7 +178,7 @@ public class API {
      * @see AnalysisData
      */
     public AnalysisData getAnalysisDataFromCache() {
-        return plugin.getInfoManager().getAnalysisData();
+        return ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisData();
     }
 
     /**

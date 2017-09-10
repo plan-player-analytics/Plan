@@ -32,6 +32,7 @@ ${sessionLengthLongestDay} timeamount
 ${sessionLengthLongestWeek} timeamount
 
 ${contentSessions} See example page
+${sessionTabGraphViewFunctions} function calls that call the graphs to be viewed.
 ${contentServerOverview} See example page
 
 ${tabContentPlugins} See example page

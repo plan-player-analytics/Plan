@@ -22,7 +22,7 @@ public class ActionsTableCreator {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String createTableContent(List<Action> actions) {
+    public static String createTable(List<Action> actions) {
         StringBuilder html = new StringBuilder();
         if (actions.isEmpty()) {
             html.append(Html.TABLELINE_3.parse("", "", ""));

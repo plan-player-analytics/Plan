@@ -1,8 +1,6 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
@@ -45,11 +43,7 @@ public class EconomyBalance extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
-        if (data == null) {
-            return parseContainer(modifierPrefix, "0");
-        }
-        OfflinePlayer p = new FakeOfflinePlayer(data);
+        OfflinePlayer p = new FakeOfflinePlayer(uuid, getNameOf(uuid));
         if (this.econ.hasAccount(p)) {
             return parseContainer(modifierPrefix, Double.toString(this.econ.getBalance(p)));
         }

@@ -7,8 +7,8 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -61,7 +61,7 @@ public class TownyTable extends PluginData {
                 }
                 int residents = t.getNumResidents();
                 int land = t.getPurchasedBlocks();
-                String leaderPage = Html.LINK.parse(HtmlUtils.getInspectUrl(mayor), mayor);
+                String leaderPage = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(mayor), mayor);
                 html.append(Html.TABLELINE_4.parse(name, residents, land, leaderPage));
             }
         }

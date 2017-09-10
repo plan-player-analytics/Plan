@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
  * ${playersNewAverageDay} - (Number)
  * ${playersNewAverageWeek} - (Number)
  * ${playersNewAverageMonth} - (Number)
- * //TODO ${tableBodySessions}
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -62,7 +61,9 @@ public class JoinInfoPart extends RawData {
     }
 
     private void sessionTables() {
-        addValue("tableBodyRecentLogins", SessionsTableCreator.createTable(this));
+        String[] tables = SessionsTableCreator.createTables(this);
+        addValue("tableBodySessions", tables[0]);
+        addValue("tableBodyRecentLogins", tables[1]);
     }
 
     private void uniquePlayers() {

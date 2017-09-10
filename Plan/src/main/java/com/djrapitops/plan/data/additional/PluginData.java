@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data.additional;
 
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -320,5 +321,13 @@ public abstract class PluginData {
                 .append("prefix", prefix)
                 .append("suffix", suffix)
                 .toString();
+    }
+
+    protected Set<UUID> getUUIDsBeingAnalyzed() {
+        return Plan.getInstance().getDataCache().getUuids();
+    }
+
+    protected String getNameOf(UUID uuid) {
+        return Plan.getInstance().getDataCache().getName(uuid);
     }
 }

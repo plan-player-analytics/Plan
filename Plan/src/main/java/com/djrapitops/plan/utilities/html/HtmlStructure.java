@@ -84,7 +84,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    public static String createSessionsTabContent(Map<String, List<Session>> sessions, List<Session> allSessions) throws FileNotFoundException {
+    public static String[] createSessionsTabContent(Map<String, List<Session>> sessions, List<Session> allSessions) throws FileNotFoundException {
         Map<Integer, String> serverNameIDRelationMap = new HashMap<>();
 
         for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
@@ -95,7 +95,8 @@ public class HtmlStructure {
             }
         }
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder html = new StringBuilder();
+        StringBuilder viewScript = new StringBuilder();
         int i = 0;
         for (Session session : allSessions) {
             if (i >= 50) {
@@ -109,7 +110,7 @@ public class HtmlStructure {
             String dotSeparated = separateWithDots(sessionStart, sessionLength);
 
             // Session-column starts & header.
-            builder.append("<div class=\"session column\">")
+            html.append("<div class=\"session column\">")
                     .append("<div class=\"session-header\">")
                     .append("<div class=\"session-col\" style=\"width: 200%;\">")
                     .append("<h3>").append(dotSeparated).append("</h3>")
@@ -120,57 +121,58 @@ public class HtmlStructure {
             String serverName = serverNameIDRelationMap.get(session.getSessionID());
 
             // Left side of Session box
-            builder.append("<div class=\"session-content\">")
+            html.append("<div class=\"session-content\">")
                     .append("<div class=\"row\">") //
                     .append("<div class=\"session-col\" style=\"padding: 0px;\">");
 
             // Left side header
-            builder.append("<div class=\"box-header\" style=\"margin: 0px;\">")
+            html.append("<div class=\"box-header\" style=\"margin: 0px;\">")
                     .append("<h2><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i> ")
                     .append(sessionStart)
                     .append("</h2>")
                     .append("</div>");
 
             // Left side content
-            builder.append("<div class=\"box\" style=\"margin: 0px;\">")
+            html.append("<div class=\"box\" style=\"margin: 0px;\">")
                     .append("<p>Session Length: ").append(sessionLength).append("<br>")
                     .append("Session Ended: ").append(sessionEnd).append("<br>")
                     .append("Server: ").append(serverName).append("<br><br>")
                     .append("Mob Kills: ").append(session.getMobKills()).append("<br>")
                     .append("Deaths: ").append(session.getDeaths()).append("</p>");
 
-            builder.append(KillsTableCreator.createTable(session.getPlayerKills()))
+            html.append(KillsTableCreator.createTable(session.getPlayerKills()))
                     .append("</div>"); // Left Side content ends
 
             // Left side ends & Right side starts
-            builder.append("</div>")
+            html.append("</div>")
                     .append("<div class=\"session-col\">");
 
             String id = "worldPie" + session.getSessionStart();
 
-            builder.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
+            html.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
 
             String[] worldData = WorldPieCreator.createSeriesData(session.getWorldTimes());
 
-            builder.append("<script>")
+            html.append("<script>")
                     .append("var ").append(id).append("series = {name:'World Playtime',colorByPoint:true,data:").append(worldData[0]).append("};")
                     .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
-                    .append("$( document ).ready(function() {worldPie(")
+                    .append("</script>");
+
+            viewScript.append("worldPie(")
                     .append(id).append(", ")
                     .append(id).append("series, ")
                     .append(id).append("gmseries")
-                    .append(");})")
-                    .append("</script>");
+                    .append(");");
 
             // Session-col, Row, Session-Content, Session-column ends.
-            builder.append("</div>")
+            html.append("</div>")
                     .append("</div>")
                     .append("</div>")
                     .append("</div>");
 
             i++;
         }
-        return builder.toString();
+        return new String[]{html.toString(), viewScript.toString()};
     }
 
     public static String createInspectPageTabContent(String serverName, List<PluginData> plugins, Map<String, String> replaceMap) {

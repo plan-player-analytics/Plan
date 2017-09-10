@@ -5,9 +5,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html.graphs;
 
-import main.java.com.djrapitops.plan.utilities.analysis.DouglasPeuckerAlgorithm;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
-import main.java.com.djrapitops.plan.utilities.analysis.ReduceGapTriangles;
 
 import java.util.List;
 
@@ -33,13 +31,13 @@ public class SeriesCreator {
     public static String seriesGraph(List<Point> points, boolean reduceGapTriangles, boolean reducePoints) {
         StringBuilder arrayBuilder = new StringBuilder("[");
 
-        if (reducePoints) {
-            points = DouglasPeuckerAlgorithm.reducePoints(points, 0);
-        }
+//        if (reducePoints) {
+//            points = DouglasPeuckerAlgorithm.reducePoints(points, 0);
+//        }
 
-        if (reduceGapTriangles) {
-            points = ReduceGapTriangles.reduce(points);
-        }
+//        if (reduceGapTriangles) {
+//            points = ReduceGapTriangles.reduce(points);
+//        }
 
         int size = points.size();
         for (int i = 0; i < size; i++) {

@@ -38,7 +38,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
-import main.java.com.djrapitops.plan.systems.info.ImporterManager;
+import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
@@ -166,7 +166,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             processingQueue = new ProcessingQueue();
 
             serverInfoManager = new ServerInfoManager(this);
-            infoManager = new InformationManager(this);
+            infoManager = new BukkitInformationManager(this);
             webServer.setInfoManager(infoManager);
 
             Benchmark.stop("Enable", "WebServer Initialization");

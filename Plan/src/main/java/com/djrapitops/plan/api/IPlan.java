@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstraction interface for both Plan and PlanBungee.
  *
  * @author Rsl1122
  */

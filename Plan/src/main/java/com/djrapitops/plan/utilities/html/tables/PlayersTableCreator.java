@@ -26,7 +26,7 @@ public class PlayersTableCreator {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String createSortablePlayersTable(List<UserInfo> userInfo, JoinInfoPart joinInfoPart, GeolocationPart geolocationPart) {
+    public static String createTable(List<UserInfo> userInfo, JoinInfoPart joinInfoPart, GeolocationPart geolocationPart) {
         if (userInfo.isEmpty()) {
             return Html.TABLELINE_PLAYERS.parse("<b>No Players</b>", "", "", "", "", "", "", "", "", "");
         }
@@ -74,7 +74,7 @@ public class PlayersTableCreator {
                         String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
                         String.valueOf(loginTimes),
                         String.valueOf(registered), FormatUtils.formatTimeStampYear(registered),
-                        String.valueOf(lastSeen), FormatUtils.formatTimeStamp(lastSeen),
+                        String.valueOf(lastSeen), lastSeen != 0 ? FormatUtils.formatTimeStamp(lastSeen) : "-",
                         String.valueOf(geoLocation)
                 ));
             } catch (NullPointerException ignored) {

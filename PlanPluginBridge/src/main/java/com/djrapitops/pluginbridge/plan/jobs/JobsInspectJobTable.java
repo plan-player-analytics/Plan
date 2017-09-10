@@ -3,7 +3,7 @@ package com.djrapitops.pluginbridge.plan.jobs;
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.dao.JobsDAOData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.Serializable;
 import java.util.List;

@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * //TODO Class Javadoc Comment
+ * Exception thrown when Html page parsing fails.
  *
  * @author Rsl1122
  */

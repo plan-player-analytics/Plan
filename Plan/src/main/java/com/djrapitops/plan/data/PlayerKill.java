@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.data;
 
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -59,7 +60,8 @@ public class PlayerKill {
     }
 
     public Action convertToAction() {
-        return new Action(time, Actions.KILLED, "name with " + weapon); // TODO Name Cache.
+        String name = Plan.getInstance().getDataCache().getName(victim);
+        return new Action(time, Actions.KILLED, name + " with " + weapon);
     }
 
     @Override

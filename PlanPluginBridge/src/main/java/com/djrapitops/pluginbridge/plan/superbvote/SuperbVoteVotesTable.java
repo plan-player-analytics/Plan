@@ -6,14 +6,14 @@
 package com.djrapitops.pluginbridge.plan.superbvote;
 
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
-import java.io.Serializable;
-import java.util.UUID;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * PluginData class for Vault-plugin.
@@ -47,10 +47,11 @@ public class SuperbVoteVotesTable extends PluginData {
 
     private String getTableLines() {
         StringBuilder html = new StringBuilder();
-        Plan.getPlanAPI().getInspectCachedUserData()
-                .forEach(data -> {
-                    String link = Html.LINK.parse(HtmlUtils.getInspectUrl(data.getName()), data.getName());
-                    String bal = FormatUtils.cutDecimals(store.getVotes(data.getUuid()));
+        getUUIDsBeingAnalyzed()
+                .forEach(uuid -> {
+                    String name = getNameOf(uuid);
+                    String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
+                    String bal = FormatUtils.cutDecimals(store.getVotes(uuid));
                     html.append(Html.TABLELINE_2.parse(link, bal));
                 });
         return html.toString();

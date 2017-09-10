@@ -5,10 +5,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This Class contains the Cache.
@@ -55,6 +52,14 @@ public class DataCache extends SessionCache {
         displayNames.put(uuid, displayName);
     }
 
+    public void cacheSavedNames() {
+        try {
+            playerNames.putAll(db.getUsersTable().getPlayerNames());
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+    }
+
     /**
      * Used to get the player name in the cache.
      *
@@ -62,7 +67,17 @@ public class DataCache extends SessionCache {
      * @return name or null if not cached.
      */
     public String getName(UUID uuid) {
-        return playerNames.get(uuid);
+        String name = playerNames.get(uuid);
+        if (name == null) {
+            try {
+                name = db.getUsersTable().getPlayerName(uuid);
+                playerNames.put(uuid, name);
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+                name = "Error occurred";
+            }
+        }
+        return name;
     }
 
     /**
@@ -118,5 +133,9 @@ public class DataCache extends SessionCache {
 
     public int getFirstSessionMsgCount(UUID uuid) {
         return firstSessionInformation.getOrDefault(uuid, 0);
+    }
+
+    public Set<UUID> getUuids() {
+        return playerNames.keySet();
     }
 }

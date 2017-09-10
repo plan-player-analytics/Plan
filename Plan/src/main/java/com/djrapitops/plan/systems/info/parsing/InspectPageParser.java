@@ -74,6 +74,7 @@ public class InspectPageParser extends PageParser {
             addValue("kickCount", timesKicked);
 
             Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
+            // TODO Server preference pie
 
             List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()
@@ -89,7 +90,9 @@ public class InspectPageParser extends PageParser {
                     .sorted(new SessionStartComparator())
                     .collect(Collectors.toList());
 
-            addValue("contentSessions", HtmlStructure.createSessionsTabContent(sessions, allSessions));
+            String[] sessionsTabContent = HtmlStructure.createSessionsTabContent(sessions, allSessions);
+            addValue("contentSessions", sessionsTabContent[0]);
+            addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
             addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
 
             long now = MiscUtils.getTime();
@@ -126,7 +129,7 @@ public class InspectPageParser extends PageParser {
                     .collect(Collectors.toList()));
             actions.sort(new ActionComparator());
 
-            addValue("tableBodyActions", ActionsTableCreator.createTableContent(actions));
+            addValue("tableBodyActions", ActionsTableCreator.createTable(actions));
 
             Benchmark.stop("Inspect Parse, Fetch");
 
@@ -141,7 +144,6 @@ public class InspectPageParser extends PageParser {
 
             addValue("worldPieSeries", worldPieData[0]);
             addValue("gmSeries", worldPieData[1]);
-
 
             addValue("punchCardSeries", punchCardData);
 
@@ -164,7 +166,6 @@ public class InspectPageParser extends PageParser {
             addValue("playerKillCount", playerKillCount);
             addValue("mobKillCount", mobKillCount);
             addValue("deathCount", deathCount);
-
 
             playerClassification(userInfo, lastSeen, playTime, sessionCount);
 

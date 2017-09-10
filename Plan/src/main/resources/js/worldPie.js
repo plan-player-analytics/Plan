@@ -27,7 +27,7 @@ function worldPie(id, worldSeries, gmSeries) {
         },
         series: [worldSeries],
         drilldown: {
-            series: [gmSeries]
+            series: gmSeries
         }
     });
 }

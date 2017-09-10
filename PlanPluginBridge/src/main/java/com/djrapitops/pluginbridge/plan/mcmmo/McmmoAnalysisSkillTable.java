@@ -6,9 +6,9 @@ import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.util.player.UserManager;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;

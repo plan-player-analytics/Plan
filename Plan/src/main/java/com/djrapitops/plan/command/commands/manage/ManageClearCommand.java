@@ -8,10 +8,15 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.ManageUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 
@@ -63,20 +68,16 @@ public class ManageClearCommand extends SubCommand {
             return true;
         }
 
-//    TODO CLEAR COMMAND
-//    final Database database = ManageUtils.getDB(plugin, dbName);
-//
-//        // If DB is null return
-//        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-//            Log.error(dbName + " was null!");
-//            return true;
-//        }
-
-//        runClearTask(sender, database);
+        try {
+            Database database = ManageUtils.getDB(plugin, dbName);
+            runClearTask(sender, database);
+        } catch (DatabaseInitException e) {
+            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+        }
         return true;
     }
 
-    private void runClearTask(ISender sender, final Database database) {
+    private void runClearTask(ISender sender, Database database) {
         plugin.getRunnableFactory().createNew(new AbsRunnable("DBClearTask") {
             @Override
             public void run() {
@@ -84,7 +85,14 @@ public class ManageClearCommand extends SubCommand {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
                     database.removeAllData();
-                    // TODO Clear active session of all users & start new ones
+
+                    DataCache dataCache = plugin.getDataCache();
+                    long now = MiscUtils.getTime();
+                    dataCache.getActiveSessions().clear();
+                    plugin.getServer().getOnlinePlayers().forEach(
+                            player -> dataCache.cacheSession(player.getUniqueId(),
+                                    new Session(now, player.getWorld().getName(), player.getGameMode().name()))
+                    );
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_CLEAR_SUCCESS).toString());
                 } catch (SQLException e) {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
