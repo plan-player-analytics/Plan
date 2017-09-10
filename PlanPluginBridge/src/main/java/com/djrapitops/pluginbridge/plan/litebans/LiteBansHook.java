@@ -24,18 +24,21 @@ public class LiteBansHook extends Hook {
      * @see API
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public LiteBansHook(HookHandler hookH) throws NoClassDefFoundError {
+    public LiteBansHook(HookHandler hookH) {
         super();
         try {
             Database.get();
             enabled = true;
-        } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
+        } catch (NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError | Exception e) {
             enabled = false;
         }
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
             LiteBansDatabaseQueries db = new LiteBansDatabaseQueries();
-            hookH.addPluginDataSource(new LiteBansBansTable(db));
-            hookH.addPluginDataSource(new LiteBansInspectBansTable(db));
+            addPluginDataSource(new LiteBansBansTable(db));
+            addPluginDataSource(new LiteBansInspectBansTable(db));
         }
     }
 }

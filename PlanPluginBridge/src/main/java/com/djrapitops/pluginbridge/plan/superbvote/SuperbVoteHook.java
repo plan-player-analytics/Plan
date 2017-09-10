@@ -5,6 +5,7 @@ import io.minimum.minecraft.superbvote.SuperbVote;
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
+
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
@@ -18,19 +19,22 @@ public class SuperbVoteHook extends Hook {
 
     /**
      * Hooks the plugin and registers it's PluginData objects.
-     *
+     * <p>
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
+     * @see API
      */
-    public SuperbVoteHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("io.minimum.minecraft.superbvote.SuperbVote");
+    public SuperbVoteHook(HookHandler hookH) {
+        super("io.minimum.minecraft.superbvote.SuperbVote", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
             VoteStorage store = getPlugin(SuperbVote.class).getVoteStorage();
-            hookH.addPluginDataSource(new SuperbVoteVotes(store));
-            hookH.addPluginDataSource(new SuperbVoteVotesTable(store));
+            addPluginDataSource(new SuperbVoteVotes(store));
+            addPluginDataSource(new SuperbVoteVotesTable(store));
         }
     }
 }

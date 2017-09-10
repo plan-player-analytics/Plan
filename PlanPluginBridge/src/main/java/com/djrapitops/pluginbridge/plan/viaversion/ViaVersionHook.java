@@ -24,11 +24,13 @@ public class ViaVersionHook extends Hook {
      * API#addPluginDataSource uses the same method from HookHandler.
      *
      * @param hookH HookHandler instance for registering the data sources.
-     * @throws NoClassDefFoundError when the plugin class can not be found.
      * @see API
      */
-    public ViaVersionHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("us.myles.ViaVersion.ViaVersionPlugin");
+    public ViaVersionHook(HookHandler hookH) {
+        super("us.myles.ViaVersion.ViaVersionPlugin", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
@@ -43,7 +45,7 @@ public class ViaVersionHook extends Hook {
         }
         PlayerVersionListener l = new PlayerVersionListener(plan, api, table);
         plan.registerListener(l);
-        hookH.addPluginDataSource(new ViaVersionVersionTable(table));
-        hookH.addPluginDataSource(new ViaVersionVersion(table));
+        addPluginDataSource(new ViaVersionVersionTable(table));
+        addPluginDataSource(new ViaVersionVersion(table));
     }
 }

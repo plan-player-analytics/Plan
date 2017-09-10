@@ -21,15 +21,18 @@ public class OnTimeHook extends Hook {
      * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
      */
-    public OnTimeHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("me.edge209.OnTime.OnTime");
+    public OnTimeHook(HookHandler hookH) {
+        super("me.edge209.OnTime.OnTime", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            hookH.addPluginDataSource(new OntimeVotes());
-            hookH.addPluginDataSource(new OntimeVotesWeek());
-            hookH.addPluginDataSource(new OntimeVotesMonth());
-            hookH.addPluginDataSource(new OntimeRefer());
-            hookH.addPluginDataSource(new OntimeReferWeek());
-            hookH.addPluginDataSource(new OntimeReferMonth());
+            addPluginDataSource(new OntimeVotes());
+            addPluginDataSource(new OntimeVotesWeek());
+            addPluginDataSource(new OntimeVotesMonth());
+            addPluginDataSource(new OntimeRefer());
+            addPluginDataSource(new OntimeReferWeek());
+            addPluginDataSource(new OntimeReferMonth());
         }
     }
 }

@@ -61,4 +61,9 @@ public class BungeeInformationManager extends InformationManager {
     public String getAnalysisHtml() {
         return null;
     }
+
+    @Override
+    public String getPluginsTabContent(UUID uuid) {
+        return null;
+    }
 }

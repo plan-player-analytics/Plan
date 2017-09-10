@@ -171,24 +171,31 @@ public class Analysis {
                     return;
                 }
                 if (analysisTypes.contains(AnalysisType.HTML)) {
-                    replaceMap.put(source.getPlaceholder(AnalysisType.HTML.getPlaceholderModifier()), source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), UUID.randomUUID()));
+                    String html = source.getHtmlReplaceValue(AnalysisType.HTML.getModifier(), UUID.randomUUID());
+                    String placeholderName = source.getPlaceholderName(AnalysisType.HTML.getPlaceholderModifier());
+                    int length = html.length();
+                    if (length < 20000) {
+                        replaceMap.put(placeholderName, html);
+                    } else {
+                        replaceMap.put(placeholderName, "<p>Html was removed because it contained too many characters to be responsive (" + length + "/20000)</p>");
+                    }
                     return;
                 }
                 for (AnalysisType type : totalTypes) {
                     if (analysisTypes.contains(type)) {
-                        replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getTotal(type, source, uuids));
+                        replaceMap.put(source.getPlaceholderName(type.getPlaceholderModifier()), AnalysisUtils.getTotal(type, source, uuids));
                     }
                 }
                 for (AnalysisType type : avgTypes) {
                     if (analysisTypes.contains(type)) {
-                        replaceMap.put(source.getPlaceholder(type.getPlaceholderModifier()), AnalysisUtils.getAverage(type, source, uuids));
+                        replaceMap.put(source.getPlaceholderName(type.getPlaceholderModifier()), AnalysisUtils.getAverage(type, source, uuids));
                     }
                 }
                 if (analysisTypes.contains(bool)) {
-                    replaceMap.put(source.getPlaceholder(bool.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(bool, source, uuids));
+                    replaceMap.put(source.getPlaceholderName(bool.getPlaceholderModifier()), AnalysisUtils.getBooleanPercentage(bool, source, uuids));
                 }
                 if (analysisTypes.contains(boolTot)) {
-                    replaceMap.put(source.getPlaceholder(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
+                    replaceMap.put(source.getPlaceholderName(boolTot.getPlaceholderModifier()), AnalysisUtils.getBooleanTotal(boolTot, source, uuids));
                 }
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
                 Log.error("A PluginData-source caused an exception: " + StringUtils.remove(source.getPlaceholder(), '%'));

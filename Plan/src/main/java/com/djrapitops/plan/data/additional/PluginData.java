@@ -156,7 +156,7 @@ public abstract class PluginData {
      * @see AnalysisType
      */
     public final String getPlaceholder(String modifier) {
-        return "${" + sourcePlugin + "_" + placeholder + modifier + "}";
+        return "${" + getPlaceholderName(modifier) + "}";
     }
 
     /**
@@ -166,7 +166,27 @@ public abstract class PluginData {
      * @see #getPlaceholder(String)
      */
     public final String getPlaceholder() {
-        return "${" + sourcePlugin + "_" + placeholder + "}";
+        return "${" + getPlaceholderName() + "}";
+    }
+
+    /**
+     * Used to get the placeholder name with modifier.
+     *
+     * @return for example "StepCounter_stepsTaken_modifier"
+     * @see #getPlaceholder(String)
+     */
+    public final String getPlaceholderName(String modifier) {
+        return getPlaceholderName() + modifier;
+    }
+
+    /**
+     * Used to get the placeholder name.
+     *
+     * @return for example "StepCounter_stepsTaken"
+     * @see #getPlaceholder(String)
+     */
+    public final String getPlaceholderName() {
+        return sourcePlugin + "_" + placeholder;
     }
 
     /**

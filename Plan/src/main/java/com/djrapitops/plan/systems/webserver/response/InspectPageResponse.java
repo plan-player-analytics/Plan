@@ -11,8 +11,20 @@ import java.util.UUID;
  */
 public class InspectPageResponse extends Response {
 
+    private String inspectPagePluginsTab;
+
     public InspectPageResponse(InformationManager infoManager, UUID uuid) {
         super.setHeader("HTTP/1.1 200 OK");
         super.setContent(Theme.replaceColors(infoManager.getPlayerHtml(uuid)));
+        setInspectPagePluginsTab(infoManager.getPluginsTabContent(uuid));
+    }
+
+    public void setInspectPagePluginsTab(String inspectPagePluginsTab) {
+        if (this.inspectPagePluginsTab != null) {
+            setContent(getContent().replace(this.inspectPagePluginsTab, inspectPagePluginsTab));
+        } else {
+            setContent(getContent().replace("${tabContentPlugins}", inspectPagePluginsTab));
+        }
+        this.inspectPagePluginsTab = inspectPagePluginsTab;
     }
 }

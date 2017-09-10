@@ -72,5 +72,5 @@ public abstract class InformationManager {
         analysisNotification.add(sender);
     }
 
-
+    public abstract String getPluginsTabContent(UUID uuid);
 }

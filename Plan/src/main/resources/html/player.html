@@ -19,7 +19,8 @@
             <i style="padding: 0; color: #348e0f; font-size: 95px;" class="fa fa-square fa-stack-1x"></i>
             <i style="padding: 0; color: #fff; font-size: 60px;" class="fa fa-circle fa-stack-1x"></i>
             <div style="margin: 0px; padding: 0px; width: 100%; height: 100%; position: relative; overflow: hidden; top: -6px;">
-                <i style="position: absolute; left: -4px; top: 8px; color: #348e0f; font-size: 40px;" class="fa fa-bar-chart fa-stack-1x"></i>
+                <i style="position: absolute; left: -4px; top: 8px; color: #348e0f; font-size: 40px;"
+                   class="fa fa-bar-chart fa-stack-1x"></i>
             </div>
         </div>
         <p class="right">Player Analytics v.${version}</p>
@@ -42,7 +43,7 @@
         </a>
     </div>
     <div id="limiter" class="main-limiter">
-        <div id="main" class="main-wrapper">
+        <div id="main" class="main-wrapper" style="width: 400%;">
             <div id="tab-information" class="tab">
                 <div class="row">
                     <div class="column">
@@ -108,7 +109,7 @@
                             <h2><i class="fa fa-braille" aria-hidden="true"></i> Join PunchCard</h2>
                         </div>
                         <div class="box-footer">
-                            <div id="punchcard" style="width: 75%; height: 400px;"></div>
+                            <div id="punchcard" style="width: 100%; height: 400px;"></div>
                         </div>
                         <div class="box-header">
                             <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Server Preference</h2>
@@ -206,6 +207,8 @@
             color: '#222',
             data: ${punchCardSeries}
         };
+
+
     </script>
     <script>
             var navButtons = document.getElementsByClassName("nav-button");
@@ -255,6 +258,8 @@
                     x.style.transform = "translate3d(" + value + "%,0px,0)";
                 };
             }
+
+
 
     </script>
 </div>

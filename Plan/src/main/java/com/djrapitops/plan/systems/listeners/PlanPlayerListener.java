@@ -121,9 +121,8 @@ public class PlanPlayerListener implements Listener {
                 new EndSessionProcessor(uuid, time)
         );
 
-        int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
-
         if (cache.isFirstSession(uuid)) {
+            int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
             plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
         }
     }
