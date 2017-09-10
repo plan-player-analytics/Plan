@@ -82,8 +82,8 @@ public class Version8TransferTable extends Table {
         KillsTable killsTable = db.getKillsTable();
         execute(tableRenameSql(killsTable.toString(), tempKillsTableName));
 
-        nicknamesTable.createTable();
         usersTable.createTable();
+        nicknamesTable.createTable();
         killsTable.createTable();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
