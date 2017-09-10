@@ -136,7 +136,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             GeolocationCache.checkDB();
 
-            // Initialize Locale
             new Locale(this).loadLocale();
 
             Benchmark.start("Reading server variables");
@@ -177,15 +176,15 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             this.api = new API(this);
 
             // Data view settings // TODO Rewrite. (TextUI removed & webServer might be running on bungee
-            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-            boolean hasDataViewCapability = usingAlternativeIP;
-
-            if (!hasDataViewCapability) {
-                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
-            }
-            if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
-                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
-            }
+//            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+//            boolean hasDataViewCapability = usingAlternativeIP;
+//
+//            if (!hasDataViewCapability) {
+//                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
+//            }
+//            if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
+//                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
+//            }
 
             registerCommand(new PlanCommand(this));
 
@@ -260,8 +259,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
     /**
      * Disables the plugin.
-     * <p>
-     * Stops the webServer, cancels all tasks and saves cache to the database.
      */
     @Override
     public void onDisable() {
@@ -273,6 +270,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             webServer.stop();
         }
 
+        // Processes unprocessed processors
         if (processingQueue != null) {
             List<Processor> processors = processingQueue.stopAndReturnLeftovers();
             Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
@@ -284,16 +282,11 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         getServer().getScheduler().cancelTasks(this);
 
         if (Verify.notNull(infoManager, db)) {
-            // Saves the DataCache to the database without Bukkit's Schedulers.
-            Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
-
-            // TODO Process all leftover Processors.
             taskStatus().cancelAllKnownTasks();
         }
 
         getPluginLogger().endAllDebugs();
         Log.info(Locale.get(Msg.DISABLED).toString());
-//        Locale.unload();
     }
 
     private void registerListeners() {
