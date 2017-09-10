@@ -62,8 +62,6 @@ public class Version8TransferTable extends Table {
         db.getWorldTable().createTable();
         db.getWorldTimesTable().createTable();
         execute(dropTableSql("plan_gamemodetimes"));
-        execute(dropTableSql("plan_sessions"));
-        db.getSessionsTable().createTable();
 
         db.setVersion(10);
         Benchmark.stop("Schema copy from 8 to 10");
@@ -84,6 +82,8 @@ public class Version8TransferTable extends Table {
 
         usersTable.createTable();
         nicknamesTable.createTable();
+        execute(dropTableSql("plan_sessions"));
+        db.getSessionsTable().createTable();
         killsTable.createTable();
 
         UserInfoTable userInfoTable = db.getUserInfoTable();
