@@ -8,5 +8,6 @@ public class JavaScriptResponse extends FileResponse {
 
     public JavaScriptResponse(String fileName) {
         super(fileName);
+        super.setType(ResponseType.JAVASCRIPT);
     }
 }

@@ -185,7 +185,10 @@ public class UserInfoTable extends UserIDTable {
                 boolean banned = set.getBoolean(columnBanned);
                 String name = set.getString("name");
                 UUID uuid = UUID.fromString(set.getString("uuid"));
-                userInfo.add(new UserInfo(uuid, name, registered, opped, banned));
+                UserInfo info = new UserInfo(uuid, name, registered, opped, banned);
+                if (!userInfo.contains(info)) {
+                    userInfo.add(info);
+                }
             }
             return userInfo;
         } finally {

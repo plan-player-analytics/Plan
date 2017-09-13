@@ -12,20 +12,20 @@ import java.util.Map;
  */
 public class WebAPIManager {
 
-    private static final Map<String, WebAPI> registry = new HashMap<>();
+    private final Map<String, WebAPI> registry;
 
     /**
      * Constructor used to hide the public constructor
      */
-    private WebAPIManager() {
-        throw new IllegalStateException("Utility class");
+    public WebAPIManager() {
+        registry = new HashMap<>();
     }
 
-    public static void registerNewAPI(String method, WebAPI api) {
+    public void registerNewAPI(String method, WebAPI api) {
         registry.put(method.toLowerCase(), api);
     }
 
-    public static WebAPI getAPI(String method) {
+    public WebAPI getAPI(String method) {
         return registry.get(method.toLowerCase());
     }
 }

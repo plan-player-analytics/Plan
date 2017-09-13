@@ -6,7 +6,7 @@ import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +29,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class GeolocationCache {
 
-    private static File geolocationDB = new File(Plan.getInstance().getDataFolder(), "GeoIP.dat");
+    private static File geolocationDB = new File(MiscUtils.getIPlan().getDataFolder(), "GeoIP.dat");
 
     private static final Cache<String, String> geolocationCache = CacheBuilder.newBuilder()
             .build();
@@ -51,7 +51,7 @@ public class GeolocationCache {
      * <p>
      * An exception from that rule is when the country is unknown or the retrieval of the country failed in any way,
      * if that happens, "Not Known" will be returned.
-     * @see #getUncachedCountry(String)
+     * @see #getUnCachedCountry(String)
      */
     public static String getCountry(String ipAddress) {
         String country = getCachedCountry(ipAddress);
@@ -59,7 +59,7 @@ public class GeolocationCache {
         if (country != null) {
             return country;
         } else {
-            country = getUncachedCountry(ipAddress);
+            country = getUnCachedCountry(ipAddress);
             geolocationCache.put(ipAddress, country);
 
             return country;
@@ -71,6 +71,7 @@ public class GeolocationCache {
      * <p>
      * This product includes GeoLite2 data created by MaxMind, available from
      * <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+     *
      * @param ipAddress The IP Address from which the country is retrieved
      * @return The name of the country in full length.
      * <p>
@@ -79,7 +80,7 @@ public class GeolocationCache {
      * @see <a href="http://maxmind.com">http://maxmind.com</a>
      * @see #getCountry(String)
      */
-    private static String getUncachedCountry(String ipAddress) {
+    private static String getUnCachedCountry(String ipAddress) {
         try {
             checkDB();
 

@@ -10,6 +10,7 @@ public class CSSResponse extends FileResponse {
 
     public CSSResponse(String fileName) {
         super(fileName);
+        super.setType(ResponseType.CSS);
         setContent(Theme.replaceColors(getContent()));
     }
 }

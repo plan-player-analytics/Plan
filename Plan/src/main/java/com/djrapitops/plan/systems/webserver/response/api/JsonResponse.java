@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.webserver.response.api;
 
 import com.google.gson.Gson;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.response.ResponseType;
 
 /**
  * @author Fuzzlemann
@@ -13,6 +14,7 @@ import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 public class JsonResponse extends Response {
 
     public <T> JsonResponse(T object) {
+        super(ResponseType.JSON);
         Gson gson = new Gson();
 
         super.setHeader("HTTP/1.1 200 OK");
