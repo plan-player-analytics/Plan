@@ -2,14 +2,14 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.systems.webapi.bukkit;
+package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.util.Map;

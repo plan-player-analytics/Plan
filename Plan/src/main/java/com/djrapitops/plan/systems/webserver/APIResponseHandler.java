@@ -5,11 +5,11 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
-import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.ForbiddenResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.ByteArrayOutputStream;

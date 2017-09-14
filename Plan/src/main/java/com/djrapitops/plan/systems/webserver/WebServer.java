@@ -10,9 +10,9 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.webapi.WebAPIManager;
-import main.java.com.djrapitops.plan.systems.webapi.bukkit.*;
-import main.java.com.djrapitops.plan.systems.webapi.universal.PingWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import javax.net.ssl.*;
