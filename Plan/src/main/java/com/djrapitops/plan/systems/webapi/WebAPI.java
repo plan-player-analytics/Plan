@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webapi;
 
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 
 import java.util.Map;
@@ -14,5 +14,5 @@ import java.util.Map;
  */
 public interface WebAPI {
 
-    Response onResponse(Plan plan, Map<String, String> variables);
+    Response onResponse(IPlan plugin, Map<String, String> variables);
 }

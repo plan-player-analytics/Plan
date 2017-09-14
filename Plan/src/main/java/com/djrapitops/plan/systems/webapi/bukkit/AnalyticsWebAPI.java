@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
@@ -19,8 +19,8 @@ import java.util.Map;
  */
 public class AnalyticsWebAPI implements WebAPI {
     @Override
-    public Response onResponse(Plan plan, Map<String, String> variables) {
-        InformationManager infoManager = plan.getInfoManager();
+    public Response onResponse(IPlan plugin, Map<String, String> variables) {
+        InformationManager infoManager = plugin.getInfoManager();
 
         if (!infoManager.isAnalysisCached()) {
             return PageCache.loadPage("No Analysis Data", () -> new BadRequestResponse("No analysis data available"));

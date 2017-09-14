@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webapi.universal;
 
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class PingWebAPI implements WebAPI {
     @Override
-    public Response onResponse(Plan plan, Map<String, String> variables) {
+    public Response onResponse(IPlan plugin, Map<String, String> variables) {
         return PageCache.loadPage("success", SuccessResponse::new);
     }
 }

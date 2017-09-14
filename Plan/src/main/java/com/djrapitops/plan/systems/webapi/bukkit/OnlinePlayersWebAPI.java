@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.JsonResponse;
@@ -17,8 +18,8 @@ import java.util.Map;
  */
 public class OnlinePlayersWebAPI implements WebAPI {
     @Override
-    public Response onResponse(Plan plan, Map<String, String> variables) {
-        Server server = plan.getServer();
+    public Response onResponse(IPlan plugin, Map<String, String> variables) {
+        Server server = ((Plan) plugin).getServer();
 
         return new JsonResponse(server.getOnlinePlayers() + "/" + server.getMaxPlayers());
     }

@@ -44,18 +44,18 @@ public class APIResponseHandler {
         }
 
         String method = args[2];
-        String response = null;
+        String requestBody;
         try (InputStream inputStream = request.getRequestBody()) {
-            response = readPOSTRequest(inputStream);
+            requestBody = readPOSTRequest(inputStream);
         }
 
-        if (response == null) {
+        if (requestBody == null) {
             String error = "Error at reading the POST request." +
                     "Note that the Encoding must be ISO-8859-1.";
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
-        Map<String, String> variables = readVariables(response);
+        Map<String, String> variables = readVariables(requestBody);
         String key = variables.get("key");
 
         if (!checkKey(key)) {
@@ -111,12 +111,12 @@ public class APIResponseHandler {
         return uuid.equals(keyUUID);
     }
 
-    private Map<String, String> readVariables(String response) {
-        String[] variables = response.split("&");
+    private Map<String, String> readVariables(String requestBody) {
+        String[] variables = requestBody.split("&");
 
         return Arrays.stream(variables)
                 .map(variable -> variable.split("=", 2))
-                .filter(splittedVariables -> splittedVariables.length == 2)
-                .collect(Collectors.toMap(splittedVariables -> splittedVariables[0], splittedVariables -> splittedVariables[1], (a, b) -> b));
+                .filter(splitVariables -> splitVariables.length == 2)
+                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
     }
 }

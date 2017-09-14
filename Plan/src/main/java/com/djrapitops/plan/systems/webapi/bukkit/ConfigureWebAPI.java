@@ -4,14 +4,16 @@
  */
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
-import main.java.com.djrapitops.plan.Plan;
+import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
-import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -19,7 +21,7 @@ import java.util.Map;
  */
 public class ConfigureWebAPI implements WebAPI {
     @Override
-    public Response onResponse(Plan plan, Map<String, String> variables) {
+    public Response onResponse(IPlan plugin, Map<String, String> variables) {
         String key = variables.get("configKey");
 
         if (key == null) {
@@ -38,9 +40,14 @@ public class ConfigureWebAPI implements WebAPI {
             value = null;
         }
 
-        FileConfiguration config = plan.getConfig();
-        config.set(key, value);
-        plan.saveConfig();
+        IFileConfig config = null;
+        try {
+            config = plugin.getIConfig().getConfig();
+            config.set(key, value);
+            plugin.getIConfig().save();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
 
         return PageCache.loadPage("success", SuccessResponse::new);
     }

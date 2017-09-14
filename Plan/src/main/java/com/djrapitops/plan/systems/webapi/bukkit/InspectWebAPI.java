@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webapi.bukkit;
 
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 public class InspectWebAPI implements WebAPI {
     @Override
-    public Response onResponse(Plan plan, Map<String, String> variables) {
+    public Response onResponse(IPlan plugin, Map<String, String> variables) {
         String playerString = variables.get("player");
 
         if (playerString == null) {
@@ -35,7 +35,7 @@ public class InspectWebAPI implements WebAPI {
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
-        plan.getInfoManager().cachePlayer(uuid);
+        plugin.getInfoManager().cachePlayer(uuid);
 
         return PageCache.loadPage("success", SuccessResponse::new);
     }
