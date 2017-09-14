@@ -5,12 +5,12 @@
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
-import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.util.Map;
 import java.util.UUID;
@@ -21,22 +21,20 @@ import java.util.UUID;
 public class InspectWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
-        String playerString = variables.get("player");
-
-        if (playerString == null) {
-            String error = "Player String not included";
+        String uuidS = variables.get("uuid");
+        if (uuidS == null) {
+            String error = "UUID not included";
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
-
-        UUID uuid = UUIDUtility.getUUIDOf(playerString);
-
-        if (uuid == null) {
-            String error = "UUID not found";
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
-        }
+        UUID uuid = UUID.fromString(uuidS);
 
         plugin.getInfoManager().cachePlayer(uuid);
 
         return PageCache.loadPage("success", SuccessResponse::new);
+    }
+
+    public String sendRequest(String address, UUID receiverUUID, UUID uuid) throws WebAPIException {
+        addVariable("uuid", uuid.toString());
+        return super.sendRequest(address, receiverUUID);
     }
 }

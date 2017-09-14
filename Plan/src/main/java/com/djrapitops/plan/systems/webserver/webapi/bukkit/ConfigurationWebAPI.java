@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * @author Fuzzlemann
  */
-public class ConfigureWebAPI extends WebAPI {
+public class ConfigurationWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         String key = variables.get("configKey");
@@ -40,9 +40,8 @@ public class ConfigureWebAPI extends WebAPI {
             value = null;
         }
 
-        IFileConfig config = null;
         try {
-            config = plugin.getIConfig().getConfig();
+            IFileConfig config = plugin.getIConfig().getConfig();
             config.set(key, value);
             plugin.getIConfig().save();
         } catch (IOException e) {

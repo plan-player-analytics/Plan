@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author Fuzzlemann
  */
-public class AnalyticsWebAPI extends WebAPI {
+public class GetAnalysisWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         InformationManager infoManager = plugin.getInfoManager();
