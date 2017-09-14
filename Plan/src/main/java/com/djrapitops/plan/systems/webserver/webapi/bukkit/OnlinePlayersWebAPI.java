@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author Fuzzlemann
  */
-public class OnlinePlayersWebAPI implements WebAPI {
+public class OnlinePlayersWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         Server server = ((Plan) plugin).getServer();

@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * @author Fuzzlemann
  */
-public class InspectWebAPI implements WebAPI {
+public class InspectWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         String playerString = variables.get("player");

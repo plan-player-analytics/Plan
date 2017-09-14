@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * @author Fuzzlemann
  */
-public class ConfigureWebAPI implements WebAPI {
+public class ConfigureWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         String key = variables.get("configKey");

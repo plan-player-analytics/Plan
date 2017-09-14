@@ -59,12 +59,12 @@ public class WebServer {
     }
 
     private void registerWebAPIs() {
-        webAPI.registerNewAPI("analytics", new AnalyticsWebAPI());
-        webAPI.registerNewAPI("analyze", new AnalyzeWebAPI());
-        webAPI.registerNewAPI("configure", new ConfigureWebAPI());
-        webAPI.registerNewAPI("inspect", new InspectWebAPI());
-        webAPI.registerNewAPI("onlineplayers", new OnlinePlayersWebAPI());
-        webAPI.registerNewAPI("ping", new PingWebAPI());
+        webAPI.registerNewAPI(new AnalyticsWebAPI());
+        webAPI.registerNewAPI(new AnalyzeWebAPI());
+        webAPI.registerNewAPI(new ConfigureWebAPI());
+        webAPI.registerNewAPI(new InspectWebAPI());
+        webAPI.registerNewAPI(new OnlinePlayersWebAPI());
+        webAPI.registerNewAPI(new PingWebAPI());
     }
 
     /**

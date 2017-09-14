@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Fuzzlemann
+ * @author Fuzzlemann & Rsl1122
  */
 public class WebAPIManager {
 
@@ -21,11 +21,11 @@ public class WebAPIManager {
         registry = new HashMap<>();
     }
 
-    public void registerNewAPI(String method, WebAPI api) {
-        registry.put(method.toLowerCase(), api);
+    public void registerNewAPI(WebAPI api) {
+        registry.put(api.getClass().getSimpleName().toLowerCase(), api);
     }
 
-    public WebAPI getAPI(String method) {
-        return registry.get(method.toLowerCase());
+    public WebAPI getAPI(String apiName) {
+        return registry.get(apiName.toLowerCase());
     }
 }
