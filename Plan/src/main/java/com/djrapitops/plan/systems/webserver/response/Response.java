@@ -33,7 +33,7 @@ public abstract class Response {
 
     public String getResponse() {
         return header + "\r\n"
-                + "Content-Type: text/html;\r\n"
+                + "Content-Type: " + type + ";\r\n"
                 + "Content-Length: " + content.length() + "\r\n"
                 + "\r\n"
                 + content;
@@ -90,5 +90,10 @@ public abstract class Response {
                 out.write(buffer, 0, count);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return header + " | " + getResponse();
     }
 }

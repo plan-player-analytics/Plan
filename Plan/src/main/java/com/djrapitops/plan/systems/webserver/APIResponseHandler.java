@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.systems.webserver.response.ForbiddenResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -74,7 +75,14 @@ public class APIResponseHandler {
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
-        return api.onResponse(Plan.getInstance(), variables);
+        Log.debug(request.toString());
+        Log.debug(requestBody);
+
+        Response response = api.onResponse(Plan.getInstance(), variables);
+
+        Log.debug(response.toString());
+
+        return response;
     }
 
     private String readPOSTRequest(InputStream in) throws IOException {
