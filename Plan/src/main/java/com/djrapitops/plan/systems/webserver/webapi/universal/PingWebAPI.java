@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author Fuzzlemann
  */
-public class PingWebAPI implements WebAPI {
+public class PingWebAPI extends WebAPI {
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         return PageCache.loadPage("success", SuccessResponse::new);

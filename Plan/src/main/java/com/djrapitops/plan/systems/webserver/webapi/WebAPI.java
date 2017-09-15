@@ -10,19 +10,13 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailExceptio
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -33,40 +27,43 @@ public abstract class WebAPI {
 
     public abstract Response onResponse(IPlan plugin, Map<String, String> variables);
 
-    public String sendRequest(String address, UUID receiverUUID) throws WebAPIException {
+    public void sendRequest(String address, UUID receiverUUID) throws WebAPIException {
         Verify.nullCheck(address, receiverUUID);
 
-        HttpClient httpClient = HttpClients.createDefault();
-
-        HttpPost postRequest = new HttpPost(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
-
-        List<NameValuePair> parameters = new ArrayList<>();
-        String serverUUID = MiscUtils.getIPlan().getServerInfoManager().getServerUUID().toString();
-        parameters.add(new BasicNameValuePair("sender", serverUUID));
-        parameters.add(new BasicNameValuePair("key", receiverUUID.toString()));
-        for (Map.Entry<String, String> entry : variables.entrySet()) {
-            parameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-
         try {
-            postRequest.setEntity(new UrlEncodedFormEntity(parameters, "ISO-8859-1"));
-        } catch (UnsupportedEncodingException e) {
-            throw new WebAPIException("Unsupported parameter encoding", e);
-        }
+            URL url = new URL(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setInstanceFollowRedirects(false);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("charset", "ISO-8859-1");
 
-        try {
-            HttpResponse response = httpClient.execute(postRequest);
-            HttpEntity responseEntity = response.getEntity();
+            StringBuilder parameters = new StringBuilder();
+            String serverUUID = MiscUtils.getIPlan().getServerInfoManager().getServerUUID().toString();
+            parameters.append("sender=").append(serverUUID).append("&");
+            parameters.append("key=").append(receiverUUID.toString());
+            for (Map.Entry<String, String> entry : variables.entrySet()) {
+                parameters.append("&").append(entry.getKey()).append(entry.getValue());
+            }
+            byte[] toSend = parameters.toString().getBytes();
+            int length = toSend.length;
 
-            if (responseEntity != null) {
-                StringBuilder content = new StringBuilder();
-                try (InputStream inputStream = responseEntity.getContent()) {
-                    Scanner scanner = new Scanner(inputStream);
-                    while (scanner.hasNextLine()) {
-                        content.append(scanner.nextLine());
-                    }
-                }
-                return content.toString();
+            connection.setRequestProperty("Content-Length", Integer.toString(length));
+
+            connection.setUseCaches(false);
+            try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
+                out.write(toSend);
+            }
+
+            int responseCode = connection.getResponseCode();
+            switch (responseCode) {
+                case 200:
+                    break;
+                case 400:
+                    throw new WebAPIException("Bad Request: " + url.toString() + "|" + parameters);
+                default:
+                    throw new WebAPIException(url.toString() + "| Wrong response code " + responseCode);
             }
         } catch (IOException e) {
             throw new WebAPIConnectionFailException("API connection failed.", e);

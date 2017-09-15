@@ -25,6 +25,10 @@ public class WebAPIManager {
         registry.put(api.getClass().getSimpleName().toLowerCase(), api);
     }
 
+    public WebAPI getAPI(Class api) {
+        return getAPI(api.getSimpleName());
+    }
+
     public WebAPI getAPI(String apiName) {
         return registry.get(apiName.toLowerCase());
     }

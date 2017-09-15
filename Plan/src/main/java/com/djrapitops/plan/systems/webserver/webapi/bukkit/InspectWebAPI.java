@@ -33,8 +33,8 @@ public class InspectWebAPI extends WebAPI {
         return PageCache.loadPage("success", SuccessResponse::new);
     }
 
-    public String sendRequest(String address, UUID receiverUUID, UUID uuid) throws WebAPIException {
+    public void sendRequest(String address, UUID receiverUUID, UUID uuid) throws WebAPIException {
         addVariable("uuid", uuid.toString());
-        return super.sendRequest(address, receiverUUID);
+        super.sendRequest(address, receiverUUID);
     }
 }
