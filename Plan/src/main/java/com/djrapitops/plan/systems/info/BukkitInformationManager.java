@@ -21,8 +21,10 @@ import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.IsCachedWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
@@ -72,7 +74,15 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public void cachePlayer(UUID uuid) {
-        PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+        if (usingBungeeWebServer) {
+            try {
+                getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
+            } catch (WebAPIException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        } else {
+            PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+        }
         plugin.addToProcessQueue(new Processor<UUID>(uuid) {
             @Override
             public void process() {
@@ -138,9 +148,8 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public String getAnalysisHtml() {
-        // TODO Bungee part.
         try {
-            return new AnalysisPageParser(analysisData, plugin).parse();
+            return Theme.replaceColors(new AnalysisPageParser(analysisData, plugin).parse());
         } catch (ParseException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -153,7 +162,7 @@ public class BukkitInformationManager extends InformationManager {
             // TODO Bungee request
         }
         try {
-            return new InspectPageParser(uuid, plugin).parse();
+            return Theme.replaceColors(new InspectPageParser(uuid, plugin).parse());
         } catch (ParseException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -168,9 +177,21 @@ public class BukkitInformationManager extends InformationManager {
     public void cacheAnalysisdata(AnalysisData analysisData) {
         this.analysisData = analysisData;
         refreshDate = MiscUtils.getTime();
-        PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(this));
+        cacheAnalysisHtml();
         AnalyzeCommand.sendAnalysisMessage(analysisNotification);
         analysisNotification.clear();
+    }
+
+    private void cacheAnalysisHtml() {
+        if (usingBungeeWebServer) {
+            try {
+                getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, getAnalysisHtml());
+            } catch (WebAPIException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        } else {
+            PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(this));
+        }
     }
 
     public AnalysisData getAnalysisData() {

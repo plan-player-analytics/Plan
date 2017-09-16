@@ -15,7 +15,7 @@ public class InspectPageResponse extends Response {
 
     public InspectPageResponse(InformationManager infoManager, UUID uuid) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(Theme.replaceColors(infoManager.getPlayerHtml(uuid)));
+        super.setContent(infoManager.getPlayerHtml(uuid));
         setInspectPagePluginsTab(infoManager.getPluginsTabContent(uuid));
     }
 

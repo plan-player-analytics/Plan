@@ -61,7 +61,6 @@ public class WebServer {
     }
 
     private void registerWebAPIs() {
-        webAPI.registerNewAPI(new GetAnalysisWebAPI());
         webAPI.registerNewAPI(new AnalyzeWebAPI());
         webAPI.registerNewAPI(new ConfigurationWebAPI());
         webAPI.registerNewAPI(new InspectWebAPI());

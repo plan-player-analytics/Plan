@@ -11,7 +11,7 @@ public class AnalysisPageResponse extends Response {
 
     public AnalysisPageResponse(InformationManager informationManager) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(Theme.replaceColors(informationManager.getAnalysisHtml()));
+        super.setContent(informationManager.getAnalysisHtml());
     }
 
     public AnalysisPageResponse(String html) {
