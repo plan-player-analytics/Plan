@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageRespo
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -30,8 +31,11 @@ public class BungeeInformationManager extends InformationManager {
     private PlanBungee plugin;
     private Map<UUID, ServerInfo> bukkitServers;
 
+    private Map<UUID, Map<UUID, String>> pluginsTabContent;
+
     public BungeeInformationManager(PlanBungee plugin) throws SQLException {
         usingBungeeWebServer = true;
+        pluginsTabContent = new HashMap<>();
         this.plugin = plugin;
         refreshBukkitServerMap();
     }
@@ -103,5 +107,11 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public String getPluginsTabContent(UUID uuid) {
         return null;
+    }
+
+    public void cachePluginsTabContent(UUID serverUUID, UUID uuid, String html) {
+        Map<UUID, String> perServerPluginsTab = pluginsTabContent.getOrDefault(uuid, new HashMap<>());
+        perServerPluginsTab.put(serverUUID, html);
+        pluginsTabContent.put(uuid, perServerPluginsTab);
     }
 }

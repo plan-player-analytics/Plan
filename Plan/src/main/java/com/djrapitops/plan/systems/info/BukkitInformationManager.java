@@ -23,8 +23,11 @@ import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageRespo
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.IsCachedWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostInspectPluginsTabWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
@@ -92,8 +95,16 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     public void cacheInspectPluginsTab(UUID uuid) {
-        if (usingBungeeWebServer) {
-            // TODO plugin tab request on bungee
+        cacheInspectPluginsTab(uuid, this.getClass());
+    }
+
+    public void cacheInspectPluginsTab(UUID uuid, Class origin) {
+        if (usingBungeeWebServer && !origin.equals(RequestInspectPluginsTabBukkitWebAPI.class)) {
+            try {
+                getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequest(webServerAddress, uuid);
+            } catch (WebAPIException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
         } else {
             String serverName = plugin.getServerInfoManager().getServerName();
             HookHandler hookHandler = plugin.getHookHandler();
@@ -105,10 +116,18 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     public void cacheInspectPluginsTab(UUID uuid, String contents) {
-        pluginsTabContents.put(uuid, contents);
-        Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
-        if (inspectResponse != null) {
-            ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
+        if (usingBungeeWebServer) {
+            try {
+                getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
+            } catch (WebAPIException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        } else {
+            pluginsTabContents.put(uuid, contents);
+            Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
+            if (inspectResponse != null) {
+                ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(contents);
+            }
         }
     }
 
@@ -158,9 +177,6 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public String getPlayerHtml(UUID uuid) {
-        if (usingBungeeWebServer) {
-            // TODO Bungee request
-        }
         try {
             return Theme.replaceColors(new InspectPageParser(uuid, plugin).parse());
         } catch (ParseException e) {
