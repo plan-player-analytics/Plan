@@ -59,7 +59,7 @@ public abstract class InformationManager {
      *
      * @return Is page cached.
      */
-    public abstract boolean isAnalysisCached();
+    public abstract boolean isAnalysisCached(UUID serverUUID);
 
     /**
      * Used for /server on Bukkit and /network on Bungee

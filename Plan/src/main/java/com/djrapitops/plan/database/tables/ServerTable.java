@@ -322,4 +322,25 @@ public class ServerTable extends Table {
             close(set, statement);
         }
     }
+
+    public Optional<UUID> getServerUUID(String serverName) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName,
+                    columnServerUUID)
+                    .where(columnServerName + "=?")
+                    .toString());
+            statement.setString(1, serverName);
+            set = statement.executeQuery();
+            if (set.next()) {
+                return Optional.of(UUID.fromString(set.getString(columnServerUUID)));
+            } else {
+                return Optional.empty();
+            }
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

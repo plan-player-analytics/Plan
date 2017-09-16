@@ -139,7 +139,7 @@ public class API {
      * @return true/false
      */
     public boolean isAnalysisCached() {
-        return plugin.getInfoManager().isAnalysisCached();
+        return plugin.getInfoManager().isAnalysisCached(Plan.getServerUUID());
     }
 
     /**

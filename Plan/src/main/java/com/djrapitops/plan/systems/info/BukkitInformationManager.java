@@ -150,10 +150,10 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     @Override
-    public boolean isAnalysisCached() {
+    public boolean isAnalysisCached(UUID serverUUID) {
         if (usingBungeeWebServer) {
             try {
-                return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress);
+                return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
             } catch (WebAPIException e) {
                 Log.toLog(this.getClass().getName(), e);
             }

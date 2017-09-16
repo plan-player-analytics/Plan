@@ -44,7 +44,7 @@ public class IsCachedWebAPI extends WebAPI {
                     }
                     break;
                 case "analysisPage":
-                    if (infoManager.isAnalysisCached()) {
+                    if (infoManager.isAnalysisCached(UUID.fromString(variables.get("serverUUID")))) {
                         cached = true;
                     }
                     break;
@@ -78,7 +78,8 @@ public class IsCachedWebAPI extends WebAPI {
         }
     }
 
-    public boolean isAnalysisCached(String address) throws WebAPIException {
+    public boolean isAnalysisCached(String address, UUID serverUUID) throws WebAPIException {
+        addVariable("serverUUID", serverUUID.toString());
         addVariable("target", "analysisPage");
         try {
             super.sendRequest(address);

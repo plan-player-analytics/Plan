@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
+import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -92,8 +93,12 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     @Override
-    public boolean isAnalysisCached() {
-        return PageCache.isCached("networkPage");
+    public boolean isAnalysisCached(UUID serverUUID) {
+        if (PlanBungee.getServerUUID().equals(serverUUID)) {
+            return PageCache.isCached("networkPage");
+        } else {
+            return PageCache.isCached("analysisPage:" + serverUUID);
+        }
     }
 
     @Override
@@ -108,7 +113,16 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public String getPluginsTabContent(UUID uuid) {
-        return null;
+        Map<UUID, String> pluginsTab = pluginsTabContent.get(uuid);
+        if (pluginsTab == null) {
+            return HtmlStructure.createInspectPageTabContentCalculating();
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (String tab : pluginsTab.values()) {
+            builder.append(tab);
+        }
+        return builder.toString();
     }
 
     public void cachePluginsTabContent(UUID serverUUID, UUID uuid, String html) {

@@ -27,6 +27,7 @@ import net.md_5.bungee.api.ChatColor;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Bungee Main class.
@@ -157,5 +158,9 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     @Override
     public ServerVariableHolder getVariable() {
         return variableHolder;
+    }
+
+    public static UUID getServerUUID() {
+        return getInstance().serverInfoManager.getServerUUID();
     }
 }

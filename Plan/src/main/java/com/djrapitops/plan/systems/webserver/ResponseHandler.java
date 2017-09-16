@@ -9,12 +9,14 @@ import main.java.com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -54,6 +56,9 @@ public class ResponseHandler extends APIResponseHandler {
                 String fileName = args[args.length - 1];
                 return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(fileName));
             }
+
+            UUID serverUUID = MiscUtils.getIPlan().getServerInfoManager().getServerUUID();
+
             if (usingHttps) {
                 if (!request.hasAuth()) {
                     throw new WebUserAuthException("No Authorization");
@@ -67,7 +72,7 @@ public class ResponseHandler extends APIResponseHandler {
                     return forbiddenResponse(required, permLevel);
                 }
                 if (args.length < 2) {
-                    return rootPageResponse(user);
+                    return rootPageResponse(user, serverUUID);
                 }
             }
 
@@ -77,8 +82,19 @@ public class ResponseHandler extends APIResponseHandler {
                     return PageCache.loadPage("players", PlayersPageResponse::new);
                 case "player":
                     return playerResponse(args);
+                case "network":
                 case "server":
-                    return serverResponse();
+                    if (args.length > 2) {
+                        try {
+                            Optional<UUID> serverUUIDOptional = plugin.getDB().getServerTable().getServerUUID(args[2]);
+                            if (serverUUIDOptional.isPresent()) {
+                                serverUUID = serverUUIDOptional.get();
+                            }
+                        } catch (IllegalArgumentException ignore) {
+                            /*ignored*/
+                        }
+                    }
+                    return serverResponse(serverUUID);
                 default:
                     return notFoundResponse();
             }
@@ -154,14 +170,14 @@ public class ResponseHandler extends APIResponseHandler {
         }
     }
 
-    private Response rootPageResponse(WebUser user) {
+    private Response rootPageResponse(WebUser user, UUID serverUUID) {
         if (user == null) {
             return notFoundResponse();
         }
 
         switch (user.getPermLevel()) {
             case 0:
-                return serverResponse();
+                return serverResponse(serverUUID);
             case 1:
                 return PageCache.loadPage("players", PlayersPageResponse::new);
             case 2:
@@ -171,8 +187,8 @@ public class ResponseHandler extends APIResponseHandler {
         }
     }
 
-    private Response serverResponse() {
-        if (!plugin.getInfoManager().isAnalysisCached()) {
+    private Response serverResponse(UUID serverUUID) {
+        if (!plugin.getInfoManager().isAnalysisCached(serverUUID)) {
             String error = "Analysis Data was not cached.<br>Use /plan analyze to cache the Data.";
             PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
