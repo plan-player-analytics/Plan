@@ -4,12 +4,21 @@
  */
 package main.java.com.djrapitops.plan.systems.info;
 
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 
+import java.sql.SQLException;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * //TODO Class Javadoc Comment
@@ -18,8 +27,17 @@ import java.util.UUID;
  */
 public class BungeeInformationManager extends InformationManager {
 
-    public BungeeInformationManager(PlanBungee plugin) {
+    private PlanBungee plugin;
+    private Map<UUID, ServerInfo> bukkitServers;
+
+    public BungeeInformationManager(PlanBungee plugin) throws SQLException {
         usingBungeeWebServer = true;
+        this.plugin = plugin;
+        refreshBukkitServerMap();
+    }
+
+    private void refreshBukkitServerMap() throws SQLException {
+        bukkitServers = plugin.getDB().getServerTable().getBukkitServers().stream().collect(Collectors.toMap(ServerInfo::getUuid, Function.identity()));
     }
 
     @Override
@@ -28,7 +46,27 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     public void refreshAnalysis(UUID serverUUID) {
-        // TODO
+        ServerInfo serverInfo = bukkitServers.get(serverUUID);
+        if (serverInfo == null) {
+            try {
+                refreshBukkitServerMap();
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+            serverInfo = bukkitServers.get(serverUUID);
+        }
+        if (serverInfo == null) {
+            return;
+        }
+
+        AnalyzeWebAPI api = plugin.getWebServer().getWebAPI().getAPI(AnalyzeWebAPI.class);
+        try {
+            api.sendRequest(serverInfo.getWebAddress());
+        } catch (WebAPIConnectionFailException e) {
+            attemptConnection();
+        } catch (WebAPIException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     @Override
@@ -43,8 +81,8 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     @Override
-    public void attemptConnection() {
-
+    public boolean attemptConnection() {
+        return false;
     }
 
     @Override

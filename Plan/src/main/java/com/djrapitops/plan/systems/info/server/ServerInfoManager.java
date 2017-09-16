@@ -99,7 +99,7 @@ public class ServerInfoManager {
         int id = serverID.get();
         serverInfo.setId(id);
 
-        serverInfoFile.saveInfo(serverInfo, new ServerInfo(id, serverUUID, name, webAddress, maxPlayers));
+        serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, name, "", 0));
     }
 
     private UUID generateNewUUID(ServerVariableHolder variableHolder) {
@@ -127,6 +127,10 @@ public class ServerInfoManager {
      */
     public void saveBungeeConnectionAddress(String address) throws IOException {
         serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, "Bungee", address, -1));
+    }
+
+    public void markConnectionFail() {
+        serverInfoFile.markConnectionFail();
     }
 
     public int getServerID() {

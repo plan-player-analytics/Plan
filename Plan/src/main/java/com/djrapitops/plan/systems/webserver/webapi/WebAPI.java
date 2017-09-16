@@ -8,16 +8,18 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIForbiddenException;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -32,12 +34,13 @@ public abstract class WebAPI {
 
     public abstract Response onResponse(IPlan plugin, Map<String, String> variables);
 
-    public void sendRequest(String address, UUID receiverUUID) throws WebAPIException {
-        Verify.nullCheck(address, receiverUUID);
+    public void sendRequest(String address) throws WebAPIException {
+        Verify.nullCheck(address);
 
         try {
             URL url = new URL(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(10000);
             connection.setDoOutput(true);
             connection.setInstanceFollowRedirects(false);
             connection.setRequestMethod("POST");
@@ -47,7 +50,6 @@ public abstract class WebAPI {
             StringBuilder parameters = new StringBuilder();
             String serverUUID = MiscUtils.getIPlan().getServerInfoManager().getServerUUID().toString();
             parameters.append("sender=").append(serverUUID).append("&");
-            parameters.append("key=").append(receiverUUID.toString());
             for (Map.Entry<String, String> entry : variables.entrySet()) {
                 parameters.append("&").append(entry.getKey()).append(entry.getValue());
             }
@@ -67,9 +69,15 @@ public abstract class WebAPI {
                     return;
                 case 400:
                     throw new WebAPIException("Bad Request: " + url.toString() + "|" + parameters);
+                case 403:
+                    throw new WebAPIForbiddenException(url.toString());
+                case 404:
+                    throw new WebAPINotFoundException();
                 default:
                     throw new WebAPIException(url.toString() + "| Wrong response code " + responseCode);
             }
+        } catch (SocketTimeoutException e) {
+            throw new WebAPIConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (IOException e) {
             throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }

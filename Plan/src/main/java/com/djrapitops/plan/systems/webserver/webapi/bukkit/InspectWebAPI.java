@@ -34,12 +34,12 @@ public class InspectWebAPI extends WebAPI {
     }
 
     @Override
-    public void sendRequest(String address, UUID receiverUUID) throws WebAPIException {
+    public void sendRequest(String address) throws WebAPIException {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
-    public void sendRequest(String address, UUID receiverUUID, UUID uuid) throws WebAPIException {
+    public void sendRequest(String address, UUID uuid) throws WebAPIException {
         addVariable("uuid", uuid.toString());
-        super.sendRequest(address, receiverUUID);
+        super.sendRequest(address);
     }
 }

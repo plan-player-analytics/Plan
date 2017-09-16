@@ -17,7 +17,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -57,9 +59,9 @@ public class APIResponseHandler {
         }
 
         Map<String, String> variables = readVariables(requestBody);
-        String key = variables.get("key");
+        String sender = variables.get("sender");
 
-        if (!checkKey(key)) {
+        if (!checkKey(sender)) {
             String error = "Server Key not given or invalid";
             return PageCache.loadPage(error, () -> {
                 ForbiddenResponse forbidden = new ForbiddenResponse();
@@ -103,20 +105,26 @@ public class APIResponseHandler {
         }
     }
 
-    private boolean checkKey(String key) {
-        if (key == null) {
+    private boolean checkKey(String sender) {
+        if (sender == null) {
             return false;
         }
 
-        UUID uuid = MiscUtils.getIPlan().getServerInfoManager().getServerUUID();
+        List<UUID> uuids = null;
+        try {
+            uuids = MiscUtils.getIPlan().getDB().getServerTable().getServerUUIDs();
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+            return false;
+        }
         UUID keyUUID;
         try {
-            keyUUID = UUID.fromString(key);
+            keyUUID = UUID.fromString(sender);
         } catch (IllegalArgumentException e) {
             return false;
         }
 
-        return uuid.equals(keyUUID);
+        return uuids.contains(keyUUID);
     }
 
     private Map<String, String> readVariables(String requestBody) {

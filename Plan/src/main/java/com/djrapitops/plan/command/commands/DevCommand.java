@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
 import main.java.com.djrapitops.plan.utilities.Check;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -40,11 +41,17 @@ public class DevCommand extends SubCommand {
         switch (feature) {
             case "webapi":
                 if (!Check.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
-                    return true;
+                    break;
                 }
-                if (!webapi(args[1])) {
+                if (!webapi(args[1] + "webapi")) {
                     sender.sendMessage("[Plan] No such API / Exception occurred.");
                 }
+            case "web":
+                Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
+                String accessAddress = plugin.getWebServer().getAccessAddress();
+                sender.sendMessage((plugin.getInfoManager().isUsingBungeeWebServer() && bungeeConnectionAddress.isPresent())
+                        ? "Bungee: " + bungeeConnectionAddress.get() : "Local: " + accessAddress);
+                break;
             default:
                 break;
         }
@@ -58,9 +65,9 @@ public class DevCommand extends SubCommand {
         }
         try {
             if (api instanceof InspectWebAPI) {
-                ((InspectWebAPI) api).sendRequest(plugin.getWebServer().getAccessAddress(), Plan.getServerUUID(), UUID.randomUUID());
+                ((InspectWebAPI) api).sendRequest(plugin.getWebServer().getAccessAddress(), UUID.randomUUID());
             } else {
-                api.sendRequest(plugin.getWebServer().getAccessAddress(), Plan.getServerUUID());
+                api.sendRequest(plugin.getWebServer().getAccessAddress());
             }
             return true;
         } catch (WebAPIException e) {

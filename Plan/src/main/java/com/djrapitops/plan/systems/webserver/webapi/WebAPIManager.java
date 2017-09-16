@@ -25,8 +25,9 @@ public class WebAPIManager {
         registry.put(api.getClass().getSimpleName().toLowerCase(), api);
     }
 
-    public WebAPI getAPI(Class api) {
-        return getAPI(api.getSimpleName());
+    public <T extends WebAPI> T getAPI(Class<T> api) {
+        WebAPI webAPI = getAPI(api.getSimpleName());
+        return (T) webAPI;
     }
 
     public WebAPI getAPI(String apiName) {

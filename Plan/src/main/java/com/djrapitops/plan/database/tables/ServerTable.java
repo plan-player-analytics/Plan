@@ -302,4 +302,24 @@ public class ServerTable extends Table {
             close(statement);
         }
     }
+
+    public List<UUID> getServerUUIDs() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName, columnServerUUID)
+                    .where(columnServerName + "!=?")
+                    .toString());
+            statement.setString(1, "BungeeCord");
+            set = statement.executeQuery();
+            List<UUID> uuids = new ArrayList<>();
+            while (set.next()) {
+                uuids.add(UUID.fromString(set.getString(columnServerUUID)));
+            }
+            return uuids;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

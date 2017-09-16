@@ -28,7 +28,7 @@ public abstract class InformationManager {
         analysisNotification = new HashSet<>();
     }
 
-    public abstract void attemptConnection();
+    public abstract boolean attemptConnection();
 
     public abstract void cachePlayer(UUID uuid);
 
@@ -73,4 +73,8 @@ public abstract class InformationManager {
     }
 
     public abstract String getPluginsTabContent(UUID uuid);
+
+    public boolean isUsingBungeeWebServer() {
+        return usingBungeeWebServer;
+    }
 }

@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.systems.info.server;
 import com.djrapitops.plugin.config.BukkitConfig;
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 
 import java.io.IOException;
@@ -66,10 +67,14 @@ public class ServerInfoFile extends BukkitConfig {
         return getConfig().getString("Bungee.WebAddress");
     }
 
-    public void markConnectionFail() throws IOException {
-        IFileConfig config = getConfig();
-        int fails = config.getInt("Bungee.Fail");
-        config.set("Bungee.Fail", fails + 1);
-        save();
+    public void markConnectionFail() {
+        try {
+            IFileConfig config = getConfig();
+            int fails = config.getInt("Bungee.Fail");
+            config.set("Bungee.Fail", fails + 1);
+            save();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 }
