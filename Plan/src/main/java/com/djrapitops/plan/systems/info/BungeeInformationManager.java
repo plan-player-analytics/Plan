@@ -11,8 +11,9 @@ import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -75,8 +76,9 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public void cachePlayer(UUID uuid) {
-        PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
-        // TODO Player page plugin tab request
+        // TODO Request Inspect from server where the player is online or any if offline
+//        PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+        getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequestsToBukkitServers(plugin, uuid);
     }
 
     @Override
@@ -114,4 +116,9 @@ public class BungeeInformationManager extends InformationManager {
         perServerPluginsTab.put(serverUUID, html);
         pluginsTabContent.put(uuid, perServerPluginsTab);
     }
+
+    private WebAPIManager getWebAPI() {
+        return plugin.getWebServer().getWebAPI();
+    }
+
 }

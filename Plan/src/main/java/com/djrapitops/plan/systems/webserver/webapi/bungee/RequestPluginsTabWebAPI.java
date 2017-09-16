@@ -42,6 +42,21 @@ public class RequestPluginsTabWebAPI extends WebAPI {
         }
         UUID uuid = UUID.fromString(uuidS);
 
+        sendRequestsToBukkitServers(plugin, uuid);
+        return PageCache.loadPage("success", SuccessResponse::new);
+    }
+
+    @Override
+    public void sendRequest(String address) throws WebAPIException {
+        throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
+    }
+
+    public void sendRequest(String address, UUID uuid) throws WebAPIException {
+        addVariable("uuid", uuid.toString());
+        super.sendRequest(address);
+    }
+
+    public void sendRequestsToBukkitServers(IPlan plugin, UUID uuid) {
         plugin.addToProcessQueue(new Processor<UUID>(uuid) {
             @Override
             public void process() {
@@ -60,16 +75,5 @@ public class RequestPluginsTabWebAPI extends WebAPI {
                 }
             }
         });
-        return PageCache.loadPage("success", SuccessResponse::new);
-    }
-
-    @Override
-    public void sendRequest(String address) throws WebAPIException {
-        throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
-    }
-
-    public void sendRequest(String address, UUID uuid) throws WebAPIException {
-        addVariable("uuid", uuid.toString());
-        super.sendRequest(address);
     }
 }
