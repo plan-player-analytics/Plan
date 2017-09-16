@@ -15,6 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,6 +25,10 @@ import java.util.UUID;
 public abstract class WebAPI {
 
     private Map<String, String> variables;
+
+    public WebAPI() {
+        this.variables = new HashMap<>();
+    }
 
     public abstract Response onResponse(IPlan plugin, Map<String, String> variables);
 
@@ -59,16 +64,15 @@ public abstract class WebAPI {
             int responseCode = connection.getResponseCode();
             switch (responseCode) {
                 case 200:
-                    break;
+                    return;
                 case 400:
                     throw new WebAPIException("Bad Request: " + url.toString() + "|" + parameters);
                 default:
                     throw new WebAPIException(url.toString() + "| Wrong response code " + responseCode);
             }
         } catch (IOException e) {
-            throw new WebAPIConnectionFailException("API connection failed.", e);
+            throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }
-        throw new WebAPIException("Response entity was null");
     }
 
     protected void addVariable(String key, String value) {

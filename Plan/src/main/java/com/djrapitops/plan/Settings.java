@@ -24,6 +24,7 @@ public enum Settings {
     LOG_UNKNOWN_COMMANDS("Data.Commands.LogUnknownCommands"),
     COMBINE_COMMAND_ALIASES("Data.Commands.CombineCommandAliases"),
     WRITE_NEW_LOCALE("Plugin.WriteNewLocaleFileOnStart"),
+    DEV_MODE("Plugin.Dev"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

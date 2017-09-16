@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @author Fuzzlemann
+ * @author Rsl1122
  */
 public class InspectWebAPI extends WebAPI {
     @Override
@@ -31,6 +31,11 @@ public class InspectWebAPI extends WebAPI {
         plugin.getInfoManager().cachePlayer(uuid);
 
         return PageCache.loadPage("success", SuccessResponse::new);
+    }
+
+    @Override
+    public void sendRequest(String address, UUID receiverUUID) throws WebAPIException {
+        throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
     public void sendRequest(String address, UUID receiverUUID, UUID uuid) throws WebAPIException {

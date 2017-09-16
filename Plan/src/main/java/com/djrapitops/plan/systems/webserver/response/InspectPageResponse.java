@@ -19,6 +19,12 @@ public class InspectPageResponse extends Response {
         setInspectPagePluginsTab(infoManager.getPluginsTabContent(uuid));
     }
 
+    public InspectPageResponse(InformationManager infoManager, UUID uuid, String html) {
+        super.setHeader("HTTP/1.1 200 OK");
+        super.setContent(Theme.replaceColors(html));
+        setInspectPagePluginsTab(infoManager.getPluginsTabContent(uuid));
+    }
+
     public void setInspectPagePluginsTab(String inspectPagePluginsTab) {
         if (this.inspectPagePluginsTab != null) {
             setContent(getContent().replace(this.inspectPagePluginsTab, inspectPagePluginsTab));
