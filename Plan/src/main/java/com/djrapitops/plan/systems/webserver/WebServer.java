@@ -91,7 +91,11 @@ public class WebServer {
                 server = HttpServer.create(new InetSocketAddress(port), 10);
             }
 
-            server.createContext("/", new RequestHandler(plugin, this));
+            if (plugin.getInfoManager().isUsingBungeeWebServer()) {
+                server.createContext("/", new APIRequestHandler(getWebAPI()));
+            } else {
+                server.createContext("/", new RequestHandler(plugin, this));
+            }
 
             server.setExecutor(new ThreadPoolExecutor(4, 8, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100)));
             server.start();
