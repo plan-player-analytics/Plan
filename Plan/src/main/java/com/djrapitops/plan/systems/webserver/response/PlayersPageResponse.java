@@ -21,10 +21,9 @@ public class PlayersPageResponse extends Response {
 
     public PlayersPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
-        List<String> names = null;
         try {
             IPlan plugin = MiscUtils.getIPlan();
-            names = new ArrayList<>(plugin.getDB().getUsersTable().getPlayerNames().values());
+            List<String> names = new ArrayList<>(plugin.getDB().getUsersTable().getPlayerNames().values());
             Collections.sort(names);
             Map<String, String> replace = new HashMap<>();
             replace.put("content", buildContent(names));

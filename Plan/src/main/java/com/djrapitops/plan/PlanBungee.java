@@ -2,16 +2,12 @@
  * Licence is provided in the jar as license.yml also here:
  * https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/Plan/src/main/resources/license.yml
  */
-package main.java.com.djrapitops.plan.bungee;
+package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.settings.ColorScheme;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.ServerVariableHolder;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.bungee.systems.BungeePlayerListener;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -19,6 +15,7 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
+import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
@@ -85,7 +82,6 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
             serverInfoManager = new ServerInfoManager(this);
             infoManager = new BungeeInformationManager(this);
-            webServer.setInfoManager(infoManager);
 
             registerListener(new BungeePlayerListener(this));
 

@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.systems.queue;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
+import main.java.com.djrapitops.plan.PlanBungee;
 
 /**
  * Abstract representation of a queue setup.

@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.IsCachedWebAPI;
@@ -37,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 public class WebServer {
 
     private final IPlan plugin;
-    private InformationManager infoManager;
     private final WebAPIManager webAPI;
 
     private final int port;
@@ -56,10 +54,6 @@ public class WebServer {
         registerWebAPIs();
     }
 
-    public void setInfoManager(InformationManager infoManager) {
-        this.infoManager = infoManager;
-    }
-
     private void registerWebAPIs() {
         webAPI.registerNewAPI(new AnalyzeWebAPI());
         webAPI.registerNewAPI(new ConfigurationWebAPI());
@@ -68,8 +62,8 @@ public class WebServer {
         webAPI.registerNewAPI(new MaxPlayersWebAPI());
         webAPI.registerNewAPI(new PingWebAPI());
 
-        webAPI.registerNewAPI(new IsCachedWebAPI(plugin));
-        webAPI.registerNewAPI(new PostHtmlWebAPI(plugin));
+        webAPI.registerNewAPI(new IsCachedWebAPI());
+        webAPI.registerNewAPI(new PostHtmlWebAPI());
     }
 
     /**

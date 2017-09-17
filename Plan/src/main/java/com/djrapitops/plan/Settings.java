@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.config.fileconfig.BukkitFileConfig;
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
 
 import java.io.IOException;
 import java.util.List;

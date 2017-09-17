@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Class used for executing transfer queries when the database has version 8.
@@ -25,7 +26,11 @@ public class Version8TransferTable extends Table {
 
     public Version8TransferTable(SQLDB db, boolean usingMySQL) throws SQLException {
         super("", db, usingMySQL);
-        serverID = db.getServerTable().getServerID(Plan.getServerUUID()).get();
+        Optional<Integer> serverID = db.getServerTable().getServerID(Plan.getServerUUID());
+        if (!serverID.isPresent()) {
+            throw new IllegalStateException("Server UUID was not registered, try rebooting the plugin.");
+        }
+        this.serverID = serverID.get();
     }
 
     @Override

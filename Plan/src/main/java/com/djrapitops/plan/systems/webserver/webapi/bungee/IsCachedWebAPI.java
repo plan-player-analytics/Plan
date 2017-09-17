@@ -25,12 +25,6 @@ import java.util.UUID;
  */
 public class IsCachedWebAPI extends WebAPI {
 
-    private final IPlan plugin;
-
-    public IsCachedWebAPI(IPlan plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         try {

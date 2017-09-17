@@ -110,21 +110,13 @@ public class APIResponseHandler {
             return false;
         }
 
-        List<UUID> uuids = null;
         try {
-            uuids = MiscUtils.getIPlan().getDB().getServerTable().getServerUUIDs();
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
+            List<UUID> uuids = MiscUtils.getIPlan().getDB().getServerTable().getServerUUIDs();
+            UUID keyUUID = UUID.fromString(sender);
+            return uuids.contains(keyUUID);
+        } catch (SQLException | IllegalArgumentException e) {
             return false;
         }
-        UUID keyUUID;
-        try {
-            keyUUID = UUID.fromString(sender);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-
-        return uuids.contains(keyUUID);
     }
 
     private Map<String, String> readVariables(String requestBody) {

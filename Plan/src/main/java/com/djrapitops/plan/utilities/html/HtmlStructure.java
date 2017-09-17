@@ -347,15 +347,13 @@ public class HtmlStructure {
     }
 
     public static String createInspectPageTabContentCalculating() {
-        StringBuilder html = new StringBuilder();
-        html.append("<div class=\"row\">")
-                .append("<div class=\"column\">")
-                .append("<div class=\"box-header\">")
-                .append("<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> No Plugins</h2></div>")
-                .append("<div class=\"box plugin\">")
-                .append("<p><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Plugins tab is still being calculated, please refresh the page after a while (F5)</p>")
-                .append("</div></div>")
-                .append("</div>");
-        return html.toString();
+        return "<div class=\"row\">" +
+                "<div class=\"column\">" +
+                "<div class=\"box-header\">" +
+                "<h2><i class=\"fa fa-cube\" aria-hidden=\"true\"></i> No Plugins</h2></div>" +
+                "<div class=\"box plugin\">" +
+                "<p><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Plugins tab is still being calculated, please refresh the page after a while (F5)</p>" +
+                "</div></div>" +
+                "</div>";
     }
 }

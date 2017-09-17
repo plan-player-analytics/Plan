@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -90,7 +89,7 @@ public class HtmlUtils {
     }
 
     public static String getRelativeInspectUrl(String playerName) {
-        return "../player/" + playerName;
+        return "../player/" + playerName.replace(" ", "%20").replace(".", "%2E");
     }
 
     public static String getRelativeInspectUrl(UUID uuid) {

@@ -168,7 +168,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             serverInfoManager = new ServerInfoManager(this);
             infoManager = new BukkitInformationManager(this);
-            webServer.setInfoManager(infoManager);
 
             Benchmark.stop("Enable", "WebServer Initialization");
 

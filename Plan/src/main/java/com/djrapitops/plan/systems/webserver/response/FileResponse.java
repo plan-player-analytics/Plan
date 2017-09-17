@@ -4,7 +4,6 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.FileNotFoundException;
@@ -24,8 +23,7 @@ public class FileResponse extends Response {
         try {
             super.setContent(FileUtil.getStringFromResource(fileName));
         } catch (FileNotFoundException e) {
-            Log.toLog(this.getClass().getName(), e);
-            super.setContent("");
+            super.setContent(new NotFoundResponse(fileName + " was not found inside the .jar or /plugins/Plan/ folder").getContent());
         }
     }
 }

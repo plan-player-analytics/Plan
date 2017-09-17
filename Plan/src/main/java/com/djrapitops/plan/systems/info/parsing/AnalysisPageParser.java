@@ -5,10 +5,10 @@
 package main.java.com.djrapitops.plan.systems.info.parsing;
 
 import com.djrapitops.plugin.utilities.Compatibility;
+import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;

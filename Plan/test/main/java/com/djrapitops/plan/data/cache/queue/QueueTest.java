@@ -30,7 +30,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({JavaPlugin.class})
 public class QueueTest {
 
-    private DataCache dataCache;
     private Database db;
 
     @Before
@@ -42,7 +41,7 @@ public class QueueTest {
         db.init();
         when(plan.getDB()).thenReturn(db);
 
-        dataCache = new DataCache(plan);
+        DataCache dataCache = new DataCache(plan);
         when(plan.getDataCache()).thenReturn(dataCache);
     }
 

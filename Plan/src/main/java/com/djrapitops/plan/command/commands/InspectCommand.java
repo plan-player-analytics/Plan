@@ -55,10 +55,6 @@ public class InspectCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW).toString(), sender)) {
-            return true;
-        }
-
         String playerName = MiscUtils.getPlayerName(args, sender);
 
         runInspectTask(playerName, sender);

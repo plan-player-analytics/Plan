@@ -25,12 +25,6 @@ import java.util.UUID;
  */
 public class PostHtmlWebAPI extends WebAPI {
 
-    private final IPlan plugin;
-
-    public PostHtmlWebAPI(IPlan plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public Response onResponse(IPlan plugin, Map<String, String> variables) {
         try {

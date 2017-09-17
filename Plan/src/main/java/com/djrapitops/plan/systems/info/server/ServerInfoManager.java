@@ -6,11 +6,11 @@ package main.java.com.djrapitops.plan.systems.info.server;
 
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
-import main.java.com.djrapitops.plan.bungee.PlanBungee;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
 
