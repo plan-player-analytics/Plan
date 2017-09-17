@@ -8,9 +8,7 @@ import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
 import java.util.Map;
@@ -36,7 +34,7 @@ public class RequestInspectPluginsTabBukkitWebAPI extends WebAPI {
         UUID uuid = UUID.fromString(uuidS);
 
         ((BukkitInformationManager) plugin.getInfoManager()).cacheInspectPluginsTab(uuid, this.getClass());
-        return PageCache.loadPage("success", SuccessResponse::new);
+        return success();
     }
 
     @Override

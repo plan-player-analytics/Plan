@@ -13,6 +13,8 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.IsCachedWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostInspectPluginsTabWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
@@ -58,12 +60,15 @@ public class WebServer {
         webAPI.registerNewAPI(new AnalyzeWebAPI());
         webAPI.registerNewAPI(new ConfigurationWebAPI());
         webAPI.registerNewAPI(new InspectWebAPI());
-        webAPI.registerNewAPI(new OnlinePlayersWebAPI());
-        webAPI.registerNewAPI(new MaxPlayersWebAPI());
+        webAPI.registerNewAPI(new GetOnlinePlayersWebAPI());
+        webAPI.registerNewAPI(new GetMaxPlayersWebAPI());
         webAPI.registerNewAPI(new PingWebAPI());
+        webAPI.registerNewAPI(new RequestInspectPluginsTabBukkitWebAPI());
 
         webAPI.registerNewAPI(new IsCachedWebAPI());
         webAPI.registerNewAPI(new PostHtmlWebAPI());
+        webAPI.registerNewAPI(new PostInspectPluginsTabWebAPI());
+        webAPI.registerNewAPI(new RequestPluginsTabWebAPI());
     }
 
     /**

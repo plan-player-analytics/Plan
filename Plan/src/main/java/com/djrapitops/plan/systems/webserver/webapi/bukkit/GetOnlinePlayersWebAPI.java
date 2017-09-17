@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author Fuzzlemann
  */
-public class OnlinePlayersWebAPI extends WebAPI {
+public class GetOnlinePlayersWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         return new JsonResponse(((Plan) plugin).getServer().getOnlinePlayers());

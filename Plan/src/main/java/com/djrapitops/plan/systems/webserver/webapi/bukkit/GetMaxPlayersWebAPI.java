@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author Rsl1122
  */
-public class MaxPlayersWebAPI extends WebAPI {
+public class GetMaxPlayersWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         return new JsonResponse(plugin.getVariable().getMaxPlayers());
