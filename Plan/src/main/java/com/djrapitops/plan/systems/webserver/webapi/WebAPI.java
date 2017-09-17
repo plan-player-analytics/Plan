@@ -10,7 +10,11 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailExceptio
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIForbiddenException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
+import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import javax.net.ssl.*;
@@ -35,7 +39,7 @@ public abstract class WebAPI {
         this.variables = new HashMap<>();
     }
 
-    public abstract Response onResponse(IPlan plugin, Map<String, String> variables);
+    public abstract Response onRequest(IPlan plugin, Map<String, String> variables);
 
     public void sendRequest(String address) throws WebAPIException {
         Verify.nullCheck(address);
@@ -138,4 +142,15 @@ public abstract class WebAPI {
                 }
             }
     };
+
+    protected Response success() {
+        return PageCache.loadPage("success", SuccessResponse::new);
+    }
+    protected Response fail(String reason) {
+        return PageCache.loadPage("fail", () -> new NotFoundResponse(reason));
+    }
+
+    protected Response badRequest(String error) {
+        return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+    }
 }

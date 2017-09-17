@@ -8,11 +8,7 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
 import java.util.Map;
@@ -26,7 +22,7 @@ import java.util.UUID;
 public class IsCachedWebAPI extends WebAPI {
 
     @Override
-    public Response onResponse(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(IPlan plugin, Map<String, String> variables) {
         try {
             String target = variables.get("target");
             InformationManager infoManager = plugin.getInfoManager();
@@ -43,16 +39,15 @@ public class IsCachedWebAPI extends WebAPI {
                     }
                     break;
                 default:
-                    String error = "Faulty Target";
-                    return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+                    return badRequest("Faulty Target");
             }
             if (cached) {
-                return PageCache.loadPage("success", SuccessResponse::new);
+                return success();
             } else {
-                return PageCache.loadPage("fail", () -> new NotFoundResponse("Not Cached"));
+                return fail("Not Cached");
             }
         } catch (NullPointerException e) {
-            return PageCache.loadPage(e.toString(), () -> new BadRequestResponse(e.toString()));
+            return badRequest(e.toString());
         }
     }
 

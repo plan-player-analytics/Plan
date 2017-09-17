@@ -10,10 +10,7 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 
@@ -29,21 +26,19 @@ import java.util.UUID;
  */
 public class RequestPluginsTabWebAPI extends WebAPI {
     @Override
-    public Response onResponse(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(IPlan plugin, Map<String, String> variables) {
         if (!Compatibility.isBungeeAvailable()) {
-            String error = "Called a Bukkit Server";
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+            return badRequest("Called a Bukkit Server");
         }
 
         String uuidS = variables.get("uuid");
         if (uuidS == null) {
-            String error = "UUID not included";
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+            return badRequest("UUID not included");
         }
         UUID uuid = UUID.fromString(uuidS);
 
         sendRequestsToBukkitServers(plugin, uuid);
-        return PageCache.loadPage("success", SuccessResponse::new);
+        return success();
     }
 
     @Override

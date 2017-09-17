@@ -66,4 +66,9 @@ public class Request {
     public InputStream getRequestBody() {
         return exchange.getRequestBody();
     }
+
+    @Override
+    public String toString() {
+        return "Request:" + requestMethod + " " + target;
+    }
 }

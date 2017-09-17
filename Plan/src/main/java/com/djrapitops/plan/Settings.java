@@ -27,11 +27,17 @@ public enum Settings {
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
+    DB_PORT("Database.MySQL.Port"),
     ANALYSIS_AUTO_REFRESH("Analysis.AutoRefreshPeriod"),
+
     // String
     DEBUG("Plugin.Debug"),
     ALTERNATIVE_IP("Commands.AlternativeIP.Link"),
     DB_TYPE("Database.Type"),
+    DB_HOST("Database.MySQL.Host"),
+    DB_USER("Database.MySQL.User"),
+    DB_PASS("Database.MySQL.Password"),
+    DB_DATABASE("Database.MySQL.Database"),
     LOCALE("Plugin.Locale"),
     WEBSERVER_IP("WebServer.InternalIP"),
     ANALYSIS_EXPORT_PATH("Analysis.Export.DestinationFolder"),
@@ -89,6 +95,8 @@ public enum Settings {
     // Bungee
     BUNGEE_IP("Server.IP");
 
+    private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
+
     private final String configPath;
     private Boolean value;
 
@@ -106,6 +114,10 @@ public enum Settings {
             return value;
         }
         return getConfig().getBoolean(configPath);
+    }
+
+    public boolean isFalse() {
+        return !isTrue();
     }
 
     public void setValue(Boolean value) {
@@ -155,5 +167,13 @@ public enum Settings {
         } catch (IOException e) {
             throw new IllegalStateException("Config could not be loaded.", e);
         }
+    }
+
+    public static ServerSpecificSettings serverSpecific() {
+        if (!Compatibility.isBungeeAvailable()) {
+            throw new IllegalStateException("Not supposed to call this method on Bukkit");
+        }
+
+        return serverSpecificSettings;
     }
 }

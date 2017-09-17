@@ -11,8 +11,6 @@ import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
 import java.util.Map;
@@ -26,7 +24,7 @@ import java.util.UUID;
 public class PostHtmlWebAPI extends WebAPI {
 
     @Override
-    public Response onResponse(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(IPlan plugin, Map<String, String> variables) {
         try {
             String html = variables.get("html");
             String target = variables.get("target");
@@ -38,13 +36,13 @@ public class PostHtmlWebAPI extends WebAPI {
                     break;
                 case "analysisPage":
                     PageCache.loadPage("analysisPage:" + variables.get("sender"), () -> new AnalysisPageResponse(html));
+                    break;
                 default:
-                    String error = "Faulty Target";
-                    return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+                    return badRequest("Faulty Target");
             }
-            return PageCache.loadPage("success", SuccessResponse::new);
+            return success();
         } catch (NullPointerException e) {
-            return PageCache.loadPage(e.toString(), () -> new BadRequestResponse(e.toString()));
+            return badRequest(e.toString());
         }
     }
 

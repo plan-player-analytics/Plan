@@ -8,10 +8,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.api.SuccessResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
 import java.util.Map;
@@ -24,12 +21,11 @@ import java.util.UUID;
  */
 public class PostInspectPluginsTabWebAPI extends WebAPI {
     @Override
-    public Response onResponse(IPlan plugin, Map<String, String> variables) {
+    public Response onRequest(IPlan plugin, Map<String, String> variables) {
         String uuidS = variables.get("uuid");
         String sender = variables.get("sender");
         if (Verify.notNull(uuidS, sender)) {
-            String error = "uuid or sender not included";
-            return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+            return badRequest("uuid or sender not included");
         }
 
         UUID uuid = UUID.fromString(uuidS);
@@ -38,7 +34,7 @@ public class PostInspectPluginsTabWebAPI extends WebAPI {
 
         ((BungeeInformationManager) plugin.getInfoManager()).cachePluginsTabContent(serverUUID, uuid, html);
 
-        return PageCache.loadPage("success", SuccessResponse::new);
+        return success();
     }
 
     @Override

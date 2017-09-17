@@ -46,6 +46,7 @@ public class DevCommand extends SubCommand {
                 if (!webapi(args[1] + "webapi")) {
                     sender.sendMessage("[Plan] No such API / Exception occurred.");
                 }
+                break;
             case "web":
                 Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
                 String accessAddress = plugin.getWebServer().getAccessAddress();

@@ -1,11 +1,9 @@
 package main.java.com.djrapitops.plan.database.databases;
 
-import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import org.apache.commons.dbcp2.BasicDataSource;
-
-import java.io.IOException;
 
 /**
  * @author Rsl1122
@@ -26,24 +24,17 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     public void setupDataSource() throws DatabaseInitException {
-        IFileConfig config;
-        try {
-            config = plugin.getIConfig().getConfig();
-        } catch (IOException e) {
-            throw new DatabaseInitException("Failed to read config.", e);
-        }
-
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 
-        String host = config.getString("Database.MySQL.Host");
-        String port = config.getInt("Database.MySQL.Port").toString();
-        String database = config.getString("Database.MySQL.Database");
+        String host = Settings.DB_HOST.toString();
+        String port = Integer.toString(Settings.DB_PORT.getNumber());
+        String database = Settings.DB_DATABASE.toString();
 
         dataSource.setUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?rewriteBatchedStatements=true&useSSL=false");
 
-        String username = config.getString("Database.MySQL.User");
-        String password = config.getString("Database.MySQL.Password");
+        String username = Settings.DB_USER.toString();
+        String password = Settings.DB_PASS.toString();
 
         dataSource.setUsername(username);
         dataSource.setPassword(password);
