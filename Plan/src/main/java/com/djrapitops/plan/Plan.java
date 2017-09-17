@@ -158,16 +158,16 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
-            webServer.initServer();
-
-            if (!webServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized.");
-            }
 
             processingQueue = new ProcessingQueue();
 
             serverInfoManager = new ServerInfoManager(this);
             infoManager = new BukkitInformationManager(this);
+
+            webServer.initServer();
+            if (!webServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+            }
 
             Benchmark.stop("Enable", "WebServer Initialization");
 

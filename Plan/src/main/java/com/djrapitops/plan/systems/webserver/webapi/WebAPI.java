@@ -13,11 +13,14 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
+import javax.net.ssl.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +43,29 @@ public abstract class WebAPI {
         try {
             URL url = new URL(address + "/api/" + this.getClass().getSimpleName().toLowerCase());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            if (address.startsWith("https")) {
+                HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
+
+                // Disables unsigned certificate & hostname check, because we're trusting the user given certificate.
+
+                // This allows https connections internally to local ports.
+                httpsConn.setHostnameVerifier((hostname, session) -> true);
+
+                // This allows connecting to connections with invalid certificate
+                // Drawback: MitM attack possible between connections to servers that are not local.
+                // Scope: WebAPI transmissions
+                // Risk: Attacker sets up a server between Bungee and Bukkit WebServers
+                //       - Negotiates SSL Handshake with both servers
+                //       - Receives the SSL encrypted data, but decrypts it in the MitM server.
+                //       -> Access to valid ServerUUID for POST requests
+                //       -> Access to sending Html to the (Bungee) WebServer
+                // Mitigating factors:
+                // - If Server owner has access to all routing done on the domain (IP/Address)
+                // - If Direct IPs are used to transfer between servers
+                // Alternative solution: WebAPI run only on HTTP, HTTP can be read during transmission,
+                // would require running two WebServers when HTTPS is used.
+                httpsConn.setSSLSocketFactory(getRelaxedSocketFactory());
+            }
             connection.setConnectTimeout(10000);
             connection.setDoOutput(true);
             connection.setInstanceFollowRedirects(false);
@@ -78,7 +104,7 @@ public abstract class WebAPI {
             }
         } catch (SocketTimeoutException e) {
             throw new WebAPIConnectionFailException("Connection timed out after 10 seconds.", e);
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
             throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }
     }
@@ -90,4 +116,26 @@ public abstract class WebAPI {
     public Map<String, String> getVariables() {
         return variables;
     }
+
+    private SSLSocketFactory getRelaxedSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        return sc.getSocketFactory();
+    }
+
+    static TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    //No need to implement.
+                }
+
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    //No need to implement.
+                }
+            }
+    };
 }

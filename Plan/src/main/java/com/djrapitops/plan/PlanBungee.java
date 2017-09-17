@@ -72,6 +72,10 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
+
+            serverInfoManager = new ServerInfoManager(this);
+            infoManager = new BungeeInformationManager(this);
+
             webServer.initServer();
 
             if (!webServer.isEnabled()) {
@@ -79,9 +83,6 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
                 disablePlugin();
                 return;
             }
-
-            serverInfoManager = new ServerInfoManager(this);
-            infoManager = new BungeeInformationManager(this);
 
             registerListener(new BungeePlayerListener(this));
 

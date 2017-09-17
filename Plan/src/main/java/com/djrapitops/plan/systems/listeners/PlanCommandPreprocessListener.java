@@ -46,16 +46,19 @@ public class PlanCommandPreprocessListener implements Listener {
 
         String commandName = event.getMessage().substring(1).split(" ")[0].toLowerCase();
 
-        boolean doNotLogUnknownCommands = !Settings.LOG_UNKNOWN_COMMANDS.isTrue();
-        boolean combineCommandAliasesToMainCommand = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+        boolean logUnknownCommands = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
+        boolean combineCommandAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
 
-        if (doNotLogUnknownCommands || combineCommandAliasesToMainCommand) {
+        if (!logUnknownCommands || combineCommandAliases) {
             Command command = plugin.getServer().getPluginCommand(commandName);
             if (command == null) {
-                if (doNotLogUnknownCommands) {
+                command = plugin.getServer().getCommandMap().getCommand(commandName);
+            }
+            if (command == null) {
+                if (!logUnknownCommands) {
                     return;
                 }
-            } else if (combineCommandAliasesToMainCommand) {
+            } else if (combineCommandAliases) {
                 commandName = command.getName();
             }
         }
