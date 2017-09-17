@@ -4,9 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
-import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.ServerSpecificSettings;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -14,7 +12,6 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,41 +25,35 @@ public class ConfigurationWebAPI extends WebAPI {
 
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
+        if (!Compatibility.isBukkitAvailable()) {
+            return badRequest("Called a Bungee Server");
+        }
         if (Settings.BUNGEE_COPY_CONFIG.isFalse() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
             return success();
         }
-        String key = variables.get("configKey");
-
-        if (key == null) {
-            return badRequest("Config Key null");
-        }
-
-        String value = variables.get("configValue");
-
-        if (value == null) {
-            return badRequest("Config Value null");
-        }
-
-        if (value.equals("null")) {
-            value = null;
-        }
-
-        try {
-            IFileConfig config = plugin.getIConfig().getConfig();
-            config.set(key, value);
-            plugin.getIConfig().save();
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-
+        variables.remove("sender");
+        Settings.serverSpecific().updateSettings(plugin, variables);
         return success();
     }
 
-    public void addConfigValue(Settings setting, Object value) {
+    @Override
+    public void sendRequest(String address) throws WebAPIException {
+        throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
+    }
+
+    public void sendRequest(String address, UUID serverUUID, int newPort) throws WebAPIException {
+        setConfigValues(serverUUID, newPort);
+        for (Map.Entry<String, Object> entry : configValues.entrySet()) {
+            addVariable(entry.getKey(), entry.getValue().toString());
+        }
+        super.sendRequest(address);
+    }
+
+    private void addConfigValue(Settings setting, Object value) {
         configValues.put(setting.getPath(), value);
     }
 
-    public void setConfigValues(UUID serverUUID, int port) throws WebAPIException {
+    public void setConfigValues(UUID serverUUID, int newPort) throws WebAPIException {
         if (!Compatibility.isBungeeAvailable()) {
             throw new WebAPIException("Attempted to send config values from Bukkit to Bungee.");
         }
@@ -78,7 +69,7 @@ public class ConfigurationWebAPI extends WebAPI {
             addConfigValue(setting, setting.toString());
         }
         addConfigValue(Settings.DB_PORT, Settings.DB_PORT.getNumber());
-        addConfigValue(Settings.WEBSERVER_PORT, port);
+        addConfigValue(Settings.WEBSERVER_PORT, newPort);
         addServerSpecificValues(serverUUID);
     }
 
