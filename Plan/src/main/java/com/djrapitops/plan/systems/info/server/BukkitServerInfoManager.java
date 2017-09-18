@@ -6,10 +6,8 @@ package main.java.com.djrapitops.plan.systems.info.server;
 
 
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
@@ -26,14 +24,14 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class ServerInfoManager {
+public class BukkitServerInfoManager {
 
-    private final IPlan plugin;
+    private final Plan plugin;
     private ServerInfo serverInfo;
     private ServerInfoFile serverInfoFile;
     private final ServerTable serverTable;
 
-    public ServerInfoManager(Plan plugin) throws PlanEnableException {
+    public BukkitServerInfoManager(Plan plugin) throws PlanEnableException {
         this.plugin = plugin;
         Database db = plugin.getDB();
         serverTable = db.getServerTable();
@@ -57,11 +55,6 @@ public class ServerInfoManager {
         } catch (IOException e) {
             throw new PlanEnableException("Failed to write to ServerInfoFile.yml", e);
         }
-    }
-
-    public ServerInfoManager(PlanBungee plugin) throws PlanEnableException {
-        this.plugin = plugin;
-        serverTable = plugin.getDB().getServerTable();
     }
 
     private void updateDbInfo(UUID serverUUID) throws SQLException, IOException {

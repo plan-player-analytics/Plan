@@ -4,11 +4,14 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.universal;
 
+import com.djrapitops.plugin.utilities.Compatibility;
+import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Fuzzlemann
@@ -16,6 +19,9 @@ import java.util.Map;
 public class PingWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
+        if (Compatibility.isBungeeAvailable()) {
+            ((PlanBungee) plugin).getServerInfoManager().serverConnected(UUID.fromString(variables.get("sender")));
+        }
         return success();
     }
 }

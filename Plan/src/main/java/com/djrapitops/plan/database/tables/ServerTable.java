@@ -343,4 +343,28 @@ public class ServerTable extends Table {
             close(set, statement);
         }
     }
+
+    public Optional<ServerInfo> getServerInfo(UUID serverUUID) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement(Select.from(tableName, "*")
+                    .where(columnServerUUID + "=?")
+                    .toString());
+            statement.setString(1, serverUUID.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                return Optional.of(new ServerInfo(
+                        set.getInt(columnServerID),
+                        UUID.fromString(set.getString(columnServerUUID)),
+                        set.getString(columnServerName),
+                        set.getString(columnWebserverAddress),
+                        set.getInt(columnMaxPlayers)));
+            }
+            return Optional.empty();
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

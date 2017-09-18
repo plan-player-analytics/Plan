@@ -27,6 +27,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
@@ -37,6 +38,19 @@ public abstract class WebAPI {
 
     public WebAPI() {
         this.variables = new HashMap<>();
+    }
+
+    public Response processRequest(IPlan plugin, Map<String, String> variables) {
+        String sender = variables.get("sender");
+        if (sender == null) {
+            return badRequest("Sender not present");
+        }
+        try {
+            UUID.fromString(sender);
+        } catch (Exception e) {
+            return badRequest("Faulty Sender value");
+        }
+        return onRequest(plugin, variables);
     }
 
     public abstract Response onRequest(IPlan plugin, Map<String, String> variables);
@@ -78,7 +92,7 @@ public abstract class WebAPI {
             connection.setRequestProperty("charset", "ISO-8859-1");
 
             StringBuilder parameters = new StringBuilder();
-            String serverUUID = MiscUtils.getIPlan().getServerInfoManager().getServerUUID().toString();
+            String serverUUID = MiscUtils.getIPlan().getServerUuid().toString();
             parameters.append("sender=").append(serverUUID).append("&");
             for (Map.Entry<String, String> entry : variables.entrySet()) {
                 parameters.append("&").append(entry.getKey()).append(entry.getValue());
@@ -146,6 +160,7 @@ public abstract class WebAPI {
     protected Response success() {
         return PageCache.loadPage("success", SuccessResponse::new);
     }
+
     protected Response fail(String reason) {
         return PageCache.loadPage("fail", () -> new NotFoundResponse(reason));
     }

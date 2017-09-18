@@ -80,7 +80,7 @@ public class APIResponseHandler {
         Log.debug(request.toString());
         Log.debug(requestBody);
 
-        Response response = api.onRequest(Plan.getInstance(), variables);
+        Response response = api.processRequest(Plan.getInstance(), variables);
 
         Log.debug(response.toString());
 

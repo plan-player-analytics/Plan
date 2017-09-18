@@ -14,7 +14,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
+import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
@@ -35,7 +35,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
     private WebServer webServer;
     private Database db;
-    private ServerInfoManager serverInfoManager;
+    private BungeeServerInfoManager serverInfoManager;
     private InformationManager infoManager;
     private ServerVariableHolder variableHolder;
 
@@ -73,7 +73,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
 
-            serverInfoManager = new ServerInfoManager(this);
+            serverInfoManager = new BungeeServerInfoManager(this);
             infoManager = new BungeeInformationManager(this);
 
             webServer.initServer();
@@ -119,8 +119,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
         return db;
     }
 
-    @Override
-    public ServerInfoManager getServerInfoManager() {
+    public BungeeServerInfoManager getServerInfoManager() {
         return serverInfoManager;
     }
 
@@ -158,6 +157,10 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     }
 
     public static UUID getServerUUID() {
-        return getInstance().serverInfoManager.getServerUUID();
+        return getInstance().getServerUuid();
+    }
+
+    public UUID getServerUuid() {
+        return serverInfoManager.getServerUUID();
     }
 }

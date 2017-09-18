@@ -92,9 +92,9 @@ public abstract class Importer {
             return;
         }
 
-        Plan plan = Plan.getInstance();
-        UUID uuid = plan.getServerInfoManager().getServerUUID();
-        Database db = plan.getDB();
+        Plan plugin = Plan.getInstance();
+        UUID uuid = plugin.getServerInfoManager().getServerUUID();
+        Database db = plugin.getDB();
 
         ExecutorService service = Executors.newCachedThreadPool();
 
@@ -144,13 +144,13 @@ public abstract class Importer {
             return;
         }
 
-        Plan plan = Plan.getInstance();
+        Plan plugin = Plan.getInstance();
 
-        UserImportRefiner userImportRefiner = new UserImportRefiner(plan, userImportData);
+        UserImportRefiner userImportRefiner = new UserImportRefiner(plugin, userImportData);
         userImportData = userImportRefiner.refineData();
 
-        UUID serverUUID = plan.getServerInfoManager().getServerUUID();
-        Database db = plan.getDB();
+        UUID serverUUID = plugin.getServerInfoManager().getServerUUID();
+        Database db = plugin.getDB();
 
         Set<UUID> existingUUIDs = db.getSavedUUIDs();
         Set<UUID> existingUserInfoTableUUIDs = db.getUserInfoTable().getSavedUUIDs().get(serverUUID);

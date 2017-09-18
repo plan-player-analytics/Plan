@@ -9,7 +9,6 @@ import com.djrapitops.plugin.config.IConfig;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
@@ -17,6 +16,7 @@ import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * Abstraction interface for both Plan and PlanBungee.
@@ -28,7 +28,7 @@ public interface IPlan extends IPlugin {
 
     ServerVariableHolder getVariable();
 
-    ServerInfoManager getServerInfoManager();
+    UUID getServerUuid();
 
     InformationManager getInfoManager();
 

@@ -15,7 +15,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.locale.Locale;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
+import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -123,10 +123,10 @@ public class TestInit {
         when(planMock.benchmark()).thenReturn(bench);
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.fetch()).thenReturn(fetch);
-        ServerInfoManager serverInfoManager = PowerMockito.mock(ServerInfoManager.class);
+        BukkitServerInfoManager bukkitServerInfoManager = PowerMockito.mock(BukkitServerInfoManager.class);
 
-        when(serverInfoManager.getServerUUID()).thenReturn(serverUUID);
-        when(planMock.getServerInfoManager()).thenReturn(serverInfoManager);
+        when(bukkitServerInfoManager.getServerUUID()).thenReturn(serverUUID);
+        when(planMock.getServerInfoManager()).thenReturn(bukkitServerInfoManager);
         RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
         when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);

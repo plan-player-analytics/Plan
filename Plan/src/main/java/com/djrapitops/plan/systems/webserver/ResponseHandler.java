@@ -57,7 +57,7 @@ public class ResponseHandler extends APIResponseHandler {
                 return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(fileName));
             }
 
-            UUID serverUUID = MiscUtils.getIPlan().getServerInfoManager().getServerUUID();
+            UUID serverUUID = MiscUtils.getIPlan().getServerUuid();
 
             if (usingHttps) {
                 if (!request.hasAuth()) {

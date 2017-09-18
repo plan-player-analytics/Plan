@@ -41,7 +41,7 @@ import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.info.server.ServerInfoManager;
+import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
@@ -80,7 +80,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     private WebServer webServer;
 
     private InformationManager infoManager;
-    private ServerInfoManager serverInfoManager;
+    private BukkitServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
     private TPSCountTimer tpsCountTimer;
@@ -112,7 +112,11 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     }
 
     public static UUID getServerUUID() {
-        return getInstance().getServerInfoManager().getServerUUID();
+        return getInstance().getServerUuid();
+    }
+
+    public UUID getServerUuid() {
+        return serverInfoManager.getServerUUID();
     }
 
     /**
@@ -161,7 +165,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             processingQueue = new ProcessingQueue();
 
-            serverInfoManager = new ServerInfoManager(this);
+            serverInfoManager = new BukkitServerInfoManager(this);
             infoManager = new BukkitInformationManager(this);
 
             webServer.initServer();
@@ -402,10 +406,10 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     /**
      * Used to get the object storing server info
      *
-     * @return ServerInfoManager
-     * @see ServerInfoManager
+     * @return BukkitServerInfoManager
+     * @see BukkitServerInfoManager
      */
-    public ServerInfoManager getServerInfoManager() {
+    public BukkitServerInfoManager getServerInfoManager() {
         return serverInfoManager;
     }
 
