@@ -4,7 +4,9 @@
  */
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.plugin.config.IConfig;
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.IPlan;
 
 import java.io.IOException;
@@ -48,7 +50,81 @@ public class ServerSpecificSettings {
         }
     }
 
+    private String getPath(UUID serverUUID, Settings setting) {
+        String path = "Servers." + serverUUID;
+        switch (setting) {
+            case WEBSERVER_PORT:
+                path += ".WebServerPort";
+                break;
+            case SERVER_NAME:
+                path += ".ServerName";
+                break;
+            case THEME_BASE:
+                path += ".ThemeBase";
+                break;
+            default:
+                break;
+        }
+        return path;
+    }
+
     public Object get(UUID serverUUID, Settings setting) {
+        try {
+            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
+            String path = getPath(serverUUID, setting);
+            String value = config.getString(path);
+            try {
+                return Boolean.parseBoolean(value);
+            } catch (Exception e) {
+                if (Verify.isEmpty(value)) {
+                    return config.getInt(value);
+                }
+                return value;
+            }
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
         return null;
+    }
+
+    public boolean getBoolean(UUID serverUUID, Settings setting) {
+        try {
+            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
+            String path = getPath(serverUUID, setting);
+            return config.getBoolean(path);
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return false;
+    }
+
+    public String getString(UUID serverUUID, Settings setting) {
+        try {
+            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
+            String path = getPath(serverUUID, setting);
+            return config.getString(path);
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return null;
+    }
+
+    public Integer getInt(UUID serverUUID, Settings setting) {
+        try {
+            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
+            String path = getPath(serverUUID, setting);
+            return config.getInt(path);
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return null;
+    }
+
+    public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
+        IConfig iConfig = PlanBungee.getInstance().getIConfig();
+        IFileConfig config = iConfig.getConfig();
+        String path = getPath(serverUUID, setting);
+        config.set(path, value);
+        iConfig.save();
     }
 }

@@ -69,14 +69,13 @@ public class ConfigurationWebAPI extends WebAPI {
             addConfigValue(setting, setting.toString());
         }
         addConfigValue(Settings.DB_PORT, Settings.DB_PORT.getNumber());
-        addConfigValue(Settings.WEBSERVER_PORT, newPort);
         addServerSpecificValues(serverUUID);
     }
 
     private void addServerSpecificValues(UUID serverUUID) {
         ServerSpecificSettings settings = Settings.serverSpecific();
-        addConfigValue(Settings.THEME_BASE, settings.get(serverUUID, Settings.THEME_BASE));
-        addConfigValue(Settings.WEBSERVER_PORT, settings.get(serverUUID, Settings.WEBSERVER_PORT));
-        addConfigValue(Settings.SERVER_NAME, settings.get(serverUUID, Settings.SERVER_NAME));
+        addConfigValue(Settings.THEME_BASE, settings.getString(serverUUID, Settings.THEME_BASE));
+        addConfigValue(Settings.WEBSERVER_PORT, settings.getInt(serverUUID, Settings.WEBSERVER_PORT));
+        addConfigValue(Settings.SERVER_NAME, settings.getString(serverUUID, Settings.SERVER_NAME));
     }
 }

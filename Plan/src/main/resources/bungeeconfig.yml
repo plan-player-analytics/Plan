@@ -86,8 +86,6 @@ Theme:
     PunchCard: Base
     PlayersOnline: Base
     TPS:
-      High-Threshold: 18
-      Medium-Threshold: 10
       High: Base
       Medium: Base
       Low: Base
@@ -95,3 +93,9 @@ Theme:
     RAM: Base
     Chunks: Base
     Entities: Base
+
+Servers:
+  Example:
+    WebServerPort: 8034
+    ServerName: Example
+    ThemeBase: Default
