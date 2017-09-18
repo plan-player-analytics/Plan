@@ -60,8 +60,7 @@ public class WebServer {
         webAPI.registerNewAPI(new AnalyzeWebAPI());
         webAPI.registerNewAPI(new ConfigurationWebAPI());
         webAPI.registerNewAPI(new InspectWebAPI());
-        webAPI.registerNewAPI(new GetOnlinePlayersWebAPI());
-        webAPI.registerNewAPI(new GetMaxPlayersWebAPI());
+        webAPI.registerNewAPI(new IsOnlineWebAPI());
         webAPI.registerNewAPI(new PingWebAPI());
         webAPI.registerNewAPI(new RequestInspectPluginsTabBukkitWebAPI());
 

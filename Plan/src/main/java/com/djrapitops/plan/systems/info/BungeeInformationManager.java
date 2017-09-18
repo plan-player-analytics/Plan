@@ -8,18 +8,18 @@ import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.IsOnlineWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,6 +80,21 @@ public class BungeeInformationManager extends InformationManager {
         // TODO Request Inspect from server where the player is online or any if offline
 //        PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
         getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequestsToBukkitServers(plugin, uuid);
+    }
+
+    public ServerInfo getInspectRequestProcessorServer(UUID uuid) throws SQLException {
+        List<ServerInfo> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
+        for (ServerInfo server : bukkitServers) {
+            try {
+                getWebAPI().getAPI(IsOnlineWebAPI.class).sendRequest(server.getWebAddress());
+                return server;
+            } catch (WebAPINotFoundException e) {
+                    /*continue*/
+            } catch (WebAPIException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+        }
+        return bukkitServers.get(new Random().nextInt(bukkitServers.size()));
     }
 
     @Override
