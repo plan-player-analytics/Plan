@@ -88,7 +88,7 @@ public class ResponseHandler extends APIResponseHandler {
                 case "server":
                     if (args.length > 2) {
                         try {
-                            Optional<UUID> serverUUIDOptional = plugin.getDB().getServerTable().getServerUUID(args[2]);
+                            Optional<UUID> serverUUIDOptional = plugin.getDB().getServerTable().getServerUUID(args[2].replace("%20", " "));
                             if (serverUUIDOptional.isPresent()) {
                                 serverUUID = serverUUIDOptional.get();
                             }
@@ -195,7 +195,7 @@ public class ResponseHandler extends APIResponseHandler {
             PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
         }
 
-        return PageCache.loadPage("analysisPage", () -> new AnalysisPageResponse(plugin.getInfoManager()));
+        return PageCache.loadPage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(plugin.getInfoManager()));
     }
 
     private Response playerResponse(String[] args) {

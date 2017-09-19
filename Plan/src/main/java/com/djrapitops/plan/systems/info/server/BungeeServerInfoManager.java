@@ -83,8 +83,9 @@ public class BungeeServerInfoManager {
             return;
         }
         try {
-            Log.info("Attempting to connect to Bukkit server.. (" + server.getWebAddress() + ")");
-            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(server.getWebAddress());
+            String webAddress = server.getWebAddress();
+            Log.info("Attempting to connect to Bukkit server.. (" + webAddress + ")");
+            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(webAddress);
             connectedToServer(server);
         } catch (WebAPIException e) {
             serverHasGoneOffline(server.getUuid());
@@ -92,7 +93,7 @@ public class BungeeServerInfoManager {
     }
 
     public void connectedToServer(ServerInfo server) {
-        Log.info("Connection to Bukkit (" + server.getWebAddress() + ") succeeded.");
+        Log.info("Connection to Bukkit (" + server.getWebAddress() + ") OK");
         bukkitServers.put(server.getUuid(), server);
         onlineServers.add(server.getUuid());
     }

@@ -32,10 +32,10 @@ public class PostHtmlWebAPI extends WebAPI {
             switch (target) {
                 case "inspectPage":
                     String uuid = variables.get("uuid");
-                    PageCache.loadPage("inspectPage:" + uuid, () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), html));
+                    PageCache.cachePage("inspectPage:" + uuid, () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), html));
                     break;
                 case "analysisPage":
-                    PageCache.loadPage("analysisPage:" + variables.get("sender"), () -> new AnalysisPageResponse(html));
+                    PageCache.cachePage("analysisPage:" + variables.get("sender"), () -> new AnalysisPageResponse(html));
                     break;
                 default:
                     return badRequest("Faulty Target");

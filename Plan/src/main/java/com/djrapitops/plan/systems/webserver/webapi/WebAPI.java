@@ -90,6 +90,7 @@ public abstract class WebAPI {
             connection.setInstanceFollowRedirects(false);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
             connection.setRequestProperty("charset", "ISO-8859-1");
 
             StringBuilder parameters = new StringBuilder();
@@ -98,10 +99,14 @@ public abstract class WebAPI {
             for (Map.Entry<String, String> entry : variables.entrySet()) {
                 parameters.append("&").append(entry.getKey()).append("=").append(entry.getValue());
             }
-            byte[] toSend = parameters.toString().getBytes();
+            String params = parameters.toString();
+
+            connection.setRequestProperty("Content-Length", Integer.toString(params.length()));
+
+            byte[] toSend = params.getBytes();
             int length = toSend.length;
 
-            connection.setRequestProperty("Content-Length", Integer.toString(length));
+//            connection.setRequestProperty("Content-Length", Integer.toString(length));
 
             connection.setUseCaches(false);
             Log.debug("Sending WebAPI Request: " + this.getClass().getSimpleName() + " to " + address);

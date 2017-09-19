@@ -12,6 +12,9 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
@@ -111,7 +114,11 @@ public class BungeeInformationManager extends InformationManager {
             }
         }
 
-        return bukkitServers.stream().findAny().get();
+        Optional<ServerInfo> bukkitServer = bukkitServers.stream().findAny();
+        if (bukkitServer.isPresent()) {
+            return bukkitServer.get();
+        }
+        throw new IllegalStateException("No Bukkit servers online");
     }
 
     @Override
@@ -143,12 +150,17 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public String getPlayerHtml(UUID uuid) {
-        return null;
+        Response response = PageCache.loadPage("inspectPage:" + uuid,
+                () -> new NotFoundResponse("No Bukkit Servers were online to process this request"));
+        if (response instanceof InspectPageResponse) {
+            ((InspectPageResponse) response).setInspectPagePluginsTab(pluginsTabContent.get(uuid));
+        }
+        return response.getContent();
     }
 
     @Override
     public String getAnalysisHtml() {
-        return null;
+        return new NotFoundResponse("Network page not yet created").getContent();
     }
 
     @Override

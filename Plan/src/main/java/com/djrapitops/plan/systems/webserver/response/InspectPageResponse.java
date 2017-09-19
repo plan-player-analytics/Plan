@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.systems.webserver.response;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -32,5 +33,9 @@ public class InspectPageResponse extends Response {
             setContent(getContent().replace("${tabContentPlugins}", inspectPagePluginsTab));
         }
         this.inspectPagePluginsTab = inspectPagePluginsTab;
+    }
+
+    public void setInspectPagePluginsTab(Map<UUID, String> uuidStringMap) {
+        // TODO
     }
 }

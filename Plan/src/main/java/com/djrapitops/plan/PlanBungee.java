@@ -102,10 +102,12 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
     @Override
     public void onDisable() {
-        List<Processor> processors = processingQueue.stopAndReturnLeftovers();
-        Log.info("Processing unprocessed processors. (" + processors.size() + ")");
-        for (Processor processor : processors) {
-            processor.process();
+        if (processingQueue != null) {
+            List<Processor> processors = processingQueue.stopAndReturnLeftovers();
+            Log.info("Processing unprocessed processors. (" + processors.size() + ")");
+            for (Processor processor : processors) {
+                processor.process();
+            }
         }
         Log.info(Locale.get(Msg.DISABLED).toString());
     }

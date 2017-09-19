@@ -89,9 +89,9 @@ public class WebServer {
                 Log.infoColor("§eUser Authorization Disabled! (Not possible over http)");
                 server = HttpServer.create(new InetSocketAddress(port), 10);
             }
-
             if (plugin.getInfoManager().isUsingAnotherWebServer()) {
                 server.createContext("/", new APIRequestHandler(getWebAPI()));
+                Log.infoColor("§aWebServer Running in WebAPI-only Mode");
             } else {
                 server.createContext("/", new RequestHandler(plugin, this));
             }

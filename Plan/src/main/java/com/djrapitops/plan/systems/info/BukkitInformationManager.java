@@ -160,7 +160,7 @@ public class BukkitInformationManager extends InformationManager {
                 Log.toLog(this.getClass().getName(), e);
             }
         }
-        return PageCache.isCached("analysisPage");
+        return PageCache.isCached("analysisPage:" + serverUUID);
     }
 
     private WebAPIManager getWebAPI() {
@@ -208,7 +208,7 @@ public class BukkitInformationManager extends InformationManager {
                 Log.toLog(this.getClass().getName(), e);
             }
         } else {
-            PageCache.cachePage("analysisPage", () -> new AnalysisPageResponse(this));
+            PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(this));
         }
     }
 
@@ -222,7 +222,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean attemptConnection() {
-        Log.info("Attempting Bungee Connection.. ("+webServerAddress+")");
+        Log.info("Attempting Bungee Connection.. (" + webServerAddress + ")");
         PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
         try {
             api.sendRequest(webServerAddress);

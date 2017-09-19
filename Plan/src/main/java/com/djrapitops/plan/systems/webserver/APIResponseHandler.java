@@ -5,9 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.systems.webserver.response.ForbiddenResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
@@ -41,6 +39,13 @@ public class APIResponseHandler {
     Response getAPIResponse(Request request) throws IOException {
         String target = request.getTarget();
         String[] args = target.split("/");
+
+        if ("/favicon.ico".equals(target)) {
+            return PageCache.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
+        }
+        if (target.endsWith(".css")) {
+            return PageCache.loadPage(target + "css", () -> new CSSResponse("main.css"));
+        }
 
         if (args.length < 2 || !"api".equals(args[1])) {
             String address = MiscUtils.getIPlan().getInfoManager().getWebServerAddress() + target;
@@ -84,9 +89,6 @@ public class APIResponseHandler {
             String error = "API Method not found";
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
-
-        Log.debug(request.toString());
-        Log.debug(requestBody);
 
         Response response = api.processRequest(MiscUtils.getIPlan(), variables);
 
