@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -26,9 +27,11 @@ public class APIRequestHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        Headers responseHeaders = exchange.getResponseHeaders();
         Request request = new Request(exchange);
         try {
             Response response = responseHandler.getAPIResponse(request);
+            response.setResponseHeaders(responseHeaders);
             response.send(exchange);
         } finally {
             exchange.close();

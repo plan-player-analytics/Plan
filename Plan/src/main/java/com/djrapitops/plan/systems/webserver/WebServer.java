@@ -90,7 +90,7 @@ public class WebServer {
                 server = HttpServer.create(new InetSocketAddress(port), 10);
             }
 
-            if (plugin.getInfoManager().isUsingBungeeWebServer()) {
+            if (plugin.getInfoManager().isUsingAnotherWebServer()) {
                 server.createContext("/", new APIRequestHandler(getWebAPI()));
             } else {
                 server.createContext("/", new RequestHandler(plugin, this));

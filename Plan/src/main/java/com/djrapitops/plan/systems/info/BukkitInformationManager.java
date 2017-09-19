@@ -64,9 +64,9 @@ public class BukkitInformationManager extends InformationManager {
         Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
         if (bungeeConnectionAddress.isPresent()) {
             webServerAddress = bungeeConnectionAddress.get();
-            usingBungeeWebServer = attemptConnection();
+            usingAnotherWebServer = attemptConnection();
         } else {
-            usingBungeeWebServer = false;
+            usingAnotherWebServer = false;
         }
 
     }
@@ -79,7 +79,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public void cachePlayer(UUID uuid) {
-        if (usingBungeeWebServer) {
+        if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
             } catch (WebAPIException e) {
@@ -101,7 +101,7 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     public void cacheInspectPluginsTab(UUID uuid, Class origin) {
-        if (usingBungeeWebServer && !origin.equals(RequestInspectPluginsTabBukkitWebAPI.class)) {
+        if (usingAnotherWebServer && !origin.equals(RequestInspectPluginsTabBukkitWebAPI.class)) {
             try {
                 getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequest(webServerAddress, uuid);
             } catch (WebAPIException e) {
@@ -118,7 +118,7 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     public void cacheInspectPluginsTab(UUID uuid, String contents) {
-        if (usingBungeeWebServer) {
+        if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
             } catch (WebAPIException e) {
@@ -141,7 +141,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean isCached(UUID uuid) {
-        if (usingBungeeWebServer) {
+        if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isInspectCached(webServerAddress, uuid);
             } catch (WebAPIException e) {
@@ -153,7 +153,7 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean isAnalysisCached(UUID serverUUID) {
-        if (usingBungeeWebServer) {
+        if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
             } catch (WebAPIException e) {
@@ -201,7 +201,7 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     private void cacheAnalysisHtml() {
-        if (usingBungeeWebServer) {
+        if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, getAnalysisHtml());
             } catch (WebAPIException e) {
@@ -222,15 +222,18 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean attemptConnection() {
+        Log.info("Attempting Bungee Connection.. ("+webServerAddress+")");
         PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
         try {
             api.sendRequest(webServerAddress);
+            Log.info("Bungee Connection OK");
             return true;
         } catch (WebAPIConnectionFailException e) {
             plugin.getServerInfoManager().markConnectionFail();
         } catch (WebAPIException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        Log.info("Bungee Connection Failed.");
         return false;
     }
 

@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.webapi;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
@@ -95,7 +96,7 @@ public abstract class WebAPI {
             String serverUUID = MiscUtils.getIPlan().getServerUuid().toString();
             parameters.append("sender=").append(serverUUID).append("&");
             for (Map.Entry<String, String> entry : variables.entrySet()) {
-                parameters.append("&").append(entry.getKey()).append(entry.getValue());
+                parameters.append("&").append(entry.getKey()).append("=").append(entry.getValue());
             }
             byte[] toSend = parameters.toString().getBytes();
             int length = toSend.length;
@@ -103,6 +104,7 @@ public abstract class WebAPI {
             connection.setRequestProperty("Content-Length", Integer.toString(length));
 
             connection.setUseCaches(false);
+            Log.debug("Sending WebAPI Request: " + this.getClass().getSimpleName() + " to " + address);
             try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
                 out.write(toSend);
             }
@@ -123,6 +125,7 @@ public abstract class WebAPI {
         } catch (SocketTimeoutException e) {
             throw new WebAPIConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            Log.toLog(this.getClass().getName(), e);
             throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }
     }

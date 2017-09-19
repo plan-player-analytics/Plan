@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.file;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
@@ -28,7 +27,7 @@ public class FileUtil {
         InputStream resourceStream = null;
         Scanner scanner = null;
         try {
-            Plan plugin = Plan.getInstance();
+            IPlan plugin = MiscUtils.getIPlan();
             File localFile = new File(plugin.getDataFolder(), fileName);
 
             if (localFile.exists()) {

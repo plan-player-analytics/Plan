@@ -180,7 +180,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             this.api = new API(this);
 
-            boolean usingBungeeWebServer = infoManager.isUsingBungeeWebServer();
+            boolean usingBungeeWebServer = infoManager.isUsingAnotherWebServer();
             boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
             if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {

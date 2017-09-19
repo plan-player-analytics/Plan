@@ -43,14 +43,14 @@ public class DevCommand extends SubCommand {
                 if (!Check.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
                     break;
                 }
-                if (!webapi(args[1] + "webapi")) {
+                if (!webapi(args[1] + "webapi", args.length >= 3)) {
                     sender.sendMessage("[Plan] No such API / Exception occurred.");
                 }
                 break;
             case "web":
                 Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
                 String accessAddress = plugin.getWebServer().getAccessAddress();
-                sender.sendMessage((plugin.getInfoManager().isUsingBungeeWebServer() && bungeeConnectionAddress.isPresent())
+                sender.sendMessage((plugin.getInfoManager().isUsingAnotherWebServer() && bungeeConnectionAddress.isPresent())
                         ? "Bungee: " + bungeeConnectionAddress.get() : "Local: " + accessAddress);
                 break;
             default:
@@ -59,16 +59,23 @@ public class DevCommand extends SubCommand {
         return true;
     }
 
-    private boolean webapi(String method) {
+    private boolean webapi(String method, boolean connectToBungee) {
         WebAPI api = plugin.getWebServer().getWebAPI().getAPI(method);
         if (api == null) {
             return false;
         }
         try {
+            String address = plugin.getWebServer().getAccessAddress();
+            if (connectToBungee) {
+                Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
+                if (bungeeConnectionAddress.isPresent()) {
+                    address = bungeeConnectionAddress.get();
+                }
+            }
             if (api instanceof InspectWebAPI) {
-                ((InspectWebAPI) api).sendRequest(plugin.getWebServer().getAccessAddress(), UUID.randomUUID());
+                ((InspectWebAPI) api).sendRequest(address, UUID.randomUUID());
             } else {
-                api.sendRequest(plugin.getWebServer().getAccessAddress());
+                api.sendRequest(address);
             }
             return true;
         } catch (WebAPIException e) {

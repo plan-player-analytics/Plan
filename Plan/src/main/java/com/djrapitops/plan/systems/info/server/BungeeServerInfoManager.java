@@ -79,9 +79,11 @@ public class BungeeServerInfoManager {
 
     public void attemptConnection(ServerInfo server) {
         if (server == null) {
+            Log.debug("Attempted a connection to a null ServerInfo");
             return;
         }
         try {
+            Log.info("Attempting to connect to Bukkit server.. (" + server.getWebAddress() + ")");
             plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(server.getWebAddress());
             connectedToServer(server);
         } catch (WebAPIException e) {
@@ -90,14 +92,20 @@ public class BungeeServerInfoManager {
     }
 
     public void connectedToServer(ServerInfo server) {
+        Log.info("Connection to Bukkit (" + server.getWebAddress() + ") succeeded.");
         bukkitServers.put(server.getUuid(), server);
         onlineServers.add(server.getUuid());
     }
 
     public void serverConnected(UUID serverUUID) {
+        Log.info("Received a connection from a Bukkit server..");
         try {
             Optional<ServerInfo> serverInfo = db.getServerTable().getServerInfo(serverUUID);
-            serverInfo.ifPresent(this::attemptConnection);
+            serverInfo.ifPresent(server -> {
+                        Log.info("Server Info found from DB: " + server.getName());
+                        attemptConnection(server);
+                    }
+            );
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -115,6 +123,7 @@ public class BungeeServerInfoManager {
     }
 
     public void serverHasGoneOffline(UUID serverUUID) {
+        Log.info("Bukkit Server Marked Offline");
         onlineServers.remove(serverUUID);
     }
 }

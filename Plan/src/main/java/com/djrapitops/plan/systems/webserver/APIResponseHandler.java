@@ -68,7 +68,7 @@ public class APIResponseHandler {
 
         Map<String, String> variables = readVariables(requestBody);
         String sender = variables.get("sender");
-
+        Log.debug("Received WebAPI Request" + target + " from " + sender);
         if (!checkKey(sender)) {
             String error = "Server Key not given or invalid";
             return PageCache.loadPage(error, () -> {

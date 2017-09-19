@@ -22,7 +22,7 @@ import java.util.UUID;
  * @author Rsl1122
  */
 public abstract class InformationManager {
-    boolean usingBungeeWebServer;
+    boolean usingAnotherWebServer;
     String webServerAddress;
     Set<ISender> analysisNotification;
 
@@ -76,8 +76,8 @@ public abstract class InformationManager {
 
     public abstract String getPluginsTabContent(UUID uuid);
 
-    public boolean isUsingBungeeWebServer() {
-        return usingBungeeWebServer;
+    public boolean isUsingAnotherWebServer() {
+        return usingAnotherWebServer;
     }
 
     public abstract String getWebServerAddress();

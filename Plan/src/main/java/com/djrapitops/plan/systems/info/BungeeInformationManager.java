@@ -37,7 +37,7 @@ public class BungeeInformationManager extends InformationManager {
     private Map<UUID, Map<UUID, String>> pluginsTabContent;
 
     public BungeeInformationManager(PlanBungee plugin) throws SQLException {
-        usingBungeeWebServer = true;
+        usingAnotherWebServer = false;
         pluginsTabContent = new HashMap<>();
         this.plugin = plugin;
         refreshBukkitServerMap();

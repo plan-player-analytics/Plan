@@ -74,6 +74,8 @@ public class ResponseHandler extends APIResponseHandler {
                 if (args.length < 2) {
                     return rootPageResponse(user, serverUUID);
                 }
+            } else if (args.length < 2) {
+                return notFoundResponse();
             }
 
             String page = args[1];
