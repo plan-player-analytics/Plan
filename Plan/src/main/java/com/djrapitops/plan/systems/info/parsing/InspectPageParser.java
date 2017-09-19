@@ -35,7 +35,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * Used for parsing Inspect page out of database data and the html.
  *
  * @author Rsl1122
  */

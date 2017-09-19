@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.Plan;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Ends a session and saves it to the database.
  *
  * @author Rsl1122
  */

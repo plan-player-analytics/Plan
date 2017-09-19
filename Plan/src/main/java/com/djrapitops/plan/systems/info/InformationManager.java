@@ -15,7 +15,9 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstract layer for Bukkit and Bungee Information managers.
+ * <p>
+ * Manages analysis notification sending.
  *
  * @author Rsl1122
  */
@@ -77,4 +79,6 @@ public abstract class InformationManager {
     public boolean isUsingBungeeWebServer() {
         return usingBungeeWebServer;
     }
+
+    public abstract String getWebServerAddress();
 }

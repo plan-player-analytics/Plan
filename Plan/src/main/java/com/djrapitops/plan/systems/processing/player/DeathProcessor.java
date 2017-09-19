@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * // TODO Write Javadoc Class Description
+ * Updates death count of the current session.
  *
  * @author Rsl1122
  * @since 4.0.0

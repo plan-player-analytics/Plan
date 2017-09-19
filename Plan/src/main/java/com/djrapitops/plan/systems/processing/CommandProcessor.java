@@ -10,7 +10,7 @@ import main.java.com.djrapitops.plan.Plan;
 import java.sql.SQLException;
 
 /**
- * //TODO Class Javadoc Comment
+ * Updates Command usage amount in the database.
  *
  * @author Rsl1122
  */

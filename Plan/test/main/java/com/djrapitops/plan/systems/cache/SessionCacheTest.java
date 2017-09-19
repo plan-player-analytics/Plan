@@ -10,11 +10,6 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * //TODO Class Javadoc Comment
- *
- * @author Rsl1122
- */
 public class SessionCacheTest {
 
     private final UUID uuid = MockUtils.getPlayerUUID();

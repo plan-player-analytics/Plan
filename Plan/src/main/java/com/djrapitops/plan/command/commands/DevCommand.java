@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Command used for testing functions that are too difficult to unit test.
  *
  * @author Rsl1122
  */

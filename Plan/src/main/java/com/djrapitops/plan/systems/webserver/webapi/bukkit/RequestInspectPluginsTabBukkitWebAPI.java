@@ -15,7 +15,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * WebAPI for requesting Inspect plugins tab contents from a Bukkit Server.
+ * <p>
+ * Call: Bungee -> Bukkit
+ * <p>
+ * Bad Requests:
+ * - Called a Bungee Server
+ * - Did not include uuid variable
  *
  * @author Rsl1122
  */

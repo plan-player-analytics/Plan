@@ -20,7 +20,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * WebAPI for requesting Bungee Server to request Plugins tab contents from every server.
+ * <p>
+ * Call: Bukkit -> Bungee
+ * <p>
+ * Bad Requests:
+ * - Called a Bukkit Server
+ * - Did not include uuid variable
  *
  * @author Rsl1122
  */

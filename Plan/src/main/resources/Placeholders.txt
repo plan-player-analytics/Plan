@@ -23,7 +23,6 @@ ${playerKillCount} num
 ${mobKillCount} num
 ${deathCount} num
 
-// TODO All these after SessionData has been updated.
 ${sessionCountDay} num
 ${sessionCountWeek} num
 ${playtimeDay} timeamount
@@ -132,9 +131,6 @@ ${punchCardSeries}
 
 ${playersGraphColor} // done
 
-
-${gmData} // TODO Remove
-${gmTotal} timeamount // TODO Remove
 ${gmColors} // TODO Move to World Graph
 
 // done

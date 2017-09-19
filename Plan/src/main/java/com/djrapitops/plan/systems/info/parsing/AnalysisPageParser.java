@@ -17,7 +17,7 @@ import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import java.io.FileNotFoundException;
 
 /**
- * //TODO Class Javadoc Comment
+ * Used for parsing a Html String out of AnalysisData and the html file.
  *
  * @author Rsl1122
  */

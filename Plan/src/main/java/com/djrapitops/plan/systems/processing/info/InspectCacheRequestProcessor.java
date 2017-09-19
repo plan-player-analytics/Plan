@@ -15,7 +15,7 @@ import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Sends a request to cache players inspect page to the PageCache on the appropriate WebServer.
  *
  * @author Rsl1122
  */

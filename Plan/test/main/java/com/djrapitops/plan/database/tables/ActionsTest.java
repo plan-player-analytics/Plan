@@ -4,11 +4,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * //TODO Class Javadoc Comment
- *
- * @author Rsl1122
- */
 public class ActionsTest {
 
     @Test

@@ -7,11 +7,13 @@ package main.java.com.djrapitops.plan.systems.webserver;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.systems.webserver.response.ForbiddenResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.response.api.BadRequestResponse;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * Handles choosing of the correct API response to an API request.
  *
  * @author Rsl1122
  */
@@ -40,6 +42,13 @@ public class APIResponseHandler {
     Response getAPIResponse(Request request) throws IOException {
         String target = request.getTarget();
         String[] args = target.split("/");
+
+        if (args.length < 2 || !"api".equals(args[1])) {
+            String address = MiscUtils.getIPlan().getInfoManager().getWebServerAddress() + target;
+            String link = Html.LINK.parse(address, address);
+            return PageCache.loadPage("Non-API Request", () -> new NotFoundResponse("WebServer is in WebAPI-only mode, " +
+                    "connect to the Bungee server instead: " + link));
+        }
 
         if (args.length < 3) {
             String error = "API Method not specified";

@@ -4,7 +4,6 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
@@ -15,7 +14,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * WebAPI for posting Inspect page Plugins tab contents to the Bungee server.
+ * <p>
+ * Call: Bukkit -> Bungee
+ * <p>
+ * Bad Requests:
+ * - Did not include uuid
  *
  * @author Rsl1122
  */
@@ -23,13 +27,12 @@ public class PostInspectPluginsTabWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         String uuidS = variables.get("uuid");
-        String sender = variables.get("sender");
-        if (Verify.notNull(uuidS, sender)) {
-            return badRequest("uuid or sender not included");
+        if (uuidS == null) {
+            return badRequest("uuid not included");
         }
 
         UUID uuid = UUID.fromString(uuidS);
-        UUID serverUUID = UUID.fromString(sender);
+        UUID serverUUID = UUID.fromString(variables.get("sender"));
         String html = variables.get("html");
 
         ((BungeeInformationManager) plugin.getInfoManager()).cachePluginsTabContent(serverUUID, uuid, html);

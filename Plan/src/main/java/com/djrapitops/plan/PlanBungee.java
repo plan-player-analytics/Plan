@@ -67,7 +67,9 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {
-                Log.error("IP setting still 0.0.0.0 - Set up AlternativeIP/IP that connects to the Proxy server.");
+                Log.error("IP setting still 0.0.0.0 - Config AlternativeIP/IP that connects to the Proxy server.");
+                disablePlugin();
+                return;
             }
 
             Benchmark.start("WebServer Initialization");

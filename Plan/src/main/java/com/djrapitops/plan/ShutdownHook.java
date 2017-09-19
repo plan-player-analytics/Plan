@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Thread that is run when JVM shuts down.
+ * <p>
+ * Saves active sessions to the Database (PlayerQuitEvent is not called)
  *
  * @author Rsl1122
  */

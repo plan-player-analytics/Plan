@@ -25,7 +25,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * //TODO Class Javadoc Comment
+ * Manages information going to the PageCache from Bukkit servers.
  *
  * @author Rsl1122
  */
@@ -175,4 +175,8 @@ public class BungeeInformationManager extends InformationManager {
         return plugin.getWebServer().getWebAPI();
     }
 
+    @Override
+    public String getWebServerAddress() {
+        return plugin.getWebServer().getAccessAddress();
+    }
 }

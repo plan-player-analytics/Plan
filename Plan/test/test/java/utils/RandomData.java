@@ -11,6 +11,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomData {
@@ -65,7 +66,12 @@ public class RandomData {
     }
 
     public static List<UserInfo> randomUserData() {
-        return new ArrayList<>();
-        // TODO Rewrite
+        List<UserInfo> test = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            UserInfo info = new UserInfo(UUID.randomUUID(), randomString(10), r.nextLong(), r.nextBoolean(), r.nextBoolean());
+            info.setLastSeen(r.nextLong());
+            test.add(info);
+        }
+        return test;
     }
 }

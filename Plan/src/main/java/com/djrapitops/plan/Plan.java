@@ -180,16 +180,16 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             this.api = new API(this);
 
-            // Data view settings // TODO Rewrite. (TextUI removed & webServer might be running on bungee
-//            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-//            boolean hasDataViewCapability = usingAlternativeIP;
-//
-//            if (!hasDataViewCapability) {
-//                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
-//            }
-//            if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
-//                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
-//            }
+            boolean usingBungeeWebServer = infoManager.isUsingBungeeWebServer();
+            boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
+
+            if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
+                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
+            }
+            if (usingBungeeWebServer && usingAlternativeIP) {
+                // TODO Move to Locale
+                Log.info("Make sure that the alternative IP points to Bungee Server: " + Settings.ALTERNATIVE_IP.toString());
+            }
 
             registerCommand(new PlanCommand(this));
 

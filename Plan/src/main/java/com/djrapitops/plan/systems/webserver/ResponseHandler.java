@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Handles choosing of the correct response to a request.
  *
  * @author Rsl1122
  */

@@ -37,7 +37,9 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * //TODO Class Javadoc Comment
+ * Manages the Information going to the PageCache.
+ * <p>
+ * This means Inspect and Analysis pages as well as managing what is sent to Bungee WebServer when one is in use.
  *
  * @author Rsl1122
  */
@@ -230,5 +232,10 @@ public class BukkitInformationManager extends InformationManager {
             Log.toLog(this.getClass().getName(), e);
         }
         return false;
+    }
+
+    @Override
+    public String getWebServerAddress() {
+        return webServerAddress != null ? webServerAddress : plugin.getWebServer().getAccessAddress();
     }
 }

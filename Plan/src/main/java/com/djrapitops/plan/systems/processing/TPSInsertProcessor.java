@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * //TODO Class Javadoc Comment
+ * Processes 60s average of a TPS list.
  *
  * @author Rsl1122
  */

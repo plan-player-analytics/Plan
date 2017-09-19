@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * //TODO Class Javadoc Comment
+ * Abstract class that is responsible for parsing data and html together into a String.
  *
  * @author Rsl1122
  */

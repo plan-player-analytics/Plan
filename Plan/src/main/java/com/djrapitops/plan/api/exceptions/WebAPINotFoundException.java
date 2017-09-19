@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * //TODO Class Javadoc Comment
+ * Thrown when WebAPI returns 404, usually when response is supposed to be false.
  *
  * @author Rsl1122
  */

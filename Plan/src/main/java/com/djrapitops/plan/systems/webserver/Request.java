@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * //TODO Class Javadoc Comment
+ * Represents a HttpExchange Request.
+ * <p>
+ * Automatically gets the Basic Auth from headers.
  *
  * @author Rsl1122
  */

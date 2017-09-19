@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Updates ban and OP status of the player to the database.
  *
  * @author Rsl1122
  */

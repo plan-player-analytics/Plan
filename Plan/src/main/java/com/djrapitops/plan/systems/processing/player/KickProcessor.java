@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * //TODO Class Javadoc Comment
+ * Updates the Kick count of a user.
  *
  * @author Rsl1122
  */

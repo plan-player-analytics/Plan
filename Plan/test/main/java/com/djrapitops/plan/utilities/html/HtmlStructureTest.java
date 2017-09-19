@@ -19,11 +19,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * //TODO Class Javadoc Comment
- *
- * @author Rsl1122
- */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
 public class HtmlStructureTest {
