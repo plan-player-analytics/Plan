@@ -164,7 +164,7 @@ public class TPSTable extends Table {
     }
 
     public Optional<TPS> getPeakPlayerCount(long afterDate) throws SQLException {
-        return getPeakPlayerCount(Plan.getServerUUID(), afterDate);
+        return getPeakPlayerCount(MiscUtils.getIPlan().getServerUuid(), afterDate);
     }
 
     public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {

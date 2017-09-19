@@ -7,8 +7,8 @@ package main.java.com.djrapitops.plan.utilities.uuid;
 
 import com.djrapitops.plugin.utilities.player.UUIDFetcher;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class UUIDUtility {
      */
     public static UUID getUUIDOf(String playername) {
         try {
-            return getUUIDOf(playername, Plan.getInstance().getDB());
+            return getUUIDOf(playername, MiscUtils.getIPlan().getDB());
         } catch (Exception e) {
             return null;
         }

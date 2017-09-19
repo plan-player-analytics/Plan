@@ -5,7 +5,6 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.systems.webserver.response.ForbiddenResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -89,7 +88,7 @@ public class APIResponseHandler {
         Log.debug(request.toString());
         Log.debug(requestBody);
 
-        Response response = api.processRequest(Plan.getInstance(), variables);
+        Response response = api.processRequest(MiscUtils.getIPlan(), variables);
 
         Log.debug(response.toString());
 

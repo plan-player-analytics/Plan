@@ -90,7 +90,7 @@ public class MiscUtils {
      * @return Alphabetically sorted list of matching player names.
      */
     public static List<String> getMatchingPlayerNames(String search) {
-        Database db = Plan.getInstance().getDB();
+        Database db = getIPlan().getDB();
         List<String> matches;
         try {
             matches = db.getUsersTable().getMatchingNames(search);

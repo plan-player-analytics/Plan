@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.utilities.html;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -59,7 +60,7 @@ public class HtmlUtils {
         if (Settings.SHOW_ALTERNATIVE_IP.isTrue()) {
             ip = Settings.ALTERNATIVE_IP.toString().replace("%port%", String.valueOf(port));
         } else {
-            ip = Plan.getInstance().getVariable().getIp() + ":" + port;
+            ip = MiscUtils.getIPlan().getVariable().getIp() + ":" + port;
         }
         return ip;
     }

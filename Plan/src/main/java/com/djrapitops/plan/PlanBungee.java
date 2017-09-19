@@ -45,6 +45,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     public void onEnable() {
         try {
             super.setInstance(this);
+            super.copyDefaultConfig("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
             super.setDebugMode(Settings.DEBUG.toString());
             super.getPluginLogger().setFolder(getDataFolder());
             super.setColorScheme(new ColorScheme(ChatColor.GREEN, ChatColor.GRAY, ChatColor.WHITE));
@@ -52,15 +53,11 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
             super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
 
-            super.copyDefaultConfig("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
-
             super.onEnableDefaultTasks();
 
             variableHolder = new ServerVariableHolder(getProxy());
 
             new Locale(this).loadLocale();
-
-            processingQueue = new ProcessingQueue();
 
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
@@ -85,6 +82,8 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
                 disablePlugin();
                 return;
             }
+
+            processingQueue = new ProcessingQueue();
 
             registerListener(new BungeePlayerListener(this));
 
