@@ -17,11 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Handles choosing of the correct API response to an API request.
@@ -71,7 +69,7 @@ public class APIResponseHandler {
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
-        Map<String, String> variables = readVariables(requestBody);
+        Map<String, String> variables = WebAPI.readVariables(requestBody);
         String sender = variables.get("sender");
         Log.debug("Received WebAPI Request" + target + " from " + sender);
         if (!checkKey(sender)) {
@@ -127,14 +125,5 @@ public class APIResponseHandler {
         } catch (SQLException | IllegalArgumentException e) {
             return false;
         }
-    }
-
-    private Map<String, String> readVariables(String requestBody) {
-        String[] variables = requestBody.split("&");
-
-        return Arrays.stream(variables)
-                .map(variable -> variable.split("=", 2))
-                .filter(splitVariables -> splitVariables.length == 2)
-                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
     }
 }

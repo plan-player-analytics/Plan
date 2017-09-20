@@ -26,9 +26,11 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Rsl1122
@@ -93,17 +95,11 @@ public abstract class WebAPI {
 
             connection.setRequestProperty("charset", "ISO-8859-1");
 
-            StringBuilder parameters = new StringBuilder();
-            String serverUUID = MiscUtils.getIPlan().getServerUuid().toString();
-            parameters.append("sender=").append(serverUUID).append("&");
-            for (Map.Entry<String, String> entry : variables.entrySet()) {
-                parameters.append("&").append(entry.getKey()).append("=").append(entry.getValue());
-            }
-            String params = parameters.toString();
+            String parameters = parseVariables();
 
-            connection.setRequestProperty("Content-Length", Integer.toString(params.length()));
+            connection.setRequestProperty("Content-Length", Integer.toString(parameters.length()));
 
-            byte[] toSend = params.getBytes();
+            byte[] toSend = parameters.getBytes();
             int length = toSend.length;
 
 //            connection.setRequestProperty("Content-Length", Integer.toString(length));
@@ -149,7 +145,7 @@ public abstract class WebAPI {
         return sc.getSocketFactory();
     }
 
-    static TrustManager[] trustAllCerts = new TrustManager[]{
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -175,5 +171,24 @@ public abstract class WebAPI {
 
     protected Response badRequest(String error) {
         return PageCache.loadPage(error, () -> new BadRequestResponse(error));
+    }
+
+    private String parseVariables() {
+        StringBuilder parameters = new StringBuilder();
+        String serverUUID = MiscUtils.getIPlan().getServerUuid().toString();
+        parameters.append("sender=").append(serverUUID);
+        for (Map.Entry<String, String> entry : variables.entrySet()) {
+            parameters.append(";&").append(entry.getKey()).append("=").append(entry.getValue());
+        }
+        return parameters.toString();
+    }
+
+    public static Map<String, String> readVariables(String requestBody) {
+        String[] variables = requestBody.split(";&");
+
+        return Arrays.stream(variables)
+                .map(variable -> variable.split("=", 2))
+                .filter(splitVariables -> splitVariables.length == 2)
+                .collect(Collectors.toMap(splitVariables -> splitVariables[0], splitVariables -> splitVariables[1], (a, b) -> b));
     }
 }
