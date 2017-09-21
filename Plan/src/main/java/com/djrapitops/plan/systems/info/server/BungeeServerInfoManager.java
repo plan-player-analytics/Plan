@@ -4,6 +4,8 @@
  */
 package main.java.com.djrapitops.plan.systems.info.server;
 
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
@@ -104,7 +106,13 @@ public class BungeeServerInfoManager {
             Optional<ServerInfo> serverInfo = db.getServerTable().getServerInfo(serverUUID);
             serverInfo.ifPresent(server -> {
                         Log.info("Server Info found from DB: " + server.getName());
-                        attemptConnection(server);
+                        plugin.getRunnableFactory().createNew("BukkitConnectionTask: " + server.getName(), new AbsRunnable() {
+                            @Override
+                            public void run() {
+                                attemptConnection(server);
+                                this.cancel();
+                            }
+                        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 3L);
                     }
             );
         } catch (SQLException e) {

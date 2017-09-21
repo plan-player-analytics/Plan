@@ -74,6 +74,7 @@ public class APIResponseHandler {
         Log.debug("Received WebAPI Request" + target + " from " + sender);
         if (!checkKey(sender)) {
             String error = "Server Key not given or invalid";
+            Log.debug("Request had invalid Server key");
             return PageCache.loadPage(error, () -> {
                 ForbiddenResponse forbidden = new ForbiddenResponse();
                 forbidden.setContent(error);

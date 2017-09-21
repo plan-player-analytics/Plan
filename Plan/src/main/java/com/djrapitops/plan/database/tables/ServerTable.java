@@ -308,9 +308,7 @@ public class ServerTable extends Table {
         ResultSet set = null;
         try {
             statement = prepareStatement(Select.from(tableName, columnServerUUID)
-                    .where(columnServerName + "!=?")
                     .toString());
-            statement.setString(1, "BungeeCord");
             set = statement.executeQuery();
             List<UUID> uuids = new ArrayList<>();
             while (set.next()) {

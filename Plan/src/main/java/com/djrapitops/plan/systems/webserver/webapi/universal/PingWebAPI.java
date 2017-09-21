@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @author Fuzzlemann
+ * @author Rsl1122
  */
 public class PingWebAPI extends WebAPI {
     @Override
