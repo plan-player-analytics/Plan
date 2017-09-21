@@ -299,7 +299,8 @@ public class SessionsTable extends UserIDTable {
                     columnServerID +
                     " FROM " + tableName +
                     " WHERE " + columnSessionStart + ">?" +
-                    " AND " + columnUserID + "=" + usersTable.statementSelectID);
+                    " AND " + columnUserID + "=" + usersTable.statementSelectID +
+                    " GROUP BY " + columnServerID);
             statement.setLong(1, afterDate);
             statement.setString(2, uuid.toString());
             set = statement.executeQuery();

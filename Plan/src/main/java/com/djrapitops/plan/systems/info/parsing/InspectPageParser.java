@@ -63,8 +63,13 @@ public class InspectPageParser extends PageParser {
             addValue("version", MiscUtils.getPlanVersion());
             addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
-            addValue("playerName", userInfo.getName());
-            addValue("registered", FormatUtils.formatTimeStampYear(userInfo.getRegistered()));
+            if (userInfo != null) {
+                addValue("playerName", userInfo.getName());
+                addValue("registered", FormatUtils.formatTimeStampYear(userInfo.getRegistered()));
+            } else {
+                addValue("playerName", "Error occurred.");
+                addValue("registered", "Error occurred.");
+            }
             long lastSeen = sessionsTable.getLastSeen(uuid);
             if (lastSeen != 0) {
                 addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
@@ -171,6 +176,7 @@ public class InspectPageParser extends PageParser {
 
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);
         } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
             throw new ParseException(e);
         }
     }

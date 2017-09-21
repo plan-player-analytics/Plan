@@ -166,7 +166,11 @@ public abstract class WebAPI {
     }
 
     protected Response fail(String reason) {
-        return PageCache.loadPage("fail", () -> new NotFoundResponse(reason));
+        return PageCache.loadPage("fail", () -> {
+            NotFoundResponse notFoundResponse = new NotFoundResponse("");
+            notFoundResponse.setContent(reason);
+            return notFoundResponse;
+        });
     }
 
     protected Response badRequest(String error) {

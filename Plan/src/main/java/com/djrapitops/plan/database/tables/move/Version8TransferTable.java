@@ -54,6 +54,7 @@ public class Version8TransferTable extends Table {
 
         copyTPS();
 
+        execute(dropTableSql("plan_user_info"));
         copyUsers();
 
         execute(dropTableSql("plan_ips"));
@@ -62,10 +63,10 @@ public class Version8TransferTable extends Table {
         execute(dropTableSql("plan_worlds"));
         db.getWorldTable().createTable();
         db.getWorldTimesTable().createTable();
-        execute(dropTableSql("plan_user_info"));
+
         execute(dropTableSql("plan_actions"));
         db.getActionsTable().createTable();
-        db.getUserInfoTable().createTable();
+
         execute(dropTableSql("plan_gamemodetimes"));
         execute(dropTableSql("temp_nicks"));
         execute(dropTableSql("temp_kills"));
