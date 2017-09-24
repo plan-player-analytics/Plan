@@ -77,6 +77,8 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
             webServer.initServer();
 
+            infoManager.attemptConnection();
+
             if (!webServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized.");
                 disablePlugin();

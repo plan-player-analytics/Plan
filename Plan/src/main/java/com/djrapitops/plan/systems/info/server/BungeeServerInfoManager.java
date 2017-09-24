@@ -13,6 +13,7 @@ import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.ServerTable;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.ConfigurationWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 
 import java.sql.SQLException;
@@ -94,6 +95,20 @@ public class BungeeServerInfoManager {
         }
     }
 
+    private void sendConfigSettings(UUID serverUUID) {
+        try {
+            ServerInfo server = bukkitServers.get(serverUUID);
+            if (server == null) {
+                return;
+            }
+            String webAddress = server.getWebAddress();
+            Log.debug("Sending config settings to " + webAddress + "");
+            plugin.getWebServer().getWebAPI().getAPI(ConfigurationWebAPI.class).sendRequest(webAddress, serverUUID);
+        } catch (WebAPIException e) {
+            serverHasGoneOffline(serverUUID);
+        }
+    }
+
     public void connectedToServer(ServerInfo server) {
         Log.info("Connection to Bukkit (" + server.getWebAddress() + ") OK");
         bukkitServers.put(server.getUuid(), server);
@@ -110,6 +125,7 @@ public class BungeeServerInfoManager {
                             @Override
                             public void run() {
                                 attemptConnection(server);
+                                sendConfigSettings(serverUUID);
                                 this.cancel();
                             }
                         }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 3L);

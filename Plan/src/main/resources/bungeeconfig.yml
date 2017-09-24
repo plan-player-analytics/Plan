@@ -4,7 +4,6 @@ Server:
 Plugin:
   Debug: 'false'
   Locale: default
-  WriteNewLocaleFileOnEnable: false
 
 WebServer:
   Port: 8804
@@ -15,12 +14,6 @@ WebServer:
       KeyPass: 'default'
       StorePass: 'default'
       Alias: 'alias'
-  Servers:
-    TODO: TODO AUTO GENERATE
-    Server1:
-      Port: 8805
-    Server2:
-      Port: 8806
 
 Database:
   MySQL:

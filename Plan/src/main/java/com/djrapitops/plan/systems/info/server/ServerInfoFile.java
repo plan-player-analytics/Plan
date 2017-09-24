@@ -67,11 +67,23 @@ public class ServerInfoFile extends BukkitConfig {
         return getConfig().getString("Bungee.WebAddress");
     }
 
-    public void markConnectionFail() {
+    public int markConnectionFail() {
         try {
             IFileConfig config = getConfig();
             int fails = config.getInt("Bungee.Fail");
             config.set("Bungee.Fail", fails + 1);
+            save();
+            return fails;
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        return -1;
+    }
+
+    public void resetConnectionFails() {
+        try {
+            IFileConfig config = getConfig();
+            config.set("Bungee.Fail", 0);
             save();
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);

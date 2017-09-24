@@ -430,4 +430,10 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     public InformationManager getInfoManager() {
         return infoManager;
     }
+
+    public void restart() {
+        onDisable();
+        reloadConfig();
+        onEnable();
+    }
 }

@@ -11,10 +11,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.*;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.IsCachedWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostInspectPluginsTabWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
@@ -68,6 +65,7 @@ public class WebServer {
         webAPI.registerNewAPI(new PostHtmlWebAPI());
         webAPI.registerNewAPI(new PostInspectPluginsTabWebAPI());
         webAPI.registerNewAPI(new RequestPluginsTabWebAPI());
+        webAPI.registerNewAPI(new PostOriginalBukkitSettingsWebAPI());
     }
 
     /**

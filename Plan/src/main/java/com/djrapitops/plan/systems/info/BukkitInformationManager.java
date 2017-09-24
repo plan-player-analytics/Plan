@@ -24,10 +24,7 @@ import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.IsCachedWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostHtmlWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.PostInspectPluginsTabWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
@@ -226,7 +223,9 @@ public class BukkitInformationManager extends InformationManager {
         PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
         try {
             api.sendRequest(webServerAddress);
+            getWebAPI().getAPI(PostOriginalBukkitSettingsWebAPI.class).sendRequest(webServerAddress);
             Log.info("Bungee Connection OK");
+            plugin.getServerInfoManager().resetConnectionFails();
             return true;
         } catch (WebAPIConnectionFailException e) {
             plugin.getServerInfoManager().markConnectionFail();

@@ -7,7 +7,6 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.config.IConfig;
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.api.IPlan;
 
 import java.io.IOException;
 import java.util.Map;
@@ -23,7 +22,23 @@ import java.util.UUID;
  */
 public class ServerSpecificSettings {
 
-    public void updateSettings(IPlan plugin, Map<String, String> settings) {
+    public void addOriginalBukkitSettings(PlanBungee plugin, UUID serverUUID, Map<String, Object> settings) {
+        try {
+            IConfig iConfig = plugin.getIConfig();
+            IFileConfig config = iConfig.getConfig();
+            if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
+                return;
+            }
+            for (Map.Entry<String, Object> entry : settings.entrySet()) {
+                config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
+            }
+            iConfig.save();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+    }
+
+    public void updateSettings(Plan plugin, Map<String, String> settings) {
         try {
             IFileConfig config = plugin.getIConfig().getConfig();
             boolean changedSomething = false;
@@ -42,8 +57,7 @@ public class ServerSpecificSettings {
                 Log.info("----------------------------------");
                 Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
                 Log.info("----------------------------------");
-                plugin.onDisable();
-                plugin.onEnable();
+                plugin.restart();
             }
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
