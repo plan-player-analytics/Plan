@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCreator;
 
 /**
@@ -81,6 +82,8 @@ public class InspectPageParser extends PageParser {
 
             Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
             addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(playtimeByServer));
+            addValue("worldPieColors", Settings.THEME_GRAPH_WORLDPIE.toString());
+            addValue("serverPieColors", Settings.THEME_GRAPH_SERVERPREFPIE.toString());
 
             List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()

@@ -93,6 +93,9 @@ Theme:
     RAM: Base
     Chunks: Base
     Entities: Base
+    WorldPie: '[#222]'
+    ActivityPie: '[#333]'
+    ServerPreferencePie: '[#444]'
 
 Plugins:
   Factions:

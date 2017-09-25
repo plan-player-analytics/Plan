@@ -88,6 +88,9 @@ public enum Settings {
     THEME_GRAPH_RAM("Theme.Graphs.RAM"),
     THEME_GRAPH_CHUNKS("Theme.Graphs.Chunks"),
     THEME_GRAPH_ENTITIES("Theme.Graphs.Entities"),
+    THEME_GRAPH_WORLDPIE("Theme.Graphs.WorldPie"),
+    THEME_GRAPH_ACTIVITYPIE("Theme.Graphs.ActivityPie"),
+    THEME_GRAPH_SERVERPREFPIE("Theme.Graphs.ServerPreferencePie"),
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),
     HIDE_TOWNS("Plugins.Towny.HideTowns"),

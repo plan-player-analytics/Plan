@@ -17,7 +17,7 @@ function activityPie(id, activitySeries, activityTotal, activityColors) {
 				dataLabels: {
 					enabled: false
 				},
-				colors: activityColors,
+//				colors: activityColors,
 				showInLegend: true
 			}
 		},

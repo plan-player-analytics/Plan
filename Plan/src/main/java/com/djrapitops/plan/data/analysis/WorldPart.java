@@ -5,6 +5,7 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 
 import java.util.HashMap;
+import main.java.com.djrapitops.plan.Settings;
 
 /**
  * Part responsible for all World Playtime related analysis.
@@ -34,6 +35,7 @@ public class WorldPart extends RawData {
         String[] seriesData = WorldPieCreator.createSeriesData(worldTimes);
         addValue("worldSeries", seriesData[0]);
         addValue("gmSeries", seriesData[1]);
+        addValue("worldPieColors", Settings.THEME_GRAPH_WORLDPIE.toString());
     }
 
     public WorldTimes getWorldTimes() {

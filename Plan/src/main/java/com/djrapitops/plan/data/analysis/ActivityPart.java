@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator
 
 import java.util.*;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.Settings;
 
 /**
  * Part responsible for all Player Activity related analysis.
@@ -92,10 +93,7 @@ public class ActivityPart extends RawData {
 
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
 
-        String activityColors = HtmlUtils.separateWithQuotes(
-                "#55ffff", "#ff55ff", "#ff5555", "#ffff55" //TODO Write Colors (enums) for Activity pie.
-        );
-        addValue("activityColors", activityColors);
+        addValue("activityPieColors", Settings.THEME_GRAPH_ACTIVITYPIE.toString());
         addValue("playersActive", counts[0]);
         addValue("active", counts[0]);
         addValue("inactive", counts[1]);
