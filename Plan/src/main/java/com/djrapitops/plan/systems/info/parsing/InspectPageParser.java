@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.info.parsing;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.Action;
@@ -25,6 +26,7 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 
@@ -33,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCreator;
 
 /**
  * Used for parsing Inspect page out of database data and the html.
@@ -82,8 +82,8 @@ public class InspectPageParser extends PageParser {
 
             Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
             addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(playtimeByServer));
-            addValue("worldPieColors", Settings.THEME_GRAPH_WORLDPIE.toString());
-            addValue("serverPieColors", Settings.THEME_GRAPH_SERVERPREFPIE.toString());
+            addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
+            addValue("serverPieColors", Settings.THEME_GRAPH_SERVER_PREF_PIE.toString());
 
             List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()

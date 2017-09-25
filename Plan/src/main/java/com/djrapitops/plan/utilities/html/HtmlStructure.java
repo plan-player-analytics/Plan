@@ -5,9 +5,11 @@
 package main.java.com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
@@ -196,7 +198,7 @@ public class HtmlStructure {
                     "<div class=\"row\">" +
                     "<div class=\"column\">" +
                     "<div class=\"box-header\">" +
-                    "<h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> "+ serverName+
+                    "<h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> " + serverName +
                     "</h2><p>No Compatible Plugins</p>" +
                     "</div></div></div></div></div>";
         }
@@ -375,5 +377,61 @@ public class HtmlStructure {
                 "<p><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Plugins tab is still being calculated, please refresh the page after a while (F5)</p>" +
                 "</div></div>" +
                 "</div>";
+    }
+
+    public static String createNetworkPageContent(Map<UUID, String> networkPageContents) {
+        if (Verify.isEmpty(networkPageContents)) {
+            return "";
+        }
+        int i = 0;
+        StringBuilder b = new StringBuilder();
+        Collection<String> values = networkPageContents.values();
+        int size = values.size();
+        for (String server : values) {
+            if (i % 3 == 0) {
+                b.append("<div class=\"row\">");
+            }
+            b.append(server);
+            if ((i + 1) % 3 == 0 || i + 1 == size) {
+                b.append("</div>");
+            }
+            i++;
+        }
+        return b.toString();
+    }
+
+    public static String createServerContainer(Plan plugin) {
+        int maxPlayers = plugin.getVariable().getMaxPlayers();
+        int online = plugin.getServer().getOnlinePlayers().size();
+        Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
+        String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
+        boolean analysisIsAvailable = analysisRefreshDate.isPresent();
+
+        String serverName = plugin.getServerInfoManager().getServerName();
+        String address = plugin.getInfoManager().getLinkTo("/server/" + serverName).relative().toString();
+
+        StringBuilder b = new StringBuilder("<div class=\"column\">");
+
+        // Header
+        b.append("<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> ")
+                .append(serverName)
+                .append("</h2></div>");
+
+        // Online players
+        b.append("<div class=\"box\"><p>").append(online).append("/").append(maxPlayers)
+                .append(" Players Online</p></div>");
+
+        // Footer
+        b.append("<div class=\"box-footer\"><p>Last Refresh: ").append(refresh).append("</p>");
+        if (analysisIsAvailable) {
+            b.append("<a href=\"").append(address).append("\" class=\"button right\">Analysis</a>");
+        } else {
+            b.append("<a class=\"button disabled right\">Analysis</a>");
+        }
+        // TODO Refresh functionality
+
+        b.append("</div>")
+                .append("</div>");
+        return b.toString();
     }
 }

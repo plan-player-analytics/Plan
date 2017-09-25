@@ -365,4 +365,22 @@ public class ServerTable extends Table {
             close(set, statement);
         }
     }
+
+    public int getMaxPlayers() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName);
+            statement.setFetchSize(5000);
+
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getInt("max");
+            }
+            return 0;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

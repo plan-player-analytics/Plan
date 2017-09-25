@@ -20,6 +20,7 @@ import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
@@ -169,9 +170,8 @@ public class BukkitInformationManager extends InformationManager {
         try {
             return Theme.replaceColors(new AnalysisPageParser(analysisData, plugin).parse());
         } catch (ParseException e) {
-            Log.toLog(this.getClass().getName(), e);
+            return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
         }
-        return "";
     }
 
     @Override
@@ -179,9 +179,8 @@ public class BukkitInformationManager extends InformationManager {
         try {
             return Theme.replaceColors(new InspectPageParser(uuid, plugin).parse());
         } catch (ParseException e) {
-            Log.toLog(this.getClass().getName(), e);
+            return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
         }
-        return "";
     }
 
     @Override

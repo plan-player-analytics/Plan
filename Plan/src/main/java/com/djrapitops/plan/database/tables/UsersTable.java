@@ -429,4 +429,22 @@ public class UsersTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    public int getPlayerCount() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT COUNT(*) AS player_count FROM " + tableName);
+            statement.setFetchSize(5000);
+
+            set = statement.executeQuery();
+            if (set.next()) {
+                return set.getInt("player_count");
+            }
+            return 0;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

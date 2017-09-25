@@ -1,5 +1,7 @@
 Server:
   IP: 0.0.0.0
+Network:
+  Name: Plan
 
 Plugin:
   Debug: 'false'

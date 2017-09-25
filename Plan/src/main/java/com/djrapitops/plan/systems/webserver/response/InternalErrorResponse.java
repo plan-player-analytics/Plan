@@ -21,10 +21,24 @@ public class InternalErrorResponse extends ErrorResponse {
 
         for (StackTraceElement element : e.getStackTrace()) {
             paragraph.append("<br>");
-            paragraph.append("  ").append(element);
+            paragraph.append("&nbsp;&nbsp;").append(element);
+        }
+        if (e.getCause() != null) {
+            appendCause(e.getCause(), paragraph);
         }
 
         super.setParagraph(paragraph.toString());
         super.replacePlaceholders();
+    }
+
+    private void appendCause(Throwable cause, StringBuilder paragraph) {
+        paragraph.append("<br>Caused by: ").append(cause);
+        for (StackTraceElement element : cause.getStackTrace()) {
+            paragraph.append("<br>");
+            paragraph.append("&nbsp;&nbsp;").append(element);
+        }
+        if (cause.getCause() != null) {
+            appendCause(cause.getCause(), paragraph);
+        }
     }
 }

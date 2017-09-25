@@ -6,13 +6,16 @@ package main.java.com.djrapitops.plan.systems.info;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.PlanBungee;
+import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
@@ -162,7 +165,11 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public String getAnalysisHtml() {
-        return new NotFoundResponse("Network page not yet created").getContent();
+        try {
+            return new NetworkPageParser(plugin).parse();
+        } catch (ParseException e) {
+            return new InternalErrorResponse(e, this.getClass().getSimpleName()).getContent();
+        }
     }
 
     @Override
@@ -201,7 +208,7 @@ public class BungeeInformationManager extends InformationManager {
     public void askForNetWorkPageContent() {
         // TODO WebAPI for network page content
     }
-    
+
     public void cacheNetworkPageContent(UUID serverUUID, String html) {
         networkPageContent.put(serverUUID, html);
     }

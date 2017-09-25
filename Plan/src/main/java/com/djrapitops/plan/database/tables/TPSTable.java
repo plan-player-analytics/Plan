@@ -272,4 +272,30 @@ public class TPSTable extends Table {
             close(statement);
         }
     }
+
+    public List<TPS> getNetworkOnlineData() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            statement = prepareStatement("SELECT " +
+                    columnDate + ", " +
+                    "SUM(" + columnPlayers + ") as players" +
+                    " FROM " + tableName +
+                    " GROUP BY " + columnDate
+            );
+            statement.setFetchSize(50000);
+            set = statement.executeQuery();
+            List<TPS> tpsList = new ArrayList<>();
+            while (set.next()) {
+                long date = set.getLong(columnDate);
+                int players = set.getInt("players");
+
+                tpsList.add(new TPS(date, 0, players, 0, 0, 0, 0));
+            }
+            return tpsList;
+        } finally {
+            endTransaction(statement);
+            close(set, statement);
+        }
+    }
 }

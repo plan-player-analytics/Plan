@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
@@ -9,13 +10,11 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
 import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import main.java.com.djrapitops.plan.Settings;
 
 /**
  * Part responsible for all Player Activity related analysis.
@@ -93,7 +92,7 @@ public class ActivityPart extends RawData {
 
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
 
-        addValue("activityPieColors", Settings.THEME_GRAPH_ACTIVITYPIE.toString());
+        addValue("activityPieColors", Settings.THEME_GRAPH_ACTIVITY_PIE.toString());
         addValue("playersActive", counts[0]);
         addValue("active", counts[0]);
         addValue("inactive", counts[1]);

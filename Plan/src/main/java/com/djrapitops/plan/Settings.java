@@ -88,15 +88,16 @@ public enum Settings {
     THEME_GRAPH_RAM("Theme.Graphs.RAM"),
     THEME_GRAPH_CHUNKS("Theme.Graphs.Chunks"),
     THEME_GRAPH_ENTITIES("Theme.Graphs.Entities"),
-    THEME_GRAPH_WORLDPIE("Theme.Graphs.WorldPie"),
-    THEME_GRAPH_ACTIVITYPIE("Theme.Graphs.ActivityPie"),
-    THEME_GRAPH_SERVERPREFPIE("Theme.Graphs.ServerPreferencePie"),
+    THEME_GRAPH_WORLD_PIE("Theme.Graphs.WorldPie"),
+    THEME_GRAPH_ACTIVITY_PIE("Theme.Graphs.ActivityPie"),
+    THEME_GRAPH_SERVER_PREF_PIE("Theme.Graphs.ServerPreferencePie"),
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),
     HIDE_TOWNS("Plugins.Towny.HideTowns"),
     //
     // Bungee
-    BUNGEE_IP("Server.IP");
+    BUNGEE_IP("Server.IP"),
+    BUNGEE_NETWROK_NAME("Network.Name");
 
     private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
 
