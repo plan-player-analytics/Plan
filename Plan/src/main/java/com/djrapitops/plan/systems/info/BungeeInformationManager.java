@@ -34,14 +34,16 @@ import java.util.stream.Collectors;
  */
 public class BungeeInformationManager extends InformationManager {
 
-    private PlanBungee plugin;
+    private final PlanBungee plugin;
     private Map<UUID, ServerInfo> bukkitServers;
 
-    private Map<UUID, Map<UUID, String>> pluginsTabContent;
+    private final Map<UUID, String> networkPageContent;
+    private final Map<UUID, Map<UUID, String>> pluginsTabContent;
 
     public BungeeInformationManager(PlanBungee plugin) throws SQLException {
         usingAnotherWebServer = false;
         pluginsTabContent = new HashMap<>();
+        networkPageContent = new HashMap<>();
         this.plugin = plugin;
         refreshBukkitServerMap();
     }
@@ -108,7 +110,7 @@ public class BungeeInformationManager extends InformationManager {
                 getWebAPI().getAPI(IsOnlineWebAPI.class).sendRequest(server.getWebAddress(), uuid);
                 return server;
             } catch (WebAPINotFoundException e) {
-                    /*continue*/
+                /*continue*/
             } catch (WebAPIException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
@@ -190,5 +192,21 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public String getWebServerAddress() {
         return plugin.getWebServer().getAccessAddress();
+    }
+
+    public void askForNetWorkPageContent() {
+        // TODO WebAPI for network page content
+    }
+    
+    public void cacheNetworkPageContent(UUID serverUUID, String html) {
+        networkPageContent.put(serverUUID, html);
+    }
+
+    public void removeNetworkPageContent(UUID serverUUID) {
+        networkPageContent.remove(serverUUID);
+    }
+
+    public Map<UUID, String> getNetworkPageContent() {
+        return networkPageContent;
     }
 }
