@@ -196,6 +196,11 @@
                 timezoneOffset: ${timeZone} *  60
             }
         });
+        var serverSeries = {
+            name:'Server Playtime',
+            colorByPoint:true,
+            data: ${serverPieSeries}
+        }
         var worldSeries = {
              name:'World Playtime',
              colorByPoint:true,
@@ -227,6 +232,7 @@
             x.style.opacity = "1";
 
             worldPie('worldPie', worldSeries, gmSeries);
+            serverPie('serverPie', serverSeries);
             punchCard('punchcard', punchcardSeries);
             ${sessionTabGraphViewFunctions}
 
