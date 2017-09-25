@@ -183,6 +183,10 @@ public class BungeeInformationManager extends InformationManager {
         Map<UUID, String> perServerPluginsTab = pluginsTabContent.getOrDefault(uuid, new HashMap<>());
         perServerPluginsTab.put(serverUUID, html);
         pluginsTabContent.put(uuid, perServerPluginsTab);
+        Response inspectResponse = PageCache.loadPage("inspectPage: " + uuid);
+        if (inspectResponse != null) {
+            ((InspectPageResponse) inspectResponse).setInspectPagePluginsTab(getPluginsTabContent(uuid));
+        }
     }
 
     private WebAPIManager getWebAPI() {

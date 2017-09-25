@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.utilities.html;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -58,6 +59,10 @@ public class HtmlStructure {
 
     public static String createServerOverviewColumn(Map<String, List<Session>> sessions) {
         StringBuilder builder = new StringBuilder("<div class=\"column\">");
+        if (Verify.isEmpty(sessions)) {
+            return "<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> No Sessions</h2> </div>" +
+                    "<div class=\"box\" style=\"margin-bottom: 5px;\"><p>No sessions to calculate server specific playtime.</p></div>";
+        }
         for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
             String serverName = entry.getKey();
             List<Session> serverSessions = entry.getValue();
@@ -87,6 +92,14 @@ public class HtmlStructure {
 
     public static String[] createSessionsTabContent(Map<String, List<Session>> sessions, List<Session> allSessions) throws FileNotFoundException {
         Map<Integer, String> serverNameIDRelationMap = new HashMap<>();
+
+        if (Verify.isEmpty(allSessions)) {
+            return new String[]{"<div class=\"session column\">" +
+                    "<div class=\"session-header\">" +
+                    "<div class=\"session-col\" style=\"width: 200%;\">" +
+                    "<h3>No Sessions</h3>" +
+                    "</div></div></div>", ""};
+        }
 
         for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
             String serverName = entry.getKey();
@@ -178,7 +191,14 @@ public class HtmlStructure {
 
     public static String createInspectPageTabContent(String serverName, List<PluginData> plugins, Map<String, Serializable> replaceMap) {
         if (plugins.isEmpty()) {
-            return "";
+            return "<div class=\"plugins-server\">" +
+                    "<div class=\"plugins-header\">" +
+                    "<div class=\"row\">" +
+                    "<div class=\"column\">" +
+                    "<div class=\"box-header\">" +
+                    "<h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> "+ serverName+
+                    "</h2><p>No Compatible Plugins</p>" +
+                    "</div></div></div></div></div>";
         }
 
         Map<String, List<String>> placeholders = getPlaceholdersInspect(plugins);
