@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.theme;
 
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Settings;
 
 /**
  * Enum that contains available themes.
@@ -70,6 +71,8 @@ public enum Theme {
                 replaced = replaced.replace("background: #" + Theme.DEFAULT.getColor(c.getId()), "background: " + colorAndUrl[1]);
             }
         }
+        replaced = replaced.replace("https://fonts.googleapis.com/css?family=Quicksand:300,400", Settings.THEME_FONT_STYLESHEET.toString());
+        replaced = replaced.replace("''Quicksand'', sans-serif", Settings.THEME_FONT_FAMILY.toString());
         return replaced;
     }
 

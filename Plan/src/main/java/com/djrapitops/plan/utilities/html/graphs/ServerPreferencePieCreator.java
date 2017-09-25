@@ -15,7 +15,7 @@ public class ServerPreferencePieCreator {
         for (Map.Entry<String, Long> server : serverPlaytimes.entrySet()) {
             String serverName = server.getKey();
             seriesBuilder.append("{name:'").append(serverName)
-                    .append("',y:").append(server.getValue()).append("'");
+                    .append("',y:").append(server.getValue());
 
             seriesBuilder.append("}");
             if (i < size - 1) {
