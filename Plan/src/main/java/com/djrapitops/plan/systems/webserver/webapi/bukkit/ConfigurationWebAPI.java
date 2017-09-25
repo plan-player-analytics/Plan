@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
 import com.djrapitops.plugin.utilities.Compatibility;
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerSpecificSettings;
@@ -26,14 +27,14 @@ public class ConfigurationWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         if (!Compatibility.isBukkitAvailable()) {
+            Log.debug("Called a wrong server type");
             return badRequest("Called a Bungee Server");
         }
         if (Settings.BUNGEE_COPY_CONFIG.isFalse() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
             Log.debug("Bungee Config settings overridden on this server.");
             return success();
         }
-        variables.remove("sender");
-        Settings.serverSpecific().updateSettings((Plan) plugin, variables);
+        ServerSpecificSettings.updateSettings((Plan) plugin, variables);
         return success();
     }
 
@@ -44,14 +45,22 @@ public class ConfigurationWebAPI extends WebAPI {
 
     public void sendRequest(String address, UUID serverUUID) throws WebAPIException {
         Map<String, Object> configValues = getConfigValues(serverUUID);
+        Log.debug("Sending config values: " + configValues);
         for (Map.Entry<String, Object> entry : configValues.entrySet()) {
-            addVariable(entry.getKey(), entry.getValue().toString());
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (!Verify.notNull(key, value)) {
+                continue;
+            }
+            addVariable(key, value.toString());
         }
         super.sendRequest(address);
     }
 
     private void addConfigValue(Map<String, Object> configValues, Settings setting, Object value) {
-        configValues.put(setting.getPath(), value);
+        if (value != null) {
+            configValues.put(setting.getPath(), value);
+        }
     }
 
     private Map<String, Object> getConfigValues(UUID serverUUID) throws WebAPIException {

@@ -61,7 +61,7 @@ public class BukkitInformationManager extends InformationManager {
         Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
         if (bungeeConnectionAddress.isPresent()) {
             webServerAddress = bungeeConnectionAddress.get();
-            usingAnotherWebServer = attemptConnection();
+            attemptConnection();
         } else {
             usingAnotherWebServer = false;
         }
@@ -226,6 +226,7 @@ public class BukkitInformationManager extends InformationManager {
             getWebAPI().getAPI(PostOriginalBukkitSettingsWebAPI.class).sendRequest(webServerAddress);
             Log.info("Bungee Connection OK");
             plugin.getServerInfoManager().resetConnectionFails();
+            usingAnotherWebServer = true;
             return true;
         } catch (WebAPIConnectionFailException e) {
             plugin.getServerInfoManager().markConnectionFail();
@@ -233,6 +234,7 @@ public class BukkitInformationManager extends InformationManager {
             Log.toLog(this.getClass().getName(), e);
         }
         Log.info("Bungee Connection Failed.");
+        usingAnotherWebServer = false;
         return false;
     }
 

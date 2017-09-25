@@ -409,7 +409,7 @@
         var activitySeries = {
             name: 'Players',
             colorByPoint: true,
-            colors: ${activityPieColors},
+            colors: [${activityPieColors}],
             data: [{
                 name: 'Active',
                 y: ${active}
@@ -429,7 +429,7 @@
         var worldSeries = {
             name: 'World Playtime',
             colorByPoint: true,
-            colors: ${worldPieColors},
+            colors: [${worldPieColors}],
             data: ${worldSeries}
         };
         var gmSeries = ${gmSeries};
@@ -464,7 +464,7 @@
             }
             x.style.opacity = "1";
             openFunc(slideIndex)();
-            activityPie('activityPie', activitySeries, ${playersTotal}, [${activityColors}]);
+            activityPie('activityPie', activitySeries, ${playersTotal}, [${activityPieColors}]);
             worldPie('worldPie', worldSeries, gmSeries);
             playersChart('playerChartDay', playersOnlineSeries, 1);
             playersChart('playerChartMonth', playersOnlineSeries, 4);

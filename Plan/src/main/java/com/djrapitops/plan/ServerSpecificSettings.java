@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.config.IConfig;
 import com.djrapitops.plugin.config.fileconfig.IFileConfig;
 import com.djrapitops.plugin.utilities.Verify;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,30 +39,47 @@ public class ServerSpecificSettings {
         }
     }
 
-    public void updateSettings(Plan plugin, Map<String, String> settings) {
-        try {
-            IFileConfig config = plugin.getIConfig().getConfig();
-            boolean changedSomething = false;
-            for (Map.Entry<String, String> setting : settings.entrySet()) {
-                String path = setting.getKey();
-                String value = setting.getValue();
-                String currentValue = config.getString(path);
-                if (currentValue.equals(value)) {
-                    continue;
-                }
-                config.set(path, value);
-                changedSomething = true;
+    public static void updateSettings(Plan plugin, Map<String, String> settings) {
+        Log.debug("Checking new settings..");
+        FileConfiguration config = plugin.getConfig();
+        boolean changedSomething = false;
+        for (Map.Entry<String, String> setting : settings.entrySet()) {
+            String path = setting.getKey();
+            if ("sender".equals(path)) {
+                continue;
             }
-            if (changedSomething) {
-                plugin.getIConfig().save();
-                Log.info("----------------------------------");
-                Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
-                Log.info("----------------------------------");
-                plugin.restart();
+            String stringValue = setting.getValue();
+            Object value = getValue(stringValue);
+            String currentValue = config.getString(path);
+            if (currentValue.equals(stringValue)) {
+                continue;
             }
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
+            config.set(path, value);
+            Log.debug("  " + path + ": " + value);
+            changedSomething = true;
         }
+        if (changedSomething) {
+            plugin.saveConfig();
+            Log.info("----------------------------------");
+            Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
+            Log.info("----------------------------------");
+            plugin.restart();
+        } else {
+            Log.debug("Settings up to date");
+        }
+    }
+
+    private static Object getValue(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception ignored) {
+        }
+        if ("true".equalsIgnoreCase(value)) {
+            return true;
+        } else if ("false".equalsIgnoreCase(value)) {
+            return false;
+        }
+        return value;
     }
 
     private String getPath(UUID serverUUID, Settings setting) {

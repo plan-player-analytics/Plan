@@ -46,11 +46,13 @@ public abstract class WebAPI {
     public Response processRequest(IPlan plugin, Map<String, String> variables) {
         String sender = variables.get("sender");
         if (sender == null) {
+            Log.debug(getClass().getSimpleName() + ": Sender not Found");
             return badRequest("Sender not present");
         }
         try {
             UUID.fromString(sender);
         } catch (Exception e) {
+            Log.debug(getClass().getSimpleName() + ": Invalid Sender UUID");
             return badRequest("Faulty Sender value");
         }
         return onRequest(plugin, variables);

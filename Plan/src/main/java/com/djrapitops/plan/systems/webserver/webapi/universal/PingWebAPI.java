@@ -22,6 +22,9 @@ public class PingWebAPI extends WebAPI {
         if (Compatibility.isBungeeAvailable()) {
             ((PlanBungee) plugin).getServerInfoManager().serverConnected(UUID.fromString(variables.get("sender")));
         }
+        if (Compatibility.isBukkitAvailable() && !plugin.getInfoManager().isUsingAnotherWebServer()) {
+            plugin.getInfoManager().attemptConnection();
+        }
         return success();
     }
 }

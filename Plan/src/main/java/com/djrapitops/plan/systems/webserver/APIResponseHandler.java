@@ -86,12 +86,13 @@ public class APIResponseHandler {
 
         if (api == null) {
             String error = "API Method not found";
+            Log.debug(error);
             return PageCache.loadPage(error, () -> new BadRequestResponse(error));
         }
 
         Response response = api.processRequest(MiscUtils.getIPlan(), variables);
 
-        Log.debug(response.toString());
+        Log.debug("Response: " + response.getResponse().split("\r\n")[0]);
 
         return response;
     }
