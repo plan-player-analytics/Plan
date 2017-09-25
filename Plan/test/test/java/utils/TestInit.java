@@ -126,6 +126,7 @@ public class TestInit {
         BukkitServerInfoManager bukkitServerInfoManager = PowerMockito.mock(BukkitServerInfoManager.class);
 
         when(bukkitServerInfoManager.getServerUUID()).thenReturn(serverUUID);
+        when(planMock.getServerUuid()).thenReturn(serverUUID);
         when(planMock.getServerInfoManager()).thenReturn(bukkitServerInfoManager);
         RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
         when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
