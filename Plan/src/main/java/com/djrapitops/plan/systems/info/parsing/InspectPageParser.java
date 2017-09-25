@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCreator;
 
 /**
  * Used for parsing Inspect page out of database data and the html.
@@ -79,7 +80,7 @@ public class InspectPageParser extends PageParser {
             addValue("kickCount", timesKicked);
 
             Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
-            // TODO Server preference pie
+            addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(playtimeByServer));
 
             List<String> geolocations = db.getIpsTable().getGeolocations(uuid);
             List<String> nicknames = db.getNicknamesTable().getNicknames(uuid).stream()
@@ -192,6 +193,5 @@ public class InspectPageParser extends PageParser {
 
         addValue("playerClassification", HtmlStructure.separateWithDots(active, banned, op));
     }
-
 
 }
