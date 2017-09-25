@@ -1,10 +1,12 @@
 package main.java.com.djrapitops.plan.utilities.metrics;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BStats {
 
