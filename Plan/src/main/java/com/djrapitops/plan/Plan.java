@@ -41,6 +41,7 @@ import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
+import main.java.com.djrapitops.plan.systems.info.pluginchannel.BukkitPluginChannelListener;
 import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -51,6 +52,7 @@ import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.HashSet;
@@ -199,6 +201,10 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
+            if (Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
+                registerPluginChannelListener();
+            }
+
             BStats bStats = new BStats(this);
             bStats.registerMetrics();
 
@@ -211,6 +217,11 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             Log.logStackTrace(e);
             disablePlugin();
         }
+    }
+
+    private void registerPluginChannelListener() {
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "Plan", new BukkitPluginChannelListener(this));
     }
 
     private void registerTasks() {
@@ -423,6 +434,9 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
     public void addToProcessQueue(Processor... processors) {
         for (Processor processor : processors) {
+            if (processor == null) {
+                continue;
+            }
             processingQueue.addToQueue(processor);
         }
     }

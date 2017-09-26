@@ -2,8 +2,10 @@ package main.java.com.djrapitops.plan.systems.listeners;
 
 import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.processing.info.BungeePluginChannelSenderProcessor;
 import main.java.com.djrapitops.plan.systems.processing.info.NetworkPageUpdateProcessor;
 import main.java.com.djrapitops.plan.systems.processing.player.*;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -93,14 +95,16 @@ public class PlanPlayerListener implements Listener {
 
         int playersOnline = plugin.getTpsCountTimer().getLatestPlayersOnline();
 
+        BungeePluginChannelSenderProcessor bungeePluginChannelSenderProcessor = null;
+        if (!plugin.getInfoManager().isUsingAnotherWebServer() && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
+            bungeePluginChannelSenderProcessor = new BungeePluginChannelSenderProcessor(player);
+        }
         cache.cacheSession(uuid, Session.start(time, world, gm));
-
-        IPUpdateProcessor ipUpdateProcessor = new IPUpdateProcessor(uuid, ip);
-        NameProcessor nameProcessor = new NameProcessor(uuid, playerName, displayName);
         plugin.addToProcessQueue(
                 new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
-                        ipUpdateProcessor,
-                        nameProcessor
+                        new IPUpdateProcessor(uuid, ip),
+                        new NameProcessor(uuid, playerName, displayName),
+                        bungeePluginChannelSenderProcessor
                 ),
                 new NetworkPageUpdateProcessor(plugin.getInfoManager())
         );

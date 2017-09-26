@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
+import main.java.com.djrapitops.plan.systems.info.pluginchannel.BungeePluginChannelListener;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -84,6 +85,9 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
                 disablePlugin();
                 return;
             }
+
+            getProxy().registerChannel("Plan");
+            registerListener(new BungeePluginChannelListener(this));
 
             processingQueue = new ProcessingQueue();
 
