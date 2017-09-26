@@ -11,11 +11,14 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import org.bukkit.ChatColor;
 
+import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * This subcommand is used to run the analysis and access the /server link.
@@ -37,25 +40,32 @@ public class AnalyzeCommand extends SubCommand {
         super("analyze, analyse, analysis, a",
                 CommandType.CONSOLE,
                 Permissions.ANALYZE.getPermission(),
-                Locale.get(Msg.CMD_USG_ANALYZE).parse());
+                Locale.get(Msg.CMD_USG_ANALYZE).parse(),
+                "[ServerName or ID]");
         this.plugin = plugin;
         infoManager = plugin.getInfoManager();
     }
 
-    public static void sendAnalysisMessage(Collection<ISender> senders) {
-        for (ISender sender : senders) {
-            sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
-            // Link
-            String url = HtmlUtils.getServerAnalysisUrlWithProtocol();
+    public static void sendAnalysisMessage(Collection<ISender> senders, UUID serverUUID) throws SQLException {
+        Plan plugin = Plan.getInstance();
+        Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
+        if (serverName.isPresent()) {
+            String target = "/server/" + serverName.get();
+            String url = plugin.getInfoManager().getLinkTo(target).toString();
             String message = Locale.get(Msg.CMD_INFO_LINK).toString();
-            boolean console = !CommandUtils.isPlayer(sender);
-            if (console) {
-                sender.sendMessage(message + url);
-            } else {
-                sender.sendMessage(message);
-                sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+
+            for (ISender sender : senders) {
+                sender.sendMessage(Locale.get(Msg.CMD_HEADER_ANALYZE).toString());
+                // Link
+                boolean console = !CommandUtils.isPlayer(sender);
+                if (console) {
+                    sender.sendMessage(message + url);
+                } else {
+                    sender.sendMessage(message);
+                    sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
+                }
+                sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
             }
-            sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
         }
     }
 
@@ -67,18 +77,29 @@ public class AnalyzeCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
 
-        // TODO Rewrite so that a server can be specified
         // TODO Write a command for listing servers.
-//        Optional<Long> analysisRefreshDate = infoManager.getAnalysisRefreshDate();
-//        boolean forcedRefresh = args.length >= 1 && "-r".equals(args[0]);
-//        boolean refresh = !analysisRefreshDate.isPresent()
-//                || analysisRefreshDate.get() < MiscUtils.getTime() - TimeAmount.MINUTE.ms()
-//                || forcedRefresh;
 
-        updateCache(sender, true);
+        UUID serverUUID = Plan.getServerUUID();
+        if (args.length >= 1 && plugin.getInfoManager().isUsingAnotherWebServer()) {
+            try {
+                List<ServerInfo> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
+                Optional<ServerInfo> server = bukkitServers.stream().filter(info -> {
+                    String serverIdentifier = args[0];
+                    return Integer.toString(info.getId()).equals(serverIdentifier) || info.getName().equals(serverIdentifier);
+                }).findFirst();
+                if (server.isPresent()) {
+                    serverUUID = server.get().getUuid();
+                }
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+                return true;
+            }
+        }
+
+        updateCache(sender, serverUUID);
 
         sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
-        if (plugin.getWebServer().isAuthRequired() && CommandUtils.isPlayer(sender)) {
+        if (plugin.getInfoManager().isAuthRequired() && CommandUtils.isPlayer(sender)) {
             plugin.getRunnableFactory().createNew(new AbsRunnable("WebUser exist check task") {
                 @Override
                 public void run() {
@@ -98,16 +119,12 @@ public class AnalyzeCommand extends SubCommand {
         return true;
     }
 
-    private void updateCache(ISender sender, boolean refresh) {
-        if (refresh) {
-            int bootAnID = plugin.getBootAnalysisTaskID();
-            if (bootAnID != -1) {
-                plugin.getServer().getScheduler().cancelTask(bootAnID);
-            }
-            infoManager.addAnalysisNotification(sender);
-            infoManager.refreshAnalysis();
-        } else {
-            sendAnalysisMessage(Collections.singletonList(sender));
+    private void updateCache(ISender sender, UUID serverUUID) {
+        int bootAnID = plugin.getBootAnalysisTaskID();
+        if (bootAnID != -1) {
+            plugin.getServer().getScheduler().cancelTask(bootAnID);
         }
+        infoManager.addAnalysisNotification(sender, serverUUID);
+        infoManager.refreshAnalysis(serverUUID);
     }
 }

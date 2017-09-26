@@ -10,9 +10,7 @@ import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Abstract layer for Bukkit and Bungee Information managers.
@@ -24,10 +22,10 @@ import java.util.UUID;
 public abstract class InformationManager {
     boolean usingAnotherWebServer;
     String webServerAddress;
-    Set<ISender> analysisNotification;
+    Map<UUID, Set<ISender>> analysisNotification;
 
     public InformationManager() {
-        analysisNotification = new HashSet<>();
+        analysisNotification = new HashMap<>();
     }
 
     public abstract boolean attemptConnection();
@@ -42,7 +40,7 @@ public abstract class InformationManager {
         }
     }
 
-    public abstract void refreshAnalysis();
+    public abstract void refreshAnalysis(UUID serverUUID);
 
     public abstract DataCache getDataCache();
 
@@ -70,8 +68,10 @@ public abstract class InformationManager {
      */
     public abstract String getAnalysisHtml();
 
-    public void addAnalysisNotification(ISender sender) {
-        analysisNotification.add(sender);
+    public void addAnalysisNotification(ISender sender, UUID serverUUID) {
+        Set<ISender> notify = analysisNotification.getOrDefault(serverUUID, new HashSet<>());
+        notify.add(sender);
+        analysisNotification.put(serverUUID, notify);
     }
 
     public abstract String getPluginsTabContent(UUID uuid);
@@ -81,4 +81,10 @@ public abstract class InformationManager {
     }
 
     public abstract String getWebServerAddress();
+
+    public boolean isAuthRequired() {
+        return getWebServerAddress().startsWith("https");
+    }
+
+    public abstract void analysisReady(UUID serverUUID);
 }

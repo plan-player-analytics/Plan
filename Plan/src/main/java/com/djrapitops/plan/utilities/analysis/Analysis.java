@@ -117,7 +117,7 @@ public class Analysis {
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
             Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(analysisData.getPlayerCountPart().getUuids()));
-            ((BukkitInformationManager) infoManager).cacheAnalysisdata(analysisData);
+            ((BukkitInformationManager) infoManager).cacheAnalysisData(analysisData);
             long time = Benchmark.stop("Analysis", "Analysis");
 
             Log.logDebug("Analysis", time);

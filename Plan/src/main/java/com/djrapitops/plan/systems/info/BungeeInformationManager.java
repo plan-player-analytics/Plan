@@ -19,6 +19,7 @@ import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorRes
 import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.IsOnlineWebAPI;
@@ -56,10 +57,6 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     @Override
-    public void refreshAnalysis() {
-        // TODO Refresh network page
-    }
-
     public void refreshAnalysis(UUID serverUUID) {
         ServerInfo serverInfo = bukkitServers.get(serverUUID);
         if (serverInfo == null) {
@@ -76,7 +73,7 @@ public class BungeeInformationManager extends InformationManager {
 
         AnalyzeWebAPI api = plugin.getWebServer().getWebAPI().getAPI(AnalyzeWebAPI.class);
         try {
-            api.sendRequest(serverInfo.getWebAddress());
+            api.sendRequest(serverInfo.getWebAddress(), serverUUID);
         } catch (WebAPIConnectionFailException e) {
             attemptConnection();
         } catch (WebAPIException e) {
@@ -219,5 +216,17 @@ public class BungeeInformationManager extends InformationManager {
 
     public Map<UUID, String> getNetworkPageContent() {
         return networkPageContent;
+    }
+
+    @Override
+    public void analysisReady(UUID serverUUID) {
+        AnalysisReadyWebAPI api = getWebAPI().getAPI(AnalysisReadyWebAPI.class);
+        for (ServerInfo serverInfo : bukkitServers.values()) {
+            try {
+                api.sendRequest(serverInfo.getWebAddress(), serverUUID);
+            } catch (WebAPIException ignored) {
+                /*Ignored*/
+            }
+        }
     }
 }

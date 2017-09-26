@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.info;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
@@ -24,6 +25,8 @@ import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorRes
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
+import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.RequestInspectPluginsTabBukkitWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
@@ -32,6 +35,7 @@ import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -60,7 +64,7 @@ public class BukkitInformationManager extends InformationManager {
         pluginsTabContents = new HashMap<>();
 
         Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
-        if (bungeeConnectionAddress.isPresent()) {
+        if (bungeeConnectionAddress.isPresent() && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
             webServerAddress = bungeeConnectionAddress.get();
             attemptConnection();
         } else {
@@ -70,9 +74,19 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     @Override
-    public void refreshAnalysis() {
-        plugin.getDataCache().cacheSavedNames();
-        analysis.runAnalysis(this);
+    public void refreshAnalysis(UUID serverUUID) {
+        if (Plan.getServerUUID().equals(serverUUID)) {
+            plugin.getDataCache().cacheSavedNames();
+            analysis.runAnalysis(this);
+        } else if (usingAnotherWebServer) {
+            try {
+                getWebAPI().getAPI(AnalyzeWebAPI.class).sendRequest(webServerAddress, serverUUID);
+            } catch (WebAPIException e) {
+                attemptConnection();
+                refreshAnalysis(serverUUID);
+            }
+        }
+
     }
 
     @Override
@@ -81,7 +95,8 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
             } catch (WebAPIException e) {
-                Log.toLog(this.getClass().getName(), e);
+                attemptConnection();
+                cachePlayer(uuid);
             }
         } else {
             PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
@@ -103,7 +118,8 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequest(webServerAddress, uuid);
             } catch (WebAPIException e) {
-                Log.toLog(this.getClass().getName(), e);
+                attemptConnection();
+                cacheInspectPluginsTab(uuid, origin);
             }
         } else {
             String serverName = plugin.getServerInfoManager().getServerName();
@@ -120,7 +136,8 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
             } catch (WebAPIException e) {
-                Log.toLog(this.getClass().getName(), e);
+                attemptConnection();
+                cacheInspectPluginsTab(uuid, contents);
             }
         } else {
             pluginsTabContents.put(uuid, contents);
@@ -143,7 +160,8 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isInspectCached(webServerAddress, uuid);
             } catch (WebAPIException e) {
-                Log.toLog(this.getClass().getName(), e);
+                attemptConnection();
+                return isCached(uuid);
             }
         }
         return super.isCached(uuid);
@@ -155,7 +173,8 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
             } catch (WebAPIException e) {
-                Log.toLog(this.getClass().getName(), e);
+                attemptConnection();
+                return isAnalysisCached(serverUUID);
             }
         }
         return PageCache.isCached("analysisPage:" + serverUUID);
@@ -188,12 +207,20 @@ public class BukkitInformationManager extends InformationManager {
         return dataCache;
     }
 
-    public void cacheAnalysisdata(AnalysisData analysisData) {
+    public void cacheAnalysisData(AnalysisData analysisData) {
         this.analysisData = analysisData;
         refreshDate = MiscUtils.getTime();
         cacheAnalysisHtml();
-        AnalyzeCommand.sendAnalysisMessage(analysisNotification);
-        analysisNotification.clear();
+        UUID serverUUID = Plan.getServerUUID();
+        if (usingAnotherWebServer) {
+            try {
+                getWebAPI().getAPI(AnalysisReadyWebAPI.class).sendRequest(webServerAddress, serverUUID);
+                return;
+            } catch (WebAPIException e) {
+                attemptConnection();
+            }
+        }
+        analysisReady(serverUUID);
     }
 
     private void cacheAnalysisHtml() {
@@ -201,7 +228,8 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, getAnalysisHtml());
             } catch (WebAPIException e) {
-                Log.toLog(this.getClass().getName(), e);
+                attemptConnection();
+                cacheAnalysisHtml();
             }
         } else {
             PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(this));
@@ -240,5 +268,15 @@ public class BukkitInformationManager extends InformationManager {
     @Override
     public String getWebServerAddress() {
         return webServerAddress != null ? webServerAddress : plugin.getWebServer().getAccessAddress();
+    }
+
+    @Override
+    public void analysisReady(UUID serverUUID) {
+        try {
+            AnalyzeCommand.sendAnalysisMessage(analysisNotification.get(serverUUID), serverUUID);
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
+        analysisNotification.getOrDefault(serverUUID, new HashSet<>()).clear();
     }
 }

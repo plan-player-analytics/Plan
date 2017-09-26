@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * @author Rsl1122
  */
-public class AnalyzeWebAPI extends WebAPI {
+public class AnalysisReadyWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         String serverUUIDS = variables.get("serverUUID");
@@ -23,7 +23,7 @@ public class AnalyzeWebAPI extends WebAPI {
             return badRequest("serverUUID was not present");
         }
         UUID serverUUID = UUID.fromString(serverUUIDS);
-        plugin.getInfoManager().refreshAnalysis(serverUUID);
+        plugin.getInfoManager().analysisReady(serverUUID);
         return success();
     }
 
