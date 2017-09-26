@@ -8,7 +8,6 @@ import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
-import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
@@ -146,16 +145,7 @@ public class API {
      * Run the analysis.
      */
     public void updateAnalysisCache() {
-        plugin.getInfoManager().refreshAnalysis();
-    }
-
-    /**
-     * Run the analysis and call the given processor.
-     *
-     * @param processor Processor to call after analysis has finished.
-     */
-    public void updateAnalysisCache(Processor processor) {
-        plugin.getInfoManager().refreshAnalysis();
+        plugin.getInfoManager().refreshAnalysis(plugin.getServerUuid());
     }
 
     /**
