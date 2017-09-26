@@ -42,6 +42,8 @@ public class SessionCache {
             plugin.getDB().getSessionsTable().saveSession(uuid, session);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
+        } finally {
+            activeSessions.remove(uuid);
         }
     }
 
