@@ -408,7 +408,7 @@ public class HtmlStructure {
         boolean analysisIsAvailable = analysisRefreshDate.isPresent();
 
         String serverName = plugin.getServerInfoManager().getServerName();
-        String address = plugin.getInfoManager().getLinkTo("/server/" + serverName).relative().toString();
+        String address = "../server/" + serverName;
 
         StringBuilder b = new StringBuilder("<div class=\"column\">");
 

@@ -55,7 +55,7 @@ public class AnalyzeCommand extends SubCommand {
         Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
         if (serverName.isPresent()) {
             String target = "/server/" + serverName.get();
-            String url = plugin.getInfoManager().getLinkTo(target).toString();
+            String url = plugin.getInfoManager().getLinkTo(target);
             String message = Locale.get(Msg.CMD_INFO_LINK).toString();
 
             for (ISender sender : senders) {

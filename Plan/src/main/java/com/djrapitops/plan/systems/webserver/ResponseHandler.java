@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 
 import java.sql.SQLException;
@@ -217,10 +216,12 @@ public class ResponseHandler extends APIResponseHandler {
 
     private Response notFoundResponse() {
         String error = "404 Not Found";
-        return PageCache.loadPage("notFound: " + error, () ->
-                new NotFoundResponse("Make sure you're accessing a link given by a command, Examples:</p>"
-                        + "<p>" + webServer.getProtocol() + ":" + HtmlUtils.getInspectUrl("<player>") + " or<br>"
-                        + webServer.getProtocol() + ":" + HtmlUtils.getServerAnalysisUrl())
+        return PageCache.loadPage("notFound: " + error, () -> {
+                    String url = plugin.getInfoManager().getWebServerAddress();
+                    return new NotFoundResponse("Make sure you're accessing a link given by a command, Examples:</p>"
+                            + "<p>" + url + "/player/Playername<br>" +
+                            url + "/server</p>");
+                }
         );
     }
 

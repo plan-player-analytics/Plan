@@ -7,7 +7,6 @@ package main.java.com.djrapitops.plan.systems.info;
 import com.djrapitops.plugin.command.ISender;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.systems.info.parsing.UrlParser;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 
 import java.util.*;
@@ -32,12 +31,8 @@ public abstract class InformationManager {
 
     public abstract void cachePlayer(UUID uuid);
 
-    public UrlParser getLinkTo(String target) {
-        if (webServerAddress != null) {
-            return new UrlParser(webServerAddress).target(target);
-        } else {
-            return new UrlParser("");
-        }
+    public String getLinkTo(String target) {
+        return getWebServerAddress() + target;
     }
 
     public abstract void refreshAnalysis(UUID serverUUID);

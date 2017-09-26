@@ -81,7 +81,7 @@ public class API {
      * @return ./player/PlayerName
      */
     public String getPlayerInspectPageLink(String name) {
-        return plugin.getInfoManager().getLinkTo("/player/" + name).relative().toString();
+        return "../player/" + name;
     }
 
     /**

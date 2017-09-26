@@ -35,21 +35,6 @@ public class HtmlUtils {
     }
 
     /**
-     * @return
-     */
-    public static String getServerAnalysisUrlWithProtocol() {
-        return getProtocol() + ":" + getServerAnalysisUrl();
-    }
-
-    /**
-     * @return
-     */
-    public static String getServerAnalysisUrl() {
-        String ip = getIP();
-        return "//" + ip + "/server";
-    }
-
-    /**
      * Used to get the WebServer's IP with Port.
      *
      * @return For example 127.0.0.1:8804
@@ -68,25 +53,6 @@ public class HtmlUtils {
     public static String getProtocol() {
         WebServer uiServer = Plan.getInstance().getWebServer();
         return uiServer.isEnabled() ? uiServer.getProtocol() : Settings.EXTERNAL_WEBSERVER_LINK_PROTOCOL.toString();
-    }
-
-    /**
-     * @param playerName
-     * @return
-     */
-    public static String getInspectUrlWithProtocol(String playerName) {
-        return getProtocol() + ":" + getInspectUrl(playerName);
-    }
-
-    /**
-     * @param playerName
-     * @return
-     * @deprecated Use getRelativeInspectUrl instead.
-     */
-    @Deprecated
-    public static String getInspectUrl(String playerName) {
-        String ip = getIP();
-        return "//" + ip + "/player/" + playerName.replace(" ", "%20").replace(".", "%2E");
     }
 
     public static String getRelativeInspectUrl(String playerName) {

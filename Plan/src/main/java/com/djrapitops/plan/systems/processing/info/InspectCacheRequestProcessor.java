@@ -6,13 +6,13 @@ package main.java.com.djrapitops.plan.systems.processing.info;
 
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.player.PlayerProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.UUID;
 
@@ -46,7 +46,7 @@ public class InspectCacheRequestProcessor extends PlayerProcessor {
     private void sendInspectMsg(ISender sender, String playerName) {
         sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
         // Link
-        String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
+        String url = Plan.getInstance().getInfoManager().getLinkTo("/player/" + playerName);
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

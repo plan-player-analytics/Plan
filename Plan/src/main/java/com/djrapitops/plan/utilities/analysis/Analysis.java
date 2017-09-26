@@ -21,7 +21,6 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.html.tables.PlayersTableCreator;
 import org.apache.commons.lang3.StringUtils;
 
@@ -122,7 +121,7 @@ public class Analysis {
 
             Log.logDebug("Analysis", time);
 
-            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), HtmlUtils.getServerAnalysisUrlWithProtocol()));
+            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), ""));
 
             // TODO Export
 //            ExportUtility.export(analysisData, rawData);
