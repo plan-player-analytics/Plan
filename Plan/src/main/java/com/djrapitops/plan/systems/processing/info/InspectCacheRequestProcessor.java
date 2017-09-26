@@ -6,8 +6,10 @@ package main.java.com.djrapitops.plan.systems.processing.info;
 
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.processing.player.PlayerProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
@@ -32,7 +34,12 @@ public class InspectCacheRequestProcessor extends PlayerProcessor {
 
     @Override
     public void process() {
-        MiscUtils.getIPlan().getInfoManager().cachePlayer(getUUID());
+        IPlan plugin = MiscUtils.getIPlan();
+        plugin.getInfoManager().cachePlayer(getUUID());
+        DataCache dataCache = plugin.getInfoManager().getDataCache();
+        if (dataCache != null) {
+            dataCache.refreshActiveSessionsState();
+        }
         sendInspectMsg(sender, playerName);
     }
 

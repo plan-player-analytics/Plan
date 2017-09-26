@@ -3,6 +3,7 @@ package main.java.com.djrapitops.plan.systems.cache;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -44,6 +45,12 @@ public class SessionCache {
             Log.toLog(this.getClass().getName(), e);
         } finally {
             activeSessions.remove(uuid);
+        }
+    }
+
+    public void refreshActiveSessionsState() {
+        for (Session session : activeSessions.values()) {
+            session.getWorldTimes().updateState(MiscUtils.getTime());
         }
     }
 
