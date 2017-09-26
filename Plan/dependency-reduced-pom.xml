@@ -113,14 +113,6 @@
   </build>
   <repositories>
     <repository>
-      <id>plan-repo</id>
-      <url>http://repo.fuzzlemann.de/artifactory/libs-release/</url>
-    </repository>
-    <repository>
-      <id>plan-snapshot-repo</id>
-      <url>http://repo.fuzzlemann.de/artifactory/libs-snapshot/</url>
-    </repository>
-    <repository>
       <id>bungeecord-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>

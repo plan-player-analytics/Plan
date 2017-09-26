@@ -81,6 +81,9 @@ public class GeolocationCache {
      * @see #getCountry(String)
      */
     private static String getUnCachedCountry(String ipAddress) {
+        if ("127.0.0.1".equals(ipAddress)) {
+            return "Local Machine";
+        }
         try {
             checkDB();
 
