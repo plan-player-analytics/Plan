@@ -99,7 +99,7 @@ public class BukkitInformationManager extends InformationManager {
                 cachePlayer(uuid);
             }
         } else {
-            PageCache.loadPage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
+            PageCache.cachePage("inspectPage: " + uuid, () -> new InspectPageResponse(this, uuid));
         }
         plugin.addToProcessQueue(new Processor<UUID>(uuid) {
             @Override

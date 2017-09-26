@@ -93,5 +93,6 @@ public class ShutdownHook extends Thread {
                 Log.toLog(this.getClass().getName(), e);
             }
         }
+        activeSessions.clear();
     }
 }

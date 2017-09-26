@@ -15,7 +15,6 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.processing.info.InspectCacheRequestProcessor;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.ChatColor;
 
@@ -76,7 +75,6 @@ public class InspectCommand extends SubCommand {
                     if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString(), sender)) {
                         return;
                     }
-                    sender.sendMessage(Locale.get(Msg.CMD_INFO_FETCH_DATA).toString());
                     if (CommandUtils.isPlayer(sender) && plugin.getWebServer().isAuthRequired()) {
                         boolean senderHasWebUser = plugin.getDB().getSecurityTable().userExists(sender.getName());
                         if (!senderHasWebUser) {
@@ -92,21 +90,5 @@ public class InspectCommand extends SubCommand {
                 }
             }
         }).runTaskAsynchronously();
-    }
-
-    private void sendInspectMsg(ISender sender, String playerName) {
-        sender.sendMessage(Locale.get(Msg.CMD_HEADER_INSPECT) + " " + playerName);
-        // Link
-        String url = HtmlUtils.getInspectUrlWithProtocol(playerName);
-        String message = Locale.get(Msg.CMD_INFO_LINK).toString();
-        boolean console = !CommandUtils.isPlayer(sender);
-        if (console) {
-            sender.sendMessage(message + url);
-        } else {
-            sender.sendMessage(message);
-            sender.sendLink("   ", Locale.get(Msg.CMD_INFO_CLICK_ME).toString(), url);
-        }
-
-        sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
     }
 }
