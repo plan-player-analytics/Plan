@@ -57,7 +57,8 @@ public class RegisterProcessor extends PlayerProcessor {
             db.getActionsTable().insertAction(uuid, new Action(time, Actions.FIRST_SESSION, "Online: " + playersOnline + " Players"));
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
+        } finally {
+            plugin.addToProcessQueue(afterProcess);
         }
-        plugin.addToProcessQueue(afterProcess);
     }
 }
