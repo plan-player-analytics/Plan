@@ -4,6 +4,8 @@ import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.processing.player.*;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
@@ -98,7 +100,13 @@ public class PlanPlayerListener implements Listener {
                 new RegisterProcessor(uuid, player.getFirstPlayed(), time, playerName, playersOnline,
                         new IPUpdateProcessor(uuid, ip),
                         new NameProcessor(uuid, playerName, displayName)
-                )
+                ),
+                new Processor<InformationManager>(plugin.getInfoManager()) {
+                    @Override
+                    public void process() {
+                        object.updateNetworkPageContent();
+                    }
+                }
         );
     }
 

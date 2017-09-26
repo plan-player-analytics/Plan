@@ -91,7 +91,6 @@ public class IPsTable extends UserIDTable {
         if (ips.contains(ip)) {
             return;
         }
-
         insertIp(uuid, ip, geolocation);
     }
 

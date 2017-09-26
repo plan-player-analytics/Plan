@@ -279,4 +279,16 @@ public class BukkitInformationManager extends InformationManager {
         }
         analysisNotification.getOrDefault(serverUUID, new HashSet<>()).clear();
     }
+
+    @Override
+    public void updateNetworkPageContent() {
+        if (usingAnotherWebServer) {
+            try {
+                getWebAPI().getAPI(PostNetworkPageContentWebAPI.class).sendNetworkContent(webServerAddress, HtmlStructure.createServerContainer(plugin));
+            } catch (WebAPIException e) {
+                attemptConnection();
+                updateNetworkPageContent();
+            }
+        }
+    }
 }

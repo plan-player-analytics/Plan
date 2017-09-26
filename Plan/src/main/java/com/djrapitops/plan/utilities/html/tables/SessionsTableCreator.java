@@ -49,12 +49,23 @@ public class SessionsTableCreator {
 
         DataCache dataCache = Plan.getInstance().getDataCache();
 
+        Map<Long, UUID> uuidBySessionStart = new HashMap<>();
+        for (Map.Entry<UUID, Session> entry : dataCache.getActiveSessions().entrySet()) {
+            uuidBySessionStart.put(entry.getValue().getSessionStart(), entry.getKey());
+        }
+
+
         for (Session session : allSessions) {
             if (i >= 50) {
                 break;
             }
 
-            UUID uuid = uuidByID.get(session.getSessionID());
+            UUID uuid;
+            if (session.isFetchedFromDB()) {
+                uuid = uuidByID.get(session.getSessionID());
+            } else {
+                uuid = uuidBySessionStart.get(session.getSessionStart());
+            }
 
             String name = dataCache.getName(uuid);
             String start = FormatUtils.formatTimeStamp(session.getSessionStart());

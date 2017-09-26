@@ -73,6 +73,9 @@ public class BungeeInformationManager extends InformationManager {
      */
     @Override
     public void refreshAnalysis(UUID serverUUID) {
+        if (PlanBungee.getServerUUID().equals(serverUUID)) {
+            return;
+        }
         ServerInfo serverInfo = getOnlineServerInfo(serverUUID);
         if (serverInfo == null) {
             return;
@@ -323,7 +326,7 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     public void removeNetworkPageContent(UUID serverUUID) {
-        networkPageContent.remove(serverUUID);
+        networkPageContent.put(serverUUID, HtmlStructure.parseOfflineServerContainer(networkPageContent.get(serverUUID)));
     }
 
     public Map<UUID, String> getNetworkPageContent() {
@@ -345,5 +348,13 @@ public class BungeeInformationManager extends InformationManager {
                 /*Ignored*/
             }
         }
+    }
+
+    @Override
+    public void updateNetworkPageContent() {
+        Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
+        bukkitServers.values().stream()
+                .filter(s -> !online.contains(s)).map(ServerInfo::getUuid)
+                .forEach(this::removeNetworkPageContent);
     }
 }

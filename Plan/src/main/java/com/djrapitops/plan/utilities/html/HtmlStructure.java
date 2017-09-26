@@ -428,10 +428,18 @@ public class HtmlStructure {
         } else {
             b.append("<a class=\"button disabled right\">Analysis</a>");
         }
-        // TODO Refresh functionality
 
         b.append("</div>")
                 .append("</div>");
         return b.toString();
+    }
+
+    public static String parseOfflineServerContainer(String oldContent) {
+        if (oldContent == null) {
+            return "";
+        }
+        String[] split = oldContent.split("<p>", 2);
+        String[] split2 = split[1].split("box-footer", 2);
+        return split[0] + "<p>Offline</p></div><div class=\"box-footer" + split2[1];
     }
 }

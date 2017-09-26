@@ -97,8 +97,8 @@ ${killCount} num
 ${mobKillCount} num
 ${deathCount} num
 
-${commandCount} num //TODO
-${commandUniqueCount} num //TODO
+${commandCount} num
+${commandUniqueCount} num
 
 //done
 ${tpsAverageDay} num
@@ -131,7 +131,7 @@ ${punchCardSeries}
 
 ${playersGraphColor} // done
 
-${gmColors} // TODO Move to World Graph
+${gmColors}
 
 // done
 ${active}
@@ -141,7 +141,7 @@ ${banned}
 ${activityColors}
 
 ${worldTotal} timeamount //done
-${worldColors} //TODO NOT IMPLEMENTED
+${worldColors}
 
 //done
 ${tpsMedium}

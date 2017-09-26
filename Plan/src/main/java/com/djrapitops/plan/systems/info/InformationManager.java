@@ -87,4 +87,6 @@ public abstract class InformationManager {
     }
 
     public abstract void analysisReady(UUID serverUUID);
+
+    public abstract void updateNetworkPageContent();
 }
