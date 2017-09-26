@@ -63,8 +63,8 @@ public class ProtocolTable extends Table {
                 return -1;
             }
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -82,8 +82,8 @@ public class ProtocolTable extends Table {
             }
             return versions;
         } finally {
-            close(set);
-            close(statement);
+            endTransaction(statement);
+            close(set, statement);
         }
     }
 
@@ -100,6 +100,8 @@ public class ProtocolTable extends Table {
             statement.setInt(1, version);
             statement.setString(2, uuid.toString());
             statement.execute();
+
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
@@ -116,6 +118,8 @@ public class ProtocolTable extends Table {
             statement.setString(1, uuid.toString());
             statement.setInt(2, version);
             statement.execute();
+
+            commit(statement.getConnection());
         } finally {
             close(statement);
         }
