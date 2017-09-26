@@ -54,18 +54,24 @@ public class WebServer {
     }
 
     private void registerWebAPIs() {
-        webAPI.registerNewAPI(new AnalyzeWebAPI());
-        webAPI.registerNewAPI(new ConfigurationWebAPI());
-        webAPI.registerNewAPI(new InspectWebAPI());
-        webAPI.registerNewAPI(new IsOnlineWebAPI());
-        webAPI.registerNewAPI(new PingWebAPI());
-        webAPI.registerNewAPI(new RequestInspectPluginsTabBukkitWebAPI());
+        webAPI.registerNewAPI(
+                new AnalysisReadyWebAPI(),
+                new AnalyzeWebAPI(),
+                new ConfigurationWebAPI(),
+                new InspectWebAPI(),
+                new IsOnlineWebAPI(),
+                new RequestInspectPluginsTabBukkitWebAPI(),
+                new PingWebAPI()
+        );
 
-        webAPI.registerNewAPI(new IsCachedWebAPI());
-        webAPI.registerNewAPI(new PostHtmlWebAPI());
-        webAPI.registerNewAPI(new PostInspectPluginsTabWebAPI());
-        webAPI.registerNewAPI(new RequestPluginsTabWebAPI());
-        webAPI.registerNewAPI(new PostOriginalBukkitSettingsWebAPI());
+        webAPI.registerNewAPI(
+                new IsCachedWebAPI(),
+                new PostHtmlWebAPI(),
+                new PostInspectPluginsTabWebAPI(),
+                new PostNetworkPageContentWebAPI(),
+                new PostOriginalBukkitSettingsWebAPI(),
+                new RequestPluginsTabWebAPI()
+        );
     }
 
     /**

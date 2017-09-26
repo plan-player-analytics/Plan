@@ -21,6 +21,12 @@ public class WebAPIManager {
         registry = new HashMap<>();
     }
 
+    public void registerNewAPI(WebAPI... api) {
+        for (WebAPI webAPI : api) {
+            registerNewAPI(webAPI);
+        }
+    }
+
     public void registerNewAPI(WebAPI api) {
         registry.put(api.getClass().getSimpleName().toLowerCase(), api);
     }
