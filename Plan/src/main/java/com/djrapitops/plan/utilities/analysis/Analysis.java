@@ -312,6 +312,5 @@ public class Analysis {
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
-        Benchmark.stop("Analysis", "Fetch Phase");
     }
 }
