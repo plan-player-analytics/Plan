@@ -296,8 +296,8 @@ tr:nth-child(odd) {background: #eee}
     padding: 10px;
 }
 
-.plugin p, i, table {
-    padding: 0;
+.plugin p {
+    padding: 5px 0px;
     margin: 0;
 }
 
