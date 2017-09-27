@@ -89,6 +89,7 @@ public enum Settings {
     THEME_GRAPH_CHUNKS("Theme.Graphs.Chunks"),
     THEME_GRAPH_ENTITIES("Theme.Graphs.Entities"),
     THEME_GRAPH_WORLD_PIE("Theme.Graphs.WorldPie"),
+    THEME_GRAPH_GM_PIE("Theme.Graphs.GMDrilldown"),
     THEME_GRAPH_ACTIVITY_PIE("Theme.Graphs.ActivityPie"),
     THEME_GRAPH_SERVER_PREF_PIE("Theme.Graphs.ServerPreferencePie"),
     // StringList

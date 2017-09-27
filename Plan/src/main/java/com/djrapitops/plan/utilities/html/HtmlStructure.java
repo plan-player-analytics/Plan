@@ -163,14 +163,14 @@ public class HtmlStructure {
             html.append("</div>")
                     .append("<div class=\"session-col\">");
 
-            String id = "worldPie" + session.getSessionStart();
+            String id = "worldPie" + session.getSessionStart() + i;
 
             html.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
 
             String[] worldData = WorldPieCreator.createSeriesData(session.getWorldTimes());
 
             html.append("<script>")
-                    .append("var ").append(id).append("series = {name:'World Playtime',colorByPoint:true,data:").append(worldData[0]).append("};")
+                    .append("var ").append(id).append("series = {name:'World Playtime',colors: worldPieColors,colorByPoint:true,data:").append(worldData[0]).append("};")
                     .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
                     .append("</script>");
 

@@ -83,6 +83,7 @@ public class InspectPageParser extends PageParser {
             Map<String, Long> playtimeByServer = sessionsTable.getPlaytimeByServer(uuid);
             addValue("serverPieSeries", ServerPreferencePieCreator.createSeriesData(playtimeByServer));
             addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
+            addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
             addValue("serverPieColors", Settings.THEME_GRAPH_SERVER_PREF_PIE.toString());
 
             List<String> geolocations = db.getIpsTable().getGeolocations(uuid);

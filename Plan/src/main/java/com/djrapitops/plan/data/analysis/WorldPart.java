@@ -36,6 +36,7 @@ public class WorldPart extends RawData {
         addValue("worldSeries", seriesData[0]);
         addValue("gmSeries", seriesData[1]);
         addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
+        addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
     }
 
     public WorldTimes getWorldTimes() {

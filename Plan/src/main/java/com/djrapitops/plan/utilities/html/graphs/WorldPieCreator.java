@@ -59,7 +59,7 @@ public class WorldPieCreator {
         for (Map.Entry<String, GMTimes> world : gmTimesMap.entrySet()) {
             drilldownBuilder.append("{name:'").append(world.getKey())
                     .append("', id:'").append(world.getKey())
-                    .append("',");
+                    .append("',colors: gmPieColors,");
             drilldownBuilder.append("data: [");
 
             appendGMTimesForWorld(drilldownBuilder, world);
