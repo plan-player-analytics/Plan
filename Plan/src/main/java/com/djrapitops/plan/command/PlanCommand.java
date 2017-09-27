@@ -46,12 +46,13 @@ public class PlanCommand extends TreeCommand<Plan> {
         commands.add(new ReloadCommand(plugin));
         commands.add(new ManageCommand(plugin));
         commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission()));
-
-        if (plugin.getWebServer().isEnabled()) {
-            commands.add(new ListCommand());
-            RegisterCommand registerCommand = new RegisterCommand(plugin);
-            commands.add(registerCommand);
-            commands.add(new WebUserCommand(plugin, registerCommand));
+        commands.add(new ListCommand());
+        RegisterCommand registerCommand = new RegisterCommand(plugin);
+        commands.add(registerCommand);
+        commands.add(new WebUserCommand(plugin, registerCommand));
+        if (plugin.getInfoManager().isUsingAnotherWebServer()) {
+            commands.add(new NetworkCommand());
+            commands.add(new ListServersCommand(plugin));
         }
 
         if (Settings.DEV_MODE.isTrue()) {
