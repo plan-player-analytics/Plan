@@ -43,4 +43,6 @@ public interface IPlan extends IPlugin {
     InputStream getResource(String resource);
 
     IConfig getIConfig() throws IOException;
+
+    void restart();
 }

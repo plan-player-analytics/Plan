@@ -8,6 +8,7 @@ import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.command.commands.ReloadCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -63,10 +64,12 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
 
+            registerCommand(new ReloadCommand(this));
+
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {
-                Log.error("IP setting still 0.0.0.0 - Config AlternativeIP/IP that connects to the Proxy server.");
-                disablePlugin();
+                Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
+                Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
                 return;
             }
 
@@ -171,5 +174,11 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
     public UUID getServerUuid() {
         return serverInfoManager.getServerUUID();
+    }
+
+    @Override
+    public void restart() {
+        onDisable();
+        onEnable();
     }
 }
