@@ -23,29 +23,6 @@ function worldChart(id, entitySeries, chunkSeries) {
 				text: 'All'
 			}]
 		},
-		yAxis: [{
-			labels: {
-				align: 'right',
-				x: -3
-			},
-			title: {
-				text: 'Chunks'
-			},
-			height: '50%',
-			lineWidth: 2
-		}, {
-			labels: {
-				align: 'right',
-				x: -3
-			},
-			title: {
-				text: 'Entities'
-			},
-			top: '50%',
-			height: '40%',
-			offset: 0,
-			lineWidth: 2
-		}],
 		tooltip: {
 			split: true
 		},
@@ -55,6 +32,9 @@ function worldChart(id, entitySeries, chunkSeries) {
 				fillOpacity: 0.4
 			}
 		},
+		legend: {
+            enabled: true,
+        },
 		series: [entitySeries, chunkSeries]
 	});
 }

@@ -23,28 +23,6 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
 				text: 'All'
 			}]
 		},
-		yAxis: [{
-			labels: {
-				align: 'right',
-				x: -3
-			},
-			title: {
-				text: 'Players'
-			},
-			height: '30%'
-		}, {
-			lineWidth: 2,
-			labels: {
-				align: 'right',
-				x: -3
-			},
-			title: {
-				text: 'TPS'
-			},
-			height: '70%',
-			top: '30%',
-			offset: 0
-		}],
 		tooltip: {
 			split: true
 		},
@@ -54,6 +32,9 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
 				fillOpacity: 0.4
 			}
 		},
+		legend: {
+            enabled: true,
+        },
 		series: [tpsSeries, playersOnlineSeries]
 	});
 }
