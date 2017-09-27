@@ -12,6 +12,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<script>
+    var worldPieColors = [${worldPieColors}];
+    var gmPieColors = [${gmPieColors}];
+</script>
 <header>
     <div>
         <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px">
@@ -206,7 +210,7 @@
         var worldSeries = {
              name:'World Playtime',
              colorByPoint:true,
-             colors: [${worldPieColors}],
+             colors: worldPieColors,
              data: ${worldPieSeries}
         };
         var gmSeries = ${gmSeries};
