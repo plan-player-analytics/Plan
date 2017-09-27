@@ -167,7 +167,7 @@ public class KillsTable extends UserIDTable {
                     " JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + columnVictimUserID +
                     " JOIN " + usersTable + " a on " + usersKillerIDColumn + "=" + columnKillerUserID);
 
-            statement.setFetchSize(10000);
+            statement.setFetchSize(50000);
             set = statement.executeQuery();
 
             Map<UUID, List<PlayerKill>> allKills = new HashMap<>();
@@ -250,7 +250,7 @@ public class KillsTable extends UserIDTable {
                     " FROM " + tableName +
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID);
 
-            statement.setFetchSize(10000);
+            statement.setFetchSize(50000);
 
             set = statement.executeQuery();
 

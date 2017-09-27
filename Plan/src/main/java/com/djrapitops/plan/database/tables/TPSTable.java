@@ -86,7 +86,7 @@ public class TPSTable extends Table {
             statement = prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
-            statement.setFetchSize(20000);
+            statement.setFetchSize(50000);
             statement.setString(1, Plan.getServerUUID().toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -176,6 +176,7 @@ public class TPSTable extends Table {
                     .and(columnPlayers + "= (SELECT MAX(" + columnPlayers + ") FROM " + tableName + ")")
                     .and(columnDate + ">= ?")
                     .toString());
+            statement.setFetchSize(1000);
             statement.setString(1, serverUUID.toString());
             statement.setLong(2, afterDate);
             set = statement.executeQuery();

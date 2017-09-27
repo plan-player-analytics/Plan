@@ -85,6 +85,7 @@ public class CommandUseTable extends Table {
                     columnCommand, columnTimesUsed)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
+            statement.setFetchSize(5000);
             statement.setString(1, serverUUID.toString());
             set = statement.executeQuery();
             while (set.next()) {

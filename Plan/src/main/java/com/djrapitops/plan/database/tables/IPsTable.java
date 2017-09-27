@@ -144,7 +144,7 @@ public class IPsTable extends UserIDTable {
                     " FROM " + tableName +
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
             );
-            statement.setFetchSize(5000);
+            statement.setFetchSize(50000);
             set = statement.executeQuery();
             while (set.next()) {
                 UUID uuid = UUID.fromString(set.getString("uuid"));

@@ -365,6 +365,7 @@ public class SessionsTable extends UserIDTable {
                     " FROM " + tableName +
                     " WHERE " + columnSessionStart + ">?" +
                     " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
+            statement.setFetchSize(1000);
             statement.setLong(1, afterDate);
             statement.setString(2, serverUUID.toString());
             set = statement.executeQuery();
@@ -533,7 +534,7 @@ public class SessionsTable extends UserIDTable {
                     " FROM " + tableName +
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                     " GROUP BY uuid");
-            statement.setFetchSize(5000);
+            statement.setFetchSize(20000);
             set = statement.executeQuery();
             Map<UUID, Long> lastSeenMap = new HashMap<>();
             while (set.next()) {
