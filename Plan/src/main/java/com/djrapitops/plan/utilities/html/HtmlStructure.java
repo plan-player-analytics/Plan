@@ -304,7 +304,7 @@ public class HtmlStructure {
             html.append("<div class=\"box plugin\">");
 
             for (String ph : pluginPhs) {
-                html.append(ph).append("<br>");
+                html.append(ph);
             }
 
             html.append("</div></div>"); // Closes column

@@ -292,6 +292,15 @@ tr:nth-child(odd) {background: #eee}
     margin: 0;
 }
 
+.plugin {
+    padding: 10px;
+}
+
+.plugin p, i, table {
+    padding: 0;
+    margin: 0;
+}
+
 @media only screen and (max-width: 1680px) {
     .nav-button {
         font-size: 19px;

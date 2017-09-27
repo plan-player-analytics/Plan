@@ -286,6 +286,7 @@ public class UsersTable extends UserIDTable {
                             " (SELECT " + columnID + " FROM " + nicknamesTable +
                             " WHERE " + nicknamesTable.getColumnNick() + " LIKE LOWER(?))"
             );
+            statement.setFetchSize(5000);
             statement.setString(1, searchString);
             statement.setString(2, searchString);
 

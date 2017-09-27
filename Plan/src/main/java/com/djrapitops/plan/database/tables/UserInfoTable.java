@@ -132,6 +132,7 @@ public class UserInfoTable extends UserIDTable {
                     " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
                     " AND " + columnServerID + "=" + serverTable.statementSelectServerID
             );
+            statement.setFetchSize(20000);
             statement.setString(1, uuid.toString());
             statement.setString(2, serverUUID.toString());
             set = statement.executeQuery();
@@ -176,7 +177,7 @@ public class UserInfoTable extends UserIDTable {
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                     " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID
             );
-            statement.setFetchSize(2000);
+            statement.setFetchSize(20000);
             statement.setString(1, serverUUID.toString());
             set = statement.executeQuery();
             while (set.next()) {
@@ -214,7 +215,7 @@ public class UserInfoTable extends UserIDTable {
                     " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                     " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
             );
-            statement.setFetchSize(5000);
+            statement.setFetchSize(20000);
             set = statement.executeQuery();
             Map<UUID, List<UserInfo>> serverMap = new HashMap<>();
             while (set.next()) {
