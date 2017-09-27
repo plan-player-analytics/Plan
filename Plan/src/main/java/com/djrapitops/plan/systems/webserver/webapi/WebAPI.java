@@ -128,7 +128,6 @@ public abstract class WebAPI {
         } catch (SocketTimeoutException e) {
             throw new WebAPIConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
-            Log.toLog(this.getClass().getName(), e);
             throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }
     }
