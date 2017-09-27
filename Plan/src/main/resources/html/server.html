@@ -226,17 +226,21 @@
                             <div class="box-footer" style="height: 640px;">
                                 <div id="tabs">
                                     <ul style="list-style: none; padding: 0; float: left; position: relative; top: 0; white-space: nowrap;">
-                                        <li style="display: inline;"><a class="button" href="#tabs-1">TPS</a></li>
-                                        <li style="display: inline;"><a class="button" href="#tabs-2">CPU & RAM</a></li>
-                                        <li style="display: inline;"><a class="button" href="#tabs-3">World Load</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-1"><i class="fa fa-cogs"></i> All</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-2"><i class="fa fa-tachometer"></i> TPS</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-3"><i class="fa fa-microchip"></i> CPU & RAM</a></li>
+                                        <li style="display: inline;"><a class="button" href="#tabs-4"><i class="fa fa-map"></i> World Load</a></li>
                                     </ul>
                                     <div id="tabs-1">
-                                        <div id="tpsGraph" style="width: 100%; height: 550px;"></div>
+                                        <div id="performanceGraph" style="width: 100%; height: 550px;"></div>
                                     </div>
                                     <div id="tabs-2">
-                                        <div id="resourceGraph" style="width: 100%; height: 550px;"></div>
+                                        <div id="tpsGraph" style="width: 100%; height: 550px;"></div>
                                     </div>
                                     <div id="tabs-3">
+                                        <div id="resourceGraph" style="width: 100%; height: 550px;"></div>
+                                    </div>
+                                    <div id="tabs-4">
                                         <div id="worldGraph" style="width: 100%; height: 550px;"></div>
                                     </div>
                                 </div>
@@ -491,7 +495,7 @@
             worldPie('worldPie', worldSeries, gmSeries);
             playersChart('playerChartDay', playersOnlineSeries, 1);
             playersChart('playerChartMonth', playersOnlineSeries, 4);
-            <!--performanceChart('tpsGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);-->
+            performanceChart('performanceGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
             tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
             resourceChart('resourceGraph', cpuSeries, ramSeries);
             worldChart('worldGraph', entitySeries, chunkSeries);
