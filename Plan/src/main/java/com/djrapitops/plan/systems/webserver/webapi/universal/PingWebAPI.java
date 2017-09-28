@@ -32,15 +32,19 @@ public class PingWebAPI extends WebAPI {
 
     @Override
     public void sendRequest(String address) throws WebAPIException {
-        String accessKey = BukkitPluginChannelListener.getAccessKey();
-        if (accessKey != null) {
-            addVariable("accessKey", accessKey);
-        }
+        if (Compatibility.isBukkitAvailable()) {
+            String accessKey = BukkitPluginChannelListener.getAccessKey();
+            if (accessKey != null) {
+                addVariable("accessKey", accessKey);
+            }
 
-        super.sendRequest(address);
+            super.sendRequest(address);
 
-        if (accessKey != null) {
-            BukkitPluginChannelListener.usedAccessKey();
+            if (accessKey != null) {
+                BukkitPluginChannelListener.usedAccessKey();
+            }
+        } else {
+            super.sendRequest(address);
         }
     }
 }
