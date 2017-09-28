@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
+import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -45,6 +46,7 @@ public class NetworkPageParser extends PageParser {
             addValue("networkName", Settings.BUNGEE_NETWROK_NAME.toString());
             addValue("version", plugin.getVersion());
             addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(networkOnlineData));
+            addValue("playersGraphColor", Colors.PLAYERS_ONLINE.getColor());
             addValue("playersOnline", plugin.getProxy().getOnlineCount());
             addValue("playersMax", db.getServerTable().getMaxPlayers());
 
