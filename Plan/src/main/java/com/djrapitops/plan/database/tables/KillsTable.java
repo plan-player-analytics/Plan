@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,15 +70,15 @@ public class KillsTable extends UserIDTable {
     @Override
     public void removeUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName +
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("DELETE FROM " + tableName +
                     " WHERE " + columnKillerUserID + " = " + usersTable.statementSelectID +
                     " OR " + columnVictimUserID + " = " + usersTable.statementSelectID);
             statement.setString(1, uuid.toString());
             statement.setString(2, uuid.toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -88,8 +89,8 @@ public class KillsTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
             for (PlayerKill kill : playerKills) {
                 UUID victim = kill.getVictim();
                 long date = kill.getTime();
@@ -103,7 +104,7 @@ public class KillsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -112,10 +113,10 @@ public class KillsTable extends UserIDTable {
     public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnSessionID + ", " +
                     columnDate + ", " +
                     columnWeapon + ", " +
@@ -153,12 +154,12 @@ public class KillsTable extends UserIDTable {
     public Map<UUID, List<PlayerKill>> getPlayerKills(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersVictimIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersKillerIDColumn = "a." + usersTable.getColumnID();
             String usersVictimUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
             String usersKillerUUIDColumn = "a." + usersTable.getColumnUUID() + " as killer_uuid";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnDate + ", " +
                     columnWeapon + ", " +
                     usersVictimUUIDColumn + ", " +
@@ -205,8 +206,8 @@ public class KillsTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             String[] gms = GMTimes.getGMKeyArray();
             for (UUID serverUUID : allSessions.keySet()) {
                 for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
@@ -230,7 +231,7 @@ public class KillsTable extends UserIDTable {
                 }
             }
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -239,10 +240,10 @@ public class KillsTable extends UserIDTable {
     public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnSessionID + ", " +
                     columnDate + ", " +
                     columnWeapon + ", " +

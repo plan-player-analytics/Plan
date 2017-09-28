@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
@@ -305,7 +306,7 @@ public abstract class SQLDB extends Database {
                 connection.commit();
             }
         } finally {
-            endTransaction(connection);
+            MiscUtils.close(connection);
         }
     }
 
@@ -320,12 +321,8 @@ public abstract class SQLDB extends Database {
                 connection.rollback();
             }
         } finally {
-            endTransaction(connection);
+            MiscUtils.close(connection);
         }
-    }
-
-    public void endTransaction(Connection connection) throws SQLException {
-        connection.close();
     }
 
     public boolean isOpen() {

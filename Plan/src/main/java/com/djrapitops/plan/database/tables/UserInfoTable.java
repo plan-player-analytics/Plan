@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.database.sql.Update;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,8 +60,8 @@ public class UserInfoTable extends UserIDTable {
         }
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " (" +
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("INSERT INTO " + tableName + " (" +
                     columnUserID + ", " +
                     columnRegistered + ", " +
                     columnServerID +
@@ -73,7 +74,7 @@ public class UserInfoTable extends UserIDTable {
             statement.setString(3, Plan.getServerUUID().toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -82,23 +83,22 @@ public class UserInfoTable extends UserIDTable {
     public boolean isRegistered(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnUserID)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnUserID)
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             return set.next();
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
 
     public void updateOpAndBanStatus(UUID uuid, boolean opped, boolean banned) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(Update.values(tableName, columnOP, columnBanned)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Update.values(tableName, columnOP, columnBanned)
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
             statement.setBoolean(1, opped);
@@ -106,7 +106,7 @@ public class UserInfoTable extends UserIDTable {
             statement.setString(3, uuid.toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -119,10 +119,10 @@ public class UserInfoTable extends UserIDTable {
     public UserInfo getUserInfo(UUID uuid, UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     tableName + "." + columnRegistered + ", " +
                     columnOP + ", " +
                     columnBanned + ", " +
@@ -145,7 +145,6 @@ public class UserInfoTable extends UserIDTable {
             }
             return null;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -162,12 +161,12 @@ public class UserInfoTable extends UserIDTable {
     public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             List<UserInfo> userInfo = new ArrayList<>();
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String usersNameColumn = usersTable + "." + usersTable.getColumnName() + " as name";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     tableName + "." + columnRegistered + ", " +
                     columnOP + ", " +
                     columnBanned + ", " +
@@ -200,12 +199,12 @@ public class UserInfoTable extends UserIDTable {
     public Map<UUID, List<UserInfo>> getAllUserInfo() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     tableName + "." + columnRegistered + ", " +
                     columnBanned + ", " +
                     columnOP + ", " +
@@ -234,7 +233,6 @@ public class UserInfoTable extends UserIDTable {
             }
             return serverMap;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -244,8 +242,8 @@ public class UserInfoTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " (" +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("INSERT INTO " + tableName + " (" +
                     columnUserID + ", " +
                     columnRegistered + ", " +
                     columnServerID + ", " +
@@ -271,7 +269,7 @@ public class UserInfoTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -280,12 +278,12 @@ public class UserInfoTable extends UserIDTable {
     public Map<UUID, Set<UUID>> getSavedUUIDs() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     usersUUIDColumn + ", " +
                     serverUUIDColumn +
                     " FROM " + tableName +
@@ -306,7 +304,6 @@ public class UserInfoTable extends UserIDTable {
             }
             return serverMap;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }

@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,8 +57,8 @@ public class WorldTable extends Table {
     public List<String> getWorlds() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             List<String> worldNames = new ArrayList<>();
             while (set.next()) {
@@ -66,7 +67,6 @@ public class WorldTable extends Table {
             }
             return worldNames;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -90,8 +90,8 @@ public class WorldTable extends Table {
         }
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("INSERT INTO " + tableName + " ("
                     + columnWorldName
                     + ") VALUES (?)");
             for (String world : worldsToSave) {
@@ -100,7 +100,7 @@ public class WorldTable extends Table {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }

@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,8 +68,8 @@ public class NicknamesTable extends UserIDTable {
     public List<String> getAllNicknames(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " + columnNick + " FROM " + tableName +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT " + columnNick + " FROM " + tableName +
                     " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")");
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
@@ -85,7 +86,6 @@ public class NicknamesTable extends UserIDTable {
             }
             return nicknames;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -116,8 +116,8 @@ public class NicknamesTable extends UserIDTable {
     public List<String> getNicknames(UUID uuid, UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " + columnNick + " FROM " + tableName +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT " + columnNick + " FROM " + tableName +
                     " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")" +
                     " AND " + columnServerID + "=" + serverTable.statementSelectServerID
             );
@@ -137,7 +137,6 @@ public class NicknamesTable extends UserIDTable {
             }
             return nicknames;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -149,14 +148,14 @@ public class NicknamesTable extends UserIDTable {
         }
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setString(2, Plan.getServerUUID().toString());
             statement.setString(3, displayName);
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -165,12 +164,12 @@ public class NicknamesTable extends UserIDTable {
     public Map<UUID, Map<UUID, List<String>>> getAllNicknames() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnNick + ", " +
                     usersUUIDColumn + ", " +
                     serverUUIDColumn +
@@ -195,7 +194,6 @@ public class NicknamesTable extends UserIDTable {
             }
             return map;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -205,8 +203,8 @@ public class NicknamesTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
 
             // Every Server
             for (UUID serverUUID : allNicknames.keySet()) {
@@ -225,7 +223,7 @@ public class NicknamesTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }

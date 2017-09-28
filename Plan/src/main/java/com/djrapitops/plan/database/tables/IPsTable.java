@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,10 +67,10 @@ public class IPsTable extends UserIDTable {
     private List<String> getStringList(UUID uuid, String column) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             List<String> stringList = new ArrayList<>();
 
-            statement = prepareStatement(Select.from(tableName, column)
+            statement = connection.prepareStatement(Select.from(tableName, column)
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
             statement.setFetchSize(50);
@@ -81,7 +82,6 @@ public class IPsTable extends UserIDTable {
 
             return stringList;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -96,15 +96,15 @@ public class IPsTable extends UserIDTable {
 
     private void insertIp(UUID uuid, String ip, String geolocation) throws SQLException {
         PreparedStatement statement = null;
-        try {
+        try (Connection connection = getConnection()) {
 
-            statement = prepareStatement(insertStatement);
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setString(2, ip);
             statement.setString(3, geolocation);
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -113,8 +113,8 @@ public class IPsTable extends UserIDTable {
     public Optional<String> getGeolocation(String ip) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnGeolocation)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnGeolocation)
                     .where(columnIP + "=?")
                     .toString());
             statement.setString(1, ip);
@@ -124,7 +124,6 @@ public class IPsTable extends UserIDTable {
             }
             return Optional.empty();
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -132,13 +131,13 @@ public class IPsTable extends UserIDTable {
     public Map<UUID, List<String>> getAllGeolocations() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             Map<UUID, List<String>> geoLocations = new HashMap<>();
 
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
 
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnGeolocation + ", " +
                     usersUUIDColumn +
                     " FROM " + tableName +
@@ -155,7 +154,6 @@ public class IPsTable extends UserIDTable {
             }
             return geoLocations;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -163,11 +161,11 @@ public class IPsTable extends UserIDTable {
     public Map<UUID, Map<String, String>> getAllIPsAndGeolocations() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
 
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnGeolocation + ", " +
                     columnIP + ", " +
                     usersUUIDColumn +
@@ -190,7 +188,6 @@ public class IPsTable extends UserIDTable {
             }
             return map;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -200,8 +197,8 @@ public class IPsTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
 
             // Every User
             for (UUID uuid : allIPsAndGeolocations.keySet()) {
@@ -219,7 +216,7 @@ public class IPsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }

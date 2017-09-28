@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,8 +63,8 @@ public class UsersTable extends UserIDTable {
 
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnUUID).toString());
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnUUID).toString());
             statement.setFetchSize(5000);
 
             set = statement.executeQuery();
@@ -73,7 +74,6 @@ public class UsersTable extends UserIDTable {
             }
             return uuids;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -85,12 +85,12 @@ public class UsersTable extends UserIDTable {
     @Override
     public void removeUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)");
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)");
             statement.setString(1, uuid.toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -118,8 +118,8 @@ public class UsersTable extends UserIDTable {
     public UUID getUuidOf(String playername) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnUUID)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnUUID)
                     .where("UPPER(" + columnName + ")=UPPER(?)")
                     .toString());
             statement.setString(1, playername);
@@ -130,7 +130,6 @@ public class UsersTable extends UserIDTable {
             }
             return null;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -138,8 +137,8 @@ public class UsersTable extends UserIDTable {
     public List<Long> getRegisterDates() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnRegistered).toString());
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnRegistered).toString());
             set = statement.executeQuery();
             List<Long> registerDates = new ArrayList<>();
             while (set.next()) {
@@ -147,7 +146,6 @@ public class UsersTable extends UserIDTable {
             }
             return registerDates;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -165,14 +163,14 @@ public class UsersTable extends UserIDTable {
         Verify.nullCheck(uuid, name);
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setLong(2, registered);
             statement.setString(3, name);
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -181,30 +179,29 @@ public class UsersTable extends UserIDTable {
     public boolean isRegistered(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnID)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnID)
                     .where(columnUUID + "=?")
                     .toString());
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             return set.next();
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
 
     public void updateName(UUID uuid, String name) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(Update.values(tableName, columnName)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Update.values(tableName, columnName)
                     .where(columnUUID + "=?")
                     .toString());
             statement.setString(1, name);
             statement.setString(2, uuid.toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -213,8 +210,8 @@ public class UsersTable extends UserIDTable {
     public int getTimesKicked(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnTimesKicked)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnTimesKicked)
                     .where(columnUUID + "=?")
                     .toString());
             statement.setString(1, uuid.toString());
@@ -224,21 +221,20 @@ public class UsersTable extends UserIDTable {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
 
     public void kicked(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("UPDATE " + tableName + " SET "
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
                     + columnTimesKicked + "=" + columnTimesKicked + "+ 1" +
                     " WHERE " + columnUUID + "=?");
             statement.setString(1, uuid.toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -247,8 +243,8 @@ public class UsersTable extends UserIDTable {
     public String getPlayerName(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnName)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnName)
                     .where(columnUUID + "=?")
                     .toString());
             statement.setString(1, uuid.toString());
@@ -258,7 +254,6 @@ public class UsersTable extends UserIDTable {
             }
             return null;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -276,9 +271,9 @@ public class UsersTable extends UserIDTable {
 
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             NicknamesTable nicknamesTable = db.getNicknamesTable();
-            statement = prepareStatement(
+            statement = connection.prepareStatement(
                     "SELECT " + columnName + " FROM " + tableName +
                             " WHERE " + columnName + " LIKE LOWER(?)" +
                             " UNION SELECT " + columnName + " FROM " + tableName +
@@ -296,7 +291,6 @@ public class UsersTable extends UserIDTable {
             }
             return matchingNames;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -319,8 +313,8 @@ public class UsersTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
             for (Map.Entry<UUID, UserInfo> entry : users.entrySet()) {
                 UUID uuid = entry.getKey();
                 UserInfo info = entry.getValue();
@@ -334,7 +328,7 @@ public class UsersTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -343,9 +337,8 @@ public class UsersTable extends UserIDTable {
     public Map<UUID, UserInfo> getUsers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.all(tableName)
-                    .toString());
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.all(tableName).toString());
             statement.setFetchSize(20000);
             set = statement.executeQuery();
             Map<UUID, UserInfo> users = new HashMap<>();
@@ -358,7 +351,6 @@ public class UsersTable extends UserIDTable {
             }
             return users;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -368,8 +360,8 @@ public class UsersTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("UPDATE " + tableName + " SET "
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
                     + columnTimesKicked + "=?" +
                     " WHERE " + columnUUID + "=?");
             for (Map.Entry<UUID, Integer> entry : timesKicked.entrySet()) {
@@ -381,7 +373,7 @@ public class UsersTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -390,8 +382,8 @@ public class UsersTable extends UserIDTable {
     public Map<UUID, Integer> getAllTimesKicked() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnUUID, columnTimesKicked)
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnUUID, columnTimesKicked)
                     .toString());
             statement.setFetchSize(20000);
             set = statement.executeQuery();
@@ -404,7 +396,6 @@ public class UsersTable extends UserIDTable {
             }
             return timesKicked;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -412,9 +403,8 @@ public class UsersTable extends UserIDTable {
     public Map<UUID, String> getPlayerNames() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnUUID, columnName)
-                    .toString());
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnUUID, columnName).toString());
             statement.setFetchSize(20000);
             set = statement.executeQuery();
             Map<UUID, String> names = new HashMap<>();
@@ -426,7 +416,6 @@ public class UsersTable extends UserIDTable {
             }
             return names;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -434,8 +423,8 @@ public class UsersTable extends UserIDTable {
     public int getPlayerCount() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT COUNT(*) AS player_count FROM " + tableName);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT COUNT(*) AS player_count FROM " + tableName);
             statement.setFetchSize(5000);
 
             set = statement.executeQuery();
@@ -444,7 +433,6 @@ public class UsersTable extends UserIDTable {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }

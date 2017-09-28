@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.*;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,8 +79,8 @@ public class ServerTable extends Table {
 
     private void updateServerInfo(ServerInfo info) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(Update.values(tableName,
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Update.values(tableName,
                     columnServerUUID,
                     columnServerName,
                     columnWebserverAddress,
@@ -96,7 +97,7 @@ public class ServerTable extends Table {
             statement.setInt(6, info.getId());
             statement.executeUpdate();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -115,8 +116,8 @@ public class ServerTable extends Table {
         String webAddress = info.getWebAddress();
         Verify.nullCheck(uuid, name, webAddress);
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
 
             statement.setString(1, uuid.toString());
             statement.setString(2, name);
@@ -125,7 +126,7 @@ public class ServerTable extends Table {
             statement.setInt(5, info.getMaxPlayers());
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -141,8 +142,8 @@ public class ServerTable extends Table {
     public Optional<Integer> getServerID(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName,
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName,
                     columnServerID)
                     .where(columnServerUUID + "=?")
                     .toString());
@@ -154,7 +155,6 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -169,8 +169,8 @@ public class ServerTable extends Table {
     public Optional<String> getServerName(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName,
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName,
                     columnServerName)
                     .where(columnServerUUID + "=?")
                     .toString());
@@ -182,7 +182,6 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -191,8 +190,8 @@ public class ServerTable extends Table {
         Map<Integer, String> names = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName,
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName,
                     columnServerID, columnServerName)
                     .toString());
             set = statement.executeQuery();
@@ -202,7 +201,6 @@ public class ServerTable extends Table {
             }
             return names;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -216,8 +214,8 @@ public class ServerTable extends Table {
     public Optional<ServerInfo> getBungeeInfo() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, "*")
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName, "*")
                     .where(columnServerName + "=?")
                     .toString());
             statement.setString(1, "BungeeCord");
@@ -233,7 +231,6 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -241,8 +238,8 @@ public class ServerTable extends Table {
     public List<ServerInfo> getBukkitServers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, "*")
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName, "*")
                     .where(columnServerName + "!=?")
                     .toString());
             statement.setString(1, "BungeeCord");
@@ -258,7 +255,6 @@ public class ServerTable extends Table {
             }
             return servers;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -276,8 +272,8 @@ public class ServerTable extends Table {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
 
             for (ServerInfo info : allServerInfo) {
                 UUID uuid = info.getUuid();
@@ -297,7 +293,7 @@ public class ServerTable extends Table {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -306,8 +302,8 @@ public class ServerTable extends Table {
     public List<UUID> getServerUUIDs() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, columnServerUUID)
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName, columnServerUUID)
                     .toString());
             set = statement.executeQuery();
             List<UUID> uuids = new ArrayList<>();
@@ -316,7 +312,6 @@ public class ServerTable extends Table {
             }
             return uuids;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -324,8 +319,8 @@ public class ServerTable extends Table {
     public Optional<UUID> getServerUUID(String serverName) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName,
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName,
                     columnServerUUID)
                     .where(columnServerName + "=?")
                     .toString());
@@ -337,7 +332,6 @@ public class ServerTable extends Table {
                 return Optional.empty();
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -345,8 +339,8 @@ public class ServerTable extends Table {
     public Optional<ServerInfo> getServerInfo(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, "*")
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName, "*")
                     .where(columnServerUUID + "=?")
                     .toString());
             statement.setString(1, serverUUID.toString());
@@ -361,7 +355,6 @@ public class ServerTable extends Table {
             }
             return Optional.empty();
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -369,8 +362,8 @@ public class ServerTable extends Table {
     public int getMaxPlayers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName);
             statement.setFetchSize(5000);
 
             set = statement.executeQuery();
@@ -379,7 +372,6 @@ public class ServerTable extends Table {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }

@@ -7,6 +7,7 @@ import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,10 +79,12 @@ public class CommandUseTable extends Table {
      */
     public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
         Map<String, Integer> commandUse = new HashMap<>();
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement(Select.from(tableName,
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName,
                     columnCommand, columnTimesUsed)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
@@ -95,8 +98,7 @@ public class CommandUseTable extends Table {
             }
             return commandUse;
         } finally {
-            endTransaction(statement);
-            close(set, statement);
+            close(set, statement, connection);
         }
     }
 
@@ -104,9 +106,11 @@ public class CommandUseTable extends Table {
         if (command.length() > 20) {
             return;
         }
+        Connection connection = null;
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement("UPDATE " + tableName + " SET "
+            connection = getConnection();
+            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
                     + columnTimesUsed + "=" + columnTimesUsed + "+ 1" +
                     " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID +
                     " AND " + columnCommand + "=?");
@@ -114,36 +118,40 @@ public class CommandUseTable extends Table {
             statement.setString(2, command);
             int success = statement.executeUpdate();
 
-            commit(statement.getConnection());
+            connection.commit();
 
             if (success == 0) {
                 insertCommand(command);
             }
         } finally {
-            close(statement);
+            close(statement, connection);
         }
     }
 
     private void insertCommand(String command) throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement(insertStatement);
+            connection = getConnection();
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, command);
             statement.setInt(2, 1);
             statement.setString(3, Plan.getServerUUID().toString());
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
-            close(statement);
+            close(statement, connection);
         }
     }
 
     public Optional<String> getCommandByID(int id) throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement(Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString());
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString());
             statement.setInt(1, id);
             set = statement.executeQuery();
             if (set.next()) {
@@ -151,16 +159,17 @@ public class CommandUseTable extends Table {
             }
             return Optional.empty();
         } finally {
-            endTransaction(statement);
-            close(set, statement);
+            close(set, statement, connection);
         }
     }
 
     public Optional<Integer> getCommandID(String command) throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement(Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString());
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString());
             statement.setString(1, command);
             set = statement.executeQuery();
             if (set.next()) {
@@ -168,18 +177,19 @@ public class CommandUseTable extends Table {
             }
             return Optional.empty();
         } finally {
-            endTransaction(statement);
-            close(set, statement);
+            close(set, statement, connection);
         }
     }
 
     public Map<UUID, Map<String, Integer>> getAllCommandUsages() throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            statement = prepareStatement("SELECT " +
+            connection = getConnection();
+            statement = connection.prepareStatement("SELECT " +
                     columnCommand + ", " +
                     columnTimesUsed + ", " +
                     serverUUIDColumn +
@@ -202,8 +212,7 @@ public class CommandUseTable extends Table {
             }
             return map;
         } finally {
-            endTransaction(statement);
-            close(set, statement);
+            close(set, statement, connection);
         }
     }
 
@@ -212,8 +221,8 @@ public class CommandUseTable extends Table {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
 
             // Every Server
             for (UUID serverUUID : allCommandUsages.keySet()) {
@@ -230,7 +239,7 @@ public class CommandUseTable extends Table {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }

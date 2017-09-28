@@ -81,12 +81,11 @@ public abstract class Table {
      * @throws SQLException
      */
     protected boolean execute(String statementString) throws SQLException {
-        Connection connection = getConnection();
         Statement statement = null;
-        try {
+        try (Connection connection = getConnection()){
             statement = connection.createStatement();
             boolean b = statement.execute(statementString);
-            commit(statement.getConnection());
+            connection.commit();
             return b;
         } finally {
             close(statement);
@@ -114,6 +113,7 @@ public abstract class Table {
      * @return
      * @throws SQLException
      */
+    @Deprecated
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return getConnection().prepareStatement(sql);
     }
@@ -174,21 +174,11 @@ public abstract class Table {
         return tableName;
     }
 
-    /**
-     * Commits changes to .db file when using SQLite databse.
-     * <p>
-     * Auto Commit enabled when using MySQL
-     *
-     * @throws SQLException If commit fails or there is nothing to commit.
-     */
-    protected void commit(Connection connection) throws SQLException {
-        db.commit(connection);
-    }
-
+    @Deprecated
     protected void endTransaction(Connection connection) throws SQLException {
-        db.endTransaction(connection);
     }
 
+    @Deprecated
     protected void endTransaction(Statement statement) throws SQLException {
         if (statement == null) {
             return;

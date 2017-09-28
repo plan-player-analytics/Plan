@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,8 +87,8 @@ public class WorldTimesTable extends UserIDTable {
         db.getWorldTable().saveWorlds(worldNames);
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
 
             for (Map.Entry<String, GMTimes> entry : worldTimesMap.entrySet()) {
                 String worldName = entry.getKey();
@@ -105,7 +106,7 @@ public class WorldTimesTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -114,10 +115,10 @@ public class WorldTimesTable extends UserIDTable {
     public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             String worldIDColumn = worldTable + "." + worldTable.getColumnID();
             String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnSessionID + ", " +
                     columnSurvival + ", " +
                     columnCreative + ", " +
@@ -153,7 +154,6 @@ public class WorldTimesTable extends UserIDTable {
                 session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -165,12 +165,12 @@ public class WorldTimesTable extends UserIDTable {
     public WorldTimes getWorldTimesOfServer(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             String worldIDColumn = worldTable + "." + worldTable.getColumnID();
             String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
             String sessionIDColumn = sessionsTable + "." + sessionsTable.getColumnID();
             String sessionServerIDColumn = sessionsTable + ".server_id";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     "SUM(" + columnSurvival + ") as survival, " +
                     "SUM(" + columnCreative + ") as creative, " +
                     "SUM(" + columnAdventure + ") as adventure, " +
@@ -202,7 +202,6 @@ public class WorldTimesTable extends UserIDTable {
             }
             return worldTimes;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -210,10 +209,10 @@ public class WorldTimesTable extends UserIDTable {
     public WorldTimes getWorldTimesOfUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             String worldIDColumn = worldTable + "." + worldTable.getColumnID();
             String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     "SUM(" + columnSurvival + ") as survival, " +
                     "SUM(" + columnCreative + ") as creative, " +
                     "SUM(" + columnAdventure + ") as adventure, " +
@@ -243,7 +242,6 @@ public class WorldTimesTable extends UserIDTable {
             }
             return worldTimes;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -280,8 +278,8 @@ public class WorldTimesTable extends UserIDTable {
         db.getWorldTable().saveWorlds(worldNames);
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
             String[] gms = GMTimes.getGMKeyArray();
             for (Map<UUID, List<Session>> serverSessions : allSessions.values()) {
                 for (Map.Entry<UUID, List<Session>> entry : serverSessions.entrySet()) {
@@ -305,7 +303,7 @@ public class WorldTimesTable extends UserIDTable {
                 }
             }
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -314,10 +312,10 @@ public class WorldTimesTable extends UserIDTable {
     public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             String worldIDColumn = worldTable + "." + worldTable.getColumnID();
             String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnSessionID + ", " +
                     columnSurvival + ", " +
                     columnCreative + ", " +
@@ -350,7 +348,6 @@ public class WorldTimesTable extends UserIDTable {
             }
             return worldTimes;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }

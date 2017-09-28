@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,12 +52,12 @@ public class SecurityTable extends Table {
 
     public boolean removeUser(String user) {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)");
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)");
             statement.setString(1, user);
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -72,14 +73,14 @@ public class SecurityTable extends Table {
 
     public void addNewUser(String user, String saltPassHash, int permLevel) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, user);
             statement.setString(2, saltPassHash);
             statement.setInt(3, permLevel);
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -92,8 +93,8 @@ public class SecurityTable extends Table {
     public WebUser getWebUser(String user) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.all(tableName).where(columnUser + "=?").toString());
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.all(tableName).where(columnUser + "=?").toString());
             statement.setString(1, user);
             set = statement.executeQuery();
             if (set.next()) {
@@ -103,7 +104,6 @@ public class SecurityTable extends Table {
             }
             return null;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -111,8 +111,8 @@ public class SecurityTable extends Table {
     public List<WebUser> getUsers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.all(tableName).toString());
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.all(tableName).toString());
             statement.setFetchSize(5000);
             set = statement.executeQuery();
             List<WebUser> list = new ArrayList<>();
@@ -125,7 +125,6 @@ public class SecurityTable extends Table {
             }
             return list;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -135,8 +134,8 @@ public class SecurityTable extends Table {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             for (WebUser user : users) {
                 String userName = user.getName();
                 String pass = user.getSaltedPassHash();
@@ -149,7 +148,7 @@ public class SecurityTable extends Table {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }

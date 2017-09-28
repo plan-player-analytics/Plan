@@ -13,6 +13,7 @@ import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -72,10 +73,11 @@ public class ActionsTable extends UserIDTable {
     }
 
     public void insertAction(UUID uuid, Action action) throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         try {
-
-            statement = prepareStatement(insertStatement);
+            connection = getConnection();
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
             statement.setString(2, Plan.getServerUUID().toString());
             statement.setInt(3, action.getDoneAction().getId());
@@ -83,9 +85,9 @@ public class ActionsTable extends UserIDTable {
             statement.setString(5, action.getAdditionalInfo());
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
-            close(statement);
+            close(statement, connection);
         }
     }
 
@@ -98,10 +100,12 @@ public class ActionsTable extends UserIDTable {
      */
     public List<Action> getActions(UUID uuid) throws SQLException {
         List<Action> actions = new ArrayList<>();
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement(Select.from(tableName, "*")
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName, "*")
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
             statement.setFetchSize(5000);
@@ -116,12 +120,12 @@ public class ActionsTable extends UserIDTable {
             }
             return actions;
         } finally {
-            endTransaction(statement);
-            close(set, statement);
+            close(set, statement, connection);
         }
     }
 
     public Map<UUID, Map<UUID, List<Action>>> getAllActions() throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
@@ -129,7 +133,8 @@ public class ActionsTable extends UserIDTable {
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            statement = prepareStatement("SELECT " +
+            connection = getConnection();
+            statement = connection.prepareStatement("SELECT " +
                     columnActionID + ", " +
                     columnDate + ", " +
                     columnAdditionalInfo + ", " +
@@ -160,8 +165,7 @@ public class ActionsTable extends UserIDTable {
             }
             return map;
         } finally {
-            endTransaction(statement);
-            close(set, statement);
+            close(set, statement, connection);
         }
     }
 
@@ -169,9 +173,11 @@ public class ActionsTable extends UserIDTable {
         if (Verify.isEmpty(allActions)) {
             return;
         }
+        Connection connection = null;
         PreparedStatement statement = null;
         try {
-            statement = prepareStatement(insertStatement);
+            connection = getConnection();
+            statement = connection.prepareStatement(insertStatement);
 
             // Every Server
             for (UUID serverUUID : allActions.keySet()) {
@@ -192,9 +198,9 @@ public class ActionsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
-            close(statement);
+            close(statement, connection);
         }
     }
 }

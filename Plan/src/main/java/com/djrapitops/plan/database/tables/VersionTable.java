@@ -6,6 +6,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,20 +38,16 @@ public class VersionTable extends Table {
     public boolean isNewDatabase() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            if (usingMySQL) {
-                statement = prepareStatement("SHOW TABLES LIKE ?");
-            } else {
-                statement = prepareStatement("SELECT tbl_name FROM sqlite_master WHERE tbl_name=?");
-            }
-
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(usingMySQL ?
+                    "SHOW TABLES LIKE ?" :
+                    "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?");
             statement.setString(1, tableName);
 
             set = statement.executeQuery();
 
             return !set.next();
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -62,9 +59,9 @@ public class VersionTable extends Table {
     public int getVersion() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()) {
             int version = 0;
-            statement = prepareStatement("SELECT * FROM " + tableName);
+            statement = connection.prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             if (set.next()) {
                 version = set.getInt("version");
@@ -73,7 +70,6 @@ public class VersionTable extends Table {
         } catch (Exception exc) {
             Log.toLog("VersionsTable.getVersion", exc);
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
 
@@ -87,11 +83,11 @@ public class VersionTable extends Table {
     public void setVersion(int version) throws SQLException {
         removeAllData();
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " (version) VALUES (" + version + ")");
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("INSERT INTO " + tableName + " (version) VALUES (" + version + ")");
 
             statement.executeUpdate();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }

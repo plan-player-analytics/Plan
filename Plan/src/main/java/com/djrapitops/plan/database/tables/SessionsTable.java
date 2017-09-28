@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,8 +103,8 @@ public class SessionsTable extends UserIDTable {
      */
     private void saveSessionInformation(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, uuid.toString());
 
             statement.setLong(2, session.getSessionStart());
@@ -113,7 +114,7 @@ public class SessionsTable extends UserIDTable {
             statement.setString(6, Plan.getServerUUID().toString());
 
             statement.execute();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -129,8 +130,8 @@ public class SessionsTable extends UserIDTable {
     private int getSessionID(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " + columnID + " FROM " + tableName +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT " + columnID + " FROM " + tableName +
                     " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
                     " AND " + columnSessionStart + "=?" +
                     " AND " + columnSessionEnd + "=?");
@@ -143,7 +144,6 @@ public class SessionsTable extends UserIDTable {
             }
             return -1;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -163,8 +163,8 @@ public class SessionsTable extends UserIDTable {
         Map<String, List<Session>> sessionsByServer = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement(Select.from(tableName, "*")
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.from(tableName, "*")
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
             statement.setString(1, uuid.toString());
@@ -187,7 +187,6 @@ public class SessionsTable extends UserIDTable {
             }
             return sessionsByServer;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -248,8 +247,8 @@ public class SessionsTable extends UserIDTable {
     public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT" +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT" +
                     " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
                     " FROM " + tableName +
                     " WHERE " + columnSessionStart + ">?" +
@@ -264,7 +263,6 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -293,8 +291,8 @@ public class SessionsTable extends UserIDTable {
         Map<String, Long> playtimes = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT " +
                     "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
                     columnServerID +
                     " FROM " + tableName +
@@ -311,7 +309,6 @@ public class SessionsTable extends UserIDTable {
             }
             return playtimes;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -359,8 +356,8 @@ public class SessionsTable extends UserIDTable {
     public long getPlaytimeOfServer(UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT" +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT" +
                     " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
                     " FROM " + tableName +
                     " WHERE " + columnSessionStart + ">?" +
@@ -374,7 +371,6 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -426,8 +422,8 @@ public class SessionsTable extends UserIDTable {
     public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT" +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT" +
                     " COUNT(*) as logintimes" +
                     " FROM " + tableName +
                     " WHERE (" + columnSessionStart + " >= ?)" +
@@ -442,7 +438,6 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -464,11 +459,11 @@ public class SessionsTable extends UserIDTable {
         Map<UUID, List<Session>> sessionsByUser = new HashMap<>();
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
 
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     columnSessionStart + ", " +
                     columnSessionEnd + ", " +
                     columnDeaths + ", " +
@@ -494,7 +489,6 @@ public class SessionsTable extends UserIDTable {
             }
             return sessionsByUser;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -503,8 +497,8 @@ public class SessionsTable extends UserIDTable {
     public long getLastSeen(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT" +
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("SELECT" +
                     " MAX(" + columnSessionEnd + ") as last_seen" +
                     " FROM " + tableName +
                     " WHERE " + columnUserID + "=" + usersTable.statementSelectID);
@@ -515,7 +509,6 @@ public class SessionsTable extends UserIDTable {
             }
             return 0;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -524,11 +517,11 @@ public class SessionsTable extends UserIDTable {
     public Map<UUID, Long> getLastSeenForAllPlayers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
 
-            statement = prepareStatement("SELECT" +
+            statement = connection.prepareStatement("SELECT" +
                     " MAX(" + columnSessionEnd + ") as last_seen, " +
                     usersUUIDColumn +
                     " FROM " + tableName +
@@ -544,7 +537,6 @@ public class SessionsTable extends UserIDTable {
             }
             return lastSeenMap;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -552,13 +544,13 @@ public class SessionsTable extends UserIDTable {
     public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
+        try (Connection connection = getConnection()){
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
 
-            statement = prepareStatement("SELECT " +
+            statement = connection.prepareStatement("SELECT " +
                     tableName + "." + columnID + ", " +
                     columnSessionStart + ", " +
                     columnSessionEnd + ", " +
@@ -600,7 +592,6 @@ public class SessionsTable extends UserIDTable {
             }
             return map;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -610,8 +601,8 @@ public class SessionsTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(insertStatement);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             for (UUID serverUUID : allSessions.keySet()) {
                 for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
                     UUID uuid = entry.getKey();
@@ -630,7 +621,7 @@ public class SessionsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
