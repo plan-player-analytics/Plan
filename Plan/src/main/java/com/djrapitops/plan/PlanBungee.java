@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.command.commands.ReloadCommand;
@@ -38,7 +39,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     private WebServer webServer;
     private Database db;
     private BungeeServerInfoManager serverInfoManager;
-    private InformationManager infoManager;
+    private BungeeInformationManager infoManager;
     private ServerVariableHolder variableHolder;
 
     private ProcessingQueue processingQueue;
@@ -81,13 +82,19 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
             webServer.initServer();
 
-            infoManager.attemptConnection();
-
             if (!webServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized.");
                 disablePlugin();
                 return;
             }
+
+            getRunnableFactory().createNew("Enable Bukkit Connection Task", new AbsRunnable() {
+                @Override
+                public void run() {
+                    infoManager.attemptConnection();
+                    infoManager.sendConfigSettings();
+                }
+            }).runTaskAsynchronously();
 
             getProxy().registerChannel("Plan");
             registerListener(new BungeePluginChannelListener(this));

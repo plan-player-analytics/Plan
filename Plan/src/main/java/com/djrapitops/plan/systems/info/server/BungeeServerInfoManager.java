@@ -97,7 +97,7 @@ public class BungeeServerInfoManager {
         }
     }
 
-    private void sendConfigSettings(UUID serverUUID) {
+    public void sendConfigSettings(UUID serverUUID) {
         try {
             ServerInfo server = bukkitServers.get(serverUUID);
             if (server == null) {

@@ -353,8 +353,13 @@ public class BungeeInformationManager extends InformationManager {
     @Override
     public void updateNetworkPageContent() {
         Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
-        bukkitServers.values().stream()
-                .filter(s -> !online.contains(s)).map(ServerInfo::getUuid)
+        online.stream().map(ServerInfo::getUuid)
                 .forEach(this::removeNetworkPageContent);
+    }
+
+    public void sendConfigSettings() {
+        Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
+        online.stream().map(ServerInfo::getUuid)
+                .forEach(serverInfoManager::sendConfigSettings);
     }
 }
