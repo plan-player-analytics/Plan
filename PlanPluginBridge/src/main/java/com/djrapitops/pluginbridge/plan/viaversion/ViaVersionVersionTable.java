@@ -50,7 +50,7 @@ public class ViaVersionVersionTable extends PluginData {
 
         Map<String, Integer> usersPerVersion = getUsersPerVersion(html);
         if (usersPerVersion.isEmpty()) {
-            html.append(Html.TABLELINE_2.parse("No joins after 3.5.0 install", ""));
+            html.append(Html.TABLELINE_2.parse("No joins after installation", ""));
         } else {
             usersPerVersion.entrySet().stream().map(e -> Html.TABLELINE_2.parse(e.getKey(), e.getValue() + "")).forEach(html::append);
         }

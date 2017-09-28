@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.Table;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,8 +54,8 @@ public class ProtocolTable extends Table {
     public int getProtocolVersion(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?");
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?");
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             if (set.next()) {
@@ -63,7 +64,6 @@ public class ProtocolTable extends Table {
                 return -1;
             }
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -71,8 +71,8 @@ public class ProtocolTable extends Table {
     public Map<UUID, Integer> getProtocolVersions() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             Map<UUID, Integer> versions = new HashMap<>();
             while (set.next()) {
@@ -82,7 +82,6 @@ public class ProtocolTable extends Table {
             }
             return versions;
         } finally {
-            endTransaction(statement);
             close(set, statement);
         }
     }
@@ -93,15 +92,15 @@ public class ProtocolTable extends Table {
 
     private void updateProtocolVersion(UUID uuid, int version) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("UPDATE " + tableName + " SET "
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
                     + columnProtocolVersion + "=? "
                     + " WHERE (" + columnUUID + "=?)");
             statement.setInt(1, version);
             statement.setString(2, uuid.toString());
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
@@ -109,8 +108,8 @@ public class ProtocolTable extends Table {
 
     private void insertProtocolVersion(UUID uuid, int version) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(
                     "INSERT INTO " + tableName + " ("
                             + columnUUID + ", "
                             + columnProtocolVersion
@@ -119,7 +118,7 @@ public class ProtocolTable extends Table {
             statement.setInt(2, version);
             statement.execute();
 
-            commit(statement.getConnection());
+            connection.commit();
         } finally {
             close(statement);
         }
