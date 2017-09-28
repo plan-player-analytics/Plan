@@ -126,7 +126,8 @@ public class PlanPlayerListener implements Listener {
 
         plugin.addToProcessQueue(
                 new BanAndOpProcessor(uuid, player.isBanned(), player.isOp()),
-                new EndSessionProcessor(uuid, time)
+                new EndSessionProcessor(uuid, time),
+                new NetworkPageUpdateProcessor(plugin.getInfoManager())
         );
 
         if (cache.isFirstSession(uuid)) {

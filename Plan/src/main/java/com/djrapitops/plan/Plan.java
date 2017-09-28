@@ -81,7 +81,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
     private WebServer webServer;
 
-    private InformationManager infoManager;
+    private BukkitInformationManager infoManager;
     private BukkitServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
@@ -259,6 +259,13 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 }
             }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
+
+        runnableFactory.createNew("PeriodicNetworkBoxRefreshTask", new AbsRunnable() {
+            @Override
+            public void run() {
+                infoManager.updateNetworkPageContent();
+            }
+        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks(), TimeAmount.MINUTE.ticks() * 5L);
 
         Benchmark.stop("Enable", "Task Registration");
     }

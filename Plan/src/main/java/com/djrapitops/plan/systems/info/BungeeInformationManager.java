@@ -317,10 +317,6 @@ public class BungeeInformationManager extends InformationManager {
         return plugin.getWebServer().getAccessAddress();
     }
 
-    public void askForNetWorkPageContent() {
-        // TODO WebAPI for network page content
-    }
-
     public void cacheNetworkPageContent(UUID serverUUID, String html) {
         networkPageContent.put(serverUUID, html);
     }
