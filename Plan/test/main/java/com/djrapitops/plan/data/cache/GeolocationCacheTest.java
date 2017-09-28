@@ -36,7 +36,7 @@ public class GeolocationCacheTest {
         ipsToCountries.put("205.210.42.205", "Canada");
         ipsToCountries.put("64.68.200.200", "Canada");
         ipsToCountries.put("0.0.0.0", "Not Known");
-        ipsToCountries.put("127.0.0.1", "Not Known");
+        ipsToCountries.put("127.0.0.1", "Local Machine");
     }
 
     @Test

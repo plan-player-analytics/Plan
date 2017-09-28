@@ -55,7 +55,7 @@ public class GraphTest {
         assertEquals(expected, WorldLoadGraphCreator.buildSeriesDataStringChunks(tpsList));
         assertEquals(expected, WorldLoadGraphCreator.buildSeriesDataStringEntities(tpsList));
         assertEquals("[{'code':'1','value':1},{'code':'2','value':2},{'code':'3','value':3},{'code':'4','value':4},{'code':'5','value':5},{'code':'6','value':6},{'code':'7','value':7},{'code':'8','value':8},{'code':'9','value':9}]", WorldMapCreator.createDataSeries(geoList));
-        assertEquals("[[{name:'WORLD',y:0,drilldown: 'WORLD'}], [{name:'WORLD', id:'WORLD',data: []}]]", Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)));
+        assertEquals("[[{name:'WORLD',y:0,drilldown: 'WORLD'}], [{name:'WORLD', id:'WORLD',colors: gmPieColors,data: []}]]", Arrays.toString(WorldPieCreator.createSeriesData(worldTimes)));
     }
 
     @Test
