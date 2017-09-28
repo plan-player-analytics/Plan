@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.info.pluginchannel;
 
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -30,6 +31,10 @@ public class BukkitPluginChannelListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        if (plugin.getInfoManager().isUsingAnotherWebServer() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
+            return;
+        }
+
         try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(message))) {
             String subChannel = in.readUTF();
             String[] data = in.readUTF().split("<!>");
@@ -39,7 +44,7 @@ public class BukkitPluginChannelListener implements PluginMessageListener {
             if ("bungee_address".equals(subChannel)) {
                 plugin.getServerInfoManager().saveBungeeConnectionAddress(address);
                 Log.info("-----------------------------------");
-                Log.info("Recieved Bungee WebServer address through plugin channel, restarting Plan.");
+                Log.info("Received Bungee WebServer address through plugin channel, restarting Plan.");
                 Log.info("-----------------------------------");
                 plugin.restart();
                 notifyAll();
