@@ -19,17 +19,22 @@ import main.java.com.djrapitops.plan.locale.Msg;
  */
 public class NetworkCommand extends SubCommand {
 
+    private final Plan plugin;
+
     /**
      * Class Constructor.
      */
-    public NetworkCommand() {
+    public NetworkCommand(Plan plugin) {
         super("network, n, netw", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
-
+        this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-
+        if (plugin.getInfoManager().isUsingAnotherWebServer()) {
+            sender.sendMessage("§cNot using Bungee WebServer!");
+            return true;
+        }
         sendNetworkMsg(sender);
         return true;
     }

@@ -19,6 +19,7 @@ import main.java.com.djrapitops.plan.systems.info.parsing.AnalysisPageParser;
 import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
@@ -246,23 +247,35 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean attemptConnection() {
-        Log.info("Attempting Bungee Connection.. (" + webServerAddress + ")");
-        PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
+        WebServer webServer = plugin.getWebServer();
+        boolean webServerIsEnabled = webServer.isEnabled();
+        boolean previousState = usingAnotherWebServer;
+
         try {
-            api.sendRequest(webServerAddress);
-            getWebAPI().getAPI(PostOriginalBukkitSettingsWebAPI.class).sendRequest(webServerAddress);
-            Log.info("Bungee Connection OK");
-            plugin.getServerInfoManager().resetConnectionFails();
-            usingAnotherWebServer = true;
-            return true;
-        } catch (WebAPIConnectionFailException e) {
-            plugin.getServerInfoManager().markConnectionFail();
-        } catch (WebAPIException e) {
-            Log.toLog(this.getClass().getName(), e);
+            Log.info("Attempting Bungee Connection.. (" + webServerAddress + ")");
+            PingWebAPI api = getWebAPI().getAPI(PingWebAPI.class);
+            try {
+                api.sendRequest(webServerAddress);
+                getWebAPI().getAPI(PostOriginalBukkitSettingsWebAPI.class).sendRequest(webServerAddress);
+                Log.info("Bungee Connection OK");
+                plugin.getServerInfoManager().resetConnectionFails();
+                usingAnotherWebServer = true;
+                return true;
+            } catch (WebAPIConnectionFailException e) {
+                plugin.getServerInfoManager().markConnectionFail();
+            } catch (WebAPIException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+            Log.info("Bungee Connection Failed.");
+            usingAnotherWebServer = false;
+            return false;
+        } finally {
+            boolean changedState = previousState != usingAnotherWebServer;
+            if (webServerIsEnabled && changedState) {
+                webServer.stop();
+                webServer.initServer();
+            }
         }
-        Log.info("Bungee Connection Failed.");
-        usingAnotherWebServer = false;
-        return false;
     }
 
     @Override
