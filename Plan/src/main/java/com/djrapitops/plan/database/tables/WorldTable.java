@@ -100,7 +100,7 @@ public class WorldTable extends Table {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

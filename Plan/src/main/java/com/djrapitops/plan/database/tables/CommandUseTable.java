@@ -118,7 +118,7 @@ public class CommandUseTable extends Table {
             statement.setString(2, command);
             int success = statement.executeUpdate();
 
-            connection.commit();
+            commit(connection);
 
             if (success == 0) {
                 insertCommand(command);
@@ -139,7 +139,7 @@ public class CommandUseTable extends Table {
             statement.setString(3, Plan.getServerUUID().toString());
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement, connection);
         }
@@ -239,7 +239,7 @@ public class CommandUseTable extends Table {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

@@ -106,7 +106,7 @@ public class WorldTimesTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -303,7 +303,7 @@ public class WorldTimesTable extends UserIDTable {
                 }
             }
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

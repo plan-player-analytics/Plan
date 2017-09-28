@@ -84,7 +84,7 @@ public abstract class Table {
         try (Connection connection = getConnection()){
             statement = connection.createStatement();
             boolean b = statement.execute(statementString);
-            connection.commit();
+            commit(connection);
             return b;
         } finally {
             close(statement);
@@ -171,6 +171,10 @@ public abstract class Table {
         return usingMySQL == table.usingMySQL &&
                 Objects.equal(tableName, table.tableName) &&
                 Objects.equal(db, table.db);
+    }
+
+    protected void commit(Connection connection) throws SQLException {
+        db.commit(connection);
     }
 
     @Override

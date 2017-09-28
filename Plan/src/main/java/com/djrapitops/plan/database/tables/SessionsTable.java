@@ -114,7 +114,7 @@ public class SessionsTable extends UserIDTable {
             statement.setString(6, Plan.getServerUUID().toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -621,7 +621,7 @@ public class SessionsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

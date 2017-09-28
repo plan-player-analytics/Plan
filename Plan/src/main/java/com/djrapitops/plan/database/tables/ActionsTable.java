@@ -85,7 +85,7 @@ public class ActionsTable extends UserIDTable {
             statement.setString(5, action.getAdditionalInfo());
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement, connection);
         }
@@ -198,7 +198,7 @@ public class ActionsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement, connection);
         }

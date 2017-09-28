@@ -100,7 +100,7 @@ public class ProtocolTable extends Table {
             statement.setString(2, uuid.toString());
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -118,7 +118,7 @@ public class ProtocolTable extends Table {
             statement.setInt(2, version);
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

@@ -90,7 +90,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(1, uuid.toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -170,7 +170,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(3, name);
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -201,7 +201,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(2, uuid.toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -234,7 +234,7 @@ public class UsersTable extends UserIDTable {
             statement.setString(1, uuid.toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -328,7 +328,7 @@ public class UsersTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -373,7 +373,7 @@ public class UsersTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

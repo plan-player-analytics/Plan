@@ -74,7 +74,7 @@ public class UserInfoTable extends UserIDTable {
             statement.setString(3, Plan.getServerUUID().toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -106,7 +106,7 @@ public class UserInfoTable extends UserIDTable {
             statement.setString(3, uuid.toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -269,7 +269,7 @@ public class UserInfoTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

@@ -97,7 +97,7 @@ public class ServerTable extends Table {
             statement.setInt(6, info.getId());
             statement.executeUpdate();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -126,7 +126,7 @@ public class ServerTable extends Table {
             statement.setInt(5, info.getMaxPlayers());
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -293,7 +293,7 @@ public class ServerTable extends Table {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

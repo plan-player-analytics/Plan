@@ -104,7 +104,7 @@ public class IPsTable extends UserIDTable {
             statement.setString(3, geolocation);
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -216,7 +216,7 @@ public class IPsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

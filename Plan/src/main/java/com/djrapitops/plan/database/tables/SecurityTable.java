@@ -57,7 +57,7 @@ public class SecurityTable extends Table {
             statement.setString(1, user);
 
             statement.execute();
-            connection.commit();
+            commit(connection);
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -80,7 +80,7 @@ public class SecurityTable extends Table {
             statement.setInt(3, permLevel);
             statement.execute();
 
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -148,7 +148,7 @@ public class SecurityTable extends Table {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

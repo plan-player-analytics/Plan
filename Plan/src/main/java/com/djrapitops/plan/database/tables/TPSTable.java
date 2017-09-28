@@ -122,7 +122,7 @@ public class TPSTable extends Table {
             statement.setDouble(8, tps.getChunksLoaded());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -149,7 +149,7 @@ public class TPSTable extends Table {
             statement.setLong(2, MiscUtils.getTime() - fiveWeeks);
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -266,7 +266,7 @@ public class TPSTable extends Table {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

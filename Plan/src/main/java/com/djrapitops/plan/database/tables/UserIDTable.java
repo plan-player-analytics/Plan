@@ -31,7 +31,7 @@ public abstract class UserIDTable extends Table {
             statement.setString(1, uuid.toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

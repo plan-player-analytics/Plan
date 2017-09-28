@@ -155,7 +155,7 @@ public class NicknamesTable extends UserIDTable {
             statement.setString(3, displayName);
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -223,7 +223,7 @@ public class NicknamesTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }

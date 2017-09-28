@@ -78,7 +78,7 @@ public class KillsTable extends UserIDTable {
             statement.setString(2, uuid.toString());
 
             statement.execute();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -104,7 +104,7 @@ public class KillsTable extends UserIDTable {
             }
 
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -231,7 +231,7 @@ public class KillsTable extends UserIDTable {
                 }
             }
             statement.executeBatch();
-            connection.commit();
+            commit(connection);
         } finally {
             close(statement);
         }
