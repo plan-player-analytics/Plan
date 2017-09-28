@@ -1,4 +1,4 @@
-function worldChart(id, entitySeries, chunkSeries) {
+function worldChart(id, entitySeries, chunkSeries, playersOnlineSeries) {
 	Highcharts.stockChart(id, {
 		rangeSelector: {
 			selected: 1,
@@ -35,6 +35,6 @@ function worldChart(id, entitySeries, chunkSeries) {
 		legend: {
             enabled: true,
         },
-		series: [entitySeries, chunkSeries]
+		series: [entitySeries, chunkSeries, playersOnlineSeries]
 	});
 }

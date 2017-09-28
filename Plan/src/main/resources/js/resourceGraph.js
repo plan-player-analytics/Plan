@@ -1,4 +1,4 @@
-function resourceChart(id, cpuSeries, ramSeries) {
+function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
 	Highcharts.stockChart(id, {
 		rangeSelector: {
 			selected: 1,
@@ -35,6 +35,6 @@ function resourceChart(id, cpuSeries, ramSeries) {
 		legend: {
             enabled: true,
         },
-		series: [cpuSeries, ramSeries]
+		series: [cpuSeries, ramSeries, playersOnlineSeries]
 	});
 }

@@ -497,8 +497,8 @@
             playersChart('playerChartMonth', playersOnlineSeries, 4);
             performanceChart('performanceGraph', playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries);
             tpsChart('tpsGraph', tpsSeries, playersOnlineSeries);
-            resourceChart('resourceGraph', cpuSeries, ramSeries);
-            worldChart('worldGraph', entitySeries, chunkSeries);
+            resourceChart('resourceGraph', cpuSeries, ramSeries, playersOnlineSeries);
+            worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
             worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
             punchCard('punchcard', punchcardSeries);
             /*countUpTimer();*/
