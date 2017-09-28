@@ -9,7 +9,6 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -109,16 +108,6 @@ public abstract class Table {
     }
 
     /**
-     * @param sql
-     * @return
-     * @throws SQLException
-     */
-    @Deprecated
-    protected PreparedStatement prepareStatement(String sql) throws SQLException {
-        return getConnection().prepareStatement(sql);
-    }
-
-    /**
      * @param toClose
      */
     protected void close(AutoCloseable... toClose) {
@@ -172,18 +161,6 @@ public abstract class Table {
     @Override
     public String toString() {
         return tableName;
-    }
-
-    @Deprecated
-    protected void endTransaction(Connection connection) throws SQLException {
-    }
-
-    @Deprecated
-    protected void endTransaction(Statement statement) throws SQLException {
-        if (statement == null) {
-            return;
-        }
-        endTransaction(statement.getConnection());
     }
 
     @Override
