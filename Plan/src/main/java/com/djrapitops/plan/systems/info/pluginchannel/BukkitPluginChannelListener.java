@@ -20,6 +20,8 @@ import java.io.IOException;
  */
 public class BukkitPluginChannelListener implements PluginMessageListener {
 
+    private static String accessKey;
+
     private final Plan plugin;
 
     public BukkitPluginChannelListener(Plan plugin) {
@@ -30,7 +32,9 @@ public class BukkitPluginChannelListener implements PluginMessageListener {
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
         try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(message))) {
             String subChannel = in.readUTF();
-            String address = in.readUTF();
+            String[] data = in.readUTF().split("<!>");
+            String address = data[0];
+            accessKey = data[1];
 
             if ("bungee_address".equals(subChannel)) {
                 plugin.getServerInfoManager().saveBungeeConnectionAddress(address);
@@ -43,5 +47,13 @@ public class BukkitPluginChannelListener implements PluginMessageListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getAccessKey() {
+        return accessKey;
+    }
+
+    public static void usedAccessKey() {
+        accessKey = null;
     }
 }

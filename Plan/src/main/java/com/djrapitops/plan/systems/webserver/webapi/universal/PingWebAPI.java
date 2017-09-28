@@ -7,6 +7,8 @@ package main.java.com.djrapitops.plan.systems.webserver.webapi.universal;
 import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.systems.info.pluginchannel.BukkitPluginChannelListener;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 
@@ -26,5 +28,19 @@ public class PingWebAPI extends WebAPI {
             plugin.getInfoManager().attemptConnection();
         }
         return success();
+    }
+
+    @Override
+    public void sendRequest(String address) throws WebAPIException {
+        String accessKey = BukkitPluginChannelListener.getAccessKey();
+        if (accessKey != null) {
+            addVariable("accessKey", accessKey);
+        }
+
+        super.sendRequest(address);
+
+        if (accessKey != null) {
+            BukkitPluginChannelListener.usedAccessKey();
+        }
     }
 }

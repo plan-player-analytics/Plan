@@ -45,12 +45,14 @@ public class BungeePluginChannelListener implements Listener {
 
     private void sendToBukkit(ServerInfo server) {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            String accessKey = plugin.getWebServer().getWebAPI().generateNewAccessKey();
+
             try (DataOutputStream out = new DataOutputStream(stream)) {
                 out.writeUTF("bungee_address");
-                out.writeUTF(plugin.getWebServer().getAccessAddress());
+                out.writeUTF(plugin.getWebServer().getAccessAddress() + "<!>" + accessKey);
             }
             server.sendData("Return", stream.toByteArray());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
