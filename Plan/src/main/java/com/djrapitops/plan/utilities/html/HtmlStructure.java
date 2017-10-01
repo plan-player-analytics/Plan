@@ -385,8 +385,12 @@ public class HtmlStructure {
         }
         int i = 0;
         StringBuilder b = new StringBuilder();
-        Collection<String> values = networkPageContents.values();
+        List<String> values = new ArrayList<>(networkPageContents.values());
         int size = values.size();
+        int extra = size % 3;
+        for (int j = 0; j < extra; j++) {
+            values.add("<div class=\"column\"></div>");
+        }
         for (String server : values) {
             if (i % 3 == 0) {
                 b.append("<div class=\"row\">");

@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import main.java.com.djrapitops.plan.data.WebUser;
@@ -103,6 +104,7 @@ public class ResponseHandler extends APIResponseHandler {
         } catch (WebUserAuthException e) {
             return PageCache.loadPage("promptAuthorization", PromptAuthorizationResponse::new);
         } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
             return new InternalErrorResponse(e, request.getTarget());
         }
     }

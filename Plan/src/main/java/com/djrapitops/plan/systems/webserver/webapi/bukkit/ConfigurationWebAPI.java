@@ -6,10 +6,7 @@ package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
 import com.djrapitops.plugin.utilities.Compatibility;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.ServerSpecificSettings;
-import main.java.com.djrapitops.plan.Settings;
+import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -43,9 +40,17 @@ public class ConfigurationWebAPI extends WebAPI {
         throw new IllegalStateException("Wrong method call for this WebAPI, call sendRequest(String, UUID, UUID) instead.");
     }
 
+    public void sendRequest(String address, UUID serverUUID, String accessKey) throws WebAPIException {
+        if (accessKey != null) {
+            addVariable("accessKey", accessKey);
+        }
+        addVariable("webAddress", PlanBungee.getInstance().getWebServer().getAccessAddress());
+
+        sendRequest(address, serverUUID);
+    }
+
     public void sendRequest(String address, UUID serverUUID) throws WebAPIException {
         Map<String, Object> configValues = getConfigValues(serverUUID);
-        Log.debug("Sending config values: " + configValues);
         for (Map.Entry<String, Object> entry : configValues.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
@@ -87,8 +92,19 @@ public class ConfigurationWebAPI extends WebAPI {
 
     private void addServerSpecificValues(Map<String, Object> configValues, UUID serverUUID) {
         ServerSpecificSettings settings = Settings.serverSpecific();
-        addConfigValue(configValues, Settings.THEME_BASE, settings.getString(serverUUID, Settings.THEME_BASE));
-        addConfigValue(configValues, Settings.WEBSERVER_PORT, settings.getInt(serverUUID, Settings.WEBSERVER_PORT));
-        addConfigValue(configValues, Settings.SERVER_NAME, settings.getString(serverUUID, Settings.SERVER_NAME));
+
+        String theme = settings.getString(serverUUID, Settings.THEME_BASE);
+        Integer port = settings.getInt(serverUUID, Settings.WEBSERVER_PORT);
+        String name = settings.getString(serverUUID, Settings.SERVER_NAME);
+
+        if (!Verify.isEmpty(theme)) {
+            addConfigValue(configValues, Settings.THEME_BASE, theme);
+        }
+        if (port != null && port != 0) {
+            addConfigValue(configValues, Settings.WEBSERVER_PORT, port);
+        }
+        if (!Verify.isEmpty(name)) {
+            addConfigValue(configValues, Settings.SERVER_NAME, name);
+        }
     }
 }

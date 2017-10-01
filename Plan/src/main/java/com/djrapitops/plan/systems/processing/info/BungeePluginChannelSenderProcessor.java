@@ -26,6 +26,7 @@ public class BungeePluginChannelSenderProcessor extends Processor<Player> {
 
     @Override
     public void process() {
+        Log.debug("Sending a Bungee Address get Request through plugin channel");
         try (ByteArrayOutputStream b = new ByteArrayOutputStream()) {
             try (DataOutputStream out = new DataOutputStream(b)) {
                 out.writeUTF("bungee_address_get");

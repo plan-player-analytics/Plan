@@ -39,7 +39,7 @@ public class WebAPIManager {
     }
 
     public String generateNewAccessKey() throws Exception {
-        String key = PassEncryptUtil.createHash(UUID.randomUUID().toString()).split(":")[4];
+        String key = PassEncryptUtil.createHash(UUID.randomUUID().toString().substring(0, 5)).split(":")[4];
         accessKeys.add(key);
         return key;
     }

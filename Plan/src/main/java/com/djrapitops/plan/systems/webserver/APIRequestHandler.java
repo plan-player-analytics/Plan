@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.systems.webserver;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 
@@ -33,6 +34,8 @@ public class APIRequestHandler implements HttpHandler {
             Response response = responseHandler.getAPIResponse(request);
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
+        } catch (Exception e) {
+            Log.toLog(this.getClass().getName(), e);
         } finally {
             exchange.close();
         }

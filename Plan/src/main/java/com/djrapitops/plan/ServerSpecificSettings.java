@@ -42,22 +42,27 @@ public class ServerSpecificSettings {
     public static void updateSettings(Plan plugin, Map<String, String> settings) {
         Log.debug("Checking new settings..");
         FileConfiguration config = plugin.getConfig();
+
         boolean changedSomething = false;
         for (Map.Entry<String, String> setting : settings.entrySet()) {
-            String path = setting.getKey();
-            if ("sender".equals(path)) {
-                continue;
+            try {
+                String path = setting.getKey();
+                if ("sender".equals(path)) {
+                    continue;
+                }
+                String stringValue = setting.getValue();
+                Object value = getValue(stringValue);
+                String currentValue = config.get(path).toString();
+                if (stringValue.equals(currentValue)) {
+                    continue;
+                }
+                config.set(path, value);
+                Log.debug("  " + path + ": " + value);
+            } catch (NullPointerException e) {
             }
-            String stringValue = setting.getValue();
-            Object value = getValue(stringValue);
-            String currentValue = config.getString(path);
-            if (currentValue.equals(stringValue)) {
-                continue;
-            }
-            config.set(path, value);
-            Log.debug("  " + path + ": " + value);
             changedSomething = true;
         }
+
         if (changedSomething) {
             plugin.saveConfig();
             Log.info("----------------------------------");

@@ -64,6 +64,10 @@ public class BukkitInformationManager extends InformationManager {
         analysis = new Analysis(plugin);
         pluginsTabContents = new HashMap<>();
 
+        updateConnection();
+    }
+
+    public void updateConnection() {
         Optional<String> bungeeConnectionAddress = plugin.getServerInfoManager().getBungeeConnectionAddress();
         if (bungeeConnectionAddress.isPresent() && Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
             webServerAddress = bungeeConnectionAddress.get();
@@ -71,7 +75,6 @@ public class BukkitInformationManager extends InformationManager {
         } else {
             usingAnotherWebServer = false;
         }
-
     }
 
     @Override
@@ -216,6 +219,7 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(AnalysisReadyWebAPI.class).sendRequest(webServerAddress, serverUUID);
+                updateNetworkPageContent();
                 return;
             } catch (WebAPIException e) {
                 attemptConnection();
@@ -299,8 +303,6 @@ public class BukkitInformationManager extends InformationManager {
             try {
                 getWebAPI().getAPI(PostNetworkPageContentWebAPI.class).sendNetworkContent(webServerAddress, HtmlStructure.createServerContainer(plugin));
             } catch (WebAPIException e) {
-                attemptConnection();
-                updateNetworkPageContent();
             }
         }
     }

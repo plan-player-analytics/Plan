@@ -37,6 +37,7 @@ public class BukkitPluginChannelListener implements PluginMessageListener {
 
         try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(message))) {
             String subChannel = in.readUTF();
+            Log.debug("Received plugin message, channel: " + subChannel);
             String[] data = in.readUTF().split("<!>");
             String address = data[0];
             accessKey = data[1];

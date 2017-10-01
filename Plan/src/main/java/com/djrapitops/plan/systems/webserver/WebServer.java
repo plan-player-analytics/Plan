@@ -70,7 +70,8 @@ public class WebServer {
                 new PostInspectPluginsTabWebAPI(),
                 new PostNetworkPageContentWebAPI(),
                 new PostOriginalBukkitSettingsWebAPI(),
-                new RequestPluginsTabWebAPI()
+                new RequestPluginsTabWebAPI(),
+                new RequestSetupWebAPI()
         );
     }
 
@@ -105,7 +106,7 @@ public class WebServer {
 
             enabled = true;
 
-            Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()));
+            Log.info(Locale.get(Msg.ENABLE_WEBSERVER_INFO).parse(server.getAddress().getPort()) + " (" + getAccessAddress() + ")");
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             enabled = false;

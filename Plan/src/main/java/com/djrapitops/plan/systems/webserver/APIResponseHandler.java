@@ -72,14 +72,36 @@ public class APIResponseHandler {
         Map<String, String> variables = WebAPI.readVariables(requestBody);
         String sender = variables.get("sender");
         Log.debug("Received WebAPI Request" + target + " from " + sender);
-        if (!checkKey(sender)) {
-            String error = "Server Key not given or invalid";
-            Log.debug("Request had invalid Server key");
-            return PageCache.loadPage(error, () -> {
-                ForbiddenResponse forbidden = new ForbiddenResponse();
-                forbidden.setContent(error);
-                return forbidden;
-            });
+
+        boolean isPing = "pingwebapi".equalsIgnoreCase(method);
+        boolean isSetupRequest = "requestsetupwebapi".equalsIgnoreCase(method);
+        boolean isPostOriginalSettings = "postoriginalbukkitsettingswebapi".equalsIgnoreCase(method);
+        boolean skipAuthCheck = isPing || isSetupRequest || isPostOriginalSettings;
+
+        // TODO refactor to more methods
+        if (!skipAuthCheck) {
+            String accessKey = variables.get("accessKey");
+            if (accessKey == null) {
+                if (!checkKey(sender)) {
+                    String error = "Server Key not given or invalid";
+                    Log.debug("Request had invalid Server key: " + sender);
+                    return PageCache.loadPage(error, () -> {
+                        ForbiddenResponse forbidden = new ForbiddenResponse();
+                        forbidden.setContent(error);
+                        return forbidden;
+                    });
+                }
+            } else {
+                if (!webAPI.isAuthorized(accessKey)) {
+                    String error = "Access Key invalid";
+                    Log.debug("Request had invalid Access key: " + accessKey);
+                    return PageCache.loadPage(error, () -> {
+                        ForbiddenResponse forbidden = new ForbiddenResponse();
+                        forbidden.setContent(error);
+                        return forbidden;
+                    });
+                }
+            }
         }
 
         WebAPI api = webAPI.getAPI(method);

@@ -88,7 +88,13 @@ public class AnalyzeCommand extends SubCommand {
             try {
                 List<ServerInfo> bukkitServers = plugin.getDB().getServerTable().getBukkitServers();
                 Optional<ServerInfo> server = bukkitServers.stream().filter(info -> {
-                    String serverIdentifier = args[0];
+                    StringBuilder idBuilder = new StringBuilder(args[0]);
+                    if (args.length > 1) {
+                        for (int i = 1; i < args.length; i++) {
+                            idBuilder.append(" ").append(args[i]);
+                        }
+                    }
+                    String serverIdentifier = idBuilder.toString();
                     return Integer.toString(info.getId()).equals(serverIdentifier) || info.getName().equalsIgnoreCase(serverIdentifier);
                 }).findFirst();
                 if (server.isPresent()) {

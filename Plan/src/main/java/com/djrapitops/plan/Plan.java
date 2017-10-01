@@ -201,9 +201,9 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
-            if (Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
-                registerPluginChannelListener();
-            }
+//            if (Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
+//                registerPluginChannelListener();
+//            }
 
             BStats bStats = new BStats(this);
             bStats.registerMetrics();

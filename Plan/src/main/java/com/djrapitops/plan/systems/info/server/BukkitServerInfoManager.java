@@ -110,6 +110,14 @@ public class BukkitServerInfoManager {
         } catch (Exception ignored) {
             /* Ignored */
         }
+        try {
+            Optional<ServerInfo> bungeeInfo = plugin.getDB().getServerTable().getBungeeInfo();
+            if (bungeeInfo.isPresent()) {
+                return Optional.of(bungeeInfo.get().getWebAddress());
+            }
+        } catch (SQLException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
         return Optional.empty();
     }
 

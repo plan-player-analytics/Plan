@@ -28,13 +28,16 @@ public class BungeePluginChannelListener implements Listener {
 
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
-        if (!e.getTag().equalsIgnoreCase("BungeeCord")) {
+        String tag = e.getTag();
+        Log.debug(tag);
+        if (!tag.equalsIgnoreCase("BungeeCord")) {
             return;
         }
 
         try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()))) {
-            String channel = in.readUTF(); // channel we delivered
-            if (channel.equals("bungee_address_get")) {
+            String channel = in.readUTF();
+            Log.debug("Received plugin channel message on channel: " + channel);
+            if ("bungee_address_get".equals(channel)) {
                 ServerInfo server = plugin.getProxy().getPlayer(e.getReceiver().toString()).getServer().getInfo();
                 sendToBukkit(server);
             }
@@ -44,10 +47,14 @@ public class BungeePluginChannelListener implements Listener {
     }
 
     private void sendToBukkit(ServerInfo server) {
+        Log.debug("Sending data to bukkit through plugin channel");
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             String accessKey = plugin.getWebServer().getWebAPI().generateNewAccessKey();
 
             try (DataOutputStream out = new DataOutputStream(stream)) {
+                out.writeUTF("Forward");
+                out.writeUTF(server.getName());
+                out.writeUTF("Plan");
                 out.writeUTF("bungee_address");
                 out.writeUTF(plugin.getWebServer().getAccessAddress() + "<!>" + accessKey);
             }

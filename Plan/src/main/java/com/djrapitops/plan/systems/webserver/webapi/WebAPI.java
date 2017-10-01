@@ -46,14 +46,8 @@ public abstract class WebAPI {
     public Response processRequest(IPlan plugin, Map<String, String> variables) {
         String sender = variables.get("sender");
         if (sender == null) {
-            String accessKey = variables.get("accessKey");
-            WebAPIManager apiManager = MiscUtils.getIPlan().getWebServer().getWebAPI();
-            if (apiManager.isAuthorized(accessKey)) {
-                apiManager.authorize(accessKey);
-            } else {
-                Log.debug(getClass().getSimpleName() + ": Sender not Found");
-                return badRequest("Sender not present");
-            }
+            Log.debug(getClass().getSimpleName() + ": Sender not Found");
+            return badRequest("Sender not present");
         } else {
             try {
                 UUID.fromString(sender);
