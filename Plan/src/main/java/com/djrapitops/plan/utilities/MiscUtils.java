@@ -3,10 +3,12 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.PlanBungee;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -42,7 +44,7 @@ public class MiscUtils {
     }
 
     public static int getTimeZoneOffsetHours() {
-        return -TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
+        return TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
     }
 
     /**
@@ -88,17 +90,13 @@ public class MiscUtils {
      * @return Alphabetically sorted list of matching player names.
      */
     public static List<String> getMatchingPlayerNames(String search) {
-        final String searchFor = search.toLowerCase();
-        Database db = Plan.getInstance().getDB();
-        List<String> matches = new ArrayList<>();
+        Database db = getIPlan().getDB();
+        List<String> matches;
         try {
-            List<UserData> data = db.getUserDataForUUIDS(db.getSavedUUIDs());
-            matches = data.stream()
-                    .map(UserData::getName)
-                    .filter(name -> name.toLowerCase().contains(searchFor))
-                    .collect(Collectors.toList());
+            matches = db.getUsersTable().getMatchingNames(search);
         } catch (SQLException e) {
             Log.toLog("MiscUtils.getMatchingPlayerNames", e);
+            return new ArrayList<>();
         }
         Collections.sort(matches);
         return matches;
@@ -129,6 +127,22 @@ public class MiscUtils {
                     /* Ignored */
                 }
             }
+        }
+    }
+
+    public static String getPlanVersion() {
+        if (Compatibility.isBukkitAvailable()) {
+            return Plan.getInstance().getDescription().getVersion();
+        } else {
+            return PlanBungee.getInstance().getDescription().getVersion();
+        }
+    }
+
+    public static IPlan getIPlan() {
+        if (Compatibility.isBukkitAvailable()) {
+            return Plan.getInstance();
+        } else {
+            return PlanBungee.getInstance();
         }
     }
 }

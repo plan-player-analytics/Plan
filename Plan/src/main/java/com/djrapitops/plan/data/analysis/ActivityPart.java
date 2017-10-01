@@ -3,17 +3,15 @@ package main.java.com.djrapitops.plan.data.analysis;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.ui.html.RecentPlayersButtonsCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.PlayerActivityGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.PunchCardGraphCreator;
-import main.java.com.djrapitops.plan.ui.html.graphs.SessionLengthDistributionGraphCreator;
+import main.java.com.djrapitops.plan.systems.webserver.theme.Colors;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PlayerActivityGraphCreator;
+import main.java.com.djrapitops.plan.utilities.html.graphs.PunchCardGraphCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,23 +19,28 @@ import java.util.stream.Collectors;
 /**
  * Part responsible for all Player Activity related analysis.
  * <p>
- * Online Graphs, Player-base pie-chart, Recent Players and Session
- * visualisation.
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: recentlogins, sessionaverage,
- * datapunchcard, datasessiondistribution, labelssessiondistribution,
- * datascatterday, datascatterweek, datascattermonth, playersonlinecolor,
- * playersgraphfill, activecol, inactivecol, joinleavecol, bannedcol,
- * activitycolors, labelsactivity, dataaactivity, active, inactive, joinleaver,
- * banned
+ * Contains following placeholders after analyzed:
+ * ${active} - (Number)
+ * ${inactive} - (Number)
+ * ${joinLeaver} - (Number)
+ * ${banned} - (Number)
+ * ${activityColors} - Color array
+ * ${playersGraphColor} - Color
+ * <p>
+ * ${playersOnlineSeries} - Data for HighCharts
+ * ${sessionLengthSeries} - Data for HighCharts
+ * ${punchCardSeries} - Data for HighCharts
+ * <p>
+ * ${sessionAverage} - Formatted Time amount
  *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class ActivityPart extends RawData {
 
+    private final PlayerCountPart playerCount;
     private final JoinInfoPart joins;
     private final TPSPart tpsPart;
     private final Set<UUID> bans;
@@ -47,7 +50,8 @@ public class ActivityPart extends RawData {
     private List<String> recentPlayers;
     private List<UUID> recentPlayersUUIDs;
 
-    public ActivityPart(JoinInfoPart joins, TPSPart tps) {
+    public ActivityPart(PlayerCountPart playerCount, JoinInfoPart joins, TPSPart tps) {
+        this.playerCount = playerCount;
         this.joins = joins;
         tpsPart = tps;
         bans = new HashSet<>();
@@ -61,76 +65,82 @@ public class ActivityPart extends RawData {
         Verify.nullCheck(recentPlayers);
         Verify.nullCheck(recentPlayersUUIDs);
 
-        addValue("recentlogins", RecentPlayersButtonsCreator.createRecentLoginsButtons(recentPlayers, 15));
-
         activityPiechart();
 
         playerActivityGraphs();
 
-        final List<SessionData> sessions = joins.getAllSessions();
+        final List<Session> sessions = joins.getAllSessions();
 
         List<Long> lengths = AnalysisUtils.transformSessionDataToLengths(sessions);
         long averageLength = MathUtils.averageLong(lengths);
-        addValue("sessionaverage", FormatUtils.formatTimeAmount(averageLength));
+        addValue("sessionAverage", FormatUtils.formatTimeAmount(averageLength));
 
-        List<SessionData> sessionsMonth = sessions.stream()
+        List<Session> sessionsMonth = sessions.stream()
                 .filter(s -> s.getSessionStart() > MiscUtils.getTime() - TimeAmount.MONTH.ms())
                 .collect(Collectors.toList());
-        addValue("punchcardseries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
-        addValue("sessionlengthseries", SessionLengthDistributionGraphCreator.createDataSeries(lengths));
+        addValue("punchCardSeries", PunchCardGraphCreator.createDataSeries(sessionsMonth));
     }
 
     private void playerActivityGraphs() {
         List<TPS> tpsData = tpsPart.getTpsData();
-        addValue("playersonlineseries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
-        addValue("%playersgraphcolor%", Settings.HCOLOR_ACT_ONL.toString());
+        addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(tpsData));
+        addValue("playersGraphColor", Colors.PLAYERS_ONLINE.getColor());
     }
 
     private void activityPiechart() {
+        calculateActivityAmounts();
+
         int[] counts = new int[]{active.size(), inactive.size(), joinedOnce.size(), bans.size()};
-        final String colAct = Settings.HCOLOR_ACTP_ACT.toString();
-        final String colIna = Settings.HCOLOR_ACTP_INA.toString();
-        final String colJoi = Settings.HCOLOR_ACTP_JON.toString();
-        final String colBan = Settings.HCOLOR_ACTP_BAN.toString();
 
-        addValue("%activecol%", colAct);
-        addValue("%inactivecol%", colIna);
-        addValue("%joinleavecol%", colJoi);
-        addValue("%bancol%", colBan);
-        String activityColors = HtmlUtils.separateWithQuotes(
-                "#" + colAct, "#" + colIna, "#" + colJoi, "#" + colBan
-        );
-        addValue("%activitycolors%", activityColors);
+        addValue("activityPieColors", Settings.THEME_GRAPH_ACTIVITY_PIE.toString());
+        addValue("playersActive", counts[0]);
+        addValue("active", counts[0]);
+        addValue("inactive", counts[1]);
+        addValue("joinLeaver", counts[2]);
+        addValue("banned", counts[3]);
+    }
 
-        String activityLabels = "[" + HtmlUtils.separateWithQuotes(
-                "Active", "Inactive", "Unknown", "Banned") + "]";
-        addValue("%labelsactivity%", activityLabels);
+    private void calculateActivityAmounts() {
+        Map<UUID, List<Session>> allSessions = joins.getSessions();
+        for (UUID uuid : playerCount.getUuids()) {
+            if (bans.contains(uuid)) {
+                continue;
+            }
+            List<Session> sessions = allSessions.getOrDefault(uuid, new ArrayList<>());
+            long lastSeen = AnalysisUtils.getLastSeen(sessions);
+            long playtime = AnalysisUtils.getTotalPlaytime(sessions);
+            int sessionCount = sessions.size();
+            if (sessionCount <= 1) {
+                addJoinedOnce(uuid);
+                continue;
+            }
+            boolean isActive = AnalysisUtils.isActive(MiscUtils.getTime(), lastSeen, playtime, sessionCount);
+            if (isActive) {
+                addActive(uuid);
+            } else {
+                addInActive(uuid);
+            }
+        }
+    }
 
-        addValue("activitydata", Arrays.toString(counts));
-        addValue("%active%", counts[0]);
-        addValue("%inactive%", counts[1]);
-        addValue("%joinleaver%", counts[2]);
-        addValue("%banned%", counts[3]);
+    public void addBans(Collection<UUID> uuids) {
+        bans.addAll(uuids);
     }
 
     public void addBan(UUID uuid) {
-        Verify.nullCheck(uuid);
-        bans.add(uuid);
+        bans.add(Verify.nullCheck(uuid));
     }
 
     public void addActive(UUID uuid) {
-        Verify.nullCheck(uuid);
-        active.add(uuid);
+        active.add(Verify.nullCheck(uuid));
     }
 
     public void addInActive(UUID uuid) {
-        Verify.nullCheck(uuid);
-        inactive.add(uuid);
+        inactive.add(Verify.nullCheck(uuid));
     }
 
     public void addJoinedOnce(UUID uuid) {
-        Verify.nullCheck(uuid);
-        joinedOnce.add(uuid);
+        joinedOnce.add(Verify.nullCheck(uuid));
     }
 
     public Map<Long, Integer> getPlayersOnline() {

@@ -21,12 +21,15 @@ public class FactionsHook extends Hook {
      * @see API
      */
     public FactionsHook(HookHandler hookH) {
-        super("com.massivecraft.factions.Factions");
+        super("com.massivecraft.factions.Factions", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            hookH.addPluginDataSource(new FactionsFaction());
-            hookH.addPluginDataSource(new FactionsPower());
-            hookH.addPluginDataSource(new FactionsMaxPower());
-            hookH.addPluginDataSource(new FactionsTable());
+            addPluginDataSource(new FactionsFaction());
+            addPluginDataSource(new FactionsPower());
+            addPluginDataSource(new FactionsMaxPower());
+            addPluginDataSource(new FactionsTable());
         }
     }
 }

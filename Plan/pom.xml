@@ -4,41 +4,76 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>3.7.0</version>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
-            <id>plan-repo</id>
-            <url>http://repo.fuzzlemann.de/artifactory/libs-release/</url>
-        </repository>
-        <repository>
-            <id>plan-snapshot-repo</id>
-            <url>http://repo.fuzzlemann.de/artifactory/libs-snapshot/</url>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
     <dependencies>
-        <!--        PaperSpigot 1.12 built with Buildtools for Database classes.-->
+        <!--        PaperSpigot 1.12 -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper</artifactId>
             <version>1.12-R0.1-20170725.202533-1</version>
             <scope>provided</scope>
         </dependency>
-        <!--        Framework for easier plugin development-->
+        <!--        BungeeCord -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        Geo IP -->
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <!--        Framework for easier plugin development -->
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>abstract-plugin-framework</artifactId>
-            <version>2.0.4</version>
+            <version>2.0.5</version>
             <scope>compile</scope>
         </dependency>
-        <!--        SoftDepended Plugins-->
+        <!--         Connection Pool -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.4.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        SoftDepended Plugins -->
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
-            <version>3.7.0</version>
+            <version>4.0.0</version>
             <scope>compile</scope>
         </dependency>
-        <!--         -->
+        <!--        Testing -->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock</artifactId>
@@ -107,10 +142,26 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
                     <include>*.keystore</include>
-                    <include>*.js</include>
+                    <include>*.css</include>
                     <include>*.yml</include>
                     <include>*.html</include>
-                    <include>*.txt</include>
+                </includes>
+                <excludes>
+                    <exclude>licence.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/html</directory>
+                <includes>
+                    <include>*.html</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/js</directory>
+                <includes>
+                    <include>*.js</include>
                 </includes>
             </resource>
         </resources>
@@ -136,6 +187,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <minimizeJar>true</minimizeJar>
                     <artifactSet>
                         <excludes>
                             <exclude>org.powermock:*</exclude>
@@ -145,7 +197,8 @@
                             <exclude>xpp3:*</exclude>
                             <exclude>org.objenesis:*</exclude>
                             <exclude>cglib:*</exclude>
-                            <exclude>org.*:*</exclude>
+                            <exclude>org.bukkit:*</exclude>
+                            <exclude>org.mockito:*</exclude>
                             <exclude>org.easymock:*</exclude>
                             <exclude>junit:*</exclude>
                         </excludes>

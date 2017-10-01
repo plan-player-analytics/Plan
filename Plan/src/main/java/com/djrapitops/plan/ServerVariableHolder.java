@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan;
 
+import net.md_5.bungee.api.ProxyServer;
 import org.bukkit.Server;
 
 /**
@@ -11,7 +12,12 @@ import org.bukkit.Server;
  */
 public class ServerVariableHolder {
 
+    private final String name;
+    private final int port;
+    private final String version;
+    private final String implVersion;
     private final String ip;
+    private final int maxPlayers;
     private final boolean usingPaper;
 
     /**
@@ -21,10 +27,32 @@ public class ServerVariableHolder {
      */
     public ServerVariableHolder(Server server) {
         ip = server.getIp();
+        name = server.getName();
+        port = server.getPort();
+        version = server.getVersion();
+        implVersion = server.getBukkitVersion();
 
-        String serverName = server.getName();
-        usingPaper = serverName.equals("Paper")
-                || serverName.equals("TacoSpigot"); //Fork of Paper
+        maxPlayers = server.getMaxPlayers();
+
+        usingPaper = name.equals("Paper")
+                || name.equals("TacoSpigot"); //Fork of Paper
+    }
+
+    /**
+     * Constructor, grabs the variables.
+     *
+     * @param server instance the plugin is running on.
+     */
+    public ServerVariableHolder(ProxyServer server) {
+        ip = Settings.BUNGEE_IP.toString();
+        name = "BungeeCord";
+        port = -1;
+        version = server.getVersion();
+        implVersion = server.getVersion();
+
+        maxPlayers = server.getConfig().getPlayerLimit();
+
+        usingPaper = false;
     }
 
     /**
@@ -43,5 +71,25 @@ public class ServerVariableHolder {
      */
     public boolean isUsingPaper() {
         return usingPaper;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getImplVersion() {
+        return implVersion;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 }

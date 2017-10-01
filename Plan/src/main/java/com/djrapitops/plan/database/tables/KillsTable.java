@@ -1,13 +1,16 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.KillData;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.data.PlayerKill;
+import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,12 +19,16 @@ import java.util.*;
 /**
  * @author Rsl1122
  */
-public class KillsTable extends Table {
+public class KillsTable extends UserIDTable {
 
-    private final String columnKillerUserID;
-    private final String columnVictimUserID;
-    private final String columnWeapon;
-    private final String columnDate;
+    private final String columnKillerUserID = "killer_id";
+    private final String columnVictimUserID = "victim_id";
+    private final String columnWeapon = "weapon";
+    private final String columnDate = "date";
+    private final String columnSessionID = "session_id";
+
+    private final SessionsTable sessionsTable;
+    private String insertStatement;
 
     /**
      * @param db
@@ -29,234 +36,242 @@ public class KillsTable extends Table {
      */
     public KillsTable(SQLDB db, boolean usingMySQL) {
         super("plan_kills", db, usingMySQL);
-        columnWeapon = "weapon";
-        columnDate = "date";
-        columnKillerUserID = "killer_id";
-        columnVictimUserID = "victim_id";
+        sessionsTable = db.getSessionsTable();
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnKillerUserID + ", "
+                + columnVictimUserID + ", "
+                + columnSessionID + ", "
+                + columnDate + ", "
+                + columnWeapon
+                + ") VALUES ("
+                + usersTable.statementSelectID + ", "
+                + usersTable.statementSelectID + ", "
+                + "?, ?, ?)";
     }
 
     /**
      * @return
      */
     @Override
-    public boolean createTable() {
-        UsersTable usersTable = db.getUsersTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnKillerUserID, Sql.INT).notNull()
-                    .column(columnVictimUserID, Sql.INT).notNull()
-                    .column(columnWeapon, Sql.varchar(30)).notNull()
-                    .column(columnDate, Sql.LONG).notNull()
-                    .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void createTable() throws DBCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
+                .column(columnKillerUserID, Sql.INT).notNull()
+                .column(columnVictimUserID, Sql.INT).notNull()
+                .column(columnWeapon, Sql.varchar(30)).notNull()
+                .column(columnDate, Sql.LONG).notNull()
+                .column(columnSessionID, Sql.INT).notNull()
+                .foreignKey(columnKillerUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnVictimUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
+                .toString()
+        );
     }
 
-    /**
-     * @param userId
-     * @return
-     */
-    public boolean removeUserKillsAndVictims(int userId) {
+    @Override
+    public void removeUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE " + columnKillerUserID + " = ? OR " + columnVictimUserID + " = ?");
-            statement.setInt(1, userId);
-            statement.setInt(2, userId);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("DELETE FROM " + tableName +
+                    " WHERE " + columnKillerUserID + " = " + usersTable.statementSelectID +
+                    " OR " + columnVictimUserID + " = " + usersTable.statementSelectID);
+            statement.setString(1, uuid.toString());
+            statement.setString(2, uuid.toString());
+
             statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+            commit(connection);
         } finally {
             close(statement);
         }
     }
 
-    /**
-     * @param userId
-     * @return
-     * @throws SQLException
-     */
-    public List<KillData> getPlayerKills(int userId) throws SQLException {
-        UsersTable usersTable = db.getUsersTable();
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnKillerUserID + "=?)");
-            statement.setInt(1, userId);
-            set = statement.executeQuery();
-            List<KillData> killData = new ArrayList<>();
-            while (set.next()) {
-                int victimID = set.getInt(columnVictimUserID);
-                UUID victimUUID = usersTable.getUserUUID(String.valueOf(victimID));
-                killData.add(new KillData(victimUUID, victimID, set.getString(columnWeapon), set.getLong(columnDate)));
-            }
-            return killData;
-        } finally {
-            close(set);
-            close(statement);
-        }
-    }
-
-    /**
-     * @param userId
-     * @param kills
-     * @throws SQLException
-     */
-    public void savePlayerKills(int userId, List<KillData> kills) throws SQLException {
-        if (Verify.isEmpty(kills)) {
+    public void savePlayerKills(UUID uuid, int sessionID, List<PlayerKill> playerKills) throws SQLException {
+        if (Verify.isEmpty(playerKills)) {
             return;
         }
-        Benchmark.start("Save Kills");
-        kills.removeAll(getPlayerKills(userId));
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnKillerUserID + ", "
-                    + columnVictimUserID + ", "
-                    + columnWeapon + ", "
-                    + columnDate
-                    + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
-            kills.stream().filter(Objects::nonNull).forEach(killData -> {
-                int victimUserID = killData.getVictimUserID();
-                if (victimUserID == -1) {
-                    try {
-                        int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
-                        killData.setVictimUserID(newVictimID);
-                    } catch (SQLException e) {
-                        Log.toLog(this.getClass().getName(), e);
-                        return;
-                    }
-                }
-            });
-            for (KillData kill : kills) {
-                if (kill == null || kill.getVictimUserID() == -1) {
-                    continue;
-                }
-                statement.setInt(1, userId);
-                statement.setInt(2, kill.getVictimUserID());
-                statement.setString(3, kill.getWeapon());
-                statement.setLong(4, kill.getDate());
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
+            for (PlayerKill kill : playerKills) {
+                UUID victim = kill.getVictim();
+                long date = kill.getTime();
+                String weapon = kill.getWeapon();
+                statement.setString(1, uuid.toString());
+                statement.setString(2, victim.toString());
+                statement.setInt(3, sessionID);
+                statement.setLong(4, date);
+                statement.setString(5, weapon);
                 statement.addBatch();
-                commitRequired = true;
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
+            commit(connection);
         } finally {
             close(statement);
-            Benchmark.stop("Database", "Save Kills");
         }
     }
 
-    /**
-     * @param ids
-     * @param uuids
-     * @return
-     * @throws SQLException
-     */
-    public Map<Integer, List<KillData>> getPlayerKills(Collection<Integer> ids, Map<Integer, UUID> uuids) throws SQLException {
-        if (ids == null || ids.isEmpty()) {
-            return new HashMap<>();
-        }
-        Benchmark.start("Get Kills multiple");
+    public void addKillsToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            Map<Integer, List<KillData>> kills = new HashMap<>();
-            statement = prepareStatement("SELECT * FROM " + tableName);
+        try (Connection connection = getConnection()) {
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            statement = connection.prepareStatement("SELECT " +
+                    columnSessionID + ", " +
+                    columnDate + ", " +
+                    columnWeapon + ", " +
+                    usersUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID +
+                    " WHERE " + columnKillerUserID + "=" + usersTable.statementSelectID);
+
+            statement.setFetchSize(10000);
+            statement.setString(1, uuid.toString());
+
             set = statement.executeQuery();
-            for (Integer id : ids) {
-                kills.put(id, new ArrayList<>());
-            }
+
             while (set.next()) {
-                int killerID = set.getInt(columnKillerUserID);
-                int victimID = set.getInt(columnVictimUserID);
-                if (!ids.contains(killerID)) {
+                int sessionID = set.getInt(columnSessionID);
+                Session session = sessions.get(sessionID);
+                if (session == null) {
                     continue;
                 }
-                UUID victimUUID = uuids.get(victimID);
-                kills.get(killerID).add(new KillData(victimUUID, victimID, set.getString(columnWeapon), set.getLong(columnDate)));
+                String uuidS = set.getString("victim_uuid");
+                UUID victim = UUID.fromString(uuidS);
+                long date = set.getLong(columnDate);
+                String weapon = set.getString(columnWeapon);
+                session.getPlayerKills().add(new PlayerKill(victim, weapon, date));
             }
-            return kills;
         } finally {
-            close(set);
-            close(statement);
-            Benchmark.stop("Database", "Get Kills multiple");
+            close(set, statement);
         }
     }
 
-    /**
-     * @param kills
-     * @param uuids
-     * @throws SQLException
-     */
-    public void savePlayerKills(Map<Integer, List<KillData>> kills, Map<Integer, UUID> uuids) throws SQLException {
-        if (Verify.isEmpty(kills)) {
+    public Map<UUID, List<PlayerKill>> getPlayerKills() throws SQLException {
+        return getPlayerKills(Plan.getServerUUID());
+    }
+
+    public Map<UUID, List<PlayerKill>> getPlayerKills(UUID serverUUID) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try (Connection connection = getConnection()){
+            String usersVictimIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersKillerIDColumn = "a." + usersTable.getColumnID();
+            String usersVictimUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            String usersKillerUUIDColumn = "a." + usersTable.getColumnUUID() + " as killer_uuid";
+            statement = connection.prepareStatement("SELECT " +
+                    columnDate + ", " +
+                    columnWeapon + ", " +
+                    usersVictimUUIDColumn + ", " +
+                    usersKillerUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersVictimIDColumn + "=" + columnVictimUserID +
+                    " JOIN " + usersTable + " a on " + usersKillerIDColumn + "=" + columnKillerUserID);
+
+            statement.setFetchSize(50000);
+            set = statement.executeQuery();
+
+            Map<UUID, List<PlayerKill>> allKills = new HashMap<>();
+            while (set.next()) {
+                UUID killer = UUID.fromString(set.getString("killer_uuid"));
+                UUID victim = UUID.fromString(set.getString("victim_uuid"));
+                long date = set.getLong(columnDate);
+                String weapon = set.getString(columnWeapon);
+                List<PlayerKill> kills = allKills.getOrDefault(killer, new ArrayList<>());
+                kills.add(new PlayerKill(victim, weapon, date));
+                allKills.put(killer, kills);
+            }
+            return allKills;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public void addKillsToSessions(Map<UUID, Map<UUID, List<Session>>> map) throws SQLException {
+        Map<Integer, List<PlayerKill>> playerKillsBySessionID = getAllPlayerKillsBySessionID();
+        for (UUID serverUUID : map.keySet()) {
+            for (List<Session> sessions : map.get(serverUUID).values()) {
+                for (Session session : sessions) {
+                    List<PlayerKill> playerKills = playerKillsBySessionID.get(session.getSessionID());
+                    if (playerKills != null) {
+                        session.setPlayerKills(playerKills);
+                    }
+                }
+            }
+        }
+    }
+
+    public void savePlayerKills(Map<UUID, Map<UUID, List<Session>>> allSessions) throws SQLException {
+        if (Verify.isEmpty(allSessions)) {
             return;
         }
-
-        Benchmark.start("Save Kills multiple");
-        Map<Integer, List<KillData>> saved = getPlayerKills(kills.keySet(), uuids);
-
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnKillerUserID + ", "
-                    + columnVictimUserID + ", "
-                    + columnWeapon + ", "
-                    + columnDate
-                    + ") VALUES (?, ?, ?, ?)");
-            boolean commitRequired = false;
-            for (Map.Entry<Integer, List<KillData>> entrySet : kills.entrySet()) {
-                Integer id = entrySet.getKey();
-                List<KillData> playerKills = entrySet.getValue();
-                playerKills.removeIf(Objects::isNull);
-                List<KillData> s = saved.get(id);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
+            String[] gms = GMTimes.getGMKeyArray();
+            for (UUID serverUUID : allSessions.keySet()) {
+                for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
+                    UUID killer = entry.getKey();
+                    List<Session> sessions = entry.getValue();
 
-                if (s != null) {
-                    playerKills.removeAll(s);
-                }
-
-                findMissingIDs(playerKills);
-
-                for (KillData kill : playerKills) {
-                    if (kill.getVictimUserID() == -1) {
-                        continue;
+                    for (Session session : sessions) {
+                        int sessionID = session.getSessionID();
+                        for (PlayerKill kill : session.getPlayerKills()) {
+                            UUID victim = kill.getVictim();
+                            long date = kill.getTime();
+                            String weapon = kill.getWeapon();
+                            statement.setString(1, killer.toString());
+                            statement.setString(2, victim.toString());
+                            statement.setInt(3, sessionID);
+                            statement.setLong(4, date);
+                            statement.setString(5, weapon);
+                            statement.addBatch();
+                        }
                     }
-                    statement.setInt(1, id);
-                    statement.setInt(2, kill.getVictimUserID());
-                    statement.setString(3, kill.getWeapon());
-                    statement.setLong(4, kill.getDate());
-                    statement.addBatch();
-                    commitRequired = true;
-                }
-
-                if (commitRequired) {
-                    statement.executeBatch();
                 }
             }
+            statement.executeBatch();
+            commit(connection);
         } finally {
             close(statement);
-            Benchmark.stop("Database", "Save Kills multiple");
         }
     }
 
-    private void findMissingIDs(List<KillData> playerKills) throws SQLException {
-        for (KillData killData : playerKills) {
-            int victimUserID = killData.getVictimUserID();
-            if (victimUserID == -1) {
-                int newVictimID = db.getUsersTable().getUserId(killData.getVictim());
-                killData.setVictimUserID(newVictimID);
+    public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try (Connection connection = getConnection()){
+            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
+            statement = connection.prepareStatement("SELECT " +
+                    columnSessionID + ", " +
+                    columnDate + ", " +
+                    columnWeapon + ", " +
+                    usersUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnVictimUserID);
+
+            statement.setFetchSize(50000);
+
+            set = statement.executeQuery();
+
+            Map<Integer, List<PlayerKill>> allPlayerKills = new HashMap<>();
+            while (set.next()) {
+                int sessionID = set.getInt(columnSessionID);
+
+                List<PlayerKill> playerKills = allPlayerKills.getOrDefault(sessionID, new ArrayList<>());
+
+                String uuidS = set.getString("victim_uuid");
+                UUID victim = UUID.fromString(uuidS);
+                long date = set.getLong(columnDate);
+                String weapon = set.getString(columnWeapon);
+                playerKills.add(new PlayerKill(victim, weapon, date));
+
+                allPlayerKills.put(sessionID, playerKills);
             }
+            return allPlayerKills;
+        } finally {
+            close(set, statement);
         }
     }
 }

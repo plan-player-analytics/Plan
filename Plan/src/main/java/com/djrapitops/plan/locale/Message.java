@@ -1,6 +1,11 @@
 package main.java.com.djrapitops.plan.locale;
 
+import com.djrapitops.plugin.utilities.Verify;
+import org.apache.commons.lang3.text.StrSubstitutor;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a Message that can be modified.
@@ -17,11 +22,17 @@ public class Message {
     }
 
     public String parse(Serializable... p) {
-        String returnValue = this.content;
+        Verify.nullCheck(p);
+
+        Map<String, Serializable> replaceMap = new HashMap<>();
+
         for (int i = 0; i < p.length; i++) {
-            returnValue = returnValue.replace("REPLACE" + i, p[i].toString());
+            replaceMap.put(String.valueOf(i), p[i].toString());
         }
-        return returnValue;
+
+        StrSubstitutor sub = new StrSubstitutor(replaceMap);
+
+        return sub.replace(content);
     }
 
     public String[] toArray() {

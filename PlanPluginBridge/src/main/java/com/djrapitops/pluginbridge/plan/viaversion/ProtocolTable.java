@@ -5,15 +5,17 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.tables.Table;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.database.databases.SQLDB;
-import main.java.com.djrapitops.plan.database.tables.Table;
 
 /**
  * Class responsible for version protocol information in Plan database.
@@ -27,24 +29,18 @@ public class ProtocolTable extends Table {
     private final String columnProtocolVersion;
 
     public ProtocolTable(SQLDB db) {
-        super("plan_viaversion_protocol", db, db.supportsModification());
+        super("plan_viaversion_protocol", db, db.isUsingMySQL());
         columnUUID = "uuid";
         columnProtocolVersion = "protocol_version";
     }
 
     @Override
-    public boolean createTable() {
-        try {
-            execute("CREATE TABLE IF NOT EXISTS " + tableName + " ("
-                    + columnUUID + " varchar(36) NOT NULL UNIQUE, "
-                    + columnProtocolVersion + " integer NOT NULL"
-                    + ")"
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void createTable() throws DBCreateTableException {
+        createTable("CREATE TABLE IF NOT EXISTS " + tableName + " ("
+                + columnUUID + " varchar(36) NOT NULL UNIQUE, "
+                + columnProtocolVersion + " integer NOT NULL"
+                + ")"
+        );
     }
 
     public void saveProtocolVersion(UUID uuid, int version) throws SQLException {
@@ -58,8 +54,8 @@ public class ProtocolTable extends Table {
     public int getProtocolVersion(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?");
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?");
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
             if (set.next()) {
@@ -68,16 +64,15 @@ public class ProtocolTable extends Table {
                 return -1;
             }
         } finally {
-            close(set);
-            close(statement);
+            close(set, statement);
         }
     }
 
     public Map<UUID, Integer> getProtocolVersions() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             Map<UUID, Integer> versions = new HashMap<>();
             while (set.next()) {
@@ -87,8 +82,7 @@ public class ProtocolTable extends Table {
             }
             return versions;
         } finally {
-            close(set);
-            close(statement);
+            close(set, statement);
         }
     }
 
@@ -98,13 +92,15 @@ public class ProtocolTable extends Table {
 
     private void updateProtocolVersion(UUID uuid, int version) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("UPDATE " + tableName + " SET "
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
                     + columnProtocolVersion + "=? "
                     + " WHERE (" + columnUUID + "=?)");
             statement.setInt(1, version);
             statement.setString(2, uuid.toString());
             statement.execute();
+
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -112,15 +108,17 @@ public class ProtocolTable extends Table {
 
     private void insertProtocolVersion(UUID uuid, int version) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(
                     "INSERT INTO " + tableName + " ("
-                    + columnUUID + ", "
-                    + columnProtocolVersion
-                    + ") VALUES (?, ?)");
+                            + columnUUID + ", "
+                            + columnProtocolVersion
+                            + ") VALUES (?, ?)");
             statement.setString(1, uuid.toString());
             statement.setInt(2, version);
             statement.execute();
+
+            commit(connection);
         } finally {
             close(statement);
         }

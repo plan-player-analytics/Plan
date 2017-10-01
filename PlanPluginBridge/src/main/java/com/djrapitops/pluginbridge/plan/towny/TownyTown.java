@@ -3,8 +3,6 @@ package com.djrapitops.pluginbridge.plan.towny;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 import java.io.Serializable;
@@ -37,11 +35,7 @@ public class TownyTown extends PluginData {
 
     @Override
     public String getHtmlReplaceValue(String modifierPrefix, UUID uuid) {
-        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
-        if (data == null) {
-            return parseContainer(modifierPrefix, notInTown);
-        }
-        String name = data.getName();
+        String name = getNameOf(uuid);
         try {
             Resident res = TownyUniverse.getDataSource().getResident(name);
             String town;
@@ -58,11 +52,7 @@ public class TownyTown extends PluginData {
 
     @Override
     public Serializable getValue(UUID uuid) {
-        UserData data = Plan.getPlanAPI().getInspectCachedUserDataMap().get(uuid);
-        if (data == null) {
-            return notInTown;
-        }
-        String name = data.getName();
+        String name = getNameOf(uuid);
         try {
             Resident res = TownyUniverse.getDataSource().getResident(name);
             String town;

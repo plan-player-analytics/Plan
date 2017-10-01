@@ -5,11 +5,9 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.command.ConditionUtils;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 
 /**
  * Command used to display link to the player list webpage.
@@ -36,9 +34,6 @@ public class ListCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(ConditionUtils.pluginHasViewCapability(), Locale.get(Msg.CMD_FAIL_NO_DATA_VIEW) + "", sender)) {
-            return true;
-        }
 
         sendListMsg(sender);
         return true;
@@ -48,7 +43,7 @@ public class ListCommand extends SubCommand {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
 
         // Link
-        String url = HtmlUtils.getServerAnalysisUrlWithProtocol().replace("server", "players");
+        String url = Plan.getInstance().getInfoManager().getLinkTo("/players");
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {

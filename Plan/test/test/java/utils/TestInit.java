@@ -1,6 +1,8 @@
 package test.java.utils;
 
 import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.config.BukkitConfig;
+import com.djrapitops.plugin.config.IConfig;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.IRunnable;
@@ -13,17 +15,28 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.Plugin;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -33,13 +46,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 public class TestInit {
 
+    private static final UUID serverUUID = UUID.fromString("9a27457b-f1a2-4b71-be7f-daf2170a1b66");
     private Plan planMock;
-
-    /**
-     *
-     */
-    public TestInit() {
-    }
 
     /**
      * Init locale with empty messages.
@@ -63,33 +71,37 @@ public class TestInit {
 
     public static TestInit init() throws Exception {
         TestInit t = new TestInit();
-        t.setUp(true);
+        t.setUp();
         return t;
     }
 
-    public static TestInit init(boolean clearOnStart) throws Exception {
-        TestInit t = new TestInit();
-        t.setUp(clearOnStart);
-        return t;
+    static File getTestFolder() {
+        File testFolder = new File("temporaryTestFolder");
+        testFolder.mkdir();
+        return testFolder;
     }
 
-    private void setUp(boolean clearOnStart) throws Exception {
+    public static UUID getServerUUID() {
+        return serverUUID;
+    }
+
+    private void setUp() throws Exception {
         planMock = PowerMockito.mock(Plan.class);
         StaticHolder.setInstance(Plan.class, planMock);
         StaticHolder.setInstance(planMock.getClass(), planMock);
 
-        YamlConfiguration config = mockConfig();
-        when(planMock.getConfig()).thenReturn(config);
-
         File testFolder = getTestFolder();
-        if (clearOnStart) {
-            clean(testFolder);
-        }
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
+        YamlConfiguration config = mockConfig();
+        when(planMock.getConfig()).thenReturn(config);
+        IConfig iConfig = new BukkitConfig(planMock, "config.yml");
+        iConfig.copyFromStream(getClass().getResource("/config.yml").openStream());
+        when(planMock.getIConfig()).thenReturn(iConfig);
+
         // Html Files
-        File analysis = new File(getClass().getResource("/analysis.html").getPath());
-        when(planMock.getResource("analysis.html")).thenReturn(new FileInputStream(analysis));
+        File analysis = new File(getClass().getResource("/server.html").getPath());
+        when(planMock.getResource("server.html")).thenReturn(new FileInputStream(analysis));
         File player = new File(getClass().getResource("/player.html").getPath());
         when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
 
@@ -111,6 +123,11 @@ public class TestInit {
         when(planMock.benchmark()).thenReturn(bench);
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         when(planMock.fetch()).thenReturn(fetch);
+        BukkitServerInfoManager bukkitServerInfoManager = PowerMockito.mock(BukkitServerInfoManager.class);
+
+        when(bukkitServerInfoManager.getServerUUID()).thenReturn(serverUUID);
+        when(planMock.getServerUuid()).thenReturn(serverUUID);
+        when(planMock.getServerInfoManager()).thenReturn(bukkitServerInfoManager);
         RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
         when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
@@ -119,76 +136,77 @@ public class TestInit {
     }
 
     private RunnableFactory<Plan> mockRunnableFactory() {
-        RunnableFactory<Plan> runnableFactory = new RunnableFactory<Plan>(planMock) {
+        return new RunnableFactory<Plan>(planMock) {
             @Override
             public IRunnable createNew(String name, final AbsRunnable runnable) {
-                return new IRunnable() {
+                IRunnable iRunnable = new IRunnable() {
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            runnable.run();
+                        }
+                    };
+
                     @Override
                     public String getTaskName() {
-                        return "Test";
+                        return name;
                     }
 
                     @Override
                     public void cancel() {
+                        timer.cancel();
                     }
 
                     @Override
                     public int getTaskId() {
-                        return 0;
+                        return runnable.getTaskId();
                     }
 
                     @Override
                     public ITask runTask() {
-                        new Thread(() -> runnable.run()).start();
+                        task.run();
                         return null;
                     }
 
                     @Override
                     public ITask runTaskAsynchronously() {
-                        return runTask();
+                        new Thread(this::runTask).start();
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskLater(long l) {
-                        return runTask();
+                        timer.schedule(task, convertTicksToMillis(l));
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskLaterAsynchronously(long l) {
-                        return runTask();
+                        new Thread(() -> timer.schedule(task, convertTicksToMillis(l))).start();
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskTimer(long l, long l1) {
-                        return runTask();
+                        timer.scheduleAtFixedRate(task, convertTicksToMillis(l), convertTicksToMillis(l1));
+                        return null;
                     }
 
                     @Override
                     public ITask runTaskTimerAsynchronously(long l, long l1) {
-                        return runTask();
+                        new Thread(() -> timer.scheduleAtFixedRate(task, convertTicksToMillis(l), convertTicksToMillis(l1)));
+                        return null;
+                    }
+
+                    private long convertTicksToMillis(long ticks) {
+                        return ticks * 50;
                     }
                 };
+                runnable.setCancellable(iRunnable);
+                return iRunnable;
             }
         };
-        return runnableFactory;
-    }
-
-    private static File getTestFolder() {
-        File testFolder = new File("temporaryTestFolder");
-        testFolder.mkdir();
-        return testFolder;
-    }
-
-    public static void clean() throws IOException {
-        clean(getTestFolder());
-    }
-
-    public static void clean(File testFolder) throws IOException {
-        if (testFolder.exists() && testFolder.isDirectory()) {
-            for (File f : testFolder.listFiles()) {
-                Files.deleteIfExists(f.toPath());
-            }
-        }
     }
 
     private Server mockServer() {
@@ -200,7 +218,136 @@ public class TestInit {
         when(mockServer.getMaxPlayers()).thenReturn(20);
         when(mockServer.getName()).thenReturn("Bukkit");
         when(mockServer.getOfflinePlayers()).thenReturn(ops);
+        ConsoleCommandSender sender = mockServerCmdSender();
+        when(mockServer.getConsoleSender()).thenReturn(sender);
         return mockServer;
+    }
+
+    private ConsoleCommandSender mockServerCmdSender() {
+        return new ConsoleCommandSender() {
+            @Override
+            public void sendMessage(String s) {
+                System.out.println("Log: " + s);
+            }
+
+            @Override
+            public void sendMessage(String[] strings) {
+                for (String string : strings) {
+                    sendMessage(string);
+                }
+
+            }
+
+            @Override
+            public Server getServer() {
+                return null;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public Spigot spigot() {
+                return null;
+            }
+
+            @Override
+            public boolean isConversing() {
+                return false;
+            }
+
+            @Override
+            public void acceptConversationInput(String s) {
+
+            }
+
+            @Override
+            public boolean beginConversation(Conversation conversation) {
+                return false;
+            }
+
+            @Override
+            public void abandonConversation(Conversation conversation) {
+
+            }
+
+            @Override
+            public void abandonConversation(Conversation conversation, ConversationAbandonedEvent conversationAbandonedEvent) {
+
+            }
+
+            @Override
+            public void sendRawMessage(String s) {
+
+            }
+
+            @Override
+            public boolean isPermissionSet(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean isPermissionSet(Permission permission) {
+                return false;
+            }
+
+            @Override
+            public boolean hasPermission(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean hasPermission(Permission permission) {
+                return false;
+            }
+
+            @Override
+            public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b) {
+                return null;
+            }
+
+            @Override
+            public PermissionAttachment addAttachment(Plugin plugin) {
+                return null;
+            }
+
+            @Override
+            public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b, int i) {
+                return null;
+            }
+
+            @Override
+            public PermissionAttachment addAttachment(Plugin plugin, int i) {
+                return null;
+            }
+
+            @Override
+            public void removeAttachment(PermissionAttachment permissionAttachment) {
+
+            }
+
+            @Override
+            public void recalculatePermissions() {
+
+            }
+
+            @Override
+            public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+                return null;
+            }
+
+            @Override
+            public boolean isOp() {
+                return false;
+            }
+
+            @Override
+            public void setOp(boolean b) {
+
+            }
+        };
     }
 
     private YamlConfiguration mockConfig() throws IOException, InvalidConfigurationException {
@@ -210,9 +357,6 @@ public class TestInit {
         return configuration;
     }
 
-    /**
-     * @return
-     */
     public Plan getPlanMock() {
         return planMock;
     }

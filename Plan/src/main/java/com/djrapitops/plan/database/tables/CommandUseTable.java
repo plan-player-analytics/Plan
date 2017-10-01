@@ -1,25 +1,33 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Rsl1122
  */
 public class CommandUseTable extends Table {
 
-    private final String columnCommand;
-    private final String columnTimesUsed;
+    private final String columnCommandId = "id";
+    private final String columnCommand = "command";
+    private final String columnTimesUsed = "times_used";
+    private final String columnServerID = "server_id";
+
+    private final ServerTable serverTable;
+    private String insertStatement;
 
     /**
      * @param db
@@ -27,145 +35,211 @@ public class CommandUseTable extends Table {
      */
     public CommandUseTable(SQLDB db, boolean usingMySQL) {
         super("plan_commandusages", db, usingMySQL);
-        columnCommand = "command";
-        columnTimesUsed = "times_used";
+        serverTable = db.getServerTable();
+        insertStatement = "INSERT INTO " + tableName + " ("
+                + columnCommand + ", "
+                + columnTimesUsed + ", "
+                + columnServerID
+                + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
     }
 
     /**
      * @return
      */
     @Override
-    public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnCommand, Sql.varchar(20)).notNull()
-                    .column(columnTimesUsed, Sql.INT).notNull()
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void createTable() throws DBCreateTableException {
+        ServerTable serverTable = db.getServerTable();
+        createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnCommandId)
+                .column(columnCommand, Sql.varchar(20)).notNull()
+                .column(columnTimesUsed, Sql.INT).notNull()
+                .column(columnServerID, Sql.INT).notNull()
+                .primaryKey(usingMySQL, columnCommandId)
+                .foreignKey(columnServerID, serverTable.toString(), serverTable.getColumnID())
+                .toString()
+        );
     }
 
     /**
-     * @return @throws SQLException
+     * Used to get all commands used in this server.
+     *
+     * @return command - times used Map
+     * @throws SQLException
      */
     public Map<String, Integer> getCommandUse() throws SQLException {
-        Benchmark.start("Get CommandUse");
+        return getCommandUse(Plan.getServerUUID());
+    }
+
+    /**
+     * Used to get all commands used in a server.
+     *
+     * @param serverUUID UUID of the server.
+     * @return command - times used Map
+     * @throws SQLException
+     */
+    public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
         Map<String, Integer> commandUse = new HashMap<>();
+        Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName,
+                    columnCommand, columnTimesUsed)
+                    .where(columnServerID + "=" + serverTable.statementSelectServerID)
+                    .toString());
+            statement.setFetchSize(5000);
+            statement.setString(1, serverUUID.toString());
             set = statement.executeQuery();
             while (set.next()) {
                 String cmd = set.getString(columnCommand).toLowerCase();
                 int amountUsed = set.getInt(columnTimesUsed);
-                Integer get = commandUse.get(cmd);
-                if (get != null && get > amountUsed) {
-                    continue;
-                }
                 commandUse.put(cmd, amountUsed);
             }
             return commandUse;
         } finally {
-            close(set);
-            close(statement);
-            Benchmark.stop("Database", "Get CommandUse");
+            close(set, statement, connection);
         }
     }
 
-    /**
-     * @param data
-     * @throws SQLException
-     */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
-        if (Verify.isEmpty(data)) {
+    public void commandUsed(String command) throws SQLException {
+        if (command.length() > 20) {
             return;
         }
-
-        Benchmark.start("Save Commanduse");
-        Map<String, Integer> newData = new HashMap<>(data);
-        Map<String, Integer> saved = getCommandUse();
-        newData.keySet().removeAll(saved.keySet());
-
-        insertCommands(newData);
-
-        Map<String, Integer> updateData = new HashMap<>(data);
-        updateData.keySet().removeAll(newData.keySet());
-
-        for (Map.Entry<String, Integer> savedEntry : saved.entrySet()) {
-            String cmd = savedEntry.getKey();
-            // IMPORTANT - not using saved as value
-            Integer toSave = updateData.get(cmd);
-
-            if (toSave != null && toSave <= savedEntry.getValue()) {
-                updateData.remove(cmd);
-            }
-        }
-
-        updateCommands(updateData);
-        commit();
-        Benchmark.stop("Database", "Save Commanduse");
-        db.setAvailable();
-    }
-
-    private void updateCommands(Map<String, Integer> data) throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         try {
-            String updateStatement = "UPDATE " + tableName + " SET " + columnTimesUsed + "=? WHERE (" + columnCommand + "=?)";
-            statement = prepareStatement(updateStatement);
-            boolean commitRequired = false;
-            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
-                String key = entrySet.getKey();
-                Integer amount = entrySet.getValue();
+            connection = getConnection();
+            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
+                    + columnTimesUsed + "=" + columnTimesUsed + "+ 1" +
+                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID +
+                    " AND " + columnCommand + "=?");
+            statement.setString(1, Plan.getServerUUID().toString());
+            statement.setString(2, command);
+            int success = statement.executeUpdate();
 
-                if (key.length() > 20) {
-                    continue;
-                }
+            commit(connection);
 
-                statement.setInt(1, amount);
-                statement.setString(2, key);
-                statement.addBatch();
-                commitRequired = true;
-            }
-
-            if (commitRequired) {
-                statement.executeBatch();
+            if (success == 0) {
+                insertCommand(command);
             }
         } finally {
-            close(statement);
+            close(statement, connection);
         }
     }
 
-    private void insertCommands(Map<String, Integer> data) throws SQLException {
+    private void insertCommand(String command) throws SQLException {
+        Connection connection = null;
         PreparedStatement statement = null;
         try {
-            String insertStatement = "INSERT INTO " + tableName + " ("
-                    + columnCommand + ", "
-                    + columnTimesUsed
-                    + ") VALUES (?, ?)";
-            statement = prepareStatement(insertStatement);
-            boolean commitRequired = false;
-            for (Map.Entry<String, Integer> entrySet : data.entrySet()) {
-                String key = entrySet.getKey();
-                Integer amount = entrySet.getValue();
+            connection = getConnection();
+            statement = connection.prepareStatement(insertStatement);
+            statement.setString(1, command);
+            statement.setInt(2, 1);
+            statement.setString(3, Plan.getServerUUID().toString());
+            statement.execute();
 
-                if (key.length() > 20) {
-                    continue;
+            commit(connection);
+        } finally {
+            close(statement, connection);
+        }
+    }
+
+    public Optional<String> getCommandByID(int id) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString());
+            statement.setInt(1, id);
+            set = statement.executeQuery();
+            if (set.next()) {
+                return Optional.of(set.getString(columnCommand));
+            }
+            return Optional.empty();
+        } finally {
+            close(set, statement, connection);
+        }
+    }
+
+    public Optional<Integer> getCommandID(String command) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString());
+            statement.setString(1, command);
+            set = statement.executeQuery();
+            if (set.next()) {
+                return Optional.of(set.getInt(columnCommandId));
+            }
+            return Optional.empty();
+        } finally {
+            close(set, statement, connection);
+        }
+    }
+
+    public Map<UUID, Map<String, Integer>> getAllCommandUsages() throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+            connection = getConnection();
+            statement = connection.prepareStatement("SELECT " +
+                    columnCommand + ", " +
+                    columnTimesUsed + ", " +
+                    serverUUIDColumn +
+                    " FROM " + tableName +
+                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
+            );
+            statement.setFetchSize(5000);
+            set = statement.executeQuery();
+            Map<UUID, Map<String, Integer>> map = new HashMap<>();
+            while (set.next()) {
+                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+
+                Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+
+                String command = set.getString(columnCommand);
+                int timesUsed = set.getInt(columnTimesUsed);
+
+                serverMap.put(command, timesUsed);
+                map.put(serverUUID, serverMap);
+            }
+            return map;
+        } finally {
+            close(set, statement, connection);
+        }
+    }
+
+    public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) throws SQLException {
+        if (allCommandUsages.isEmpty()) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
+
+            // Every Server
+            for (UUID serverUUID : allCommandUsages.keySet()) {
+                // Every Command
+                for (Map.Entry<String, Integer> entry : allCommandUsages.get(serverUUID).entrySet()) {
+                    String command = entry.getKey();
+                    int timesUsed = entry.getValue();
+
+                    statement.setString(1, command);
+                    statement.setInt(2, timesUsed);
+                    statement.setString(3, serverUUID.toString());
+                    statement.addBatch();
                 }
-
-                statement.setString(1, key);
-                statement.setInt(2, amount);
-                statement.addBatch();
-                commitRequired = true;
             }
 
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
+            commit(connection);
         } finally {
             close(statement);
         }

@@ -3,7 +3,7 @@ package com.djrapitops.pluginbridge.plan.griefprevention;
 import com.djrapitops.plugin.utilities.FormattingUtils;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
-import main.java.com.djrapitops.plan.ui.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.Html;
 import me.ryanhamshire.GriefPrevention.DataStore;
 
 import java.io.Serializable;

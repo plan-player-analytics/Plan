@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.utilities.BenchUtil;
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
 
 /**
  * @author Rsl1122
@@ -19,7 +19,7 @@ public class Benchmark {
      * @param source
      */
     public static void start(String source) {
-        Plan.getInstance().benchmark().start(source);
+        getBenchUtil().start(source);
     }
 
     /**
@@ -27,7 +27,7 @@ public class Benchmark {
      * @return
      */
     public static long stop(String source) {
-        long ms = Plan.getInstance().benchmark().stop(source);
+        long ms = getBenchUtil().stop(source);
         if (ms != -1) {
             Log.debug(source + " took " + ms + " ms");
         }
@@ -42,6 +42,10 @@ public class Benchmark {
      * @return Execution time in ms.
      */
     public static long stop(String task, String source) {
-        return Plan.getInstance().benchmark().stop(task, source);
+        return getBenchUtil().stop(task, source);
+    }
+
+    private static BenchUtil getBenchUtil() {
+        return MiscUtils.getIPlan().benchmark();
     }
 }

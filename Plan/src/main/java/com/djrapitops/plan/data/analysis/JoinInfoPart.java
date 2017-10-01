@@ -2,47 +2,68 @@ package main.java.com.djrapitops.plan.data.analysis;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Part responsible for all Player login related analysis.
- * <p>
- * Unique per Day, Unique, New Players, Logins
+ * Part responsible for all Player player related analysis.
  * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: totallogins, uniquejoinsday,
- * uniquejoinsweek, uniquejoinsmonth, avguniquejoins, avguniquejoinsday,
- * avguniquejoinsweek, avguniquejoinsmonth, npday, npweek, npmonth,
- * npdataday, npdataweek, npdatamonth, newperday, newperdayday, newperdayweek, newperdaymonth
+ * Contains following placeholders after analyzed:
+ * ${playersAverage} - (Number)
+ * ${playersNewAverage} - (Number)
+ * <p>
+ * ${playersDay} - (Number)
+ * ${playersWeek} - (Number)
+ * ${playersMonth} - (Number)
+ * ${playersAverageDay} - (Number)
+ * ${playersAverageWeek} - (Number)
+ * ${playersAverageMonth} - (Number)
+ * ${playersNewDay} - (Number)
+ * ${playersNewWeek} - (Number)
+ * ${playersNewMonth} - (Number)
+ * ${playersNewAverageDay} - (Number)
+ * ${playersNewAverageWeek} - (Number)
+ * ${playersNewAverageMonth} - (Number)
  *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class JoinInfoPart extends RawData {
 
-    private final Map<UUID, List<SessionData>> sessions;
-    private final List<Long> registered;
+    private final Map<UUID, Session> activeSessions;
+    private final Map<UUID, List<Session>> sessions;
+    private final Map<UUID, Long> registered;
     private long loginTimes;
 
     public JoinInfoPart() {
+        activeSessions = new HashMap<>();
         sessions = new HashMap<>();
-        registered = new ArrayList<>();
+        registered = new HashMap<>();
         loginTimes = 0;
     }
 
     @Override
     public void analyse() {
-        addValue("totallogins", loginTimes);
-
         newPlayers();
         uniquePlayers();
         uniquePlayersPerDay();
+
+        addValue("sessionCount", getAllSessions().size());
+
+        sessionTables();
+    }
+
+    private void sessionTables() {
+        String[] tables = SessionsTableCreator.createTables(this);
+        addValue("tableBodySessions", tables[0]);
+        addValue("tableBodyRecentLogins", tables[1]);
     }
 
     private void uniquePlayers() {
@@ -50,9 +71,9 @@ public class JoinInfoPart extends RawData {
         int uniqueWeek = AnalysisUtils.getUniqueJoins(sessions, TimeAmount.WEEK.ms());
         int uniqueMonth = AnalysisUtils.getUniqueJoins(sessions, TimeAmount.MONTH.ms());
 
-        addValue("uniquejoinsday", uniqueDay);
-        addValue("uniquejoinsweek", uniqueWeek);
-        addValue("uniquejoinsmonth", uniqueMonth);
+        addValue("playersDay", uniqueDay);
+        addValue("playersWeek", uniqueWeek);
+        addValue("playersMonth", uniqueMonth);
     }
 
     private void uniquePlayersPerDay() {
@@ -61,31 +82,32 @@ public class JoinInfoPart extends RawData {
         int perDayWeek = AnalysisUtils.getUniqueJoinsPerDay(sessions, TimeAmount.WEEK.ms());
         int perDayMonth = AnalysisUtils.getUniqueJoinsPerDay(sessions, TimeAmount.MONTH.ms());
 
-        addValue("avguniquejoins", perDay);
-        addValue("avguniquejoinsday", perDayDay);
-        addValue("avguniquejoinsweek", perDayWeek);
-        addValue("avguniquejoinsmonth", perDayMonth);
+        addValue("playersAverage", perDay);
+        addValue("playersAverageDay", perDayDay);
+        addValue("playersAverageWeek", perDayWeek);
+        addValue("playersAverageMonth", perDayMonth);
     }
 
     private void newPlayers() {
         long now = MiscUtils.getTime();
-        long newDay = AnalysisUtils.getNewPlayers(registered, TimeAmount.DAY.ms(), now);
-        long newWeek = AnalysisUtils.getNewPlayers(registered, TimeAmount.WEEK.ms(), now);
-        long newMonth = AnalysisUtils.getNewPlayers(registered, TimeAmount.MONTH.ms(), now);
+        List<Long> registeredList = getRegisteredList();
+        long newDay = AnalysisUtils.getNewPlayers(registeredList, TimeAmount.DAY.ms(), now);
+        long newWeek = AnalysisUtils.getNewPlayers(registeredList, TimeAmount.WEEK.ms(), now);
+        long newMonth = AnalysisUtils.getNewPlayers(registeredList, TimeAmount.MONTH.ms(), now);
 
-        addValue("npday", newDay);
-        addValue("npweek", newWeek);
-        addValue("npmonth", newMonth);
+        addValue("playersNewDay", newDay);
+        addValue("playersNewWeek", newWeek);
+        addValue("playersNewMonth", newMonth);
 
-        long newPerDay = AnalysisUtils.getNewUsersPerDay(registered, -1);
-        long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.DAY.ms());
-        long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.WEEK.ms());
-        long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registered, TimeAmount.MONTH.ms());
+        long newPerDay = AnalysisUtils.getNewUsersPerDay(registeredList, -1);
+        long newPerDayDay = AnalysisUtils.getNewUsersPerDay(registeredList, TimeAmount.DAY.ms());
+        long newPerDayWeek = AnalysisUtils.getNewUsersPerDay(registeredList, TimeAmount.WEEK.ms());
+        long newPerDayMonth = AnalysisUtils.getNewUsersPerDay(registeredList, TimeAmount.MONTH.ms());
 
-        addValue("newperday", newPerDay);
-        addValue("newperdayday", newPerDayDay);
-        addValue("newperdayweek", newPerDayWeek);
-        addValue("newperdaymonth", newPerDayMonth);
+        addValue("playersNewAverage", newPerDay);
+        addValue("playersNewAverageDay", newPerDayDay);
+        addValue("playersNewAverageWeek", newPerDayWeek);
+        addValue("playersNewAverageMonth", newPerDayMonth);
     }
 
     public void addToLoginTimes() {
@@ -100,25 +122,43 @@ public class JoinInfoPart extends RawData {
         return loginTimes;
     }
 
-    public Map<UUID, List<SessionData>> getSessions() {
+    public Map<UUID, List<Session>> getSessions() {
         return sessions;
     }
 
-    public List<SessionData> getAllSessions() {
-        return MiscUtils.flatMap(sessions.values());
+    public List<Session> getAllSessions() {
+        List<Session> sessions = MiscUtils.flatMap(this.sessions.values());
+        sessions.addAll(activeSessions.values());
+        return sessions;
     }
 
-    public void addRegistered(long registerDate) {
-        registered.add(registerDate);
+    public void addRegistered(UUID uuid, long registerDate) {
+        registered.put(uuid, registerDate);
     }
 
-    public List<Long> getRegistered() {
+    public void addRegistered(Map<UUID, Long> registerDates) {
+        registered.putAll(registerDates);
+    }
+
+    public Map<UUID, Long> getRegistered() {
         return registered;
     }
 
-    public void addSessions(UUID uuid, List<SessionData> sessions) {
+    public List<Long> getRegisteredList() {
+        return new ArrayList<>(registered.values());
+    }
+
+    public void addSessions(Map<UUID, List<Session>> sessions) {
+        this.sessions.putAll(Verify.nullCheck(sessions));
+    }
+
+    public void addSessions(UUID uuid, List<Session> sessions) {
         Verify.nullCheck(uuid);
         Verify.nullCheck(sessions);
         this.sessions.put(uuid, sessions.stream().distinct().collect(Collectors.toList()));
+    }
+
+    public void addActiveSessions(Map<UUID, Session> activeSessions) {
+        this.activeSessions.putAll(activeSessions);
     }
 }

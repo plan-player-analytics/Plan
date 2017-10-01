@@ -1,15 +1,12 @@
 package test.java.utils;
 
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.TPS;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.WebUser;
-import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
-import main.java.com.djrapitops.plan.data.handling.info.InfoType;
-import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import main.java.com.djrapitops.plan.utilities.analysis.Point;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +22,8 @@ public class RandomData {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
     }
 
-    public static List<UserData> randomUserData() {
-        List<UserData> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            String randomName = randomString(10);
-            UserData uD = new UserData(UUID.randomUUID(), r.nextLong(), r.nextBoolean(), GMTimesTable.getGMKeyArray()[r.nextInt(3)], randomName, r.nextBoolean());
-            uD.setLastPlayed(r.nextLong());
-            test.add(uD);
-        }
-        return test;
-    }
-
     public static String randomString(int size) {
-        return RandomStringUtils.random(size);
+        return RandomStringUtils.randomAlphanumeric(size);
     }
 
     public static List<WebUser> randomWebUsers() throws PassEncryptUtil.CannotPerformOperationException {
@@ -58,10 +44,10 @@ public class RandomData {
         return test;
     }
 
-    public static List<SessionData> randomSessions() {
-        List<SessionData> test = new ArrayList<>();
+    public static List<Session> randomSessions() {
+        List<Session> test = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            test.add(new SessionData(r.nextLong(), r.nextLong()));
+            test.add(new Session(1, r.nextLong(), r.nextLong(), 0, 0));
         }
         return test;
     }
@@ -74,21 +60,18 @@ public class RandomData {
         return test;
     }
 
-    public static List<HandlingInfo> randomHandlingInfo() {
-        List<HandlingInfo> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            test.add(new HandlingInfo(UUID.randomUUID(), randomEnum(InfoType.class), r.nextLong()) {
-                @Override
-                public boolean process(UserData uData) {
-                    return false;
-                }
-            });
-        }
-        return test;
-    }
-
     public static <T extends Enum> T randomEnum(Class<T> clazz) {
         int x = r.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
+    }
+
+    public static List<UserInfo> randomUserData() {
+        List<UserInfo> test = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            UserInfo info = new UserInfo(UUID.randomUUID(), randomString(10), r.nextLong(), r.nextBoolean(), r.nextBoolean());
+            info.setLastSeen(r.nextLong());
+            test.add(info);
+        }
+        return test;
     }
 }

@@ -1,34 +1,40 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
+import main.java.com.djrapitops.plan.data.Session;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Table class representing database table plan_world_times.
  *
  * @author Rsl1122
- * @since 3.6.0 / Database version 7
+ * @since 4.0.0
  */
 public class WorldTimesTable extends UserIDTable {
 
+    private final String columnSessionID = "session_id";
+    private final String columnWorldId = "world_id";
+    private final String columnSurvival = "survival_time";
+    private final String columnCreative = "creative_time";
+    private final String columnAdventure = "adventure_time";
+    private final String columnSpectator = "spectator_time";
+
     private final WorldTable worldTable;
-    private final String worldIDColumn;
-    private final String worldNameColumn;
-
-    private final String columnWorldId;
-    private final String columnPlaytime;
-
-    private final String selectWorldIDsql;
+    private final SessionsTable sessionsTable;
+    private String insertStatement;
 
     /**
      * Constructor.
@@ -39,277 +45,310 @@ public class WorldTimesTable extends UserIDTable {
     public WorldTimesTable(SQLDB db, boolean usingMySQL) {
         super("plan_world_times", db, usingMySQL);
         worldTable = db.getWorldTable();
-        worldIDColumn = worldTable + "." + worldTable.getColumnID();
-        worldNameColumn = worldTable.getColumnWorldName();
-        columnWorldId = "world_id";
-        columnUserID = "user_id";
-        columnPlaytime = "playtime";
-
-        selectWorldIDsql = "(SELECT " + worldIDColumn + " FROM " + worldTable + " WHERE (" + worldNameColumn + "=?))";
+        sessionsTable = db.getSessionsTable();
+        insertStatement = "INSERT INTO " + tableName + " (" +
+                columnUserID + ", " +
+                columnWorldId + ", " +
+                columnSessionID + ", " +
+                columnSurvival + ", " +
+                columnCreative + ", " +
+                columnAdventure + ", " +
+                columnSpectator +
+                ") VALUES (" +
+                usersTable.statementSelectID + ", " +
+                worldTable.statementSelectID + ", " +
+                "?, ?, ?, ?, ?)";
     }
 
     @Override
-    public boolean createTable() {
-        UsersTable usersTable = db.getUsersTable();
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUserID, Sql.INT).notNull()
-                    .column(columnWorldId, Sql.INT).notNull()
-                    .column(columnPlaytime, Sql.LONG).notNull()
-                    .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
-                    .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+    public void createTable() throws DBCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
+                .column(columnUserID, Sql.INT).notNull()
+                .column(columnWorldId, Sql.INT).notNull()
+                .column(columnSessionID, Sql.INT).notNull()
+                .column(columnSurvival, Sql.LONG).notNull().defaultValue("0")
+                .column(columnCreative, Sql.LONG).notNull().defaultValue("0")
+                .column(columnAdventure, Sql.LONG).notNull().defaultValue("0")
+                .column(columnSpectator, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
+                .foreignKey(columnWorldId, worldTable.getTableName(), worldTable.getColumnID())
+                .foreignKey(columnSessionID, sessionsTable.getTableName(), sessionsTable.getColumnID())
+                .toString()
+        );
+    }
+
+    public void saveWorldTimes(UUID uuid, int sessionID, WorldTimes worldTimes) throws SQLException {
+        Map<String, GMTimes> worldTimesMap = worldTimes.getWorldTimes();
+        if (Verify.isEmpty(worldTimesMap)) {
+            return;
         }
-    }
 
-    public boolean removeUserWorldTimes(int userId) {
-        return super.removeDataOf(userId);
-    }
+        Set<String> worldNames = worldTimesMap.keySet();
+        db.getWorldTable().saveWorlds(worldNames);
 
-    /**
-     * @param userId
-     * @return
-     * @throws SQLException
-     */
-    public Map<String, Long> getWorldTimes(int userId) throws SQLException {
         PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT "
-                    + columnPlaytime + ", "
-                    + worldNameColumn
-                    + " FROM " + tableName + ", " + worldTable
-                    + " WHERE (" + columnUserID + "=?)"
-                    + " AND (" + worldIDColumn + "=" + tableName + "." + columnWorldId + ")");
-            statement.setInt(1, userId);
-            set = statement.executeQuery();
-            HashMap<String, Long> times = new HashMap<>();
-            while (set.next()) {
-                times.put(set.getString(worldNameColumn), set.getLong(columnPlaytime));
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
+
+            for (Map.Entry<String, GMTimes> entry : worldTimesMap.entrySet()) {
+                String worldName = entry.getKey();
+                GMTimes gmTimes = entry.getValue();
+                statement.setString(1, uuid.toString());
+                statement.setString(2, worldName);
+                statement.setInt(3, sessionID);
+
+                String[] gms = GMTimes.getGMKeyArray();
+                statement.setLong(4, gmTimes.getTime(gms[0]));
+                statement.setLong(5, gmTimes.getTime(gms[1]));
+                statement.setLong(6, gmTimes.getTime(gms[2]));
+                statement.setLong(7, gmTimes.getTime(gms[3]));
+                statement.addBatch();
             }
-            return times;
+
+            statement.executeBatch();
+            commit(connection);
         } finally {
-            close(set);
             close(statement);
         }
     }
 
-    public Map<Integer, Map<String, Long>> getWorldTimes(Collection<Integer> userIds) throws SQLException {
+    public void addWorldTimesToSessions(UUID uuid, Map<Integer, Session> sessions) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        Map<Integer, Map<String, Long>> times = new HashMap<>();
-        for (Integer id : userIds) {
-            times.put(id, new HashMap<>());
-        }
-        try {
-            statement = prepareStatement("SELECT "
-                    + columnUserID + ", "
-                    + columnPlaytime + ", "
-                    + worldNameColumn
-                    + " FROM " + tableName + ", " + worldTable
-                    + " WHERE (" + worldIDColumn + "=" + tableName + "." + columnWorldId + ")");
+        try (Connection connection = getConnection()) {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            statement = connection.prepareStatement("SELECT " +
+                    columnSessionID + ", " +
+                    columnSurvival + ", " +
+                    columnCreative + ", " +
+                    columnAdventure + ", " +
+                    columnSpectator + ", " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID
+            );
+            statement.setFetchSize(2000);
+            statement.setString(1, uuid.toString());
             set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
             while (set.next()) {
-                int id = set.getInt(columnUserID);
-                if (!userIds.contains(id)) {
+                int sessionID = set.getInt(columnSessionID);
+                Session session = sessions.get(sessionID);
+
+                if (session == null) {
                     continue;
                 }
-                Map<String, Long> worldTimes = times.get(id);
-                worldTimes.put(set.getString(worldNameColumn), set.getLong(columnPlaytime));
+
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong(columnSurvival));
+                gmMap.put(gms[1], set.getLong(columnCreative));
+                gmMap.put(gms[2], set.getLong(columnAdventure));
+                gmMap.put(gms[3], set.getLong(columnSpectator));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                session.getWorldTimes().setGMTimesForWorld(worldName, gmTimes);
             }
-            return times;
         } finally {
-            close(set);
-            close(statement);
+            close(set, statement);
         }
     }
 
-    public void saveWorldTimes(int userId, Map<String, Long> worldTimes) throws SQLException {
-        if (Verify.isEmpty(worldTimes)) {
-            return;
+    public WorldTimes getWorldTimesOfServer() throws SQLException {
+        return getWorldTimesOfServer(Plan.getServerUUID());
+    }
+
+    public WorldTimes getWorldTimesOfServer(UUID serverUUID) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try (Connection connection = getConnection()) {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            String sessionIDColumn = sessionsTable + "." + sessionsTable.getColumnID();
+            String sessionServerIDColumn = sessionsTable + ".server_id";
+            statement = connection.prepareStatement("SELECT " +
+                    "SUM(" + columnSurvival + ") as survival, " +
+                    "SUM(" + columnCreative + ") as creative, " +
+                    "SUM(" + columnAdventure + ") as adventure, " +
+                    "SUM(" + columnSpectator + ") as spectator, " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                    " JOIN " + sessionsTable + " on " + sessionIDColumn + "=" + columnSessionID +
+                    " WHERE " + sessionServerIDColumn + "=" + db.getServerTable().statementSelectServerID +
+                    " GROUP BY " + columnWorldId
+            );
+            statement.setFetchSize(1000);
+            statement.setString(1, serverUUID.toString());
+            set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
+            WorldTimes worldTimes = new WorldTimes(new HashMap<>());
+            while (set.next()) {
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong("survival"));
+                gmMap.put(gms[1], set.getLong("creative"));
+                gmMap.put(gms[2], set.getLong("adventure"));
+                gmMap.put(gms[3], set.getLong("spectator"));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                worldTimes.setGMTimesForWorld(worldName, gmTimes);
+            }
+            return worldTimes;
+        } finally {
+            close(set, statement);
         }
-        Map<String, Long> saved = getWorldTimes(userId);
+    }
 
-        Map<String, Long> newData = new HashMap<>();
-        Map<String, Long> updateData = new HashMap<>();
+    public WorldTimes getWorldTimesOfUser(UUID uuid) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try (Connection connection = getConnection()) {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            statement = connection.prepareStatement("SELECT " +
+                    "SUM(" + columnSurvival + ") as survival, " +
+                    "SUM(" + columnCreative + ") as creative, " +
+                    "SUM(" + columnAdventure + ") as adventure, " +
+                    "SUM(" + columnSpectator + ") as spectator, " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId +
+                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
+                    " GROUP BY " + columnWorldId
+            );
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
 
-        for (Map.Entry<String, Long> entry : worldTimes.entrySet()) {
-            String world = entry.getKey();
-            long time = entry.getValue();
-            Long savedTime = saved.get(world);
+            WorldTimes worldTimes = new WorldTimes(new HashMap<>());
+            while (set.next()) {
+                String worldName = set.getString("world_name");
 
-            if (savedTime == null) {
-                newData.put(world, time);
-            } else {
-                if (savedTime < time) {
-                    updateData.put(world, time);
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong("survival"));
+                gmMap.put(gms[1], set.getLong("creative"));
+                gmMap.put(gms[2], set.getLong("adventure"));
+                gmMap.put(gms[3], set.getLong("spectator"));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                worldTimes.setGMTimesForWorld(worldName, gmTimes);
+            }
+            return worldTimes;
+        } finally {
+            close(set, statement);
+        }
+    }
+
+    public void addWorldTimesToSessions(Map<UUID, Map<UUID, List<Session>>> map) throws SQLException {
+        Map<Integer, WorldTimes> worldTimesBySessionID = getAllWorldTimesBySessionID();
+
+        for (UUID serverUUID : map.keySet()) {
+            for (List<Session> sessions : map.get(serverUUID).values()) {
+                for (Session session : sessions) {
+                    WorldTimes worldTimes = worldTimesBySessionID.get(session.getSessionID());
+                    if (worldTimes != null) {
+                        session.setWorldTimes(worldTimes);
+                    }
                 }
             }
         }
-        insertWorlds(userId, newData);
-        updateWorlds(userId, updateData);
     }
 
-    private void updateWorlds(int userId, Map<String, Long> updateData) throws SQLException {
-        if (Verify.isEmpty(updateData)) {
+    public void saveWorldTimes(Map<UUID, Map<UUID, List<Session>>> allSessions) throws SQLException {
+        if (Verify.isEmpty(allSessions)) {
             return;
         }
+        List<String> worldNames = allSessions.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .flatMap(Collection::stream)
+                .map(Session::getWorldTimes)
+                .map(WorldTimes::getWorldTimes)
+                .map(Map::keySet)
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
+        db.getWorldTable().saveWorlds(worldNames);
+
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "UPDATE " + tableName + " SET " + columnPlaytime + "=?" +
-                            " WHERE (" + selectWorldIDsql + "=" + columnWorldId + ")" +
-                            " AND (" + columnUserID + "=?)"
-            );
-            boolean commitRequired = false;
-            for (Map.Entry<String, Long> entry : updateData.entrySet()) {
-                String worldName = entry.getKey();
-                long time = entry.getValue();
-                statement.setLong(1, time);
-                statement.setString(2, worldName);
-                statement.setInt(3, userId);
-                statement.addBatch();
-                commitRequired = true;
-            }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
-        } finally {
-            close(statement);
-        }
-    }
-
-    private void insertWorlds(int userId, Map<String, Long> newData) throws SQLException {
-        if (Verify.isEmpty(newData)) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "INSERT INTO " + tableName + " ("
-                            + columnUserID + ", "
-                            + columnWorldId + ", "
-                            + columnPlaytime
-                            + ") VALUES (?, " + selectWorldIDsql + ", ?)"
-            );
-            boolean commitRequired = false;
-            for (Map.Entry<String, Long> entry : newData.entrySet()) {
-                String worldName = entry.getKey();
-                long time = entry.getValue();
-                statement.setInt(1, userId);
-                statement.setString(2, worldName);
-                statement.setLong(3, time);
-                statement.addBatch();
-                commitRequired = true;
-            }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
-        } finally {
-            close(statement);
-        }
-    }
-
-    public void saveWorldTimes(Map<Integer, Map<String, Long>> worldTimesMultiple) throws SQLException {
-        if (Verify.isEmpty(worldTimesMultiple)) {
-            return;
-        }
-        Map<Integer, Map<String, Long>> saved = getWorldTimes(worldTimesMultiple.keySet());
-
-        Map<Integer, Map<String, Long>> newData = new HashMap<>();
-        Map<Integer, Map<String, Long>> updateData = new HashMap<>();
-
-        for (Map.Entry<Integer, Map<String, Long>> entry : worldTimesMultiple.entrySet()) {
-            int userId = entry.getKey();
-            Map<String, Long> savedTimes = saved.get(userId);
-            Map<String, Long> worldTimes = entry.getValue();
-            Map<String, Long> newTimes = new HashMap<>(worldTimes);
-            newTimes.keySet().removeAll(savedTimes.keySet());
-
-            newData.put(userId, newTimes);
-
-            for (Map.Entry<String, Long> times : savedTimes.entrySet()) {
-                String world = times.getKey();
-                long savedTime = times.getValue();
-                Long toSave = worldTimes.get(world);
-                if (toSave != null && toSave <= savedTime) {
-                    worldTimes.remove(world);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(insertStatement);
+            String[] gms = GMTimes.getGMKeyArray();
+            for (Map<UUID, List<Session>> serverSessions : allSessions.values()) {
+                for (Map.Entry<UUID, List<Session>> entry : serverSessions.entrySet()) {
+                    UUID uuid = entry.getKey();
+                    List<Session> sessions = entry.getValue();
+                    for (Session session : sessions) {
+                        int sessionID = session.getSessionID();
+                        for (Map.Entry<String, GMTimes> worldTimesEntry : session.getWorldTimes().getWorldTimes().entrySet()) {
+                            String worldName = worldTimesEntry.getKey();
+                            GMTimes gmTimes = worldTimesEntry.getValue();
+                            statement.setString(1, uuid.toString());
+                            statement.setString(2, worldName);
+                            statement.setInt(3, sessionID);
+                            statement.setLong(4, gmTimes.getTime(gms[0]));
+                            statement.setLong(5, gmTimes.getTime(gms[1]));
+                            statement.setLong(6, gmTimes.getTime(gms[2]));
+                            statement.setLong(7, gmTimes.getTime(gms[3]));
+                            statement.addBatch();
+                        }
+                    }
                 }
             }
-            updateData.put(userId, worldTimes);
-        }
-        insertWorlds(newData);
-        updateWorlds(updateData);
-    }
-
-    private void updateWorlds(Map<Integer, Map<String, Long>> updateData) throws SQLException {
-        if (Verify.isEmpty(updateData)) {
-            return;
-        }
-        PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "UPDATE " + tableName + " SET " + columnPlaytime + "=?" +
-                            " WHERE (" + selectWorldIDsql + "=" + columnWorldId + ")" +
-                            " AND (" + columnUserID + "=?)"
-            );
-            boolean commitRequired = false;
-            for (Map.Entry<Integer, Map<String, Long>> entry : updateData.entrySet()) {
-                int userId = entry.getKey();
-                for (Map.Entry<String, Long> times : entry.getValue().entrySet()) {
-                    String worldName = times.getKey();
-                    long time = times.getValue();
-                    statement.setLong(1, time);
-                    statement.setString(2, worldName);
-                    statement.setInt(3, userId);
-                    statement.addBatch();
-                    commitRequired = true;
-                }
-            }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            statement.executeBatch();
+            commit(connection);
         } finally {
             close(statement);
         }
     }
 
-    private void insertWorlds(Map<Integer, Map<String, Long>> newData) throws SQLException {
-        if (Verify.isEmpty(newData)) {
-            return;
-        }
+    public Map<Integer, WorldTimes> getAllWorldTimesBySessionID() throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement(
-                    "INSERT INTO " + tableName + " ("
-                            + columnUserID + ", "
-                            + columnWorldId + ", "
-                            + columnPlaytime
-                            + ") VALUES (?, " + selectWorldIDsql + ", ?)"
+        ResultSet set = null;
+        try (Connection connection = getConnection()) {
+            String worldIDColumn = worldTable + "." + worldTable.getColumnID();
+            String worldNameColumn = worldTable + "." + worldTable.getColumnWorldName() + " as world_name";
+            statement = connection.prepareStatement("SELECT " +
+                    columnSessionID + ", " +
+                    columnSurvival + ", " +
+                    columnCreative + ", " +
+                    columnAdventure + ", " +
+                    columnSpectator + ", " +
+                    worldNameColumn +
+                    " FROM " + tableName +
+                    " JOIN " + worldTable + " on " + worldIDColumn + "=" + columnWorldId
             );
-            boolean commitRequired = false;
-            for (Map.Entry<Integer, Map<String, Long>> entry : newData.entrySet()) {
-                int userId = entry.getKey();
-                for (Map.Entry<String, Long> times : entry.getValue().entrySet()) {
-                    String worldName = times.getKey();
-                    long time = times.getValue();
-                    statement.setInt(1, userId);
-                    statement.setString(2, worldName);
-                    statement.setLong(3, time);
-                    statement.addBatch();
-                    commitRequired = true;
-                }
+            statement.setFetchSize(50000);
+            set = statement.executeQuery();
+            String[] gms = GMTimes.getGMKeyArray();
+
+            Map<Integer, WorldTimes> worldTimes = new HashMap<>();
+            while (set.next()) {
+                int sessionID = set.getInt(columnSessionID);
+
+                String worldName = set.getString("world_name");
+
+                Map<String, Long> gmMap = new HashMap<>();
+                gmMap.put(gms[0], set.getLong(columnSurvival));
+                gmMap.put(gms[1], set.getLong(columnCreative));
+                gmMap.put(gms[2], set.getLong(columnAdventure));
+                gmMap.put(gms[3], set.getLong(columnSpectator));
+                GMTimes gmTimes = new GMTimes(gmMap);
+
+                WorldTimes worldTOfSession = worldTimes.getOrDefault(sessionID, new WorldTimes(new HashMap<>()));
+                worldTOfSession.setGMTimesForWorld(worldName, gmTimes);
+                worldTimes.put(sessionID, worldTOfSession);
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+            return worldTimes;
         } finally {
-            close(statement);
+            close(set, statement);
         }
     }
 }

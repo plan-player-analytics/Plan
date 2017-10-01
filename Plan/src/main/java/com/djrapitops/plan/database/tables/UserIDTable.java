@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Represents a Table that uses UsersTable IDs to get their data.
@@ -14,22 +15,23 @@ import java.sql.SQLException;
  */
 public abstract class UserIDTable extends Table {
 
-    protected String columnUserID;
+    protected final String columnUserID = "user_id";
+    protected final UsersTable usersTable;
 
     public UserIDTable(String name, SQLDB db, boolean usingMySQL) {
         super(name, db, usingMySQL);
+        usersTable = db.getUsersTable();
     }
 
-    protected boolean removeDataOf(int userID) {
+    public void removeUser(UUID uuid) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUserID + "=?)");
-            statement.setInt(1, userID);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("DELETE FROM " + tableName +
+                    " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")");
+            statement.setString(1, uuid.toString());
+
             statement.execute();
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
+            commit(connection);
         } finally {
             close(statement);
         }

@@ -1,14 +1,14 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import com.google.common.base.Objects;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.Container;
 import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -48,21 +48,27 @@ public abstract class Table {
     /**
      * @return
      */
-    public abstract boolean createTable();
+    public abstract void createTable() throws DBCreateTableException;
 
-    /**
-     * @return @throws SQLException
-     */
-    protected Connection getConnection() throws SQLException {
-        Connection connection = db.getConnection();
-        if (connection == null || connection.isClosed()) {
-            connection = db.getNewConnection();
+    protected void createTable(String sql) throws DBCreateTableException {
+        try {
+            execute(sql);
+        } catch (SQLException e) {
+            throw new DBCreateTableException(tableName, "Failed to create table", e);
         }
-        return connection;
     }
 
     /**
-     * @return @throws SQLException
+     * @return
+     * @throws SQLException
+     */
+    protected Connection getConnection() throws SQLException {
+        return db.getConnection();
+    }
+
+    /**
+     * @return
+     * @throws SQLException
      */
     public int getVersion() throws SQLException {
         return db.getVersion();
@@ -74,15 +80,14 @@ public abstract class Table {
      * @throws SQLException
      */
     protected boolean execute(String statementString) throws SQLException {
-        Connection connection = getConnection();
         Statement statement = null;
-        try {
+        try (Connection connection = getConnection()){
             statement = connection.createStatement();
-            return statement.execute(statementString);
+            boolean b = statement.execute(statementString);
+            commit(connection);
+            return b;
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            close(statement);
         }
     }
 
@@ -103,15 +108,6 @@ public abstract class Table {
     }
 
     /**
-     * @param sql
-     * @return
-     * @throws SQLException
-     */
-    protected PreparedStatement prepareStatement(String sql) throws SQLException {
-        return getConnection().prepareStatement(sql);
-    }
-
-    /**
      * @param toClose
      */
     protected void close(AutoCloseable... toClose) {
@@ -128,14 +124,8 @@ public abstract class Table {
     /**
      * @return
      */
-    public boolean removeAllData() {
-        try {
-            execute("DELETE FROM " + tableName);
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void removeAllData() throws SQLException {
+        execute("DELETE FROM " + tableName);
     }
 
     /**
@@ -173,14 +163,26 @@ public abstract class Table {
         return tableName;
     }
 
-    /**
-     * Commits changes to .db file when using SQLite databse.
-     * <p>
-     * Auto Commit enabled when using MySQL
-     *
-     * @throws SQLException If commit fails or there is nothing to commit.
-     */
-    protected void commit() throws SQLException {
-        db.commit();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return usingMySQL == table.usingMySQL &&
+                Objects.equal(tableName, table.tableName) &&
+                Objects.equal(db, table.db);
+    }
+
+    protected void commit(Connection connection) throws SQLException {
+        db.commit(connection);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(tableName, db, usingMySQL);
+    }
+
+    public SQLDB getDb() {
+        return db;
     }
 }

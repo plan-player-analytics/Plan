@@ -27,12 +27,12 @@ public class PluginConfigSectionHandler {
         }
 
         ConfigurationSection pluginSection = section.getConfigurationSection(pluginName);
-        return pluginSection.contains(dataSource.getPlaceholder(""));
+        return pluginSection.contains(dataSource.getPlaceholder());
     }
 
     private ConfigurationSection getPluginsSection() {
         FileConfiguration config = plan.getConfig();
-        return config.getConfigurationSection("Customization.Plugins");
+        return config.getConfigurationSection("Plugins");
     }
 
     public void createSection(PluginData dataSource) {
@@ -44,7 +44,7 @@ public class PluginConfigSectionHandler {
         section.addDefault(pluginName + ".Data." + source, true);
 
         FileConfiguration config = plan.getConfig();
-        config.set("Customization.Plugins", section);
+        config.set("Plugins", section);
         plan.saveConfig();
     }
 

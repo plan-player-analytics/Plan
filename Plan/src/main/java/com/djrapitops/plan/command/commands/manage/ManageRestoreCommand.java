@@ -16,8 +16,6 @@ import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.UUID;
 
 /**
  * This manage subcommand is used to restore a backup.db file in the
@@ -61,14 +59,13 @@ public class ManageRestoreCommand extends SubCommand {
             return true;
         }
 
-        final Database database = ManageUtils.getDB(plugin, db);
+        try {
+            final Database database = ManageUtils.getDB(plugin, db);
 
-        if (!Check.isTrue(Verify.notNull(database), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(db + " was null!");
-            return true;
+            runRestoreTask(args, sender, database);
+        } catch (Exception e) {
+            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         }
-
-        runRestoreTask(args, sender, database);
         return true;
     }
 
@@ -90,27 +87,16 @@ public class ManageRestoreCommand extends SubCommand {
                     }
 
                     SQLiteDB backupDB = new SQLiteDB(plugin, backupDBName);
-                    if (!backupDB.init()) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
-                        return;
-                    }
+                    backupDB.init();
 
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    final Collection<UUID> uuids = ManageUtils.getUUIDS(backupDB);
-                    if (!Check.isTrue(!Verify.isEmpty(uuids), Locale.get(Msg.MANAGE_FAIL_NO_PLAYERS) + " (" + backupDBName + ")", sender)) {
-                        return;
+                    ManageUtils.clearAndCopy(database, backupDB);
+                    if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
+//                            plugin.getDataCache().getCommandUseFromDb();
                     }
 
-                    if (ManageUtils.clearAndCopy(database, backupDB)) {
-                        if (database.getConfigName().equals(plugin.getDB().getConfigName())) {
-                            plugin.getHandler().getCommandUseFromDb();
-                        }
-
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    }
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

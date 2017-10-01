@@ -21,10 +21,13 @@ public class McmmoHook extends Hook {
      * @see API
      */
     public McmmoHook(HookHandler hookH) {
-        super("com.gmail.nossr50.mcMMO");
+        super("com.gmail.nossr50.mcMMO", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            hookH.addPluginDataSource(new McmmoInspectSkillTable());
-            hookH.addPluginDataSource(new McmmoAnalysisSkillTable());
+            addPluginDataSource(new McmmoInspectSkillTable());
+            addPluginDataSource(new McmmoAnalysisSkillTable());
         }
     }
 }

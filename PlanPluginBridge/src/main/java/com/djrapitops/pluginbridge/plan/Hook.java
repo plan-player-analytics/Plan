@@ -1,5 +1,7 @@
 package com.djrapitops.pluginbridge.plan;
 
+import main.java.com.djrapitops.plan.data.additional.HookHandler;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
@@ -17,6 +19,8 @@ public abstract class Hook {
      */
     protected boolean enabled;
 
+    protected HookHandler hookHandler;
+
     /**
      * Class constructor.
      * <p>
@@ -24,7 +28,8 @@ public abstract class Hook {
      *
      * @param plugin Class path string of the plugin's main JavaPlugin class.
      */
-    public Hook(String plugin) {
+    public Hook(String plugin, HookHandler hookHandler) {
+        this.hookHandler = hookHandler;
         try {
             Class<?> givenClass = Class.forName(plugin);
             Class<? extends JavaPlugin> pluginClass = (Class<? extends JavaPlugin>) givenClass;
@@ -35,10 +40,16 @@ public abstract class Hook {
         }
     }
 
+    public abstract void hook() throws NoClassDefFoundError;
+
     /**
      * Constructor to set enabled to false.
      */
     public Hook() {
         enabled = false;
+    }
+
+    protected void addPluginDataSource(PluginData pluginData) {
+        hookHandler.addPluginDataSource(pluginData);
     }
 }

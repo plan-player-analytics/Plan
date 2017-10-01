@@ -26,22 +26,25 @@ public class VaultHook extends Hook {
      * @see API
      */
     public VaultHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("net.milkbowl.vault.Vault");
+        super("net.milkbowl.vault.Vault", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (!enabled) {
             return;
         }
 
         try {
             Permission permSys = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-            hookH.addPluginDataSource(new PermGroup(permSys));
-            hookH.addPluginDataSource(new PermGroupTable(permSys));
+            addPluginDataSource(new PermGroup(permSys));
+            addPluginDataSource(new PermGroupTable(permSys));
         } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
         }
 
         try {
             Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
-            hookH.addPluginDataSource(new EconomyBalance(econ));
-            hookH.addPluginDataSource(new EconomyBalanceTable(econ));
+            addPluginDataSource(new EconomyBalance(econ));
+            addPluginDataSource(new EconomyBalanceTable(econ));
         } catch (NoSuchFieldError | NoSuchMethodError | Exception e) {
         }
     }

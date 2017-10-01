@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.data.SessionData;
+import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -33,14 +34,8 @@ public class AnalysisUtils {
      * @return
      */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
-        int timeToActive = Settings.ANALYSIS_MINUTES_FOR_ACTIVE.getNumber();
-
-        if (timeToActive < 0) {
-            timeToActive = 0;
-        }
-
+        int timeToActive = 10;
         long twoWeeks = 1209600000;
-
         return now - lastPlayed < twoWeeks
                 && loginTimes > 3
                 && playTime > 60 * timeToActive;
@@ -68,11 +63,11 @@ public class AnalysisUtils {
      * @param data
      * @return
      */
-    public static List<Long> transformSessionDataToLengths(Collection<SessionData> data) {
+    public static List<Long> transformSessionDataToLengths(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
-                .filter(SessionData::isValid)
-                .map(SessionData::getLength)
+                .filter(session -> session.getLength() > 0)
+                .map(Session::getLength)
                 .collect(Collectors.toList());
     }
 
@@ -82,7 +77,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType == null) {
             return source.parseContainer("Err ", "Null Analysistype. ");
         }
@@ -110,7 +105,7 @@ public class AnalysisUtils {
         }
     }
 
-    private static Stream<Serializable> getCorrectValues(List<UUID> uuids, PluginData source) {
+    private static Stream<Serializable> getCorrectValues(Collection<UUID> uuids, PluginData source) {
         return uuids.stream()
                 .map(source::getValue)
                 .filter(value -> !value.equals(-1))
@@ -123,7 +118,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getAverage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getAverage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType == null) {
             return source.parseContainer("Err ", "Null Analysistype. ");
         }
@@ -161,7 +156,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType != AnalysisType.BOOLEAN_PERCENTAGE) {
             return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
         }
@@ -183,7 +178,7 @@ public class AnalysisUtils {
      * @param uuids
      * @return
      */
-    public static String getBooleanTotal(AnalysisType analysisType, PluginData source, List<UUID> uuids) {
+    public static String getBooleanTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType != AnalysisType.BOOLEAN_TOTAL) {
             return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
         }
@@ -200,8 +195,10 @@ public class AnalysisUtils {
     }
 
     private static String logPluginDataCausedError(PluginData source, Throwable e) {
-        Log.error("A PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""));
-        Log.toLog("PluginData-source caused an exception: " + source.getPlaceholder("").replace("%", ""), e);
+        String placeholder = StringUtils.remove(source.getPlaceholder(), '%');
+
+        Log.error("A PluginData-source caused an exception: " + placeholder);
+        Log.toLog("PluginData-source caused an exception: " + placeholder, e);
         return source.parseContainer("", "Exception during calculation.");
     }
 
@@ -212,7 +209,7 @@ public class AnalysisUtils {
      * @param scale    Scale (milliseconds), time before (Current epoch - scale) will be ignored.
      * @return Amount of Unique joins within the time span.
      */
-    public static int getUniqueJoins(Map<UUID, List<SessionData>> sessions, long scale) {
+    public static int getUniqueJoins(Map<UUID, List<Session>> sessions, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
 
@@ -232,13 +229,13 @@ public class AnalysisUtils {
      * @param scale
      * @return
      */
-    public static int getUniqueJoinsPerDay(Map<UUID, List<SessionData>> sessions, long scale) {
+    public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long scale) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
 
         sessions.forEach((uuid, s) -> {
-            for (SessionData session : s) {
+            for (Session session : s) {
                 if (scale != -1
                         && session.getSessionStart() < nowMinusScale) {
                     continue;
@@ -314,7 +311,7 @@ public class AnalysisUtils {
         }).collect(Collectors.toList());
     }
 
-    private static int getDayOfYear(SessionData session) {
+    private static int getDayOfYear(Session session) {
         return getDayOfYear(session.getSessionStart());
 
     }
@@ -323,5 +320,22 @@ public class AnalysisUtils {
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(date);
         return day.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static long getTotalPlaytime(List<Session> sessions) {
+        return sessions.stream().mapToLong(Session::getLength).sum();
+    }
+
+    public static long getLongestSessionLength(List<Session> sessions) {
+        Optional<Session> longest = sessions.stream().sorted(new SessionLengthComparator()).findFirst();
+        return longest.map(Session::getLength).orElse(0L);
+    }
+
+    public static long getLastSeen(List<Session> userSessions) {
+        OptionalLong max = userSessions.stream().mapToLong(Session::getSessionEnd).max();
+        if (max.isPresent()) {
+            return max.getAsLong();
+        }
+        return 0;
     }
 }

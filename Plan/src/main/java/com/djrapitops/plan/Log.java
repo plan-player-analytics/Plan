@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.utilities.log.DebugInfo;
+import com.djrapitops.plugin.utilities.log.PluginLog;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class Log {
      * @param message "Message" will show up as [INFO][Plan]: Message
      */
     public static void info(String message) {
-        Plan.getInstance().getPluginLogger().info(message);
+        getPluginLogger().info(message);
     }
 
     /**
@@ -37,7 +38,7 @@ public class Log {
      * @param message Message to send.
      */
     public static void infoColor(String message) {
-        Plan.getInstance().getPluginLogger().infoColor(message);
+        getPluginLogger().infoColor(message);
     }
 
     /**
@@ -46,7 +47,7 @@ public class Log {
      * @param message "Message" will show up as [ERROR][Plan]: Message
      */
     public static void error(String message) {
-        Plan.getInstance().getPluginLogger().error(message);
+        getPluginLogger().error(message);
     }
 
     /**
@@ -55,7 +56,7 @@ public class Log {
      * @param message "Message" will show up as [INFO][Plan]: [DEBUG] Message
      */
     public static void debug(String message) {
-        Plan.getInstance().getPluginLogger().debug(message);
+        getPluginLogger().debug(message);
     }
 
 
@@ -77,7 +78,6 @@ public class Log {
      * @param messages All messages to add to the debug log.
      * @return full debug complex so far.
      */
-    @SafeVarargs
     public static DebugInfo debug(String task, String... messages) {
         DebugInfo debug = getDebug(task);
         long time = MiscUtils.getTime();
@@ -94,7 +94,7 @@ public class Log {
      * @return full debug complex so far.
      */
     public static DebugInfo getDebug(String task) {
-        return Plan.getInstance().getPluginLogger().getDebug(task);
+        return getPluginLogger().getDebug(task);
     }
 
     /**
@@ -120,19 +120,45 @@ public class Log {
      * Logs trace of caught Exception to Errors.txt and notifies on console.
      *
      * @param source Class name the exception was caught in.
-     * @param e      Throwable, eg NullPointerException
+     * @param e      {@code Throwable}, eg NullPointerException
      */
     public static void toLog(String source, Throwable e) {
-        Plan.getInstance().getPluginLogger().toLog(source, e);
+        getPluginLogger().toLog(source, e);
     }
 
     /**
      * Logs multiple caught Errors to Errors.txt.
      *
      * @param source Class name the exception was caught in.
-     * @param e      Collection of Throwables, eg NullPointerException
+     * @param e      Collection of {@code Throwable}, eg NullPointerException
      */
     public static void toLog(String source, Collection<Throwable> e) {
         Plan.getInstance().getPluginLogger().toLog(source, e);
+    }
+
+    private static PluginLog getPluginLogger() {
+        return MiscUtils.getIPlan().getPluginLogger();
+    }
+
+    public static void logStackTrace(Throwable e) {
+        error(e.toString());
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            error("  " + stackTraceElement);
+        }
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            logCause(cause);
+        }
+    }
+
+    private static void logCause(Throwable e) {
+        error("caused by: " + e.toString());
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            error("  " + stackTraceElement);
+        }
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            logCause(cause);
+        }
     }
 }

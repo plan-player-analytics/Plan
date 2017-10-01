@@ -1,11 +1,11 @@
 package main.java.com.djrapitops.plan.data.analysis;
 
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
-import main.java.com.djrapitops.plan.ui.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Part responsible for all World Playtime related analysis.
@@ -14,28 +14,36 @@ import java.util.Map;
  * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: worldtotal, worldseries
+ * Contains following placeholders after analyzed:
+ * ${worldTotal} - Total playtime for all worlds
+ * ${worldSeries} - Data for HighCharts
  *
  * @author Rsl1122
  * @since 3.6.0
  */
 public class WorldPart extends RawData {
 
-    private final Map<String, Long> worldTimes;
+    private WorldTimes worldTimes;
 
     public WorldPart() {
-        worldTimes = new HashMap<>();
+        worldTimes = new WorldTimes(new HashMap<>());
     }
 
     @Override
     protected void analyse() {
-        WorldTimes t = new WorldTimes(worldTimes);
-        addValue("worldtotal", FormatUtils.formatTimeAmount(t.getTotal()));
-        addValue("worldseries", WorldPieCreator.createSeriesData(worldTimes));
+        addValue("worldTotal", FormatUtils.formatTimeAmount(worldTimes.getTotal()));
+        String[] seriesData = WorldPieCreator.createSeriesData(worldTimes);
+        addValue("worldSeries", seriesData[0]);
+        addValue("gmSeries", seriesData[1]);
+        addValue("worldPieColors", Settings.THEME_GRAPH_WORLD_PIE.toString());
+        addValue("gmPieColors", Settings.THEME_GRAPH_GM_PIE.toString());
     }
 
-    public void addToWorld(String worldName, long playTime) {
-        Long value = worldTimes.getOrDefault(worldName, 0L);
-        worldTimes.put(worldName, value + playTime);
+    public WorldTimes getWorldTimes() {
+        return worldTimes;
+    }
+
+    public void setWorldTimes(WorldTimes worldTimes) {
+        this.worldTimes = worldTimes;
     }
 }

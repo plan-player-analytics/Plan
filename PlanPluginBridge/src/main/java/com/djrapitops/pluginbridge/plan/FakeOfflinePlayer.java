@@ -5,7 +5,6 @@
  */
 package com.djrapitops.pluginbridge.plan;
 
-import main.java.com.djrapitops.plan.data.UserData;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -19,34 +18,32 @@ import java.util.UUID;
  */
 public class FakeOfflinePlayer implements OfflinePlayer {
 
-    private final UserData data;
+    private final UUID uuid;
+    private final String name;
 
-    public FakeOfflinePlayer(UserData data) {
-        this.data = data;
+    public FakeOfflinePlayer(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
     }
 
     @Override
     public boolean isOnline() {
-        return data.isOnline();
+        return false;
     }
 
     @Override
     public String getName() {
-        String name = data.getName();
-        if (name == null) {
-            name = "null";
-        }
         return name;
     }
 
     @Override
     public UUID getUniqueId() {
-        return data.getUuid();
+        return uuid;
     }
 
     @Override
     public boolean isBanned() {
-        return data.isBanned();
+        return false;
     }
 
     @Override
@@ -66,12 +63,12 @@ public class FakeOfflinePlayer implements OfflinePlayer {
 
     @Override
     public long getFirstPlayed() {
-        return data.getRegistered();
+        return 0L;
     }
 
     @Override
     public long getLastPlayed() {
-        return data.getLastPlayed();
+        return 0L;
     }
 
     @Override
@@ -86,7 +83,7 @@ public class FakeOfflinePlayer implements OfflinePlayer {
 
     @Override
     public boolean isOp() {
-        return data.isOp();
+        return false;
     }
 
     @Override

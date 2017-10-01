@@ -1,10 +1,15 @@
 package main.java.com.djrapitops.plan.utilities.metrics;
 
+import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BStats {
+
     private final Plan plugin;
     private Metrics metrics;
 
@@ -21,29 +26,47 @@ public class BStats {
     }
 
     private void registerConfigSettingGraphs() {
-        boolean webserver = Settings.WEBSERVER_ENABLED.isTrue();
-        boolean analysisRefreshEnable = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
-        boolean analysisAutoRefresh = Settings.ANALYSIS_AUTO_REFRESH.getNumber() != -1;
-        boolean export = Settings.ANALYSIS_EXPORT.isTrue();
-
-        addEnabledDisabledPie("webserver_enabled", webserver);
-        addEnabledDisabledPie("analysis_enable_refresh", analysisRefreshEnable);
-        addEnabledDisabledPie("analysis_auto_refresh", analysisAutoRefresh);
-        addEnabledDisabledPie("html_export", export);
+        // TODO Write a Module bar graph
 
         String serverType = plugin.getServer().getName();
+        if ("CraftBukkit".equals(serverType) && Compatibility.isSpigotAvailable()) {
+            serverType = "Spigot";
+        } 
         String databaseType = plugin.getDB().getName();
+        String analysisRefreshPeriod = Integer.toString(Settings.ANALYSIS_AUTO_REFRESH.getNumber());
+        String themeBase = Settings.THEME_BASE.toString();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
-        addStringSettingPie("web_protocol", plugin.getUiServer().getProtocol().toUpperCase());
-    }
-
-    private void addEnabledDisabledPie(String id, boolean setting) {
-        metrics.addCustomChart(new Metrics.SimplePie(id, () -> setting ? "Enabled" : "Disabled"));
+        addStringSettingPie("analysis_periodic_refresh", analysisRefreshPeriod);
+        addStringSettingPie("theme_base", themeBase);
+        
+        addFeatureBarChart("features");
     }
 
     private void addStringSettingPie(String id, String setting) {
         metrics.addCustomChart(new Metrics.SimplePie(id, () -> setting));
+    }
+
+    private void addFeatureBarChart(String id) {
+        metrics.addCustomChart(new Metrics.AdvancedBarChart(id, () -> {
+            Map<String, int[]> map = new HashMap<>();
+
+            map.put("HTTPS", isEnabled("HTTPS".equals(plugin.getWebServer().getProtocol().toUpperCase())));
+            map.put("HTML Export", isEnabled(Settings.ANALYSIS_EXPORT.isTrue()));
+            boolean isConnectedToBungee = plugin.getInfoManager().isUsingAnotherWebServer();
+            map.put("BungeeCord Connected", isEnabled(isConnectedToBungee));
+            if (isConnectedToBungee) {
+                map.put("Copy Bungee Config Values", isEnabled(Settings.BUNGEE_COPY_CONFIG.isTrue()));
+                map.put("Standalone Override", isEnabled(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()));
+            }            
+            map.put("Log Unknown Commands", isEnabled(Settings.LOG_UNKNOWN_COMMANDS.isTrue()));
+            map.put("Combine Command Aliases", isEnabled(Settings.COMBINE_COMMAND_ALIASES.isTrue()));
+            return map;
+        }));
+    }
+
+    private int[] isEnabled(boolean t) {
+        return t ? new int[]{1, 0} : new int[]{0, 1};
     }
 }

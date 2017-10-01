@@ -5,6 +5,10 @@
  */
 package main.java.com.djrapitops.plan.data;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Objects;
+
 /**
  * Class containing single datapoint of TPS / Players online / CPU Usage / Used Memory / Entity Count / Chunks loaded.
  *
@@ -24,13 +28,13 @@ public class TPS {
     /**
      * Constructor.
      *
-     * @param date         time of the TPS calculation.
-     * @param ticksPerSecond          average ticksPerSecond for the last minute.
-     * @param players      players for the minute.
-     * @param cpuUsage     CPU usage for the minute
-     * @param usedMemory   used memory at the time of fetching
-     * @param entityCount  amount of entities at the time of fetching
-     * @param chunksLoaded amount of chunks loaded at the time of fetching
+     * @param date           time of the TPS calculation.
+     * @param ticksPerSecond average ticksPerSecond for the last minute.
+     * @param players        players for the minute.
+     * @param cpuUsage       CPU usage for the minute
+     * @param usedMemory     used memory at the time of fetching
+     * @param entityCount    amount of entities at the time of fetching
+     * @param chunksLoaded   amount of chunks loaded at the time of fetching
      */
     public TPS(long date, double ticksPerSecond, int players, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded) {
         this.date = date;
@@ -106,37 +110,34 @@ public class TPS {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + (int) (this.date ^ (this.date >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.ticksPerSecond) ^ (Double.doubleToLongBits(this.ticksPerSecond) >>> 32));
-        hash = 97 * hash + this.players;
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TPS tps = (TPS) o;
+        return date == tps.date &&
+                Double.compare(tps.ticksPerSecond, ticksPerSecond) == 0 &&
+                players == tps.players &&
+                Double.compare(tps.cpuUsage, cpuUsage) == 0 &&
+                usedMemory == tps.usedMemory &&
+                entityCount == tps.entityCount &&
+                chunksLoaded == tps.chunksLoaded;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null) {
-            return false;
-        }
-
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final TPS other = (TPS) obj;
-        return date == other.date
-                && Double.compare(this.ticksPerSecond, other.ticksPerSecond) == 0
-                && this.players == other.players
-                && Double.compare(cpuUsage, other.cpuUsage) == 0;
+    public int hashCode() {
+        return Objects.hash(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded);
     }
 
     @Override
     public String toString() {
-        return "TPS{" + date + "|" + ticksPerSecond + "|" + players + "|" + cpuUsage + "}";
+        return new ToStringBuilder(this)
+                .append("date", date)
+                .append("ticksPerSecond", ticksPerSecond)
+                .append("players", players)
+                .append("cpuUsage", cpuUsage)
+                .append("usedMemory", usedMemory)
+                .append("entityCount", entityCount)
+                .append("chunksLoaded", chunksLoaded)
+                .toString();
     }
 }

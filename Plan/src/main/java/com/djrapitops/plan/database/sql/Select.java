@@ -1,10 +1,6 @@
 package main.java.com.djrapitops.plan.database.sql;
 
-import main.java.com.djrapitops.plan.Log;
-
-public class Select extends SqlParser {
-
-    private int conditions = 0;
+public class Select extends WhereParser {
 
     public Select(String start) {
         super(start);
@@ -21,19 +17,10 @@ public class Select extends SqlParser {
         }
 
         parser.append(" FROM ").append(table);
-        Log.debug(parser.toString());
         return parser;
     }
 
-    public Select where(String... conditions) {
-        append(" WHERE ");
-        for (int i = 0; i < conditions.length; i++) {
-            if (this.conditions > 0) {
-                append(" AND ");
-            }
-            append("(").append(conditions[i]).append(")");
-            this.conditions++;
-        }
-        return this;
+    public static Select all(String table) {
+        return new Select("SELECT * FROM " + table);
     }
 }

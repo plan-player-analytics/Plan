@@ -4,8 +4,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ import java.util.Map;
  * analysed using the analysis method.
  * <p>
  * After being analysed the ReplaceMap can be retrieved for replacing
- * placeholders on the analysis.html file.
+ * placeholders on the server.html file.
  *
  * @author Rsl1122
  * @since 3.5.2
@@ -30,7 +30,6 @@ public class AnalysisData extends RawData {
 
     private final ActivityPart activityPart;
     private final CommandUsagePart commandUsagePart;
-    private final GamemodePart gamemodePart;
     private final GeolocationPart geolocationPart;
     private final JoinInfoPart joinInfoPart;
     private final KillPart killPart;
@@ -44,16 +43,15 @@ public class AnalysisData extends RawData {
     private Map<String, Serializable> additionalDataReplaceMap;
     private String playersTable;
 
-    public AnalysisData(Map<String, Integer> commandUsage, List<TPS> tpsData) {
-        commandUsagePart = new CommandUsagePart(commandUsage);
+    public AnalysisData() {
+        commandUsagePart = new CommandUsagePart();
         geolocationPart = new GeolocationPart();
         joinInfoPart = new JoinInfoPart();
         playerCountPart = new PlayerCountPart();
-        playtimePart = new PlaytimePart(playerCountPart);
-        killPart = new KillPart(playerCountPart);
-        gamemodePart = new GamemodePart();
-        tpsPart = new TPSPart(tpsData);
-        activityPart = new ActivityPart(joinInfoPart, tpsPart);
+        playtimePart = new PlaytimePart();
+        killPart = new KillPart(joinInfoPart);
+        tpsPart = new TPSPart();
+        activityPart = new ActivityPart(playerCountPart, joinInfoPart, tpsPart);
         worldPart = new WorldPart();
     }
 
@@ -63,10 +61,6 @@ public class AnalysisData extends RawData {
 
     public CommandUsagePart getCommandUsagePart() {
         return commandUsagePart;
-    }
-
-    public GamemodePart getGamemodePart() {
-        return gamemodePart;
     }
 
     public GeolocationPart getGeolocationPart() {
@@ -98,9 +92,9 @@ public class AnalysisData extends RawData {
     }
 
     public List<RawData> getAllParts() {
-        return Arrays.asList(activityPart, commandUsagePart, gamemodePart,
-                geolocationPart, joinInfoPart, killPart,
-                playerCountPart, playtimePart, tpsPart, worldPart);
+        return Arrays.asList(activityPart, commandUsagePart, geolocationPart,
+                joinInfoPart, killPart, playerCountPart, playtimePart, tpsPart,
+                worldPart);
     }
 
     public String getPlanVersion() {
@@ -137,7 +131,7 @@ public class AnalysisData extends RawData {
         Verify.nullCheck(pluginsTabLayout);
         Verify.nullCheck(planVersion);
 
-        addValue("sortabletable", playersTable);
+        addValue("tableBodyPlayerList", playersTable);
         addValue("version", planVersion);
 
         final List<RawData> parts = getAllParts();
@@ -157,8 +151,7 @@ public class AnalysisData extends RawData {
     }
 
     public String replacePluginsTabLayout() {
-        String replacedOnce = HtmlUtils.replacePlaceholders(pluginsTabLayout, additionalDataReplaceMap);
-        return HtmlUtils.replacePlaceholders(replacedOnce, additionalDataReplaceMap);
+        return HtmlUtils.replacePlaceholders(pluginsTabLayout, additionalDataReplaceMap);
     }
 
     public long getRefreshDate() {

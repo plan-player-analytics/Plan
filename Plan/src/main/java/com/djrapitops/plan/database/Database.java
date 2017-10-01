@@ -1,12 +1,16 @@
 package main.java.com.djrapitops.plan.database;
 
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.cache.DBCallableProcessor;
+import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.tables.*;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Abstract class representing a Database.
@@ -21,7 +25,7 @@ public abstract class Database {
     /**
      * Instance of Plan used with this database.
      */
-    protected final Plan plugin;
+    protected final IPlan plugin;
 
     /**
      * Table representing plan_users in the database.
@@ -29,9 +33,14 @@ public abstract class Database {
     protected UsersTable usersTable;
 
     /**
-     * Table representing plan_gamemodetimes in the database.
+     * Table representing plan_user_info in the database.
      */
-    protected GMTimesTable gmTimesTable;
+    protected UserInfoTable userInfoTable;
+
+    /**
+     * Table representing plan_actions in the database.
+     */
+    protected ActionsTable actionsTable;
 
     /**
      * Table representing plan_kills in the database.
@@ -92,11 +101,18 @@ public abstract class Database {
     protected WorldTimesTable worldTimesTable;
 
     /**
+     * Table representing plan_servers in the database.
+     */
+    protected ServerTable serverTable;
+
+    protected BasicDataSource dataSource;
+
+    /**
      * Super constructor.
      *
      * @param plugin current instance of Plan.
      */
-    public Database(Plan plugin) {
+    public Database(IPlan plugin) {
         this.plugin = plugin;
     }
 
@@ -107,62 +123,8 @@ public abstract class Database {
      *
      * @return Was the initiation successful?
      */
-    public boolean init() {
-        return false;
+    public void init() throws DatabaseInitException {
     }
-
-    /**
-     * Used to give Database processors to call with UserData after they have
-     * been fetched from the database.
-     * <p>
-     * This method is a shortcut method for multiple parameters.
-     *
-     * @param uuid       UUID of the player.
-     * @param processors Processors to call with the UserData after the fetch is
-     *                   complete.
-     * @throws SQLException If a database error occurs.
-     */
-    public void giveUserDataToProcessors(UUID uuid, DBCallableProcessor... processors) throws SQLException {
-        giveUserDataToProcessors(uuid, Arrays.asList(processors));
-    }
-
-    /**
-     * Used to give Database processors to call with UserData after they have
-     * been fetched from the database.
-     *
-     * @param uuid       UUID of the player.
-     * @param processors Processors to call with the UserData after the fetch is
-     *                   complete.
-     * @throws SQLException If a database error occurs.
-     */
-    public abstract void giveUserDataToProcessors(UUID uuid, Collection<DBCallableProcessor> processors) throws SQLException;
-
-    /**
-     * Used to get all UserData for multiple UUIDs.
-     * <p>
-     * Should only be called from async thread.
-     *
-     * @param uuids UUIDs to fetch data for.
-     * @return Data for matching UUIDs.
-     * @throws SQLException If database error occurs.
-     */
-    public abstract List<UserData> getUserDataForUUIDS(Collection<UUID> uuids) throws SQLException;
-
-    /**
-     * Used to save UserData object of a user.
-     *
-     * @param data UserData of the Player.
-     * @throws SQLException If a database error occurs.
-     */
-    public abstract void saveUserData(UserData data) throws SQLException;
-
-    /**
-     * Used to save UserData object of multiple users.
-     *
-     * @param data Collection of UserData objects.
-     * @throws SQLException If a database error occurs.
-     */
-    public abstract void saveMultipleUserData(Collection<UserData> data) throws SQLException;
 
     /**
      * Check if the user is saved in the database.
@@ -171,11 +133,6 @@ public abstract class Database {
      * @return true/false
      */
     public abstract boolean wasSeenBefore(UUID uuid);
-
-    /**
-     * Cleans the database of excess data.
-     */
-    public abstract void clean();
 
     /**
      * Used to get the name of the database type.
@@ -194,8 +151,10 @@ public abstract class Database {
      * @return sqlite/mysql
      */
     public String getConfigName() {
-        return getName().toLowerCase().replace(" ", "");
+        return StringUtils.remove(getName().toLowerCase(), ' ');
     }
+
+    public abstract boolean isNewDatabase() throws SQLException;
 
     /**
      * Used to get the database schema version.
@@ -226,30 +185,18 @@ public abstract class Database {
      * Removes all data related to an account from the database.
      *
      * @param uuid UUID of the account.
-     * @return Success of the removal.
      * @throws SQLException If a database error occurs.
      */
-    public abstract boolean removeAccount(String uuid) throws SQLException;
+    public abstract void removeAccount(UUID uuid) throws SQLException;
 
     /**
      * Used to clear all data from the database.
      * <p>
      * Uses DELETE * FROM table.
      *
-     * @return Success of removal.
+     * @throws SQLException if remove fails.
      */
-    public abstract boolean removeAllData();
-
-    /**
-     * Used to save CommandUse map.
-     *
-     * @param data String command (key), Integer times used
-     * @throws SQLException         If a database error occurs.
-     * @throws NullPointerException If the database has not initialized tables.
-     */
-    public void saveCommandUse(Map<String, Integer> data) throws SQLException {
-        commandUseTable.saveCommandUse(data);
-    }
+    public abstract void removeAllData() throws SQLException;
 
     /**
      * Used to fetch the saved UUIDs in the users table.
@@ -287,15 +234,6 @@ public abstract class Database {
      */
     public SessionsTable getSessionsTable() {
         return sessionsTable;
-    }
-
-    /**
-     * Used to get the gm times table.
-     *
-     * @return Table representing plan_gamemodetimes
-     */
-    public GMTimesTable getGmTimesTable() {
-        return gmTimesTable;
     }
 
     /**
@@ -368,5 +306,27 @@ public abstract class Database {
      */
     public WorldTimesTable getWorldTimesTable() {
         return worldTimesTable;
+    }
+
+    public ServerTable getServerTable() {
+        return serverTable;
+    }
+
+    public ActionsTable getActionsTable() {
+        return actionsTable;
+    }
+
+    public UserInfoTable getUserInfoTable() {
+        return userInfoTable;
+    }
+
+    public BasicDataSource getDataSource() {
+        return dataSource;
+    }
+
+    public abstract void commit(Connection connection) throws SQLException;
+
+    public boolean isUsingMySQL() {
+        return "mysql".equals(getConfigName());
     }
 }

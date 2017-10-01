@@ -5,18 +5,17 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import java.sql.SQLException;
-import java.util.UUID;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.handling.info.HandlingInfo;
-import main.java.com.djrapitops.plan.data.handling.info.InfoType;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import us.myles.ViaVersion.api.ViaAPI;
+
+import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Class responsible for listening join events for Version protocol.
@@ -37,20 +36,18 @@ public class PlayerVersionListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerLogin(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         int playerVersion = viaAPI.getPlayerVersion(uuid);
-        HandlingInfo i = new HandlingInfo(uuid, InfoType.OTHER, 0) {
+        plan.addToProcessQueue(new Processor<UUID>(uuid) {
             @Override
-            public boolean process(UserData uData) {
+            public void process() {
                 try {
-                    table.saveProtocolVersion(uData.getUuid(), playerVersion);
-                } catch (SQLException ex) {
-                    Log.toLog(this.getClass().getName(), ex);
+                    table.saveProtocolVersion(uuid, playerVersion);
+                } catch (SQLException e) {
+                    Log.toLog(this.getClass().getName() + ":PlanViaVersionJoinListener", e);
                 }
-                return true;
             }
-        };
-        plan.getHandler().addToPool(i);
+        });
     }
 }

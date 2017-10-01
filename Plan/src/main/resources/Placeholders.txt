@@ -1,0 +1,180 @@
+Placeholders:
+worldPie1506439618596
+worldPie1506439618596
+
+${}
+
+player.html:
+${playerName}
+${serverName}
+${version}
+
+${playerClassification} (Active &#x2022; Offline etc)
+${nicknames} &#x2022; name<br>
+${geolocations} &#x2022; country<br>
+
+${registered} time format full
+${lastSeen} time format full
+${sessionCount} num
+${playtimeTotal} timeamount
+${sessionLengthMedian} timeamount
+${sessionLengthLongest} timeamount
+
+${kickCount} num
+${playerKillCount} num
+${mobKillCount} num
+${deathCount} num
+
+${sessionCountDay} num
+${sessionCountWeek} num
+${playtimeDay} timeamount
+${playtimeWeek} timeamount
+${sessionLengthLongestDay} timeamount
+${sessionLengthLongestWeek} timeamount
+
+${contentSessions} See example page
+${sessionTabGraphViewFunctions} function calls that call the graphs to be viewed.
+${contentServerOverview} See example page
+
+${tabContentPlugins} See example page
+
+${tableBodyActions} (3) (100)
+
+punchcard
+serverPie
+worldPie
+
+network.html:
+${networkName}
+${playersOnlineSeries}
+${version}
+
+${playersOnline} num
+${playersMax} num
+${playersTotal} num
+${playersActive} num
+
+${playersNewDay} num
+${playersNewWeek} num
+
+${contentServers} row[column[box-header, box, box-footer[p,button right, refresh button right]], column...], row...
+
+server.html:
+${serverName} String //done
+${timeZone} num //done
+
+${playersOnline} num
+${playersMax} num
+${playersTotal} num //done
+${playersActive} num // done
+
+//done
+${playersAverage} num
+${playersNewAverage} num
+//done
+${playersDay} num
+${playersWeek} num
+${playersMonth} num
+${playersAverageDay} num
+${playersAverageWeek} num
+${playersAverageMonth} num
+${playersNewDay} num
+${playersNewWeek} num
+${playersNewMonth} num
+${playersNewAverageDay} num
+${playersNewAverageWeek} num
+${playersNewAverageMonth} num
+
+${lastPeakTime} time format hh:mm
+${playersLastPeak} num
+${bestPeakTime} time format full
+${playersBestPeak} num
+
+${sessionAverage} timeamount // done
+
+${playtimeTotal} timeamount // done
+${sessionCount} num
+// done
+${killCount} num
+${mobKillCount} num
+${deathCount} num
+
+${commandCount} num
+${commandUniqueCount} num
+
+//done
+${tpsAverageDay} num
+${tpsAverageWeek} num
+${cpuAverageDay} num%
+${cpuAverageWeek} num%
+${ramAverageDay} num MB
+${ramAverageWeek} num MB
+${entityAverageDay} num
+${entityAverageWeek} num
+${chunkAverageDay} num
+${chunkAverageWeek} num
+
+${tableBodyRecentLogins} tr th html (2) (15-20)
+${tableBodySessions} tr th html (4) (50)
+${tableBodyPlayerList} tr th html (7) (250) // done
+${tableBodyCommands} tr th html (2) (100) // done
+
+// done
+${playersOnlineSeries} 
+${tpsSeries} 
+${cpuSeries} 
+${ramSeries} 
+${entitySeries} 
+${chunkSeries} 
+${worldSeries}
+${geoMapSeries} 
+${sessionLengthSeries} 
+${punchCardSeries} 
+
+${playersGraphColor} // done
+
+${gmColors}
+
+// done
+${active}
+${inactive}
+${joinLeaver}
+${banned}
+${activityColors}
+
+${worldTotal} timeamount //done
+${worldColors}
+
+//done
+${tpsMedium}
+${tpsHigh}
+${tpsLowColor}
+${tpsMediumColor}
+${tpsHighColor}
+
+// Replace done
+${tabContentPlugins} row[column[box-header[h2[i, text]],box plugin], column...], row... + style="width: 200%;" <h2>That's all..</h2> <p>Do you have more plugins? ._.</p>
+
+STYLE:
+
+#267f00 - Main Dark (Geolocations)
+#222 - Punchcard
+#89c471 - Tertiary (Disabled links)
+#b58310 - Chunks
+#ac69ef - Entities
+#7dcc24 - RAM
+#e0d264 - CPU
+
+https://fonts.googleapis.com/css?family=Quicksand:300,400 (Font Link)
+
+main.css:
+#fff (white)
+#000 (black)
+
+#e2e2e2 (Table, even)
+#eee (Table, odd)
+
+#348e0f Secondary Dark (Header, on hover)
+#5da341 Secondary
+
+'Quicksand', sans-serif (Font Family)

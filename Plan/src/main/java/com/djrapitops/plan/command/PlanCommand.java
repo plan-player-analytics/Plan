@@ -5,6 +5,7 @@ import com.djrapitops.plugin.command.TreeCommand;
 import com.djrapitops.plugin.command.defaultcmds.StatusCommand;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.command.commands.*;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -39,20 +40,21 @@ public class PlanCommand extends TreeCommand<Plan> {
     @Override
     public void addCommands() {
         commands.add(new InspectCommand(plugin));
-        commands.add(new QuickInspectCommand(plugin));
         commands.add(new AnalyzeCommand(plugin));
-        commands.add(new QuickAnalyzeCommand(plugin));
         commands.add(new SearchCommand(plugin));
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
         commands.add(new ManageCommand(plugin));
         commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission()));
+        commands.add(new ListCommand());
+        RegisterCommand registerCommand = new RegisterCommand(plugin);
+        commands.add(registerCommand);
+        commands.add(new WebUserCommand(plugin, registerCommand));
+        commands.add(new NetworkCommand(plugin));
+        commands.add(new ListServersCommand(plugin));
 
-        if (plugin.getUiServer().isEnabled()) {
-            commands.add(new ListCommand());
-            RegisterCommand registerCommand = new RegisterCommand(plugin);
-            commands.add(registerCommand);
-            commands.add(new WebUserCommand(plugin, registerCommand));
+        if (Settings.DEV_MODE.isTrue()) {
+            commands.add(new DevCommand(plugin));
         }
     }
 }

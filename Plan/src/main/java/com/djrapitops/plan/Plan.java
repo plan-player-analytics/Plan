@@ -24,33 +24,41 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
+import main.java.com.djrapitops.plan.api.IPlan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
-import main.java.com.djrapitops.plan.command.commands.RegisterCommandFilter;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
-import main.java.com.djrapitops.plan.data.cache.AnalysisCacheHandler;
-import main.java.com.djrapitops.plan.data.cache.DataCacheHandler;
-import main.java.com.djrapitops.plan.data.cache.InspectCacheHandler;
-import main.java.com.djrapitops.plan.data.cache.PageCacheHandler;
-import main.java.com.djrapitops.plan.data.listeners.*;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.ui.webserver.WebServer;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
+import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
+import main.java.com.djrapitops.plan.systems.info.ImporterManager;
+import main.java.com.djrapitops.plan.systems.info.InformationManager;
+import main.java.com.djrapitops.plan.systems.info.pluginchannel.BukkitPluginChannelListener;
+import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
+import main.java.com.djrapitops.plan.systems.listeners.*;
+import main.java.com.djrapitops.plan.systems.processing.Processor;
+import main.java.com.djrapitops.plan.systems.processing.importing.importers.OfflinePlayerImporter;
+import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
+import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
+import main.java.com.djrapitops.plan.systems.webserver.PageCache;
+import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.Check;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
-import org.apache.logging.log4j.LogManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.UUID;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -61,21 +69,23 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class Plan extends BukkitPlugin<Plan> {
+public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
     private API api;
 
-    private DataCacheHandler handler;
-    private InspectCacheHandler inspectCache;
-    private AnalysisCacheHandler analysisCache;
+    private ProcessingQueue processingQueue;
     private HookHandler hookHandler; // Manages 3rd party data sources
 
     private Database db;
     private Set<Database> databases;
 
-    private WebServer uiServer;
+    private WebServer webServer;
+
+    private BukkitInformationManager infoManager;
+    private BukkitServerInfoManager serverInfoManager;
 
     private ServerVariableHolder serverVariableHolder;
+    private TPSCountTimer tpsCountTimer;
     private int bootAnalysisTaskID = -1;
 
     /**
@@ -103,6 +113,14 @@ public class Plan extends BukkitPlugin<Plan> {
         return (Plan) getPluginInstance(Plan.class);
     }
 
+    public static UUID getServerUUID() {
+        return getInstance().getServerUuid();
+    }
+
+    public UUID getServerUuid() {
+        return serverInfoManager.getServerUUID();
+    }
+
     /**
      * OnEnable method.
      * <p>
@@ -124,7 +142,8 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Enable");
 
-            // Initialize Locale
+            GeolocationCache.checkDB();
+
             new Locale(this).loadLocale();
 
             Benchmark.start("Reading server variables");
@@ -133,72 +152,46 @@ public class Plan extends BukkitPlugin<Plan> {
 
             Benchmark.start("Copy default config");
             getConfig().options().copyDefaults(true);
-            getConfig().options().header("Plan Config | More info at https://www.spigotmc.org/wiki/plan-configuration/");
+            getConfig().options().header("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
             saveConfig();
             Benchmark.stop("Enable", "Copy default config");
 
+
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
-            if (Check.errorIfFalse(initDatabase(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString())) {
-                Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
-            } else {
-                disablePlugin();
-                return;
-            }
+            initDatabase();
             Benchmark.stop("Enable", "Init Database");
 
-            Benchmark.start("Init DataCache");
-            this.handler = new DataCacheHandler(this);
-            this.inspectCache = new InspectCacheHandler(this);
-            this.analysisCache = new AnalysisCacheHandler(this);
-            Benchmark.stop("Enable", "Init DataCache");
+            Benchmark.start("WebServer Initialization");
+            webServer = new WebServer(this);
 
-            super.getRunnableFactory().createNew(new TPSCountTimer(this)).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+            processingQueue = new ProcessingQueue();
+
+            serverInfoManager = new BukkitServerInfoManager(this);
+            infoManager = new BukkitInformationManager(this);
+
+            webServer.initServer();
+            if (!webServer.isEnabled()) {
+                Log.error("WebServer was not successfully initialized.");
+            }
+
+            Benchmark.stop("Enable", "WebServer Initialization");
+
             registerListeners();
+            registerTasks();
 
             this.api = new API(this);
-            Benchmark.start("Handle Reload");
-            handler.handleReload();
-            Benchmark.stop("Enable", "Handle Reload");
 
-            Benchmark.start("Analysis refresh task registration");
-            // Analysis refresh settings
-            boolean bootAnalysisIsEnabled = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
-            int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
-            boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
-
-            // Analysis refresh tasks
-            if (bootAnalysisIsEnabled) {
-                startBootAnalysisTask();
-            }
-            if (analysisRefreshTaskIsEnabled) {
-                startAnalysisRefreshTask(analysisRefreshMinutes);
-            }
-            Benchmark.stop("Enable", "Analysis refresh task registration");
-
-            Benchmark.start("WebServer Initialization");
-            // Data view settings
-            boolean webserverIsEnabled = Settings.WEBSERVER_ENABLED.isTrue();
+            boolean usingBungeeWebServer = infoManager.isUsingAnotherWebServer();
             boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-            boolean usingAlternativeUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-            boolean hasDataViewCapability = usingAlternativeIP || usingAlternativeUI || webserverIsEnabled;
 
-            uiServer = new WebServer(this);
-            if (webserverIsEnabled) {
-                uiServer.initServer();
-
-                if (!uiServer.isEnabled()) {
-                    Log.error("WebServer was not successfully initialized.");
-                }
-
-                setupFilter();
-            } else if (!hasDataViewCapability) {
-                Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_NO_DATA_VIEW).toString());
-            }
             if (!usingAlternativeIP && serverVariableHolder.getIp().isEmpty()) {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
             }
-            Benchmark.stop("Enable", "WebServer Initialization");
+            if (usingBungeeWebServer && usingAlternativeIP) {
+                // TODO Move to Locale
+                Log.info("Make sure that the alternative IP points to Bungee Server: " + Settings.ALTERNATIVE_IP.toString());
+            }
 
             registerCommand(new PlanCommand(this));
 
@@ -206,20 +199,78 @@ public class Plan extends BukkitPlugin<Plan> {
             hookHandler = new HookHandler(this);
             Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
+            ImporterManager.registerImporter(new OfflinePlayerImporter());
+
+//            if (Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
+//                registerPluginChannelListener();
+//            }
+
             BStats bStats = new BStats(this);
             bStats.registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
             Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
             Log.info(Locale.get(Msg.ENABLED).toString());
+            new ShutdownHook(this);
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
-            Log.toLog(this.getClass().getName(), e);
+            Log.logStackTrace(e);
             disablePlugin();
         }
     }
 
-    private final void initColorScheme() {
+    private void registerPluginChannelListener() {
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "Plan", new BukkitPluginChannelListener(this));
+    }
+
+    private void registerTasks() {
+        RunnableFactory runnableFactory = getRunnableFactory();
+        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
+        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
+
+        Benchmark.start("Task Registration");
+        tpsCountTimer = new TPSCountTimer(this);
+        runnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+
+        // Analysis refresh settings
+        int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
+        boolean analysisRefreshTaskIsEnabled = analysisRefreshMinutes > 0;
+        long analysisPeriod = analysisRefreshMinutes * TimeAmount.MINUTE.ticks();
+
+        Log.info(bootAnalysisMsg);
+
+        ITask bootAnalysisTask = runnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
+            @Override
+            public void run() {
+                Log.info(bootAnalysisRunMsg);
+                infoManager.refreshAnalysis(getServerUUID());
+                this.cancel();
+            }
+        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
+
+        bootAnalysisTaskID = bootAnalysisTask.getTaskId();
+
+        if (analysisRefreshTaskIsEnabled) {
+            runnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
+                @Override
+                public void run() {
+                    infoManager.refreshAnalysis(getServerUUID());
+                }
+            }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
+        }
+
+        runnableFactory.createNew("PeriodicNetworkBoxRefreshTask", new AbsRunnable() {
+            @Override
+            public void run() {
+                infoManager.updateNetworkPageContent();
+            }
+        }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks(), TimeAmount.MINUTE.ticks() * 5L);
+
+        Benchmark.stop("Enable", "Task Registration");
+    }
+
+    private void initColorScheme() {
         try {
             ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
             ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
@@ -233,63 +284,44 @@ public class Plan extends BukkitPlugin<Plan> {
 
     /**
      * Disables the plugin.
-     * <p>
-     * Stops the webserver, cancels all tasks and saves cache to the database.
      */
     @Override
     public void onDisable() {
         //Clears the page cache
-        PageCacheHandler.clearCache();
+        PageCache.clearCache();
 
         // Stop the UI Server
-        if (uiServer != null) {
-            uiServer.stop();
+        if (webServer != null) {
+            webServer.stop();
+        }
+
+        // Processes unprocessed processors
+        if (processingQueue != null) {
+            List<Processor> processors = processingQueue.stopAndReturnLeftovers();
+            Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
+            for (Processor processor : processors) {
+                processor.process();
+            }
         }
 
         getServer().getScheduler().cancelTasks(this);
 
-        if (Verify.notNull(handler, db)) {
-            Benchmark.start("Disable: DataCache Save");
-            // Saves the DataCache to the database without Bukkit's Schedulers.
-            Log.info(Locale.get(Msg.DISABLE_CACHE_SAVE).toString());
-
-            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.execute(() -> {
-                handler.saveCacheOnDisable();
-                taskStatus().cancelAllKnownTasks();
-                Benchmark.stop("Disable: DataCache Save");
-            });
-
-            scheduler.shutdown(); // Schedules the save to shutdown after it has ran the execute method.
+        if (Verify.notNull(infoManager, db)) {
+            taskStatus().cancelAllKnownTasks();
         }
 
         getPluginLogger().endAllDebugs();
         Log.info(Locale.get(Msg.DISABLED).toString());
-//        Locale.unload();
     }
 
     private void registerListeners() {
         Benchmark.start("Register Listeners");
         registerListener(new PlanPlayerListener(this));
-        boolean chatListenerIsEnabled = Check.isTrue(Settings.GATHERCHAT.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_CHATLISTENER).toString());
-        boolean commandListenerIsEnabled = Check.isTrue(Settings.GATHERCOMMANDS.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_COMMANDLISTENER).toString());
-        boolean deathListenerIsEnabled = Check.isTrue(Settings.GATHERKILLS.isTrue(), Locale.get(Msg.ENABLE_NOTIFY_DISABLED_DEATHLISTENER).toString());
-
-        if (chatListenerIsEnabled) {
-            registerListener(new PlanChatListener(this));
-        }
-
+        registerListener(new PlanChatListener(this));
         registerListener(new PlanGamemodeChangeListener(this));
         registerListener(new PlanWorldChangeListener(this));
-
-        if (commandListenerIsEnabled) {
-            registerListener(new PlanCommandPreprocessListener(this));
-        }
-
-        if (deathListenerIsEnabled) {
-            registerListener(new PlanDeathEventListener(this));
-        }
-
+        registerListener(new PlanCommandPreprocessListener(this));
+        registerListener(new PlanDeathEventListener(this));
         Benchmark.stop("Enable", "Register Listeners");
     }
 
@@ -300,7 +332,7 @@ public class Plan extends BukkitPlugin<Plan> {
      *
      * @return true if init was successful, false if not.
      */
-    public boolean initDatabase() {
+    private void initDatabase() throws DatabaseInitException {
         databases = new HashSet<>();
         databases.add(new MySQLDB(this));
         databases.add(new SQLiteDB(this));
@@ -315,85 +347,20 @@ public class Plan extends BukkitPlugin<Plan> {
             }
         }
 
-        if (!Verify.notNull(db)) {
-            Log.info(Locale.get(Msg.ENABLE_FAIL_WRONG_DB).toString() + " " + dbType);
-            return false;
+        if (db == null) {
+            throw new DatabaseInitException(Locale.get(Msg.ENABLE_FAIL_WRONG_DB).toString() + " " + dbType);
         }
 
-        return Check.errorIfFalse(db.init(), Locale.get(Msg.ENABLE_DB_FAIL_DISABLE_INFO).toString());
-    }
-
-    private void startAnalysisRefreshTask(int everyXMinutes) {
-        Benchmark.start("Schedule PeriodicAnalysisTask");
-        if (everyXMinutes <= 0) {
-            return;
-        }
-        getRunnableFactory().createNew("PeriodicalAnalysisTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                Log.debug("Running PeriodicalAnalysisTask");
-                if (!analysisCache.isCached() || MiscUtils.getTime() - analysisCache.getData().getRefreshDate() > TimeAmount.MINUTE.ms()) {
-                    analysisCache.updateCache();
-                }
-            }
-        }).runTaskTimerAsynchronously(everyXMinutes * TimeAmount.MINUTE.ticks(), everyXMinutes * TimeAmount.MINUTE.ticks());
-        Benchmark.stop("Schedule PeriodicAnalysisTask");
-    }
-
-    private void startBootAnalysisTask() {
-        Benchmark.start("Schedule boot analysis task");
-        String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
-        String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
-
-        Log.info(bootAnalysisMsg);
-
-        ITask bootAnalysisTask = getRunnableFactory().createNew("BootAnalysisTask", new AbsRunnable() {
-            @Override
-            public void run() {
-                Log.debug("Running BootAnalysisTask");
-                Log.info(bootAnalysisRunMsg);
-
-                analysisCache.updateCache();
-                this.cancel();
-            }
-        }).runTaskLaterAsynchronously(30 * TimeAmount.SECOND.ticks());
-        bootAnalysisTaskID = bootAnalysisTask.getTaskId();
-        Benchmark.stop("Enable", "Schedule boot analysis task");
-    }
-
-    /**
-     * Setups the command console output filter
-     */
-    private void setupFilter() {
-        org.apache.logging.log4j.core.Logger logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
-        logger.addFilter(new RegisterCommandFilter());
-    }
-
-    /**
-     * Used to access AnalysisCache.
-     *
-     * @return Current instance of the AnalysisCacheHandler
-     */
-    public AnalysisCacheHandler getAnalysisCache() {
-        return analysisCache;
-    }
-
-    /**
-     * Used to access InspectCache.
-     *
-     * @return Current instance of the InspectCacheHandler
-     */
-    public InspectCacheHandler getInspectCache() {
-        return inspectCache;
+        db.init();
     }
 
     /**
      * Used to access Cache.
      *
-     * @return Current instance of the DataCacheHandler
+     * @return Current instance of the DataCache
      */
-    public DataCacheHandler getHandler() {
-        return handler;
+    public DataCache getDataCache() {
+        return getInfoManager().getDataCache();
     }
 
     /**
@@ -406,12 +373,12 @@ public class Plan extends BukkitPlugin<Plan> {
     }
 
     /**
-     * Used to access Webserver.
+     * Used to access WebServer.
      *
-     * @return the Webserver
+     * @return the WebServer
      */
-    public WebServer getUiServer() {
-        return uiServer;
+    public WebServer getWebServer() {
+        return webServer;
     }
 
     /**
@@ -452,5 +419,42 @@ public class Plan extends BukkitPlugin<Plan> {
      */
     public ServerVariableHolder getVariable() {
         return serverVariableHolder;
+    }
+
+    /**
+     * Used to get the object storing server info
+     *
+     * @return BukkitServerInfoManager
+     * @see BukkitServerInfoManager
+     */
+    public BukkitServerInfoManager getServerInfoManager() {
+        return serverInfoManager;
+    }
+
+    public ProcessingQueue getProcessingQueue() {
+        return processingQueue;
+    }
+
+    public TPSCountTimer getTpsCountTimer() {
+        return tpsCountTimer;
+    }
+
+    public void addToProcessQueue(Processor... processors) {
+        for (Processor processor : processors) {
+            if (processor == null) {
+                continue;
+            }
+            processingQueue.addToQueue(processor);
+        }
+    }
+
+    public InformationManager getInfoManager() {
+        return infoManager;
+    }
+
+    public void restart() {
+        onDisable();
+        reloadConfig();
+        onEnable();
     }
 }

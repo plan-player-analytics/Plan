@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.data.time;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.database.tables.GMTimesTable;
 
 import java.util.Map;
 
@@ -12,6 +11,11 @@ import java.util.Map;
  * @since 3.6.0
  */
 public class GMTimes extends TimeKeeper {
+
+    private static final String SURVIVAL = "SURVIVAL";
+    private static final String CREATIVE = "CREATIVE";
+    private static final String ADVENTURE = "ADVENTURE";
+    private static final String SPECTATOR = "SPECTATOR";
 
     public GMTimes(Map<String, Long> times, String lastState, long lastStateChange) {
         super(times, lastState, lastStateChange);
@@ -33,6 +37,10 @@ public class GMTimes extends TimeKeeper {
         super();
     }
 
+    public static String[] getGMKeyArray() {
+        return new String[]{SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR};
+    }
+
     /**
      * Sets times for all 4 gamemodes.
      * <p>
@@ -47,7 +55,7 @@ public class GMTimes extends TimeKeeper {
      */
     public void setAllGMTimes(long... times) {
         Verify.nullCheck(times);
-        String[] gms = GMTimesTable.getGMKeyArray();
+        String[] gms = getGMKeyArray();
         int size = times.length;
         for (int i = 0; i < 4; i++) {
             if (i >= size) {
@@ -58,16 +66,16 @@ public class GMTimes extends TimeKeeper {
         }
     }
 
-    public void resetTimes(long playtime) {
-        resetState("SURVIVAL", playtime);
-        resetState("CREATIVE");
-        resetState("ADVENTURE");
-        resetState("SPECTATOR");
+    public void resetTimes(long time) {
+        resetState(SURVIVAL, time);
+        resetState(CREATIVE);
+        resetState(ADVENTURE);
+        resetState(SPECTATOR);
     }
 
     @Override
     public String getState() {
         String state = super.getState();
-        return state != null ? state : "SURVIVAL";
+        return state != null ? state : SURVIVAL;
     }
 }

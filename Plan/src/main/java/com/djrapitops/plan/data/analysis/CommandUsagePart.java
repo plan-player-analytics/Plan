@@ -5,37 +5,47 @@
  */
 package main.java.com.djrapitops.plan.data.analysis;
 
-import main.java.com.djrapitops.plan.ui.html.tables.CommandUseTableCreator;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
+import main.java.com.djrapitops.plan.utilities.html.tables.CommandUseTableCreator;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Part responsible for all CommandUsage related analysis.
  * <p>
- * Command Usage Table.
- * <p>
  * Placeholder values can be retrieved using the get method.
  * <p>
- * Contains following place-holders: uniquecommands, totalcommands, commanduse
+ * Contains following placeholders after analyzed:
+ * ${commandCount} - (Number)
+ * ${commandUniqueCount} - (Number)
+ * ${tableBodyCommands} - Table body for CommandUsage table.
  *
  * @author Rsl1122
  * @since 3.5.2
  */
 public class CommandUsagePart extends RawData {
 
-    private final Map<String, Integer> commandUsage;
+    private Map<String, Integer> commandUsage;
 
-    public CommandUsagePart(Map<String, Integer> commandUsage) {
-        this.commandUsage = commandUsage;
+    public CommandUsagePart() {
+        this.commandUsage = new HashMap<>();
     }
 
     @Override
     public void analyse() {
-        addValue("uniquecommands", String.valueOf(getUniqueCommands()));
-        addValue("totalcommands", String.valueOf(getCommandTotal()));
-        String commandUsageTable = CommandUseTableCreator.createSortedCommandUseTable(commandUsage);
-        addValue("commanduse", HtmlUtils.removeXSS(commandUsageTable));
+        addValue("commandUniqueCount", String.valueOf(getUniqueCommands()));
+        addValue("commandCount", String.valueOf(getCommandTotal()));
+        String commandUsageTable = CommandUseTableCreator.createTable(commandUsage);
+        addValue("tableBodyCommands", HtmlUtils.removeXSS(commandUsageTable));
+    }
+
+    public void setCommandUsage(Map<String, Integer> commandUsage) {
+        this.commandUsage = commandUsage;
+    }
+
+    public void addCommands(Map<String, Integer> commandUsage) {
+        this.commandUsage.putAll(commandUsage);
     }
 
     public int getUniqueCommands() {

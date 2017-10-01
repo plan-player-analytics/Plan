@@ -21,11 +21,14 @@ public class TownyHook extends Hook {
      * @see API
      * @throws NoClassDefFoundError when the plugin class can not be found.
      */
-    public TownyHook(HookHandler hookH) throws NoClassDefFoundError {
-        super("com.palmergames.bukkit.towny.Towny");
+    public TownyHook(HookHandler hookH) {
+        super("com.palmergames.bukkit.towny.Towny", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            hookH.addPluginDataSource(new TownyTable());
-            hookH.addPluginDataSource(new TownyTown());
+            addPluginDataSource(new TownyTable());
+            addPluginDataSource(new TownyTown());
         }
     }
 }

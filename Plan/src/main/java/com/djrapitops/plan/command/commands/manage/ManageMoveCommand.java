@@ -14,9 +14,6 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 
-import java.util.Collection;
-import java.util.UUID;
-
 /**
  * This manage subcommand is used to move all data from one database to another.
  * <p>
@@ -72,21 +69,14 @@ public class ManageMoveCommand extends SubCommand {
             return true;
         }
 
-        final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
+        try {
+            final Database fromDatabase = ManageUtils.getDB(plugin, fromDB);
+            final Database toDatabase = ManageUtils.getDB(plugin, toDB);
 
-        if (!Check.isTrue(Verify.notNull(fromDatabase), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(fromDB + " was null!");
-            return true;
+            runMoveTask(fromDatabase, toDatabase, sender);
+        } catch (Exception e) {
+            sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
         }
-
-        final Database toDatabase = ManageUtils.getDB(plugin, toDB);
-
-        if (!Check.isTrue(Verify.notNull(toDatabase), Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString(), sender)) {
-            Log.error(toDB + " was null!");
-            return true;
-        }
-
-        runMoveTask(fromDatabase, toDatabase, sender);
         return true;
     }
 
@@ -95,21 +85,12 @@ public class ManageMoveCommand extends SubCommand {
             @Override
             public void run() {
                 try {
-                    final Collection<UUID> uuids = ManageUtils.getUUIDS(fromDatabase);
-                    if (Check.isTrue(Verify.isEmpty(uuids), Locale.get(Msg.MANAGE_FAIL_NO_PLAYERS) + " (" + fromDatabase.getName() + ")", sender)) {
-                        return;
-                    }
-
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
 
-                    if (ManageUtils.clearAndCopy(toDatabase, fromDatabase)) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
-                        boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
-
-                        Check.isTrue(!movedToCurrentDatabase, Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString(), sender);
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    }
+                    ManageUtils.clearAndCopy(toDatabase, fromDatabase);
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_MOVE_SUCCESS).toString());
+                    boolean movedToCurrentDatabase = Verify.equalsIgnoreCase(toDatabase.getConfigName(), plugin.getDB().getConfigName());
+                    Check.isTrue(!movedToCurrentDatabase, Locale.get(Msg.MANAGE_INFO_CONFIG_REMINDER).toString(), sender);
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

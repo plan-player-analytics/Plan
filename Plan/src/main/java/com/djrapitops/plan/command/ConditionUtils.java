@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.command;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 
 import java.util.UUID;
 
@@ -19,18 +18,6 @@ public class ConditionUtils {
      */
     private ConditionUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * Check if the plugin can display the data.
-     *
-     * @return true/false
-     */
-    public static boolean pluginHasViewCapability() {
-        final boolean usingAlternativeIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
-        final boolean webserverIsOn = Settings.WEBSERVER_ENABLED.isTrue();
-        final boolean usingTextUI = Settings.USE_ALTERNATIVE_UI.isTrue();
-        return webserverIsOn || usingAlternativeIP || usingTextUI;
     }
 
     /**

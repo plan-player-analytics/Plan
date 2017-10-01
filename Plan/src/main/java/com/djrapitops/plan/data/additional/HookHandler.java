@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.data.additional;
 import com.djrapitops.pluginbridge.plan.Bridge;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.HtmlUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -53,7 +53,7 @@ public class HookHandler {
                 configHandler.createSection(dataSource);
             }
             if (configHandler.isEnabled(dataSource)) {
-                Log.debug("Registered a new datasource: " + dataSource.getPlaceholder("").replace("%", ""));
+                Log.debug("Registered a new datasource: " + StringUtils.remove(dataSource.getPlaceholder(), '%'));
                 additionalDataSources.add(dataSource);
             }
         } catch (Exception e) {
@@ -69,32 +69,6 @@ public class HookHandler {
      */
     public List<PluginData> getAdditionalDataSources() {
         return additionalDataSources;
-    }
-
-    /**
-     * Used to get the Layout with PluginData placeholders to replace %plugins%
-     * placeholder on analysis.html.
-     *
-     * @return html, getPluginsTabLayout-method
-     * @see HtmlUtils
-     */
-    public String getPluginsTabLayoutForAnalysis() {
-        List<String> pluginNames = getPluginNamesAnalysis();
-        Map<String, List<String>> placeholders = getPlaceholdersAnalysis();
-        return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
-    }
-
-    /**
-     * Used to get the Layout with PluginData placeholders to replace %plugins%
-     * placeholder on player.html.
-     *
-     * @return html, getPluginsTabLayout-method
-     * @see HtmlUtils
-     */
-    public String getPluginsTabLayoutForInspect() {
-        List<String> pluginNames = getPluginNamesInspect();
-        Map<String, List<String>> placeholders = getPlaceholdersInspect();
-        return HtmlUtils.getPluginsTabLayout(pluginNames, placeholders);
     }
 
     private List<String> getPluginNamesAnalysis() {
@@ -117,39 +91,6 @@ public class HookHandler {
         return pluginNames;
     }
 
-    private Map<String, List<String>> getPlaceholdersAnalysis() {
-        Map<String, List<String>> placeholders = new HashMap<>();
-        for (PluginData source : additionalDataSources) {
-            List<AnalysisType> analysisTypes = source.getAnalysisTypes();
-            if (analysisTypes.isEmpty()) {
-                continue;
-            }
-            String pluginName = source.getSourcePlugin();
-            if (!placeholders.containsKey(pluginName)) {
-                placeholders.put(pluginName, new ArrayList<>());
-            }
-            for (AnalysisType t : analysisTypes) {
-                placeholders.get(pluginName).add(source.getPlaceholder(t.getPlaceholderModifier()));
-            }
-        }
-        return placeholders;
-    }
-
-    private Map<String, List<String>> getPlaceholdersInspect() {
-        Map<String, List<String>> placeholders = new HashMap<>();
-        for (PluginData source : additionalDataSources) {
-            if (source.analysisOnly()) {
-                continue;
-            }
-            String pluginName = source.getSourcePlugin();
-            if (!placeholders.containsKey(pluginName)) {
-                placeholders.put(pluginName, new ArrayList<>());
-            }
-            placeholders.get(pluginName).add(source.getPlaceholder(""));
-        }
-        return placeholders;
-    }
-
     /**
      * Used to get the replaceMap for inspect page.
      *
@@ -163,9 +104,9 @@ public class HookHandler {
                 continue;
             }
             try {
-                addReplace.put(source.getPlaceholder(""), source.getHtmlReplaceValue("", uuid));
+                addReplace.put(source.getPlaceholderName(), source.getHtmlReplaceValue("", uuid));
             } catch (Exception e) {
-                addReplace.put(source.getPlaceholder(""), "Error occurred: " + e);
+                addReplace.put(source.getPlaceholderName(), "Error occurred: " + e);
                 Log.error("PluginDataSource caused an exception: " + source.getSourcePlugin());
                 Log.toLog("PluginDataSource " + source.getSourcePlugin(), e);
             }

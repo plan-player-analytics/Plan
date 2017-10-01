@@ -21,10 +21,13 @@ public class JobsHook extends Hook {
      * @see API
      */
     public JobsHook(HookHandler hookH) {
-        super("com.gamingmesh.jobs.Jobs");
+        super("com.gamingmesh.jobs.Jobs", hookH);
+    }
+
+    public void hook() throws NoClassDefFoundError {
         if (enabled) {
-            hookH.addPluginDataSource(new JobsInspectJobTable());
-            hookH.addPluginDataSource(new JobsAnalysisJobTable());
+            addPluginDataSource(new JobsInspectJobTable());
+            addPluginDataSource(new JobsAnalysisJobTable());
         }
     }
 }

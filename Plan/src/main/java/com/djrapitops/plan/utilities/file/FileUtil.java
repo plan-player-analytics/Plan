@@ -1,9 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.file;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +27,7 @@ public class FileUtil {
         InputStream resourceStream = null;
         Scanner scanner = null;
         try {
-            Plan plugin = Plan.getInstance();
+            IPlan plugin = MiscUtils.getIPlan();
             File localFile = new File(plugin.getDataFolder(), fileName);
 
             if (localFile.exists()) {
@@ -49,7 +48,7 @@ public class FileUtil {
         }
     }
 
-    public static List<String> lines(JavaPlugin plugin, String resource) throws IOException {
+    public static List<String> lines(IPlan plugin, String resource) throws IOException {
         List<String> lines = new ArrayList<>();
         Scanner scanner = null;
         try (InputStream inputStream = plugin.getResource(resource)) {

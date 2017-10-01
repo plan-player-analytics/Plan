@@ -22,6 +22,16 @@ public class TableSqlParser extends SqlParser {
         return "DROP TABLE IF EXISTS " + tableName;
     }
 
+    /**
+     * Used for ALTER TABLE sql statements.
+     *
+     * @param column column to modify
+     * @return TableSqlParser object
+     */
+    public static TableSqlParser newColumn(String column, String type) {
+        return new TableSqlParser("").column(column, type);
+    }
+
     public TableSqlParser column(String column, String type) {
         if (columns > 0) {
             append(", ");
@@ -32,7 +42,6 @@ public class TableSqlParser extends SqlParser {
         columns++;
         return this;
     }
-
 
     public TableSqlParser foreignKey(String column, String refrencedTable, String referencedColumn) {
         if (columns > 0) {
@@ -71,12 +80,12 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
-    public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column, String type) {
+    public TableSqlParser primaryKeyIDColumn(boolean mySQL, String column) {
         if (columns > 0) {
             append(", ");
         }
         append(column).addSpace();
-        append(type).addSpace();
+        append(Sql.INT).addSpace();
         append((mySQL) ? "NOT NULL AUTO_INCREMENT" : "PRIMARY KEY");
         columns++;
         return this;
@@ -93,14 +102,12 @@ public class TableSqlParser extends SqlParser {
         return this;
     }
 
-    /**
-     * Used for ALTER TABLE sql statements.
-     *
-     * @param column column to modify
-     * @return TableSqlParser object
-     */
-    public static TableSqlParser newColumn(String column, String type) {
-        return new TableSqlParser("").column(column, type);
+    public TableSqlParser charSetUTF8(boolean mySQL) {
+        if (mySQL) {
+            addSpace();
+            append("CHARACTER SET utf8 COLLATE utf8mb4_general_ci");
+        }
+        return this;
     }
 
     @Override

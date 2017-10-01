@@ -3,11 +3,6 @@ package test.java.utils;
 import com.djrapitops.plugin.utilities.player.Fetch;
 import com.djrapitops.plugin.utilities.player.IPlayer;
 import com.sun.net.httpserver.HttpServer;
-import main.java.com.djrapitops.plan.data.KillData;
-import main.java.com.djrapitops.plan.data.SessionData;
-import main.java.com.djrapitops.plan.data.UserData;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
-import main.java.com.djrapitops.plan.utilities.NewPlayerCreator;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -30,48 +23,12 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 public class MockUtils {
 
-    /**
-     * @return
-     */
     public static World mockWorld() {
         World mockWorld = Mockito.mock(World.class);
         when(mockWorld.toString()).thenReturn("World");
         return mockWorld;
     }
 
-    public static UserData mockUser() {
-        return NewPlayerCreator.createNewPlayer(mockIPlayer());
-    }
-
-    public static UserData mockUserWithMoreData() {
-        UserData mock = mockUser();
-        try {
-            mock.addIpAddress(InetAddress.getByName("247.183.163.155"));
-        } catch (UnknownHostException ignored) {
-            /* Ignored */
-        }
-        mock.addNickname("MoreNicks");
-        mock.addPlayerKill(new KillData(getPlayer2UUID(), 1, "WEP", 126873643232L));
-        mock.addSession(new SessionData(12345L, 23456L));
-        GMTimes gmTimes = mock.getGmTimes();
-        gmTimes.setAllGMTimes(1234, 2345, 4356, 4767);
-        gmTimes.setState("ADVENTURE");
-        mock.setDeaths(5);
-        mock.setTimesKicked(5);
-        mock.setPlayTime(34438926);
-        mock.setGeolocation("Finland");
-        mock.setLoginTimes(5);
-        mock.setMobKills(5);
-        return mock;
-    }
-
-    public static UserData mockUser2() {
-        return NewPlayerCreator.createNewPlayer(mockIPlayer2());
-    }
-
-    /**
-     * @return
-     */
     public static IPlayer mockIPlayer() {
         return Fetch.wrapBukkit(mockPlayer());
     }
@@ -91,16 +48,10 @@ public class MockUtils {
         return p;
     }
 
-    /**
-     * @return
-     */
     public static UUID getPlayerUUID() {
         return UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
     }
 
-    /**
-     * @return
-     */
     public static IPlayer mockIPlayer2() {
         return Fetch.wrapBukkit(mockPlayer2());
     }
@@ -120,9 +71,6 @@ public class MockUtils {
         return p;
     }
 
-    /**
-     * @return
-     */
     public static UUID getPlayer2UUID() {
         return UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
     }
@@ -134,9 +82,6 @@ public class MockUtils {
         return uuids;
     }
 
-    /**
-     * @return
-     */
     public static IPlayer mockBrokenPlayer() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
@@ -151,9 +96,6 @@ public class MockUtils {
         return Fetch.wrapBukkit(p);
     }
 
-    /**
-     * @return
-     */
     public static CommandSender mockConsoleSender() {
         return PowerMockito.mock(CommandSender.class);
     }

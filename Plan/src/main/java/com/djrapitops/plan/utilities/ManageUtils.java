@@ -3,9 +3,10 @@ package main.java.com.djrapitops.plan.utilities;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.data.UserData;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
+import main.java.com.djrapitops.plan.database.tables.move.BatchOperationTable;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -29,17 +30,18 @@ public class ManageUtils {
      * @param copyFromDB Database you want to backup.
      * @return success?
      */
-    public static boolean backup(String dbName, Database copyFromDB) {
+    public static void backup(String dbName, Database copyFromDB) throws DatabaseInitException, SQLException {
         Plan plugin = Plan.getInstance();
         String timeStamp = new Date().toString().substring(4, 10).replace(" ", "-");
         String fileName = dbName + "-backup-" + timeStamp;
         SQLiteDB backupDB = new SQLiteDB(plugin, fileName);
         Collection<UUID> uuids = ManageUtils.getUUIDS(copyFromDB);
         if (uuids.isEmpty()) {
-            return false;
+            return;
         }
         backupDB.init();
-        return clearAndCopy(backupDB, copyFromDB);
+        clearAndCopy(backupDB, copyFromDB);
+        backupDB.close();
     }
 
     /**
@@ -66,29 +68,21 @@ public class ManageUtils {
      * @param copyFromDB       Database where data will be copied from
      * @return success?
      */
-    public static boolean clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) {
-        try {
-            clearAndCopyToDB.removeAllData();
-            List<UserData> allUserData = copyFromDB.getUserDataForUUIDS(copyFromDB.getSavedUUIDs());
-            clearAndCopyToDB.saveMultipleUserData(allUserData);
-            clearAndCopyToDB.getCommandUseTable().saveCommandUse(copyFromDB.getCommandUseTable().getCommandUse());
-            clearAndCopyToDB.getTpsTable().saveTPSData(copyFromDB.getTpsTable().getTPSData());
-        } catch (SQLException | NullPointerException e) {
-            Log.toLog("ManageUtils.move", e);
-            return false;
-        }
-        return true;
+    public static void clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) throws SQLException {
+        BatchOperationTable toDB = new BatchOperationTable(clearAndCopyToDB);
+        BatchOperationTable fromDB = new BatchOperationTable(copyFromDB);
+
+        toDB.removeAllData();
+        fromDB.copyEverything(toDB);
     }
 
-    public static Database getDB(Plan plugin, String dbName) {
+    public static Database getDB(Plan plugin, String dbName) throws DatabaseInitException {
         Database database = null;
         for (Database sqldb : plugin.getDatabases()) {
             String dbConfigName = sqldb.getConfigName();
             if (Verify.equalsIgnoreCase(dbName, dbConfigName)) {
                 database = sqldb;
-                if (!database.init()) {
-                    return null;
-                }
+                database.init();
                 break;
             }
         }

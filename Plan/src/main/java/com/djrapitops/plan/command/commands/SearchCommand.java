@@ -5,6 +5,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.FormattingUtils;
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -62,9 +63,12 @@ public class SearchCommand extends SubCommand {
             public void run() {
                 try {
                     List<String> names = MiscUtils.getMatchingPlayerNames(args[0]);
-                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_SEARCH) + args[0] + " (" + names.size() + ")");
+
+                    boolean empty = Verify.isEmpty(names);
+
+                    sender.sendMessage(Locale.get(Msg.CMD_HEADER_SEARCH) + args[0] + " (" + (empty ? 0 : names.size()) + ")");
                     // Results
-                    if (names.isEmpty()) {
+                    if (empty) {
                         sender.sendMessage(Locale.get(Msg.CMD_INFO_NO_RESULTS).parse(Arrays.toString(args)));
                     } else {
                         sender.sendMessage(Locale.get(Msg.CMD_INFO_RESULTS).toString() + FormattingUtils.collectionToStringNoBrackets(names));

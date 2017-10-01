@@ -1,108 +1,107 @@
-Settings:
+Server:
+  ServerName: 'Plan'
+
+Plugin:
   Debug: false
   Locale: default
-  WriteNewLocaleFileOnStart: false
-  UseTextUI: false
-  Data:
-    ChatListener: true
-    GatherKillData: true
-    GatherCommandUsage: true
-  Analysis:
-    LogProgressOnConsole: false
-    NotifyWhenFinished: true
-    MinutesPlayedUntilConsidiredActive: 10
-    Export:
-      Enabled: false
-      DestinationFolder: 'Analysis Results'
-  Cache:
-    Processing:
-      GetLimit: 5000
-      SaveLimit: 2500
-      ClearLimit: 2500
-    AnalysisCache:
-      RefreshAnalysisCacheOnEnable: true
-      RefreshEveryXMinutes: -1
-    InspectCache:
-      ClearFromInspectCacheAfterXMinutes: 5
-    DataCache:
-      SaveEveryXMinutes: 2
-      ClearCacheEveryXSaves: 5
-  WebServer:
-    Enabled: true
-    Port: 8804
-    InternalIP: 0.0.0.0
-    ShowAlternativeServerIP: false
-    AlternativeIP: your.ip.here:%port%
+  WriteNewLocaleFileOnEnable: false
+  Bungee-Override:
+    StandaloneMode: false
+    CopyBungeeConfig: true
+
+WebServer:
+  Port: 8804
+  InternalIP: 0.0.0.0
+  Security:
+    SSL-Certificate:
+      KeyStorePath: 'SSLCertificate.keystore'
+      KeyPass: 'default'
+      StorePass: 'default'
+      Alias: 'alias'
+
+Database:
+  Type: SQLite
+  MySQL:
+    Host: localhost
+    Port: 3306
+    User: root
+    Password: minecraft
+    Database: Plan
+
+Commands:
+  AlternativeIP:
+    Enabled: false
+    Link: your.domain.here:%port%
+  Colors:
+    Main: '&2'
+    Secondary: '&7'
+    Highlight: '&f'
+
+Analysis:
+  AutoRefreshPeriod: 60
+  Export:
+    Enabled: false
     ExternalWebServerLinkProtocol: http
-    Security:
-      DisplayIPsAndUUIDs: true
-      Certificate:
-        KeyStorePath: 'SSLCertificate.keystore'
-        KeyPass: 'default'
-        StorePass: 'default'
-        Alias: 'alias'
+    DestinationFolder: 'Analysis Results'
+
+Data:
+  Commands:
+    LogUnknownCommands: false
+    CombineCommandAliases: true
 
 Customization:
-  ServerName: 'Plan'
-  SmallHeadImagesOnAnalysisPlayerlist: true
-  Data:
-    DoNotLogUnknownCommands: false
-    CombineCommandAliasesToMainCommand: false
-  Formats:
+  Formatting:
+    DecimalPoints: '#.##'
     TimeAmount:
       Year: '1 year, '
       Years: '%years% years, '
+      Month: '1 month, '
+      Months: '%months% months, '
       Day: '1d '
       Days: '%days%d '
       Hours: '%hours%h '
       Minutes: '%minutes%m '
       Seconds: '%seconds%s'
-    DecimalPoints: '#.##'
-  Colors:
-    Commands:
-      Main: '&2'
-      Secondary: '&7'
-      Highlight: '&f'
-    HTML:
-      UI:
-        Main: 348e0f
-        MainDark: 267F00
-        Secondary: 5cb239
-        Tertiary: 89c471
-        TertiaryDark: 5da341
-      TPSGraph:
-        TPSHigh: 18
-        TPSMedium: 10
-        TPSHighCol: 267F00
-        TPSMediumCol: e5cc12
-        TPSLowCol: b74343
-      ActivityGraph:
-        OnlinePlayers: '1E90FF'
-        NewPlayers: '228B22'
-      GamemodePie:
-        Survival: '438c99'
-        Creative: '639A67'
-        Adventure: 'D8EBB5'
-        Spectator: 'D9BF77'
-      ActivityPie:
-        Active: '228B22'
-        Banned: '951800'
-        Inactive: 'A9A9A9'
-        JoinedOnce: '808080'
-  Plugins:
-    Factions:
-      HideFactions:
-        - ExampleFaction
-    Towny:
-      HideTowns:
-        - ExampleTown
 
-database:
-  type: sqlite
-  
-mysql:
-  host: localhost
-  port: 3306
-  user: root
-  password: minecraft
-  database: Plan
+Theme:
+  Base: Default
+  Font:
+    FontStyleSheet: https://fonts.googleapis.com/css?family=Quicksand:300,400
+    FontFamily: "'Quicksand', sans-serif"
+    Color:
+      Dark: Base
+      Light: Base
+  Colors:
+    Main: Base
+    Main-Dark: Base
+    Secondary: Base
+    Secondary-Dark: Base
+    Tertiary: Base
+    Background: Base
+    Table-Light: Base
+    Table-Dark: Base
+  Graphs:
+    PunchCard: Base
+    PlayersOnline: Base
+    TPS:
+      High-Threshold: 18
+      Medium-Threshold: 10
+      High: Base
+      Medium: Base
+      Low: Base
+    CPU: Base
+    RAM: Base
+    Chunks: Base
+    Entities: Base
+    WorldPie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
+    GMDrilldown: '"#438c99", "#639A67", "#D8EBB5", "#D9BF77"'
+    ActivityPie: '"#228B22", "#A9A9A9", "#808080", "#951800"'
+    ServerPreferencePie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
+
+Plugins:
+  Factions:
+    HideFactions:
+      - ExampleFaction
+  Towny:
+    HideTowns:
+      - ExampleTown

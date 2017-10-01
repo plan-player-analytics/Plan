@@ -8,6 +8,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -42,12 +43,13 @@ public class ManageBackupCommand extends SubCommand {
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
         try {
+
             if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
                 return true;
             }
             String dbName = args[0].toLowerCase();
             boolean isCorrectDB = "sqlite".equals(dbName) || "mysql".equals(dbName);
-            if (Check.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
+            if (!Check.isTrue(isCorrectDB, Locale.get(Msg.MANAGE_FAIL_INCORRECT_DB) + dbName, sender)) {
                 return true;
             }
 
@@ -58,10 +60,12 @@ public class ManageBackupCommand extends SubCommand {
                 Log.error(dbName + " was null!");
                 return true;
             }
-
+            Log.debug("Backup", "Start");
             runBackupTask(sender, args, database);
-        } catch (NullPointerException e) {
+        } catch (DatabaseInitException | NullPointerException e) {
             sender.sendMessage(Locale.get(Msg.MANAGE_FAIL_FAULTY_DB).toString());
+        } finally {
+            Log.logDebug("Backup");
         }
         return true;
     }
@@ -72,11 +76,8 @@ public class ManageBackupCommand extends SubCommand {
             public void run() {
                 try {
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_START).parse());
-                    if (ManageUtils.backup(args[0], database)) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());
-                    }
+                    ManageUtils.backup(args[0], database);
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_COPY_SUCCESS).toString());
                 } catch (Exception e) {
                     Log.toLog(this.getClass().getName() + " " + getTaskName(), e);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).toString());

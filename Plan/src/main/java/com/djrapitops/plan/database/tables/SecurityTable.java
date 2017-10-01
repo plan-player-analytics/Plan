@@ -5,12 +5,17 @@
  */
 package main.java.com.djrapitops.plan.database.tables;
 
+import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.sql.Insert;
+import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,39 +27,37 @@ import java.util.List;
  */
 public class SecurityTable extends Table {
 
-    private final String columnUser;
-    private final String columnSaltedHash;
-    private final String columnPermLevel;
+    private final String columnUser = "username";
+    private final String columnSaltedHash = "salted_pass_hash";
+    private final String columnPermLevel = "permission_level";
+    private String insertStatement;
 
     public SecurityTable(SQLDB db, boolean usingMySQL) {
         super("plan_security", db, usingMySQL);
-        columnUser = "username";
-        columnSaltedHash = "salted_pass_hash";
-        columnPermLevel = "permission_level";
+        insertStatement = Insert.values(tableName,
+                columnUser,
+                columnSaltedHash,
+                columnPermLevel);
     }
 
     @Override
-    public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .column(columnUser, Sql.varchar(100)).notNull().unique()
-                    .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()
-                    .column(columnPermLevel, Sql.INT).notNull()
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void createTable() throws DBCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
+                .column(columnUser, Sql.varchar(100)).notNull().unique()
+                .column(columnSaltedHash, Sql.varchar(100)).notNull().unique()
+                .column(columnPermLevel, Sql.INT).notNull()
+                .toString()
+        );
     }
 
     public boolean removeUser(String user) {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)");
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)");
             statement.setString(1, user);
+
             statement.execute();
+            commit(connection);
             return true;
         } catch (SQLException ex) {
             Log.toLog(this.getClass().getName(), ex);
@@ -70,17 +73,14 @@ public class SecurityTable extends Table {
 
     public void addNewUser(String user, String saltPassHash, int permLevel) throws SQLException {
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnUser + ", "
-                    + columnSaltedHash + ", "
-                    + columnPermLevel
-                    + ") VALUES (?, ?, ?)");
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
             statement.setString(1, user);
             statement.setString(2, saltPassHash);
             statement.setInt(3, permLevel);
             statement.execute();
-            commit();
+
+            commit(connection);
         } finally {
             close(statement);
         }
@@ -93,8 +93,8 @@ public class SecurityTable extends Table {
     public WebUser getWebUser(String user) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName + " WHERE (" + columnUser + "=?)");
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.all(tableName).where(columnUser + "=?").toString());
             statement.setString(1, user);
             set = statement.executeQuery();
             if (set.next()) {
@@ -104,16 +104,16 @@ public class SecurityTable extends Table {
             }
             return null;
         } finally {
-            close(set);
-            close(statement);
+            close(set, statement);
         }
     }
 
     public List<WebUser> getUsers() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(Select.all(tableName).toString());
+            statement.setFetchSize(5000);
             set = statement.executeQuery();
             List<WebUser> list = new ArrayList<>();
             while (set.next()) {
@@ -125,7 +125,31 @@ public class SecurityTable extends Table {
             }
             return list;
         } finally {
-            close(set);
+            close(set, statement);
+        }
+    }
+
+    public void addUsers(List<WebUser> users) throws SQLException {
+        if (Verify.isEmpty(users)) {
+            return;
+        }
+        PreparedStatement statement = null;
+        try (Connection connection = getConnection()){
+            statement = connection.prepareStatement(insertStatement);
+            for (WebUser user : users) {
+                String userName = user.getName();
+                String pass = user.getSaltedPassHash();
+                int permLvl = user.getPermLevel();
+
+                statement.setString(1, userName);
+                statement.setString(2, pass);
+                statement.setInt(3, permLvl);
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+            commit(connection);
+        } finally {
             close(statement);
         }
     }

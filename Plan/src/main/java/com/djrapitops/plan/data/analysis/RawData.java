@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public abstract class RawData {
 
-    private final Map<String, String> replaceMap;
+    private final Map<String, Serializable> replaceMap;
 
     /**
      * Status info for call to analyzeData method.
@@ -60,7 +60,7 @@ public abstract class RawData {
      *
      * @param values Map that contains place-holders.
      */
-    public void addValues(Map<String, String> values) {
+    public void addValues(Map<String, Serializable> values) {
         Verify.nullCheck(values);
         replaceMap.putAll(values);
     }
@@ -68,28 +68,11 @@ public abstract class RawData {
     /**
      * Adds a placeholder to the replaceMap.
      *
-     * @param placeholder placeholder, with or without % signs.
+     * @param placeholder placeholder, without prefix and suffix
      * @param value       Any value the placeholder should be replaced with.
      */
     public void addValue(String placeholder, Serializable value) {
-        replaceMap.put(addPlaceholderSigns(placeholder), value.toString());
-    }
-
-    private String addPlaceholderSigns(String placeholder) {
-        StringBuilder newPlaceholder = new StringBuilder();
-
-        if (placeholder.charAt(0) != '%') {
-            newPlaceholder.append("%");
-        }
-
-        newPlaceholder.append(placeholder);
-        int lastIndex = placeholder.length() - 1;
-
-        if (placeholder.charAt(lastIndex) != '%') {
-            newPlaceholder.append("%");
-        }
-
-        return newPlaceholder.toString();
+        replaceMap.put(placeholder, value);
     }
 
     /**
@@ -97,17 +80,17 @@ public abstract class RawData {
      *
      * @return Map containing the placeholders and values.
      */
-    public Map<String, String> getReplaceMap() {
+    public Map<String, Serializable> getReplaceMap() {
         return replaceMap;
     }
 
     /**
-     * Used to get the value for a placeholder with or without the % symbols.
+     * Used to get the value for a placeholder without the placeholder prefix and suffix.
      *
-     * @param key placeholder with or without % symbols.
+     * @param key placeholder name without ${ and }
      * @return Value the placeholder should be replaced with or null.
      */
-    public String get(String key) {
-        return replaceMap.get(addPlaceholderSigns(key));
+    public Serializable get(String key) {
+        return replaceMap.get(key);
     }
 }

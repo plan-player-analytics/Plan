@@ -145,7 +145,7 @@ public class DumpUtils {
         List<String> plugins = Arrays.stream(server.getPluginManager().getPlugins())
                 .map(Plugin::getDescription)
                 .map(description -> description.getName() + " " + description.getVersion())
-                .sorted()
+                .sorted(String::compareToIgnoreCase)
                 .collect(Collectors.toList());
 
         log.addHeader("Server Details");
@@ -198,33 +198,21 @@ public class DumpUtils {
      * @param plan The Plan instance
      */
     private static void addConfigurationDetails(DumpLog log, Plan plan) {
-        boolean webServerEnabled = Settings.WEBSERVER_ENABLED.isTrue();
-        boolean usingHTTPS = plan.getUiServer().usingHttps();
-        boolean refreshAnalysisOnEnable = Settings.ANALYSIS_REFRESH_ON_ENABLE.isTrue();
+        boolean usingHTTPS = plan.getWebServer().isUsingHTTPS();
         boolean analysisExport = Settings.ANALYSIS_EXPORT.isTrue();
-        boolean usingAlternativeServerIP = Settings.USE_ALTERNATIVE_UI.isTrue();
+        boolean usingAlternativeServerIP = Settings.SHOW_ALTERNATIVE_IP.isTrue();
 
-        boolean chatGathering = Settings.GATHERCHAT.isTrue();
-        boolean killGathering = Settings.GATHERKILLS.isTrue();
-        boolean commandGathering = Settings.GATHERCOMMANDS.isTrue();
-
-        boolean combineAliases = Settings.COMBINE_COMMAND_ALIASES_TO_MAIN_COMMAND.isTrue();
-        boolean unknownCommandLogging = Settings.DO_NOT_LOG_UNKNOWN_COMMANDS.isTrue();
+        boolean combineAliases = Settings.COMBINE_COMMAND_ALIASES.isTrue();
+        boolean unknownCommandLogging = Settings.LOG_UNKNOWN_COMMANDS.isTrue();
 
         String locale = Settings.LOCALE.toString();
         String dbType = Settings.DB_TYPE.toString();
 
         log.addHeader("Plan Configuration");
 
-        log.add("Webserver Enabled", webServerEnabled);
         log.add("Webserver HTTPS", usingHTTPS);
-        log.add("Refresh Analysis on Enable", refreshAnalysisOnEnable);
         log.add("Analysis Export", analysisExport);
         log.add("Alternative Server IP", usingAlternativeServerIP);
-
-        log.add("Chat Gathering", chatGathering);
-        log.add("Kill Gathering", killGathering);
-        log.add("Command Gathering", commandGathering);
 
         log.add("Combine Aliases", combineAliases);
         log.add("Unknown Command Logging", unknownCommandLogging);

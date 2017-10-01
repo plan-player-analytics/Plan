@@ -1,17 +1,16 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Table class representing database table plan_worlds.
@@ -23,8 +22,10 @@ import java.util.List;
  */
 public class WorldTable extends Table {
 
-    private final String columnWorldId;
-    private final String columnWorldName;
+    public final String statementSelectID;
+    private final String columnWorldId = "id";
+    private final String columnWorldName = "world_name";
+    private final String columnServerID = "server_id";
 
     /**
      * Constructor.
@@ -34,24 +35,17 @@ public class WorldTable extends Table {
      */
     public WorldTable(SQLDB db, boolean usingMySQL) {
         super("plan_worlds", db, usingMySQL);
-        columnWorldId = "world_id";
-        columnWorldName = "world_name";
+        statementSelectID = "(SELECT " + columnWorldId + " FROM " + tableName + " WHERE (" + columnWorldName + "=?))";
     }
 
     @Override
-    public boolean createTable() {
-        try {
-            execute(TableSqlParser.createTable(tableName)
-                    .primaryKeyIDColumn(usingMySQL, columnWorldId, Sql.INT)
-                    .column(columnWorldName, Sql.varchar(100)).notNull()
-                    .primaryKey(usingMySQL, columnWorldId)
-                    .toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        }
+    public void createTable() throws DBCreateTableException {
+        createTable(TableSqlParser.createTable(tableName)
+                .primaryKeyIDColumn(usingMySQL, columnWorldId)
+                .column(columnWorldName, Sql.varchar(100)).notNull()
+                .primaryKey(usingMySQL, columnWorldId)
+                .toString()
+        );
     }
 
     /**
@@ -63,8 +57,8 @@ public class WorldTable extends Table {
     public List<String> getWorlds() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try {
-            statement = prepareStatement("SELECT * FROM " + tableName);
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("SELECT * FROM " + tableName);
             set = statement.executeQuery();
             List<String> worldNames = new ArrayList<>();
             while (set.next()) {
@@ -87,27 +81,26 @@ public class WorldTable extends Table {
      */
     public void saveWorlds(Collection<String> worlds) throws SQLException {
         Verify.nullCheck(worlds);
+        Set<String> worldsToSave = new HashSet<>(worlds);
 
         List<String> saved = getWorlds();
-        worlds.removeAll(saved);
+        worldsToSave.removeAll(saved);
         if (Verify.isEmpty(worlds)) {
             return;
         }
 
         PreparedStatement statement = null;
-        try {
-            statement = prepareStatement("INSERT INTO " + tableName + " ("
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement("INSERT INTO " + tableName + " ("
                     + columnWorldName
                     + ") VALUES (?)");
-            boolean commitRequired = false;
-            for (String world : worlds) {
+            for (String world : worldsToSave) {
                 statement.setString(1, world);
                 statement.addBatch();
-                commitRequired = true;
             }
-            if (commitRequired) {
-                statement.executeBatch();
-            }
+
+            statement.executeBatch();
+            commit(connection);
         } finally {
             close(statement);
         }
