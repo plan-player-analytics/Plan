@@ -4,11 +4,11 @@ import com.massivecraft.factions.entity.MPlayer;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -61,7 +61,7 @@ public class TownyTable extends PluginData {
                 }
                 int residents = t.getNumResidents();
                 int land = t.getPurchasedBlocks();
-                String leaderPage = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(mayor), mayor);
+                String leaderPage = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(mayor), mayor);
                 html.append(Html.TABLELINE_4.parse(name, residents, land, leaderPage));
             }
         }
