@@ -4,10 +4,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
+import main.java.com.djrapitops.plan.*;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -44,7 +41,10 @@ public class MiscUtils {
     }
 
     public static int getTimeZoneOffsetHours() {
-        return TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
+        if (Settings.USE_SERVER_TIME.isTrue()) {
+            return -TimeZone.getDefault().getOffset(MiscUtils.getTime()) / (int) TimeAmount.HOUR.ms();
+        }
+        return 0;
     }
 
     /**

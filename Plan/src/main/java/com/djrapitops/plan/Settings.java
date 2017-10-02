@@ -24,6 +24,7 @@ public enum Settings {
     COMBINE_COMMAND_ALIASES("Data.Commands.CombineCommandAliases"),
     WRITE_NEW_LOCALE("Plugin.WriteNewLocaleFileOnStart"),
     DEV_MODE("Plugin.Dev"),
+    USE_SERVER_TIME("Customization.UseServerTime"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),
