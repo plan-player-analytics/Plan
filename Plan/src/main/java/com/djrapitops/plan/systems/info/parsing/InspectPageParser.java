@@ -178,8 +178,12 @@ public class InspectPageParser extends PageParser {
             addValue("mobKillCount", mobKillCount);
             addValue("deathCount", deathCount);
 
+            boolean isActive = AnalysisUtils.isActive(MiscUtils.getTime(), lastSeen, playTime, sessionCount);
+            String active = isActive ? "Active" : "Inactive";
             if (userInfo != null) {
-                playerClassification(userInfo, lastSeen, playTime, sessionCount);
+                playerClassification(userInfo, active);
+            } else {
+                addValue("playerClassification", active);
             }
 
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);
@@ -189,12 +193,10 @@ public class InspectPageParser extends PageParser {
         }
     }
 
-    private void playerClassification(UserInfo userInfo, long lastPlayed, long playTime, int loginTimes) {
+    private void playerClassification(UserInfo userInfo, String active) {
         boolean isBanned = userInfo.isBanned();
         boolean isOP = userInfo.isOpped();
-        boolean isActive = AnalysisUtils.isActive(MiscUtils.getTime(), lastPlayed, playTime, loginTimes);
 
-        String active = isActive ? "Active" : "Inactive";
         String banned = isBanned ? "Banned" : "";
         String op = isOP ? "Operator (OP)" : "";
 

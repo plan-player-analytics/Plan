@@ -62,8 +62,8 @@ public class HtmlStructure {
     public static String createServerOverviewColumn(Map<String, List<Session>> sessions) {
         StringBuilder builder = new StringBuilder("<div class=\"column\">");
         if (Verify.isEmpty(sessions)) {
-            return "<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> No Sessions</h2> </div>" +
-                    "<div class=\"box\" style=\"margin-bottom: 5px;\"><p>No sessions to calculate server specific playtime.</p></div>";
+            return "<div class=\"column\"><div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> No Sessions</h2> </div>" +
+                    "<div class=\"box\" style=\"margin-bottom: 5px;\"><p>No sessions to calculate server specific playtime.</p></div></div>";
         }
         for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
             String serverName = entry.getKey();
