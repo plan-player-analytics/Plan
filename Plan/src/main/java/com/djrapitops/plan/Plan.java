@@ -172,7 +172,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             webServer.initServer();
             if (!webServer.isEnabled()) {
-                Log.error("WebServer was not successfully initialized.");
+                Log.error("WebServer was not successfully initialized. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
             }
 
             Benchmark.stop("Enable", "WebServer Initialization");
@@ -189,8 +189,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 Log.infoColor(Locale.get(Msg.ENABLE_NOTIFY_EMPTY_IP).toString());
             }
             if (usingBungeeWebServer && usingAlternativeIP) {
-                // TODO Move to Locale
-                Log.info("Make sure that the alternative IP points to Bungee Server: " + Settings.ALTERNATIVE_IP.toString());
+                Log.info("Make sure that the alternative IP points to the Bukkit Server: " + Settings.ALTERNATIVE_IP.toString());
             }
 
             registerCommand(new PlanCommand(this));
