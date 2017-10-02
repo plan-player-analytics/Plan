@@ -409,7 +409,6 @@ public class HtmlStructure {
         int online = plugin.getServer().getOnlinePlayers().size();
         Optional<Long> analysisRefreshDate = ((BukkitInformationManager) plugin.getInfoManager()).getAnalysisRefreshDate();
         String refresh = analysisRefreshDate.map(FormatUtils::formatTimeStamp).orElse("-");
-        boolean analysisIsAvailable = analysisRefreshDate.isPresent();
 
         String serverName = plugin.getServerInfoManager().getServerName();
         String address = "../server/" + serverName;
@@ -427,14 +426,9 @@ public class HtmlStructure {
 
         // Footer
         b.append("<div class=\"box-footer\"><p>Last Refresh: ").append(refresh).append("</p>");
-        if (analysisIsAvailable) {
-            b.append("<a href=\"").append(address).append("\" class=\"button right\">Analysis</a>");
-        } else {
-            b.append("<a class=\"button disabled right\">Analysis</a>");
-        }
+        b.append("<a href=\"").append(address).append("\" class=\"button right\">Analysis</a>");
 
-        b.append("</div>")
-                .append("</div>");
+        b.append("</div>").append("</div>");
         return b.toString();
     }
 
