@@ -15,6 +15,7 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
+import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -30,10 +31,7 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.ServerPreferencePieCr
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.ActionsTableCreator;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -60,18 +58,21 @@ public class InspectPageParser extends PageParser {
             SessionsTable sessionsTable = db.getSessionsTable();
 
             UserInfo userInfo = db.getUserInfoTable().getUserInfo(uuid);
-            int timesKicked = db.getUsersTable().getTimesKicked(uuid);
+            UsersTable usersTable = db.getUsersTable();
+            String playerName = usersTable.getPlayerName(uuid);
+            Optional<Long> registerDate = usersTable.getRegisterDate(uuid);
+            if (registerDate.isPresent()) {
+                addValue("registered", FormatUtils.formatTimeStampYear(registerDate.get()));
+            } else {
+                addValue("registered", "-");
+            }
+
+            addValue("playerName", playerName);
+            int timesKicked = usersTable.getTimesKicked(uuid);
 
             addValue("version", MiscUtils.getPlanVersion());
             addValue("timeZone", MiscUtils.getTimeZoneOffsetHours());
 
-            if (userInfo != null) {
-                addValue("playerName", userInfo.getName());
-                addValue("registered", FormatUtils.formatTimeStampYear(userInfo.getRegistered()));
-            } else {
-                addValue("playerName", "Error occurred.");
-                addValue("registered", "Error occurred.");
-            }
             long lastSeen = sessionsTable.getLastSeen(uuid);
             if (lastSeen != 0) {
                 addValue("lastSeen", FormatUtils.formatTimeStampYear(lastSeen));
@@ -177,7 +178,9 @@ public class InspectPageParser extends PageParser {
             addValue("mobKillCount", mobKillCount);
             addValue("deathCount", deathCount);
 
-            playerClassification(userInfo, lastSeen, playTime, sessionCount);
+            if (userInfo != null) {
+                playerClassification(userInfo, lastSeen, playTime, sessionCount);
+            }
 
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);
         } catch (Exception e) {

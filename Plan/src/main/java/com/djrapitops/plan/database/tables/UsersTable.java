@@ -439,4 +439,20 @@ public class UsersTable extends UserIDTable {
             close(set, statement);
         }
     }
+
+    public Optional<Long> getRegisterDate(UUID uuid) throws SQLException {
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try (Connection connection = getConnection()) {
+            statement = connection.prepareStatement(Select.from(tableName, columnRegistered).where(columnUUID + "=?").toString());
+            statement.setString(1, uuid.toString());
+            set = statement.executeQuery();
+            if (set.next()) {
+                Optional.of(set.getLong(columnRegistered));
+            }
+            return Optional.empty();
+        } finally {
+            close(set, statement);
+        }
+    }
 }
