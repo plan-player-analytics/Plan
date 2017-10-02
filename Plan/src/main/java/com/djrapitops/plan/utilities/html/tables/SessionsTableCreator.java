@@ -13,7 +13,6 @@ import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.*;
 
@@ -72,7 +71,7 @@ public class SessionsTableCreator {
             String length = session.getSessionEnd() != -1 ? FormatUtils.formatTimeAmount(session.getLength()) : "Online";
             String world = getLongestWorldPlayed(session);
 
-            String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
+            String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
             sessionTableBuilder.append(Html.TABLELINE_4.parse(
                     Html.LINK.parse(inspectUrl, name),
                     start,

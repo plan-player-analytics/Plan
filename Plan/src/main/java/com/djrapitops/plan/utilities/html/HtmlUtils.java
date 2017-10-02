@@ -60,7 +60,7 @@ public class HtmlUtils {
     }
 
     public static String getRelativeInspectUrl(UUID uuid) {
-        return getRelativeInspectUrl(Plan.getInstance().getDataCache().getName(uuid));
+        return Plan.getPlanAPI().getPlayerInspectPageLink(Plan.getInstance().getDataCache().getName(uuid));
     }
 
     /**

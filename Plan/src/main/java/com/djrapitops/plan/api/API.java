@@ -81,7 +81,8 @@ public class API {
      * @return ./player/PlayerName
      */
     public String getPlayerInspectPageLink(String name) {
-        return "../player/" + name;
+        String link = "../player/" + name;
+        return link.replace(" ", "%20").replace(".", "%2E");
     }
 
     /**
