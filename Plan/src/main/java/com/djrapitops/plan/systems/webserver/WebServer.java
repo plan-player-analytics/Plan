@@ -187,6 +187,7 @@ public class WebServer {
         if (server != null) {
             server.stop(0);
         }
+        enabled = false;
     }
 
     public String getProtocol() {

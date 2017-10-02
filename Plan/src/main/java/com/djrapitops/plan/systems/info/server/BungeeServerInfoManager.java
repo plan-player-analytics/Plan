@@ -98,6 +98,7 @@ public class BungeeServerInfoManager {
             connectedToServer(server);
             return true;
         } catch (WebAPIException e) {
+            Log.debug(e.toString());
             serverHasGoneOffline(server.getUuid());
             return false;
         }

@@ -247,7 +247,7 @@ public class BukkitInformationManager extends InformationManager {
     public void cacheAnalysisHtml(String html) {
         if (usingAnotherWebServer) {
             try {
-                getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, getAnalysisHtml());
+                getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, html);
             } catch (WebAPIException e) {
                 attemptConnection();
                 cacheAnalysisHtml();
