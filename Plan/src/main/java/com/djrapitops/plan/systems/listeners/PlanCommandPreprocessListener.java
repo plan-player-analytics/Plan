@@ -52,7 +52,11 @@ public class PlanCommandPreprocessListener implements Listener {
         if (!logUnknownCommands || combineCommandAliases) {
             Command command = plugin.getServer().getPluginCommand(commandName);
             if (command == null) {
-                command = plugin.getServer().getCommandMap().getCommand(commandName);
+                try {
+                    command = plugin.getServer().getCommandMap().getCommand(commandName);
+                } catch (NoSuchMethodError ignored) {
+                    /* Ignored, Bukkit 1.8 has no such method */
+                }
             }
             if (command == null) {
                 if (!logUnknownCommands) {
