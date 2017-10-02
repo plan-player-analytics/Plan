@@ -51,6 +51,9 @@ public class ManageSetupCommand extends SubCommand {
             return true;
         }
         String address = args[0].toLowerCase();
+        if (address.endsWith("/")) {
+            address = address.substring(0, address.length() - 1);
+        }
         try {
             plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
             plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
