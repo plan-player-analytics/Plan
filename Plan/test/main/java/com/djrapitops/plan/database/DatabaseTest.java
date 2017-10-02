@@ -14,7 +14,9 @@ import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.databases.SQLiteDB;
 import main.java.com.djrapitops.plan.database.tables.*;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
+import main.java.com.djrapitops.plan.systems.processing.player.RegisterProcessor;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.MathUtils;
@@ -38,6 +40,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * @author Rsl1122
@@ -61,6 +64,14 @@ public class DatabaseTest {
 
         db = new SQLiteDB(plan, "debug" + MiscUtils.getTime());
         db.init();
+
+        when(plan.getDB()).thenReturn(db);
+        DataCache dataCache = new DataCache(plan) {
+            @Override
+            public void markFirstSession(UUID uuid) {
+            }
+        };
+        when(plan.getDataCache()).thenReturn(dataCache);
 
         db.getServerTable().saveCurrentServerInfo(new ServerInfo(-1, TestInit.getServerUUID(), "ServerName", "", 20));
 
@@ -848,5 +859,14 @@ public class DatabaseTest {
         Map<UUID, Map<UUID, List<Session>>> allSessions = sessionsTable.getAllSessions(true);
 
         assertEquals(worldTimes, allSessions.get(serverUUID).get(uuid).get(0).getWorldTimes());
+    }
+
+    @Test
+    public void testRegisterProcessorRegisterException() throws SQLException {
+        for (int i = 0; i < 200; i++) {
+            new RegisterProcessor(uuid, 500L, 1000L, "name", 4).process();
+        }
+        assertTrue(db.getUsersTable().isRegistered(uuid));
+        assertTrue(db.getUserInfoTable().isRegistered(uuid));
     }
 }

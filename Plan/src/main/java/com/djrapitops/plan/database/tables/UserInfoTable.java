@@ -84,12 +84,15 @@ public class UserInfoTable extends UserIDTable {
         PreparedStatement statement = null;
         ResultSet set = null;
         try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnUserID)
+            statement = connection.prepareStatement(Select.from(tableName, "COUNT(" + columnUserID + ") as c")
                     .where(columnUserID + "=" + usersTable.statementSelectID)
                     .toString());
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
-            return set.next();
+            if (set.next()) {
+                return set.getInt("c") >= 1;
+            }
+            return false;
         } finally {
             close(set, statement);
         }
@@ -161,7 +164,7 @@ public class UserInfoTable extends UserIDTable {
     public List<UserInfo> getServerUserInfo(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             List<UserInfo> userInfo = new ArrayList<>();
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
@@ -199,7 +202,7 @@ public class UserInfoTable extends UserIDTable {
     public Map<UUID, List<UserInfo>> getAllUserInfo() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
@@ -242,7 +245,7 @@ public class UserInfoTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement("INSERT INTO " + tableName + " (" +
                     columnUserID + ", " +
                     columnRegistered + ", " +
@@ -278,7 +281,7 @@ public class UserInfoTable extends UserIDTable {
     public Map<UUID, Set<UUID>> getSavedUUIDs() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();

@@ -180,12 +180,15 @@ public class UsersTable extends UserIDTable {
         PreparedStatement statement = null;
         ResultSet set = null;
         try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnID)
+            statement = connection.prepareStatement(Select.from(tableName, "COUNT(" + columnID + ") as c")
                     .where(columnUUID + "=?")
                     .toString());
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
-            return set.next();
+            if (set.next()) {
+                return set.getInt("c") >= 1;
+            }
+            return false;
         } finally {
             close(set, statement);
         }
@@ -423,7 +426,7 @@ public class UsersTable extends UserIDTable {
     public int getPlayerCount() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement("SELECT COUNT(*) AS player_count FROM " + tableName);
             statement.setFetchSize(5000);
 
