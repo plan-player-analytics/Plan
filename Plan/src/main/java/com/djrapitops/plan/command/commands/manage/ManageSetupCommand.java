@@ -50,6 +50,10 @@ public class ManageSetupCommand extends SubCommand {
         if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
+        if (plugin.getWebServer().isEnabled()) {
+            sender.sendMessage("§cWebServer is not enabled on this server! Make sure it enables on boot!");
+            return true;
+        }
         String address = args[0].toLowerCase();
         if (address.endsWith("/")) {
             address = address.substring(0, address.length() - 1);
@@ -57,7 +61,7 @@ public class ManageSetupCommand extends SubCommand {
         try {
             plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
             plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
-            sender.sendMessage("§aConnection successful, Plan may restart in a few seconds.");
+            sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
         } catch (WebAPIException e) {
             Log.toLog(this.getClass().getName(), e);
             sender.sendMessage("§cConnection to Bungee WebServer failed: More info on console");
