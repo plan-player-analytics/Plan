@@ -26,13 +26,6 @@ public class AnalysisUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    /**
-     * @param now
-     * @param lastPlayed
-     * @param playTime
-     * @param loginTimes
-     * @return
-     */
     public static boolean isActive(long now, long lastPlayed, long playTime, int loginTimes) {
         int timeToActive = 10;
         long twoWeeks = 1209600000;
@@ -41,12 +34,6 @@ public class AnalysisUtils {
                 && playTime > 60 * timeToActive;
     }
 
-    /**
-     * @param registered
-     * @param scale
-     * @param now
-     * @return
-     */
     public static long getNewPlayers(List<Long> registered, long scale, long now) {
         long newPlayers = 0;
         if (!registered.isEmpty()) {
@@ -59,10 +46,6 @@ public class AnalysisUtils {
         return newPlayers;
     }
 
-    /**
-     * @param data
-     * @return
-     */
     public static List<Long> transformSessionDataToLengths(Collection<Session> data) {
         return data.stream()
                 .filter(Objects::nonNull)
@@ -71,12 +54,6 @@ public class AnalysisUtils {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @param analysisType
-     * @param source
-     * @param uuids
-     * @return
-     */
     public static String getTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType == null) {
             return source.parseContainer("Err ", "Null Analysistype. ");
@@ -112,12 +89,6 @@ public class AnalysisUtils {
                 .filter(value -> !value.equals(-1L));
     }
 
-    /**
-     * @param analysisType
-     * @param source
-     * @param uuids
-     * @return
-     */
     public static String getAverage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType == null) {
             return source.parseContainer("Err ", "Null Analysistype. ");
@@ -150,12 +121,6 @@ public class AnalysisUtils {
         }
     }
 
-    /**
-     * @param analysisType
-     * @param source
-     * @param uuids
-     * @return
-     */
     public static String getBooleanPercentage(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType != AnalysisType.BOOLEAN_PERCENTAGE) {
             return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
@@ -172,12 +137,6 @@ public class AnalysisUtils {
         }
     }
 
-    /**
-     * @param analysisType
-     * @param source
-     * @param uuids
-     * @return
-     */
     public static String getBooleanTotal(AnalysisType analysisType, PluginData source, Collection<UUID> uuids) {
         if (analysisType != AnalysisType.BOOLEAN_TOTAL) {
             return source.parseContainer("Err ", "Wrong Analysistype specified: " + analysisType.name());
@@ -224,11 +183,6 @@ public class AnalysisUtils {
         return uniqueJoins.size();
     }
 
-    /**
-     * @param sessions
-     * @param scale
-     * @return
-     */
     public static int getUniqueJoinsPerDay(Map<UUID, List<Session>> sessions, long scale) {
         Map<Integer, Set<UUID>> uniqueJoins = new HashMap<>();
         long now = MiscUtils.getTime();

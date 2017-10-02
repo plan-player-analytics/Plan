@@ -14,7 +14,7 @@ import java.util.*;
  * <ul>
  * <li>PlayerName cache, used for reducing database calls on chat events</li>
  * <li>DisplayName cache, used for reducing database calls on chat events</li>
- * <li>FirstSession MessageCount Map, used for tracking first session & message count on that session.</li>
+ * <li>FirstSession MessageCount Map, used for tracking first session and message count on that session.</li>
  * </ul>
  *
  * @author Rsl1122
@@ -114,8 +114,10 @@ public class DataCache extends SessionCache {
     }
 
     /**
-     * @param uuid
-     * @return
+     * Check if a session is player's first session on the server.
+     *
+     * @param uuid UUID of the player
+     * @return true / false
      */
     public boolean isFirstSession(UUID uuid) {
         return firstSessionInformation.containsKey(uuid);

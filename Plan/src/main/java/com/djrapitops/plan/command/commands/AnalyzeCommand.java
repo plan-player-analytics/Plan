@@ -53,8 +53,8 @@ public class AnalyzeCommand extends SubCommand {
         }
         Plan plugin = Plan.getInstance();
         Optional<String> serverName = plugin.getDB().getServerTable().getServerName(serverUUID);
-        if (serverName.isPresent()) {
-            String target = "/server/" + serverName.get();
+        serverName.ifPresent(name -> {
+            String target = "/server/" + name;
             String url = plugin.getInfoManager().getLinkTo(target);
             String message = Locale.get(Msg.CMD_INFO_LINK).toString();
 
@@ -70,7 +70,7 @@ public class AnalyzeCommand extends SubCommand {
                 }
                 sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());
             }
-        }
+        });
     }
 
     @Override

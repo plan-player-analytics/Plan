@@ -23,9 +23,11 @@ public class HtmlUtils {
     }
 
     /**
-     * @param html
-     * @param replaceMap
-     * @return
+     * Replaces ${placeholder} placeholders.
+     *
+     * @param html       Html to replace placeholders from
+     * @param replaceMap Placeholders and values
+     * @return Html with placeholders replaced
      */
     public static String replacePlaceholders(String html, Map<String, Serializable> replaceMap) {
         StrSubstitutor sub = new StrSubstitutor(replaceMap);
@@ -63,16 +65,20 @@ public class HtmlUtils {
     }
 
     /**
-     * @param string
-     * @return
+     * Attempts to remove XSS components.
+     *
+     * @param string String to remove XSS components from
+     * @return String but with the components removed
      */
     public static String removeXSS(String string) {
-        return string.replace("<!--", "").replace("-->", "").replace("</script>", "");
+        return string.replace("<!--", "").replace("-->", "").replace("</script>", "").replace("<script>", "");
     }
 
     /**
-     * @param string
-     * @return
+     * Changes Minecraft color codes to HTML span elements with correct color class assignments.
+     *
+     * @param string String to replace Minecraft color codes from
+     * @return String with span elements.
      */
     public static String swapColorsToSpan(String string) {
         Html[] replacer = new Html[]{Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,

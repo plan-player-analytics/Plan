@@ -13,7 +13,7 @@ public class WorldPieCreator {
     }
 
     /**
-     * Used to create HighCharts series string for series & drilldown.
+     * Used to create HighCharts series string for series and drilldown.
      *
      * @param worldTimes WorldTimes object.
      * @return String array, index 0: Series data, 1: drilldown data

@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * WebAPI for requesting Inspect plugins tab contents from a Bukkit Server.
  * <p>
- * Call: Bungee -> Bukkit
+ * Call: Bungee to Bukkit
  * <p>
  * Bad Requests:
  * - Called a Bungee Server

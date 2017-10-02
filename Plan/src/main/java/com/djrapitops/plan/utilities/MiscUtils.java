@@ -48,9 +48,11 @@ public class MiscUtils {
     }
 
     /**
-     * @param args
-     * @param sender
-     * @return
+     * Get a players name that matches the given arguments or name of the sender.
+     *
+     * @param args   Arguments of command.
+     * @param sender Sender of command
+     * @return Player name.
      */
     public static String getPlayerName(String[] args, ISender sender) {
         return getPlayerName(args, sender, Permissions.INSPECT_OTHER);
@@ -61,7 +63,7 @@ public class MiscUtils {
      *
      * @param args   Arguments of a command, must not be empty if console sender.
      * @param sender Command sender
-     * @param perm
+     * @param perm   Permission to use when checking. No permission will notify user.
      * @return The name of the player (first argument or sender)
      */
     public static String getPlayerName(String[] args, ISender sender, Permissions perm) {

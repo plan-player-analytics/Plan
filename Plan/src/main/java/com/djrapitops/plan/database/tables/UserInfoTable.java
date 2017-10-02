@@ -89,10 +89,7 @@ public class UserInfoTable extends UserIDTable {
                     .toString());
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt("c") >= 1;
-            }
-            return false;
+            return set.next() && set.getInt("c") >= 1;
         } finally {
             close(set, statement);
         }

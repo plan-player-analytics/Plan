@@ -13,8 +13,8 @@ import java.util.Objects;
  * <p>
  * Includes:
  * <ul>
- * <li>World & GameMode playtimes</li>
- * <li>Player & Mob kills</li>
+ * <li>World and GameMode playtimes</li>
+ * <li>Player and Mob kills</li>
  * <li>Deaths</li>
  * </ul>
  * <p>

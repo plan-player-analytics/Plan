@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.database.sql;
 
 /**
- * SqlParser Class for parsing table creation, removal & modification statements.
+ * SqlParser Class for parsing table creation, removal and modification statements.
  *
  * @author Rsl1122
  * @since 3.7.0

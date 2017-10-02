@@ -26,32 +26,36 @@ public class UUIDUtility {
     }
 
     /**
-     * @param playername
-     * @return
+     * Get UUID of a player.
+     *
+     * @param playerName Player's name
+     * @return UUID of the player.
      */
-    public static UUID getUUIDOf(String playername) {
+    public static UUID getUUIDOf(String playerName) {
         try {
-            return getUUIDOf(playername, MiscUtils.getIPlan().getDB());
+            return getUUIDOf(playerName, MiscUtils.getIPlan().getDB());
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * @param playername
-     * @param db
-     * @return
+     * Get UUID of a player.
+     *
+     * @param playerName Player's name
+     * @param db         Database to check from.
+     * @return UUID of the player
      */
-    public static UUID getUUIDOf(String playername, Database db) {
+    public static UUID getUUIDOf(String playerName, Database db) {
         UUID uuid = null;
         try {
-            uuid = db.getUsersTable().getUuidOf(playername);
+            uuid = db.getUsersTable().getUuidOf(playerName);
         } catch (SQLException e) {
             Log.toLog("UUIDUtility", e);
         }
         try {
             if (uuid == null) {
-                uuid = UUIDFetcher.getUUIDOf(playername);
+                uuid = UUIDFetcher.getUUIDOf(playerName);
             }
         } catch (Exception | NoClassDefFoundError ignored) {
             /* Ignored */

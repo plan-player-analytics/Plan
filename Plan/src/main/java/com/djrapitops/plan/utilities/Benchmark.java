@@ -16,15 +16,19 @@ public class Benchmark {
     }
 
     /**
-     * @param source
+     * Start a benchmark.
+     *
+     * @param source Thing to bench.
      */
     public static void start(String source) {
         getBenchUtil().start(source);
     }
 
     /**
-     * @param source
-     * @return
+     * End a benchmark.
+     *
+     * @param source Thing to stop benching.
+     * @return ms it took.
      */
     public static long stop(String source) {
         long ms = getBenchUtil().stop(source);

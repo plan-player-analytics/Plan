@@ -22,7 +22,7 @@ import java.util.UUID;
 /**
  * WebAPI for requesting Bungee Server to request Plugins tab contents from every server.
  * <p>
- * Call: Bukkit -> Bungee
+ * Call: Bukkit to Bungee
  * <p>
  * Bad Requests:
  * - Called a Bukkit Server

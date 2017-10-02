@@ -25,10 +25,6 @@ public class UsersTable extends UserIDTable {
     private final String columnTimesKicked = "times_kicked";
     private String insertStatement;
 
-    /**
-     * @param db
-     * @param usingMySQL
-     */
     public UsersTable(SQLDB db, boolean usingMySQL) {
         super("plan_users", db, usingMySQL);
         statementSelectID = "(" + Select.from(tableName, tableName + "." + columnID).where(columnUUID + "=?").toString() + ")";
@@ -38,9 +34,6 @@ public class UsersTable extends UserIDTable {
                 columnName);
     }
 
-    /**
-     * @return
-     */
     @Override
     public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
@@ -79,8 +72,10 @@ public class UsersTable extends UserIDTable {
     }
 
     /**
+     * Remove a user from Users Table.
+     *
      * @param uuid the UUID of the user that should be removed.
-     * @return if the removal was successful.
+     * @throws SQLException DB Error
      */
     @Override
     public void removeUser(UUID uuid) throws SQLException {
@@ -111,18 +106,20 @@ public class UsersTable extends UserIDTable {
     }
 
     /**
-     * @param playername
-     * @return
-     * @throws SQLException
+     * Get UUID of a player.
+     *
+     * @param playerName Name of a player
+     * @return UUID of the player
+     * @throws SQLException DB Error
      */
-    public UUID getUuidOf(String playername) throws SQLException {
+    public UUID getUuidOf(String playerName) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
         try (Connection connection = getConnection()) {
             statement = connection.prepareStatement(Select.from(tableName, columnUUID)
                     .where("UPPER(" + columnName + ")=UPPER(?)")
                     .toString());
-            statement.setString(1, playername);
+            statement.setString(1, playerName);
             set = statement.executeQuery();
             if (set.next()) {
                 String uuidS = set.getString(columnUUID);
@@ -156,7 +153,7 @@ public class UsersTable extends UserIDTable {
      * @param uuid       UUID of the player.
      * @param registered Register date.
      * @param name       Name of the player.
-     * @throws SQLException
+     * @throws SQLException             DB Error
      * @throws IllegalArgumentException If uuid or name are null.
      */
     public void registerUser(UUID uuid, long registered, String name) throws SQLException {
@@ -185,10 +182,7 @@ public class UsersTable extends UserIDTable {
                     .toString());
             statement.setString(1, uuid.toString());
             set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt("c") >= 1;
-            }
-            return false;
+            return set.next() && set.getInt("c") >= 1;
         } finally {
             close(set, statement);
         }
@@ -308,8 +302,8 @@ public class UsersTable extends UserIDTable {
      * This method is for batch operations, and should not be used to add information of users.
      * Use UserInfoTable instead.
      *
-     * @param users
-     * @throws SQLException
+     * @param users Users to insert
+     * @throws SQLException DB Error
      */
     public void insertUsers(Map<UUID, UserInfo> users) throws SQLException {
         if (Verify.isEmpty(users)) {

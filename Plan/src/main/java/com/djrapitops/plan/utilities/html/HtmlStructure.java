@@ -413,23 +413,15 @@ public class HtmlStructure {
         String serverName = plugin.getServerInfoManager().getServerName();
         String address = "../server/" + serverName;
 
-        StringBuilder b = new StringBuilder("<div class=\"column\">");
 
-        // Header
-        b.append("<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> ")
-                .append(serverName)
-                .append("</h2></div>");
-
-        // Online players
-        b.append("<div class=\"box\"><p>").append(online).append("/").append(maxPlayers)
-                .append(" Players Online</p></div>");
-
-        // Footer
-        b.append("<div class=\"box-footer\"><p>Last Refresh: ").append(refresh).append("</p>");
-        b.append("<a href=\"").append(address).append("\" class=\"button right\">Analysis</a>");
-
-        b.append("</div>").append("</div>");
-        return b.toString();
+        return "<div class=\"column\">" + "<div class=\"box-header\"><h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> " +
+                serverName +
+                "</h2></div>" +
+                "<div class=\"box\"><p>" + online + "/" + maxPlayers +
+                " Players Online</p></div>" +
+                "<div class=\"box-footer\"><p>Last Refresh: " + refresh + "</p>" +
+                "<a href=\"" + address + "\" class=\"button right\">Analysis</a>" +
+                "</div></div>";
     }
 
     public static String parseOfflineServerContainer(String oldContent) {

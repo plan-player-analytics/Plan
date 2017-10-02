@@ -3,7 +3,7 @@ package main.java.com.djrapitops.plan.utilities.comparators;
 import java.util.Comparator;
 
 /**
- * Compares Strings & sorts them by length
+ * Compares Strings and sorts them by length
  *
  * @author Rsl1122
  * @since 3.6.2

@@ -118,10 +118,8 @@ public abstract class Database {
 
     /**
      * Initiates the database.
-     * <p>
-     * Default method returns false.
      *
-     * @return Was the initiation successful?
+     * @throws DatabaseInitException if SQLException or other exception occurs.
      */
     public void init() throws DatabaseInitException {
     }
@@ -175,7 +173,7 @@ public abstract class Database {
     public abstract void setVersion(int version) throws SQLException;
 
     /**
-     * Closes the database & it's resources.
+     * Closes the database and it's resources.
      *
      * @throws SQLException If a database error occurs.
      */

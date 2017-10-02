@@ -318,7 +318,7 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostNetworkPageContentWebAPI.class).sendNetworkContent(webServerAddress, HtmlStructure.createServerContainer(plugin));
-            } catch (WebAPIException e) {
+            } catch (WebAPIException ignored) {
             }
         }
     }

@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Manages local server info file.
  * <p>
- * ServerInfo.yml contains current server's ID, UUID & Bungee WebServer connection information.
+ * ServerInfo.yml contains current server's ID, UUID and Bungee WebServer connection information.
  * It
  *
  * @author Rsl1122

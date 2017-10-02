@@ -28,11 +28,12 @@ public class Hastebin {
     /**
      * Uploads the content safely to Hastebin.
      * Longer than allowed content is being uploaded too.
-     *
-     * @return The link to the Dump Log
-     * @implNote Splits the content into parts of 390.000 chars each,
+     * <p>
+     * Splits the content into parts of 390.000 chars each,
      * uploads the parts in reverse order and adds the last link (if present)
      * at each end of the following part, that's why the redundancy of 10.000 chars exists.
+     *
+     * @return The link to the Dump Log
      * @see #split(String)
      */
     public static String safeUpload(String content) {

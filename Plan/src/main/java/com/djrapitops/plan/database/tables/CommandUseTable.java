@@ -29,10 +29,6 @@ public class CommandUseTable extends Table {
     private final ServerTable serverTable;
     private String insertStatement;
 
-    /**
-     * @param db
-     * @param usingMySQL
-     */
     public CommandUseTable(SQLDB db, boolean usingMySQL) {
         super("plan_commandusages", db, usingMySQL);
         serverTable = db.getServerTable();
@@ -43,9 +39,6 @@ public class CommandUseTable extends Table {
                 + ") VALUES (?, ?, " + serverTable.statementSelectServerID + ")";
     }
 
-    /**
-     * @return
-     */
     @Override
     public void createTable() throws DBCreateTableException {
         ServerTable serverTable = db.getServerTable();
@@ -64,7 +57,7 @@ public class CommandUseTable extends Table {
      * Used to get all commands used in this server.
      *
      * @return command - times used Map
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Map<String, Integer> getCommandUse() throws SQLException {
         return getCommandUse(Plan.getServerUUID());
@@ -75,7 +68,7 @@ public class CommandUseTable extends Table {
      *
      * @param serverUUID UUID of the server.
      * @return command - times used Map
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
         Map<String, Integer> commandUse = new HashMap<>();

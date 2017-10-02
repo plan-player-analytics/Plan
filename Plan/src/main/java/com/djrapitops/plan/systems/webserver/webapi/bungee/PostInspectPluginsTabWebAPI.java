@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * WebAPI for posting Inspect page Plugins tab contents to the Bungee server.
  * <p>
- * Call: Bukkit -> Bungee
+ * Call: Bukkit to Bungee
  * <p>
  * Bad Requests:
  * - Did not include uuid

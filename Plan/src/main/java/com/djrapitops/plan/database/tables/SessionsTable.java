@@ -32,10 +32,6 @@ public class SessionsTable extends UserIDTable {
     private final ServerTable serverTable;
     private String insertStatement;
 
-    /**
-     * @param db
-     * @param usingMySQL
-     */
     public SessionsTable(SQLDB db, boolean usingMySQL) {
         super("plan_sessions", db, usingMySQL);
         serverTable = db.getServerTable();
@@ -52,9 +48,6 @@ public class SessionsTable extends UserIDTable {
                 + serverTable.statementSelectServerID + ")";
     }
 
-    /**
-     * @return
-     */
     @Override
     public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(this.tableName)
@@ -79,7 +72,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid    UUID of the player.
      * @param session Session of the player that has ended ({@code endSession} has been called)
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public void saveSession(UUID uuid, Session session) throws SQLException {
         saveSessionInformation(uuid, session);
@@ -99,7 +92,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid    UUID of the player.
      * @param session Session of the player that has ended ({@code endSession} has been called)
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     private void saveSessionInformation(UUID uuid, Session session) throws SQLException {
         PreparedStatement statement = null;
@@ -156,7 +149,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player
      * @return Map with Sessions that don't contain Kills or WorldTimes.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     private Map<String, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
         Map<Integer, String> serverNames = serverTable.getServerNames();
@@ -205,7 +198,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player.
      * @return Milliseconds played on THIS server. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid) throws SQLException {
         return getPlaytime(uuid, Plan.getServerUUID());
@@ -217,7 +210,7 @@ public class SessionsTable extends UserIDTable {
      * @param uuid      UUID of the player.
      * @param afterDate Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played on THIS server. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid, long afterDate) throws SQLException {
         return getPlaytime(uuid, Plan.getServerUUID(), afterDate);
@@ -229,7 +222,7 @@ public class SessionsTable extends UserIDTable {
      * @param uuid       UUID of the player.
      * @param serverUUID UUID of the server. @see ServerTable
      * @return Milliseconds played on the server. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid, UUID serverUUID) throws SQLException {
         return getPlaytime(uuid, serverUUID, 0L);
@@ -242,7 +235,7 @@ public class SessionsTable extends UserIDTable {
      * @param serverUUID UUID of the server. @see ServerTable
      * @param afterDate  Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played after given epoch ms on the server. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
@@ -272,7 +265,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the Player.
      * @return key - ServerName, value ms played
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Map<String, Long> getPlaytimeByServer(UUID uuid) throws SQLException {
         return getPlaytimeByServer(uuid, 0L);
@@ -284,7 +277,7 @@ public class SessionsTable extends UserIDTable {
      * @param uuid      UUID of the Player.
      * @param afterDate Epoch ms (Playtime after this date is calculated)
      * @return key - ServerName, value ms played
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) throws SQLException {
         Map<Integer, String> serverNames = serverTable.getServerNames();
@@ -317,7 +310,7 @@ public class SessionsTable extends UserIDTable {
      * Used to get the Total Playtime of THIS Server.
      *
      * @return Milliseconds played on the server. 0 if server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer() throws SQLException {
         return getPlaytimeOfServer(Plan.getServerUUID());
@@ -328,7 +321,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param serverUUID UUID of the server.
      * @return Milliseconds played on the server. 0 if server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer(UUID serverUUID) throws SQLException {
         return getPlaytimeOfServer(serverUUID, 0L);
@@ -339,7 +332,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param afterDate Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer(long afterDate) throws SQLException {
         return getPlaytimeOfServer(Plan.getServerUUID(), afterDate);
@@ -351,7 +344,7 @@ public class SessionsTable extends UserIDTable {
      * @param serverUUID UUID of the server.
      * @param afterDate  Epoch ms (Playtime after this date is calculated)
      * @return Milliseconds played  after given epoch ms on the server. 0 if server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer(UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
@@ -380,7 +373,7 @@ public class SessionsTable extends UserIDTable {
      *
      * @param uuid UUID of the player.
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public int getSessionCount(UUID uuid) throws SQLException {
         return getSessionCount(uuid, 0L);
@@ -392,7 +385,7 @@ public class SessionsTable extends UserIDTable {
      * @param uuid      UUID of the player.
      * @param afterDate Epoch ms (Session count after this date is calculated)
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public int getSessionCount(UUID uuid, long afterDate) throws SQLException {
         return getSessionCount(uuid, Plan.getServerUUID(), afterDate);
@@ -404,7 +397,7 @@ public class SessionsTable extends UserIDTable {
      * @param uuid       UUID of the player.
      * @param serverUUID UUID of the server.
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public int getSessionCount(UUID uuid, UUID serverUUID) throws SQLException {
         return getSessionCount(uuid, serverUUID, 0L);
@@ -417,7 +410,7 @@ public class SessionsTable extends UserIDTable {
      * @param serverUUID UUID of the server.
      * @param afterDate  Epoch ms (Session count after this date is calculated)
      * @return How many sessions player has. 0 if player or server not found.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;

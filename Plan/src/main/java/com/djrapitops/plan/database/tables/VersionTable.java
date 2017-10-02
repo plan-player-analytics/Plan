@@ -16,17 +16,10 @@ import java.sql.SQLException;
  */
 public class VersionTable extends Table {
 
-    /**
-     * @param db
-     * @param usingMySQL
-     */
     public VersionTable(SQLDB db, boolean usingMySQL) {
         super("plan_version", db, usingMySQL);
     }
 
-    /**
-     * @return
-     */
     @Override
     public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
@@ -77,8 +70,10 @@ public class VersionTable extends Table {
     }
 
     /**
-     * @param version
-     * @throws SQLException
+     * Set the DB Schema version
+     *
+     * @param version DB Schema version
+     * @throws SQLException DB Error
      */
     public void setVersion(int version) throws SQLException {
         removeAllData();

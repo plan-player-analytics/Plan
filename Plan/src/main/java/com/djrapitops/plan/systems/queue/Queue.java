@@ -34,7 +34,7 @@ public abstract class Queue<T> {
     }
 
     /**
-     * Used to stop the queue processing & get the unprocessed objects.
+     * Used to stop the queue processing and get the unprocessed objects.
      *
      * @return List of unprocessed objects.
      */

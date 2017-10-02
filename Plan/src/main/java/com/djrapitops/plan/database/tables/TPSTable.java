@@ -38,10 +38,6 @@ public class TPSTable extends Table {
     private final ServerTable serverTable;
     private String insertStatement;
 
-    /**
-     * @param db
-     * @param usingMySQL
-     */
     public TPSTable(SQLDB db, boolean usingMySQL) {
         super("plan_tps", db, usingMySQL);
         serverTable = db.getServerTable();
@@ -83,7 +79,7 @@ public class TPSTable extends Table {
         List<TPS> data = new ArrayList<>();
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .toString());
@@ -109,7 +105,7 @@ public class TPSTable extends Table {
 
     public void insertTPS(TPS tps) throws SQLException {
         PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement(insertStatement);
 
             statement.setString(1, Plan.getServerUUID().toString());
@@ -129,7 +125,9 @@ public class TPSTable extends Table {
     }
 
     /**
-     * @throws SQLException
+     * Clean the TPS Table of old data.
+     *
+     * @throws SQLException DB Error
      */
     public void clean() throws SQLException {
         Optional<TPS> allTimePeak = getAllTimePeak();
@@ -138,7 +136,7 @@ public class TPSTable extends Table {
             p = allTimePeak.get().getPlayers();
         }
         PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement("DELETE FROM " + tableName +
                     " WHERE (" + columnDate + "<?)" +
                     " AND (" + columnPlayers + "" +
@@ -170,7 +168,7 @@ public class TPSTable extends Table {
     public Optional<TPS> getPeakPlayerCount(UUID serverUUID, long afterDate) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement(Select.all(tableName)
                     .where(columnServerID + "=" + serverTable.statementSelectServerID)
                     .and(columnPlayers + "= (SELECT MAX(" + columnPlayers + ") FROM " + tableName + ")")
@@ -199,7 +197,7 @@ public class TPSTable extends Table {
     public Map<UUID, List<TPS>> getAllTPS() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             String serverIDColumn = serverTable + "." + serverTable.getColumnID();
             String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
             statement = connection.prepareStatement("SELECT " +
@@ -244,7 +242,7 @@ public class TPSTable extends Table {
             return;
         }
         PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement(insertStatement);
 
             // Every Server
@@ -275,7 +273,7 @@ public class TPSTable extends Table {
     public List<TPS> getNetworkOnlineData() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement("SELECT " +
                     columnDate + ", " +
                     "SUM(" + columnPlayers + ") as players" +

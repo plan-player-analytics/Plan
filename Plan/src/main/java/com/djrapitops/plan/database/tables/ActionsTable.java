@@ -94,9 +94,9 @@ public class ActionsTable extends UserIDTable {
     /**
      * Used to get all Actions done by a user on this server.
      *
-     * @param uuid
-     * @return
-     * @throws SQLException
+     * @param uuid UUID of the player
+     * @return List of actions done by the player. Does not include the kills.
+     * @throws SQLException DB Error
      */
     public List<Action> getActions(UUID uuid) throws SQLException {
         List<Action> actions = new ArrayList<>();

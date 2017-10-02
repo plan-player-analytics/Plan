@@ -43,9 +43,6 @@ public class WebServer {
 
     private boolean usingHttps = false;
 
-    /**
-     * @param plugin
-     */
     public WebServer(IPlan plugin) {
         this.plugin = plugin;
         this.port = Settings.WEBSERVER_PORT.getNumber();

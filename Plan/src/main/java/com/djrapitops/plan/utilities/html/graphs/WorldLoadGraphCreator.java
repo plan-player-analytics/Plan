@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Class for creating scatter graph data from Chunk & Entity load snapshots with TPS task.
+ * Class for creating scatter graph data from Chunk and Entity load snapshots with TPS task.
  *
  * @author Rsl1122
  * @see TPSCountTimer

@@ -23,42 +23,34 @@ public class FormatUtils {
     }
 
     /**
-     * @param ms
-     * @return
+     * Format time amount according to the config settings.
+     *
+     * @param ms Milliseconds.
+     * @return String formatted with the config settings.
      */
     public static String formatTimeAmount(long ms) {
         return formatMilliseconds(ms);
     }
 
     /**
-     * @param before
-     * @param after
-     * @return
+     * Format the time difference between an end point and a start point.
+     *
+     * @param before Epoch ms.
+     * @param after  Epoch ms.
+     * @return String formatted with the config settings.
      */
     public static String formatTimeAmountDifference(long before, long after) {
         return formatMilliseconds(Math.abs(after - before));
     }
 
-    /**
-     * @param epochMs
-     * @return
-     */
     public static String formatTimeStamp(long epochMs) {
         return FormattingUtils.formatTimeStamp(epochMs);
     }
 
-    /**
-     * @param epochMs
-     * @return
-     */
     public static String formatTimeStampSecond(long epochMs) {
         return FormattingUtils.formatTimeStampSecond(epochMs);
     }
 
-    /**
-     * @param epochMs
-     * @return
-     */
     public static String formatTimeStampYear(long epochMs) {
         return FormattingUtils.formatTimeStampYear(epochMs);
     }
@@ -66,8 +58,8 @@ public class FormatUtils {
     /**
      * Removes letters from a string leaving only numbers and dots.
      *
-     * @param dataPoint
-     * @return
+     * @param dataPoint String to remove stuff from.
+     * @return String with the stuff removed.
      */
     public static String removeLetters(String dataPoint) {
         return Format.create(dataPoint)
@@ -78,8 +70,10 @@ public class FormatUtils {
     }
 
     /**
-     * @param dataPoint
-     * @return
+     * Removes numbers from a string leaving only letters.
+     *
+     * @param dataPoint String to remove stuff from.
+     * @return String with the stuff removed.
      */
     public static String removeNumbers(String dataPoint) {
         return Format.create(dataPoint)
@@ -176,8 +170,10 @@ public class FormatUtils {
     }
 
     /**
-     * @param d
-     * @return
+     * Remove extra decimals from the end of the double.
+     *
+     * @param d Double.
+     * @return String format of the double.
      */
     public static String cutDecimals(double d) {
         return df.format(d);

@@ -27,14 +27,12 @@ import java.util.UUID;
 public class ResponseHandler extends APIResponseHandler {
 
     private final IPlan plugin;
-    private final WebServer webServer;
 
     private final boolean usingHttps;
 
     public ResponseHandler(IPlan plugin, WebServer webServer) {
         super(webServer.getWebAPI());
         this.plugin = plugin;
-        this.webServer = webServer;
         this.usingHttps = webServer.isUsingHTTPS();
     }
 

@@ -97,8 +97,10 @@ public class Analysis {
     }
 
     /**
+     * Analyze data in the db about this server.
+     *
      * @param infoManager InformationManager of the plugin.
-     * @return
+     * @return Success?
      */
     public boolean analyzeData(InformationManager infoManager, Database db) {
         try {
@@ -210,7 +212,9 @@ public class Analysis {
     }
 
     /**
-     * @return
+     * Check whether or not analysis is being run.
+     *
+     * @return true / false (state)
      */
     public boolean isAnalysisBeingRun() {
         return taskId != -1;

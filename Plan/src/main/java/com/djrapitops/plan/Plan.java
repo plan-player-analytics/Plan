@@ -328,8 +328,6 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
      * Initializes the database according to settings in the config.
      * <p>
      * If database connection can not be established plugin is disabled.
-     *
-     * @return true if init was successful, false if not.
      */
     private void initDatabase() throws DatabaseInitException {
         databases = new HashSet<>();

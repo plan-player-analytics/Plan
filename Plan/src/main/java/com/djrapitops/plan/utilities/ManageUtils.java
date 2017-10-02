@@ -28,7 +28,6 @@ public class ManageUtils {
      *
      * @param dbName     Name of database (mysql/sqlite)
      * @param copyFromDB Database you want to backup.
-     * @return success?
      */
     public static void backup(String dbName, Database copyFromDB) throws DatabaseInitException, SQLException {
         Plan plugin = Plan.getInstance();
@@ -66,7 +65,6 @@ public class ManageUtils {
      * @param clearAndCopyToDB Database that will be cleared data will be copied
      *                         to.
      * @param copyFromDB       Database where data will be copied from
-     * @return success?
      */
     public static void clearAndCopy(Database clearAndCopyToDB, Database copyFromDB) throws SQLException {
         BatchOperationTable toDB = new BatchOperationTable(clearAndCopyToDB);

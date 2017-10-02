@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * Class containing main logic for different data related save & load functionality.
+ * Class containing main logic for different data related save and load functionality.
  *
  * @author Rsl1122
  * @since 2.0.0
@@ -29,9 +29,6 @@ public abstract class SQLDB extends Database {
     private boolean open = false;
     private ITask dbCleanTask;
 
-    /**
-     * @param plugin
-     */
     public SQLDB(IPlan plugin) {
         super(plugin);
         usingMySQL = getName().equals("MySQL");
@@ -62,7 +59,7 @@ public abstract class SQLDB extends Database {
      * Converts Unsaved Bukkit player files to database data.
      * Cleans the database.
      *
-     * @return Was the Initialization successful.
+     * @throws DatabaseInitException if Database fails to initiate.
      */
     @Override
     public void init() throws DatabaseInitException {
@@ -140,8 +137,6 @@ public abstract class SQLDB extends Database {
      * Creates the tables that contain data.
      * <p>
      * Updates table columns to latest schema.
-     *
-     * @return true if successful.
      */
     private void createTables() throws DatabaseInitException {
         Benchmark.start("Create tables");
@@ -152,7 +147,9 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     * @return
+     * Get all tables in a good order.
+     *
+     * @return Table array.
      */
     public Table[] getAllTables() {
         return new Table[]{
@@ -164,7 +161,7 @@ public abstract class SQLDB extends Database {
     }
 
     /**
-     * Get all tables except securityTable for removal of user data.
+     * Get all tables for removal of data.
      *
      * @return Tables in the order the data should be removed in.
      */
@@ -184,7 +181,9 @@ public abstract class SQLDB extends Database {
     public abstract void setupDataSource() throws DatabaseInitException;
 
     /**
-     * @throws SQLException
+     * Closes the SQLDB
+     *
+     * @throws SQLException DB Error
      */
     @Override
     public void close() throws SQLException {
@@ -205,10 +204,6 @@ public abstract class SQLDB extends Database {
         return versionTable.getVersion();
     }
 
-    /**
-     * @param version
-     * @throws SQLException
-     */
     @Override
     public void setVersion(int version) throws SQLException {
         versionTable.setVersion(version);
@@ -219,10 +214,6 @@ public abstract class SQLDB extends Database {
         return versionTable.isNewDatabase();
     }
 
-    /**
-     * @param uuid
-     * @return
-     */
     @Override
     public boolean wasSeenBefore(UUID uuid) {
         if (uuid == null) {
@@ -267,9 +258,6 @@ public abstract class SQLDB extends Database {
         Log.info("Clean complete.");
     }
 
-    /**
-     * @return
-     */
     @Override
     public void removeAllData() throws SQLException {
         setStatus("Clearing all data");

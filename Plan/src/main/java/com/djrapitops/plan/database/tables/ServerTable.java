@@ -108,7 +108,7 @@ public class ServerTable extends Table {
      *
      * @param info Info to instert (All variables should be present.
      * @throws IllegalStateException if one of the ServerInfo variables is null
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     private void saveNewServerInfo(ServerInfo info) throws SQLException {
         UUID uuid = info.getUuid();
@@ -137,7 +137,7 @@ public class ServerTable extends Table {
      *
      * @param serverUUID UUID of the server.
      * @return ID or or empty optional.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Optional<Integer> getServerID(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
@@ -164,7 +164,7 @@ public class ServerTable extends Table {
      *
      * @param serverUUID UUID of the server.
      * @return Name or empty optional.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Optional<String> getServerName(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
@@ -209,7 +209,7 @@ public class ServerTable extends Table {
      * Used to get BungeeCord WebServer info if present.
      *
      * @return information about Bungee server.
-     * @throws SQLException
+     * @throws SQLException DB Error
      */
     public Optional<ServerInfo> getBungeeInfo() throws SQLException {
         PreparedStatement statement = null;

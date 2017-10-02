@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 import java.util.*;
 
 /**
- * @author Fuzzlemann & Rsl1122
+ * @author Fuzzlemann and Rsl1122
  */
 public class WebAPIManager {
 

@@ -58,7 +58,7 @@ public class ServerSpecificSettings {
                 }
                 config.set(path, value);
                 Log.debug("  " + path + ": " + value);
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
             }
             changedSomething = true;
         }

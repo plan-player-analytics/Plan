@@ -13,7 +13,9 @@ import main.java.com.djrapitops.plan.systems.info.InformationManager;
 public class AnalysisPageResponse extends Response {
 
     /**
-     * @param informationManager
+     * Constructor.
+     *
+     * @param informationManager InformationManager to use for getting the Html
      * @throws NullPointerException if AnalysisData has not been cached after 1 second.
      */
     public AnalysisPageResponse(InformationManager informationManager) {

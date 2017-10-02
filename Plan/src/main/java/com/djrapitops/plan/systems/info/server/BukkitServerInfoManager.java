@@ -124,8 +124,8 @@ public class BukkitServerInfoManager {
     /**
      * Saves Bungee connection information to local file on Bukkit servers.
      *
-     * @param address
-     * @throws IOException
+     * @param address Address to save
+     * @throws IOException If ServerInfo file can not be written to.
      */
     public void saveBungeeConnectionAddress(String address) throws IOException {
         serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, "Bungee", address, -1));

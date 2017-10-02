@@ -30,10 +30,6 @@ public class KillsTable extends UserIDTable {
     private final SessionsTable sessionsTable;
     private String insertStatement;
 
-    /**
-     * @param db
-     * @param usingMySQL
-     */
     public KillsTable(SQLDB db, boolean usingMySQL) {
         super("plan_kills", db, usingMySQL);
         sessionsTable = db.getSessionsTable();
@@ -49,9 +45,6 @@ public class KillsTable extends UserIDTable {
                 + "?, ?, ?)";
     }
 
-    /**
-     * @return
-     */
     @Override
     public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
@@ -154,7 +147,7 @@ public class KillsTable extends UserIDTable {
     public Map<UUID, List<PlayerKill>> getPlayerKills(UUID serverUUID) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             String usersVictimIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersKillerIDColumn = "a." + usersTable.getColumnID();
             String usersVictimUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
@@ -206,7 +199,7 @@ public class KillsTable extends UserIDTable {
             return;
         }
         PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.prepareStatement(insertStatement);
             String[] gms = GMTimes.getGMKeyArray();
             for (UUID serverUUID : allSessions.keySet()) {
@@ -240,7 +233,7 @@ public class KillsTable extends UserIDTable {
     public Map<Integer, List<PlayerKill>> getAllPlayerKillsBySessionID() throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             String usersIDColumn = usersTable + "." + usersTable.getColumnID();
             String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as victim_uuid";
             statement = connection.prepareStatement("SELECT " +

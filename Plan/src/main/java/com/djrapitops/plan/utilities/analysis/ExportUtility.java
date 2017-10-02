@@ -8,7 +8,6 @@ import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.systems.webserver.response.PlayersPageResponse;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,9 +27,6 @@ public class ExportUtility {
         throw new IllegalStateException("Utility class");
     }
 
-    /**
-     * @return
-     */
     public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
 
@@ -50,10 +46,6 @@ public class ExportUtility {
         return folder;
     }
 
-    /**
-     * @param analysisData
-     * @param playerNames
-     */
     public static void export(AnalysisData analysisData, List<String> playerNames) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
@@ -84,20 +76,12 @@ public class ExportUtility {
 //        }
     }
 
-    /**
-     * @param folder
-     * @return
-     */
     public static File getPlayersFolder(File folder) {
         File playersFolder = new File(folder, "player");
         playersFolder.mkdirs();
         return playersFolder;
     }
 
-    /**
-     * @param userInfo
-     * @param playersFolder
-     */
     public static void writeInspectHtml(UserInfo userInfo, File playersFolder, String playerHtml) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
@@ -127,12 +111,6 @@ public class ExportUtility {
 //        }
     }
 
-    /**
-     * @param analysisData
-     * @param serverFolder
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
     public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws IOException {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;

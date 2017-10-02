@@ -3,16 +3,12 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
-import main.java.com.djrapitops.plan.database.Container;
-import main.java.com.djrapitops.plan.database.DBUtils;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Rsl1122
@@ -35,9 +31,11 @@ public abstract class Table {
     protected final boolean usingMySQL;
 
     /**
-     * @param name
-     * @param db
-     * @param usingMySQL
+     * Constructor.
+     *
+     * @param name       Name of the table in the db.
+     * @param db         Database to use.
+     * @param usingMySQL Is the database using MySQL?
      */
     public Table(String name, SQLDB db, boolean usingMySQL) {
         this.tableName = name;
@@ -45,9 +43,6 @@ public abstract class Table {
         this.usingMySQL = usingMySQL;
     }
 
-    /**
-     * @return
-     */
     public abstract void createTable() throws DBCreateTableException;
 
     protected void createTable(String sql) throws DBCreateTableException {
@@ -59,29 +54,35 @@ public abstract class Table {
     }
 
     /**
-     * @return
-     * @throws SQLException
+     * Used to get a new Connection to the Database.
+     *
+     * @return SQL Connection
+     * @throws SQLException DB Error
      */
     protected Connection getConnection() throws SQLException {
         return db.getConnection();
     }
 
     /**
-     * @return
-     * @throws SQLException
+     * Get the Database Schema version from VersionTable.
+     *
+     * @return Database Schema version.
+     * @throws SQLException DB Error
      */
     public int getVersion() throws SQLException {
         return db.getVersion();
     }
 
     /**
-     * @param statementString
-     * @return
-     * @throws SQLException
+     * Executes an SQL Statement
+     *
+     * @param statementString Statement to execute
+     * @return What execute returns.
+     * @throws SQLException DB error
      */
     protected boolean execute(String statementString) throws SQLException {
         Statement statement = null;
-        try (Connection connection = getConnection()){
+        try (Connection connection = getConnection()) {
             statement = connection.createStatement();
             boolean b = statement.execute(statementString);
             commit(connection);
@@ -108,33 +109,23 @@ public abstract class Table {
     }
 
     /**
-     * @param toClose
+     * Closes DB elements.
+     *
+     * @param toClose All elements to close.
      */
     protected void close(AutoCloseable... toClose) {
         MiscUtils.close(toClose);
     }
 
-    /**
-     * @return
-     */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * @return
+     * Removes all data from the table.
      */
     public void removeAllData() throws SQLException {
         execute("DELETE FROM " + tableName);
-    }
-
-    /**
-     * @param <T>
-     * @param objects
-     * @return
-     */
-    protected <T> List<List<Container<T>>> splitIntoBatches(Map<Integer, List<T>> objects) {
-        return DBUtils.splitIntoBatchesId(objects);
     }
 
     protected void addColumns(String... columnInfo) {

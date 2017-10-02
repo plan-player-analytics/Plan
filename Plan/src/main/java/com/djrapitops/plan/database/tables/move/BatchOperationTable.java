@@ -32,7 +32,7 @@ import java.util.UUID;
  * <p>
  * clearTable methods can be used to clear the table beforehand.
  * <p>
- * Server & User tables should be copied first.
+ * Server and User tables should be copied first.
  *
  * @author Rsl1122
  * @since 4.0.0
@@ -42,7 +42,7 @@ public class BatchOperationTable extends Table {
     /**
      * Constructor, call to access copy functionality.
      *
-     * @param database
+     * @param database Database to copy things from
      * @throws IllegalStateException if database.init has not been called.
      * @throws ClassCastException    if database is not SQLDB.
      */

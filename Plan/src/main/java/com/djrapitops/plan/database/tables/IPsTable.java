@@ -37,9 +37,6 @@ public class IPsTable extends UserIDTable {
                 + "?, ?)";
     }
 
-    /**
-     * @return if the table was created successfully
-     */
     @Override
     public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
