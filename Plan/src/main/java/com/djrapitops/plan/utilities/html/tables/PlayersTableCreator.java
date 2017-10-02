@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.data.analysis.GeolocationPart;
@@ -8,7 +9,6 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +69,7 @@ public class PlayersTableCreator {
                     geoLocation = "Not Known";
                 }
                 html.append(Html.TABLELINE_PLAYERS.parse(
-                        Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(user.getName()), user.getName()),
+                        Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(user.getName()), user.getName()),
                         activityString,
                         String.valueOf(playtime), FormatUtils.formatTimeAmount(playtime),
                         String.valueOf(loginTimes),

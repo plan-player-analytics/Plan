@@ -1,12 +1,12 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.FileNotFoundException;
@@ -43,7 +43,7 @@ public class PlayersPageResponse extends Response {
 
         int i = 1;
         for (String name : names) {
-            String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
+            String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name);
 
             html.append("<td>").append(link).append("</td>");
 

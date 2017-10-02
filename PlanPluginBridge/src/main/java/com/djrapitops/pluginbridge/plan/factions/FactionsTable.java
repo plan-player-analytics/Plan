@@ -3,12 +3,12 @@ package com.djrapitops.pluginbridge.plan.factions;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class FactionsTable extends PluginData {
                 if (f != null) {
                     MPlayer fLeader = f.getLeader();
                     String leader = fLeader != null ? fLeader.getNameAndSomething("", "") : "No Leader";
-                    String leaderPage = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(leader), leader);
+                    String leaderPage = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(leader), leader);
                     html.append(Html.TABLELINE_4.parse(
                             f.getName(),
                             FormatUtils.cutDecimals(f.getPower()),

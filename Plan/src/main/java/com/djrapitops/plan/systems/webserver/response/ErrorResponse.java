@@ -32,7 +32,7 @@ public class ErrorResponse extends Response {
         }
     }
 
-    protected void replacePlaceholders() {
+    public void replacePlaceholders() {
         Map<String, String> placeHolders = new HashMap<>();
         placeHolders.put("title", title);
         placeHolders.put("paragraph", paragraph);

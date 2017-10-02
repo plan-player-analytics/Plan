@@ -144,7 +144,7 @@ public class ActivityPart extends RawData {
     }
 
     public Map<Long, Integer> getPlayersOnline() {
-        return tpsPart.getTpsData().stream().collect(Collectors.toMap(TPS::getDate, TPS::getPlayers));
+        return tpsPart.getTpsData().stream().distinct().collect(Collectors.toMap(TPS::getDate, TPS::getPlayers));
     }
 
     public List<String> getRecentPlayers() {

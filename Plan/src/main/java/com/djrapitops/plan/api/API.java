@@ -81,7 +81,8 @@ public class API {
      * @return ./player/PlayerName
      */
     public String getPlayerInspectPageLink(String name) {
-        return "../player/" + name;
+        String link = "../player/" + name;
+        return link.replace(" ", "%20").replace(".", "%2E");
     }
 
     /**
@@ -154,6 +155,7 @@ public class API {
      * Check if the data is cached to AnalysisCache before calling this.
      *
      * @return server.html with all placeholders replaced.
+     * @throws NullPointerException if AnalysisData has not been cached.
      */
     public String getAnalysisHtmlAsString() {
         return plugin.getInfoManager().getAnalysisHtml();

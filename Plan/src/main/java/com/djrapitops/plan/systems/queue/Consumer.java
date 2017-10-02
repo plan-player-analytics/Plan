@@ -42,7 +42,11 @@ public abstract class Consumer<T> extends AbsRunnable {
 
     protected void stop() {
         run = false;
-        super.cancel();
+        try {
+            super.cancel();
+        } catch (NullPointerException ignore) {
+            /*ignored*/
+        }
     }
 
     protected abstract void clearVariables();

@@ -17,6 +17,8 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
+import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
+import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
@@ -63,6 +65,11 @@ public class Analysis {
         plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
             @Override
             public void run() {
+                ErrorResponse analysisRefreshPage = new ErrorResponse();
+                analysisRefreshPage.setTitle("Analysis is being refreshed..");
+                analysisRefreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
+                analysisRefreshPage.replacePlaceholders();
+                ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(analysisRefreshPage.getContent());
                 taskId = this.getTaskId();
                 analyze(infoManager, plugin.getDB());
                 taskId = -1;
@@ -127,6 +134,7 @@ public class Analysis {
 //            ExportUtility.export(analysisData, rawData);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
+            ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(new InternalErrorResponse(e, "Analysis").getContent());
             Log.debug("Analysis", "Error: " + e);
             Log.logDebug("Analysis");
             return false;
@@ -238,7 +246,7 @@ public class Analysis {
             tpsPart.addTpsData(tpsData);
             Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
 
-            List<UserInfo> userInfo = db.getUserInfoTable().getServerUserInfo();
+            List<UserInfo> userInfo = db.getUserInfoTable().getServerUserInfo().stream().distinct().collect(Collectors.toList());
 
             for (UserInfo user : userInfo) {
                 if (user.isBanned()) {

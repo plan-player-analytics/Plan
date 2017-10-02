@@ -6,11 +6,11 @@
 package com.djrapitops.pluginbridge.plan.superbvote;
 
 import io.minimum.minecraft.superbvote.storage.VoteStorage;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -50,7 +50,7 @@ public class SuperbVoteVotesTable extends PluginData {
         getUUIDsBeingAnalyzed()
                 .forEach(uuid -> {
                     String name = getNameOf(uuid);
-                    String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
+                    String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name);
                     String bal = FormatUtils.cutDecimals(store.getVotes(uuid));
                     html.append(Html.TABLELINE_2.parse(link, bal));
                 });

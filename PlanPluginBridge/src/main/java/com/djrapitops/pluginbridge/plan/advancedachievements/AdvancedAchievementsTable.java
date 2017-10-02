@@ -5,7 +5,6 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class AdvancedAchievementsTable extends PluginData {
     private void appendTableLinesForLessThanV520(Set<UUID> users, StringBuilder html) {
         users.forEach(uuid -> {
             String name = super.getNameOf(uuid);
-            String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
+            String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
             int achievements = aaAPI.getPlayerTotalAchievements(uuid);
             html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), achievements));
         });
@@ -74,7 +73,7 @@ public class AdvancedAchievementsTable extends PluginData {
             UUID uuid = entry.getKey();
             int achievements = entry.getValue();
             String name = getNameOf(uuid);
-            String inspectUrl = HtmlUtils.getRelativeInspectUrl(name);
+            String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
             html.append(Html.TABLELINE_2.parse(Html.LINK.parse(inspectUrl, name), achievements));
         }
     }

@@ -50,6 +50,7 @@ Data:
     CombineCommandAliases: true
 
 Customization:
+  UseServerTime: true
   Formatting:
     DecimalPoints: '#.##'
     TimeAmount:

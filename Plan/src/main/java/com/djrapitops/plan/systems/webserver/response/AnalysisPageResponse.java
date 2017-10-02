@@ -1,7 +1,10 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
+import com.djrapitops.plugin.task.AbsRunnable;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.data.AnalysisData;
+import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 
 /**
  * @author Rsl1122
@@ -9,13 +12,37 @@ import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
  */
 public class AnalysisPageResponse extends Response {
 
+    /**
+     * @param informationManager
+     * @throws NullPointerException if AnalysisData has not been cached after 1 second.
+     */
     public AnalysisPageResponse(InformationManager informationManager) {
         super.setHeader("HTTP/1.1 200 OK");
+
+        if (informationManager instanceof BukkitInformationManager) {
+            AnalysisData analysisData = ((BukkitInformationManager) informationManager).getAnalysisData();
+            if (analysisData == null) {
+                Plan.getInstance().getRunnableFactory().createNew("OnRequestAnalysisRefreshTask", new AbsRunnable() {
+                    @Override
+                    public void run() {
+                        informationManager.refreshAnalysis(Plan.getServerUUID());
+                    }
+                }).runTaskAsynchronously();
+
+                ErrorResponse analysisRefreshPage = new ErrorResponse();
+                analysisRefreshPage.setTitle("Analysis is being refreshed..");
+                analysisRefreshPage.setParagraph("<i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
+                analysisRefreshPage.replacePlaceholders();
+                super.setContent(analysisRefreshPage.getContent());
+
+                return;
+            }
+        }
         super.setContent(informationManager.getAnalysisHtml());
     }
 
     public AnalysisPageResponse(String html) {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setContent(Theme.replaceColors(html));
+        super.setContent(html);
     }
 }

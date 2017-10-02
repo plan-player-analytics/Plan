@@ -6,11 +6,11 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 import net.milkbowl.vault.economy.Economy;
 
 import java.io.Serializable;
@@ -50,7 +50,7 @@ public class EconomyBalanceTable extends PluginData {
         StringBuilder html = new StringBuilder();
         getUUIDsBeingAnalyzed().forEach(uuid -> {
             String name = getNameOf(uuid);
-            String link = Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name);
+            String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name);
             String bal = FormatUtils.cutDecimals(econ.getBalance(new FakeOfflinePlayer(uuid, name)));
             html.append(Html.TABLELINE_2.parse(link, bal));
         });

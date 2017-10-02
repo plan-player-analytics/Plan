@@ -7,7 +7,6 @@ import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.KillDataComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
-import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +47,7 @@ public class KillsTableCreator {
                 String name = Plan.getInstance().getDataCache().getName(kill.getVictim());
                 html.append(Html.TABLELINE_3_CUSTOMKEY_1.parse(
                         String.valueOf(date), FormatUtils.formatTimeStamp(date),
-                        Html.LINK.parse(HtmlUtils.getRelativeInspectUrl(name), name),
+                        Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name),
                         kill.getWeapon()
                 ));
 

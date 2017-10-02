@@ -6,6 +6,7 @@
 package com.djrapitops.pluginbridge.plan.vault;
 
 import com.djrapitops.plugin.utilities.Format;
+import com.djrapitops.plugin.utilities.Verify;
 import com.djrapitops.pluginbridge.plan.FakeOfflinePlayer;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -56,6 +57,9 @@ public class PermGroupTable extends PluginData {
                 .map(uuid -> new FakeOfflinePlayer(uuid, getNameOf(uuid))).collect(Collectors.toList());
         for (OfflinePlayer p : userData) {
             String group = permSys.getPrimaryGroup(null, p);
+            if (Verify.isEmpty(group)) {
+                continue;
+            }
             if (!groups.containsKey(group)) {
                 groups.put(group, 0);
             }
