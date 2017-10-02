@@ -21,6 +21,7 @@ public class WorldPieCreator {
     public static String[] createSeriesData(WorldTimes worldTimes) {
         StringBuilder seriesBuilder = new StringBuilder("[");
         int i = 0;
+        // WorldTimes Map<String, GMTimes> (GMTimes.getTotal)
         Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
 

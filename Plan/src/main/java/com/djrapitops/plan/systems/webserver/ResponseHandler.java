@@ -191,11 +191,6 @@ public class ResponseHandler extends APIResponseHandler {
     }
 
     private Response serverResponse(UUID serverUUID) {
-        if (!plugin.getInfoManager().isAnalysisCached(serverUUID)) {
-            String error = "Analysis Data was not cached.<br>Use /plan analyze to cache the Data.";
-            PageCache.loadPage("notFound: " + error, () -> new NotFoundResponse(error));
-        }
-
         return PageCache.loadPage("analysisPage:" + serverUUID, () -> new AnalysisPageResponse(plugin.getInfoManager()));
     }
 

@@ -154,6 +154,7 @@ public class API {
      * Check if the data is cached to AnalysisCache before calling this.
      *
      * @return server.html with all placeholders replaced.
+     * @throws NullPointerException if AnalysisData has not been cached.
      */
     public String getAnalysisHtmlAsString() {
         return plugin.getInfoManager().getAnalysisHtml();

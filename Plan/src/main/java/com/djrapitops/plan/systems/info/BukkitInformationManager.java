@@ -173,6 +173,9 @@ public class BukkitInformationManager extends InformationManager {
 
     @Override
     public boolean isAnalysisCached(UUID serverUUID) {
+        if (Plan.getServerUUID().equals(serverUUID)) {
+            return analysisData != null;
+        }
         if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
@@ -188,8 +191,17 @@ public class BukkitInformationManager extends InformationManager {
         return plugin.getWebServer().getWebAPI();
     }
 
+    /**
+     * Get the HTML for analysis page of this server.
+     *
+     * @return Html for Analysis page
+     * @throws NullPointerException if AnalysisData has not been cached.
+     */
     @Override
     public String getAnalysisHtml() {
+        if (analysisData == null) {
+            throw new NullPointerException("Analysis Data has not been cached.");
+        }
         try {
             return Theme.replaceColors(new AnalysisPageParser(analysisData, plugin).parse());
         } catch (ParseException e) {
@@ -229,6 +241,10 @@ public class BukkitInformationManager extends InformationManager {
     }
 
     private void cacheAnalysisHtml() {
+        cacheAnalysisHtml(getAnalysisHtml());
+    }
+
+    public void cacheAnalysisHtml(String html) {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, getAnalysisHtml());
@@ -237,7 +253,7 @@ public class BukkitInformationManager extends InformationManager {
                 cacheAnalysisHtml();
             }
         } else {
-            PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(this));
+            PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(html));
         }
     }
 
