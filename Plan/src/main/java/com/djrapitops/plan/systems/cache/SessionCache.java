@@ -34,12 +34,12 @@ public class SessionCache {
     }
 
     public void endSession(UUID uuid, long time) {
-        Session session = activeSessions.get(uuid);
-        if (session == null) {
-            return;
-        }
-        session.endSession(time);
         try {
+            Session session = activeSessions.get(uuid);
+            if (session == null) {
+                return;
+            }
+            session.endSession(time);
             plugin.getDB().getSessionsTable().saveSession(uuid, session);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
