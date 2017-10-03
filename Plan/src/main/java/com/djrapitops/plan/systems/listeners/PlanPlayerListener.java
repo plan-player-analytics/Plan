@@ -86,7 +86,7 @@ public class PlanPlayerListener implements Listener {
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
 
-        String ip = player.getAddress().getAddress().toString();
+        String ip = player.getAddress().getAddress().getHostAddress();
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
