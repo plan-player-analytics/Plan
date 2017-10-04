@@ -3,11 +3,13 @@ package main.java.com.djrapitops.plan.database.tables;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,170 +73,153 @@ public class CommandUseTable extends Table {
      * @throws SQLException DB Error
      */
     public Map<String, Integer> getCommandUse(UUID serverUUID) throws SQLException {
-        Map<String, Integer> commandUse = new HashMap<>();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(Select.from(tableName,
-                    columnCommand, columnTimesUsed)
-                    .where(columnServerID + "=" + serverTable.statementSelectServerID)
-                    .toString());
-            statement.setFetchSize(5000);
-            statement.setString(1, serverUUID.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                String cmd = set.getString(columnCommand).toLowerCase();
-                int amountUsed = set.getInt(columnTimesUsed);
-                commandUse.put(cmd, amountUsed);
+        String sql = Select.from(tableName,
+                columnCommand, columnTimesUsed)
+                .where(columnServerID + "=" + serverTable.statementSelectServerID)
+                .toString();
+
+        return query(new QueryStatement<Map<String, Integer>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
             }
-            return commandUse;
-        } finally {
-            close(set, statement, connection);
-        }
+
+            @Override
+            public Map<String, Integer> processQuery(ResultSet set) throws SQLException {
+                Map<String, Integer> commandUse = new HashMap<>();
+                while (set.next()) {
+                    String cmd = set.getString(columnCommand).toLowerCase();
+                    int amountUsed = set.getInt(columnTimesUsed);
+                    commandUse.put(cmd, amountUsed);
+                }
+                return commandUse;
+            }
+        });
     }
 
     public void commandUsed(String command) throws SQLException {
         if (command.length() > 20) {
             return;
         }
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
-                    + columnTimesUsed + "=" + columnTimesUsed + "+ 1" +
-                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID +
-                    " AND " + columnCommand + "=?");
-            statement.setString(1, Plan.getServerUUID().toString());
-            statement.setString(2, command);
-            int success = statement.executeUpdate();
 
-            commit(connection);
+        String sql = "UPDATE " + tableName + " SET "
+                + columnTimesUsed + "=" + columnTimesUsed + "+ 1" +
+                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID +
+                " AND " + columnCommand + "=?";
 
-            if (success == 0) {
-                insertCommand(command);
+        boolean updated = execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, Plan.getServerUUID().toString());
+                statement.setString(2, command);
             }
-        } finally {
-            close(statement, connection);
+        });
+        if (!updated) {
+            insertCommand(command);
         }
     }
 
     private void insertCommand(String command) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(insertStatement);
-            statement.setString(1, command);
-            statement.setInt(2, 1);
-            statement.setString(3, Plan.getServerUUID().toString());
-            statement.execute();
-
-            commit(connection);
-        } finally {
-            close(statement, connection);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, command);
+                statement.setInt(2, 1);
+                statement.setString(3, Plan.getServerUUID().toString());
+            }
+        });
     }
 
     public Optional<String> getCommandByID(int id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString());
-            statement.setInt(1, id);
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(set.getString(columnCommand));
+        String sql = Select.from(tableName, columnCommand).where(columnCommandId + "=?").toString();
+
+        return query(new QueryStatement<Optional<String>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, id);
             }
-            return Optional.empty();
-        } finally {
-            close(set, statement, connection);
-        }
+
+            @Override
+            public Optional<String> processQuery(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getString(columnCommand));
+                }
+                return Optional.empty();
+            }
+        });
     }
 
     public Optional<Integer> getCommandID(String command) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString());
-            statement.setString(1, command);
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(set.getInt(columnCommandId));
+        String sql = Select.from(tableName, columnCommandId).where(columnCommand + "=?").toString();
+
+        return query(new QueryStatement<Optional<Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, command);
             }
-            return Optional.empty();
-        } finally {
-            close(set, statement, connection);
-        }
+
+            @Override
+            public Optional<Integer> processQuery(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getInt(columnCommandId));
+                }
+                return Optional.empty();
+            }
+        });
     }
 
     public Map<UUID, Map<String, Integer>> getAllCommandUsages() throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            connection = getConnection();
-            statement = connection.prepareStatement("SELECT " +
-                    columnCommand + ", " +
-                    columnTimesUsed + ", " +
-                    serverUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
-            );
-            statement.setFetchSize(5000);
-            set = statement.executeQuery();
-            Map<UUID, Map<String, Integer>> map = new HashMap<>();
-            while (set.next()) {
-                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String sql = "SELECT " +
+                columnCommand + ", " +
+                columnTimesUsed + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
-                Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+        return query(new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
+            @Override
+            public Map<UUID, Map<String, Integer>> processQuery(ResultSet set) throws SQLException {
+                Map<UUID, Map<String, Integer>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
 
-                String command = set.getString(columnCommand);
-                int timesUsed = set.getInt(columnTimesUsed);
+                    Map<String, Integer> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
 
-                serverMap.put(command, timesUsed);
-                map.put(serverUUID, serverMap);
+                    String command = set.getString(columnCommand);
+                    int timesUsed = set.getInt(columnTimesUsed);
+
+                    serverMap.put(command, timesUsed);
+                    map.put(serverUUID, serverMap);
+                }
+                return map;
             }
-            return map;
-        } finally {
-            close(set, statement, connection);
-        }
+        });
     }
 
     public void insertCommandUsage(Map<UUID, Map<String, Integer>> allCommandUsages) throws SQLException {
         if (allCommandUsages.isEmpty()) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
 
-            // Every Server
-            for (UUID serverUUID : allCommandUsages.keySet()) {
-                // Every Command
-                for (Map.Entry<String, Integer> entry : allCommandUsages.get(serverUUID).entrySet()) {
-                    String command = entry.getKey();
-                    int timesUsed = entry.getValue();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                // Every Server
+                for (UUID serverUUID : allCommandUsages.keySet()) {
+                    // Every Command
+                    for (Map.Entry<String, Integer> entry : allCommandUsages.get(serverUUID).entrySet()) {
+                        String command = entry.getKey();
+                        int timesUsed = entry.getValue();
 
-                    statement.setString(1, command);
-                    statement.setInt(2, timesUsed);
-                    statement.setString(3, serverUUID.toString());
-                    statement.addBatch();
+                        statement.setString(1, command);
+                        statement.setInt(2, timesUsed);
+                        statement.setString(3, serverUUID.toString());
+                        statement.addBatch();
+                    }
                 }
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        });
     }
 }

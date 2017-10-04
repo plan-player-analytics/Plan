@@ -20,10 +20,10 @@ public abstract class ExecStatement {
         this.sql = sql;
     }
 
-    public void execute(PreparedStatement statement) throws SQLException {
+    public boolean execute(PreparedStatement statement) throws SQLException {
         try {
             prepare(statement);
-            statement.execute();
+            return statement.executeUpdate() > 0;
         } finally {
             statement.close();
         }

@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
@@ -134,12 +135,7 @@ public class ActionsTable extends UserIDTable {
                 " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
                 " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
-        return query(new QueryStatement<Map<UUID, Map<UUID, List<Action>>>>(sql, 20000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-
-            }
-
+        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Action>>>>(sql, 20000) {
             @Override
             public Map<UUID, Map<UUID, List<Action>>> processQuery(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Action>>> map = new HashMap<>();

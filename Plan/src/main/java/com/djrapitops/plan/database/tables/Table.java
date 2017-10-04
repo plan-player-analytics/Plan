@@ -179,11 +179,13 @@ public abstract class Table {
         return db;
     }
 
-    protected void execute(ExecStatement statement) throws SQLException {
+    protected boolean execute(ExecStatement statement) throws SQLException {
+        boolean updatedSomething = false;
         try (Connection connection = getConnection()) {
-            statement.execute(connection.prepareStatement(statement.getSql()));
+            updatedSomething = statement.execute(connection.prepareStatement(statement.getSql()));
             commit(connection);
         }
+        return updatedSomething;
     }
 
     protected void executeBatch(ExecStatement statement) throws SQLException {
