@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -259,7 +258,9 @@ public class Analysis {
                 }
             }
 
-            Map<UUID, UserInfo> mappedUserInfo = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, Function.identity()));
+            Map<UUID, UserInfo> mappedUserInfo = new HashMap<>();
+            userInfo.forEach(u -> mappedUserInfo.put(u.getUuid(), u));
+
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
             for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {
                 UserInfo user = mappedUserInfo.get(entry.getKey());
