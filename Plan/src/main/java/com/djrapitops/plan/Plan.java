@@ -71,6 +71,7 @@ import java.util.UUID;
  */
 public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
+    private boolean reloading = false;
     private API api;
 
     private ProcessingQueue processingQueue;
@@ -177,7 +178,9 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             Benchmark.stop("Enable", "WebServer Initialization");
 
-            registerListeners();
+            if (!reloading) {
+                registerListeners();
+            }
             registerTasks();
 
             this.api = new API(this);
@@ -297,9 +300,19 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         // Processes unprocessed processors
         if (processingQueue != null) {
             List<Processor> processors = processingQueue.stopAndReturnLeftovers();
-            Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
-            for (Processor processor : processors) {
-                processor.process();
+            if (!reloading) {
+                Log.info("Processing unprocessed processors. (" + processors.size() + ")"); // TODO Move to Locale
+                for (Processor processor : processors) {
+                    processor.process();
+                }
+            } else {
+                getRunnableFactory().createNew("Re-Add processors", new AbsRunnable() {
+                    @Override
+                    public void run() {
+                        addToProcessQueue(processors.toArray(new Processor[processors.size()]));
+                        cancel();
+                    }
+                }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
             }
         }
 
@@ -437,11 +450,21 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     }
 
     public void addToProcessQueue(Processor... processors) {
-        for (Processor processor : processors) {
-            if (processor == null) {
-                continue;
+        if (!reloading) {
+            for (Processor processor : processors) {
+                if (processor == null) {
+                    continue;
+                }
+                processingQueue.addToQueue(processor);
             }
-            processingQueue.addToQueue(processor);
+        } else {
+            getRunnableFactory().createNew("Re-Add processors", new AbsRunnable() {
+                @Override
+                public void run() {
+                    addToProcessQueue(processors);
+                    cancel();
+                }
+            }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
         }
     }
 
@@ -450,8 +473,14 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
     }
 
     public void restart() {
+        reloading = true;
         onDisable();
         reloadConfig();
         onEnable();
+        reloading = false;
+    }
+
+    public boolean isReloading() {
+        return reloading;
     }
 }

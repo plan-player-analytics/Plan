@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
@@ -49,7 +50,7 @@ public class SessionsTableCreator {
         DataCache dataCache = Plan.getInstance().getDataCache();
 
         Map<Long, UUID> uuidBySessionStart = new HashMap<>();
-        for (Map.Entry<UUID, Session> entry : dataCache.getActiveSessions().entrySet()) {
+        for (Map.Entry<UUID, Session> entry : SessionCache.getActiveSessions().entrySet()) {
             uuidBySessionStart.put(entry.getValue().getSessionStart(), entry.getKey());
         }
 

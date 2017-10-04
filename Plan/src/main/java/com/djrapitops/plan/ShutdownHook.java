@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.SQLException;
@@ -42,8 +43,9 @@ public class ShutdownHook extends Thread {
 
     @Override
     public void run() {
+        Log.debug("Shutdown hook triggered.");
         try {
-            Map<UUID, Session> activeSessions = dataCache.getActiveSessions();
+            Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
             long now = MiscUtils.getTime();
             if (db == null) {
                 return;
@@ -86,8 +88,13 @@ public class ShutdownHook extends Thread {
         for (Map.Entry<UUID, Session> entry : activeSessions.entrySet()) {
             UUID uuid = entry.getKey();
             Session session = entry.getValue();
+            long sessionEnd = session.getSessionEnd();
+            if (sessionEnd != -1) {
+                continue;
+            }
             session.endSession(now);
             try {
+                Log.debug("Shutdown: Saving a session: " + session.getSessionStart());
                 sessionsTable.saveSession(uuid, session);
             } catch (SQLException e) {
                 Log.toLog(this.getClass().getName(), e);
