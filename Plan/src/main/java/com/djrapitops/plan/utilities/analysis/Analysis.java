@@ -276,7 +276,7 @@ public class Analysis {
 
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-            Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));
+            Map<UUID, Long> registered = mappedUserInfo.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRegistered()));
             joinInfo.addRegistered(registered);
             activity.addBans(userInfo.stream().filter(UserInfo::isBanned).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
