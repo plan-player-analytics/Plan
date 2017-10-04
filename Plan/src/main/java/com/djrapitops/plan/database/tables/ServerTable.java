@@ -65,10 +65,16 @@ public class ServerTable extends Table {
                 .column(columnServerName, Sql.varchar(100))
                 .column(columnWebserverAddress, Sql.varchar(100))
                 .column(columnInstalled, Sql.BOOL).notNull().defaultValue(false)
-                .column(columnMaxPlayers, Sql.BOOL).notNull().defaultValue("-1")
+                .column(columnMaxPlayers, Sql.INT).notNull().defaultValue("-1")
                 .primaryKey(usingMySQL, columnServerID)
                 .toString()
         );
+    }
+
+    public void alterTableV11() {
+        if (usingMySQL) {
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnMaxPlayers + " INTEGER NOT NULL DEFAULT -1");
+        }
     }
 
     public void saveCurrentServerInfo(ServerInfo info) throws SQLException {

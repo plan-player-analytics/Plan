@@ -110,7 +110,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(10);
+                setVersion(11);
             }
 
             int version = getVersion();
@@ -127,6 +127,10 @@ public abstract class SQLDB extends Database {
                         }
                     }
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+            }
+            if (version < 11) {
+                serverTable.alterTableV11();
+                setVersion(11);
             }
         } catch (SQLException e) {
             throw new DatabaseInitException("Failed to set-up Database", e);
