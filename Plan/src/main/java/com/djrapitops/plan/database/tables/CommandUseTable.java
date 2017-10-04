@@ -85,7 +85,7 @@ public class CommandUseTable extends Table {
             }
 
             @Override
-            public Map<String, Integer> processQuery(ResultSet set) throws SQLException {
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
                 Map<String, Integer> commandUse = new HashMap<>();
                 while (set.next()) {
                     String cmd = set.getString(columnCommand).toLowerCase();
@@ -140,7 +140,7 @@ public class CommandUseTable extends Table {
             }
 
             @Override
-            public Optional<String> processQuery(ResultSet set) throws SQLException {
+            public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(set.getString(columnCommand));
                 }
@@ -159,7 +159,7 @@ public class CommandUseTable extends Table {
             }
 
             @Override
-            public Optional<Integer> processQuery(ResultSet set) throws SQLException {
+            public Optional<Integer> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(set.getInt(columnCommandId));
                 }
@@ -180,7 +180,7 @@ public class CommandUseTable extends Table {
 
         return query(new QueryAllStatement<Map<UUID, Map<String, Integer>>>(sql, 10000) {
             @Override
-            public Map<UUID, Map<String, Integer>> processQuery(ResultSet set) throws SQLException {
+            public Map<UUID, Map<String, Integer>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<String, Integer>> map = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString("s_uuid"));

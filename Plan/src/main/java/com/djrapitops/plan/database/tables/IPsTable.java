@@ -75,7 +75,7 @@ public class IPsTable extends UserIDTable {
             }
 
             @Override
-            public List<String> processQuery(ResultSet set) throws SQLException {
+            public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> stringList = new ArrayList<>();
                 while (set.next()) {
                     stringList.add(set.getString(column));
@@ -116,7 +116,7 @@ public class IPsTable extends UserIDTable {
             }
 
             @Override
-            public Optional<String> processQuery(ResultSet set) throws SQLException {
+            public Optional<String> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(set.getString(columnGeolocation));
                 }
@@ -136,7 +136,7 @@ public class IPsTable extends UserIDTable {
 
         return query(new QueryAllStatement<Map<UUID, List<String>>>(sql, 50000) {
             @Override
-            public Map<UUID, List<String>> processQuery(ResultSet set) throws SQLException {
+            public Map<UUID, List<String>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<String>> geoLocations = new HashMap<>();
                 while (set.next()) {
                     UUID uuid = UUID.fromString(set.getString("uuid"));
@@ -162,7 +162,7 @@ public class IPsTable extends UserIDTable {
 
         return query(new QueryAllStatement<Map<UUID, Map<String, String>>>(sql, 50000) {
             @Override
-            public Map<UUID, Map<String, String>> processQuery(ResultSet set) throws SQLException {
+            public Map<UUID, Map<String, String>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<String, String>> map = new HashMap<>();
                 while (set.next()) {
                     UUID uuid = UUID.fromString(set.getString("uuid"));

@@ -106,7 +106,7 @@ public class ActionsTable extends UserIDTable {
             }
 
             @Override
-            public List<Action> processQuery(ResultSet set) throws SQLException {
+            public List<Action> processResults(ResultSet set) throws SQLException {
                 List<Action> actions = new ArrayList<>();
                 while (set.next()) {
                     int serverID = set.getInt(columnServerID);
@@ -137,7 +137,7 @@ public class ActionsTable extends UserIDTable {
 
         return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Action>>>>(sql, 20000) {
             @Override
-            public Map<UUID, Map<UUID, List<Action>>> processQuery(ResultSet set) throws SQLException {
+            public Map<UUID, Map<UUID, List<Action>>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Map<UUID, List<Action>>> map = new HashMap<>();
                 while (set.next()) {
                     UUID serverUUID = UUID.fromString(set.getString("s_uuid"));

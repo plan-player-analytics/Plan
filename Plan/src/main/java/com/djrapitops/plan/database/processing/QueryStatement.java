@@ -32,7 +32,7 @@ public abstract class QueryStatement<T> {
             statement.setFetchSize(fetchSize);
             prepare(statement);
             try (ResultSet set = statement.executeQuery()) {
-                return processQuery(set);
+                return processResults(set);
             }
         } finally {
             statement.close();
@@ -41,7 +41,7 @@ public abstract class QueryStatement<T> {
 
     public abstract void prepare(PreparedStatement statement) throws SQLException;
 
-    public abstract T processQuery(ResultSet set) throws SQLException;
+    public abstract T processResults(ResultSet set) throws SQLException;
 
     public String getSql() {
         return sql;

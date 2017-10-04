@@ -28,5 +28,5 @@ public abstract class QueryAllStatement<T> extends QueryStatement<T> {
     }
 
     @Override
-    public abstract T processQuery(ResultSet set) throws SQLException;
+    public abstract T processResults(ResultSet set) throws SQLException;
 }
