@@ -47,11 +47,8 @@ public class WebDeleteCommand extends SubCommand {
                     if (!Check.isTrue(table.userExists(user), ChatColor.RED + "[Plan] User Doesn't exist.", sender)) {
                         return;
                     }
-                    if (table.removeUser(user)) {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_SUCCESS).parse());
-                    } else {
-                        sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
-                    }
+                    table.removeUser(user);
+                    sender.sendMessage(Locale.get(Msg.MANAGE_INFO_SUCCESS).parse());
                 } catch (Exception ex) {
                     Log.toLog(this.getClass().getName(), ex);
                     sender.sendMessage(Locale.get(Msg.MANAGE_INFO_FAIL).parse());
