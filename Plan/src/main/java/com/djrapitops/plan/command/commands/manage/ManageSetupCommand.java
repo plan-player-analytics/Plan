@@ -50,7 +50,7 @@ public class ManageSetupCommand extends SubCommand {
         if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
-        if (plugin.getWebServer().isEnabled()) {
+        if (!plugin.getWebServer().isEnabled()) {
             sender.sendMessage("§cWebServer is not enabled on this server! Make sure it enables on boot!");
             return true;
         }
