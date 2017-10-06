@@ -3,10 +3,11 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,6 @@ public class WorldTable extends Table {
     public final String statementSelectID;
     private final String columnWorldId = "id";
     private final String columnWorldName = "world_name";
-    private final String columnServerID = "server_id";
 
     /**
      * Constructor.
@@ -55,20 +55,19 @@ public class WorldTable extends Table {
      * @throws SQLException Database error occurs.
      */
     public List<String> getWorlds() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            List<String> worldNames = new ArrayList<>();
-            while (set.next()) {
-                String worldName = set.getString(columnWorldName);
-                worldNames.add(worldName);
+        String sql = "SELECT * FROM " + tableName;
+
+        return query(new QueryAllStatement<List<String>>(sql) {
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> worldNames = new ArrayList<>();
+                while (set.next()) {
+                    String worldName = set.getString(columnWorldName);
+                    worldNames.add(worldName);
+                }
+                return worldNames;
             }
-            return worldNames;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     /**
@@ -89,21 +88,19 @@ public class WorldTable extends Table {
             return;
         }
 
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("INSERT INTO " + tableName + " ("
-                    + columnWorldName
-                    + ") VALUES (?)");
-            for (String world : worldsToSave) {
-                statement.setString(1, world);
-                statement.addBatch();
-            }
+        String sql = "INSERT INTO " + tableName + " ("
+                + columnWorldName
+                + ") VALUES (?)";
 
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        executeBatch(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (String world : worldsToSave) {
+                    statement.setString(1, world);
+                    statement.addBatch();
+                }
+            }
+        });
     }
 
     public String getColumnID() {
