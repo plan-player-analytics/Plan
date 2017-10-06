@@ -10,7 +10,7 @@ package main.java.com.djrapitops.plan.systems.webserver.response;
  * @author Rsl1122
  */
 public enum ResponseType {
-    HTML("text/html"),
+    HTML("text/html;charset=utf-8"),
     CSS("text/css"),
     JSON("application/json"),
     JAVASCRIPT("application/javascript");
