@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -24,16 +24,13 @@ public abstract class UserIDTable extends Table {
     }
 
     public void removeUser(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("DELETE FROM " + tableName +
-                    " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")");
-            statement.setString(1, uuid.toString());
+        String sql = "DELETE FROM " + tableName + " WHERE (" + columnUserID + "=" + usersTable.statementSelectID + ")";
 
-            statement.execute();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+        });
     }
 }
