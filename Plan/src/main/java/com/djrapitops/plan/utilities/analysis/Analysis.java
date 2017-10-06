@@ -5,6 +5,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -145,7 +146,9 @@ public class Analysis {
     }
 
     private void log(String msg) {
-        Log.info(msg);
+        if (Settings.ANALYSIS_LOG.isTrue()) {
+            Log.info(msg);
+        }
     }
 
     private Map<String, Serializable> analyzeAdditionalPluginData(Set<UUID> uuids) {

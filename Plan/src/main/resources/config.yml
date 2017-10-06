@@ -39,6 +39,7 @@ Commands:
 
 Analysis:
   AutoRefreshPeriod: 60
+  LogProgress: true
   Export:
     Enabled: false
     ExternalWebServerLinkProtocol: http

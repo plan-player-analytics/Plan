@@ -19,6 +19,7 @@ public enum Settings {
     BUNGEE_COPY_CONFIG("Plugin.Bungee-Override.CopyBungeeConfig"),
     BUNGEE_OVERRIDE_STANDALONE_MODE("Plugin.Bungee-Override.StandaloneMode"),
     ANALYSIS_EXPORT("Analysis.Export.Enabled"),
+    ANALYSIS_LOG("Analysis.LogProgress"),
     SHOW_ALTERNATIVE_IP("Commands.AlternativeIP.Enabled"),
     LOG_UNKNOWN_COMMANDS("Data.Commands.LogUnknownCommands"),
     COMBINE_COMMAND_ALIASES("Data.Commands.CombineCommandAliases"),
