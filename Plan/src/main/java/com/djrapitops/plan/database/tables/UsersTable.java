@@ -425,7 +425,7 @@ public class UsersTable extends UserIDTable {
             @Override
             public Optional<Long> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    Optional.of(set.getLong(columnRegistered));
+                    return Optional.of(set.getLong(columnRegistered));
                 }
                 return Optional.empty();
             }
