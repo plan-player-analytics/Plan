@@ -16,6 +16,7 @@ import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 import main.java.com.djrapitops.plan.database.sql.Update;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -81,14 +82,20 @@ public class UserInfoTable extends UserIDTable {
     }
 
     public boolean isRegistered(UUID uuid) throws SQLException {
+        return isRegistered(uuid, MiscUtils.getIPlan().getServerUuid());
+    }
+
+    public boolean isRegistered(UUID uuid, UUID serverUUID) throws SQLException {
         String sql = Select.from(tableName, "COUNT(" + columnUserID + ") as c")
                 .where(columnUserID + "=" + usersTable.statementSelectID)
+                .where(columnServerID + "=" + serverTable.statementSelectServerID)
                 .toString();
 
         return query(new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, uuid.toString());
+                statement.setString(2, serverUUID.toString());
             }
 
             @Override
