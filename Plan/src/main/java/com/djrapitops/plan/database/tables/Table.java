@@ -84,13 +84,16 @@ public abstract class Table {
      */
     protected boolean execute(String statementString) throws SQLException {
         Statement statement = null;
-        try (Connection connection = getConnection()) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
             statement = connection.createStatement();
             boolean b = statement.execute(statementString);
             commit(connection);
             return b;
         } finally {
             close(statement);
+            db.returnToPool(connection);
         }
     }
 
@@ -181,23 +184,35 @@ public abstract class Table {
 
     protected boolean execute(ExecStatement statement) throws SQLException {
         boolean updatedSomething = false;
-        try (Connection connection = getConnection()) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
             updatedSomething = statement.execute(connection.prepareStatement(statement.getSql()));
             commit(connection);
+        } finally {
+            db.returnToPool(connection);
         }
         return updatedSomething;
     }
 
     protected void executeBatch(ExecStatement statement) throws SQLException {
-        try (Connection connection = getConnection()) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
             statement.executeBatch(connection.prepareStatement(statement.getSql()));
             commit(connection);
+        } finally {
+            db.returnToPool(connection);
         }
     }
 
     protected <T> T query(QueryStatement<T> statement) throws SQLException {
-        try (Connection connection = getConnection()) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
             return statement.executeQuery(connection.prepareStatement(statement.getSql()));
+        } finally {
+            db.returnToPool(connection);
         }
     }
 }

@@ -7,9 +7,12 @@ package com.djrapitops.pluginbridge.plan.viaversion;
 
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
+import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.tables.Table;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,38 +55,38 @@ public class ProtocolTable extends Table {
     }
 
     public int getProtocolVersion(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?");
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt(columnProtocolVersion);
-            } else {
-                return -1;
+        String sql = "SELECT " + columnProtocolVersion + " FROM " + tableName + " WHERE " + columnUUID + "=?";
+
+        return query(new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt(columnProtocolVersion);
+                } else {
+                    return -1;
+                }
+            }
+        });
     }
 
     public Map<UUID, Integer> getProtocolVersions() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            Map<UUID, Integer> versions = new HashMap<>();
-            while (set.next()) {
-                String uuidS = set.getString(columnUUID);
-                UUID uuid = UUID.fromString(uuidS);
-                versions.put(uuid, set.getInt(columnProtocolVersion));
+        return query(new QueryAllStatement<Map<UUID, Integer>>(Select.all(tableName).toString(), 5000) {
+            @Override
+            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Integer> versions = new HashMap<>();
+                while (set.next()) {
+                    String uuidS = set.getString(columnUUID);
+                    UUID uuid = UUID.fromString(uuidS);
+                    versions.put(uuid, set.getInt(columnProtocolVersion));
+                }
+                return versions;
             }
-            return versions;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     private boolean exists(UUID uuid) throws SQLException {
@@ -91,36 +94,31 @@ public class ProtocolTable extends Table {
     }
 
     private void updateProtocolVersion(UUID uuid, int version) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
-                    + columnProtocolVersion + "=? "
-                    + " WHERE (" + columnUUID + "=?)");
-            statement.setInt(1, version);
-            statement.setString(2, uuid.toString());
-            statement.execute();
+        String sql = "UPDATE " + tableName + " SET "
+                + columnProtocolVersion + "=? "
+                + " WHERE (" + columnUUID + "=?)";
 
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, version);
+                statement.setString(2, uuid.toString());
+            }
+        });
     }
 
     private void insertProtocolVersion(UUID uuid, int version) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(
-                    "INSERT INTO " + tableName + " ("
-                            + columnUUID + ", "
-                            + columnProtocolVersion
-                            + ") VALUES (?, ?)");
-            statement.setString(1, uuid.toString());
-            statement.setInt(2, version);
-            statement.execute();
+        String sql = "INSERT INTO " + tableName + " ("
+                + columnUUID + ", "
+                + columnProtocolVersion
+                + ") VALUES (?, ?)";
 
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setInt(2, version);
+            }
+        });
     }
 }

@@ -31,8 +31,7 @@ public class LiteBansDatabaseQueries extends Table {
         try {
             statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM litebans_bans");
             set = statement.executeQuery();
-            List<BanObject> bans = getBanObjects(set);
-            return bans;
+            return getBanObjects(set);
         } finally {
             close(set);
             close(statement);
@@ -59,8 +58,7 @@ public class LiteBansDatabaseQueries extends Table {
             statement = database.prepareStatement("SELECT uuid, reason, banned_by_name, until FROM litebans_bans WHERE uuid=?");
             statement.setString(1, playerUUID.toString());
             set = statement.executeQuery();
-            List<BanObject> bans = getBanObjects(set);
-            return bans;
+            return getBanObjects(set);
         } finally {
             close(set);
             close(statement);
