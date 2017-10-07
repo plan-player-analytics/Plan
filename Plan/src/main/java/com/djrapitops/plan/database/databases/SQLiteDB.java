@@ -59,7 +59,14 @@ public class SQLiteDB extends SQLDB {
         }
 
         String dbFilePath = new File(plugin.getDataFolder(), dbName + ".db").getAbsolutePath();
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
+        Connection connection;
+
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
+        } catch (SQLException ignored) {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
+            Log.info("SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.");
+        }
         connection.setAutoCommit(false);
 //        connection.
 
