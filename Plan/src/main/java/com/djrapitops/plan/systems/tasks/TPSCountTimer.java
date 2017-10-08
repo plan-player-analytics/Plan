@@ -2,8 +2,11 @@ package main.java.com.djrapitops.plan.systems.tasks;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.utilities.Compatibility;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanBungee;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.systems.processing.TPSInsertProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -22,35 +25,41 @@ import java.util.List;
  */
 public class TPSCountTimer extends AbsRunnable {
 
-    private final Plan plugin;
+    private final IPlan plugin;
     private final List<TPS> history;
     private long lastCheckNano;
 
+    private final boolean usingBungee;
+
     private int latestPlayersOnline = 0;
 
-    public TPSCountTimer(Plan plugin) {
+    public TPSCountTimer(IPlan plugin) {
         super("TPSCountTimer");
         lastCheckNano = -1;
         this.plugin = plugin;
         history = new ArrayList<>();
+        usingBungee = Compatibility.isBungeeAvailable();
     }
 
     @Override
     public void run() {
         long nanoTime = System.nanoTime();
         long now = MiscUtils.getTime();
-        long diff = nanoTime - lastCheckNano;
 
-        lastCheckNano = nanoTime;
+        if (usingBungee) {
+            history.add(new TPS(now, -1, ((PlanBungee) plugin).getProxy().getOnlineCount(), -1, -1, -1, -1));
+        } else {
+            long diff = nanoTime - lastCheckNano;
 
-        if (diff > nanoTime) { // First run's diff = nanoTime + 1, no calc possible.
-            Log.debug("First run of TPSCountTimer Task.");
-            return;
+            lastCheckNano = nanoTime;
+
+            if (diff > nanoTime) { // First run's diff = nanoTime + 1, no calc possible.
+                Log.debug("First run of TPSCountTimer Task.");
+                return;
+            }
+
+            history.add(calculateTPS(diff, now));
         }
-
-        TPS tps = calculateTPS(diff, now);
-        history.add(tps);
-
         if (history.size() >= 60) {
             plugin.addToProcessQueue(new TPSInsertProcessor(new ArrayList<>(history)));
             history.clear();
@@ -78,7 +87,7 @@ public class TPSCountTimer extends AbsRunnable {
         long totalMemory = runtime.totalMemory();
         long usedMemory = (totalMemory - runtime.freeMemory()) / 1000000;
 
-        int playersOnline = plugin.getServer().getOnlinePlayers().size();
+        int playersOnline = ((Plan) plugin).getServer().getOnlinePlayers().size();
         latestPlayersOnline = playersOnline;
         int loadedChunks = getLoadedChunks();
         int entityCount;
@@ -131,7 +140,7 @@ public class TPSCountTimer extends AbsRunnable {
      * @return the TPS
      */
     private TPS getTPSPaper(long now, double cpuUsage, long usedMemory, int entityCount, int chunksLoaded, int playersOnline) {
-        double tps = plugin.getServer().getTPS()[0];
+        double tps = ((Plan) plugin).getServer().getTPS()[0];
 
         if (tps > 20) {
             tps = 20;
@@ -148,7 +157,7 @@ public class TPSCountTimer extends AbsRunnable {
      * @return amount of loaded chunks
      */
     private int getLoadedChunks() {
-        return plugin.getServer().getWorlds().stream().mapToInt(world -> world.getLoadedChunks().length).sum();
+        return ((Plan) plugin).getServer().getWorlds().stream().mapToInt(world -> world.getLoadedChunks().length).sum();
     }
 
     /**
@@ -157,7 +166,7 @@ public class TPSCountTimer extends AbsRunnable {
      * @return amount of entities
      */
     private int getEntityCount() {
-        return plugin.getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
+        return ((Plan) plugin).getServer().getWorlds().stream().mapToInt(world -> world.getEntities().size()).sum();
     }
 
     /**
@@ -166,7 +175,7 @@ public class TPSCountTimer extends AbsRunnable {
      * @return amount of entities
      */
     private int getEntityCountPaper() {
-        return plugin.getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
+        return ((Plan) plugin).getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
     }
 
     public int getLatestPlayersOnline() {

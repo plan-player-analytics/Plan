@@ -2,7 +2,6 @@ package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.TPS;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
@@ -12,6 +11,7 @@ import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
+import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.PreparedStatement;
@@ -108,7 +108,7 @@ public class TPSTable extends Table {
         execute(new ExecStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, Plan.getServerUUID().toString());
+                statement.setString(1, MiscUtils.getIPlan().getServerUuid().toString());
                 statement.setLong(2, tps.getDate());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
@@ -262,15 +262,22 @@ public class TPSTable extends Table {
     }
 
     public List<TPS> getNetworkOnlineData() throws SQLException {
+        Optional<ServerInfo> bungeeInfo = serverTable.getBungeeInfo();
+        if (!bungeeInfo.isPresent()) {
+            return new ArrayList<>();
+        }
+        UUID bungeeUUID = bungeeInfo.get().getUuid();
+
         String sql = "SELECT " +
                 columnDate + ", " +
-                "SUM(" + columnPlayers + ") as players" +
+                columnPlayers +
                 " FROM " + tableName +
-                " GROUP BY " + columnDate;
+                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
 
         return query(new QueryStatement<List<TPS>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, bungeeUUID.toString());
             }
 
             @Override
@@ -278,7 +285,7 @@ public class TPSTable extends Table {
                 List<TPS> tpsList = new ArrayList<>();
                 while (set.next()) {
                     long date = set.getLong(columnDate);
-                    int players = set.getInt("players");
+                    int players = set.getInt(columnPlayers);
 
                     tpsList.add(new TPS(date, 0, players, 0, 0, 0, 0));
                 }
