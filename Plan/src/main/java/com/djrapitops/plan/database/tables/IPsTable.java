@@ -64,9 +64,9 @@ public class IPsTable extends UserIDTable {
     }
 
     private List<String> getStringList(UUID uuid, String column) throws SQLException {
-        String sql = Select.from(tableName, column)
-                .where(columnUserID + "=" + usersTable.statementSelectID)
-                .toString();
+        String sql = "SELECT DISTINCT " + column + " FROM " + tableName +
+                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
+
 
         return query(new QueryStatement<List<String>>(sql, 100) {
             @Override
