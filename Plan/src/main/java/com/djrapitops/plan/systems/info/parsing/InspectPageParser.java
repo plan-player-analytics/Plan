@@ -107,6 +107,9 @@ public class InspectPageParser extends PageParser {
             addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
 
             long now = MiscUtils.getTime();
+
+            addValue("refresh", FormatUtils.formatTimeStamp(now));
+
             long dayAgo = now - TimeAmount.DAY.ms();
             long weekAgo = now - TimeAmount.WEEK.ms();
 
