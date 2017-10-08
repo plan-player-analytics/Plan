@@ -1,8 +1,17 @@
 $(".session-header").click(function () {
-    var $header = $(this);
-    var $content = $header.next();
+	$header = $(this);
+	$content = $header.next();
 	$(this).parent().siblings().children().next().slideUp(500);
-	$content.slideToggle(500, function () {
-		//execute this after slideToggle is done
-	});
+
+    $header.html(function(i, origText) {
+        $(".session-header").html(function(i, origText) {
+            return origText.replace("fa-chevron-up", "fa-chevron-down")
+        });
+        if (origText.includes("fa-chevron-down")) {
+            return origText.replace("fa-chevron-down", "fa-chevron-up")
+        } else {
+            return origText.replace("fa-chevron-up", "fa-chevron-down")
+        }
+    });
+	$content.slideToggle(500);
 });
