@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.BungeePlugin;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -95,7 +96,8 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
                     infoManager.sendConfigSettings();
                 }
             }).runTaskAsynchronously();
-            getRunnableFactory().createNew("Player Count task", new TPSCountTimer(this));
+            getRunnableFactory().createNew("Player Count task", new TPSCountTimer(this))
+                    .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
 
 //            getProxy().registerChannel("Plan");
 //            registerListener(new BungeePluginChannelListener(this));
