@@ -18,6 +18,7 @@ public abstract class ExecStatement {
 
     public ExecStatement(String sql) {
         this.sql = sql;
+//        Log.debug("Execute Statement: " + sql);
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {

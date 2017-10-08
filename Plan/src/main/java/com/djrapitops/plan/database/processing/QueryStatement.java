@@ -24,6 +24,7 @@ public abstract class QueryStatement<T> {
 
     public QueryStatement(String sql, int fetchSize) {
         this.sql = sql;
+//        Log.debug("Query Statement: " + sql);
         this.fetchSize = fetchSize;
     }
 

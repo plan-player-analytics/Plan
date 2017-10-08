@@ -89,6 +89,7 @@ public abstract class Table {
             connection = getConnection();
             statement = connection.createStatement();
             boolean b = statement.execute(statementString);
+//            Log.debug("Execute: " + statementString);
             commit(connection);
             return b;
         } finally {
