@@ -43,7 +43,7 @@ public class NetworkPageParser extends PageParser {
             Database db = plugin.getDB();
             List<TPS> networkOnlineData = db.getTpsTable().getNetworkOnlineData();
 
-            addValue("networkName", Settings.BUNGEE_NETWROK_NAME.toString());
+            addValue("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
             addValue("version", plugin.getVersion());
             addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(networkOnlineData));
             addValue("playersGraphColor", Colors.PLAYERS_ONLINE.getColor());

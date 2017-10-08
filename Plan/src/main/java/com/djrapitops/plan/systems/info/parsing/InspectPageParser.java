@@ -186,6 +186,10 @@ public class InspectPageParser extends PageParser {
                 addValue("playerClassification", active);
             }
 
+            if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
+                addValue("networkName", Settings.SERVER_NAME.toString());
+            }
+
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);

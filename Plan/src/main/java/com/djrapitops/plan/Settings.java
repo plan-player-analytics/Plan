@@ -101,7 +101,7 @@ public enum Settings {
     //
     // Bungee
     BUNGEE_IP("Server.IP"),
-    BUNGEE_NETWROK_NAME("Network.Name");
+    BUNGEE_NETWORK_NAME("Network.Name");
 
     private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
 

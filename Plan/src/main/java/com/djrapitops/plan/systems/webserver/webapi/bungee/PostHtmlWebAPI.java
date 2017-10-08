@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
@@ -12,7 +13,9 @@ import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResp
 import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,7 +35,11 @@ public class PostHtmlWebAPI extends WebAPI {
             switch (target) {
                 case "inspectPage":
                     String uuid = variables.get("uuid");
-                    PageCache.cachePage("inspectPage:" + uuid, () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), html));
+
+                    Map<String, String> map = new HashMap<>();
+                    map.put("networkName", Settings.BUNGEE_NETWORK_NAME.toString());
+
+                    PageCache.cachePage("inspectPage:" + uuid, () -> new InspectPageResponse(infoManager, UUID.fromString(uuid), StrSubstitutor.replace(html, map)));
                     break;
                 case "analysisPage":
                     PageCache.cachePage("analysisPage:" + variables.get("sender"), () -> new AnalysisPageResponse(html));
