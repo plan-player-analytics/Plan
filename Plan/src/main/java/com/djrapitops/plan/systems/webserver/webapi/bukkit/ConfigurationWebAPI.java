@@ -79,7 +79,7 @@ public class ConfigurationWebAPI extends WebAPI {
                 Settings.DB_DATABASE, Settings.FORMAT_DECIMALS, Settings.FORMAT_SECONDS,
                 Settings.FORMAT_DAY, Settings.FORMAT_DAYS, Settings.FORMAT_HOURS,
                 Settings.FORMAT_MINUTES, Settings.FORMAT_MONTHS, Settings.FORMAT_MONTH,
-                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS,
+                Settings.FORMAT_YEAR, Settings.FORMAT_YEARS, Settings.FORMAT_ZERO_SECONDS
         };
         for (Settings setting : sameStrings) {
             addConfigValue(configValues, setting, setting.toString());

@@ -60,6 +60,7 @@ public enum Settings {
     FORMAT_HOURS("Customization.Formatting.TimeAmount.Hours"),
     FORMAT_MINUTES("Customization.Formatting.TimeAmount.Minutes"),
     FORMAT_SECONDS("Customization.Formatting.TimeAmount.Seconds"),
+    FORMAT_ZERO_SECONDS("Customization.Formatting.TimeAmount.Zero"),
     FORMAT_DECIMALS("Customization.Formatting.DecimalPoints"),
     //
     COLOR_MAIN("Commands.Colors.Main"),
