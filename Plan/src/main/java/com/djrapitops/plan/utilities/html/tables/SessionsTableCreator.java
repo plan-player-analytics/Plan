@@ -91,6 +91,10 @@ public class SessionsTableCreator {
     }
 
     private static String getLongestWorldPlayed(Session session) {
+        if (session.getSessionEnd() == -1) {
+            return "Current: " + session.getWorldTimes().getCurrentWorld();
+        }
+
         WorldTimes worldTimes = session.getWorldTimes();
         long total = worldTimes.getTotal();
         long longest = 0;

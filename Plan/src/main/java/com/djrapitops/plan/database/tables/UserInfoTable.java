@@ -88,7 +88,7 @@ public class UserInfoTable extends UserIDTable {
     public boolean isRegistered(UUID uuid, UUID serverUUID) throws SQLException {
         String sql = Select.from(tableName, "COUNT(" + columnUserID + ") as c")
                 .where(columnUserID + "=" + usersTable.statementSelectID)
-                .where(columnServerID + "=" + serverTable.statementSelectServerID)
+                .and(columnServerID + "=" + serverTable.statementSelectServerID)
                 .toString();
 
         return query(new QueryStatement<Boolean>(sql) {

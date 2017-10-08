@@ -72,14 +72,14 @@ public class ShutdownHook extends Thread {
     }
 
     private void saveFirstSessionInformation(long now) {
-        try {
-            for (Map.Entry<UUID, Integer> entry : dataCache.getFirstSessionMsgCounts().entrySet()) {
+        for (Map.Entry<UUID, Integer> entry : dataCache.getFirstSessionMsgCounts().entrySet()) {
+            try {
                 UUID uuid = entry.getKey();
                 int messagesSent = entry.getValue();
                 db.getActionsTable().insertAction(uuid, new Action(now, Actions.FIRST_LOGOUT, "Messages sent: " + messagesSent));
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
             }
-        } catch (SQLException e) {
-            Log.toLog(this.getClass().getName(), e);
         }
     }
 
