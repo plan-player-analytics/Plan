@@ -30,20 +30,23 @@ public class SessionCache {
     }
 
     public void cacheSession(UUID uuid, Session session) {
+        Log.debug("Caching a session: " + session.getSessionStart());
         activeSessions.put(uuid, session);
     }
 
     public void endSession(UUID uuid, long time) {
-        Session session = activeSessions.get(uuid);
-        if (session == null) {
-            return;
-        }
-        session.endSession(time);
+        Log.debug("Ending a session: " + time);
         try {
+            Session session = activeSessions.get(uuid);
+            if (session == null) {
+                return;
+            }
+            session.endSession(time);
             plugin.getDB().getSessionsTable().saveSession(uuid, session);
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         } finally {
+            Log.debug("Removing session from cache: " + time);
             activeSessions.remove(uuid);
         }
     }
@@ -75,7 +78,11 @@ public class SessionCache {
      *
      * @return key:value UUID:Session
      */
-    public Map<UUID, Session> getActiveSessions() {
+    public static Map<UUID, Session> getActiveSessions() {
         return activeSessions;
+    }
+
+    public static void clear() {
+        activeSessions.clear();
     }
 }

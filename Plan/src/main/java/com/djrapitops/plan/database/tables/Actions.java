@@ -15,7 +15,7 @@ public enum Actions {
     UNKNOWN(-1),
     FIRST_SESSION(1),
     FIRST_LOGOUT(2),
-    CHANGED_NAME(3),
+    NEW_NICKNAME(3),
     KILLED(-2), // Not stored in ActionsTable.
     ;
 

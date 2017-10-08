@@ -133,7 +133,7 @@ public class FormatUtils {
         }
         String formattedTime = StringUtils.remove(builder.toString(), "%zero%");
         if (formattedTime.isEmpty()) {
-            return Settings.FORMAT_SECONDS.toString().replace("%seconds%", "0");
+            return Settings.FORMAT_ZERO_SECONDS.toString();
         }
         return formattedTime;
     }

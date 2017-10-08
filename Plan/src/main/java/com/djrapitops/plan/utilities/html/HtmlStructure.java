@@ -129,8 +129,7 @@ public class HtmlStructure {
             html.append("<div class=\"session column\">")
                     .append("<div class=\"session-header\">")
                     .append("<div class=\"session-col\" style=\"width: 200%;\">")
-                    .append("<h3>").append(dotSeparated).append("</h3>")
-                    .append("<p>Click to Expand</p>")
+                    .append("<h3><i style=\"color:#777\" class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i> ").append(dotSeparated).append("</h3>")
                     .append("</div>")
                     .append("</div>");
 
@@ -212,9 +211,9 @@ public class HtmlStructure {
                 .append("<div class=\"row\">")
                 .append("<div class=\"column\">")
                 .append("<div class=\"box-header\">")
-                .append("<h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> ")
+                .append("<h2><i style=\"padding: 8px;\" class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i> ")
                 .append(serverName)
-                .append("</h2><p>Click to Expand</p>")
+                .append(" <i class=\"fa fa-server\" aria-hidden=\"true\"></i></h2>")
                 .append("</div>")
                 .append("</div>")
                 .append("</div>")

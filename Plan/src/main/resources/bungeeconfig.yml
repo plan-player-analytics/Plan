@@ -59,6 +59,7 @@ Customization:
       Hours: '%hours%h '
       Minutes: '%minutes%m '
       Seconds: '%seconds%s'
+      Zero: '0s'
 
 Theme:
   Base: Default

@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.NicknamesTable;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
-import main.java.com.djrapitops.plan.systems.processing.NickChangeActionProcessor;
+import main.java.com.djrapitops.plan.systems.processing.NewNickActionProcessor;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,7 +47,7 @@ public class NameProcessor extends PlayerProcessor {
 
         Database db = plugin.getDB();
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        cueNameChangeActionProcessor(uuid, plugin, sameAsCached, nicknamesTable);
+        cueNameChangeActionProcessor(uuid, plugin, nicknamesTable);
 
         try {
             db.getUsersTable().updateName(uuid, playerName);
@@ -60,16 +60,13 @@ public class NameProcessor extends PlayerProcessor {
         dataCache.updateNames(uuid, playerName, displayName);
     }
 
-    private void cueNameChangeActionProcessor(UUID uuid, Plan plugin, boolean sameAsCached, NicknamesTable nicknamesTable) {
+    private void cueNameChangeActionProcessor(UUID uuid, Plan plugin, NicknamesTable nicknamesTable) {
         try {
-            if (!sameAsCached) {
-                List<String> nicknames = nicknamesTable.getNicknames(uuid, Plan.getServerUUID());
-                if (!nicknames.isEmpty()) {
-                    plugin.addToProcessQueue(new NickChangeActionProcessor(uuid, displayName, nicknames.get(nicknames.size() - 1)));
-                } else {
-                    plugin.addToProcessQueue(new NickChangeActionProcessor(uuid, displayName, playerName));
-                }
+            List<String> nicknames = nicknamesTable.getNicknames(uuid, Plan.getServerUUID());
+            if (nicknames.contains(displayName)) {
+                return;
             }
+            plugin.addToProcessQueue(new NewNickActionProcessor(uuid, displayName));
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }

@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.tables.Actions;
 import main.java.com.djrapitops.plan.systems.processing.player.PlayerProcessor;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
-import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
 import java.sql.SQLException;
@@ -22,30 +21,24 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 4.0.0
  */
-public class NickChangeActionProcessor extends PlayerProcessor {
+public class NewNickActionProcessor extends PlayerProcessor {
 
     private final String displayName;
-    private final String inDB;
 
-    public NickChangeActionProcessor(UUID uuid, String displayName, String inDB) {
+    public NewNickActionProcessor(UUID uuid, String displayName) {
         super(uuid);
         this.displayName = displayName;
-        this.inDB = inDB;
     }
 
     @Override
     public void process() {
         UUID uuid = getUUID();
-        if (displayName.equals(inDB)) {
-            return;
-        }
 
-        String old = HtmlUtils.swapColorsToSpan(inDB);
         String n = HtmlUtils.swapColorsToSpan(displayName);
 
-        String info = HtmlUtils.removeXSS(old + " " + Html.FONT_AWESOME_ICON.parse("long-arrow-right") + " " + n);
+        String info = HtmlUtils.removeXSS(n);
 
-        Action action = new Action(MiscUtils.getTime(), Actions.CHANGED_NAME, info);
+        Action action = new Action(MiscUtils.getTime(), Actions.NEW_NICKNAME, info);
 
         try {
             Plan.getInstance().getDB().getActionsTable().insertAction(uuid, action);

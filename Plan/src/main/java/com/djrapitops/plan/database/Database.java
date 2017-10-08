@@ -3,7 +3,6 @@ package main.java.com.djrapitops.plan.database;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.tables.*;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -22,90 +21,23 @@ import java.util.UUID;
  */
 public abstract class Database {
 
-    /**
-     * Instance of Plan used with this database.
-     */
     protected final IPlan plugin;
-
-    /**
-     * Table representing plan_users in the database.
-     */
     protected UsersTable usersTable;
-
-    /**
-     * Table representing plan_user_info in the database.
-     */
     protected UserInfoTable userInfoTable;
-
-    /**
-     * Table representing plan_actions in the database.
-     */
     protected ActionsTable actionsTable;
-
-    /**
-     * Table representing plan_kills in the database.
-     */
     protected KillsTable killsTable;
-
-    /**
-     * Table representing plan_nicknames in the database.
-     */
     protected NicknamesTable nicknamesTable;
-
-    /**
-     * Table representing plan_sessions in the database.
-     */
     protected SessionsTable sessionsTable;
-
-    /**
-     * Table representing plan_ips in the database.
-     */
     protected IPsTable ipsTable;
-
-    /**
-     * Table representing plan_commandusages in the database.
-     */
     protected CommandUseTable commandUseTable;
-
-    /**
-     * Table representing plan_tps in the database.
-     *
-     * @since 3.5.0
-     */
     protected TPSTable tpsTable;
-
-    /**
-     * Table representing plan_version in the database.
-     */
     protected VersionTable versionTable;
-
-    /**
-     * Table representing plan_security in the database.
-     *
-     * @since 3.5.2
-     */
     protected SecurityTable securityTable;
-
-    /**
-     * Table representing plan_worlds in the database.
-     *
-     * @since 3.6.0
-     */
     protected WorldTable worldTable;
-
-    /**
-     * Table representing plan_world_times in the database.
-     *
-     * @since 3.6.0
-     */
     protected WorldTimesTable worldTimesTable;
-
-    /**
-     * Table representing plan_servers in the database.
-     */
     protected ServerTable serverTable;
 
-    protected BasicDataSource dataSource;
+
 
     /**
      * Super constructor.
@@ -178,6 +110,16 @@ public abstract class Database {
      * @throws SQLException If a database error occurs.
      */
     public abstract void close() throws SQLException;
+
+    /**
+     * Returns a connection to the MySQL connection pool.
+     * <p>
+     * On SQLite does nothing.
+     *
+     * @param connection Connection to return.
+     * @throws SQLException DB Error
+     */
+    public abstract void returnToPool(Connection connection) throws SQLException;
 
     /**
      * Removes all data related to an account from the database.
@@ -316,10 +258,6 @@ public abstract class Database {
 
     public UserInfoTable getUserInfoTable() {
         return userInfoTable;
-    }
-
-    public BasicDataSource getDataSource() {
-        return dataSource;
     }
 
     public abstract void commit(Connection connection) throws SQLException;

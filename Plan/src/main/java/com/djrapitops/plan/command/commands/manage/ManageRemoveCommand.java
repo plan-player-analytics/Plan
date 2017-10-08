@@ -12,6 +12,7 @@ import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
@@ -93,9 +94,10 @@ public class ManageRemoveCommand extends SubCommand {
 
                         DataCache dataCache = plugin.getDataCache();
                         Player player = getPlayer(uuid);
-                        dataCache.getActiveSessions().remove(uuid);
-                        dataCache.cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
-
+                        if (player != null) {
+                            SessionCache.getActiveSessions().remove(uuid);
+                            dataCache.cacheSession(uuid, new Session(MiscUtils.getTime(), player.getWorld().getName(), player.getGameMode().name()));
+                        }
                         sender.sendMessage(Locale.get(Msg.MANAGE_INFO_REMOVE_SUCCESS).parse(playerName, plugin.getDB().getConfigName()));
                     } catch (SQLException e) {
                         Log.toLog(this.getClass().getName(), e);

@@ -4,6 +4,8 @@ import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.base.Objects;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.Connection;
@@ -76,26 +78,30 @@ public abstract class Table {
     /**
      * Executes an SQL Statement
      *
-     * @param statementString Statement to execute
-     * @return What execute returns.
+     * @param statementString Statement to setUp
+     * @return What setUp returns.
      * @throws SQLException DB error
      */
     protected boolean execute(String statementString) throws SQLException {
         Statement statement = null;
-        try (Connection connection = getConnection()) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
             statement = connection.createStatement();
             boolean b = statement.execute(statementString);
+//            Log.debug("Execute: " + statementString);
             commit(connection);
             return b;
         } finally {
             close(statement);
+            db.returnToPool(connection);
         }
     }
 
     /**
-     * Used to execute queries while possible SQLExceptions are suppressed.
+     * Used to setUp queries while possible SQLExceptions are suppressed.
      *
-     * @param statements SQL statements to execute
+     * @param statements SQL statements to setUp
      */
     protected void executeUnsafe(String... statements) {
         Verify.nullCheck(statements);
@@ -175,5 +181,39 @@ public abstract class Table {
 
     public SQLDB getDb() {
         return db;
+    }
+
+    protected boolean execute(ExecStatement statement) throws SQLException {
+        boolean updatedSomething = false;
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            updatedSomething = statement.execute(connection.prepareStatement(statement.getSql()));
+            commit(connection);
+        } finally {
+            db.returnToPool(connection);
+        }
+        return updatedSomething;
+    }
+
+    protected void executeBatch(ExecStatement statement) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            statement.executeBatch(connection.prepareStatement(statement.getSql()));
+            commit(connection);
+        } finally {
+            db.returnToPool(connection);
+        }
+    }
+
+    protected <T> T query(QueryStatement<T> statement) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            return statement.executeQuery(connection.prepareStatement(statement.getSql()));
+        } finally {
+            db.returnToPool(connection);
+        }
     }
 }

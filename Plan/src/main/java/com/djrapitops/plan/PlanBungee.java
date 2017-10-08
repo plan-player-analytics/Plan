@@ -5,6 +5,7 @@
 package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.BungeePlugin;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -20,6 +21,7 @@ import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager
 import main.java.com.djrapitops.plan.systems.listeners.BungeePlayerListener;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
+import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
 import net.md_5.bungee.api.ChatColor;
@@ -67,7 +69,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             registerCommand(new ReloadCommand(this));
 
             String ip = variableHolder.getIp();
-            if ("0.0.0.0".equals(ip)) {
+            if ("0.0.0.0" .equals(ip)) {
                 Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
                 Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
                 return;
@@ -94,6 +96,8 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
                     infoManager.sendConfigSettings();
                 }
             }).runTaskAsynchronously();
+            getRunnableFactory().createNew("Player Count task", new TPSCountTimer(this))
+                    .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
 
 //            getProxy().registerChannel("Plan");
 //            registerListener(new BungeePluginChannelListener(this));

@@ -1,12 +1,13 @@
 package main.java.com.djrapitops.plan.database.tables;
 
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,20 +30,21 @@ public class VersionTable extends Table {
     }
 
     public boolean isNewDatabase() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(usingMySQL ?
-                    "SHOW TABLES LIKE ?" :
-                    "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?");
-            statement.setString(1, tableName);
+        String sql = usingMySQL ?
+                "SHOW TABLES LIKE ?" :
+                "SELECT tbl_name FROM sqlite_master WHERE tbl_name=?";
 
-            set = statement.executeQuery();
+        return query(new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, tableName);
+            }
 
-            return !set.next();
-        } finally {
-            close(set, statement);
-        }
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return !set.next();
+            }
+        });
     }
 
     /**
@@ -50,23 +52,18 @@ public class VersionTable extends Table {
      */
     @Override
     public int getVersion() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            int version = 0;
-            statement = connection.prepareStatement("SELECT * FROM " + tableName);
-            set = statement.executeQuery();
-            if (set.next()) {
-                version = set.getInt("version");
-            }
-            return version;
-        } catch (Exception exc) {
-            Log.toLog("VersionsTable.getVersion", exc);
-        } finally {
-            close(set, statement);
-        }
+        String sql = "SELECT * FROM " + tableName;
 
-        return 1;
+        return query(new QueryAllStatement<Integer>(sql) {
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                int version = 0;
+                if (set.next()) {
+                    version = set.getInt("version");
+                }
+                return version;
+            }
+        });
     }
 
     /**
@@ -77,14 +74,14 @@ public class VersionTable extends Table {
      */
     public void setVersion(int version) throws SQLException {
         removeAllData();
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("INSERT INTO " + tableName + " (version) VALUES (" + version + ")");
 
-            statement.executeUpdate();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        String sql = "INSERT INTO " + tableName + " (version) VALUES (?)";
+
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, version);
+            }
+        });
     }
 }

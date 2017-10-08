@@ -3,11 +3,13 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,25 +64,25 @@ public class IPsTable extends UserIDTable {
     }
 
     private List<String> getStringList(UUID uuid, String column) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            List<String> stringList = new ArrayList<>();
+        String sql = "SELECT DISTINCT " + column + " FROM " + tableName +
+                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
 
-            statement = connection.prepareStatement(Select.from(tableName, column)
-                    .where(columnUserID + "=" + usersTable.statementSelectID)
-                    .toString());
-            statement.setFetchSize(50);
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                stringList.add(set.getString(column));
+
+        return query(new QueryStatement<List<String>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
 
-            return stringList;
-        } finally {
-            close(set, statement);
-        }
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> stringList = new ArrayList<>();
+                while (set.next()) {
+                    stringList.add(set.getString(column));
+                }
+                return stringList;
+            }
+        });
     }
 
     public void saveIP(UUID uuid, String ip, String geolocation) throws SQLException {
@@ -92,130 +94,115 @@ public class IPsTable extends UserIDTable {
     }
 
     private void insertIp(UUID uuid, String ip, String geolocation) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-
-            statement = connection.prepareStatement(insertStatement);
-            statement.setString(1, uuid.toString());
-            statement.setString(2, ip);
-            statement.setString(3, geolocation);
-            statement.execute();
-
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setString(2, ip);
+                statement.setString(3, geolocation);
+            }
+        });
     }
 
     public Optional<String> getGeolocation(String ip) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnGeolocation)
-                    .where(columnIP + "=?")
-                    .toString());
-            statement.setString(1, ip);
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(set.getString(columnGeolocation));
+        String sql = Select.from(tableName, columnGeolocation)
+                .where(columnIP + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<String>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, ip);
             }
-            return Optional.empty();
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<String> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getString(columnGeolocation));
+                }
+                return Optional.empty();
+            }
+        });
     }
 
     public Map<UUID, List<String>> getAllGeolocations() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            Map<UUID, List<String>> geoLocations = new HashMap<>();
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String sql = "SELECT " +
+                columnGeolocation + ", " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID;
 
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        return query(new QueryAllStatement<Map<UUID, List<String>>>(sql, 50000) {
+            @Override
+            public Map<UUID, List<String>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<String>> geoLocations = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
 
-            statement = connection.prepareStatement("SELECT " +
-                    columnGeolocation + ", " +
-                    usersUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
-            );
-            statement.setFetchSize(50000);
-            set = statement.executeQuery();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString("uuid"));
-
-                List<String> userGeoLocs = geoLocations.getOrDefault(uuid, new ArrayList<>());
-                userGeoLocs.add(set.getString(columnGeolocation));
-                geoLocations.put(uuid, userGeoLocs);
+                    List<String> userGeoLocs = geoLocations.getOrDefault(uuid, new ArrayList<>());
+                    userGeoLocs.add(set.getString(columnGeolocation));
+                    geoLocations.put(uuid, userGeoLocs);
+                }
+                return geoLocations;
             }
-            return geoLocations;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public Map<UUID, Map<String, String>> getAllIPsAndGeolocations() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String sql = "SELECT " +
+                columnGeolocation + ", " +
+                columnIP + ", " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID;
 
-            statement = connection.prepareStatement("SELECT " +
-                    columnGeolocation + ", " +
-                    columnIP + ", " +
-                    usersUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID
-            );
-            statement.setFetchSize(5000);
-            set = statement.executeQuery();
-            Map<UUID, Map<String, String>> map = new HashMap<>();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString("uuid"));
+        return query(new QueryAllStatement<Map<UUID, Map<String, String>>>(sql, 50000) {
+            @Override
+            public Map<UUID, Map<String, String>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<String, String>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
 
-                Map<String, String> userMap = map.getOrDefault(uuid, new HashMap<>());
+                    Map<String, String> userMap = map.getOrDefault(uuid, new HashMap<>());
 
-                String geoLocation = set.getString(columnGeolocation);
-                String ip = set.getString(columnIP);
+                    String geoLocation = set.getString(columnGeolocation);
+                    String ip = set.getString(columnIP);
 
-                userMap.put(ip, geoLocation);
-                map.put(uuid, userMap);
+                    userMap.put(ip, geoLocation);
+                    map.put(uuid, userMap);
+                }
+                return map;
             }
-            return map;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public void insertIPsAndGeolocations(Map<UUID, Map<String, String>> allIPsAndGeolocations) throws SQLException {
         if (Verify.isEmpty(allIPsAndGeolocations)) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
 
-            // Every User
-            for (UUID uuid : allIPsAndGeolocations.keySet()) {
-                // Every IP & Geolocation
-                for (Map.Entry<String, String> entry : allIPsAndGeolocations.get(uuid).entrySet()) {
-                    String ip = entry.getKey();
-                    String geoLocation = entry.getValue();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                // Every User
+                for (UUID uuid : allIPsAndGeolocations.keySet()) {
+                    // Every IP & Geolocation
+                    for (Map.Entry<String, String> entry : allIPsAndGeolocations.get(uuid).entrySet()) {
+                        String ip = entry.getKey();
+                        String geoLocation = entry.getValue();
 
-                    statement.setString(1, uuid.toString());
-                    statement.setString(2, ip);
-                    statement.setString(3, geoLocation);
+                        statement.setString(1, uuid.toString());
+                        statement.setString(2, ip);
+                        statement.setString(3, geoLocation);
 
-                    statement.addBatch();
+                        statement.addBatch();
+                    }
                 }
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        });
     }
 }

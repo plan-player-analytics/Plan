@@ -71,12 +71,10 @@ public enum Html {
      * @return The parsed HTML String
      */
     public String parse(Serializable... p) {
-        Verify.nullCheck(p);
-
         Map<String, Serializable> replaceMap = new HashMap<>();
 
         for (int i = 0; i < p.length; i++) {
-            replaceMap.put(String.valueOf(i), p[i].toString());
+            replaceMap.put(String.valueOf(i), p[i]);
         }
 
         StrSubstitutor sub = new StrSubstitutor(replaceMap);

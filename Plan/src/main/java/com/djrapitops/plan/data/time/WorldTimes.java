@@ -154,4 +154,8 @@ public class WorldTimes {
         b.append("}");
         return b.toString();
     }
+
+    public String getCurrentWorld() {
+        return currentWorld;
+    }
 }

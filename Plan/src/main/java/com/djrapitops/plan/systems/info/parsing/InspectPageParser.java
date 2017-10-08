@@ -107,6 +107,9 @@ public class InspectPageParser extends PageParser {
             addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
 
             long now = MiscUtils.getTime();
+
+            addValue("refresh", FormatUtils.formatTimeStamp(now));
+
             long dayAgo = now - TimeAmount.DAY.ms();
             long weekAgo = now - TimeAmount.WEEK.ms();
 
@@ -184,6 +187,10 @@ public class InspectPageParser extends PageParser {
                 playerClassification(userInfo, active);
             } else {
                 addValue("playerClassification", active);
+            }
+
+            if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
+                addValue("networkName", Settings.SERVER_NAME.toString());
             }
 
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("player.html"), placeHolders);

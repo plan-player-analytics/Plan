@@ -18,6 +18,8 @@ import us.myles.ViaVersion.api.ViaAPI;
  */
 public class ViaVersionHook extends Hook {
 
+    private static PlayerVersionListener listener;
+
     /**
      * Hooks the plugin and registers it's PluginData objects.
      * <p>
@@ -43,8 +45,10 @@ public class ViaVersionHook extends Hook {
             Log.toLog(this.getClass().getName(), e);
             return;
         }
-        PlayerVersionListener l = new PlayerVersionListener(plan, api, table);
-        plan.registerListener(l);
+        if (listener == null) {
+            listener = new PlayerVersionListener(api);
+            plan.registerListener(listener);
+        }
         addPluginDataSource(new ViaVersionVersionTable(table));
         addPluginDataSource(new ViaVersionVersion(table));
     }

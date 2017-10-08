@@ -19,6 +19,7 @@ public enum Settings {
     BUNGEE_COPY_CONFIG("Plugin.Bungee-Override.CopyBungeeConfig"),
     BUNGEE_OVERRIDE_STANDALONE_MODE("Plugin.Bungee-Override.StandaloneMode"),
     ANALYSIS_EXPORT("Analysis.Export.Enabled"),
+    ANALYSIS_LOG("Analysis.LogProgress"),
     SHOW_ALTERNATIVE_IP("Commands.AlternativeIP.Enabled"),
     LOG_UNKNOWN_COMMANDS("Data.Commands.LogUnknownCommands"),
     COMBINE_COMMAND_ALIASES("Data.Commands.CombineCommandAliases"),
@@ -59,6 +60,7 @@ public enum Settings {
     FORMAT_HOURS("Customization.Formatting.TimeAmount.Hours"),
     FORMAT_MINUTES("Customization.Formatting.TimeAmount.Minutes"),
     FORMAT_SECONDS("Customization.Formatting.TimeAmount.Seconds"),
+    FORMAT_ZERO_SECONDS("Customization.Formatting.TimeAmount.Zero"),
     FORMAT_DECIMALS("Customization.Formatting.DecimalPoints"),
     //
     COLOR_MAIN("Commands.Colors.Main"),
@@ -99,7 +101,7 @@ public enum Settings {
     //
     // Bungee
     BUNGEE_IP("Server.IP"),
-    BUNGEE_NETWROK_NAME("Network.Name");
+    BUNGEE_NETWORK_NAME("Network.Name");
 
     private static final ServerSpecificSettings serverSpecificSettings = new ServerSpecificSettings();
 

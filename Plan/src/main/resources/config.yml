@@ -39,6 +39,7 @@ Commands:
 
 Analysis:
   AutoRefreshPeriod: 60
+  LogProgress: true
   Export:
     Enabled: false
     ExternalWebServerLinkProtocol: http
@@ -63,6 +64,7 @@ Customization:
       Hours: '%hours%h '
       Minutes: '%minutes%m '
       Seconds: '%seconds%s'
+      Zero: '0s'
 
 Theme:
   Base: Default

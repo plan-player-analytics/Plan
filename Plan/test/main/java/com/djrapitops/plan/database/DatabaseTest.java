@@ -863,6 +863,8 @@ public class DatabaseTest {
 
     @Test
     public void testRegisterProcessorRegisterException() throws SQLException {
+        assertFalse(db.getUsersTable().isRegistered(uuid));
+        assertFalse(db.getUserInfoTable().isRegistered(uuid));
         for (int i = 0; i < 200; i++) {
             new RegisterProcessor(uuid, 500L, 1000L, "name", 4).process();
         }

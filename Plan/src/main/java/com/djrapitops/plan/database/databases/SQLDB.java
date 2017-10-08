@@ -10,7 +10,6 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
-import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
@@ -110,7 +109,7 @@ public abstract class SQLDB extends Database {
 
             if (newDatabase) {
                 Log.info("New Database created.");
-                setVersion(10);
+                setVersion(11);
             }
 
             int version = getVersion();
@@ -127,6 +126,10 @@ public abstract class SQLDB extends Database {
                         }
                     }
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
+            }
+            if (version < 11) {
+                serverTable.alterTableV11();
+                setVersion(11);
             }
         } catch (SQLException e) {
             throw new DatabaseInitException("Failed to set-up Database", e);
@@ -187,7 +190,6 @@ public abstract class SQLDB extends Database {
      */
     @Override
     public void close() throws SQLException {
-        dataSource.close();
         setStatus("Closed");
         open = false;
         Log.logDebug("Database"); // Log remaining Debug info if present
@@ -278,9 +280,7 @@ public abstract class SQLDB extends Database {
         Log.logDebug("Database");
     }
 
-    public Connection getConnection() throws SQLException {
-        return getDataSource().getConnection();
-    }
+    public abstract Connection getConnection() throws SQLException;
 
     /**
      * Commits changes to the .db file when using SQLite Database.
@@ -294,7 +294,14 @@ public abstract class SQLDB extends Database {
                 connection.commit();
             }
         } finally {
-            MiscUtils.close(connection);
+            returnToPool(connection);
+        }
+    }
+
+    @Override
+    public void returnToPool(Connection connection) throws SQLException {
+        if (usingMySQL && connection != null) {
+            connection.close();
         }
     }
 
@@ -309,7 +316,7 @@ public abstract class SQLDB extends Database {
                 connection.rollback();
             }
         } finally {
-            MiscUtils.close(connection);
+            returnToPool(connection);
         }
     }
 

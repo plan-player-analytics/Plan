@@ -5,10 +5,15 @@ import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * @author Rsl1122
  */
 public class MySQLDB extends SQLDB {
+
+    private BasicDataSource dataSource;
 
     /**
      * Class Constructor.
@@ -49,5 +54,16 @@ public class MySQLDB extends SQLDB {
     @Override
     public String getName() {
         return "MySQL";
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
+    @Override
+    public void close() throws SQLException {
+        dataSource.close();
+        super.close();
     }
 }

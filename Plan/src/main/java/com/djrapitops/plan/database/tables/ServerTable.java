@@ -7,10 +7,12 @@ package main.java.com.djrapitops.plan.database.tables;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.*;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,10 +65,16 @@ public class ServerTable extends Table {
                 .column(columnServerName, Sql.varchar(100))
                 .column(columnWebserverAddress, Sql.varchar(100))
                 .column(columnInstalled, Sql.BOOL).notNull().defaultValue(false)
-                .column(columnMaxPlayers, Sql.BOOL).notNull().defaultValue("-1")
+                .column(columnMaxPlayers, Sql.INT).notNull().defaultValue("-1")
                 .primaryKey(usingMySQL, columnServerID)
                 .toString()
         );
+    }
+
+    public void alterTableV11() {
+        if (usingMySQL) {
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnMaxPlayers + " INTEGER NOT NULL DEFAULT -1");
+        }
     }
 
     public void saveCurrentServerInfo(ServerInfo info) throws SQLException {
@@ -78,29 +86,26 @@ public class ServerTable extends Table {
     }
 
     private void updateServerInfo(ServerInfo info) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Update.values(tableName,
-                    columnServerUUID,
-                    columnServerName,
-                    columnWebserverAddress,
-                    columnInstalled,
-                    columnMaxPlayers)
-                    .where(columnServerID + "=?")
-                    .toString()
-            );
-            statement.setString(1, info.getUuid().toString());
-            statement.setString(2, info.getName());
-            statement.setString(3, info.getWebAddress());
-            statement.setBoolean(4, true);
-            statement.setInt(5, info.getMaxPlayers());
-            statement.setInt(6, info.getId());
-            statement.executeUpdate();
+        String sql = Update.values(tableName,
+                columnServerUUID,
+                columnServerName,
+                columnWebserverAddress,
+                columnInstalled,
+                columnMaxPlayers)
+                .where(columnServerID + "=?")
+                .toString();
 
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, info.getUuid().toString());
+                statement.setString(2, info.getName());
+                statement.setString(3, info.getWebAddress());
+                statement.setBoolean(4, true);
+                statement.setInt(5, info.getMaxPlayers());
+                statement.setInt(6, info.getId());
+            }
+        });
     }
 
     /**
@@ -108,28 +113,24 @@ public class ServerTable extends Table {
      *
      * @param info Info to instert (All variables should be present.
      * @throws IllegalStateException if one of the ServerInfo variables is null
-     * @throws SQLException DB Error
+     * @throws SQLException          DB Error
      */
     private void saveNewServerInfo(ServerInfo info) throws SQLException {
         UUID uuid = info.getUuid();
         String name = info.getName();
         String webAddress = info.getWebAddress();
         Verify.nullCheck(uuid, name, webAddress);
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(insertStatement);
 
-            statement.setString(1, uuid.toString());
-            statement.setString(2, name);
-            statement.setString(3, webAddress);
-            statement.setBoolean(4, true);
-            statement.setInt(5, info.getMaxPlayers());
-            statement.execute();
-
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setString(2, name);
+                statement.setString(3, webAddress);
+                statement.setBoolean(4, true);
+                statement.setInt(5, info.getMaxPlayers());
+            }
+        });
     }
 
     /**
@@ -140,23 +141,26 @@ public class ServerTable extends Table {
      * @throws SQLException DB Error
      */
     public Optional<Integer> getServerID(UUID serverUUID) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName,
-                    columnServerID)
-                    .where(columnServerUUID + "=?")
-                    .toString());
-            statement.setString(1, serverUUID.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(set.getInt(columnServerID));
-            } else {
-                return Optional.empty();
+        String sql = Select.from(tableName,
+                columnServerID)
+                .where(columnServerUUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
             }
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<Integer> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getInt(columnServerID));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        });
     }
 
     /**
@@ -167,42 +171,44 @@ public class ServerTable extends Table {
      * @throws SQLException DB Error
      */
     public Optional<String> getServerName(UUID serverUUID) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName,
-                    columnServerName)
-                    .where(columnServerUUID + "=?")
-                    .toString());
-            statement.setString(1, serverUUID.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(set.getString(columnServerName));
-            } else {
-                return Optional.empty();
+        String sql = Select.from(tableName,
+                columnServerName)
+                .where(columnServerUUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<String>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
             }
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<String> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getString(columnServerName));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        });
     }
 
     public Map<Integer, String> getServerNames() throws SQLException {
-        Map<Integer, String> names = new HashMap<>();
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName,
-                    columnServerID, columnServerName)
-                    .toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                int id = set.getInt(columnServerID);
-                names.put(id, set.getString(columnServerName));
+        String sql = Select.from(tableName,
+                columnServerID, columnServerName)
+                .toString();
+
+        return query(new QueryAllStatement<Map<Integer, String>>(sql) {
+            @Override
+            public Map<Integer, String> processResults(ResultSet set) throws SQLException {
+                Map<Integer, String> names = new HashMap<>();
+                while (set.next()) {
+                    int id = set.getInt(columnServerID);
+                    names.put(id, set.getString(columnServerName));
+                }
+                return names;
             }
-            return names;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     /**
@@ -212,51 +218,57 @@ public class ServerTable extends Table {
      * @throws SQLException DB Error
      */
     public Optional<ServerInfo> getBungeeInfo() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName, "*")
-                    .where(columnServerName + "=?")
-                    .toString());
-            statement.setString(1, "BungeeCord");
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(new ServerInfo(
-                        set.getInt(columnServerID),
-                        UUID.fromString(set.getString(columnServerUUID)),
-                        set.getString(columnServerName),
-                        set.getString(columnWebserverAddress),
-                        set.getInt(columnMaxPlayers)));
-            } else {
-                return Optional.empty();
+        String sql = Select.from(tableName, "*")
+                .where(columnServerName + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<ServerInfo>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, "BungeeCord");
             }
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<ServerInfo> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new ServerInfo(
+                            set.getInt(columnServerID),
+                            UUID.fromString(set.getString(columnServerUUID)),
+                            set.getString(columnServerName),
+                            set.getString(columnWebserverAddress),
+                            set.getInt(columnMaxPlayers)));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        });
     }
 
     public List<ServerInfo> getBukkitServers() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName, "*")
-                    .where(columnServerName + "!=?")
-                    .toString());
-            statement.setString(1, "BungeeCord");
-            set = statement.executeQuery();
-            List<ServerInfo> servers = new ArrayList<>();
-            while (set.next()) {
-                servers.add(new ServerInfo(
-                        set.getInt(columnServerID),
-                        UUID.fromString(set.getString(columnServerUUID)),
-                        set.getString(columnServerName),
-                        set.getString(columnWebserverAddress),
-                        set.getInt(columnMaxPlayers)));
+        String sql = Select.from(tableName, "*")
+                .where(columnServerName + "!=?")
+                .toString();
+
+        return query(new QueryStatement<List<ServerInfo>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, "BungeeCord");
             }
-            return servers;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public List<ServerInfo> processResults(ResultSet set) throws SQLException {
+                List<ServerInfo> servers = new ArrayList<>();
+                while (set.next()) {
+                    servers.add(new ServerInfo(
+                            set.getInt(columnServerID),
+                            UUID.fromString(set.getString(columnServerUUID)),
+                            set.getString(columnServerName),
+                            set.getString(columnWebserverAddress),
+                            set.getInt(columnMaxPlayers)));
+                }
+                return servers;
+            }
+        });
     }
 
     public String getColumnID() {
@@ -271,108 +283,111 @@ public class ServerTable extends Table {
         if (Verify.isEmpty(allServerInfo)) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
 
-            for (ServerInfo info : allServerInfo) {
-                UUID uuid = info.getUuid();
-                String name = info.getName();
-                String webAddress = info.getWebAddress();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (ServerInfo info : allServerInfo) {
+                    UUID uuid = info.getUuid();
+                    String name = info.getName();
+                    String webAddress = info.getWebAddress();
 
-                if (uuid == null) {
-                    continue;
+                    if (uuid == null) {
+                        continue;
+                    }
+
+                    statement.setString(1, uuid.toString());
+                    statement.setString(2, name);
+                    statement.setString(3, webAddress);
+                    statement.setBoolean(4, true);
+                    statement.setInt(5, info.getMaxPlayers());
+                    statement.addBatch();
                 }
-
-                statement.setString(1, uuid.toString());
-                statement.setString(2, name);
-                statement.setString(3, webAddress);
-                statement.setBoolean(4, true);
-                statement.setInt(5, info.getMaxPlayers());
-                statement.addBatch();
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        });
     }
 
     public List<UUID> getServerUUIDs() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName, columnServerUUID)
-                    .toString());
-            set = statement.executeQuery();
-            List<UUID> uuids = new ArrayList<>();
-            while (set.next()) {
-                uuids.add(UUID.fromString(set.getString(columnServerUUID)));
+        String sql = Select.from(tableName, columnServerUUID)
+                .toString();
+
+        return query(new QueryAllStatement<List<UUID>>(sql) {
+            @Override
+            public List<UUID> processResults(ResultSet set) throws SQLException {
+                List<UUID> uuids = new ArrayList<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(columnServerUUID)));
+                }
+                return uuids;
             }
-            return uuids;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public Optional<UUID> getServerUUID(String serverName) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName,
-                    columnServerUUID)
-                    .where(columnServerName + "=?")
-                    .toString());
-            statement.setString(1, serverName);
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(UUID.fromString(set.getString(columnServerUUID)));
-            } else {
-                return Optional.empty();
+        String sql = Select.from(tableName,
+                columnServerUUID)
+                .where(columnServerName + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverName);
             }
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<UUID> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(UUID.fromString(set.getString(columnServerUUID)));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        });
     }
 
     public Optional<ServerInfo> getServerInfo(UUID serverUUID) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName, "*")
-                    .where(columnServerUUID + "=?")
-                    .toString());
-            statement.setString(1, serverUUID.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return Optional.of(new ServerInfo(
-                        set.getInt(columnServerID),
-                        UUID.fromString(set.getString(columnServerUUID)),
-                        set.getString(columnServerName),
-                        set.getString(columnWebserverAddress),
-                        set.getInt(columnMaxPlayers)));
+        String sql = Select.from(tableName, "*")
+                .where(columnServerUUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Optional<ServerInfo>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
             }
-            return Optional.empty();
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<ServerInfo> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new ServerInfo(
+                            set.getInt(columnServerID),
+                            UUID.fromString(set.getString(columnServerUUID)),
+                            set.getString(columnServerName),
+                            set.getString(columnWebserverAddress),
+                            set.getInt(columnMaxPlayers)));
+                }
+                return Optional.empty();
+            }
+        });
     }
 
     public int getMaxPlayers() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName);
-            statement.setFetchSize(5000);
+        String sql = "SELECT SUM(" + columnMaxPlayers + ") AS max FROM " + tableName;
 
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt("max");
+        return query(new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt("max");
+                }
+                return 0;
+            }
+        });
     }
 }

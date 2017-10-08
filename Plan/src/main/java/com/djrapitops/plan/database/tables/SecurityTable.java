@@ -6,16 +6,17 @@
 package main.java.com.djrapitops.plan.database.tables;
 
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Insert;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,21 +51,15 @@ public class SecurityTable extends Table {
         );
     }
 
-    public boolean removeUser(String user) {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)");
-            statement.setString(1, user);
+    public void removeUser(String user) throws SQLException {
+        String sql = "DELETE FROM " + tableName + " WHERE (" + columnUser + "=?)";
 
-            statement.execute();
-            commit(connection);
-            return true;
-        } catch (SQLException ex) {
-            Log.toLog(this.getClass().getName(), ex);
-            return false;
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, user);
+            }
+        });
     }
 
     public void addNewUser(WebUser info) throws SQLException {
@@ -72,18 +67,14 @@ public class SecurityTable extends Table {
     }
 
     public void addNewUser(String user, String saltPassHash, int permLevel) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
-            statement.setString(1, user);
-            statement.setString(2, saltPassHash);
-            statement.setInt(3, permLevel);
-            statement.execute();
-
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, user);
+                statement.setString(2, saltPassHash);
+                statement.setInt(3, permLevel);
+            }
+        });
     }
 
     public boolean userExists(String user) throws SQLException {
@@ -91,66 +82,64 @@ public class SecurityTable extends Table {
     }
 
     public WebUser getWebUser(String user) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.all(tableName).where(columnUser + "=?").toString());
-            statement.setString(1, user);
-            set = statement.executeQuery();
-            if (set.next()) {
-                String saltedPassHash = set.getString(columnSaltedHash);
-                int permissionLevel = set.getInt(columnPermLevel);
-                return new WebUser(user, saltedPassHash, permissionLevel);
+        String sql = Select.all(tableName).where(columnUser + "=?").toString();
+
+        return query(new QueryStatement<WebUser>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, user);
             }
-            return null;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public WebUser processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    String saltedPassHash = set.getString(columnSaltedHash);
+                    int permissionLevel = set.getInt(columnPermLevel);
+                    return new WebUser(user, saltedPassHash, permissionLevel);
+                }
+                return null;
+            }
+        });
     }
 
     public List<WebUser> getUsers() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.all(tableName).toString());
-            statement.setFetchSize(5000);
-            set = statement.executeQuery();
-            List<WebUser> list = new ArrayList<>();
-            while (set.next()) {
-                String user = set.getString(columnUser);
-                String saltedPassHash = set.getString(columnSaltedHash);
-                int permissionLevel = set.getInt(columnPermLevel);
-                WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
-                list.add(info);
+        String sql = Select.all(tableName).toString();
+
+        return query(new QueryAllStatement<List<WebUser>>(sql, 5000) {
+            @Override
+            public List<WebUser> processResults(ResultSet set) throws SQLException {
+                List<WebUser> list = new ArrayList<>();
+                while (set.next()) {
+                    String user = set.getString(columnUser);
+                    String saltedPassHash = set.getString(columnSaltedHash);
+                    int permissionLevel = set.getInt(columnPermLevel);
+                    WebUser info = new WebUser(user, saltedPassHash, permissionLevel);
+                    list.add(info);
+                }
+                return list;
             }
-            return list;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public void addUsers(List<WebUser> users) throws SQLException {
         if (Verify.isEmpty(users)) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
-            for (WebUser user : users) {
-                String userName = user.getName();
-                String pass = user.getSaltedPassHash();
-                int permLvl = user.getPermLevel();
 
-                statement.setString(1, userName);
-                statement.setString(2, pass);
-                statement.setInt(3, permLvl);
-                statement.addBatch();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (WebUser user : users) {
+                    String userName = user.getName();
+                    String pass = user.getSaltedPassHash();
+                    int permLvl = user.getPermLevel();
+
+                    statement.setString(1, userName);
+                    statement.setString(2, pass);
+                    statement.setInt(3, permLvl);
+                    statement.addBatch();
+                }
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        });
     }
 }

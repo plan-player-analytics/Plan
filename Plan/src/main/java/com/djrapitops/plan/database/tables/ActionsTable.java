@@ -9,11 +9,13 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,22 +75,16 @@ public class ActionsTable extends UserIDTable {
     }
 
     public void insertAction(UUID uuid, Action action) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(insertStatement);
-            statement.setString(1, uuid.toString());
-            statement.setString(2, Plan.getServerUUID().toString());
-            statement.setInt(3, action.getDoneAction().getId());
-            statement.setLong(4, action.getDate());
-            statement.setString(5, action.getAdditionalInfo());
-            statement.execute();
-
-            commit(connection);
-        } finally {
-            close(statement, connection);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setString(2, Plan.getServerUUID().toString());
+                statement.setInt(3, action.getDoneAction().getId());
+                statement.setLong(4, action.getDate());
+                statement.setString(5, action.getAdditionalInfo());
+            }
+        });
     }
 
     /**
@@ -99,108 +95,96 @@ public class ActionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public List<Action> getActions(UUID uuid) throws SQLException {
-        List<Action> actions = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(Select.from(tableName, "*")
-                    .where(columnUserID + "=" + usersTable.statementSelectID)
-                    .toString());
-            statement.setFetchSize(5000);
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                int serverID = set.getInt(columnServerID);
-                long date = set.getLong(columnDate);
-                Actions doneAction = Actions.getById(set.getInt(columnActionID));
-                String additionalInfo = set.getString(columnAdditionalInfo);
-                actions.add(new Action(date, doneAction, additionalInfo, serverID));
+        String sql = Select.all(tableName)
+                .where(columnUserID + "=" + usersTable.statementSelectID)
+                .toString();
+
+        return query(new QueryStatement<List<Action>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-            return actions;
-        } finally {
-            close(set, statement, connection);
-        }
+
+            @Override
+            public List<Action> processResults(ResultSet set) throws SQLException {
+                List<Action> actions = new ArrayList<>();
+                while (set.next()) {
+                    int serverID = set.getInt(columnServerID);
+                    long date = set.getLong(columnDate);
+                    Actions doneAction = Actions.getById(set.getInt(columnActionID));
+                    String additionalInfo = set.getString(columnAdditionalInfo);
+                    actions.add(new Action(date, doneAction, additionalInfo, serverID));
+                }
+                return actions;
+            }
+        });
     }
 
     public Map<UUID, Map<UUID, List<Action>>> getAllActions() throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try {
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
-            connection = getConnection();
-            statement = connection.prepareStatement("SELECT " +
-                    columnActionID + ", " +
-                    columnDate + ", " +
-                    columnAdditionalInfo + ", " +
-                    usersUUIDColumn + ", " +
-                    serverUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
-            );
-            statement.setFetchSize(5000);
-            set = statement.executeQuery();
-            Map<UUID, Map<UUID, List<Action>>> map = new HashMap<>();
-            while (set.next()) {
-                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                UUID uuid = UUID.fromString(set.getString("uuid"));
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String sql = "SELECT " +
+                columnActionID + ", " +
+                columnDate + ", " +
+                columnAdditionalInfo + ", " +
+                usersUUIDColumn + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
-                Map<UUID, List<Action>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
-                List<Action> actions = serverMap.getOrDefault(uuid, new ArrayList<>());
+        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Action>>>>(sql, 20000) {
+            @Override
+            public Map<UUID, Map<UUID, List<Action>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<UUID, List<Action>>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
 
-                long date = set.getLong(columnDate);
-                Actions doneAction = Actions.getById(set.getInt(columnActionID));
-                String additionalInfo = set.getString(columnAdditionalInfo);
+                    Map<UUID, List<Action>> serverMap = map.getOrDefault(serverUUID, new HashMap<>());
+                    List<Action> actions = serverMap.getOrDefault(uuid, new ArrayList<>());
 
-                actions.add(new Action(date, doneAction, additionalInfo, -1));
+                    long date = set.getLong(columnDate);
+                    Actions doneAction = Actions.getById(set.getInt(columnActionID));
+                    String additionalInfo = set.getString(columnAdditionalInfo);
 
-                serverMap.put(uuid, actions);
-                map.put(serverUUID, serverMap);
+                    actions.add(new Action(date, doneAction, additionalInfo, -1));
+
+                    serverMap.put(uuid, actions);
+                    map.put(serverUUID, serverMap);
+                }
+                return map;
             }
-            return map;
-        } finally {
-            close(set, statement, connection);
-        }
+        });
     }
 
     public void insertActions(Map<UUID, Map<UUID, List<Action>>> allActions) throws SQLException {
         if (Verify.isEmpty(allActions)) {
             return;
         }
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(insertStatement);
 
-            // Every Server
-            for (UUID serverUUID : allActions.keySet()) {
-                // Every User
-                for (Map.Entry<UUID, List<Action>> entry : allActions.get(serverUUID).entrySet()) {
-                    UUID uuid = entry.getKey();
-                    // Every Action
-                    List<Action> actions = entry.getValue();
-                    for (Action action : actions) {
-                        statement.setString(1, uuid.toString());
-                        statement.setString(2, serverUUID.toString());
-                        statement.setInt(3, action.getDoneAction().getId());
-                        statement.setLong(4, action.getDate());
-                        statement.setString(5, action.getAdditionalInfo());
-                        statement.addBatch();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (UUID serverUUID : allActions.keySet()) {
+                    // Every User
+                    for (Map.Entry<UUID, List<Action>> entry : allActions.get(serverUUID).entrySet()) {
+                        UUID uuid = entry.getKey();
+                        // Every Action
+                        List<Action> actions = entry.getValue();
+                        for (Action action : actions) {
+                            statement.setString(1, uuid.toString());
+                            statement.setString(2, serverUUID.toString());
+                            statement.setInt(3, action.getDoneAction().getId());
+                            statement.setLong(4, action.getDate());
+                            statement.setString(5, action.getAdditionalInfo());
+                            statement.addBatch();
+                        }
                     }
                 }
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement, connection);
-        }
+        });
     }
 }

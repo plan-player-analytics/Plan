@@ -5,6 +5,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -15,6 +16,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.TPSTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
@@ -29,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -145,7 +146,9 @@ public class Analysis {
     }
 
     private void log(String msg) {
-        Log.info(msg);
+        if (Settings.ANALYSIS_LOG.isTrue()) {
+            Log.info(msg);
+        }
     }
 
     private Map<String, Serializable> analyzeAdditionalPluginData(Set<UUID> uuids) {
@@ -258,7 +261,9 @@ public class Analysis {
                 }
             }
 
-            Map<UUID, UserInfo> mappedUserInfo = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, Function.identity()));
+            Map<UUID, UserInfo> mappedUserInfo = new HashMap<>();
+            userInfo.forEach(u -> mappedUserInfo.put(u.getUuid(), u));
+
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
             for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {
                 UserInfo user = mappedUserInfo.get(entry.getKey());
@@ -274,13 +279,13 @@ public class Analysis {
 
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-            Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));
+            Map<UUID, Long> registered = mappedUserInfo.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRegistered()));
             joinInfo.addRegistered(registered);
             activity.addBans(userInfo.stream().filter(UserInfo::isBanned).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
             playerCount.addOPs(userInfo.stream().filter(UserInfo::isOpped).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-            Map<UUID, Session> activeSessions = plugin.getDataCache().getActiveSessions();
+            Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
             Map<UUID, List<Session>> sessions = db.getSessionsTable().getAllSessions(true).get(Plan.getServerUUID());
             joinInfo.addActiveSessions(activeSessions);
             if (sessions != null) {

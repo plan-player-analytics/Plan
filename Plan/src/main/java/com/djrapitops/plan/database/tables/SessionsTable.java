@@ -5,11 +5,13 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Select;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -95,22 +97,17 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     private void saveSessionInformation(UUID uuid, Session session) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
-            statement.setString(1, uuid.toString());
-
-            statement.setLong(2, session.getSessionStart());
-            statement.setLong(3, session.getSessionEnd());
-            statement.setInt(4, session.getDeaths());
-            statement.setInt(5, session.getMobKills());
-            statement.setString(6, Plan.getServerUUID().toString());
-
-            statement.execute();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setLong(2, session.getSessionStart());
+                statement.setLong(3, session.getSessionEnd());
+                statement.setInt(4, session.getDeaths());
+                statement.setInt(5, session.getMobKills());
+                statement.setString(6, Plan.getServerUUID().toString());
+            }
+        });
     }
 
     /**
@@ -121,24 +118,27 @@ public class SessionsTable extends UserIDTable {
      * @return ID of the inserted session or -1 if session has not been inserted.
      */
     private int getSessionID(UUID uuid, Session session) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT " + columnID + " FROM " + tableName +
-                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
-                    " AND " + columnSessionStart + "=?" +
-                    " AND " + columnSessionEnd + "=?");
-            statement.setString(1, uuid.toString());
-            statement.setLong(2, session.getSessionStart());
-            statement.setLong(3, session.getSessionEnd());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt(columnID);
+        String sql = "SELECT " + columnID + " FROM " + tableName +
+                " WHERE " + columnUserID + "=" + usersTable.statementSelectID +
+                " AND " + columnSessionStart + "=?" +
+                " AND " + columnSessionEnd + "=?";
+
+        return query(new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setLong(2, session.getSessionStart());
+                statement.setLong(3, session.getSessionEnd());
             }
-            return -1;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt(columnID);
+                }
+                return -1;
+            }
+        });
     }
 
     /**
@@ -153,35 +153,38 @@ public class SessionsTable extends UserIDTable {
      */
     private Map<String, List<Session>> getSessionInformation(UUID uuid) throws SQLException {
         Map<Integer, String> serverNames = serverTable.getServerNames();
-        Map<String, List<Session>> sessionsByServer = new HashMap<>();
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(Select.from(tableName, "*")
-                    .where(columnUserID + "=" + usersTable.statementSelectID)
-                    .toString());
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                int id = set.getInt(columnID);
-                long start = set.getLong(columnSessionStart);
-                long end = set.getLong(columnSessionEnd);
-                String serverName = serverNames.get(set.getInt(columnServerID));
+        String sql = Select.from(tableName, "*")
+                .where(columnUserID + "=" + usersTable.statementSelectID)
+                .toString();
 
-                if (serverName == null) {
-                    throw new IllegalStateException("Server not present");
-                }
-
-                int deaths = set.getInt(columnDeaths);
-                int mobKills = set.getInt(columnMobKills);
-                List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
-                sessions.add(new Session(id, start, end, mobKills, deaths));
-                sessionsByServer.put(serverName, sessions);
+        return query(new QueryStatement<Map<String, List<Session>>>(sql, 10000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-            return sessionsByServer;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Map<String, List<Session>> processResults(ResultSet set) throws SQLException {
+                Map<String, List<Session>> sessionsByServer = new HashMap<>();
+                while (set.next()) {
+                    int id = set.getInt(columnID);
+                    long start = set.getLong(columnSessionStart);
+                    long end = set.getLong(columnSessionEnd);
+                    String serverName = serverNames.get(set.getInt(columnServerID));
+
+                    if (serverName == null) {
+                        throw new IllegalStateException("Server not present");
+                    }
+
+                    int deaths = set.getInt(columnDeaths);
+                    int mobKills = set.getInt(columnMobKills);
+                    List<Session> sessions = sessionsByServer.getOrDefault(serverName, new ArrayList<>());
+                    sessions.add(new Session(id, start, end, mobKills, deaths));
+                    sessionsByServer.put(serverName, sessions);
+                }
+                return sessionsByServer;
+            }
+        });
     }
 
     public Map<String, List<Session>> getSessions(UUID uuid) throws SQLException {
@@ -238,26 +241,29 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public long getPlaytime(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT" +
-                    " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
-                    " FROM " + tableName +
-                    " WHERE " + columnSessionStart + ">?" +
-                    " AND " + columnUserID + "=" + usersTable.statementSelectID +
-                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
-            statement.setLong(1, afterDate);
-            statement.setString(2, uuid.toString());
-            statement.setString(3, serverUUID.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getLong("playtime");
+        String sql = "SELECT" +
+                " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
+                " FROM " + tableName +
+                " WHERE " + columnSessionStart + ">?" +
+                " AND " + columnUserID + "=" + usersTable.statementSelectID +
+                " AND " + columnServerID + "=" + serverTable.statementSelectServerID;
+
+        return query(new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, afterDate);
+                statement.setString(2, uuid.toString());
+                statement.setString(3, serverUUID.toString());
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getLong("playtime");
+                }
+                return 0L;
+            }
+        });
     }
 
     /**
@@ -281,29 +287,31 @@ public class SessionsTable extends UserIDTable {
      */
     public Map<String, Long> getPlaytimeByServer(UUID uuid, long afterDate) throws SQLException {
         Map<Integer, String> serverNames = serverTable.getServerNames();
-        Map<String, Long> playtimes = new HashMap<>();
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT " +
-                    "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
-                    columnServerID +
-                    " FROM " + tableName +
-                    " WHERE " + columnSessionStart + ">?" +
-                    " AND " + columnUserID + "=" + usersTable.statementSelectID +
-                    " GROUP BY " + columnServerID);
-            statement.setLong(1, afterDate);
-            statement.setString(2, uuid.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                String serverName = serverNames.get(set.getInt(columnServerID));
-                long playtime = set.getLong("playtime");
-                playtimes.put(serverName, playtime);
+        String sql = "SELECT " +
+                "(SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime, " +
+                columnServerID +
+                " FROM " + tableName +
+                " WHERE " + columnSessionStart + ">?" +
+                " AND " + columnUserID + "=" + usersTable.statementSelectID +
+                " GROUP BY " + columnServerID;
+        return query(new QueryStatement<Map<String, Long>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, afterDate);
+                statement.setString(2, uuid.toString());
             }
-            return playtimes;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Map<String, Long> processResults(ResultSet set) throws SQLException {
+                Map<String, Long> playtimes = new HashMap<>();
+                while (set.next()) {
+                    String serverName = serverNames.get(set.getInt(columnServerID));
+                    long playtime = set.getLong("playtime");
+                    playtimes.put(serverName, playtime);
+                }
+                return playtimes;
+            }
+        });
     }
 
     /**
@@ -347,25 +355,27 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public long getPlaytimeOfServer(UUID serverUUID, long afterDate) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT" +
-                    " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
-                    " FROM " + tableName +
-                    " WHERE " + columnSessionStart + ">?" +
-                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
-            statement.setFetchSize(1000);
-            statement.setLong(1, afterDate);
-            statement.setString(2, serverUUID.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getLong("playtime");
+        String sql = "SELECT" +
+                " (SUM(" + columnSessionEnd + ") - SUM(" + columnSessionStart + ")) as playtime" +
+                " FROM " + tableName +
+                " WHERE " + columnSessionStart + ">?" +
+                " AND " + columnServerID + "=" + serverTable.statementSelectServerID;
+
+        return query(new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, afterDate);
+                statement.setString(2, serverUUID.toString());
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getLong("playtime");
+                }
+                return 0L;
+            }
+        });
     }
 
     /**
@@ -413,26 +423,29 @@ public class SessionsTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public int getSessionCount(UUID uuid, UUID serverUUID, long afterDate) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT" +
-                    " COUNT(*) as logintimes" +
-                    " FROM " + tableName +
-                    " WHERE (" + columnSessionStart + " >= ?)" +
-                    " AND " + columnUserID + "=" + usersTable.statementSelectID +
-                    " AND " + columnServerID + "=" + serverTable.statementSelectServerID);
-            statement.setLong(1, afterDate);
-            statement.setString(2, uuid.toString());
-            statement.setString(3, serverUUID.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt("logintimes");
+        String sql = "SELECT" +
+                " COUNT(*) as logintimes" +
+                " FROM " + tableName +
+                " WHERE (" + columnSessionStart + " >= ?)" +
+                " AND " + columnUserID + "=" + usersTable.statementSelectID +
+                " AND " + columnServerID + "=" + serverTable.statementSelectServerID;
+
+        return query(new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, afterDate);
+                statement.setString(2, uuid.toString());
+                statement.setString(3, serverUUID.toString());
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt("logintimes");
+                }
+                return 0;
+            }
+        });
     }
 
     public String getColumnID() {
@@ -449,175 +462,168 @@ public class SessionsTable extends UserIDTable {
             return new HashMap<>();
         }
         int serverID = id.get();
-        Map<UUID, List<Session>> sessionsByUser = new HashMap<>();
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
 
-            statement = connection.prepareStatement("SELECT " +
-                    columnSessionStart + ", " +
-                    columnSessionEnd + ", " +
-                    columnDeaths + ", " +
-                    columnMobKills + ", " +
-                    usersUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                    " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID
-            );
-            statement.setFetchSize(5000);
-            statement.setString(1, serverUUID.toString());
-            set = statement.executeQuery();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString("uuid"));
-                long start = set.getLong(columnSessionStart);
-                long end = set.getLong(columnSessionEnd);
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String sql = "SELECT " +
+                columnSessionStart + ", " +
+                columnSessionEnd + ", " +
+                columnDeaths + ", " +
+                columnMobKills + ", " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " WHERE " + columnServerID + "=" + serverTable.statementSelectServerID;
 
-                int deaths = set.getInt(columnDeaths);
-                int mobKills = set.getInt(columnMobKills);
-                List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
-                sessions.add(new Session(serverID, start, end, mobKills, deaths));
-                sessionsByUser.put(uuid, sessions);
+        return query(new QueryStatement<Map<UUID, List<Session>>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
             }
-            return sessionsByUser;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Map<UUID, List<Session>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, List<Session>> sessionsByUser = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    long start = set.getLong(columnSessionStart);
+                    long end = set.getLong(columnSessionEnd);
+
+                    int deaths = set.getInt(columnDeaths);
+                    int mobKills = set.getInt(columnMobKills);
+                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
+                    sessions.add(new Session(serverID, start, end, mobKills, deaths));
+                    sessionsByUser.put(uuid, sessions);
+                }
+                return sessionsByUser;
+            }
+        });
     }
 
     // TODO Write tests for this method
     public long getLastSeen(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement("SELECT" +
-                    " MAX(" + columnSessionEnd + ") as last_seen" +
-                    " FROM " + tableName +
-                    " WHERE " + columnUserID + "=" + usersTable.statementSelectID);
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getLong("last_seen");
+        String sql = "SELECT" +
+                " MAX(" + columnSessionEnd + ") as last_seen" +
+                " FROM " + tableName +
+                " WHERE " + columnUserID + "=" + usersTable.statementSelectID;
+
+        return query(new QueryStatement<Long>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getLong("last_seen");
+                }
+                return 0L;
+            }
+        });
     }
 
     // TODO Write tests for this method
     public Map<UUID, Long> getLastSeenForAllPlayers() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String sql = "SELECT" +
+                " MAX(" + columnSessionEnd + ") as last_seen, " +
+                usersUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " GROUP BY uuid";
 
-            statement = connection.prepareStatement("SELECT" +
-                    " MAX(" + columnSessionEnd + ") as last_seen, " +
-                    usersUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                    " GROUP BY uuid");
-            statement.setFetchSize(20000);
-            set = statement.executeQuery();
-            Map<UUID, Long> lastSeenMap = new HashMap<>();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString("uuid"));
-                long lastSeen = set.getLong("last_seen");
-                lastSeenMap.put(uuid, lastSeen);
+        return query(new QueryAllStatement<Map<UUID, Long>>(sql, 20000) {
+            @Override
+            public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Long> lastSeenMap = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
+                    long lastSeen = set.getLong("last_seen");
+                    lastSeenMap.put(uuid, lastSeen);
+                }
+                return lastSeenMap;
             }
-            return lastSeenMap;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public Map<UUID, Map<UUID, List<Session>>> getAllSessions(boolean getKillsAndWorldTimes) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()){
-            String usersIDColumn = usersTable + "." + usersTable.getColumnID();
-            String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
-            String serverIDColumn = serverTable + "." + serverTable.getColumnID();
-            String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String usersIDColumn = usersTable + "." + usersTable.getColumnID();
+        String usersUUIDColumn = usersTable + "." + usersTable.getColumnUUID() + " as uuid";
+        String serverIDColumn = serverTable + "." + serverTable.getColumnID();
+        String serverUUIDColumn = serverTable + "." + serverTable.getColumnUUID() + " as s_uuid";
+        String sql = "SELECT " +
+                tableName + "." + columnID + ", " +
+                columnSessionStart + ", " +
+                columnSessionEnd + ", " +
+                columnDeaths + ", " +
+                columnMobKills + ", " +
+                usersUUIDColumn + ", " +
+                serverUUIDColumn +
+                " FROM " + tableName +
+                " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
+                " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID;
 
-            statement = connection.prepareStatement("SELECT " +
-                    tableName + "." + columnID + ", " +
-                    columnSessionStart + ", " +
-                    columnSessionEnd + ", " +
-                    columnDeaths + ", " +
-                    columnMobKills + ", " +
-                    usersUUIDColumn + ", " +
-                    serverUUIDColumn +
-                    " FROM " + tableName +
-                    " JOIN " + usersTable + " on " + usersIDColumn + "=" + columnUserID +
-                    " JOIN " + serverTable + " on " + serverIDColumn + "=" + columnServerID
-            );
-            statement.setFetchSize(20000);
-            set = statement.executeQuery();
+        return query(new QueryAllStatement<Map<UUID, Map<UUID, List<Session>>>>(sql, 20000) {
+            @Override
+            public Map<UUID, Map<UUID, List<Session>>> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
+                while (set.next()) {
+                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    UUID uuid = UUID.fromString(set.getString("uuid"));
 
-            Map<UUID, Map<UUID, List<Session>>> map = new HashMap<>();
-            while (set.next()) {
-                UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
-                UUID uuid = UUID.fromString(set.getString("uuid"));
+                    Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
+                    List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
 
-                Map<UUID, List<Session>> sessionsByUser = map.getOrDefault(serverUUID, new HashMap<>());
-                List<Session> sessions = sessionsByUser.getOrDefault(uuid, new ArrayList<>());
+                    long start = set.getLong(columnSessionStart);
+                    long end = set.getLong(columnSessionEnd);
 
-                long start = set.getLong(columnSessionStart);
-                long end = set.getLong(columnSessionEnd);
+                    int deaths = set.getInt(columnDeaths);
+                    int mobKills = set.getInt(columnMobKills);
+                    int id = set.getInt(columnID);
 
-                int deaths = set.getInt(columnDeaths);
-                int mobKills = set.getInt(columnMobKills);
-                int id = set.getInt(columnID);
+                    Session session = new Session(id, start, end, mobKills, deaths);
+                    sessions.add(session);
 
-                Session session = new Session(id, start, end, mobKills, deaths);
-                sessions.add(session);
-
-                sessionsByUser.put(uuid, sessions);
-                map.put(serverUUID, sessionsByUser);
+                    sessionsByUser.put(uuid, sessions);
+                    map.put(serverUUID, sessionsByUser);
+                }
+                if (getKillsAndWorldTimes) {
+                    db.getKillsTable().addKillsToSessions(map);
+                    db.getWorldTimesTable().addWorldTimesToSessions(map);
+                }
+                return map;
             }
-            if (getKillsAndWorldTimes) {
-                db.getKillsTable().addKillsToSessions(map);
-                db.getWorldTimesTable().addWorldTimesToSessions(map);
-            }
-            return map;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public void insertSessions(Map<UUID, Map<UUID, List<Session>>> allSessions, boolean saveKillsAndWorldTimes) throws SQLException {
         if (Verify.isEmpty(allSessions)) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()){
-            statement = connection.prepareStatement(insertStatement);
-            for (UUID serverUUID : allSessions.keySet()) {
-                for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
-                    UUID uuid = entry.getKey();
-                    List<Session> sessions = entry.getValue();
 
-                    for (Session session : sessions) {
-                        statement.setString(1, uuid.toString());
-                        statement.setLong(2, session.getSessionStart());
-                        statement.setLong(3, session.getSessionEnd());
-                        statement.setInt(4, session.getDeaths());
-                        statement.setInt(5, session.getMobKills());
-                        statement.setString(6, serverUUID.toString());
-                        statement.addBatch();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (UUID serverUUID : allSessions.keySet()) {
+                    for (Map.Entry<UUID, List<Session>> entry : allSessions.get(serverUUID).entrySet()) {
+                        UUID uuid = entry.getKey();
+                        List<Session> sessions = entry.getValue();
+
+                        for (Session session : sessions) {
+                            statement.setString(1, uuid.toString());
+                            statement.setLong(2, session.getSessionStart());
+                            statement.setLong(3, session.getSessionEnd());
+                            statement.setInt(4, session.getDeaths());
+                            statement.setInt(5, session.getMobKills());
+                            statement.setString(6, serverUUID.toString());
+                            statement.addBatch();
+                        }
                     }
                 }
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        });
         if (saveKillsAndWorldTimes) {
             Map<UUID, Map<UUID, List<Session>>> savedSessions = getAllSessions(false);
             matchSessionIDs(allSessions, savedSessions);

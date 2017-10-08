@@ -4,9 +4,11 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
+import main.java.com.djrapitops.plan.database.processing.ExecStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.*;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,23 +54,19 @@ public class UsersTable extends UserIDTable {
      * @throws SQLException when an error at retrieving the UUIDs happens
      */
     public Set<UUID> getSavedUUIDs() throws SQLException {
-        Set<UUID> uuids = new HashSet<>();
+        String sql = Select.from(tableName, columnUUID).toString();
 
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnUUID).toString());
-            statement.setFetchSize(5000);
-
-            set = statement.executeQuery();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString(columnUUID));
-                uuids.add(uuid);
+        return query(new QueryAllStatement<Set<UUID>>(sql, 50000) {
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    uuids.add(uuid);
+                }
+                return uuids;
             }
-            return uuids;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     /**
@@ -79,16 +77,14 @@ public class UsersTable extends UserIDTable {
      */
     @Override
     public void removeUser(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)");
-            statement.setString(1, uuid.toString());
+        String sql = "DELETE FROM " + tableName + " WHERE (" + columnUUID + "=?)";
 
-            statement.execute();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+        });
     }
 
     /**
@@ -113,38 +109,40 @@ public class UsersTable extends UserIDTable {
      * @throws SQLException DB Error
      */
     public UUID getUuidOf(String playerName) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnUUID)
-                    .where("UPPER(" + columnName + ")=UPPER(?)")
-                    .toString());
-            statement.setString(1, playerName);
-            set = statement.executeQuery();
-            if (set.next()) {
-                String uuidS = set.getString(columnUUID);
-                return UUID.fromString(uuidS);
+        String sql = Select.from(tableName, columnUUID)
+                .where("UPPER(" + columnName + ")=UPPER(?)")
+                .toString();
+
+        return query(new QueryStatement<UUID>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerName);
             }
-            return null;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public UUID processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    String uuidS = set.getString(columnUUID);
+                    return UUID.fromString(uuidS);
+                }
+                return null;
+            }
+        });
     }
 
     public List<Long> getRegisterDates() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnRegistered).toString());
-            set = statement.executeQuery();
-            List<Long> registerDates = new ArrayList<>();
-            while (set.next()) {
-                registerDates.add(set.getLong(columnRegistered));
+        String sql = Select.from(tableName, columnRegistered).toString();
+
+        return query(new QueryAllStatement<List<Long>>(sql, 50000) {
+            @Override
+            public List<Long> processResults(ResultSet set) throws SQLException {
+                List<Long> registerDates = new ArrayList<>();
+                while (set.next()) {
+                    registerDates.add(set.getLong(columnRegistered));
+                }
+                return registerDates;
             }
-            return registerDates;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     /**
@@ -159,100 +157,99 @@ public class UsersTable extends UserIDTable {
     public void registerUser(UUID uuid, long registered, String name) throws SQLException {
         Verify.nullCheck(uuid, name);
 
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(insertStatement);
-            statement.setString(1, uuid.toString());
-            statement.setLong(2, registered);
-            statement.setString(3, name);
-
-            statement.execute();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+                statement.setLong(2, registered);
+                statement.setString(3, name);
+            }
+        });
     }
 
     public boolean isRegistered(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, "COUNT(" + columnID + ") as c")
-                    .where(columnUUID + "=?")
-                    .toString());
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            return set.next() && set.getInt("c") >= 1;
-        } finally {
-            close(set, statement);
-        }
+        String sql = Select.from(tableName, "COUNT(" + columnID + ") as c")
+                .where(columnUUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Boolean>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next() && set.getInt("c") >= 1;
+            }
+        });
     }
 
     public void updateName(UUID uuid, String name) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Update.values(tableName, columnName)
-                    .where(columnUUID + "=?")
-                    .toString());
-            statement.setString(1, name);
-            statement.setString(2, uuid.toString());
+        String sql = Update.values(tableName, columnName)
+                .where(columnUUID + "=?")
+                .toString();
 
-            statement.execute();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, name);
+                statement.setString(2, uuid.toString());
+            }
+        });
     }
 
     public int getTimesKicked(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnTimesKicked)
-                    .where(columnUUID + "=?")
-                    .toString());
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt(columnTimesKicked);
+        String sql = Select.from(tableName, columnTimesKicked)
+                .where(columnUUID + "=?")
+                .toString();
+
+        return query(new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt(columnTimesKicked);
+                }
+                return 0;
+            }
+        });
     }
 
     public void kicked(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
-                    + columnTimesKicked + "=" + columnTimesKicked + "+ 1" +
-                    " WHERE " + columnUUID + "=?");
-            statement.setString(1, uuid.toString());
+        String sql = "UPDATE " + tableName + " SET "
+                + columnTimesKicked + "=" + columnTimesKicked + "+ 1" +
+                " WHERE " + columnUUID + "=?";
 
-            statement.execute();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
+            }
+        });
     }
 
     public String getPlayerName(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnName)
-                    .where(columnUUID + "=?")
-                    .toString());
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getString(columnName);
+        String sql = Select.from(tableName, columnName).where(columnUUID + "=?").toString();
+
+        return query(new QueryStatement<String>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-            return null;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public String processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getString(columnName);
+                }
+                return null;
+            }
+        });
     }
 
     /**
@@ -264,32 +261,30 @@ public class UsersTable extends UserIDTable {
      */
     public List<String> getMatchingNames(String name) throws SQLException {
         String searchString = "%" + name + "%";
-        List<String> matchingNames = new ArrayList<>();
+        NicknamesTable nicknamesTable = db.getNicknamesTable();
+        String sql = "SELECT " + columnName + " FROM " + tableName +
+                " WHERE " + columnName + " LIKE LOWER(?)" +
+                " UNION SELECT " + columnName + " FROM " + tableName +
+                " WHERE " + columnID + " =" +
+                " (SELECT " + columnID + " FROM " + nicknamesTable +
+                " WHERE " + nicknamesTable.getColumnNick() + " LIKE LOWER(?))";
 
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            NicknamesTable nicknamesTable = db.getNicknamesTable();
-            statement = connection.prepareStatement(
-                    "SELECT " + columnName + " FROM " + tableName +
-                            " WHERE " + columnName + " LIKE LOWER(?)" +
-                            " UNION SELECT " + columnName + " FROM " + tableName +
-                            " WHERE " + columnID + " =" +
-                            " (SELECT " + columnID + " FROM " + nicknamesTable +
-                            " WHERE " + nicknamesTable.getColumnNick() + " LIKE LOWER(?))"
-            );
-            statement.setFetchSize(5000);
-            statement.setString(1, searchString);
-            statement.setString(2, searchString);
-
-            set = statement.executeQuery();
-            while (set.next()) {
-                matchingNames.add(set.getString("name"));
+        return query(new QueryStatement<List<String>>(sql, 5000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, searchString);
+                statement.setString(2, searchString);
             }
-            return matchingNames;
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> matchingNames = new ArrayList<>();
+                while (set.next()) {
+                    matchingNames.add(set.getString("name"));
+                }
+                return matchingNames;
+            }
+        });
     }
 
     public String getColumnName() {
@@ -309,144 +304,131 @@ public class UsersTable extends UserIDTable {
         if (Verify.isEmpty(users)) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(insertStatement);
-            for (Map.Entry<UUID, UserInfo> entry : users.entrySet()) {
-                UUID uuid = entry.getKey();
-                UserInfo info = entry.getValue();
-                long registered = info.getRegistered();
-                String name = info.getName();
 
-                statement.setString(1, uuid.toString());
-                statement.setLong(2, registered);
-                statement.setString(3, name);
-                statement.addBatch();
+        executeBatch(new ExecStatement(insertStatement) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Map.Entry<UUID, UserInfo> entry : users.entrySet()) {
+                    UUID uuid = entry.getKey();
+                    UserInfo info = entry.getValue();
+                    long registered = info.getRegistered();
+                    String name = info.getName();
+
+                    statement.setString(1, uuid.toString());
+                    statement.setLong(2, registered);
+                    statement.setString(3, name);
+                    statement.addBatch();
+                }
             }
-
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        });
     }
 
     public Map<UUID, UserInfo> getUsers() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.all(tableName).toString());
-            statement.setFetchSize(20000);
-            set = statement.executeQuery();
-            Map<UUID, UserInfo> users = new HashMap<>();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString(columnUUID));
-                String name = set.getString(columnName);
-                long registered = set.getLong(columnRegistered);
+        String sql = Select.all(tableName).toString();
 
-                users.put(uuid, new UserInfo(uuid, name, registered, false, false));
+        return query(new QueryAllStatement<Map<UUID, UserInfo>>(sql, 20000) {
+            @Override
+            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
+                Map<UUID, UserInfo> users = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    String name = set.getString(columnName);
+                    long registered = set.getLong(columnRegistered);
+
+                    users.put(uuid, new UserInfo(uuid, name, registered, false, false));
+                }
+                return users;
             }
-            return users;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public void updateKicked(Map<UUID, Integer> timesKicked) throws SQLException {
         if (Verify.isEmpty(timesKicked)) {
             return;
         }
-        PreparedStatement statement = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("UPDATE " + tableName + " SET "
-                    + columnTimesKicked + "=?" +
-                    " WHERE " + columnUUID + "=?");
-            for (Map.Entry<UUID, Integer> entry : timesKicked.entrySet()) {
-                UUID uuid = entry.getKey();
-                int kickCount = entry.getValue();
-                statement.setInt(1, kickCount);
-                statement.setString(2, uuid.toString());
-                statement.addBatch();
-            }
 
-            statement.executeBatch();
-            commit(connection);
-        } finally {
-            close(statement);
-        }
+        String sql = "UPDATE " + tableName + " SET " + columnTimesKicked + "=? WHERE " + columnUUID + "=?";
+
+        executeBatch(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (Map.Entry<UUID, Integer> entry : timesKicked.entrySet()) {
+                    UUID uuid = entry.getKey();
+                    int kickCount = entry.getValue();
+                    statement.setInt(1, kickCount);
+                    statement.setString(2, uuid.toString());
+                    statement.addBatch();
+                }
+            }
+        });
     }
 
     public Map<UUID, Integer> getAllTimesKicked() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnUUID, columnTimesKicked)
-                    .toString());
-            statement.setFetchSize(20000);
-            set = statement.executeQuery();
-            Map<UUID, Integer> timesKicked = new HashMap<>();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString(columnUUID));
-                int kickCount = set.getInt(columnTimesKicked);
+        String sql = Select.from(tableName, columnUUID, columnTimesKicked).toString();
 
-                timesKicked.put(uuid, kickCount);
+        return query(new QueryAllStatement<Map<UUID, Integer>>(sql, 20000) {
+            @Override
+            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<UUID, Integer> timesKicked = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    int kickCount = set.getInt(columnTimesKicked);
+
+                    timesKicked.put(uuid, kickCount);
+                }
+                return timesKicked;
             }
-            return timesKicked;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public Map<UUID, String> getPlayerNames() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnUUID, columnName).toString());
-            statement.setFetchSize(20000);
-            set = statement.executeQuery();
-            Map<UUID, String> names = new HashMap<>();
-            while (set.next()) {
-                UUID uuid = UUID.fromString(set.getString(columnUUID));
-                String name = set.getString(columnName);
+        String sql = Select.from(tableName, columnUUID, columnName).toString();
 
-                names.put(uuid, name);
+        return query(new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
+            @Override
+            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
+                Map<UUID, String> names = new HashMap<>();
+                while (set.next()) {
+                    UUID uuid = UUID.fromString(set.getString(columnUUID));
+                    String name = set.getString(columnName);
+
+                    names.put(uuid, name);
+                }
+                return names;
             }
-            return names;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public int getPlayerCount() throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement("SELECT COUNT(*) AS player_count FROM " + tableName);
-            statement.setFetchSize(5000);
+        String sql = "SELECT COUNT(*) AS player_count FROM " + tableName;
 
-            set = statement.executeQuery();
-            if (set.next()) {
-                return set.getInt("player_count");
+        return query(new QueryAllStatement<Integer>(sql) {
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return set.getInt("player_count");
+                }
+                return 0;
             }
-            return 0;
-        } finally {
-            close(set, statement);
-        }
+        });
     }
 
     public Optional<Long> getRegisterDate(UUID uuid) throws SQLException {
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        try (Connection connection = getConnection()) {
-            statement = connection.prepareStatement(Select.from(tableName, columnRegistered).where(columnUUID + "=?").toString());
-            statement.setString(1, uuid.toString());
-            set = statement.executeQuery();
-            if (set.next()) {
-                Optional.of(set.getLong(columnRegistered));
+        String sql = Select.from(tableName, columnRegistered).where(columnUUID + "=?").toString();
+
+        return query(new QueryStatement<Optional<Long>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, uuid.toString());
             }
-            return Optional.empty();
-        } finally {
-            close(set, statement);
-        }
+
+            @Override
+            public Optional<Long> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getLong(columnRegistered));
+                }
+                return Optional.empty();
+            }
+        });
     }
 }

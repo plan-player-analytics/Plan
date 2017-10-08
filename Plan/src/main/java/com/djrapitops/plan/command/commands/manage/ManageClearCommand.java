@@ -14,6 +14,7 @@ import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
+import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -88,7 +89,7 @@ public class ManageClearCommand extends SubCommand {
 
                     DataCache dataCache = plugin.getDataCache();
                     long now = MiscUtils.getTime();
-                    dataCache.getActiveSessions().clear();
+                    SessionCache.clear();
                     plugin.getServer().getOnlinePlayers().forEach(
                             player -> dataCache.cacheSession(player.getUniqueId(),
                                     new Session(now, player.getWorld().getName(), player.getGameMode().name()))
