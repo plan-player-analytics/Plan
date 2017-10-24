@@ -158,7 +158,14 @@ public class BungeeInformationManager extends InformationManager {
      */
     private ServerInfo getInspectRequestProcessorServer(UUID uuid) {
         if (bukkitServers.isEmpty()) {
-            throw new IllegalStateException("No Bukkit Servers.");
+            try {
+                refreshBukkitServerMap();
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
+            }
+            if (bukkitServers.isEmpty()) {
+                throw new IllegalStateException("No Bukkit Servers.");
+            }
         }
 
         Collection<ServerInfo> onlineServers = serverInfoManager.getOnlineBukkitServers();
