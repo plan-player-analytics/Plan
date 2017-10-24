@@ -27,7 +27,6 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import net.md_5.bungee.api.ChatColor;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -128,10 +127,10 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     @Override
     public void onDisable() {
         if (processingQueue != null) {
-            List<Processor> processors = processingQueue.stopAndReturnLeftovers();
-            Log.info("Processing unprocessed processors. (" + processors.size() + ")");
-            for (Processor processor : processors) {
-                processor.process();
+            try {
+                processingQueue.stop();
+            } catch (IllegalArgumentException ignored) {
+                /*ignored*/
             }
         }
         Log.info(Locale.get(Msg.DISABLED).toString());
