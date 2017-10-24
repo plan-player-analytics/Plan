@@ -97,7 +97,7 @@ public class BukkitServerInfoManager {
     }
 
     private UUID generateNewUUID(ServerVariableHolder variableHolder) {
-        String seed = variableHolder.getName() + variableHolder.getIp() + variableHolder.getPort() + variableHolder.getVersion() + variableHolder.getImplVersion();
+        String seed = plugin.getServer().getServerId() + variableHolder.getName() + variableHolder.getIp() + variableHolder.getPort() + variableHolder.getVersion() + variableHolder.getImplVersion();
         return UUID.nameUUIDFromBytes(seed.getBytes());
     }
 
