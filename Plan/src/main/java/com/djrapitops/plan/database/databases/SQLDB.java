@@ -132,6 +132,7 @@ public abstract class SQLDB extends Database {
                 setVersion(11);
             }
             if (version < 12) {
+                actionsTable.alterTableV12();
                 ipsTable.alterTableV12();
                 setVersion(12);
             }

@@ -68,10 +68,16 @@ public class ActionsTable extends UserIDTable {
                 .column(columnServerID, Sql.INT).notNull()
                 .column(columnDate, Sql.LONG).notNull()
                 .column(columnActionID, Sql.INT).notNull()
-                .column(columnAdditionalInfo, Sql.varchar(100))
+                .column(columnAdditionalInfo, Sql.varchar(300))
                 .foreignKey(columnUserID, usersTable.toString(), usersTable.getColumnID())
                 .foreignKey(columnServerID, serverTable.toString(), serverTable.getColumnID())
                 .toString());
+    }
+
+    public void alterTableV12() throws SQLException {
+        if (usingMySQL) {
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnAdditionalInfo + " VARCHAR(300)");
+        }
     }
 
     public void insertAction(UUID uuid, Action action) throws SQLException {
