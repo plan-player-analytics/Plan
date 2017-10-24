@@ -34,9 +34,7 @@ public class NewNickActionProcessor extends PlayerProcessor {
     public void process() {
         UUID uuid = getUUID();
 
-        String n = HtmlUtils.swapColorsToSpan(displayName);
-
-        String info = HtmlUtils.removeXSS(n);
+        String info = HtmlUtils.removeXSS(displayName);
 
         Action action = new Action(MiscUtils.getTime(), Actions.NEW_NICKNAME, info);
 
