@@ -385,6 +385,7 @@ public class HtmlStructure {
         int i = 0;
         StringBuilder b = new StringBuilder();
         List<String> values = new ArrayList<>(networkPageContents.values());
+        Collections.sort(values);
         int size = values.size();
         int extra = size % 3;
         for (int j = 0; j < extra; j++) {
