@@ -130,7 +130,7 @@ public class FormatUtils {
         if (seconds != 0) {
             String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", String.valueOf(seconds));
             if (minutes == 0 && s.contains("%minutes%")) {
-                s = s.replace("%minutes%", Settings.FORMAT_MINUTES.toString().replace("%zero%", "0") + 0);
+                s = s.replace("%minutes%", Settings.FORMAT_MINUTES.toString().replace("%hours", "").replace("%zero%", "0") + 0);
             }
             if (s.contains("%zero%") && String.valueOf(seconds).length() == 1) {
                 builder.append('0');
