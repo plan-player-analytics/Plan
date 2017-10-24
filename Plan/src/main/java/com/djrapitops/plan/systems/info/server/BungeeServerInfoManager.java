@@ -129,6 +129,9 @@ public class BungeeServerInfoManager {
     }
 
     public void serverConnected(UUID serverUUID) {
+        if (plugin.getServerUuid().equals(serverUUID)) {
+            return;
+        }
         Log.info("Received a connection from a Bukkit server..");
         if (onlineServers.contains(serverUUID)) {
             sendConfigSettings(serverUUID);
