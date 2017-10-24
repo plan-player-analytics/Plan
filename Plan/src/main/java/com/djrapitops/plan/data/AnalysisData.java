@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.data;
 
-import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.data.analysis.*;
 import main.java.com.djrapitops.plan.utilities.Benchmark;
@@ -38,7 +37,6 @@ public class AnalysisData extends RawData {
     private final TPSPart tpsPart;
     private final WorldPart worldPart;
     private long refreshDate;
-    private String planVersion;
     private String pluginsTabLayout;
     private Map<String, Serializable> additionalDataReplaceMap;
     private String playersTable;
@@ -97,24 +95,8 @@ public class AnalysisData extends RawData {
                 worldPart);
     }
 
-    public String getPlanVersion() {
-        return planVersion;
-    }
-
-    public void setPlanVersion(String planVersion) {
-        this.planVersion = planVersion;
-    }
-
-    public String getPluginsTabLayout() {
-        return pluginsTabLayout;
-    }
-
     public void setPluginsTabLayout(String pluginsTabLayout) {
         this.pluginsTabLayout = pluginsTabLayout;
-    }
-
-    public Map<String, Serializable> getAdditionalDataReplaceMap() {
-        return additionalDataReplaceMap;
     }
 
     public void setAdditionalDataReplaceMap(Map<String, Serializable> additionalDataReplaceMap) {
@@ -127,12 +109,15 @@ public class AnalysisData extends RawData {
 
     @Override
     protected void analyse() {
-        Verify.nullCheck(playersTable);
-        Verify.nullCheck(pluginsTabLayout);
-        Verify.nullCheck(planVersion);
+        if (playersTable == null) {
+            playersTable = "";
+        }
+        if (pluginsTabLayout == null) {
+            pluginsTabLayout = "";
+        }
 
         addValue("tableBodyPlayerList", playersTable);
-        addValue("version", planVersion);
+        addValue("version", MiscUtils.getIPlan().getVersion());
 
         final List<RawData> parts = getAllParts();
         parts.forEach(part -> {
@@ -156,9 +141,5 @@ public class AnalysisData extends RawData {
 
     public long getRefreshDate() {
         return refreshDate;
-    }
-
-    public void setRefreshDate(long refreshDate) {
-        this.refreshDate = refreshDate;
     }
 }

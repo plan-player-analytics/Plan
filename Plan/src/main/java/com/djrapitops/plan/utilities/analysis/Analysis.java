@@ -110,7 +110,6 @@ public class Analysis {
             AnalysisData analysisData = new AnalysisData();
             List<PluginData> thirdPartyPlugins = plugin.getHookHandler().getAdditionalDataSources();
             analysisData.setPluginsTabLayout(HtmlStructure.createAnalysisPluginsTabLayout(thirdPartyPlugins));
-            analysisData.setPlanVersion(plugin.getVersion());
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             fillDataset(analysisData, db);
