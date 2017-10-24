@@ -15,16 +15,14 @@ import main.java.com.djrapitops.plan.systems.info.parsing.NetworkPageParser;
 import main.java.com.djrapitops.plan.systems.info.server.BungeeServerInfoManager;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalyzeWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.IsOnlineWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPluginsTabWebAPI;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
 import java.sql.SQLException;
@@ -355,9 +353,7 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public void updateNetworkPageContent() {
-        Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
-        online.stream().map(ServerInfo::getUuid)
-                .forEach(this::removeNetworkPageContent);
+        PageCache.cachePage("analysisPage" + MiscUtils.getIPlan().getServerUuid(), () -> new AnalysisPageResponse(this));
     }
 
     public void sendConfigSettings() {

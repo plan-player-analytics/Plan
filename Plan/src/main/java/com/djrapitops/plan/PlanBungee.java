@@ -69,7 +69,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             registerCommand(new ReloadCommand(this));
 
             String ip = variableHolder.getIp();
-            if ("0.0.0.0" .equals(ip)) {
+            if ("0.0.0.0".equals(ip)) {
                 Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
                 Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
                 return;
@@ -98,6 +98,12 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             }).runTaskAsynchronously();
             getRunnableFactory().createNew("Player Count task", new TPSCountTimer(this))
                     .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
+            getRunnableFactory().createNew("NetworkPageContentUpdateTask", new AbsRunnable("NetworkPageContentUpdateTask") {
+                @Override
+                public void run() {
+                    infoManager.updateNetworkPageContent();
+                }
+            }).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
 
 //            getProxy().registerChannel("Plan");
 //            registerListener(new BungeePluginChannelListener(this));
