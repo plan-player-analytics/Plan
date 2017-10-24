@@ -46,7 +46,7 @@ public class NetworkCommand extends SubCommand {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
 
         // Link
-        String url = Plan.getInstance().getInfoManager().getLinkTo("/network");
+        String url = Plan.getInstance().getInfoManager().getLinkTo("/network/");
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
