@@ -25,7 +25,10 @@ public class NetworkCommand extends SubCommand {
      * Class Constructor.
      */
     public NetworkCommand(Plan plugin) {
-        super("network, n, netw", CommandType.CONSOLE, Permissions.ANALYZE.getPermission(), Locale.get(Msg.CMD_USG_LIST).toString(), "");
+        super("network, n, netw",
+                CommandType.CONSOLE,
+                Permissions.ANALYZE.getPermission(),
+                "Get the link to the network page");
         this.plugin = plugin;
     }
 

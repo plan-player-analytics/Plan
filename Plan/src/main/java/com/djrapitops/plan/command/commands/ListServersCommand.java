@@ -33,7 +33,7 @@ public class ListServersCommand extends SubCommand {
         super("servers, serverlist, listservers, sl",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),
-                Locale.get(Msg.CMD_USG_RELOAD).toString());
+                "List servers in the network");
 
         this.plugin = plugin;
     }
