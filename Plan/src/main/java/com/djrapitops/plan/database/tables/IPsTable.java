@@ -50,6 +50,12 @@ public class IPsTable extends UserIDTable {
         );
     }
 
+    public void alterTableV12() throws SQLException {
+        if (usingMySQL) {
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnIP + " VARCHAR(39) NOT NULL");
+        }
+    }
+
     /**
      * @param uuid UUID of the user.
      * @return Users's Login Geolocations.
