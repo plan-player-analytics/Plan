@@ -43,7 +43,7 @@ public class ListCommand extends SubCommand {
         sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).parse());
 
         // Link
-        String url = Plan.getInstance().getInfoManager().getLinkTo("/players");
+        String url = Plan.getInstance().getInfoManager().getLinkTo("/players/");
         String message = Locale.get(Msg.CMD_INFO_LINK).toString();
         boolean console = !CommandUtils.isPlayer(sender);
         if (console) {
