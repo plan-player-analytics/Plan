@@ -213,7 +213,7 @@ public class HtmlStructure {
                 .append("<div class=\"box-header\">")
                 .append("<h2><i style=\"padding: 8px;\" class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i> ")
                 .append(serverName)
-                .append(" <i class=\"fa fa-server\" aria-hidden=\"true\"></i></h2>")
+                .append("</h2>")
                 .append("</div>")
                 .append("</div>")
                 .append("</div>")
