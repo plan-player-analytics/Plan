@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * Thrown when something goes wrong with Database#init.
+ * Thrown when something goes wrong with {@code Database#init}.
  *
  * @author Rsl1122
  */

@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * Thrown when web api post request fails.
+ * Thrown when WebAPI POST-request fails, general Exception.
  *
  * @author Rsl1122
  */

@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * Thrown when WebAPI fails to connect.
+ * Thrown when WebAPI fails to connect to an address.
  *
  * @author Rsl1122
  */
