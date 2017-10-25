@@ -130,7 +130,7 @@ public class BukkitInformationManager extends InformationManager {
             HookHandler hookHandler = plugin.getHookHandler();
             List<PluginData> plugins = hookHandler.getAdditionalDataSources();
             Map<String, Serializable> replaceMap = hookHandler.getAdditionalInspectReplaceRules(uuid);
-            String contents = HtmlStructure.createInspectPageTabContent(serverName, plugins, replaceMap);
+            String contents = HtmlStructure.createInspectPluginsTabContent(serverName, plugins, replaceMap);
             cacheInspectPluginsTab(uuid, contents);
         }
     }

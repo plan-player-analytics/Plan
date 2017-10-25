@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
@@ -14,6 +15,7 @@ import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
 import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
+import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.FileNotFoundException;
@@ -92,7 +94,11 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    public static String[] createSessionsTabContent(Map<String, List<Session>> sessions, List<Session> allSessions) throws FileNotFoundException {
+    public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) throws FileNotFoundException {
+        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
+            return getSessionsAsTable(sessions, allSessions, uuid);
+        }
+
         Map<Integer, String> serverNameIDRelationMap = new HashMap<>();
 
         if (Verify.isEmpty(allSessions)) {
@@ -190,16 +196,27 @@ public class HtmlStructure {
         return new String[]{html.toString(), viewScript.toString()};
     }
 
-    public static String createInspectPageTabContent(String serverName, List<PluginData> plugins, Map<String, Serializable> replaceMap) {
+    private static String[] getSessionsAsTable(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
+        Map<Integer, UUID> uuidByID = new HashMap<>();
+        for (List<Session> sessionList : sessions.values()) {
+            for (Session session : sessionList) {
+                uuidByID.put(session.getSessionID(), uuid);
+            }
+        }
+
+        return new String[]{Html.TABLE_SESSIONS.parse(SessionsTableCreator.createTable(uuidByID, allSessions)[0]), ""};
+    }
+
+    public static String createInspectPluginsTabContent(String serverName, List<PluginData> plugins, Map<String, Serializable> replaceMap) {
         if (plugins.isEmpty()) {
-            return "<div class=\"plugins-server\">" +
-                    "<div class=\"plugins-header\">" +
-                    "<div class=\"row\">" +
-                    "<div class=\"column\">" +
-                    "<div class=\"box-header\">" +
-                    "<h2><i class=\"fa fa-server\" aria-hidden=\"true\"></i> " + serverName +
-                    "</h2><p>No Compatible Plugins</p>" +
-                    "</div></div></div></div></div>";
+            String icon = Html.FONT_AWESOME_ICON.parse("server");
+            // TODO Move plain text to Locale
+            String headerText = Html.HEADER_2.parse(icon + " " + serverName) + Html.PARAGRAPH.parse("No Compatible Plugins");
+            return Html.DIV_W_CLASS.parse("plugins-server",
+                    Html.DIV_W_CLASS.parse("plugins-header",
+                            Html.ROW.parse(Html.DIV_W_CLASS.parse("box-header", headerText))
+                    )
+            );
         }
 
         Map<String, List<String>> placeholders = getPlaceholdersInspect(plugins);

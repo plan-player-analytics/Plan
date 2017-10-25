@@ -101,7 +101,7 @@ public class InspectPageParser extends PageParser {
                     .sorted(new SessionStartComparator())
                     .collect(Collectors.toList());
 
-            String[] sessionsTabContent = HtmlStructure.createSessionsTabContent(sessions, allSessions);
+            String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessions, allSessions, uuid);
             addValue("contentSessions", sessionsTabContent[0]);
             addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
             addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
