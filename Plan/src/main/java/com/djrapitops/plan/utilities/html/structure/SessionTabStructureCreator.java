@@ -5,11 +5,15 @@
 package main.java.com.djrapitops.plan.utilities.html.structure;
 
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
@@ -17,6 +21,7 @@ import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -107,7 +112,22 @@ public class SessionTabStructureCreator {
 
             html.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
 
-            String[] worldData = WorldPieCreator.createSeriesData(session.getWorldTimes());
+            WorldTimes worldTimes = session.getWorldTimes();
+
+            try {
+                // Add 0 time for worlds not present.
+                Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
+                for (String world : MiscUtils.getIPlan().getDB().getWorldTable().getWorlds()) {
+                    if (nonZeroWorlds.contains(world)) {
+                        continue;
+                    }
+                    worldTimes.setGMTimesForWorld(world, new GMTimes());
+                }
+            } catch (SQLException e) {
+                Log.toLog("SessionTabStructureCreator", e);
+            }
+
+            String[] worldData = WorldPieCreator.createSeriesData(worldTimes);
 
             html.append("<script>")
                     .append("var ").append(id).append("series = {name:'World Playtime',colors: worldPieColors,colorByPoint:true,data:").append(worldData[0]).append("};")
