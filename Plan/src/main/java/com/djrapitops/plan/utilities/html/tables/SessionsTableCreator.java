@@ -77,8 +77,9 @@ public class SessionsTableCreator {
             String world = getLongestWorldPlayed(session);
 
             String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
+            String toolTip = "Session ID: " + (session.isFetchedFromDB() ? session.getSessionID() : "Not Saved.");
             sessionTableBuilder.append(Html.TABLELINE_4.parse(
-                    Html.LINK.parse(inspectUrl, name),
+                    Html.LINK_TOOLTIP.parse(inspectUrl, name, toolTip),
                     start,
                     length,
                     world

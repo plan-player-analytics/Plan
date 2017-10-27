@@ -14,6 +14,10 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
+<script>
+    var worldPieColors = [${worldPieColors}];
+    var gmPieColors = [${gmPieColors}];
+</script>
 <header>
     <div>
         <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px">
@@ -183,21 +187,7 @@
                         <div class="box-header">
                             <h2><i class="fa fa-calendar"></i> 50 Most Recent Sessions</h2>
                         </div>
-                        <div class="box-footer scrollbar" style="padding: 2px;">
-                            <table class="sortable table">
-                                <thead>
-                                <tr>
-                                    <th>Player</th>
-                                    <th>Started</th>
-                                    <th>Length</th>
-                                    <th>World - Time</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                ${tableBodySessions}
-                                </tbody>
-                            </table>
-                        </div>
+                        ${contentSessions}
                     </div>
                 </div>
                 <div class="row">
@@ -358,6 +348,7 @@
     <script src="./js/performanceGraph.js"></script>
     <script src="./js/worldMap.js"></script>
     <script src="./js/worldPie.js"></script>
+    <script src="./js/sessionTabExpand.js"></script>
     <script>
         Highcharts.setOptions({
             lang: {noData: "No Data to Display"},
@@ -449,8 +440,6 @@
                 y: ${banned}
             }]
         };
-        var worldPieColors = [${worldPieColors}];
-        var gmPieColors = [${gmPieColors}];
         var worldSeries = {
             name: 'World Playtime',
             colorByPoint: true,
@@ -502,6 +491,7 @@
             worldChart('worldGraph', entitySeries, chunkSeries, playersOnlineSeries);
             worldMap('choropleth', '#EEFFEE', '#267f00', mapSeries);
             punchCard('punchcard', punchcardSeries);
+            ${sessionTabGraphViewFunctions}
             /*countUpTimer();*/
 
             function openFunc(i) {

@@ -6,15 +6,13 @@ package main.java.com.djrapitops.plan.utilities.html;
 
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
-import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
-import main.java.com.djrapitops.plan.utilities.html.tables.KillsTableCreator;
+import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -95,105 +93,9 @@ public class HtmlStructure {
     }
 
     public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) throws FileNotFoundException {
-        if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-            return getSessionsAsTable(sessions, allSessions, uuid);
-        }
-
-        Map<Integer, String> serverNameIDRelationMap = new HashMap<>();
-
-        if (Verify.isEmpty(allSessions)) {
-            return new String[]{"<div class=\"session column\">" +
-                    "<div class=\"session-header\">" +
-                    "<div class=\"session-col\" style=\"width: 200%;\">" +
-                    "<h3>No Sessions</h3>" +
-                    "</div></div></div>", ""};
-        }
-
-        for (Map.Entry<String, List<Session>> entry : sessions.entrySet()) {
-            String serverName = entry.getKey();
-            List<Session> serverSessions = entry.getValue();
-            for (Session session : serverSessions) {
-                serverNameIDRelationMap.put(session.getSessionID(), serverName);
-            }
-        }
-
-        StringBuilder html = new StringBuilder();
-        StringBuilder viewScript = new StringBuilder();
-        int i = 0;
-        for (Session session : allSessions) {
-            if (i >= 50) {
-                break;
-            }
-
-            String sessionStart = FormatUtils.formatTimeStampYear(session.getSessionStart());
-            String sessionLength = FormatUtils.formatTimeAmount(session.getLength());
-            String sessionEnd = FormatUtils.formatTimeStampYear(session.getSessionEnd());
-
-            String dotSeparated = separateWithDots(sessionStart, sessionLength);
-
-            // Session-column starts & header.
-            html.append("<div class=\"session column\">")
-                    .append("<div class=\"session-header\">")
-                    .append("<div class=\"session-col\" style=\"width: 200%;\">")
-                    .append("<h3><i style=\"color:#777\" class=\"fa fa-chevron-down\" aria-hidden=\"true\"></i> ").append(dotSeparated).append("</h3>")
-                    .append("</div>")
-                    .append("</div>");
-
-            String serverName = serverNameIDRelationMap.get(session.getSessionID());
-
-            // Left side of Session box
-            html.append("<div class=\"session-content\">")
-                    .append("<div class=\"row\">") //
-                    .append("<div class=\"session-col\" style=\"padding: 0px;\">");
-
-            // Left side header
-            html.append("<div class=\"box-header\" style=\"margin: 0px;\">")
-                    .append("<h2><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i> ")
-                    .append(sessionStart)
-                    .append("</h2>")
-                    .append("</div>");
-
-            // Left side content
-            html.append("<div class=\"box\" style=\"margin: 0px;\">")
-                    .append("<p>Session Length: ").append(sessionLength).append("<br>")
-                    .append("Session Ended: ").append(sessionEnd).append("<br>")
-                    .append("Server: ").append(serverName).append("<br><br>")
-                    .append("Mob Kills: ").append(session.getMobKills()).append("<br>")
-                    .append("Deaths: ").append(session.getDeaths()).append("</p>");
-
-            html.append(KillsTableCreator.createTable(session.getPlayerKills()))
-                    .append("</div>"); // Left Side content ends
-
-            // Left side ends & Right side starts
-            html.append("</div>")
-                    .append("<div class=\"session-col\">");
-
-            String id = "worldPie" + session.getSessionStart() + i;
-
-            html.append("<div id=\"").append(id).append("\" style=\"width: 100%; height: 400px;\"></div>");
-
-            String[] worldData = WorldPieCreator.createSeriesData(session.getWorldTimes());
-
-            html.append("<script>")
-                    .append("var ").append(id).append("series = {name:'World Playtime',colors: worldPieColors,colorByPoint:true,data:").append(worldData[0]).append("};")
-                    .append("var ").append(id).append("gmseries = ").append(worldData[1]).append(";")
-                    .append("</script>");
-
-            viewScript.append("worldPie(")
-                    .append(id).append(", ")
-                    .append(id).append("series, ")
-                    .append(id).append("gmseries")
-                    .append(");");
-
-            // Session-col, Row, Session-Content, Session-column ends.
-            html.append("</div>")
-                    .append("</div>")
-                    .append("</div>")
-                    .append("</div>");
-
-            i++;
-        }
-        return new String[]{html.toString(), viewScript.toString()};
+        Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
+        map.put(uuid, sessions);
+        return SessionTabStructureCreator.creteStructure(map, allSessions, false);
     }
 
     private static String[] getSessionsAsTable(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {

@@ -5,6 +5,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;
+import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructureCreator;
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 
 import java.util.*;
@@ -62,6 +63,9 @@ public class JoinInfoPart extends RawData {
 
     private void sessionTables() {
         String[] tables = SessionsTableCreator.createTable(this);
+        String[] sessionContent = SessionTabStructureCreator.creteStructure(this);
+        addValue("contentSessions", sessionContent[0]);
+        addValue("sessionTabGraphViewFunctions", sessionContent[1]);
         addValue("tableBodySessions", tables[0]);
         addValue("tableBodyRecentLogins", tables[1]);
     }

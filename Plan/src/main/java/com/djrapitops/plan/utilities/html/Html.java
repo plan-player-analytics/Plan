@@ -33,6 +33,7 @@ public enum Html {
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
     LINK("<a class=\"link\" href=\"${0}\">${1}</a>"),
+    LINK_TOOLTIP("<a title=\"${2}\" class=\"link\" href=\"${0}\">${1}</a>"),
     LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
     IMG("<img src=\"${0}\">"),

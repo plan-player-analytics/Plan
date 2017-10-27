@@ -98,7 +98,7 @@ public class InspectPageParser extends PageParser {
             Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
             List<Session> allSessions = sessions.values().stream()
                     .flatMap(Collection::stream)
-                    .sorted(new SessionStartComparator())
+                    .sorted(new SessionStartComparator()) // Sorted Newest first.
                     .collect(Collectors.toList());
 
             String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessions, allSessions, uuid);
