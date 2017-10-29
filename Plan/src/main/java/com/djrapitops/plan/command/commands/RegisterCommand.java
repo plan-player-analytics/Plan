@@ -7,6 +7,7 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
@@ -14,8 +15,6 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Check;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 
 /**
  * Command for registering web users.
@@ -40,7 +39,9 @@ public class RegisterCommand extends SubCommand {
                 Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
                 "<password> [name] [access lvl]");
         this.plugin = plugin;
-        setupFilter();
+        if (plugin instanceof Plan) {
+            setupFilter();
+        }
     }
 
     @Override
@@ -140,7 +141,6 @@ public class RegisterCommand extends SubCommand {
      * Setups the command console output filter
      */
     private void setupFilter() {
-        Logger logger = (Logger) LogManager.getRootLogger();
-        logger.addFilter(new RegisterCommandFilter());
+        new RegisterCommandFilter().registerFilter();
     }
 }
