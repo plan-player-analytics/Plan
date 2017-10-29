@@ -27,6 +27,7 @@ public class UserInfo {
         this.registered = registered;
         this.opped = opped;
         this.banned = banned;
+        lastSeen = 0L;
     }
 
     public UUID getUuid() {

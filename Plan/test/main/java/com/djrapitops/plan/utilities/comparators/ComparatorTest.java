@@ -67,9 +67,10 @@ public class ComparatorTest {
         longValues.sort(Long::compare);
 
         Collections.reverse(longValues);
+        System.out.println(longValues);
         userInfo.sort(new UserInfoLastPlayedComparator());
         List<Long> afterSort = userInfo.stream().map(UserInfo::getLastSeen).collect(Collectors.toList());
-
+        System.out.println(afterSort);
         assertEquals(longValues, afterSort);
     }
 

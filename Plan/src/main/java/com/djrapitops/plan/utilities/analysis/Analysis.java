@@ -261,17 +261,12 @@ public class Analysis {
                 }
             }
 
-            Map<UUID, UserInfo> mappedUserInfo = new HashMap<>();
-            userInfo.forEach(u -> mappedUserInfo.put(u.getUuid(), u));
-
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
-            for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {
-                UserInfo user = mappedUserInfo.get(entry.getKey());
-                if (user == null) {
-                    continue;
-                }
-                user.setLastSeen(entry.getValue());
+            for (UserInfo info : userInfo) {
+                Long userLastSeen = lastSeen.getOrDefault(info.getUuid(), 0L);
+                info.setLastSeen(userLastSeen);
             }
+
             userInfo.sort(new UserInfoLastPlayedComparator());
 
             activity.setRecentPlayersUUIDs(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toList()));
@@ -279,7 +274,7 @@ public class Analysis {
 
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-            Map<UUID, Long> registered = mappedUserInfo.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRegistered()));
+            Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));
             joinInfo.addRegistered(registered);
             activity.addBans(userInfo.stream().filter(UserInfo::isBanned).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
