@@ -324,6 +324,7 @@ public class BungeeInformationManager extends InformationManager {
 
     public void cacheNetworkPageContent(UUID serverUUID, String html) {
         networkPageContent.put(serverUUID, html);
+        updateNetworkPageContent();
     }
 
     public void removeNetworkPageContent(UUID serverUUID) {
