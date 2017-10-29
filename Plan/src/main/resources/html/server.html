@@ -462,7 +462,14 @@
     </script>
     <script>
         $( function() {
-            $( "#tabs" ).tabs();
+            var resourceTab = window.sessionStorage.getItem("AnalysisResourceTab");
+            if (resourceTab == null) {
+                resourceTab = 1;
+            }
+            $( "#tabs" ).tabs({active: resourceTab});
+            $( "#tabs" ).on("tabsactivate", function(event, ui) {
+                window.sessionStorage.setItem("AnalysisResourceTab", $( "#tabs" ).tabs( "option", "active" ));
+            });
         });
     </script>
     <script>
