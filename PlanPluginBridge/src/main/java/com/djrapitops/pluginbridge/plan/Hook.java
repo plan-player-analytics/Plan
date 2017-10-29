@@ -21,6 +21,10 @@ public abstract class Hook {
 
     protected HookHandler hookHandler;
 
+    private Hook() {
+        throw new IllegalStateException();
+    }
+
     /**
      * Class constructor.
      * <p>
@@ -45,8 +49,9 @@ public abstract class Hook {
     /**
      * Constructor to set enabled to false.
      */
-    public Hook() {
+    public Hook(HookHandler hookHandler) {
         enabled = false;
+        this.hookHandler = hookHandler;
     }
 
     protected void addPluginDataSource(PluginData pluginData) {

@@ -25,7 +25,7 @@ public class LiteBansHook extends Hook {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public LiteBansHook(HookHandler hookH) {
-        super();
+        super(hookH);
         try {
             Database.get();
             enabled = true;

@@ -13,6 +13,8 @@ import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
 import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionHook;
+import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 
 /**
@@ -56,7 +58,10 @@ public class Bridge {
         for (Hook hook : hooks) {
             try {
                 hook.hook();
-            } catch (Exception | NoClassDefFoundError ignore) {
+            } catch (Exception | NoClassDefFoundError e) {
+                if (Settings.DEV_MODE.isTrue()) {
+                    Log.toLog("PluginBridge", e);
+                }
             }
         }
     }
