@@ -6,7 +6,6 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -29,7 +28,7 @@ public class ListServersCommand extends SubCommand {
      *
      * @param plugin Current instance of Plan
      */
-    public ListServersCommand(Plan plugin) {
+    public ListServersCommand(IPlan plugin) {
         super("servers, serverlist, listservers, sl",
                 CommandType.CONSOLE,
                 Permissions.MANAGE.getPermission(),

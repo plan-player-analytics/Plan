@@ -10,7 +10,7 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.command.commands.ReloadCommand;
+import main.java.com.djrapitops.plan.command.PlanBungeeCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -65,7 +65,7 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
 
-            registerCommand(new ReloadCommand(this));
+            registerCommand(new PlanBungeeCommand(this));
 
             String ip = variableHolder.getIp();
             if ("0.0.0.0".equals(ip)) {

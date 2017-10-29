@@ -7,7 +7,7 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -31,9 +31,9 @@ import org.apache.logging.log4j.core.Logger;
  */
 public class RegisterCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final IPlan plugin;
 
-    public RegisterCommand(Plan plugin) {
+    public RegisterCommand(IPlan plugin) {
         super("register",
                 CommandType.CONSOLE_WITH_ARGUMENTS,
                 "", // No Permission Requirement

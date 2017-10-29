@@ -7,7 +7,7 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -23,9 +23,9 @@ import java.util.List;
  */
 public class WebListUsersCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final IPlan plugin;
 
-    public WebListUsersCommand(Plan plugin) {
+    public WebListUsersCommand(IPlan plugin) {
         super("list", CommandType.CONSOLE, Permissions.MANAGE_WEB.getPerm(), "List registered web users & permission levels.");
         this.plugin = plugin;
     }

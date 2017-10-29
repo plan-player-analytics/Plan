@@ -6,7 +6,7 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -22,9 +22,9 @@ import org.bukkit.ChatColor;
  */
 public class WebCheckCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final IPlan plugin;
 
-    public WebCheckCommand(Plan plugin) {
+    public WebCheckCommand(IPlan plugin) {
         super("check",
                 CommandType.CONSOLE_WITH_ARGUMENTS,
                 Permissions.MANAGE_WEB.getPerm(),
