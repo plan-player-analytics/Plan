@@ -354,7 +354,7 @@ public class BungeeInformationManager extends InformationManager {
 
     @Override
     public void updateNetworkPageContent() {
-        PageCache.cachePage("analysisPage" + MiscUtils.getIPlan().getServerUuid(), () -> new AnalysisPageResponse(this));
+        PageCache.cachePage("analysisPage:" + MiscUtils.getIPlan().getServerUuid(), () -> new AnalysisPageResponse(this));
     }
 
     public void sendConfigSettings() {
