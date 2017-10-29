@@ -10,7 +10,7 @@ import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
-import main.java.com.djrapitops.plan.command.commands.ReloadCommand;
+import main.java.com.djrapitops.plan.command.PlanBungeeCommand;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.databases.MySQLDB;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -27,7 +27,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import net.md_5.bungee.api.ChatColor;
 
 import java.io.InputStream;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -66,10 +66,10 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
 
-            registerCommand(new ReloadCommand(this));
+            registerCommand(new PlanBungeeCommand(this));
 
             String ip = variableHolder.getIp();
-            if ("0.0.0.0" .equals(ip)) {
+            if ("0.0.0.0".equals(ip)) {
                 Log.error("IP setting still 0.0.0.0 - Configure AlternativeIP/IP that connects to the Proxy server.");
                 Log.info("Player Analytics partially enabled (Use /planbungee to reload config)");
                 return;
@@ -98,6 +98,12 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
             }).runTaskAsynchronously();
             getRunnableFactory().createNew("Player Count task", new TPSCountTimer(this))
                     .runTaskTimerAsynchronously(1000, TimeAmount.SECOND.ticks());
+            getRunnableFactory().createNew("NetworkPageContentUpdateTask", new AbsRunnable("NetworkPageContentUpdateTask") {
+                @Override
+                public void run() {
+                    infoManager.updateNetworkPageContent();
+                }
+            }).runTaskTimerAsynchronously(1500, TimeAmount.MINUTE.ticks());
 
 //            getProxy().registerChannel("Plan");
 //            registerListener(new BungeePluginChannelListener(this));
@@ -122,10 +128,20 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
     @Override
     public void onDisable() {
         if (processingQueue != null) {
-            List<Processor> processors = processingQueue.stopAndReturnLeftovers();
-            Log.info("Processing unprocessed processors. (" + processors.size() + ")");
-            for (Processor processor : processors) {
-                processor.process();
+            try {
+                processingQueue.stop();
+            } catch (IllegalArgumentException ignored) {
+                /*ignored*/
+            }
+        }
+        if (webServer != null) {
+            webServer.stop();
+        }
+        if (db != null) {
+            try {
+                db.close();
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
             }
         }
         Log.info(Locale.get(Msg.DISABLED).toString());

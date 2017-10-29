@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * Thrown when something goes wrong in the database, generic exception.
+ * Thrown when something goes wrong with the Database, generic exception.
  *
  * @author Rsl1122
  */

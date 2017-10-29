@@ -1,6 +1,5 @@
 package main.java.com.djrapitops.plan.utilities.html;
 
-import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import java.io.Serializable;
@@ -34,13 +33,27 @@ public enum Html {
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
     LINK("<a class=\"link\" href=\"${0}\">${1}</a>"),
+    LINK_TOOLTIP("<a title=\"${2}\" class=\"link\" href=\"${0}\">${1}</a>"),
     LINK_EXTERNAL("<a class=\"link\" target=\"_blank\" href=\"${0}\">${1}</a>"),
     LINK_CLASS("class=\"link\""),
     IMG("<img src=\"${0}\">"),
     //
+    PARAGRAPH("<p>${0}</p>"),
+    HEADER("<h1>${0}</h1>"),
+    HEADER_2("<h2>${0}</h2>"),
+    //
+    DIV_W_CLASS("<div class=\"${0}\">${1}</div>"),
+    DIV_W_CLASS_STYLE("<div class=\"${0}\" style=\"${1}\">${2}</div>"),
+    //
+    ROW(DIV_W_CLASS.parse("row", "${0}")),
+    //
+    TABLE_END("</tbody></table>"),
     TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),
     TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
     TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
+    TABLE_SESSIONS(DIV_W_CLASS_STYLE.parse("box-footer scrollbar", "padding: 2px;",
+            TABLE_START_4.parse("Player", "Started", "Length", "World - Time") + "${0}" + TABLE_END.parse())
+    ),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
     TABLE_KILLS_START(TABLE_START_3.parse(FONT_AWESOME_ICON.parse("clock-o") + " Time", "Killed", "With")),
     TABLE_FACTIONS_START(TABLE_START_4.parse(FONT_AWESOME_ICON.parse("flag") + " Faction", FONT_AWESOME_ICON.parse("bolt") + " Power", FONT_AWESOME_ICON.parse("map-o") + " Land", FONT_AWESOME_ICON.parse("user") + " Leader")),
@@ -50,8 +63,7 @@ public enum Html {
     TABLELINE_4("<tr><td><b>${0}</b></td><td>${1}</td><td>${2}</td><td>${3}</td></tr>"),
     TABLELINE_PLAYERS("<tr><td>${0}</td><td>${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td>${4}</td><td sorttable_customkey=\"${5}\">${6}</td>" + "<td sorttable_customkey=\"${7}\">${8}</td><td>${9}</td></tr>"),
     TABLELINE_3_CUSTOMKEY("<tr><td sorttable_customkey=\"${0}\">${1}</td><td sorttable_customkey=\"${2}\">${3}</td><td sorttable_customkey=\"${4}\">${5}</td></tr>"),
-    TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"${0}\">${1}</td><td>${2}</td><td>${3}</td></tr>"),
-    TABLE_END("</tbody></table>");
+    TABLELINE_3_CUSTOMKEY_1("<tr><td sorttable_customkey=\"${0}\">${1}</td><td>${2}</td><td>${3}</td></tr>");
 
     private final String html;
 

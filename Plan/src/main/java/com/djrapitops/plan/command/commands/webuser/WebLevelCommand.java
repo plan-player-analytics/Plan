@@ -5,7 +5,7 @@ import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.Permissions;
-import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 
@@ -17,9 +17,9 @@ import main.java.com.djrapitops.plan.locale.Msg;
  */
 public class WebLevelCommand extends SubCommand {
 
-    private final Plan plugin;
+    private final IPlan plugin;
 
-    public WebLevelCommand(Plan plugin) {
+    public WebLevelCommand(IPlan plugin) {
         super("level",
                 CommandType.CONSOLE,
                 Permissions.MANAGE_WEB.getPerm(),

@@ -437,6 +437,11 @@ public class DatabaseTest {
         assertNull(sessions.get(worlds.get(1)));
 
         assertEquals(session, savedSessions.get(0));
+
+        Map<UUID, Long> lastSeen = sessionsTable.getLastSeenForAllPlayers();
+        assertTrue(lastSeen.containsKey(uuid));
+        assertFalse(lastSeen.containsKey(uuid2));
+        assertEquals(22345L, (long) lastSeen.get(uuid));
     }
 
     @Test

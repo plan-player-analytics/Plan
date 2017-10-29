@@ -13,6 +13,8 @@ import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.data.PlayerKill;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserInfo;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
@@ -98,10 +100,10 @@ public class InspectPageParser extends PageParser {
             Map<String, List<Session>> sessions = sessionsTable.getSessions(uuid);
             List<Session> allSessions = sessions.values().stream()
                     .flatMap(Collection::stream)
-                    .sorted(new SessionStartComparator())
+                    .sorted(new SessionStartComparator()) // Sorted Newest first.
                     .collect(Collectors.toList());
 
-            String[] sessionsTabContent = HtmlStructure.createSessionsTabContent(sessions, allSessions);
+            String[] sessionsTabContent = HtmlStructure.createSessionsTabContentInspectPage(sessions, allSessions, uuid);
             addValue("contentSessions", sessionsTabContent[0]);
             addValue("sessionTabGraphViewFunctions", sessionsTabContent[1]);
             addValue("contentServerOverview", HtmlStructure.createServerOverviewColumn(sessions));
@@ -154,7 +156,18 @@ public class InspectPageParser extends PageParser {
             addValue("playtimeTotal", FormatUtils.formatTimeAmount(playTime));
 
             String punchCardData = PunchCardGraphCreator.createDataSeries(allSessions);
-            String[] worldPieData = WorldPieCreator.createSeriesData(db.getWorldTimesTable().getWorldTimesOfUser(uuid));
+            WorldTimes worldTimes = db.getWorldTimesTable().getWorldTimesOfUser(uuid);
+
+            // Add 0 time for worlds not present.
+            Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
+            for (String world : db.getWorldTable().getWorlds()) {
+                if (nonZeroWorlds.contains(world)) {
+                    continue;
+                }
+                worldTimes.setGMTimesForWorld(world, new GMTimes());
+            }
+
+            String[] worldPieData = WorldPieCreator.createSeriesData(worldTimes);
 
             addValue("worldPieSeries", worldPieData[0]);
             addValue("gmSeries", worldPieData[1]);

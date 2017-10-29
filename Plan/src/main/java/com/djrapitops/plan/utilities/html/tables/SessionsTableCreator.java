@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class SessionsTableCreator {
 
-    public static String[] createTables(JoinInfoPart joinInfoPart) {
+    public static String[] createTable(JoinInfoPart joinInfoPart) {
         Map<Integer, UUID> uuidByID = new HashMap<>();
         for (Map.Entry<UUID, List<Session>> entry : joinInfoPart.getSessions().entrySet()) {
             List<Session> sessions = entry.getValue();
@@ -34,6 +34,10 @@ public class SessionsTableCreator {
         }
 
         List<Session> allSessions = joinInfoPart.getAllSessions();
+        return createTable(uuidByID, allSessions);
+    }
+
+    public static String[] createTable(Map<Integer, UUID> uuidByID, List<Session> allSessions) {
         if (allSessions.isEmpty()) {
             return new String[]{Html.TABLELINE_4.parse("<b>No Sessions</b>", "", "", ""),
                     Html.TABLELINE_2.parse("<b>No Sessions</b>", "")};
@@ -73,8 +77,9 @@ public class SessionsTableCreator {
             String world = getLongestWorldPlayed(session);
 
             String inspectUrl = Plan.getPlanAPI().getPlayerInspectPageLink(name);
+            String toolTip = "Session ID: " + (session.isFetchedFromDB() ? session.getSessionID() : "Not Saved.");
             sessionTableBuilder.append(Html.TABLELINE_4.parse(
-                    Html.LINK.parse(inspectUrl, name),
+                    Html.LINK_TOOLTIP.parse(inspectUrl, name, toolTip),
                     start,
                     length,
                     world

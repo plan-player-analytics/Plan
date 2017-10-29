@@ -2,6 +2,7 @@ package main.java.com.djrapitops.plan.command.commands;
 
 import com.google.common.collect.ImmutableSet;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
@@ -19,6 +20,11 @@ import java.util.Set;
 public class RegisterCommandFilter extends AbstractFilter {
 
     private final Set<String> censoredCommands = ImmutableSet.of("/plan web register", "/plan webuser register", "/plan register");
+
+    public void registerFilter() {
+        Logger logger = (Logger) LogManager.getRootLogger();
+        logger.addFilter(this);
+    }
 
     @Override
     public Result filter(LogEvent event) {

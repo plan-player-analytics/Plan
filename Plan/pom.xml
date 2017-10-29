@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.djrapitops</groupId>
     <artifactId>Plan</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.3</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>com.djrapitops</groupId>
             <artifactId>PlanPluginBridge</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.3</version>
             <scope>compile</scope>
         </dependency>
         <!--        Testing -->

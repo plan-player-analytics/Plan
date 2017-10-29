@@ -27,14 +27,14 @@ import java.util.UUID;
  * @author Rsl1122
  * @see PluginData
  * @see AnalysisType
- * @since 2.0.0
+ * @since 4.0.0
  */
 public class API {
 
     private final Plan plugin;
 
     /**
-     * Class Constructor.
+     * Creates a new API instance - not supposed to be called outside {@code Plan.onEnable}.
      *
      * @param plugin Current instance of Plan
      */
@@ -78,7 +78,7 @@ public class API {
      * {@code <a href="Link">PlayerName</a>}
      *
      * @param name Name of the player
-     * @return ./player/PlayerName
+     * @return {@code ../player/PlayerName}
      */
     public String getPlayerInspectPageLink(String name) {
         String link = "../player/" + name;
@@ -86,7 +86,7 @@ public class API {
     }
 
     /**
-     * Check if Players's Inspect page is cached to pagecache.
+     * Check if Players's Inspect page is cached to PageCache.
      *
      * @param uuid UUID of the player.
      * @return true/false
@@ -97,12 +97,21 @@ public class API {
         return isPlayerHtmlCached(uuid);
     }
 
+    /**
+     * Check if Players's Inspect page is cached to PageCache of the providing WebServer.
+     * <p>
+     * Using BungeeCord: Will send a {@code IsCachedWebAPI} request to check if the page is in Bungee's PageCache.
+     * Only Bukkit: Checks PageCache for page.
+     *
+     * @param uuid UUID of the player.
+     * @return true/false
+     */
     public boolean isPlayerHtmlCached(UUID uuid) {
         return plugin.getInfoManager().isCached(uuid);
     }
 
     /**
-     * Cache Players's Inspect page to the PageCache of the WebServer.
+     * Cache Players's Inspect page to the PageCache of the providing WebServer.
      *
      * @param uuid UUID of the player.
      * @deprecated use {@code cachePlayerHtml}
@@ -113,9 +122,13 @@ public class API {
     }
 
     /**
-     * Cache Players's Inspect page to the PageCache of the WebServer.
+     * Cache Players's Inspect page to the PageCache of the providing WebServer.
+     * <p>
+     * Using BungeeCord: Will send a {@code PostHtmlWebAPI} request after calculating the inspect page.
+     * Only Bukkit: Calculates inspect page and places it in the PageCache.
      *
      * @param uuid UUID of the player.
+     * @deprecated use {@code cachePlayerHtml}
      */
     public void cachePlayerHtml(UUID uuid) {
         plugin.getInfoManager().cachePlayer(uuid);
@@ -124,7 +137,7 @@ public class API {
     /**
      * Used to get the full Html of the Inspect page as a string.
      * <p>
-     * Check if the data is cached to InspectCache before calling this.
+     * Re-calculates the inspect html on this server.
      *
      * @param uuid UUID of the player.
      * @return player.html with all placeholders replaced.

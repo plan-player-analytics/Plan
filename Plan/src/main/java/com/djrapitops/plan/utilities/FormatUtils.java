@@ -119,6 +119,11 @@ public class FormatUtils {
         }
         if (minutes != 0) {
             String m = Settings.FORMAT_MINUTES.toString().replace("%minutes%", String.valueOf(minutes));
+            if (hours == 0 && m.contains("%hours%")) {
+                m = m.replace("%hours%", Settings.FORMAT_MINUTES.toString().replace("%zero%", "0") + "0");
+            } else {
+                m = m.replace("%hours", "");
+            }
             if (m.contains("%zero%") && String.valueOf(minutes).length() == 1) {
                 builder.append('0');
             }
@@ -126,6 +131,11 @@ public class FormatUtils {
         }
         if (seconds != 0) {
             String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", String.valueOf(seconds));
+            if (minutes == 0 && s.contains("%minutes%")) {
+                s = s.replace("%minutes%", Settings.FORMAT_MINUTES.toString().replace("%hours", "").replace("%zero%", "0") + 0);
+            } else {
+                s = s.replace("%minutes%", "");
+            }
             if (s.contains("%zero%") && String.valueOf(seconds).length() == 1) {
                 builder.append('0');
             }

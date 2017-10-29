@@ -43,11 +43,17 @@ public class IPsTable extends UserIDTable {
     public void createTable() throws DBCreateTableException {
         createTable(TableSqlParser.createTable(tableName)
                 .column(columnUserID, Sql.INT).notNull()
-                .column(columnIP, Sql.varchar(20)).notNull()
+                .column(columnIP, Sql.varchar(39)).notNull()
                 .column(columnGeolocation, Sql.varchar(50)).notNull()
                 .foreignKey(columnUserID, usersTable.getTableName(), usersTable.getColumnID())
                 .toString()
         );
+    }
+
+    public void alterTableV12() throws SQLException {
+        if (usingMySQL) {
+            executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnIP + " VARCHAR(39) NOT NULL");
+        }
     }
 
     /**

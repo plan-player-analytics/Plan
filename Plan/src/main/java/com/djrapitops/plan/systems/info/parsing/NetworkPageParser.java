@@ -48,7 +48,6 @@ public class NetworkPageParser extends PageParser {
             addValue("playersOnlineSeries", PlayerActivityGraphCreator.buildSeriesDataString(networkOnlineData));
             addValue("playersGraphColor", Colors.PLAYERS_ONLINE.getColor());
             addValue("playersOnline", plugin.getProxy().getOnlineCount());
-            addValue("playersMax", plugin.getProxy().getConfig().getPlayerLimit());
 
             addValue("playersTotal", db.getUsersTable().getPlayerCount());
 

@@ -3,6 +3,9 @@ package main.java.com.djrapitops.plan.utilities.html.graphs;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,11 +28,13 @@ public class WorldPieCreator {
         Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
 
+        List<String> worlds = new ArrayList<>(playtimePerWorld.keySet());
+        Collections.sort(worlds);
+
         int size = playtimePerWorld.size();
-        for (Map.Entry<String, Long> world : playtimePerWorld.entrySet()) {
-            String worldName = world.getKey();
+        for (String worldName : worlds) {
             seriesBuilder.append("{name:'").append(worldName)
-                    .append("',y:").append(world.getValue())
+                    .append("',y:").append(playtimePerWorld.getOrDefault(worldName, 0L))
                     .append(",drilldown: '").append(worldName).append("'");
 
             seriesBuilder.append("}");

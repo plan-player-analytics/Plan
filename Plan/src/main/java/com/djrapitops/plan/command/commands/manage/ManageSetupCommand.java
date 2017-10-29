@@ -55,6 +55,10 @@ public class ManageSetupCommand extends SubCommand {
             return true;
         }
         String address = args[0].toLowerCase();
+        if (!address.startsWith("http")) {
+            sender.sendMessage("§cMake sure you're using the full address (Starts with http:// or https://) - Check Bungee enable log for the full address.");
+            return true;
+        }
         if (address.endsWith("/")) {
             address = address.substring(0, address.length() - 1);
         }

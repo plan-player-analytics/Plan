@@ -11,6 +11,7 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.TPSTable;
@@ -110,7 +111,6 @@ public class Analysis {
             AnalysisData analysisData = new AnalysisData();
             List<PluginData> thirdPartyPlugins = plugin.getHookHandler().getAdditionalDataSources();
             analysisData.setPluginsTabLayout(HtmlStructure.createAnalysisPluginsTabLayout(thirdPartyPlugins));
-            analysisData.setPlanVersion(plugin.getVersion());
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             fillDataset(analysisData, db);
@@ -261,17 +261,12 @@ public class Analysis {
                 }
             }
 
-            Map<UUID, UserInfo> mappedUserInfo = new HashMap<>();
-            userInfo.forEach(u -> mappedUserInfo.put(u.getUuid(), u));
-
             Map<UUID, Long> lastSeen = db.getSessionsTable().getLastSeenForAllPlayers();
-            for (Map.Entry<UUID, Long> entry : lastSeen.entrySet()) {
-                UserInfo user = mappedUserInfo.get(entry.getKey());
-                if (user == null) {
-                    continue;
-                }
-                user.setLastSeen(entry.getValue());
+            for (UserInfo info : userInfo) {
+                Long userLastSeen = lastSeen.getOrDefault(info.getUuid(), 0L);
+                info.setLastSeen(userLastSeen);
             }
+
             userInfo.sort(new UserInfoLastPlayedComparator());
 
             activity.setRecentPlayersUUIDs(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toList()));
@@ -279,7 +274,7 @@ public class Analysis {
 
             playerCount.addPlayers(userInfo.stream().map(UserInfo::getUuid).collect(Collectors.toSet()));
 
-            Map<UUID, Long> registered = mappedUserInfo.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRegistered()));
+            Map<UUID, Long> registered = userInfo.stream().collect(Collectors.toMap(UserInfo::getUuid, UserInfo::getRegistered));
             joinInfo.addRegistered(registered);
             activity.addBans(userInfo.stream().filter(UserInfo::isBanned).map(UserInfo::getUuid).collect(Collectors.toSet()));
 
@@ -292,15 +287,25 @@ public class Analysis {
                 joinInfo.addSessions(sessions);
             }
 
+            Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
+            geolocPart.addGeoLocations(geolocations);
+
             analysisData.setPlayersTable(PlayersTableCreator.createTable(userInfo, joinInfo, geolocPart));
 
             Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
             killPart.addKills(playerKills);
 
-            Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
-            geolocPart.addGeoLocations(geolocations);
-
             WorldTimes worldTimes = db.getWorldTimesTable().getWorldTimesOfServer();
+
+            // Add 0 time for worlds not present.
+            Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
+            for (String world : db.getWorldTable().getWorlds()) {
+                if (nonZeroWorlds.contains(world)) {
+                    continue;
+                }
+                worldTimes.setGMTimesForWorld(world, new GMTimes());
+            }
+
             worldPart.setWorldTimes(worldTimes);
 
             playtime.setTotalPlaytime(db.getSessionsTable().getPlaytimeOfServer());

@@ -26,6 +26,7 @@ public enum Settings {
     WRITE_NEW_LOCALE("Plugin.WriteNewLocaleFileOnStart"),
     DEV_MODE("Plugin.Dev"),
     USE_SERVER_TIME("Customization.UseServerTime"),
+    DISPLAY_SESSIONS_AS_TABLE("Customization.Display.SessionsAsTable"),
 
     // Integer
     WEBSERVER_PORT("WebServer.Port"),

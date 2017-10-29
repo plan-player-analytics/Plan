@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * Thrown when something goes wrong with creating tables with Table#createTable.
+ * Thrown when something goes wrong with creating tables with {@code Table#createTable}.
  *
  * @author Rsl1122
  */

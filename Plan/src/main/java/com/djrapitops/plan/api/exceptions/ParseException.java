@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.api.exceptions;
 
 /**
- * Exception thrown when Html page parsing fails.
+ * Exception thrown when PageParser encounters an Exception.
  *
  * @author Rsl1122
  */

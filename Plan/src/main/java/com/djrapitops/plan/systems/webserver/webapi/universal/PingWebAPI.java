@@ -13,6 +13,7 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class PingWebAPI extends WebAPI {
 
     public void sendRequest(String address, String accessCode) throws WebAPIException {
         addVariable("accessKey", accessCode);
+        addVariable("version", MiscUtils.getIPlan().getVersion());
         sendRequest(address);
     }
 }
