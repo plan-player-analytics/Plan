@@ -27,6 +27,7 @@ import main.java.com.djrapitops.plan.utilities.Benchmark;
 import net.md_5.bungee.api.ChatColor;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -131,6 +132,16 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
                 processingQueue.stop();
             } catch (IllegalArgumentException ignored) {
                 /*ignored*/
+            }
+        }
+        if (webServer != null) {
+            webServer.stop();
+        }
+        if (db != null) {
+            try {
+                db.close();
+            } catch (SQLException e) {
+                Log.toLog(this.getClass().getName(), e);
             }
         }
         Log.info(Locale.get(Msg.DISABLED).toString());
