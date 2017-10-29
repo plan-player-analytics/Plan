@@ -292,13 +292,13 @@ public class Analysis {
                 joinInfo.addSessions(sessions);
             }
 
+            Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
+            geolocPart.addGeoLocations(geolocations);
+
             analysisData.setPlayersTable(PlayersTableCreator.createTable(userInfo, joinInfo, geolocPart));
 
             Map<UUID, List<PlayerKill>> playerKills = db.getKillsTable().getPlayerKills();
             killPart.addKills(playerKills);
-
-            Map<UUID, List<String>> geolocations = db.getIpsTable().getAllGeolocations();
-            geolocPart.addGeoLocations(geolocations);
 
             WorldTimes worldTimes = db.getWorldTimesTable().getWorldTimesOfServer();
 
