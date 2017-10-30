@@ -37,7 +37,7 @@ public class SessionTabStructureCreator {
         Map<Integer, UUID> uuidsByID = generateIDtoUUIDMap(sessions);
 
         if (Settings.DISPLAY_SESSIONS_AS_TABLE.isTrue()) {
-            return new String[]{Html.TABLE_SESSIONS.parse(SessionsTableCreator.createTable(uuidsByID, allSessions)[0]), ""};
+            return new String[]{Html.TABLE_SESSIONS.parse("", "", "", SessionsTableCreator.createTable(uuidsByID, allSessions)[0]), ""};
         }
 
         if (Verify.isEmpty(allSessions)) {
