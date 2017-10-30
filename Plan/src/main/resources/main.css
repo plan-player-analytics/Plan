@@ -219,7 +219,9 @@ th.text {
 }
 tr:nth-child(even) {background: #e2e2e2}
 tr:nth-child(odd) {background: #eee}
-
+tr {
+   color: #000;
+}
 
 .main-limiter {
     width: 100%;
