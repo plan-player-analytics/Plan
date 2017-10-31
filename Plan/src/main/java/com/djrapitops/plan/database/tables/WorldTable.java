@@ -5,8 +5,10 @@ import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.processing.ExecStatement;
 import main.java.com.djrapitops.plan.database.processing.QueryAllStatement;
+import main.java.com.djrapitops.plan.database.processing.QueryStatement;
 import main.java.com.djrapitops.plan.database.sql.Sql;
 import main.java.com.djrapitops.plan.database.sql.TableSqlParser;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -111,5 +113,43 @@ public class WorldTable extends Table {
         return columnWorldName;
     }
 
+    public Set<String> getWorldNames() throws SQLException {
+        return getWorldNames(MiscUtils.getIPlan().getServerUuid());
+    }
 
+    public Set<String> getWorldNames(UUID serverUUID) throws SQLException {
+        WorldTimesTable worldTimesTable = db.getWorldTimesTable();
+        SessionsTable sessionsTable = db.getSessionsTable();
+        ServerTable serverTable = db.getServerTable();
+
+        String statementSelectServerID = serverTable.statementSelectServerID;
+
+        String worldIDColumn = worldTimesTable + "." + worldTimesTable.getColumnWorldId();
+        String worldSessionIDColumn = worldTimesTable + "." + worldTimesTable.getColumnSessionID();
+        String sessionIDColumn = sessionsTable + "." + sessionsTable.getColumnID();
+        String sessionServerIDColumn = sessionsTable + "." + sessionsTable.getcolumnServerID();
+
+        String sql = "SELECT DISTINCT " +
+                columnWorldName + " FROM " +
+                tableName +
+                " JOIN " + worldTimesTable + " on " + worldIDColumn + "=" + tableName + "." + columnWorldId +
+                " JOIN " + sessionsTable + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
+                " WHERE " + statementSelectServerID + "=" + sessionServerIDColumn;
+
+        return query(new QueryStatement<Set<String>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public Set<String> processResults(ResultSet set) throws SQLException {
+                Set<String> worldNames = new HashSet<>();
+                while (set.next()) {
+                    worldNames.add(set.getString(columnWorldName));
+                }
+                return worldNames;
+            }
+        });
+    }
 }
