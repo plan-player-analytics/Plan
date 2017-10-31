@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
 import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -43,7 +42,7 @@ public class PlayersPageResponse extends Response {
 
         int i = 1;
         for (String name : names) {
-            String link = Html.LINK.parse(Plan.getPlanAPI().getPlayerInspectPageLink(name), name);
+            String link = Html.LINK.parse("../player/" + name, name);
 
             html.append("<td>").append(link).append("</td>");
 
