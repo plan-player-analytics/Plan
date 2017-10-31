@@ -54,6 +54,7 @@ public class WorldPieCreator {
     }
 
     private static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld) {
+        // TODO Optimization is possible
         WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
         Map<String, String> aliases = aliasSettings.getAliases();
 
@@ -104,6 +105,7 @@ public class WorldPieCreator {
     }
 
     private static Map<String, GMTimes> transformToGMAliases(Map<String, GMTimes> gmTimesMap) {
+        // TODO Optimization is possible
         WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
         Map<String, String> aliases = aliasSettings.getAliases();
 

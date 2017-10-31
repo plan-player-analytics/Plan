@@ -29,7 +29,11 @@ public class PostHtmlWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         try {
-            String html = variables.get("html");
+            String htmlVariable = variables.get("html");
+            if (htmlVariable == null) {
+                return badRequest("Html was null");
+            }
+            String html = "<!DOCTYPE html>" + htmlVariable.split("<!DOCTYPE html>", 2)[1];
             String target = variables.get("target");
             InformationManager infoManager = plugin.getInfoManager();
             switch (target) {
@@ -60,8 +64,8 @@ public class PostHtmlWebAPI extends WebAPI {
 
     public void sendInspectHtml(String address, UUID uuid, String html) throws WebAPIException {
         addVariable("uuid", uuid.toString());
-        addVariable("html", html);
         addVariable("target", "inspectPage");
+        addVariable("html", html);
         super.sendRequest(address);
     }
 
