@@ -99,6 +99,8 @@ public enum Settings {
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),
     HIDE_TOWNS("Plugins.Towny.HideTowns"),
+    // Config section
+    WORLD_ALIASES("Customization.WorldAliases"),
     //
     // Bungee
     BUNGEE_IP("Server.IP"),

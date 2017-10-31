@@ -67,6 +67,8 @@ Customization:
       Minutes: '%minutes%m '
       Seconds: '%seconds%s'
       Zero: '0s'
+  WorldAliases:
+    world: world
 
 Theme:
   Base: Default
