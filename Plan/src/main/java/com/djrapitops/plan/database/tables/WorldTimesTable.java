@@ -351,4 +351,12 @@ public class WorldTimesTable extends UserIDTable {
             }
         });
     }
+
+    String getColumnWorldId() {
+        return columnWorldId;
+    }
+
+    String getColumnSessionID() {
+        return columnSessionID;
+    }
 }

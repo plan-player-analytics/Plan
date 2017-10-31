@@ -679,4 +679,8 @@ public class SessionsTable extends UserIDTable {
             session.setSessionID(savedSession.getSessionID());
         }
     }
+
+    String getcolumnServerID() {
+        return columnServerID;
+    }
 }

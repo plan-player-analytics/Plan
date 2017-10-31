@@ -26,6 +26,8 @@ import java.util.UUID;
  */
 public class PlanPlayerListener implements Listener {
 
+    private static boolean countKicks = true;
+
     private final Plan plugin;
     private final DataCache cache;
 
@@ -61,7 +63,7 @@ public class PlanPlayerListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
-        if (event.isCancelled()) {
+        if (!countKicks || event.isCancelled()) {
             return;
         }
         UUID uuid = event.getPlayer().getUniqueId();
@@ -131,5 +133,9 @@ public class PlanPlayerListener implements Listener {
             int messagesSent = plugin.getDataCache().getFirstSessionMsgCount(uuid);
             plugin.addToProcessQueue(new FirstLeaveProcessor(uuid, time, messagesSent));
         }
+    }
+
+    public static void setCountKicks(boolean value) {
+        countKicks = value;
     }
 }

@@ -181,6 +181,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             if (!reloading) {
                 registerListeners();
             }
+            PlanPlayerListener.setCountKicks(true);
             registerTasks();
 
             this.api = new API(this);

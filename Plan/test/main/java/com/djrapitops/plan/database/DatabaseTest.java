@@ -876,4 +876,9 @@ public class DatabaseTest {
         assertTrue(db.getUsersTable().isRegistered(uuid));
         assertTrue(db.getUserInfoTable().isRegistered(uuid));
     }
+
+    @Test
+    public void testWorldTableGetWorldNamesNoException() throws SQLException {
+        Set<String> worldNames = db.getWorldTable().getWorldNames();
+    }
 }

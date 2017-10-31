@@ -1,15 +1,19 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
 import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
+import main.java.com.djrapitops.plan.data.time.GMTimes;
+import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionLengthComparator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -291,5 +295,21 @@ public class AnalysisUtils {
             return max.getAsLong();
         }
         return 0;
+    }
+
+    public static void addMissingWorlds(WorldTimes worldTimes) {
+        try {
+            // Add 0 time for worlds not present.
+            Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
+            IPlan plugin = MiscUtils.getIPlan();
+            for (String world : plugin.getDB().getWorldTable().getWorldNames(plugin.getServerUuid())) {
+                if (nonZeroWorlds.contains(world)) {
+                    continue;
+                }
+                worldTimes.setGMTimesForWorld(world, new GMTimes());
+            }
+        } catch (SQLException e) {
+            Log.toLog("AnalysisUtils.addMissingWorlds", e);
+        }
     }
 }

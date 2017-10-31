@@ -1,12 +1,11 @@
 package main.java.com.djrapitops.plan.utilities.html.graphs;
 
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WorldPieCreator {
@@ -28,14 +27,16 @@ public class WorldPieCreator {
         Map<String, Long> playtimePerWorld = worldTimes.getWorldTimes().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
 
-        List<String> worlds = new ArrayList<>(playtimePerWorld.keySet());
+        Map<String, Long> playtimePerAlias = transformToAliases(playtimePerWorld);
+
+        List<String> worlds = new ArrayList<>(playtimePerAlias.keySet());
         Collections.sort(worlds);
 
-        int size = playtimePerWorld.size();
-        for (String worldName : worlds) {
-            seriesBuilder.append("{name:'").append(worldName)
-                    .append("',y:").append(playtimePerWorld.getOrDefault(worldName, 0L))
-                    .append(",drilldown: '").append(worldName).append("'");
+        int size = playtimePerAlias.size();
+        for (String alias : worlds) {
+            seriesBuilder.append("{name:'").append(alias)
+                    .append("',y:").append(playtimePerAlias.getOrDefault(alias, 0L))
+                    .append(",drilldown: '").append(alias).append("'");
 
             seriesBuilder.append("}");
             if (i < size - 1) {
@@ -52,6 +53,28 @@ public class WorldPieCreator {
         return new String[]{seriesData, drilldownData};
     }
 
+    private static Map<String, Long> transformToAliases(Map<String, Long> playtimePerWorld) {
+        // TODO Optimization is possible
+        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        Map<String, String> aliases = aliasSettings.getAliases();
+
+        Map<String, Long> playtimePerAlias = new HashMap<>();
+        for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
+            String worldName = entry.getKey();
+            long playtime = entry.getValue();
+
+            if (!aliases.containsKey(worldName)) {
+                aliases.put(worldName, worldName);
+                aliasSettings.addWorld(worldName);
+            }
+
+            String alias = aliases.get(worldName);
+
+            playtimePerAlias.put(alias, playtimePerAlias.getOrDefault(alias, 0L) + playtime);
+        }
+        return playtimePerAlias;
+    }
+
     private static String createDrilldownData(WorldTimes worldTimes) {
         StringBuilder drilldownBuilder = new StringBuilder();
         int i = 0;
@@ -60,15 +83,17 @@ public class WorldPieCreator {
         if (gmTimesMap.isEmpty()) {
             return "[]";
         }
+        Map<String, GMTimes> gmTimesAliasMap = transformToGMAliases(gmTimesMap);
+
         int size = gmTimesMap.size();
         drilldownBuilder.append("[");
-        for (Map.Entry<String, GMTimes> world : gmTimesMap.entrySet()) {
-            drilldownBuilder.append("{name:'").append(world.getKey())
-                    .append("', id:'").append(world.getKey())
+        for (Map.Entry<String, GMTimes> worldAlias : gmTimesAliasMap.entrySet()) {
+            drilldownBuilder.append("{name:'").append(worldAlias.getKey())
+                    .append("', id:'").append(worldAlias.getKey())
                     .append("',colors: gmPieColors,");
             drilldownBuilder.append("data: [");
 
-            appendGMTimesForWorld(drilldownBuilder, world);
+            appendGMTimesForWorld(drilldownBuilder, worldAlias);
 
             if (i < size - 1) {
                 drilldownBuilder.append(",");
@@ -77,6 +102,35 @@ public class WorldPieCreator {
         }
         drilldownBuilder.append("]");
         return drilldownBuilder.toString();
+    }
+
+    private static Map<String, GMTimes> transformToGMAliases(Map<String, GMTimes> gmTimesMap) {
+        // TODO Optimization is possible
+        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        Map<String, String> aliases = aliasSettings.getAliases();
+
+        Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
+
+        String[] gms = GMTimes.getGMKeyArray();
+
+        for (Map.Entry<String, GMTimes> entry : gmTimesMap.entrySet()) {
+            String worldName = entry.getKey();
+            GMTimes gmTimes = entry.getValue();
+
+            if (!aliases.containsKey(worldName)) {
+                aliases.put(worldName, worldName);
+                aliasSettings.addWorld(worldName);
+            }
+
+            String alias = aliases.get(worldName);
+
+            GMTimes aliasGMtimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
+            for (String gm : gms) {
+                aliasGMtimes.addTime(gm, gmTimes.getTime(gm));
+            }
+            gmTimesPerAlias.put(alias, aliasGMtimes);
+        }
+        return gmTimesPerAlias;
     }
 
     private static void appendGMTimesForWorld(StringBuilder drilldownBuilder, Map.Entry<String, GMTimes> world) {

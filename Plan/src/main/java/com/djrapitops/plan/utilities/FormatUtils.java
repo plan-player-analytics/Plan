@@ -94,48 +94,72 @@ public class FormatUtils {
         long hours = x % 24;
         x /= 24;
         long days = x % 365;
+        long months = days % 30;
+        days -= months * 30;
         x /= 365;
         long years = x;
+
+        String fYear = Settings.FORMAT_YEAR.toString();
+        String fYears = Settings.FORMAT_YEARS.toString();
+        String fMonth = Settings.FORMAT_MONTH.toString();
+        String fMonths = Settings.FORMAT_MONTHS.toString();
+        String fDay = Settings.FORMAT_DAY.toString();
+        String fDays = Settings.FORMAT_DAYS.toString();
+        String fHours = Settings.FORMAT_HOURS.toString();
+        String fMinutes = Settings.FORMAT_MINUTES.toString();
+        String fSeconds = Settings.FORMAT_SECONDS.toString();
+
         if (years != 0) {
             if (years == 1) {
-                builder.append(Settings.FORMAT_YEAR.toString());
+                builder.append(fYear);
             } else {
-                builder.append(Settings.FORMAT_YEARS.toString().replace("%years%", String.valueOf(years)));
+                builder.append(fYears.replace("%years%", String.valueOf(years)));
+            }
+        }
+        if (months != 0) {
+            if (months == 1) {
+                builder.append(fMonth);
+            } else {
+                builder.append(fMonths.replace("%months%", String.valueOf(months)));
             }
         }
         if (days != 0) {
             if (days == 1) {
-                builder.append(Settings.FORMAT_DAY.toString());
+                builder.append(fDay);
             } else {
-                builder.append(Settings.FORMAT_DAYS.toString().replace("%days%", String.valueOf(days)));
+                builder.append(fDays.replace("%days%", String.valueOf(days)));
             }
         }
+
         if (hours != 0) {
-            String h = Settings.FORMAT_HOURS.toString().replace("%hours%", String.valueOf(hours));
+            String h = fHours.replace("%hours%", String.valueOf(hours));
             if (h.contains("%zero%") && String.valueOf(hours).length() == 1) {
                 builder.append('0');
             }
             builder.append(h);
         }
+
         if (minutes != 0) {
-            String m = Settings.FORMAT_MINUTES.toString().replace("%minutes%", String.valueOf(minutes));
+            String m = fMinutes.replace("%minutes%", String.valueOf(minutes));
             if (hours == 0 && m.contains("%hours%")) {
-                m = m.replace("%hours%", Settings.FORMAT_MINUTES.toString().replace("%zero%", "0") + "0");
-            } else {
-                m = m.replace("%hours", "");
+                builder.append(fHours.replace("%zero%", "0").replace("%hours%", "0"));
+                m = m.replace("%hours%", "");
             }
+            m = m.replace("%hours%", "");
             if (m.contains("%zero%") && String.valueOf(minutes).length() == 1) {
                 builder.append('0');
             }
             builder.append(m);
         }
         if (seconds != 0) {
-            String s = Settings.FORMAT_SECONDS.toString().replace("%seconds%", String.valueOf(seconds));
+            String s = fSeconds.replace("%seconds%", String.valueOf(seconds));
             if (minutes == 0 && s.contains("%minutes%")) {
-                s = s.replace("%minutes%", Settings.FORMAT_MINUTES.toString().replace("%hours", "").replace("%zero%", "0") + 0);
-            } else {
-                s = s.replace("%minutes%", "");
+                if (hours == 0 && fMinutes.contains("%hours%")) {
+                    builder.append(fHours.replace("%zero%", "0").replace("%hours%", "0"));
+                }
+                builder.append(fMinutes.replace("%hours%", "").replace("%zero%", "0").replace("%minutes%", "0"));
             }
+            s = s.replace("%minutes%", "");
             if (s.contains("%zero%") && String.valueOf(seconds).length() == 1) {
                 builder.append('0');
             }

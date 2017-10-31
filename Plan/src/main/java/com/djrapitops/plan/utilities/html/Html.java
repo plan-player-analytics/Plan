@@ -52,7 +52,7 @@ public enum Html {
     TABLE_START_3("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th></tr></thead><tbody>"),
     TABLE_START_4("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th><th>${2}</th><th>${3}</th></tr></thead><tbody>"),
     TABLE_SESSIONS(DIV_W_CLASS_STYLE.parse("box-footer scrollbar", "padding: 2px;",
-            TABLE_START_4.parse("Player", "Started", "Length", "World - Time") + "${0}" + TABLE_END.parse())
+            TABLE_START_4.parse("Player", "Started", "Length", "World - Time") + "${3}" + TABLE_END.parse())
     ),
     TABLE_SESSIONS_START(TABLE_START_3.parse("Session Started", "Session Ended", "Session Length")),
     TABLE_KILLS_START(TABLE_START_3.parse(FONT_AWESOME_ICON.parse("clock-o") + " Time", "Killed", "With")),
@@ -90,7 +90,7 @@ public enum Html {
         }
 
         StrSubstitutor sub = new StrSubstitutor(replaceMap);
-
+        sub.setEnableSubstitutionInVariables(false);
         return sub.replace(html);
     }
 }

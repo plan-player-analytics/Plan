@@ -11,7 +11,6 @@ import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.data.analysis.*;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.TPSTable;
@@ -296,15 +295,7 @@ public class Analysis {
             killPart.addKills(playerKills);
 
             WorldTimes worldTimes = db.getWorldTimesTable().getWorldTimesOfServer();
-
-            // Add 0 time for worlds not present.
-            Set<String> nonZeroWorlds = worldTimes.getWorldTimes().keySet();
-            for (String world : db.getWorldTable().getWorlds()) {
-                if (nonZeroWorlds.contains(world)) {
-                    continue;
-                }
-                worldTimes.setGMTimesForWorld(world, new GMTimes());
-            }
+            AnalysisUtils.addMissingWorlds(worldTimes);
 
             worldPart.setWorldTimes(worldTimes);
 

@@ -103,8 +103,11 @@ public abstract class TimeKeeper {
     }
 
     public long getTime(String state) {
-        Long time = times.get(state);
-        return time != null ? time : 0L;
+        return times.getOrDefault(state, 0L);
+    }
+
+    public void addTime(String state, long time) {
+        times.put(state, times.getOrDefault(state, 0L) + time);
     }
 
     public long getTotal() {

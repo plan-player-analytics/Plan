@@ -23,7 +23,7 @@ public enum Settings {
     SHOW_ALTERNATIVE_IP("Commands.AlternativeIP.Enabled"),
     LOG_UNKNOWN_COMMANDS("Data.Commands.LogUnknownCommands"),
     COMBINE_COMMAND_ALIASES("Data.Commands.CombineCommandAliases"),
-    WRITE_NEW_LOCALE("Plugin.WriteNewLocaleFileOnStart"),
+    WRITE_NEW_LOCALE("Plugin.WriteNewLocaleFileOnEnable"),
     DEV_MODE("Plugin.Dev"),
     USE_SERVER_TIME("Customization.UseServerTime"),
     DISPLAY_SESSIONS_AS_TABLE("Customization.Display.SessionsAsTable"),
@@ -99,6 +99,8 @@ public enum Settings {
     // StringList
     HIDE_FACTIONS("Plugins.Factions.HideFactions"),
     HIDE_TOWNS("Plugins.Towny.HideTowns"),
+    // Config section
+    WORLD_ALIASES("Customization.WorldAliases"),
     //
     // Bungee
     BUNGEE_IP("Server.IP"),

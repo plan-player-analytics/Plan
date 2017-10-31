@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import org.bukkit.entity.Player;
@@ -45,6 +46,8 @@ public class PlanGamemodeChangeListener implements Listener {
         long time = MiscUtils.getTime();
         String gameMode = event.getNewGameMode().name();
         String worldName = p.getWorld().getName();
+
+        new WorldAliasSettings(plugin).addWorld(worldName);
 
         Optional<Session> cachedSession = plugin.getDataCache().getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
