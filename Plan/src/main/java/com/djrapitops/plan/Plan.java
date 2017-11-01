@@ -175,6 +175,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             if (!webServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized. Is the port (" + Settings.WEBSERVER_PORT.getNumber() + ") in use?");
             }
+            serverInfoManager.updateServerInfo();
 
             Benchmark.stop("Enable", "WebServer Initialization");
 

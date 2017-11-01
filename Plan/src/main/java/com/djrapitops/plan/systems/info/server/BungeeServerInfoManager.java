@@ -40,13 +40,20 @@ public class BungeeServerInfoManager {
         this.db = plugin.getDB();
         serverTable = db.getServerTable();
 
-        try {
-            bukkitServers = new HashMap<>();
-            onlineServers = new HashSet<>();
+        bukkitServers = new HashMap<>();
+        onlineServers = new HashSet<>();
+    }
 
+    public void loadServerInfo() throws PlanEnableException {
+        try {
             Optional<ServerInfo> bungeeInfo = db.getServerTable().getBungeeInfo();
             if (bungeeInfo.isPresent()) {
                 serverInfo = bungeeInfo.get();
+                String accessAddress = plugin.getWebServer().getAccessAddress();
+                if (!accessAddress.equals(serverInfo.getWebAddress())) {
+                    serverInfo.setWebAddress(accessAddress);
+                    serverTable.saveCurrentServerInfo(serverInfo);
+                }
             } else {
                 serverInfo = registerBungeeInfo();
             }

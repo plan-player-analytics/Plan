@@ -42,19 +42,21 @@ public class BukkitServerInfoManager {
         } catch (IOException e) {
             throw new PlanEnableException("Failed to read ServerInfoFile.yml", e);
         }
-
-        Optional<UUID> serverUUID = serverInfoFile.getUUID();
-
         try {
-            if (serverUUID.isPresent()) {
-                updateDbInfo(serverUUID.get());
-            } else {
-                registerServer();
-            }
+            updateServerInfo();
         } catch (SQLException e) {
             throw new PlanEnableException("Failed to update Database server info", e);
         } catch (IOException e) {
             throw new PlanEnableException("Failed to write to ServerInfoFile.yml", e);
+        }
+    }
+
+    public void updateServerInfo() throws SQLException, IOException {
+        Optional<UUID> serverUUID = serverInfoFile.getUUID();
+        if (serverUUID.isPresent()) {
+            updateDbInfo(serverUUID.get());
+        } else {
+            registerServer();
         }
     }
 
