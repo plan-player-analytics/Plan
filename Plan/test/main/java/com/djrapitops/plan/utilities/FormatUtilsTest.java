@@ -96,6 +96,12 @@ public class FormatUtilsTest {
     }
 
     @Test
+    public void testFormatTimeStampMonths() {
+        long time = TimeAmount.DAY.ms() * 40L;
+        assertEquals("1 month, 10d ", FormatUtils.formatTimeAmount(time));
+    }
+
+    @Test
     public void testRemoveLetters() {
         String dataPoint = "435729847jirggu.eiwb¤#¤%¤#";
         String expResult = "435729847.";

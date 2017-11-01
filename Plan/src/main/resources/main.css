@@ -61,7 +61,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    height: 80px;
+    height: 50px;
     padding: 0;
     background: #348e0f;
     background-repeat: repeat;
@@ -69,16 +69,61 @@ header {
 }
 header h1 {    
     font-weight: 500;
-    font-size: 48px;
+    font-size: 30px;
     margin-top: 0;
     margin-bottom: 0;
-    margin-left: 10px;
 }
 header p {
     font-weight: 400;
 }
 header div {
     padding: 5px 20px;
+}
+
+.headwrap {
+	position: absolute;
+	top: 50px;
+	width: 97%;
+}
+
+.sidenav {
+	position: fixed;
+	left: 0;
+	width: 50px;
+	height: 100%;
+	background-color: #5da341;
+	z-index: 2; 
+}
+
+.sidenav a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.sidenav-button {
+	position: relative;
+	text-align: center;
+	height: 50px;
+}
+
+.sidenav-button-disabled {
+    opacity: 0.5;
+}
+
+.sidenav-button div {
+	position: relative;
+	font-size: 20px;
+}
+
+.sidenav-button div i {
+	margin-top: 13px;
+}
+.nav-button {
+}
+
+
+.sidenav-button:hover {
+	background: #89c471;
 }
 
 .right {
@@ -117,16 +162,16 @@ header div {
 }
 
 .content {
-    margin-top: 100px;
-    margin-left: 15%;
-    margin-right: 15%;
-    width: 70%;
+	position: relative;
+	left: 45px;
+	width: 100%;
+	box-sizing: content-box;
 }
-.content-server {
-    margin-top: 100px;
+.content-centered {
+    position: relative;
+	width: 80%;
     margin-left: 10%;
     margin-right: 10%;
-    width: 80%;
 }
 .box-header {
     color: #fff;
@@ -178,23 +223,6 @@ header div {
     flex-direction: column;
 }
 
-.nav-bar {
-    
-}
-.nav-button {
-    font-size: 20px;
-    font-weight: 400;
-    padding: 5px 10px;
-    margin: 5px;
-    text-decoration: none!important;
-    color: #fff;
-    background: #5da341;
-    background-repeat: repeat;
-}
-.nav-button:hover {
-    background: #348e0f;
-    background-repeat: repeat;
-}
 .active {
     background: #348e0f;
     background-repeat: repeat;
@@ -233,12 +261,11 @@ tr {
     transform: translate3d(0, 0, 0);
     opacity: 0;
     transition: 1.5s;
-    width: 500%;
     display: flex;
     flex-direction: row;
 }
 .tab {
-    width: 20%;
+	width: 20%;
     height: 100%;
     display: flex;
     align-content: flex-start;
@@ -306,27 +333,6 @@ tr {
 @media only screen and (max-width: 1680px) {
     .nav-button {
         font-size: 19px;
-    }
-}
-@media only screen and (max-width: 1150px) {
-    header h1 {    
-        font-weight: 400;
-        font-size: 40px;
-    }
-    .content {
-        margin-top: 100px;
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-    }
-    .content-server {
-        margin-top: 100px;
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-    }
-    .nav-bar {
-        flex-wrap:wrap;
     }
 }
 @media only screen and (max-width: 850px) {
