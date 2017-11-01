@@ -175,7 +175,11 @@ public class TPSCountTimer extends AbsRunnable {
      * @return amount of entities
      */
     private int getEntityCountPaper() {
-        return ((Plan) plugin).getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
+        try {
+            return ((Plan) plugin).getServer().getWorlds().stream().mapToInt(World::getEntityCount).sum();
+        } catch (NoSuchMethodError e) {
+            return getEntityCount();
+        }
     }
 
     public int getLatestPlayersOnline() {

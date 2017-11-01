@@ -94,7 +94,7 @@ public class FormatUtils {
         long hours = x % 24;
         x /= 24;
         long days = x % 365;
-        long months = days % 30;
+        long months = (days - days % 30) / 30;
         days -= months * 30;
         x /= 365;
         long years = x;

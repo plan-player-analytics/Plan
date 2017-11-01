@@ -80,8 +80,9 @@ public class PlanBungee extends BungeePlugin<PlanBungee> implements IPlan {
 
             serverInfoManager = new BungeeServerInfoManager(this);
             infoManager = new BungeeInformationManager(this);
-
             webServer.initServer();
+            serverInfoManager.loadServerInfo();
+
 
             if (!webServer.isEnabled()) {
                 Log.error("WebServer was not successfully initialized.");
