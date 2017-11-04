@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;

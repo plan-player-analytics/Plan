@@ -48,6 +48,13 @@ public class FileUtil {
         }
     }
 
+    public static List<String> lines(IPlan plugin, File savedFile, String defaults) throws IOException {
+        if (savedFile.exists()) {
+            return lines(savedFile);
+        }
+        return lines(plugin, defaults);
+    }
+
     public static List<String> lines(IPlan plugin, String resource) throws IOException {
         List<String> lines = new ArrayList<>();
         Scanner scanner = null;

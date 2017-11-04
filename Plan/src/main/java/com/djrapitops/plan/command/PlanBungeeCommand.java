@@ -39,7 +39,7 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
     @Override
     public void addCommands() {
         commands.add(new ReloadCommand(plugin));
-        commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission()));
+        commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()));
         commands.add(new ListCommand());
         RegisterCommand registerCommand = new RegisterCommand(plugin);
         commands.add(registerCommand);

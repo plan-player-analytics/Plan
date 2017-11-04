@@ -21,12 +21,12 @@ public class ConditionUtils {
     }
 
     /**
-     * Check if the player has played.
+     * Condition if the player has played.
      *
      * @param uuid UUID of player
      * @return has the player played before, false if uuid is null.
      */
     public static boolean playerHasPlayed(UUID uuid) {
-        return Verify.notNull(uuid) && Plan.getInstance().fetch().hasPlayedBefore(uuid);
+        return Verify.notNull(uuid) && Plan.getInstance().getServer().getOfflinePlayer(uuid).hasPlayedBefore();
     }
 }

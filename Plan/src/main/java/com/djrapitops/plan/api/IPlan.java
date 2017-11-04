@@ -5,7 +5,8 @@
 package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.plugin.IPlugin;
-import com.djrapitops.plugin.config.IConfig;
+import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.settings.ColorScheme;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
@@ -14,7 +15,6 @@ import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -42,7 +42,7 @@ public interface IPlan extends IPlugin {
 
     InputStream getResource(String resource);
 
-    IConfig getIConfig() throws IOException;
+    Config getMainConfig();
 
-    void restart();
+    ColorScheme getColorScheme();
 }

@@ -1,15 +1,16 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.*;
 import main.java.com.djrapitops.plan.database.tables.move.Version8TransferTable;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
@@ -77,7 +78,7 @@ public abstract class SQLDB extends Database {
     }
 
     public void scheduleClean(long secondsDelay) {
-        dbCleanTask = plugin.getRunnableFactory().createNew("DB Clean Task", new AbsRunnable() {
+        dbCleanTask = RunnableFactory.createNew("DB Clean Task", new AbsRunnable() {
             @Override
             public void run() {
                 try {
@@ -116,7 +117,7 @@ public abstract class SQLDB extends Database {
 
             final SQLDB db = this;
             if (version < 10) {
-                plugin.getRunnableFactory().createNew("DB v8 -> v10 Task", new AbsRunnable() {
+                RunnableFactory.createNew("DB v8 -> v10 Task", new AbsRunnable() {
                     @Override
                     public void run() {
                         try {

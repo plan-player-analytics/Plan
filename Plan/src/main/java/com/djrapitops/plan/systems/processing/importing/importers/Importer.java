@@ -4,9 +4,10 @@
  */
 package main.java.com.djrapitops.plan.systems.processing.importing.importers;
 
+import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.collect.ImmutableMap;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.UserInfo;
@@ -16,7 +17,6 @@ import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.processing.importing.ServerImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportData;
 import main.java.com.djrapitops.plan.systems.processing.importing.UserImportRefiner;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.SQLException;
 import java.util.*;

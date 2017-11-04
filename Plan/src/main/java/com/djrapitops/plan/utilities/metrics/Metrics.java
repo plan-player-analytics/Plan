@@ -26,7 +26,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * bStats collects some data for plugin authors.
  * <p>
- * Check out https://bStats.org/ to learn more about bStats!
+ * Condition out https://bStats.org/ to learn more about bStats!
  */
 public class Metrics {
 
@@ -75,7 +75,7 @@ public class Metrics {
         File configFile = new File(bStatsFolder, "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
-        // Check if the config file exists
+        // Condition if the config file exists
         if (!config.isSet("serverUuid")) {
 
             // Add default values

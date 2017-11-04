@@ -4,8 +4,9 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.universal;
 
-import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Log;
+
+import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class PingWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
-        if (Compatibility.isBungeeAvailable()) {
+        if (Check.isBungeeAvailable()) {
             ((PlanBungee) plugin).getServerInfoManager().serverConnected(UUID.fromString(variables.get("sender")));
         } else if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
             try {
@@ -44,7 +45,7 @@ public class PingWebAPI extends WebAPI {
 
     @Override
     public void sendRequest(String address) throws WebAPIException {
-        if (Compatibility.isBukkitAvailable()) {
+        if (Check.isBukkitAvailable()) {
             super.sendRequest(address);
         } else {
             addVariable("webAddress", PlanBungee.getInstance().getWebServer().getAccessAddress());

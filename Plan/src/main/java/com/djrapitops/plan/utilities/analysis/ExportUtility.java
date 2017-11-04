@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.AnalysisData;

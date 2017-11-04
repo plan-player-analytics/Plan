@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.info;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
@@ -218,7 +218,7 @@ public class BungeeInformationManager extends InformationManager {
     }
 
     /**
-     * Check if analysis page for an UUID is cached.
+     * Condition if analysis page for an UUID is cached.
      * <p>
      * If serverUUID is that of Bungee, network page state is returned.
      *

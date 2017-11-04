@@ -1,6 +1,15 @@
+# -----------------------------------------------------
+# Plan Bukkit Configuration file
+# More information about each setting:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
+# -----------------------------------------------------
 Server:
   ServerName: 'Plan'
 
+# -----------------------------------------------------
+# More information about Locale
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Localization
+# -----------------------------------------------------
 Plugin:
   Debug: false
   Locale: default
@@ -9,6 +18,10 @@ Plugin:
     StandaloneMode: false
     CopyBungeeConfig: true
 
+# -----------------------------------------------------
+# More information about SSL Certificate Settings:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
+# -----------------------------------------------------
 WebServer:
   Port: 8804
   InternalIP: 0.0.0.0
@@ -70,6 +83,10 @@ Customization:
   WorldAliases:
     world: world
 
+# -----------------------------------------------------
+# More information about Themes:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+# -----------------------------------------------------
 Theme:
   Base: Default
   Font:

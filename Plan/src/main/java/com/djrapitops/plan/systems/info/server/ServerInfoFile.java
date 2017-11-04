@@ -4,18 +4,16 @@
  */
 package main.java.com.djrapitops.plan.systems.info.server;
 
-import com.djrapitops.plugin.config.BukkitConfig;
-import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Manages local server info file.
@@ -25,38 +23,43 @@ import java.util.UUID;
  *
  * @author Rsl1122
  */
-public class ServerInfoFile extends BukkitConfig {
+public class ServerInfoFile extends Config {
     public ServerInfoFile(Plan plugin) throws IOException {
-        super(plugin, "ServerInfoFile.yml");
-        IFileConfig config = super.getConfig();
-        config.copyDefaults();
-        config.addDefault("Server.UUID", "");
-        config.addDefault("Bungee.WebAddress", "");
-        config.addDefault("Bungee.Fail", 0);
+        this(plugin, new File(plugin.getDataFolder(), "ServerInfoFile.yml"));
+    }
+
+    ServerInfoFile(Plan plugin, File file) throws IOException {
+        super(file, FileUtil.lines(file));
+        List<String> defaults = new ArrayList<>();
+            defaults.add("Server:");
+            defaults.add("  UUID:");
+            defaults.add("Bungee:");
+            defaults.add("  WebAddress:");
+            defaults.add("  Fail:");
+        copyDefaults(defaults);
         save();
     }
 
     public void saveInfo(ServerInfo thisServer, ServerInfo bungee) throws IOException {
-        IFileConfig config = getConfig();
         Map<String, Serializable> serverMap = new HashMap<>();
         Map<String, Serializable> bungeeMap = new HashMap<>();
 
         serverMap.put("UUID", thisServer.getUuid().toString());
-        config.set("Server", serverMap);
+        set("Server", serverMap);
 
-        String oldAddress = config.getString("Bungee.WebAddress");
+        String oldAddress = getString("Bungee.WebAddress");
         String newAddress = bungee.getWebAddress();
 
         if (!newAddress.equals(oldAddress)) {
             bungeeMap.put("Fail", 0);
             bungeeMap.put("WebAddress", newAddress);
-            config.set("Bungee", bungeeMap);
+            set("Bungee", bungeeMap);
         }
         save();
     }
 
     public Optional<UUID> getUUID() {
-        String uuidString = getConfig().getString("Server.UUID");
+        String uuidString = getString("Server.UUID");
         if (Verify.isEmpty(uuidString)) {
             return Optional.empty();
         }
@@ -64,14 +67,13 @@ public class ServerInfoFile extends BukkitConfig {
     }
 
     public String getBungeeWebAddress() {
-        return getConfig().getString("Bungee.WebAddress");
+        return getString("Bungee.WebAddress");
     }
 
     public int markConnectionFail() {
         try {
-            IFileConfig config = getConfig();
-            int fails = config.getInt("Bungee.Fail");
-            config.set("Bungee.Fail", fails + 1);
+            int fails = getInt("Bungee.Fail");
+            set("Bungee.Fail", fails + 1);
             save();
             return fails;
         } catch (IOException e) {
@@ -82,8 +84,7 @@ public class ServerInfoFile extends BukkitConfig {
 
     public void resetConnectionFails() {
         try {
-            IFileConfig config = getConfig();
-            config.set("Bungee.Fail", 0);
+            set("Bungee.Fail", 0);
             save();
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);

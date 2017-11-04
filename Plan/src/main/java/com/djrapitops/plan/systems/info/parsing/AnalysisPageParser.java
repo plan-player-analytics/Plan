@@ -4,7 +4,8 @@
  */
 package main.java.com.djrapitops.plan.systems.info.parsing;
 
-import com.djrapitops.plugin.utilities.Compatibility;
+import com.djrapitops.plugin.api.Check;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -50,8 +51,8 @@ public class AnalysisPageParser extends PageParser {
     }
 
     private int getPlayersOnline() {
-        if (Compatibility.isBukkitAvailable()) {
-            return plugin.fetch().getOnlinePlayers().size();
+        if (Check.isBukkitAvailable()) {
+            return ((Plan) plugin).getServer().getOnlinePlayers().size();
         }
         return ((PlanBungee) plugin).getProxy().getOnlineCount();
     }

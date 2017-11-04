@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.ISender;
-import main.java.com.djrapitops.plan.Log;
 
 /**
  * Class containing static check methods with message sending capabilities if
@@ -9,12 +9,12 @@ import main.java.com.djrapitops.plan.Log;
  *
  * @author Rsl1122
  */
-public class Check {
+public class Condition {
 
     /**
      * Constructor used to hide the public constructor
      */
-    private Check() {
+    private Condition() {
         throw new IllegalStateException("Utility class");
     }
 

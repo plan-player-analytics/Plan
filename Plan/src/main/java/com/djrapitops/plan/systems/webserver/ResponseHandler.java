@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebUserAuthException;
 import main.java.com.djrapitops.plan.data.WebUser;

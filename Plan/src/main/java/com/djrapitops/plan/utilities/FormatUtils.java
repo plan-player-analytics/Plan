@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.utilities.Format;
-import com.djrapitops.plugin.utilities.FormattingUtils;
 import main.java.com.djrapitops.plan.Settings;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
@@ -44,15 +43,15 @@ public class FormatUtils {
     }
 
     public static String formatTimeStamp(long epochMs) {
-        return FormattingUtils.formatTimeStamp(epochMs);
+        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStamp(epochMs);
     }
 
     public static String formatTimeStampSecond(long epochMs) {
-        return FormattingUtils.formatTimeStampSecond(epochMs);
+        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStampSecond(epochMs);
     }
 
     public static String formatTimeStampYear(long epochMs) {
-        return FormattingUtils.formatTimeStampYear(epochMs);
+        return com.djrapitops.plugin.utilities.FormatUtils.formatTimeStampYear(epochMs);
     }
 
     /**
@@ -179,8 +178,8 @@ public class FormatUtils {
      * @return parsed double - for example 1,11
      * @throws NumberFormatException When wrong format
      */
-    public static int parseVersionNumber(String versionString) {
-        return FormattingUtils.parseVersionNumber(versionString);
+    public static long parseVersionNumber(String versionString) {
+        return com.djrapitops.plugin.utilities.FormatUtils.parseVersionNumber(versionString);
     }
 
     /**
@@ -190,7 +189,7 @@ public class FormatUtils {
      * @return One array with contents of the multiple
      */
     public static String[] mergeArrays(String[]... arrays) {
-        return FormattingUtils.mergeArrays(arrays);
+        return com.djrapitops.plugin.utilities.FormatUtils.mergeArrays(arrays);
     }
 
     /**
@@ -200,7 +199,7 @@ public class FormatUtils {
      * @return Readable location format.
      */
     public static String formatLocation(Location loc) {
-        return FormattingUtils.formatLocation(loc);
+        return com.djrapitops.plugin.utilities.FormatUtils.formatLocation(loc);
     }
 
     /**

@@ -1,16 +1,16 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 
 import java.sql.SQLException;
 
@@ -49,7 +49,7 @@ public class ManageImportCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG) + " " + this.getArguments(), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG) + " " + this.getArguments(), sender)) {
             return true;
         }
 

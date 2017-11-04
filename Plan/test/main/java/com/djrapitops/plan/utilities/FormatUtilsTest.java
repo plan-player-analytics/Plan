@@ -136,7 +136,7 @@ public class FormatUtilsTest {
         String versionString = "2.10.2";
         int expResult = 21002;
 
-        int result = FormatUtils.parseVersionNumber(versionString);
+        long result = FormatUtils.parseVersionNumber(versionString);
 
         assertEquals(expResult, result);
     }
@@ -146,8 +146,8 @@ public class FormatUtilsTest {
         String versionString = "2.10.2";
         String versionString2 = "2.9.3";
 
-        int result = FormatUtils.parseVersionNumber(versionString);
-        int result2 = FormatUtils.parseVersionNumber(versionString2);
+        long result = FormatUtils.parseVersionNumber(versionString);
+        long result2 = FormatUtils.parseVersionNumber(versionString2);
 
         assertTrue("Higher version not higher", result > result2);
     }

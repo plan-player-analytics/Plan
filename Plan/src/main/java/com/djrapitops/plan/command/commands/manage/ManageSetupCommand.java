@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
@@ -11,7 +11,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestSetupWebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
  * This manage subcommand is used to swap to a different database and reload the
@@ -31,7 +31,7 @@ public class ManageSetupCommand extends SubCommand {
      */
     public ManageSetupCommand(Plan plugin) {
         super("setup",
-                CommandType.CONSOLE_WITH_ARGUMENTS,
+                CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 "Set-Up Bungee WebServer connection",
                 "<Bungee WebServer address>");
@@ -47,7 +47,7 @@ public class ManageSetupCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
         if (!plugin.getWebServer().isEnabled()) {

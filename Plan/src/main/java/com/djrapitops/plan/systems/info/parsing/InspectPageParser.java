@@ -4,8 +4,9 @@
  */
 package main.java.com.djrapitops.plan.systems.info.parsing;
 
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
@@ -17,7 +18,6 @@ import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.database.tables.SessionsTable;
 import main.java.com.djrapitops.plan.database.tables.UsersTable;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.AnalysisUtils;

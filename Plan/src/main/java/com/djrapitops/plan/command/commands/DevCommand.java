@@ -13,7 +13,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPI;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.InspectWebAPI;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,19 +28,19 @@ public class DevCommand extends SubCommand {
     private final Plan plugin;
 
     public DevCommand(Plan plugin) {
-        super("dev", CommandType.CONSOLE_WITH_ARGUMENTS, "plan.*", "Test Plugin functions not testable with unit tests.", "<feature to test>");
+        super("dev", CommandType.PLAYER_OR_ARGS, "plan.*", "Test Plugin functions not testable with unit tests.", "<feature to test>");
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(ISender sender, String cmd, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
         String feature = args[0];
         switch (feature) {
             case "webapi":
-                if (!Check.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
+                if (!Condition.isTrue(args.length >= 2, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
                     break;
                 }
                 if (!webapi(args[1] + "webapi", args.length >= 3)) {

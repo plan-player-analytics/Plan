@@ -45,7 +45,7 @@ public class PlanCommand extends TreeCommand<Plan> {
         commands.add(new InfoCommand(plugin));
         commands.add(new ReloadCommand(plugin));
         commands.add(new ManageCommand(plugin));
-        commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission()));
+        commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()));
         commands.add(new ListCommand());
         RegisterCommand registerCommand = new RegisterCommand(plugin);
         commands.add(registerCommand);

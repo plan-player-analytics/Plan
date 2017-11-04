@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.utilities.comparators.MapComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 

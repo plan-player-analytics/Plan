@@ -1,9 +1,10 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.*;
@@ -21,7 +22,6 @@ import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
 import main.java.com.djrapitops.plan.systems.webserver.response.ErrorResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.UserInfoLastPlayedComparator;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
@@ -113,7 +113,7 @@ public class Analysis {
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             fillDataset(analysisData, db);
-            long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
+            String fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             Benchmark.start("Analysis Phase");
             Log.debug("Analysis", "Analysis Phase");
@@ -126,7 +126,7 @@ public class Analysis {
             Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(analysisData.getPlayerCountPart().getUuids()));
             ((BukkitInformationManager) infoManager).cacheAnalysisData(analysisData);
-            long time = Benchmark.stop("Analysis", "Analysis");
+            String time = Benchmark.stop("Analysis", "Analysis");
 
             Log.logDebug("Analysis", time);
 
@@ -214,7 +214,7 @@ public class Analysis {
     }
 
     /**
-     * Check whether or not analysis is being run.
+     * Condition whether or not analysis is being run.
      *
      * @return true / false (state)
      */
