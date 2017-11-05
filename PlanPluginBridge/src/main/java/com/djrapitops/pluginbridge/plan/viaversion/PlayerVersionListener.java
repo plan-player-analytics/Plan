@@ -5,7 +5,8 @@
  */
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import main.java.com.djrapitops.plan.Log;
+
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
