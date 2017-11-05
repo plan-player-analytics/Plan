@@ -29,8 +29,10 @@ import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import net.md_5.bungee.api.ChatColor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -56,20 +58,26 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     @Override
     public void onEnable() {
         super.onEnable();
-        Log.setDebugMode(Settings.DEBUG.toString());
-        String currentVersion = getVersion();
-        String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
-        String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
         try {
-            if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
-                Log.infoColor("§a----------------------------------------");
-                Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                Log.infoColor("§a----------------------------------------");
+            File configFile = new File(getDataFolder(), "config.yml");
+            config = new Config(configFile);
+            config.copyDefaults(FileUtil.lines(this, "bungeeconfig.yml"));
+            config.save();
+
+            Log.setDebugMode(Settings.DEBUG.toString());
+
+            String currentVersion = getVersion();
+            String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
+            String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
+            try {
+                if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
+                    Log.infoColor("§a----------------------------------------");
+                    Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
+                    Log.infoColor("§a----------------------------------------");
+                }
+            } catch (IOException e) {
+                Log.error("Failed to check newest version number");
             }
-        } catch (IOException e) {
-            Log.error("Failed to check newest version number");
-        }
-        try {
             variableHolder = new ServerVariableHolder(getProxy());
 
             new Locale(this).loadLocale();

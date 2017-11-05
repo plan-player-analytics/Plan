@@ -12,8 +12,8 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Manages local server info file.
@@ -25,35 +25,20 @@ import java.util.*;
  */
 public class ServerInfoFile extends Config {
     public ServerInfoFile(Plan plugin) throws IOException {
-        this(plugin, new File(plugin.getDataFolder(), "ServerInfoFile.yml"));
-    }
-
-    ServerInfoFile(Plan plugin, File file) throws IOException {
-        super(file, FileUtil.lines(file));
-        List<String> defaults = new ArrayList<>();
-            defaults.add("Server:");
-            defaults.add("  UUID:");
-            defaults.add("Bungee:");
-            defaults.add("  WebAddress:");
-            defaults.add("  Fail:");
-        copyDefaults(defaults);
+        super(new File(plugin.getDataFolder(), "ServerInfoFile.yml"));
+        copyDefaults(FileUtil.lines(plugin, "DefaultServerInfoFile.yml"));
         save();
     }
 
     public void saveInfo(ServerInfo thisServer, ServerInfo bungee) throws IOException {
-        Map<String, Serializable> serverMap = new HashMap<>();
-        Map<String, Serializable> bungeeMap = new HashMap<>();
-
-        serverMap.put("UUID", thisServer.getUuid().toString());
-        set("Server", serverMap);
+        set("Server.UUID", thisServer.getUuid().toString());
 
         String oldAddress = getString("Bungee.WebAddress");
         String newAddress = bungee.getWebAddress();
 
         if (!newAddress.equals(oldAddress)) {
-            bungeeMap.put("Fail", 0);
-            bungeeMap.put("WebAddress", newAddress);
-            set("Bungee", bungeeMap);
+            set("Bungee.Fail", 0);
+            set("Bungee.WebAddress", newAddress);
         }
         save();
     }

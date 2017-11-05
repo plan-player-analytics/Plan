@@ -23,29 +23,14 @@ public class FileUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String getStringFromResource(String fileName) throws FileNotFoundException {
-        InputStream resourceStream = null;
-        Scanner scanner = null;
-        try {
-            IPlan plugin = MiscUtils.getIPlan();
-            File localFile = new File(plugin.getDataFolder(), fileName);
-
-            if (localFile.exists()) {
-                scanner = new Scanner(localFile, "UTF-8");
-            } else {
-                resourceStream = plugin.getResource(fileName);
-                scanner = new Scanner(resourceStream);
-            }
-
-            StringBuilder html = new StringBuilder();
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                html.append(line).append("\r\n");
-            }
-            return html.toString();
-        } finally {
-            MiscUtils.close(resourceStream, scanner);
-        }
+    public static String getStringFromResource(String fileName) throws IOException {
+        StringBuilder html = new StringBuilder();
+        IPlan plugin = MiscUtils.getIPlan();
+        lines(MiscUtils.getIPlan(), new File(plugin.getDataFolder(), fileName), fileName)
+                .forEach(line -> {
+                    html.append(line).append("\r\n");
+                });
+        return html.toString();
     }
 
     public static List<String> lines(IPlan plugin, File savedFile, String defaults) throws IOException {

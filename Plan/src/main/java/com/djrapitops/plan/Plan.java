@@ -136,20 +136,27 @@ public class Plan extends BukkitPlugin implements IPlan {
     @Override
     public void onEnable() {
         super.onEnable();
-        Log.setDebugMode(Settings.DEBUG.toString());
-        String currentVersion = getVersion();
-        String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
-        String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
         try {
-            if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
-                Log.infoColor("§a----------------------------------------");
-                Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
-                Log.infoColor("§a----------------------------------------");
+            File configFile = new File(getDataFolder(), "config.yml");
+            config = new Config(configFile);
+            config.copyDefaults(FileUtil.lines(this, "config.yml"));
+            config.save();
+
+            Log.setDebugMode(Settings.DEBUG.toString());
+
+            String currentVersion = getVersion();
+            String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
+            String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
+            try {
+                if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
+                    Log.infoColor("§a----------------------------------------");
+                    Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
+                    Log.infoColor("§a----------------------------------------");
+                }
+            } catch (IOException e) {
+                Log.error("Failed to check newest version number");
             }
-        } catch (IOException e) {
-            Log.error("Failed to check newest version number");
-        }
-        try {
+
             Benchmark.start("Enable");
 
             GeolocationCache.checkDB();
@@ -158,19 +165,12 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
-            Log.logDebug("Enable", Benchmark.stopAndFormat("Reading server variables"));
-
-            Benchmark.start("Copy default config");
-            File configFile = new File(getDataFolder(), "config.yml");
-            config = new Config(configFile, FileUtil.lines(this, configFile, "config.yml"));
-            config.save();
-            Log.logDebug("Enable", Benchmark.stopAndFormat("Copy default config"));
-
+            Benchmark.stop("Enable", "Reading server variables");
 
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
             initDatabase();
-            Log.logDebug("Enable", Benchmark.stopAndFormat("Init Database"));
+            Benchmark.stop("Enable", "Init Database");
 
             Benchmark.start("WebServer Initialization");
             webServer = new WebServer(this);
@@ -186,7 +186,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             }
             serverInfoManager.updateServerInfo();
 
-            Log.logDebug("Enable", Benchmark.stopAndFormat("WebServer Initialization"));
+            Benchmark.stop("Enable", "WebServer Initialization");
 
             if (!reloading) {
                 registerListeners();
@@ -210,7 +210,7 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             Benchmark.start("Hook to 3rd party plugins");
             hookHandler = new HookHandler(this);
-            Log.logDebug("Enable", Benchmark.stopAndFormat("Hook to 3rd party plugins"));
+            Benchmark.stop("Enable", "Hook to 3rd party plugins");
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
@@ -218,7 +218,8 @@ public class Plan extends BukkitPlugin implements IPlan {
             bStats.registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
-            Log.logDebug("Enable", Benchmark.stopAndFormat("Enable"));
+            Benchmark.stop("Enable", "Enable");
+            Log.logDebug("Enable");
             Log.info(Locale.get(Msg.ENABLED).toString());
             new ShutdownHook(this);
         } catch (Exception e) {
@@ -270,7 +271,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             }
         }).runTaskTimerAsynchronously(TimeAmount.SECOND.ticks(), TimeAmount.MINUTE.ticks() * 5L);
 
-        Log.logDebug("Enable", Benchmark.stopAndFormat("Task Registration"));
+        Benchmark.stop("Enable", "Task Registration");
     }
 
     @Override
@@ -339,7 +340,7 @@ public class Plan extends BukkitPlugin implements IPlan {
         registerListener(new PlanWorldChangeListener(this));
         registerListener(new PlanCommandPreprocessListener(this));
         registerListener(new PlanDeathEventListener(this));
-        Log.logDebug("Enable", Benchmark.stopAndFormat("Register Listeners"));
+        Benchmark.stop("Enable", "Register Listeners");
     }
 
     /**
@@ -475,7 +476,7 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     @Override
     public Config getMainConfig() {
-        return null;
+        return config;
     }
 
     public InformationManager getInfoManager() {

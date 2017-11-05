@@ -123,7 +123,7 @@ public enum Settings {
         if (value != null) {
             return value;
         }
-        return getConfig().getConfigNode(configPath).getBoolean();
+        return getConfig().getBoolean(configPath);
     }
 
     public boolean isFalse() {
@@ -141,7 +141,7 @@ public enum Settings {
      */
     @Override
     public String toString() {
-        return getConfig().getConfigNode(configPath).getString();
+        return getConfig().getString(configPath);
     }
 
     /**
@@ -150,11 +150,11 @@ public enum Settings {
      * @return Integer value of the config setting
      */
     public int getNumber() {
-        return getConfig().getConfigNode(configPath).getInt();
+        return getConfig().getInt(configPath);
     }
 
     public List<String> getStringList() {
-        return getConfig().getConfigNode(configPath).getStringList();
+        return getConfig().getStringList(configPath);
     }
 
     /**

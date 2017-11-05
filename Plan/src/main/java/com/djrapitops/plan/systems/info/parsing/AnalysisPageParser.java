@@ -16,7 +16,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Used for parsing a Html String out of AnalysisData and the html file.
@@ -45,7 +45,7 @@ public class AnalysisPageParser extends PageParser {
         addValue("playersOnline", getPlayersOnline());
         try {
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("server.html"), placeHolders);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new ParseException(e);
         }
     }

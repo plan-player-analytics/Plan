@@ -10,7 +10,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class ErrorResponse extends Response {
     public ErrorResponse() {
         try {
             setContent(Theme.replaceColors(FileUtil.getStringFromResource("error.html")));
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }
     }
