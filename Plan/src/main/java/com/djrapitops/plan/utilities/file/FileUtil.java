@@ -49,6 +49,7 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
             MiscUtils.close(scanner);

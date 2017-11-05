@@ -4,8 +4,9 @@
  */
 package main.java.com.djrapitops.plan;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.config.ConfigNode;
+import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,18 +35,18 @@ public class WorldAliasSettings {
      * @return Map: Original name, Alias
      */
     public Map<String, String> getAliases() {
-        ConfigurationSection aliasSect = getAliasSection();
+        ConfigNode aliasSect = getAliasSection();
 
         Map<String, String> aliasMap = new HashMap<>();
-        for (String world : aliasSect.getKeys(false)) {
-            aliasMap.put(world, aliasSect.getString(world));
+        for (Map.Entry<String, ConfigNode> world : aliasSect.getChildren().entrySet()) {
+            aliasMap.put(world.getKey(), world.getValue().getString());
         }
         return aliasMap;
     }
 
-    private ConfigurationSection getAliasSection() {
-        FileConfiguration config = plugin.getConfig();
-        return config.getConfigurationSection(Settings.WORLD_ALIASES.getPath());
+    private ConfigNode getAliasSection() {
+        Config config = plugin.getMainConfig();
+        return config.getConfigNode(Settings.WORLD_ALIASES.getPath());
     }
 
     /**
@@ -56,10 +57,10 @@ public class WorldAliasSettings {
      * @param world World name
      */
     public void addWorld(String world) {
-        ConfigurationSection aliasSect = getAliasSection();
+        ConfigNode aliasSect = getAliasSection();
 
-        Object previousValue = aliasSect.get(world);
-        if (previousValue == null) {
+        String previousValue = aliasSect.getConfigNode(world).getValue();
+        if (Verify.isEmpty(previousValue)) {
             aliasSect.set(world, world);
         }
         plugin.saveConfig();

@@ -208,7 +208,7 @@ public class Analysis {
                 Benchmark.stop("Analysis", "Source " + source.getPlaceholder());
             }
         });
-        Benchmark.stop("Analysis", "3rd party");
+        Benchmark.stop("Analysis", "3rd party Analysis");
         return replaceMap;
     }
 

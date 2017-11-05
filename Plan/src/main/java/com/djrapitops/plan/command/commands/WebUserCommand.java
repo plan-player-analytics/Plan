@@ -27,7 +27,8 @@ public class WebUserCommand extends TreeCommand<IPlan> {
                 Permissions.MANAGE_WEB.getPerm(),
                 Locale.get(Msg.CMD_USG_WEB).toString(),
                 "plan web");
-        commands.add(register);
+        super.setColorScheme(plugin.getColorScheme());
+        add(register);
     }
 
     public WebUserCommand(PlanBungee plugin, RegisterCommand register) {
@@ -36,7 +37,7 @@ public class WebUserCommand extends TreeCommand<IPlan> {
                 Permissions.MANAGE_WEB.getPerm(),
                 Locale.get(Msg.CMD_USG_WEB).toString(),
                 "planbungee web");
-        commands.add(register);
+        add(register);
     }
 
     @Override
@@ -46,9 +47,11 @@ public class WebUserCommand extends TreeCommand<IPlan> {
 
     @Override
     public void addCommands() {
-        commands.add(new WebLevelCommand(plugin));
-        commands.add(new WebListUsersCommand(plugin));
-        commands.add(new WebCheckCommand(plugin));
-        commands.add(new WebDeleteCommand(plugin));
+        add(
+                new WebLevelCommand(plugin),
+                new WebListUsersCommand(plugin),
+                new WebCheckCommand(plugin),
+                new WebDeleteCommand(plugin)
+        );
     }
 }

@@ -134,7 +134,7 @@ public class FormatUtilsTest {
     @Test
     public void testParseVersionNumber() {
         String versionString = "2.10.2";
-        int expResult = 21002;
+        long expResult = 21002000000000000L;
 
         long result = FormatUtils.parseVersionNumber(versionString);
 

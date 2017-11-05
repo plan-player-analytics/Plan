@@ -1,8 +1,11 @@
 package test.java.utils;
 
+import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
@@ -22,6 +25,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,20 +82,30 @@ public class TestInit {
 
     private void setUp() throws Exception {
         planMock = PowerMockito.mock(Plan.class);
+
+        StaticHolder.register(Plan.class, planMock);
         StaticHolder.register(planMock);
-        StaticHolder.register(planMock);
+
+        // Hacks to make APF find classes
+        StaticHolder.register(IPlugin.class, planMock);
+        StaticHolder.saveInstance(this.getClass(), Plan.class);
+        StaticHolder.saveInstance(PowerMockRunner.class, Plan.class);
+
+        Log.setDebugMode("console");
 
         File testFolder = getTestFolder();
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
-        Config iConfig = new Config(new File(planMock.getDataFolder(), "config.yml"), FileUtil.lines(planMock, "config.yml"));
-        when(planMock.getMainConfig()).thenReturn(iConfig);
-
-        // Html Files
+        //  Files
+        File config = new File(getClass().getResource("/config.yml").getPath());
+        when(planMock.getResource("config.yml")).thenReturn(new FileInputStream(config));
         File analysis = new File(getClass().getResource("/server.html").getPath());
         when(planMock.getResource("server.html")).thenReturn(new FileInputStream(analysis));
         File player = new File(getClass().getResource("/player.html").getPath());
         when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
+
+        Config iConfig = new Config(new File(planMock.getDataFolder(), "config.yml"), FileUtil.lines(planMock, "config.yml"));
+        when(planMock.getMainConfig()).thenReturn(iConfig);
 
         Server mockServer = mockServer();
 
@@ -112,6 +126,8 @@ public class TestInit {
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
         when(planMock.getColorScheme()).thenReturn(cs);
         initLocale(planMock);
+
+        RunnableFactory.activateTestMode();
     }
 
     private Server mockServer() {
@@ -140,7 +156,6 @@ public class TestInit {
                 for (String string : strings) {
                     sendMessage(string);
                 }
-
             }
 
             @Override

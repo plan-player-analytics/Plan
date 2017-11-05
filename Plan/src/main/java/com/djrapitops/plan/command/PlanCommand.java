@@ -30,6 +30,7 @@ public class PlanCommand extends TreeCommand<Plan> {
     public PlanCommand(Plan plugin) {
         super(plugin, "plan", CommandType.CONSOLE, "", "", "plan");
         super.setDefaultCommand("inspect");
+        super.setColorScheme(plugin.getColorScheme());
     }
 
     @Override
@@ -39,22 +40,25 @@ public class PlanCommand extends TreeCommand<Plan> {
 
     @Override
     public void addCommands() {
-        commands.add(new InspectCommand(plugin));
-        commands.add(new AnalyzeCommand(plugin));
-        commands.add(new SearchCommand(plugin));
-        commands.add(new InfoCommand(plugin));
-        commands.add(new ReloadCommand(plugin));
-        commands.add(new ManageCommand(plugin));
-        commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()));
-        commands.add(new ListCommand());
+        add(
+                new InspectCommand(plugin),
+                new AnalyzeCommand(plugin),
+                new SearchCommand(plugin),
+                new InfoCommand(plugin),
+                new ReloadCommand(plugin),
+                new ManageCommand(plugin),
+                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
+                new ListCommand()
+        );
         RegisterCommand registerCommand = new RegisterCommand(plugin);
-        commands.add(registerCommand);
-        commands.add(new WebUserCommand(plugin, registerCommand));
-        commands.add(new NetworkCommand(plugin));
-        commands.add(new ListServersCommand(plugin));
+        add(
+                registerCommand,
+                new WebUserCommand(plugin, registerCommand),
+                new NetworkCommand(plugin),
+                new ListServersCommand(plugin));
 
         if (Settings.DEV_MODE.isTrue()) {
-            commands.add(new DevCommand(plugin));
+            add(new DevCommand(plugin));
         }
     }
 }

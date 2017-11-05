@@ -74,6 +74,8 @@ public class PlanBungee extends BungeePlugin implements IPlan {
                     Log.infoColor("§a----------------------------------------");
                     Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
                     Log.infoColor("§a----------------------------------------");
+                } else {
+                    Log.info("You're using the latest version.");
                 }
             } catch (IOException e) {
                 Log.error("Failed to check newest version number");
