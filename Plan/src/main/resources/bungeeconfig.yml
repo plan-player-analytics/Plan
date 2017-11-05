@@ -26,7 +26,7 @@ WebServer:
       KeyPass: 'default'
       StorePass: 'default'
       Alias: 'alias'
-
+# -----------------------------------------------------
 Database:
   MySQL:
     Host: localhost
@@ -34,7 +34,7 @@ Database:
     User: root
     Password: minecraft
     Database: Plan
-
+# -----------------------------------------------------
 Commands:
   AlternativeIP:
     Enabled: false
@@ -55,7 +55,7 @@ Data:
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
-
+# -----------------------------------------------------
 Customization:
   Formatting:
     DecimalPoints: '#.##'
@@ -107,7 +107,7 @@ Theme:
     ActivityPie: '"#228B22", "#A9A9A9", "#808080", "#951800"'
     ServerPreferencePie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
 
-
+# -----------------------------------------------------
 Servers:
   Example:
     WebServerPort: 8034

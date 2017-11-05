@@ -31,7 +31,7 @@ WebServer:
       KeyPass: 'default'
       StorePass: 'default'
       Alias: 'alias'
-
+# -----------------------------------------------------
 Database:
   Type: SQLite
   MySQL:
@@ -40,7 +40,7 @@ Database:
     User: root
     Password: minecraft
     Database: Plan
-
+# -----------------------------------------------------
 Commands:
   AlternativeIP:
     Enabled: false
@@ -57,12 +57,11 @@ Analysis:
     Enabled: false
     ExternalWebServerLinkProtocol: http
     DestinationFolder: 'Analysis Results'
-
 Data:
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
-
+# -----------------------------------------------------
 Customization:
   UseServerTime: true
   Display:
@@ -121,7 +120,7 @@ Theme:
     GMDrilldown: '"#438c99", "#639A67", "#D8EBB5", "#D9BF77"'
     ActivityPie: '"#228B22", "#A9A9A9", "#808080", "#951800"'
     ServerPreferencePie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
-
+# -----------------------------------------------------
 Plugins:
   Factions:
     HideFactions:

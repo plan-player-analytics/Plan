@@ -65,7 +65,7 @@ public abstract class SQLDB extends Database {
     public void init() throws DatabaseInitException {
         setStatus("Init");
         String benchName = "Init " + getConfigName();
-        Benchmark.start(benchName);
+        Benchmark.start("Database", benchName);
         try {
             setupDataSource();
             setupDatabase();
@@ -148,7 +148,7 @@ public abstract class SQLDB extends Database {
      * Updates table columns to latest schema.
      */
     private void createTables() throws DatabaseInitException {
-        Benchmark.start("Create tables");
+        Benchmark.start("Database", "Create tables");
         for (Table table : getAllTables()) {
             table.createTable();
         }
@@ -243,8 +243,8 @@ public abstract class SQLDB extends Database {
         }
 
         try {
-            Benchmark.start("Remove Account");
-            Log.debug("Database", "Removing Account: " + uuid);
+            Log.logDebug("Database", "Removing Account: " + uuid);
+            Benchmark.start("Database", "Remove Account");
 
             for (Table t : getAllTablesInRemoveOrder()) {
                 if (!(t instanceof UserIDTable)) {
@@ -279,7 +279,7 @@ public abstract class SQLDB extends Database {
     }
 
     private void setStatus(String status) {
-        Log.debug("Database", status);
+        Log.logDebug("Database", status);
     }
 
     public void setAvailable() {

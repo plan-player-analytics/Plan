@@ -53,7 +53,7 @@ public class InspectPageParser extends PageParser {
     public String parse() throws ParseException {
         try {
             // TODO Player is online parts
-            Log.debug("Database", "Inspect Parse Fetch");
+            Log.logDebug("Database", "Inspect Parse Fetch");
             Benchmark.start("Inspect Parse, Fetch");
             Database db = plugin.getDB();
             SessionsTable sessionsTable = db.getSessionsTable();

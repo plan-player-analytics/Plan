@@ -151,7 +151,7 @@ public class Locale {
         add(Msg.ANALYSIS_FETCH, analysis + "Fetching Data..");
         add(Msg.ANALYSIS_PHASE_START, analysis + "Data Fetched (${0} users, took ${1}ms), beginning Analysis of data..");
         add(Msg.ANALYSIS_3RD_PARTY, analysis + "Analyzing additional data sources (3rd party)");
-        add(Msg.ANALYSIS_FINISHED, analysis + "Analysis Complete. (${0}) ${1}");
+        add(Msg.ANALYSIS_FINISHED, analysis + "Analysis Complete. (took ${0} ms) ${1}");
         add(Msg.ANALYSIS_FAIL_NO_PLAYERS, analysis + "Analysis failed, no known players.");
         add(Msg.ANALYSIS_FAIL_NO_DATA, analysis + "Analysis failed, no data in the database.");
         add(Msg.ANALYSIS_FAIL_FETCH_EXCEPTION, analysis + "Failed to fetch data for Analysis, Exception occurred.");

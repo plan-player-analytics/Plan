@@ -4,6 +4,7 @@ import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -63,7 +64,7 @@ public class Analysis {
         Benchmark.start("Analysis");
         log(Locale.get(Msg.ANALYSIS_START).toString());
         // Async task for Analysis
-        plugin.getRunnableFactory().createNew(new AbsRunnable("AnalysisTask") {
+        RunnableFactory.createNew(new AbsRunnable("AnalysisTask") {
             @Override
             public void run() {
                 ErrorResponse analysisRefreshPage = new ErrorResponse();
@@ -90,8 +91,8 @@ public class Analysis {
     public boolean analyze(InformationManager infoManager, Database db) {
         log(Locale.get(Msg.ANALYSIS_FETCH).toString());
         Benchmark.start("Fetch Phase");
-        Log.debug("Database", "Analysis Fetch");
-        Log.debug("Analysis", "Analysis Fetch Phase");
+        Log.logDebug("Database", "Analysis Fetch");
+        Log.logDebug("Analysis", "Analysis Fetch Phase");
 
 
         return analyzeData(infoManager, db);
@@ -113,33 +114,31 @@ public class Analysis {
 
             Benchmark.stop("Analysis", "Create Empty dataset");
             fillDataset(analysisData, db);
-            String fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
+            long fetchPhaseLength = Benchmark.stop("Analysis", "Fetch Phase");
 
             Benchmark.start("Analysis Phase");
-            Log.debug("Analysis", "Analysis Phase");
+            Log.logDebug("Analysis", "Analysis Phase");
 
             log(Locale.get(Msg.ANALYSIS_PHASE_START).parse(analysisData.getPlayerCountPart().getPlayerCount(), fetchPhaseLength));
             analysisData.analyseData();
             Benchmark.stop("Analysis", "Analysis Phase");
 
             log(Locale.get(Msg.ANALYSIS_3RD_PARTY).toString());
-            Log.debug("Analysis", "Analyzing additional data sources (3rd party)");
+            Log.logDebug("Analysis", "Analyzing additional data sources (3rd party)");
             analysisData.setAdditionalDataReplaceMap(analyzeAdditionalPluginData(analysisData.getPlayerCountPart().getUuids()));
             ((BukkitInformationManager) infoManager).cacheAnalysisData(analysisData);
-            String time = Benchmark.stop("Analysis", "Analysis");
-
-            Log.logDebug("Analysis", time);
-
-            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(String.valueOf(time), ""));
 
             // TODO Export
 //            ExportUtility.export(analysisData, rawData);
         } catch (Exception e) {
             Log.toLog(this.getClass().getName(), e);
             ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(new InternalErrorResponse(e, "Analysis").getContent());
-            Log.debug("Analysis", "Error: " + e);
-            Log.logDebug("Analysis");
+            Log.logDebug("Analysis", "Error: " + e);
             return false;
+        } finally {
+            long time = Benchmark.stop("Analysis", "Analysis");
+            Log.logDebug("Analysis");
+            Log.info(Locale.get(Msg.ANALYSIS_FINISHED).parse(time, ""));
         }
         return true;
     }
@@ -166,7 +165,7 @@ public class Analysis {
         };
         final AnalysisType bool = AnalysisType.BOOLEAN_PERCENTAGE;
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
-        Log.debug("Analysis", "Additional Sources: " + sources.size());
+        Log.logDebug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().filter(Verify::notNull).forEach(source -> {
             try {
                 Benchmark.start("Source " + StringUtils.remove(source.getPlaceholder(), '%'));
@@ -250,7 +249,7 @@ public class Analysis {
             tpsTable.getPeakPlayerCount(now - (TimeAmount.DAY.ms() * 2)).ifPresent(tpsPart::setLastPeak);
 
             tpsPart.addTpsData(tpsData);
-            Log.debug("Analysis", "TPS Data Size: " + tpsData.size());
+            Log.logDebug("Analysis", "TPS Data Size: " + tpsData.size());
 
             List<UserInfo> userInfo = db.getUserInfoTable().getServerUserInfo().stream().distinct().collect(Collectors.toList());
 

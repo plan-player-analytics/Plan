@@ -30,9 +30,9 @@ public class ExportUtility {
     public static File getFolder() {
         String path = Settings.ANALYSIS_EXPORT_PATH.toString();
 
-        Log.debug("Export", "Path: " + path);
+        Log.logDebug("Export", "Path: " + path);
         boolean isAbsolute = Paths.get(path).isAbsolute();
-        Log.debug("Export", "Absolute: " + (isAbsolute ? "Yes" : "No"));
+        Log.logDebug("Export", "Absolute: " + (isAbsolute ? "Yes" : "No"));
         if (isAbsolute) {
             File folder = new File(path);
             if (!folder.exists() || !folder.isDirectory()) {
@@ -51,17 +51,17 @@ public class ExportUtility {
             return;
         }
 
-//        Benchmark.start("Exporting Html pages");
+//        Benchmark.start("Export","Exporting Html pages");
 //        try {
 //            File folder = getFolder();
-//            Log.debug("Export", "Folder: " + folder.getAbsolutePath());
+//            Log.logDebug("Export", "Folder: " + folder.getAbsolutePath());
 //
 //            writePlayersPageHtml(playerNames, new File(folder, "players"));
 //            writeAnalysisHtml(analysisData, new File(folder, "server"));
 //
 //            File playersFolder = getPlayersFolder(folder);
-//            Log.debug("Export", "Player html files.");
-//            Log.debug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
+//            Log.logDebug("Export", "Player html files.");
+//            Log.logDebug("Export", "Player Page Folder: " + playersFolder.getAbsolutePath());
 //
 //            String playerHtml = FileUtil.getStringFromResource("player.html");
 //
@@ -120,7 +120,7 @@ public class ExportUtility {
 //                PlaceholderUtils.getAnalysisReplaceRules(analysisData))
 //                .replace(HtmlUtils.getInspectUrl(""), "../player/");
 //        File analysisHtmlFile = new File(serverFolder, "index.html");
-//        Log.debug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
+//        Log.logDebug("Export", "Analysis Page File: " + analysisHtmlFile.getAbsolutePath());
 //        Files.write(analysisHtmlFile.toPath(), Collections.singletonList(analysisHtml));
     }
 
@@ -128,7 +128,7 @@ public class ExportUtility {
         String playersHtml = PlayersPageResponse.buildContent(names);
         playersFolder.mkdirs();
         File playersHtmlFile = new File(playersFolder, "index.html");
-        Log.debug("Export", "Players Page File: " + playersHtmlFile.getAbsolutePath());
+        Log.logDebug("Export", "Players Page File: " + playersHtmlFile.getAbsolutePath());
         Files.write(playersHtmlFile.toPath(), Collections.singletonList(playersHtml));
     }
 
