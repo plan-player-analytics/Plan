@@ -162,6 +162,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
             }
         }
         Log.info(Locale.get(Msg.DISABLED).toString());
+        super.onDisable();
     }
 
     @Override

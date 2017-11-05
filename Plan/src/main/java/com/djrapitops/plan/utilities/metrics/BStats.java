@@ -19,7 +19,7 @@ public class BStats {
     }
 
     public void registerMetrics() {
-        Log.debug("Enable", "Enabling bStats Metrics.");
+        Log.logDebug("Enable", "Enabling bStats Metrics.");
         if (metrics == null) {
             metrics = new Metrics(plugin);
         }

@@ -318,8 +318,8 @@ public class Plan extends BukkitPlugin implements IPlan {
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
             }
         }
-        super.onDisable();
         Log.info(Locale.get(Msg.DISABLED).toString());
+        super.onDisable();
     }
 
     @Override

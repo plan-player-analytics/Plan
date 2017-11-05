@@ -150,7 +150,7 @@ public class Analysis {
     }
 
     private Map<String, Serializable> analyzeAdditionalPluginData(Set<UUID> uuids) {
-        Benchmark.start("3rd party");
+        Benchmark.start("Analysis", "3rd party Analysis");
         final Map<String, Serializable> replaceMap = new HashMap<>();
         final HookHandler hookHandler = plugin.getHookHandler();
         final List<PluginData> sources = hookHandler.getAdditionalDataSources().stream()
@@ -168,7 +168,7 @@ public class Analysis {
         Log.logDebug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().filter(Verify::notNull).forEach(source -> {
             try {
-                Benchmark.start("Source " + StringUtils.remove(source.getPlaceholder(), '%'));
+                Benchmark.start("Analysis", "Source " + source.getPlaceholder());
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
                 if (analysisTypes.isEmpty()) {
                     return;
@@ -205,7 +205,7 @@ public class Analysis {
 
                 Log.toLog(this.getClass().getName(), e);
             } finally {
-                Benchmark.stop("Analysis", "Source " + StringUtils.remove(source.getPlaceholder(), '%'));
+                Benchmark.stop("Analysis", "Source " + source.getPlaceholder());
             }
         });
         Benchmark.stop("Analysis", "3rd party");
@@ -238,7 +238,7 @@ public class Analysis {
 
         long now = MiscUtils.getTime();
 
-        Benchmark.start("Fetch Phase");
+        Benchmark.start("Analysis", "Fetch Phase");
         try {
             Map<String, Integer> commandUse = plugin.getDB().getCommandUse();
             commandUsagePart.setCommandUsage(commandUse);
