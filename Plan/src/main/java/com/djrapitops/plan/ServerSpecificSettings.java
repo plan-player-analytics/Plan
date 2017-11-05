@@ -4,10 +4,9 @@
  */
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.plugin.config.IConfig;
-import com.djrapitops.plugin.config.fileconfig.IFileConfig;
+import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
 import java.util.Map;
@@ -25,15 +24,14 @@ public class ServerSpecificSettings {
 
     public void addOriginalBukkitSettings(PlanBungee plugin, UUID serverUUID, Map<String, Object> settings) {
         try {
-            IConfig iConfig = plugin.getIConfig();
-            IFileConfig config = iConfig.getConfig();
+            Config config = plugin.getMainConfig();
             if (!Verify.isEmpty(config.getString("Servers." + serverUUID + ".ServerName"))) {
                 return;
             }
             for (Map.Entry<String, Object> entry : settings.entrySet()) {
                 config.set("Servers." + serverUUID + "." + entry.getKey(), entry.getValue());
             }
-            iConfig.save();
+            config.save();
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }
@@ -41,7 +39,7 @@ public class ServerSpecificSettings {
 
     public static void updateSettings(Plan plugin, Map<String, String> settings) {
         Log.debug("Checking new settings..");
-        FileConfiguration config = plugin.getConfig();
+        Config config = plugin.getMainConfig();
 
         boolean changedSomething = false;
         for (Map.Entry<String, String> setting : settings.entrySet()) {
@@ -52,7 +50,7 @@ public class ServerSpecificSettings {
                 }
                 String stringValue = setting.getValue();
                 Object value = getValue(stringValue);
-                String currentValue = config.get(path).toString();
+                String currentValue = config.getString(path);
                 if (stringValue.equals(currentValue)) {
                     continue;
                 }
@@ -64,11 +62,15 @@ public class ServerSpecificSettings {
         }
 
         if (changedSomething) {
-            plugin.saveConfig();
+            try {
+                config.save();
+            } catch (IOException e) {
+                Log.toLog("ServerSpecificSettings / ConfigSave", e);
+            }
             Log.info("----------------------------------");
             Log.info("The Received Bungee Settings changed the config values, restarting Plan..");
             Log.info("----------------------------------");
-            plugin.restart();
+            plugin.reloadPlugin(true);
         } else {
             Log.debug("Settings up to date");
         }
@@ -105,63 +107,28 @@ public class ServerSpecificSettings {
         return path;
     }
 
-    public Object get(UUID serverUUID, Settings setting) {
-        try {
-            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
-            String path = getPath(serverUUID, setting);
-            String value = config.getString(path);
-            try {
-                return Boolean.parseBoolean(value);
-            } catch (Exception e) {
-                if (Verify.isEmpty(value)) {
-                    return config.getInt(value);
-                }
-                return value;
-            }
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return null;
-    }
-
     public boolean getBoolean(UUID serverUUID, Settings setting) {
-        try {
-            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
-            String path = getPath(serverUUID, setting);
-            return config.getBoolean(path);
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return false;
+        Config config = PlanBungee.getInstance().getMainConfig();
+        String path = getPath(serverUUID, setting);
+        return config.getBoolean(path);
     }
 
     public String getString(UUID serverUUID, Settings setting) {
-        try {
-            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
-            String path = getPath(serverUUID, setting);
-            return config.getString(path);
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return null;
+        Config config = PlanBungee.getInstance().getMainConfig();
+        String path = getPath(serverUUID, setting);
+        return config.getString(path);
     }
 
     public Integer getInt(UUID serverUUID, Settings setting) {
-        try {
-            IFileConfig config = PlanBungee.getInstance().getIConfig().getConfig();
-            String path = getPath(serverUUID, setting);
-            return config.getInt(path);
-        } catch (IOException e) {
-            Log.toLog(this.getClass().getName(), e);
-        }
-        return null;
+        Config config = PlanBungee.getInstance().getMainConfig();
+        String path = getPath(serverUUID, setting);
+        return config.getInt(path);
     }
 
     public void set(UUID serverUUID, Settings setting, Object value) throws IOException {
-        IConfig iConfig = PlanBungee.getInstance().getIConfig();
-        IFileConfig config = iConfig.getConfig();
+        Config config = PlanBungee.getInstance().getMainConfig();
         String path = getPath(serverUUID, setting);
         config.set(path, value);
-        iConfig.save();
+        config.save();
     }
 }

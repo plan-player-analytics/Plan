@@ -4,9 +4,13 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit;
 
-import com.djrapitops.plugin.utilities.Compatibility;
+import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.*;
+import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.PlanBungee;
+import main.java.com.djrapitops.plan.ServerSpecificSettings;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -23,7 +27,7 @@ public class ConfigurationWebAPI extends WebAPI {
 
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
-        if (!Compatibility.isBukkitAvailable()) {
+        if (!Check.isBukkitAvailable()) {
             Log.debug("Called a wrong server type");
             return badRequest("Called a Bungee Server");
         }
@@ -70,7 +74,7 @@ public class ConfigurationWebAPI extends WebAPI {
 
     private Map<String, Object> getConfigValues(UUID serverUUID) throws WebAPIException {
         Map<String, Object> configValues = new HashMap<>();
-        if (!Compatibility.isBungeeAvailable()) {
+        if (!Check.isBungeeAvailable()) {
             throw new WebAPIException("Attempted to send config values from Bukkit to Bungee.");
         }
         addConfigValue(configValues, Settings.DB_TYPE, "mysql");

@@ -32,24 +32,26 @@
         <h1>${networkName} | ${playerName}</h1>
     </div>
 </header>
-<div class="content-server">
-    <div class="nav-bar row">
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-info-circle" aria-hidden="true"></i> Information
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-calendar" aria-hidden="true"></i> Sessions
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-line-chart" aria-hidden="true"></i> Overview
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-cubes" aria-hidden="true"></i> Plugins
-        </a>
-    </div>
-    <div id="limiter" class="main-limiter">
-        <div id="main" class="main-wrapper" style="width: 400%;">
-            <div id="tab-information" class="tab">
+<div class="headwrap">
+        <div class="sidenav">
+            <a class="nav-button" href="javascript:void(0)"><div title="Information" class="sidenav-button">
+                <div><i class="fa fa-info-circle"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Sessions" class="sidenav-button">
+                <div><i class="fa fa-calendar"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Overview" class="sidenav-button">
+                <div><i class="fa fa-line-chart"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Plugins" class="sidenav-button">
+                <div><i class="fa fa-cubes"></i></div>
+            </div></a>
+        </div>
+        
+        <div class="content">
+            <div id="limiter" class="main-limiter">
+                <div id="main" class="main-wrapper" style="width: 500%;">
+                    <div id="tab-information" class="tab">
                 <div class="row">
                     <div class="column">
                         <div class="box-header">
@@ -183,7 +185,9 @@
             <div id="tab-plugins" class="tab column">
                 ${tabContentPlugins}
             </div>
-        </div>
+                </div>
+            </div>
+    </div>
     </div>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
@@ -274,6 +278,5 @@
                 };
             }
     </script>
-</div>
 </body>
 </html>

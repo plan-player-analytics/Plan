@@ -1,13 +1,12 @@
 package com.djrapitops.pluginbridge.plan.viaversion;
 
-import com.djrapitops.pluginbridge.plan.vault.*;
+import com.djrapitops.plugin.api.utility.log.Log;
+import com.djrapitops.pluginbridge.plan.vault.VaultHook;
+import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.UUID;
-
-import main.java.com.djrapitops.plan.Log;
-import main.java.com.djrapitops.plan.data.additional.PluginData;
 
 /**
  * PluginData class for Vault-plugin.

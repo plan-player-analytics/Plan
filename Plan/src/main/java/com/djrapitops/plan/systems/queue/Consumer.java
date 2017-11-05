@@ -1,7 +1,6 @@
 package main.java.com.djrapitops.plan.systems.queue;
 
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -35,7 +34,6 @@ public abstract class Consumer<T> extends AbsRunnable {
                 consume(queue.take());
             }
         } catch (InterruptedException ex) {
-            Log.error("Consumer interrupted: " + ex.getCause());
             Thread.currentThread().interrupt();
         }
     }

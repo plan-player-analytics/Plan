@@ -4,13 +4,14 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.utilities.FormattingUtils;
+import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plugin.utilities.FormatUtils;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class SearchCommand extends SubCommand {
      */
     public SearchCommand(Plan plugin) {
         super("search",
-                CommandType.CONSOLE_WITH_ARGUMENTS,
+                CommandType.PLAYER_OR_ARGS,
                 Permissions.SEARCH.getPermission(),
                 Locale.get(Msg.CMD_USG_SEARCH).toString(),
                 "<part of playername>");
@@ -48,7 +49,7 @@ public class SearchCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
         sender.sendMessage(Locale.get(Msg.CMD_INFO_SEARCHING).toString());
@@ -58,7 +59,7 @@ public class SearchCommand extends SubCommand {
     }
 
     private void runSearchTask(String[] args, ISender sender) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("SearchTask: " + Arrays.toString(args)) {
+        RunnableFactory.createNew(new AbsRunnable("SearchTask: " + Arrays.toString(args)) {
             @Override
             public void run() {
                 try {
@@ -71,7 +72,7 @@ public class SearchCommand extends SubCommand {
                     if (empty) {
                         sender.sendMessage(Locale.get(Msg.CMD_INFO_NO_RESULTS).parse(Arrays.toString(args)));
                     } else {
-                        sender.sendMessage(Locale.get(Msg.CMD_INFO_RESULTS).toString() + FormattingUtils.collectionToStringNoBrackets(names));
+                        sender.sendMessage(Locale.get(Msg.CMD_INFO_RESULTS).toString() + FormatUtils.collectionToStringNoBrackets(names));
                     }
 
                     sender.sendMessage(Locale.get(Msg.CMD_CONSTANT_FOOTER).toString());

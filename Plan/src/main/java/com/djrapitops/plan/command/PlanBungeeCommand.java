@@ -29,6 +29,7 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
     public PlanBungeeCommand(PlanBungee plugin) {
         super(plugin, "planbungee", CommandType.CONSOLE, "", "", "planbungee");
         super.setDefaultCommand("help");
+        super.setColorScheme(plugin.getColorScheme());
     }
 
     @Override
@@ -38,13 +39,17 @@ public class PlanBungeeCommand extends TreeCommand<PlanBungee> {
 
     @Override
     public void addCommands() {
-        commands.add(new ReloadCommand(plugin));
-        commands.add(new StatusCommand<>(plugin, Permissions.MANAGE.getPermission()));
-        commands.add(new ListCommand());
+        add(
+                new ReloadCommand(plugin),
+                new StatusCommand<>(plugin, Permissions.MANAGE.getPermission(), plugin.getColorScheme()),
+                new ListCommand()
+        );
         RegisterCommand registerCommand = new RegisterCommand(plugin);
-        commands.add(registerCommand);
-        commands.add(new WebUserCommand(plugin, registerCommand));
-        commands.add(new NetworkCommand(plugin));
-        commands.add(new ListServersCommand(plugin));
+        add(
+                registerCommand,
+                new WebUserCommand(plugin, registerCommand),
+                new NetworkCommand(plugin),
+                new ListServersCommand(plugin)
+        );
     }
 }

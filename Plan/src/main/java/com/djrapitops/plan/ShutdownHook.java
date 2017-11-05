@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.Action;
 import main.java.com.djrapitops.plan.data.Session;

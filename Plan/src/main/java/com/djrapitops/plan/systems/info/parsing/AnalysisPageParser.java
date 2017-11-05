@@ -4,7 +4,8 @@
  */
 package main.java.com.djrapitops.plan.systems.info.parsing;
 
-import com.djrapitops.plugin.utilities.Compatibility;
+import com.djrapitops.plugin.api.Check;
+import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -15,7 +16,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Used for parsing a Html String out of AnalysisData and the html file.
@@ -44,14 +45,14 @@ public class AnalysisPageParser extends PageParser {
         addValue("playersOnline", getPlayersOnline());
         try {
             return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("server.html"), placeHolders);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new ParseException(e);
         }
     }
 
     private int getPlayersOnline() {
-        if (Compatibility.isBukkitAvailable()) {
-            return plugin.fetch().getOnlinePlayers().size();
+        if (Check.isBukkitAvailable()) {
+            return ((Plan) plugin).getServer().getOnlinePlayers().size();
         }
         return ((PlanBungee) plugin).getProxy().getOnlineCount();
     }

@@ -1,18 +1,19 @@
 package main.java.com.djrapitops.plan.api;
 
 import com.djrapitops.plugin.utilities.Verify;
-import com.djrapitops.plugin.utilities.player.Fetch;
-import com.djrapitops.plugin.utilities.player.IOfflinePlayer;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
+import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
+
+import static org.bukkit.Bukkit.getOfflinePlayer;
 
 /**
  * This class contains the API methods for Bukkit version of the plugin.
@@ -43,7 +44,7 @@ public class API {
     }
 
     /**
-     * Check whether or not the plugin enabled successfully.
+     * Condition whether or not the plugin enabled successfully.
      *
      * @return true if plugin is enabled correctly.
      */
@@ -86,7 +87,7 @@ public class API {
     }
 
     /**
-     * Check if Players's Inspect page is cached to PageCache.
+     * Condition if Players's Inspect page is cached to PageCache.
      *
      * @param uuid UUID of the player.
      * @return true/false
@@ -98,7 +99,7 @@ public class API {
     }
 
     /**
-     * Check if Players's Inspect page is cached to PageCache of the providing WebServer.
+     * Condition if Players's Inspect page is cached to PageCache of the providing WebServer.
      * <p>
      * Using BungeeCord: Will send a {@code IsCachedWebAPI} request to check if the page is in Bungee's PageCache.
      * Only Bukkit: Checks PageCache for page.
@@ -147,7 +148,7 @@ public class API {
     }
 
     /**
-     * Check if the Analysis has been run and is cached to the AnalysisCache.
+     * Condition if the Analysis has been run and is cached to the AnalysisCache.
      *
      * @return true/false
      */
@@ -165,7 +166,7 @@ public class API {
     /**
      * Used to get the full HTML of the Analysis page as a string.
      * <p>
-     * Check if the data is cached to AnalysisCache before calling this.
+     * Condition if the data is cached to AnalysisCache before calling this.
      *
      * @return server.html with all placeholders replaced.
      * @throws NullPointerException if AnalysisData has not been cached.
@@ -177,7 +178,7 @@ public class API {
     /**
      * Used to get the AnalysisData object.
      * <p>
-     * Check if the data is cached to AnalysisCache before calling this.
+     * Condition if the data is cached to AnalysisCache before calling this.
      *
      * @return AnalysisData object.
      * @see AnalysisData
@@ -201,7 +202,7 @@ public class API {
         if (playerName != null) {
             return playerName;
         }
-        IOfflinePlayer offlinePlayer = Fetch.getIOfflinePlayer(uuid);
+        OfflinePlayer offlinePlayer = getOfflinePlayer(uuid);
         if (offlinePlayer != null) {
             return offlinePlayer.getName();
         }

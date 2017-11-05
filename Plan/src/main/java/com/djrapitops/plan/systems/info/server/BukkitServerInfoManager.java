@@ -5,7 +5,7 @@
 package main.java.com.djrapitops.plan.systems.info.server;
 
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
@@ -144,7 +144,7 @@ public class BukkitServerInfoManager {
                 Log.info("----------------------------------");
                 Log.info("Bungee connection has failed 10 times in a row, assuming Bungee uninstalled - Restarting Plan..");
                 Log.info("----------------------------------");
-                plugin.restart();
+                plugin.reloadPlugin(true);
             } catch (IOException e) {
                 Log.toLog(this.getClass().getName(), e);
             }

@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.theme;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Settings;
 
 /**

@@ -26,29 +26,40 @@
         <h1>${networkName} | Network</h1>
     </div>
 </header>
+    
+<div class="headwrap">
+    <div class="sidenav">
+            <a class="nav-button" href="javascript:void(0)"><div title="Information" class="sidenav-button">
+                <div><i class="fa fa-info-circle"></i></div>
+            </div></a>
+            <a class="nav-button"><div title="Coming Soon" class="sidenav-button sidenav-button-disabled">
+                <div><i class="fa fa-area-chart"></i></div>
+            </div></a>
+        </div>
 <div class="content">
-    <div class="row">
-        <div class="column">
-            <div class="box-header">
-                <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
+            <div class="row">
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-bar-chart"></i> Players Online</h2>
+                    </div>
+                    <div class="box-footer">
+                        <div id="playersOnline" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box-header">
+                        <h2><i class="fa fa-info-circle"></i> Information</h2>
+                    </div>
+                    <div class="box" style="height: 75%;">
+                        <p>${playersOnline} Players Online</p>
+                        <p>${playersTotal} Total Players</p>
+                        <p>${playersNewDay} New Players Today<br>${playersNewWeek} New Players This Week</p>
+                    </div>
+                </div>
             </div>
-            <div class="box-footer">
-                <div id="playersOnline" style="width: 100%; height: 400px;"></div>
-            </div>
-        </div>
-        <div class="column">
-            <div class="box-header">
-                <h2><i class="fa fa-info-circle"></i> Information</h2>
-            </div>
-            <div class="box" style="height: 75%;">
-                <p>${playersOnline} Players Online</p>
-                <p>${playersTotal} Total Players</p>
-                <p>${playersNewDay} New Players Today<br>${playersNewWeek} New Players This Week</p>
-            </div>
-        </div>
+            ${contentServers}
+         </div>
     </div>
-    ${contentServers}
-</div>
 <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="./js/playerGraph.js"></script>

@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.additional.AnalysisType;
@@ -255,7 +255,7 @@ public class AnalysisUtils {
             day.setTimeInMillis(start);
             int hourOfDay = day.get(Calendar.HOUR_OF_DAY); // 0 AM is 0
             int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 2; // Monday is 0, Sunday is -1
-            if (hourOfDay == 24) { // Check if hour is 24 (Should be impossible but.)
+            if (hourOfDay == 24) { // Condition if hour is 24 (Should be impossible but.)
                 hourOfDay = 0;
                 dayOfWeek += 1;
             }

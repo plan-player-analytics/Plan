@@ -1,7 +1,5 @@
 package test.java.utils;
 
-import com.djrapitops.plugin.utilities.player.Fetch;
-import com.djrapitops.plugin.utilities.player.IPlayer;
 import com.sun.net.httpserver.HttpServer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -29,10 +27,6 @@ public class MockUtils {
         return mockWorld;
     }
 
-    public static IPlayer mockIPlayer() {
-        return Fetch.wrapBukkit(mockPlayer());
-    }
-
     public static Player mockPlayer() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
@@ -50,10 +44,6 @@ public class MockUtils {
 
     public static UUID getPlayerUUID() {
         return UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
-    }
-
-    public static IPlayer mockIPlayer2() {
-        return Fetch.wrapBukkit(mockPlayer2());
     }
 
     public static Player mockPlayer2() {
@@ -82,7 +72,7 @@ public class MockUtils {
         return uuids;
     }
 
-    public static IPlayer mockBrokenPlayer() {
+    public static Player mockBrokenPlayer() {
         Player p = PowerMockito.mock(Player.class);
         when(p.getGameMode()).thenReturn(GameMode.SURVIVAL);
         when(p.getUniqueId()).thenReturn(UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db"));
@@ -93,7 +83,7 @@ public class MockUtils {
         when(p.isBanned()).thenThrow(Exception.class);
         when(p.isOnline()).thenReturn(true);
         when(p.getName()).thenReturn("TestName");
-        return Fetch.wrapBukkit(p);
+        return p;
     }
 
     public static CommandSender mockConsoleSender() {
