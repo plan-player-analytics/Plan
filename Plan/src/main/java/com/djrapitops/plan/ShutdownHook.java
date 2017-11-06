@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan;
 
+import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.data.Action;
@@ -69,6 +70,7 @@ public class ShutdownHook extends Thread {
             }
             db = null;
             dataCache = null;
+            StaticHolder.unRegister(Plan.class);
         }
     }
 

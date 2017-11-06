@@ -24,7 +24,9 @@ import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.systems.TaskCenter;
 import com.djrapitops.plugin.api.utility.Version;
+import com.djrapitops.plugin.api.utility.log.DebugLog;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
@@ -223,6 +225,7 @@ public class Plan extends BukkitPlugin implements IPlan {
             Benchmark.stop("Enable", "Enable");
             Log.logDebug("Enable");
             Log.info(Locale.get(Msg.ENABLED).toString());
+            StaticHolder.saveInstance(ShutdownHook.class, this.getClass());
             new ShutdownHook(this);
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
@@ -321,7 +324,9 @@ public class Plan extends BukkitPlugin implements IPlan {
             }
         }
         Log.info(Locale.get(Msg.DISABLED).toString());
-        super.onDisable();
+        Benchmark.pluginDisabled(Plan.class);
+        DebugLog.pluginDisabled(Plan.class);
+        TaskCenter.cancelAllKnownTasks(Plan.class);
     }
 
     @Override
