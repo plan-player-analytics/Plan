@@ -174,7 +174,11 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public void onReload() {
-
+        try {
+            config.read();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     private void initDatabase() throws DatabaseInitException {
@@ -249,4 +253,5 @@ public class PlanBungee extends BungeePlugin implements IPlan {
     public UUID getServerUuid() {
         return serverInfoManager.getServerUUID();
     }
+
 }

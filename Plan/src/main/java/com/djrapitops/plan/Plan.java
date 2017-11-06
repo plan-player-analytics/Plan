@@ -59,6 +59,7 @@ import main.java.com.djrapitops.plan.systems.webserver.WebServer;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -336,7 +337,11 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     @Override
     public void onReload() {
-        reloadConfig();
+        try {
+            config.read();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     private void registerListeners() {
@@ -492,5 +497,41 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     public boolean isReloading() {
         return reloading;
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public void reloadConfig() {
+        throw new IllegalStateException("This method should be used on this plugin. Use onReload() instead");
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public FileConfiguration getConfig() {
+        throw new IllegalStateException("This method should be used on this plugin. Use getMainConfig() instead");
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public void saveConfig() {
+        throw new IllegalStateException("This method should be used on this plugin. Use getMainConfig().save() instead");
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public void saveDefaultConfig() {
+        throw new IllegalStateException("This method should be used on this plugin.");
     }
 }

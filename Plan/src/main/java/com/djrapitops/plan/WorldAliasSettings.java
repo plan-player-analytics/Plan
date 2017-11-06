@@ -6,8 +6,10 @@ package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.config.ConfigNode;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +65,11 @@ public class WorldAliasSettings {
         if (Verify.isEmpty(previousValue)) {
             aliasSect.set(world, world);
         }
-        plugin.saveConfig();
+        try {
+            aliasSect.save();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     /**

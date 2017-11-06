@@ -1,8 +1,10 @@
 package main.java.com.djrapitops.plan.data.additional;
 
+import com.djrapitops.plugin.api.config.ConfigNode;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.IOException;
 
 /**
  * Class responsible for generating and generating settings for PluginData
@@ -20,36 +22,37 @@ public class PluginConfigSectionHandler {
     }
 
     public boolean hasSection(PluginData dataSource) {
-        ConfigurationSection section = getPluginsSection();
+        ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
-        if (!section.contains(pluginName)) {
+        if (!section.getChildren().containsKey(pluginName)) {
             return false;
         }
 
-        ConfigurationSection pluginSection = section.getConfigurationSection(pluginName);
-        return pluginSection.contains(dataSource.getPlaceholder());
+        ConfigNode pluginSection = section.getConfigNode(pluginName);
+        return pluginSection.getChildren().containsKey(dataSource.placeholder);
     }
 
-    private ConfigurationSection getPluginsSection() {
-        FileConfiguration config = plan.getConfig();
-        return config.getConfigurationSection("Plugins");
+    private ConfigNode getPluginsSection() {
+        return plan.getMainConfig().getConfigNode("Plugins");
     }
 
     public void createSection(PluginData dataSource) {
-        ConfigurationSection section = getPluginsSection();
+        ConfigNode section = getPluginsSection();
         String pluginName = dataSource.getSourcePlugin();
         String source = dataSource.placeholder;
 
-        section.addDefault(pluginName + ".Enabled", true);
-        section.addDefault(pluginName + ".Data." + source, true);
-
-        FileConfiguration config = plan.getConfig();
-        config.set("Plugins", section);
-        plan.saveConfig();
+        section.set(pluginName + ".Enabled", true);
+        section.set(pluginName + ".Data." + source, true);
+        try {
+            section.sort();
+            section.save();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     public boolean isEnabled(PluginData dataSource) {
-        ConfigurationSection section = getPluginsSection();
+        ConfigNode section = getPluginsSection();
 
         String pluginName = dataSource.getSourcePlugin();
         if (!section.getBoolean(pluginName + ".Enabled")) {

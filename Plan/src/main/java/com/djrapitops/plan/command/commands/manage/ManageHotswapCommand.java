@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
@@ -7,11 +8,14 @@ import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.utilities.Condition;
 import main.java.com.djrapitops.plan.utilities.ManageUtils;
+
+import java.io.IOException;
 
 /**
  * This manage subcommand is used to swap to a different database and reload the
@@ -80,10 +84,14 @@ public class ManageHotswapCommand extends SubCommand {
             return true;
         }
 
-        plugin.getConfig().set("database.type", dbName);
-        plugin.saveConfig();
-        plugin.onDisable();
-        plugin.onEnable();
+        Config config = plugin.getMainConfig();
+        config.set(Settings.DB_TYPE.getPath(), dbName);
+        try {
+            config.save();
+            plugin.reloadPlugin(true);
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
         return true;
     }
 }
