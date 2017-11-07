@@ -78,10 +78,10 @@ public class ServerTable extends Table {
     }
 
     public void saveCurrentServerInfo(ServerInfo info) throws SQLException {
-        if (info.getId() == -1) {
-            saveNewServerInfo(info);
-        } else {
+        if (getServerID(info.getUuid()).isPresent()) {
             updateServerInfo(info);
+        } else {
+            saveNewServerInfo(info);
         }
     }
 
