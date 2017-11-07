@@ -20,10 +20,7 @@ import main.java.com.djrapitops.plan.systems.info.parsing.InspectPageParser;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.systems.webserver.response.AnalysisPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.InspectPageResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.InternalErrorResponse;
-import main.java.com.djrapitops.plan.systems.webserver.response.Response;
+import main.java.com.djrapitops.plan.systems.webserver.response.*;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.WebAPIManager;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bukkit.AnalysisReadyWebAPI;
@@ -200,7 +197,12 @@ public class BukkitInformationManager extends InformationManager {
     @Override
     public String getAnalysisHtml() {
         if (analysisData == null) {
-            throw new NullPointerException("Analysis Data has not been cached.");
+            analysis.runAnalysis(this);
+            ErrorResponse analysisRefreshPage = new ErrorResponse();
+            analysisRefreshPage.setTitle("Analysis is being refreshed..");
+            analysisRefreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
+            analysisRefreshPage.replacePlaceholders();
+            return analysisRefreshPage.getContent();
         }
         try {
             return Theme.replaceColors(new AnalysisPageParser(analysisData, plugin).parse());
