@@ -113,11 +113,10 @@ public class HtmlStructure {
             String icon = Html.FONT_AWESOME_ICON.parse("server");
             // TODO Move plain text to Locale
             String headerText = Html.HEADER_2.parse(icon + " " + serverName) + Html.PARAGRAPH.parse("No Compatible Plugins");
-            return Html.DIV_W_CLASS.parse("plugins-server",
-                    Html.DIV_W_CLASS.parse("plugins-header",
-                            Html.ROW.parse(Html.DIV_W_CLASS.parse("box-header", headerText))
-                    )
-            );
+            String header = Html.DIV_W_CLASS.parse("box-header", headerText);
+            String row = Html.ROW.parse(header);
+            String pluginsHeader = Html.DIV_W_CLASS.parse("plugins-header", row);
+            return Html.DIV_W_CLASS.parse("plugins-server", pluginsHeader);
         }
 
         Map<String, List<String>> placeholders = getPlaceholdersInspect(plugins);
