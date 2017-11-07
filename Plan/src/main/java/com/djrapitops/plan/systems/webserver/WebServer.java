@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
@@ -48,6 +49,9 @@ public class WebServer {
         this.port = Settings.WEBSERVER_PORT.getNumber();
         webAPI = new WebAPIManager();
         registerWebAPIs();
+
+        StaticHolder.saveInstance(APIRequestHandler.class, plugin.getClass());
+        StaticHolder.saveInstance(RequestHandler.class, plugin.getClass());
     }
 
     private void registerWebAPIs() {

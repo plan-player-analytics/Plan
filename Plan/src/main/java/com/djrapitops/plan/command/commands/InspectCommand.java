@@ -6,6 +6,7 @@ import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
@@ -61,7 +62,7 @@ public class InspectCommand extends SubCommand {
     }
 
     private void runInspectTask(String playerName, ISender sender) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("InspectTask") {
+        RunnableFactory.createNew(new AbsRunnable("InspectTask") {
             @Override
             public void run() {
                 try {

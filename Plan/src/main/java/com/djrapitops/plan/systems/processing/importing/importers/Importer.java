@@ -37,7 +37,7 @@ public abstract class Importer {
 
     public abstract List<UserImportData> getUserImportData();
 
-    public final void processImport() throws SQLException {
+    public final void processImport() {
         String benchmarkName = "Import processing";
         String serverBenchmarkName = "Server Data processing";
         String userDataBenchmarkName = "User Data processing";
@@ -75,7 +75,7 @@ public abstract class Importer {
         Benchmark.stop(benchmarkName);
     }
 
-    private void processServerData() throws SQLException {
+    private void processServerData() {
         String benchmarkName = "Processing Server Data";
         String getDataBenchmarkName = "Getting Server Data";
         String insertDataIntoDatabaseBenchmarkName = "Insert Server Data into Database";

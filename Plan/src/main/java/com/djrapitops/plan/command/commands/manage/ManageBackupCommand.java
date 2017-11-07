@@ -5,6 +5,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
@@ -71,7 +72,7 @@ public class ManageBackupCommand extends SubCommand {
     }
 
     private void runBackupTask(ISender sender, String[] args, final Database database) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("BackupTask") {
+        RunnableFactory.createNew(new AbsRunnable("BackupTask") {
             @Override
             public void run() {
                 try {

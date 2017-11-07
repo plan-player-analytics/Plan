@@ -50,7 +50,7 @@ public class IPsTable extends UserIDTable {
         );
     }
 
-    public void alterTableV12() throws SQLException {
+    public void alterTableV12() {
         if (usingMySQL) {
             executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnIP + " VARCHAR(39) NOT NULL");
         }

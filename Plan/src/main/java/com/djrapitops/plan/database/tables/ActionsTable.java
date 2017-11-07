@@ -74,7 +74,7 @@ public class ActionsTable extends UserIDTable {
                 .toString());
     }
 
-    public void alterTableV12() throws SQLException {
+    public void alterTableV12() {
         if (usingMySQL) {
             executeUnsafe("ALTER TABLE " + tableName + " MODIFY " + columnAdditionalInfo + " VARCHAR(300)");
         }

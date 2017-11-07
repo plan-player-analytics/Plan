@@ -6,6 +6,7 @@ package main.java.com.djrapitops.plan.systems.webserver.webapi;
 
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
@@ -103,9 +104,6 @@ public abstract class WebAPI {
             connection.setRequestProperty("Content-Length", Integer.toString(parameters.length()));
 
             byte[] toSend = parameters.getBytes();
-            int length = toSend.length;
-
-//            connection.setRequestProperty("Content-Length", Integer.toString(length));
 
             connection.setUseCaches(false);
             Log.debug("Sending WebAPI Request: " + this.getClass().getSimpleName() + " to " + address);
@@ -129,6 +127,9 @@ public abstract class WebAPI {
         } catch (SocketTimeoutException e) {
             throw new WebAPIConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.toLog(this.getClass().getName(), e);
+            }
             throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }
     }

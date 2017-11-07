@@ -111,7 +111,7 @@ public class ExportUtility {
 //        }
     }
 
-    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) throws IOException {
+    public static void writeAnalysisHtml(AnalysisData analysisData, File serverFolder) {
         if (!Settings.ANALYSIS_EXPORT.isTrue()) {
             return;
         }

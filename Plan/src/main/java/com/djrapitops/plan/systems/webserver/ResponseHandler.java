@@ -115,7 +115,7 @@ public class ResponseHandler extends APIResponseHandler {
                         + "This user has permission level of " + permLevel));
     }
 
-    private boolean isAuthorized(int requiredPermLevel, int permLevel) throws Exception {
+    private boolean isAuthorized(int requiredPermLevel, int permLevel) {
         return permLevel <= requiredPermLevel;
     }
 

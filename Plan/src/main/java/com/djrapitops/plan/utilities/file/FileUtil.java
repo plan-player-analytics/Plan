@@ -27,9 +27,7 @@ public class FileUtil {
         StringBuilder html = new StringBuilder();
         IPlan plugin = MiscUtils.getIPlan();
         lines(MiscUtils.getIPlan(), new File(plugin.getDataFolder(), fileName), fileName)
-                .forEach(line -> {
-                    html.append(line).append("\r\n");
-                });
+                .forEach(line -> html.append(line).append("\r\n"));
         return html.toString();
     }
 

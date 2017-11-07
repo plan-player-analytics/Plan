@@ -5,6 +5,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
@@ -70,7 +71,7 @@ public class ManageRestoreCommand extends SubCommand {
     }
 
     private void runRestoreTask(String[] args, ISender sender, final Database database) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("RestoreTask") {
+        RunnableFactory.createNew(new AbsRunnable("RestoreTask") {
             @Override
             public void run() {
                 try {

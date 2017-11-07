@@ -134,21 +134,7 @@ public class BukkitServerInfoManager {
     }
 
     public void markConnectionFail() {
-        int timesFailed = serverInfoFile.markConnectionFail();
-        if (timesFailed == -1) {
-            return;
-        }
-        if (timesFailed >= 10) {
-            try {
-                serverInfoFile.saveInfo(serverInfo, new ServerInfo(-1, null, "Bungee", "", -1));
-                Log.info("----------------------------------");
-                Log.info("Bungee connection has failed 10 times in a row, assuming Bungee uninstalled - Restarting Plan..");
-                Log.info("----------------------------------");
-                plugin.reloadPlugin(true);
-            } catch (IOException e) {
-                Log.toLog(this.getClass().getName(), e);
-            }
-        }
+        serverInfoFile.markConnectionFail();
     }
 
     public void resetConnectionFails() {

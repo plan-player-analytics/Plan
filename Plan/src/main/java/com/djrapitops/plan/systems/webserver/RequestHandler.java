@@ -4,9 +4,11 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.response.PromptAuthorizationResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -14,12 +16,11 @@ import main.java.com.djrapitops.plan.systems.webserver.response.Response;
 import java.io.IOException;
 
 /**
- * HttpHandler for webserver request management.
+ * HttpHandler for WebServer request management.
  *
  * @author Rsl1122
  */
 public class RequestHandler implements HttpHandler {
-
 
     private final ResponseHandler responseHandler;
 
@@ -34,11 +35,18 @@ public class RequestHandler implements HttpHandler {
 
         try {
             Response response = responseHandler.getResponse(request);
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.debug(request.toString(), response.toString());
+            }
             if (response instanceof PromptAuthorizationResponse) {
                 responseHeaders.set("WWW-Authenticate", "Basic realm=\"/\";");
             }
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
+        } catch (IOException e) {
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.toLog(this.getClass().getName(), e);
+            }
         } finally {
             exchange.close();
         }

@@ -5,6 +5,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
@@ -81,7 +82,7 @@ public class ManageMoveCommand extends SubCommand {
     }
 
     private void runMoveTask(final Database fromDatabase, final Database toDatabase, ISender sender) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("DBMoveTask") {
+        RunnableFactory.createNew(new AbsRunnable("DBMoveTask") {
             @Override
             public void run() {
                 try {

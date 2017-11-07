@@ -4,6 +4,7 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -47,7 +48,7 @@ public class ManageDumpCommand extends SubCommand {
     }
 
     private void dump(ISender sender) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("DumpTask") {
+        RunnableFactory.createNew(new AbsRunnable("DumpTask") {
             @Override
             public void run() {
                 try {

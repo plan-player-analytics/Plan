@@ -1,18 +1,16 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
-import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
 import main.java.com.djrapitops.plan.utilities.Condition;
-
-import java.sql.SQLException;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
@@ -58,13 +56,11 @@ public class ManageImportCommand extends SubCommand {
     }
 
     private void runImport(String importer) {
-        plugin.getRunnableFactory().createNew("Import", new AbsRunnable() {
+        RunnableFactory.createNew("Import", new AbsRunnable() {
             @Override
             public void run() {
                 try {
                     ImporterManager.getImporter(importer).processImport();
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
                 } finally {
                     this.cancel();
                 }

@@ -169,7 +169,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
 
     @Override
     public String getVersion() {
-        return null;
+        return super.getDescription().getVersion();
     }
 
     @Override

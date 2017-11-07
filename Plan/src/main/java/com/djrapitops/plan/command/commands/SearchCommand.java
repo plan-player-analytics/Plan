@@ -25,8 +25,6 @@ import java.util.List;
  */
 public class SearchCommand extends SubCommand {
 
-    private final Plan plugin;
-
     /**
      * Class Constructor.
      *
@@ -38,7 +36,6 @@ public class SearchCommand extends SubCommand {
                 Permissions.SEARCH.getPermission(),
                 Locale.get(Msg.CMD_USG_SEARCH).toString(),
                 "<part of playername>");
-        this.plugin = plugin;
 
     }
 

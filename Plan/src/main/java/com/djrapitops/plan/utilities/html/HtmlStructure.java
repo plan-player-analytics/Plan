@@ -16,7 +16,6 @@ import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructur
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -92,7 +91,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) throws FileNotFoundException {
+    public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
         Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
         map.put(uuid, sessions);
         return SessionTabStructureCreator.creteStructure(map, allSessions, false);

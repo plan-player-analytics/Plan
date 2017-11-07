@@ -7,6 +7,7 @@ package main.java.com.djrapitops.plan.systems.info.server;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
@@ -35,7 +36,7 @@ public class BungeeServerInfoManager {
     private final Set<UUID> onlineServers;
     private ServerTable serverTable;
 
-    public BungeeServerInfoManager(PlanBungee plugin) throws PlanEnableException {
+    public BungeeServerInfoManager(PlanBungee plugin) {
         this.plugin = plugin;
         this.db = plugin.getDB();
         serverTable = db.getServerTable();
@@ -148,7 +149,7 @@ public class BungeeServerInfoManager {
             Optional<ServerInfo> serverInfo = db.getServerTable().getServerInfo(serverUUID);
             serverInfo.ifPresent(server -> {
                         Log.info("Server Info found from DB: " + server.getName());
-                        plugin.getRunnableFactory().createNew("BukkitConnectionTask: " + server.getName(), new AbsRunnable() {
+                        RunnableFactory.createNew("BukkitConnectionTask: " + server.getName(), new AbsRunnable() {
                             @Override
                             public void run() {
                                 attemptConnection(server);
