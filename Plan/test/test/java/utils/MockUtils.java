@@ -1,6 +1,6 @@
 package test.java.utils;
 
-import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.*;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,10 +9,13 @@ import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -95,5 +98,119 @@ public class MockUtils {
         when(httpServer.getAddress()).thenReturn(new InetSocketAddress(80));
         when(httpServer.getExecutor()).thenReturn(command -> System.out.println("HTTP Server command received"));
         return httpServer;
+    }
+
+    public static HttpExchange getHttpExchange(String requestMethod, String requestURI, String body, Map<String, List<String>> responseHeaders) {
+        return new HttpExchange() {
+            private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            @Override
+            public Headers getRequestHeaders() {
+                Headers headers = new Headers();
+                headers.put("Authorization", new ArrayList<>());
+                return headers;
+            }
+
+            @Override
+            public Headers getResponseHeaders() {
+                Headers headers = new Headers();
+                headers.putAll(responseHeaders);
+                return headers;
+            }
+
+            @Override
+            public URI getRequestURI() {
+                try {
+                    return new URI(requestURI);
+                } catch (URISyntaxException e) {
+                    return null;
+                }
+            }
+
+            @Override
+            public String getRequestMethod() {
+                return requestMethod;
+            }
+
+            @Override
+            public HttpContext getHttpContext() {
+                return null;
+            }
+
+            @Override
+            public void close() {
+
+            }
+
+            @Override
+            public InputStream getRequestBody() {
+                return new ByteArrayInputStream(body.getBytes(Charset.forName("UTF-8")));
+            }
+
+            @Override
+            public OutputStream getResponseBody() {
+                return outputStream;
+            }
+
+            @Override
+            public InetSocketAddress getRemoteAddress() {
+                return null;
+            }
+
+            @Override
+            public InetSocketAddress getLocalAddress() {
+                return null;
+            }
+
+            @Override
+            public String getProtocol() {
+                return null;
+            }
+
+            @Override
+            public Object getAttribute(String name) {
+                return null;
+            }
+
+            @Override
+            public void sendResponseHeaders(int i, long l) throws IOException {
+
+            }
+
+            @Override
+            public int getResponseCode() {
+                return 0;
+            }
+
+            @Override
+            public void setAttribute(String s, Object o) {
+
+            }
+
+            @Override
+            public void setStreams(InputStream inputStream, OutputStream outputStream) {
+
+            }
+
+            @Override
+            public HttpPrincipal getPrincipal() {
+                return null;
+            }
+        };
+    }
+
+    public static String getResponseStream(HttpExchange requestExchange) throws IOException {
+        InputStream in = new GZIPInputStream(
+                new ByteArrayInputStream((
+                        (ByteArrayOutputStream) requestExchange.getResponseBody()
+                ).toByteArray())
+        );
+        try (Scanner scanner = new Scanner(in)) {
+            StringBuilder s = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                s.append(scanner.nextLine()).append("\n");
+            }
+            return s.toString();
+        }
     }
 }
