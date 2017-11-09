@@ -111,7 +111,7 @@ public class Plan extends BukkitPlugin implements IPlan {
         if (instance == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
         }
-        return instance.api;
+        return instance.getApi();
     }
 
     /**
@@ -380,6 +380,7 @@ public class Plan extends BukkitPlugin implements IPlan {
         }
 
         db.init();
+        Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
     }
 
     /**
@@ -533,5 +534,19 @@ public class Plan extends BukkitPlugin implements IPlan {
     @Deprecated
     public void saveDefaultConfig() {
         throw new IllegalStateException("This method should be used on this plugin.");
+    }
+
+    /**
+     * Method for getting the API.
+     *
+     * Created due to necessity for testing, but can be used.
+     * For direct API getter use {@code Plan.getPlanAPI()}.
+     *
+     * If Plan is reloaded a new API instance is created.
+     *
+     * @return Plan API instance.
+     */
+    public API getApi() {
+        return api;
     }
 }

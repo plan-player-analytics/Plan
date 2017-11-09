@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.ChatColor;
@@ -104,7 +105,12 @@ public class TestInit {
         File player = new File(getClass().getResource("/player.html").getPath());
         when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
 
-        Config iConfig = new Config(new File(planMock.getDataFolder(), "config.yml"), FileUtil.lines(planMock, "config.yml"));
+        File tempConfigFile = new File(planMock.getDataFolder(), "config.yml");
+        Config iConfig = new Config(tempConfigFile, FileUtil.lines(planMock, "config.yml")) {
+            @Override
+            public void save() throws IOException {
+            }
+        };
         when(planMock.getMainConfig()).thenReturn(iConfig);
 
         Server mockServer = mockServer();
@@ -119,6 +125,14 @@ public class TestInit {
 
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
         BukkitServerInfoManager bukkitServerInfoManager = PowerMockito.mock(BukkitServerInfoManager.class);
+
+        DataCache dataCache = new DataCache(planMock) {
+            @Override
+            public String getName(UUID uuid) {
+                return "";
+            }
+        };
+        when(planMock.getDataCache()).thenReturn(dataCache);
 
         when(bukkitServerInfoManager.getServerUUID()).thenReturn(serverUUID);
         when(planMock.getServerUuid()).thenReturn(serverUUID);
