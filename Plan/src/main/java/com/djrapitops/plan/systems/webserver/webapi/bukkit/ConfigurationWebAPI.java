@@ -32,7 +32,8 @@ public class ConfigurationWebAPI extends WebAPI {
             return badRequest("Called a Bungee Server");
         }
         if (Settings.BUNGEE_COPY_CONFIG.isFalse() || Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isTrue()) {
-            Log.debug("Bungee Config settings overridden on this server.");
+            Log.info("Bungee Config settings overridden on this server.");
+            Log.debug(plugin.getMainConfig().getConfigNode("Plugin.Bungee-Override").getChildren().toString());
             return success();
         }
         ServerSpecificSettings.updateSettings((Plan) plugin, variables);

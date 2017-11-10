@@ -36,6 +36,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.database.Database;
@@ -63,6 +64,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -164,7 +166,13 @@ public class Plan extends BukkitPlugin implements IPlan {
 
             Benchmark.start("Enable");
 
-            GeolocationCache.checkDB();
+            try {
+                GeolocationCache.checkDB();
+            } catch (UnknownHostException e) {
+                Log.error("Plan Requires internet access on first run to download GeoLite2 Geolocation database.");
+            } catch (IOException e) {
+                throw new PlanEnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
+            }
 
             new Locale(this).loadLocale();
 
@@ -538,10 +546,10 @@ public class Plan extends BukkitPlugin implements IPlan {
 
     /**
      * Method for getting the API.
-     *
+     * <p>
      * Created due to necessity for testing, but can be used.
      * For direct API getter use {@code Plan.getPlanAPI()}.
-     *
+     * <p>
      * If Plan is reloaded a new API instance is created.
      *
      * @return Plan API instance.
