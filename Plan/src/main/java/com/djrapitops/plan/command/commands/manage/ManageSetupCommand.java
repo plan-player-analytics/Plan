@@ -12,7 +12,6 @@ import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestSetupWebAPI;
-import main.java.com.djrapitops.plan.systems.webserver.webapi.universal.PingWebAPI;
 import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
@@ -68,7 +67,7 @@ public class ManageSetupCommand extends SubCommand {
             Config config = plugin.getMainConfig();
             config.set(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.getPath(), false);
             config.set(Settings.BUNGEE_COPY_CONFIG.getPath(), true);
-            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
+//            plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
             plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
             sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
         } catch (WebAPIException e) {

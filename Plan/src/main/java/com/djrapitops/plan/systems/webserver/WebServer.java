@@ -52,6 +52,8 @@ public class WebServer {
 
         StaticHolder.saveInstance(APIRequestHandler.class, plugin.getClass());
         StaticHolder.saveInstance(RequestHandler.class, plugin.getClass());
+        StaticHolder.saveInstance(ResponseHandler.class, plugin.getClass());
+        StaticHolder.saveInstance(APIResponseHandler.class, plugin.getClass());
     }
 
     private void registerWebAPIs() {

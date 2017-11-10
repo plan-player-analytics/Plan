@@ -27,7 +27,9 @@ public class PingWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
         if (Check.isBungeeAvailable()) {
-            ((PlanBungee) plugin).getServerInfoManager().serverConnected(UUID.fromString(variables.get("sender")));
+            if (!((PlanBungee) plugin).getServerInfoManager().serverConnected(UUID.fromString(variables.get("sender")))) {
+                return fail("Server info not found from the database");
+            }
         } else if (!plugin.getInfoManager().isUsingAnotherWebServer()) {
             try {
                 String webAddress = variables.get("webAddress");

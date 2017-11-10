@@ -9,8 +9,8 @@ package main.java.com.djrapitops.plan.api.exceptions;
  *
  * @author Rsl1122
  */
-public class WebAPINotFoundException extends WebAPIFailException {
-    public WebAPINotFoundException() {
-        super("Not Found");
+public class WebAPIInternalErrorException extends WebAPIFailException {
+    public WebAPIInternalErrorException() {
+        super("Internal Error occurred on receiving server");
     }
 }
