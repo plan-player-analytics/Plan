@@ -1,11 +1,13 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plugin.api.config.Config;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
@@ -63,6 +65,9 @@ public class ManageSetupCommand extends SubCommand {
             address = address.substring(0, address.length() - 1);
         }
         try {
+            Config config = plugin.getMainConfig();
+            config.set(Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.getPath(), false);
+            config.set(Settings.BUNGEE_COPY_CONFIG.getPath(), true);
             plugin.getWebServer().getWebAPI().getAPI(PingWebAPI.class).sendRequest(address);
             plugin.getWebServer().getWebAPI().getAPI(RequestSetupWebAPI.class).sendRequest(address);
             sender.sendMessage("§eConnection successful, Plan may restart in a few seconds, if it doesn't something has gone wrong.");
