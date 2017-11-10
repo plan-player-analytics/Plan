@@ -67,15 +67,21 @@ public class Analysis {
         RunnableFactory.createNew(new AbsRunnable("AnalysisTask") {
             @Override
             public void run() {
-                ErrorResponse analysisRefreshPage = new ErrorResponse();
-                analysisRefreshPage.setTitle("Analysis is being refreshed..");
-                analysisRefreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
-                analysisRefreshPage.replacePlaceholders();
-                ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(analysisRefreshPage.getContent());
-                taskId = this.getTaskId();
-                analyze(infoManager, plugin.getDB());
-                taskId = -1;
-                this.cancel();
+                try {
+                    ErrorResponse analysisRefreshPage = new ErrorResponse();
+                    analysisRefreshPage.setTitle("Analysis is being refreshed..");
+                    analysisRefreshPage.setParagraph("<meta http-equiv=\"refresh\" content=\"25\" /><i class=\"fa fa-refresh fa-spin\" aria-hidden=\"true\"></i> Analysis is being run, refresh the page after a few seconds.. (F5)");
+                    analysisRefreshPage.replacePlaceholders();
+                    ((BukkitInformationManager) plugin.getInfoManager()).cacheAnalysisHtml(analysisRefreshPage.getContent());
+                    taskId = this.getTaskId();
+                    analyze(infoManager, plugin.getDB());
+                } catch (Exception e) {
+                    Log.toLog(this.getClass().getName() + ":" + this.getTaskName(), e);
+                } finally {
+                    taskId = -1;
+                    this.cancel();
+                }
+
             }
         }).runTaskAsynchronously();
     }
