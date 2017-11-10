@@ -10,6 +10,7 @@ import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
+import main.java.com.djrapitops.plan.api.exceptions.WebAPIForbiddenException;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -82,6 +83,8 @@ public class BukkitInformationManager extends InformationManager {
         } else if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(AnalyzeWebAPI.class).sendRequest(webServerAddress, serverUUID);
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
                 refreshAnalysis(serverUUID);
@@ -95,6 +98,8 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendInspectHtml(webServerAddress, uuid, getPlayerHtml(uuid));
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
                 cachePlayer(uuid);
@@ -118,6 +123,8 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer && !origin.equals(RequestInspectPluginsTabBukkitWebAPI.class)) {
             try {
                 getWebAPI().getAPI(RequestPluginsTabWebAPI.class).sendRequest(webServerAddress, uuid);
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
                 cacheInspectPluginsTab(uuid, origin);
@@ -136,6 +143,8 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostInspectPluginsTabWebAPI.class).sendPluginsTab(webServerAddress, uuid, contents);
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
                 cacheInspectPluginsTab(uuid, contents);
@@ -160,6 +169,8 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isInspectCached(webServerAddress, uuid);
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
                 return isCached(uuid);
@@ -176,6 +187,8 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 return getWebAPI().getAPI(IsCachedWebAPI.class).isAnalysisCached(webServerAddress, serverUUID);
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
                 return isAnalysisCached(serverUUID);
@@ -235,6 +248,8 @@ public class BukkitInformationManager extends InformationManager {
                 getWebAPI().getAPI(AnalysisReadyWebAPI.class).sendRequest(webServerAddress, serverUUID);
                 updateNetworkPageContent();
                 return;
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
             }
@@ -250,9 +265,11 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostHtmlWebAPI.class).sendAnalysisHtml(webServerAddress, html);
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException e) {
                 attemptConnection();
-                cacheAnalysisHtml();
+                cacheAnalysisHtml(html);
             }
         } else {
             PageCache.cachePage("analysisPage:" + Plan.getServerUUID(), () -> new AnalysisPageResponse(html));
@@ -320,7 +337,11 @@ public class BukkitInformationManager extends InformationManager {
         if (usingAnotherWebServer) {
             try {
                 getWebAPI().getAPI(PostNetworkPageContentWebAPI.class).sendNetworkContent(webServerAddress, HtmlStructure.createServerContainer(plugin));
+            } catch (WebAPIForbiddenException ignored) {
+                /* Do nothing */
             } catch (WebAPIException ignored) {
+                attemptConnection();
+                updateNetworkPageContent();
             }
         }
     }
