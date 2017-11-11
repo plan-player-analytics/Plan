@@ -11,13 +11,29 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>paper-repo</id>
+            <url>https://repo.destroystokyo.com/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
     <dependencies>
-        <!--        PaperSpigot 1.12 -->
+        <!--        PaperSpigot -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper</artifactId>
-            <version>1.12-R0.1-20170725.202533-1</version>
+            <artifactId>paper-api</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--        Spigot -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.12-R0.1-SNAPSHOT</version>
+            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <!--        BungeeCord -->
@@ -28,6 +44,7 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+        <!--        StringUtils lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
