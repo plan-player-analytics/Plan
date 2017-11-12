@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
@@ -33,7 +34,16 @@ public class PostHtmlWebAPI extends WebAPI {
             if (htmlVariable == null) {
                 return badRequest("Html was null");
             }
-            String html = "<!DOCTYPE html>" + htmlVariable.split("<!DOCTYPE html>", 2)[1];
+            if (!htmlVariable.startsWith("<!DOCTYPE html>")) {
+                String[] split = htmlVariable.split("<!DOCTYPE html>", 2);
+                if (split.length <= 1) {
+                    Log.debug(htmlVariable);
+                    return badRequest("Html did not start with <!DOCTYPE html>");
+                }
+                htmlVariable = "<!DOCTYPE html>" + split[1];
+            }
+            String html = htmlVariable;
+
             String target = variables.get("target");
             InformationManager infoManager = plugin.getInfoManager();
             switch (target) {

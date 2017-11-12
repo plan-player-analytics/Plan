@@ -45,7 +45,7 @@ public enum Html {
     DIV_W_CLASS("<div class=\"${0}\">${1}</div>"),
     DIV_W_CLASS_STYLE("<div class=\"${0}\" style=\"${1}\">${2}</div>"),
     //
-    ROW(DIV_W_CLASS.parse("row", "${0}")),
+    ROW("<div class=\"row\">${0}</div>"),
     //
     TABLE_END("</tbody></table>"),
     TABLE_START_2("<table class=\"sortable table\"><thead><tr><th>${0}</th><th>${1}</th></tr></thead><tbody>"),

@@ -1,10 +1,9 @@
 package main.java.com.djrapitops.plan;
 
-import com.djrapitops.plugin.config.fileconfig.BukkitFileConfig;
-import com.djrapitops.plugin.config.fileconfig.IFileConfig;
-import com.djrapitops.plugin.utilities.Compatibility;
+import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.config.Config;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -168,20 +167,12 @@ public enum Settings {
         return configPath;
     }
 
-    private IFileConfig getConfig() {
-        try {
-            if (Compatibility.isBukkitAvailable()) {
-                return new BukkitFileConfig(Plan.getInstance().getConfig());
-            } else {
-                return PlanBungee.getInstance().getIConfig().getConfig();
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Config could not be loaded.", e);
-        }
+    private Config getConfig() {
+        return MiscUtils.getIPlan().getMainConfig();
     }
 
     public static ServerSpecificSettings serverSpecific() {
-        if (!Compatibility.isBungeeAvailable()) {
+        if (!Check.isBungeeAvailable()) {
             throw new IllegalStateException("Not supposed to call this method on Bukkit");
         }
 

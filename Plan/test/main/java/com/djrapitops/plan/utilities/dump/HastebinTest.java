@@ -1,7 +1,7 @@
 package main.java.com.djrapitops.plan.utilities.dump;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.utilities.file.dump.Hastebin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;

@@ -1,21 +1,18 @@
 package test.java.utils;
 
+import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.StaticHolder;
-import com.djrapitops.plugin.config.BukkitConfig;
-import com.djrapitops.plugin.config.IConfig;
+import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.IRunnable;
-import com.djrapitops.plugin.task.ITask;
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.utilities.BenchUtil;
-import com.djrapitops.plugin.utilities.log.BukkitLog;
-import com.djrapitops.plugin.utilities.player.Fetch;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.locale.Locale;
+import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -29,13 +26,12 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -87,23 +83,35 @@ public class TestInit {
 
     private void setUp() throws Exception {
         planMock = PowerMockito.mock(Plan.class);
-        StaticHolder.setInstance(Plan.class, planMock);
-        StaticHolder.setInstance(planMock.getClass(), planMock);
+
+        StaticHolder.register(Plan.class, planMock);
+        StaticHolder.register(planMock);
+
+        // Hacks to make APF find classes
+        StaticHolder.register(IPlugin.class, planMock);
+        StaticHolder.saveInstance(this.getClass(), Plan.class);
+        StaticHolder.saveInstance(PowerMockRunner.class, Plan.class);
+
+        Log.setDebugMode("console");
 
         File testFolder = getTestFolder();
         when(planMock.getDataFolder()).thenReturn(testFolder);
 
-        YamlConfiguration config = mockConfig();
-        when(planMock.getConfig()).thenReturn(config);
-        IConfig iConfig = new BukkitConfig(planMock, "config.yml");
-        iConfig.copyFromStream(getClass().getResource("/config.yml").openStream());
-        when(planMock.getIConfig()).thenReturn(iConfig);
-
-        // Html Files
+        //  Files
+        File config = new File(getClass().getResource("/config.yml").getPath());
+        when(planMock.getResource("config.yml")).thenReturn(new FileInputStream(config));
         File analysis = new File(getClass().getResource("/server.html").getPath());
         when(planMock.getResource("server.html")).thenReturn(new FileInputStream(analysis));
         File player = new File(getClass().getResource("/player.html").getPath());
         when(planMock.getResource("player.html")).thenReturn(new FileInputStream(player));
+
+        File tempConfigFile = new File(planMock.getDataFolder(), "config.yml");
+        Config iConfig = new Config(tempConfigFile, FileUtil.lines(planMock, "config.yml")) {
+            @Override
+            public void save() throws IOException {
+            }
+        };
+        when(planMock.getMainConfig()).thenReturn(iConfig);
 
         Server mockServer = mockServer();
 
@@ -113,100 +121,27 @@ public class TestInit {
         when(planMock.getLogger()).thenReturn(Logger.getGlobal());
         Settings.DEBUG.setValue(true);
 
-        // Abstract Plugin Framework Mocks.
-        BukkitLog<Plan> log = new BukkitLog<>(planMock, "console", "");
-        BenchUtil bench = new BenchUtil(planMock);
         ServerVariableHolder serverVariableHolder = new ServerVariableHolder(mockServer);
-        Fetch fetch = new Fetch(planMock);
 
-        when(planMock.getPluginLogger()).thenReturn(log);
-        when(planMock.benchmark()).thenReturn(bench);
         when(planMock.getVariable()).thenReturn(serverVariableHolder);
-        when(planMock.fetch()).thenReturn(fetch);
         BukkitServerInfoManager bukkitServerInfoManager = PowerMockito.mock(BukkitServerInfoManager.class);
+
+        DataCache dataCache = new DataCache(planMock) {
+            @Override
+            public String getName(UUID uuid) {
+                return "";
+            }
+        };
+        when(planMock.getDataCache()).thenReturn(dataCache);
 
         when(bukkitServerInfoManager.getServerUUID()).thenReturn(serverUUID);
         when(planMock.getServerUuid()).thenReturn(serverUUID);
         when(planMock.getServerInfoManager()).thenReturn(bukkitServerInfoManager);
-        RunnableFactory<Plan> runnableFactory = mockRunnableFactory();
-        when(planMock.getRunnableFactory()).thenReturn(runnableFactory);
         ColorScheme cs = new ColorScheme(ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK, ChatColor.BLACK);
         when(planMock.getColorScheme()).thenReturn(cs);
         initLocale(planMock);
-    }
 
-    private RunnableFactory<Plan> mockRunnableFactory() {
-        return new RunnableFactory<Plan>(planMock) {
-            @Override
-            public IRunnable createNew(String name, final AbsRunnable runnable) {
-                IRunnable iRunnable = new IRunnable() {
-                    Timer timer = new Timer();
-                    TimerTask task = new TimerTask() {
-                        @Override
-                        public void run() {
-                            runnable.run();
-                        }
-                    };
-
-                    @Override
-                    public String getTaskName() {
-                        return name;
-                    }
-
-                    @Override
-                    public void cancel() {
-                        timer.cancel();
-                    }
-
-                    @Override
-                    public int getTaskId() {
-                        return runnable.getTaskId();
-                    }
-
-                    @Override
-                    public ITask runTask() {
-                        task.run();
-                        return null;
-                    }
-
-                    @Override
-                    public ITask runTaskAsynchronously() {
-                        new Thread(this::runTask).start();
-                        return null;
-                    }
-
-                    @Override
-                    public ITask runTaskLater(long l) {
-                        timer.schedule(task, convertTicksToMillis(l));
-                        return null;
-                    }
-
-                    @Override
-                    public ITask runTaskLaterAsynchronously(long l) {
-                        new Thread(() -> timer.schedule(task, convertTicksToMillis(l))).start();
-                        return null;
-                    }
-
-                    @Override
-                    public ITask runTaskTimer(long l, long l1) {
-                        timer.scheduleAtFixedRate(task, convertTicksToMillis(l), convertTicksToMillis(l1));
-                        return null;
-                    }
-
-                    @Override
-                    public ITask runTaskTimerAsynchronously(long l, long l1) {
-                        new Thread(() -> timer.scheduleAtFixedRate(task, convertTicksToMillis(l), convertTicksToMillis(l1)));
-                        return null;
-                    }
-
-                    private long convertTicksToMillis(long ticks) {
-                        return ticks * 50;
-                    }
-                };
-                runnable.setCancellable(iRunnable);
-                return iRunnable;
-            }
-        };
+        RunnableFactory.activateTestMode();
     }
 
     private Server mockServer() {
@@ -235,7 +170,6 @@ public class TestInit {
                 for (String string : strings) {
                     sendMessage(string);
                 }
-
             }
 
             @Override

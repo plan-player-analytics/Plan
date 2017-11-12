@@ -4,10 +4,10 @@
  */
 package main.java.com.djrapitops.plan.systems.processing.importing;
 
-import com.djrapitops.plugin.utilities.player.UUIDFetcher;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.utility.UUIDFetcher;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 

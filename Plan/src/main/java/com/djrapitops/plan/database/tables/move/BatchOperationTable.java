@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.database.tables.move;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.data.UserInfo;
 import main.java.com.djrapitops.plan.database.Database;

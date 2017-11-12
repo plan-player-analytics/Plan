@@ -1,19 +1,20 @@
 package main.java.com.djrapitops.plan.command.commands;
 
+import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.CommandUtils;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
 import main.java.com.djrapitops.plan.database.tables.SecurityTable;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 import main.java.com.djrapitops.plan.utilities.PassEncryptUtil;
 
 /**
@@ -34,12 +35,12 @@ public class RegisterCommand extends SubCommand {
 
     public RegisterCommand(IPlan plugin) {
         super("register",
-                CommandType.CONSOLE_WITH_ARGUMENTS,
+                CommandType.PLAYER_OR_ARGS,
                 "", // No Permission Requirement
                 Locale.get(Msg.CMD_USG_WEB_REGISTER).toString(),
                 "<password> [name] [access lvl]");
         this.plugin = plugin;
-        if (Compatibility.isBukkitAvailable()) {
+        if (Check.isBukkitAvailable()) {
             setupFilter();
         }
     }
@@ -73,7 +74,7 @@ public class RegisterCommand extends SubCommand {
     }
 
     private void consoleRegister(String[] args, ISender sender, String notEnoughArgsMsg) throws PassEncryptUtil.CannotPerformOperationException {
-        if (Check.isTrue(args.length >= 3, notEnoughArgsMsg, sender)) {
+        if (Condition.isTrue(args.length >= 3, notEnoughArgsMsg, sender)) {
             int permLevel;
             permLevel = Integer.parseInt(args[2]);
             String passHash = PassEncryptUtil.createHash(args[0]);
@@ -113,7 +114,7 @@ public class RegisterCommand extends SubCommand {
     }
 
     private void registerUser(WebUser webUser, ISender sender) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("Register WebUser Task") {
+        RunnableFactory.createNew(new AbsRunnable("Register WebUser Task") {
             @Override
             public void run() {
                 final String existsMsg = "§cUser Already Exists!";
@@ -122,7 +123,7 @@ public class RegisterCommand extends SubCommand {
                 try {
                     SecurityTable securityTable = plugin.getDB().getSecurityTable();
                     boolean userExists = securityTable.userExists(userName);
-                    if (!Check.isTrue(!userExists, existsMsg, sender)) {
+                    if (!Condition.isTrue(!userExists, existsMsg, sender)) {
                         return;
                     }
                     securityTable.addNewUser(webUser);

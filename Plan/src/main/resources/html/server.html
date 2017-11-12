@@ -1,26 +1,30 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <title>Plan | Server</title>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>${serverName} | Server</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Player Analysis window">
     <meta name="author" content="Rsl1122">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset=utf-8>
     <link rel="icon" href="https://puu.sh/tK0KL/6aa2ba141b.ico" type="image/x-icon">
+    
+    <!--Font-->
     <link rel="stylesheet" href="./main.css">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
     <script src="https://use.fontawesome.com/df48eb908b.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-</head>
+  </head>
 <body>
 <script>
     var worldPieColors = [${worldPieColors}];
     var gmPieColors = [${gmPieColors}];
 </script>
-<header>
-    <div>
-        <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px">
+    <header>
+        <div>
+            <div class="right fa-stack fa-lg" style="padding: 23px; margin:8px; box-sizing: content-box;">
             <i style="padding: 0; color: #fff; font-size: 100px;" class="fa fa-square fa-stack-1x"></i>
             <i style="padding: 0; color: #348e0f; font-size: 95px;" class="fa fa-square fa-stack-1x"></i>
             <i style="padding: 0; color: #fff; font-size: 60px;" class="fa fa-circle fa-stack-1x"></i>
@@ -31,36 +35,38 @@
         </div>
         <p class="right">Player Analytics v.${version}</p>
         <h1>${serverName} | Server Analysis</h1>
-    </div>
-</header>
-<div class="content-server">
-    <div class="nav-bar row">
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-info-circle"></i> Information
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-bar-chart"></i> Online Activity
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-calendar"></i> Sessions
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-cogs"></i> Performance
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-list-alt"></i> Playerlist
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-terminal"></i> Command usage
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-globe"></i> Demographics
-        </a>
-        <a href="javascript:void(0)" class="nav-button">
-            <i class="fa fa-cubes"></i> Plugins
-        </a>
-    </div>
-    <div id="limiter" class="main-limiter">
+        </div>
+    </header>
+    <div class="headwrap">
+        <div class="sidenav">
+            <a class="nav-button" href="javascript:void(0)"><div title="Information" class="sidenav-button">
+                <div><i class="fa fa-info-circle"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Online Activity" class="sidenav-button">
+                <div><i class="fa fa-area-chart"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Sessions" class="sidenav-button">
+                <div><i class="fa fa-calendar"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Performance" class="sidenav-button">
+                <div><i class="fa fa-cogs"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Playerlist" class="sidenav-button">
+                <div><i class="fa fa-users"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Command Usage" class="sidenav-button">
+                <div><i class="fa fa-terminal"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Demographics" class="sidenav-button">
+                <div><i class="fa fa-globe"></i></div>
+            </div></a>
+            <a class="nav-button" href="javascript:void(0)"><div title="Plugins" class="sidenav-button">
+                <div><i class="fa fa-cubes"></i></div>
+            </div></a>
+        </div>
+        
+        <div class="content">
+            <div id="limiter" class="main-limiter">
         <div id="main" class="main-wrapper" style="width: 800%;">
             <div id="tab-information" class="tab">
                 <div class="row">
@@ -333,6 +339,8 @@
             </div>
         </div>
     </div>
+        </div>
+    </div>
     <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/maps/modules/map.js"></script>
@@ -527,11 +535,6 @@
                     x.style.transform = "translate3d(" + value + "%,0px,0)";
                 };
             }
-
-
-
-
     </script>
-</div>
-</body>
+  </body>
 </html>

@@ -1,5 +1,6 @@
 package com.djrapitops.pluginbridge.plan;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.advancedachievements.AdvancedAchievementsHook;
 import com.djrapitops.pluginbridge.plan.askyblock.ASkyBlockHook;
 import com.djrapitops.pluginbridge.plan.essentials.EssentialsHook;
@@ -13,7 +14,6 @@ import com.djrapitops.pluginbridge.plan.superbvote.SuperbVoteHook;
 import com.djrapitops.pluginbridge.plan.towny.TownyHook;
 import com.djrapitops.pluginbridge.plan.vault.VaultHook;
 import com.djrapitops.pluginbridge.plan.viaversion.ViaVersionHook;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 

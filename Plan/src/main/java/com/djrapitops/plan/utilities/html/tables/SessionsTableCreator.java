@@ -5,17 +5,19 @@
 package main.java.com.djrapitops.plan.utilities.html.tables;
 
 import main.java.com.djrapitops.plan.Plan;
+import main.java.com.djrapitops.plan.WorldAliasSettings;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.data.analysis.JoinInfoPart;
-import main.java.com.djrapitops.plan.data.time.GMTimes;
 import main.java.com.djrapitops.plan.data.time.WorldTimes;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.utilities.FormatUtils;
 import main.java.com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import main.java.com.djrapitops.plan.utilities.html.Html;
+import main.java.com.djrapitops.plan.utilities.html.graphs.WorldPieCreator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * //TODO Class Javadoc Comment
@@ -96,17 +98,23 @@ public class SessionsTableCreator {
     }
 
     private static String getLongestWorldPlayed(Session session) {
+        WorldAliasSettings aliasSettings = new WorldAliasSettings(Plan.getInstance());
+        Map<String, String> aliases = aliasSettings.getAliases();
         if (session.getSessionEnd() == -1) {
-            return "Current: " + session.getWorldTimes().getCurrentWorld();
+            return "Current: " + aliases.get(session.getWorldTimes().getCurrentWorld());
         }
+
+        Map<String, Long> playtimePerWorld = session.getWorldTimes().getWorldTimes().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
+        Map<String, Long> playtimePerAlias = WorldPieCreator.transformToAliases(playtimePerWorld, aliases);
 
         WorldTimes worldTimes = session.getWorldTimes();
         long total = worldTimes.getTotal();
         long longest = 0;
         String theWorld = "-";
-        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+        for (Map.Entry<String, Long> entry : playtimePerAlias.entrySet()) {
             String world = entry.getKey();
-            long time = entry.getValue().getTotal();
+            long time = entry.getValue();
             if (time > longest) {
                 longest = time;
                 theWorld = world;

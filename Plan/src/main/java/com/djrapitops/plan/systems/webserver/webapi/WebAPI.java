@@ -4,13 +4,11 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
+import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIForbiddenException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPINotFoundException;
+import main.java.com.djrapitops.plan.api.exceptions.*;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.response.NotFoundResponse;
 import main.java.com.djrapitops.plan.systems.webserver.response.Response;
@@ -103,9 +101,6 @@ public abstract class WebAPI {
             connection.setRequestProperty("Content-Length", Integer.toString(parameters.length()));
 
             byte[] toSend = parameters.getBytes();
-            int length = toSend.length;
-
-//            connection.setRequestProperty("Content-Length", Integer.toString(length));
 
             connection.setUseCaches(false);
             Log.debug("Sending WebAPI Request: " + this.getClass().getSimpleName() + " to " + address);
@@ -114,21 +109,27 @@ public abstract class WebAPI {
             }
 
             int responseCode = connection.getResponseCode();
+            Log.debug("Response: " + responseCode);
             switch (responseCode) {
                 case 200:
                     return;
                 case 400:
-                    throw new WebAPIException("Bad Request: " + url.toString() + "|" + parameters);
+                    throw new WebAPIFailException("Bad Request: " + url.toString() + "|" + parameters);
                 case 403:
                     throw new WebAPIForbiddenException(url.toString());
                 case 404:
                     throw new WebAPINotFoundException();
+                case 500:
+                    throw new WebAPIInternalErrorException();
                 default:
                     throw new WebAPIException(url.toString() + "| Wrong response code " + responseCode);
             }
         } catch (SocketTimeoutException e) {
             throw new WebAPIConnectionFailException("Connection timed out after 10 seconds.", e);
         } catch (NoSuchAlgorithmException | KeyManagementException | IOException e) {
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.toLog(this.getClass().getName(), e);
+            }
             throw new WebAPIConnectionFailException("API connection failed. address: " + address, e);
         }
     }

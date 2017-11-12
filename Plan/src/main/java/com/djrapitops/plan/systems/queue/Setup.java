@@ -1,9 +1,6 @@
 package main.java.com.djrapitops.plan.systems.queue;
 
 import com.djrapitops.plugin.task.RunnableFactory;
-import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Plan;
-import main.java.com.djrapitops.plan.PlanBungee;
 
 /**
  * Abstract representation of a queue setup.
@@ -27,21 +24,13 @@ public abstract class Setup<T> {
 
     public void go() {
         for (Consumer<T> consumer : consumers) {
-            getRunnableFactory().createNew(consumer).runTaskAsynchronously();
+            RunnableFactory.createNew(consumer).runTaskAsynchronously();
         }
     }
 
     public void stop() {
         for (Consumer<T> consumer : consumers) {
             consumer.stop();
-        }
-    }
-
-    private RunnableFactory getRunnableFactory() {
-        if (Compatibility.isBukkitAvailable()) {
-            return Plan.getInstance().getRunnableFactory();
-        } else {
-            return PlanBungee.getInstance().getRunnableFactory();
         }
     }
 }

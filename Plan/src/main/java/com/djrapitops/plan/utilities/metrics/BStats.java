@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.metrics;
 
-import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Log;
+
+import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 
@@ -18,7 +19,7 @@ public class BStats {
     }
 
     public void registerMetrics() {
-        Log.debug("Enable", "Enabling bStats Metrics.");
+        Log.logDebug("Enable", "Enabling bStats Metrics.");
         if (metrics == null) {
             metrics = new Metrics(plugin);
         }
@@ -29,7 +30,7 @@ public class BStats {
         // TODO Write a Module bar graph
 
         String serverType = plugin.getServer().getName();
-        if ("CraftBukkit".equals(serverType) && Compatibility.isSpigotAvailable()) {
+        if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
             serverType = "Spigot";
         } 
         String databaseType = plugin.getDB().getName();

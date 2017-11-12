@@ -4,15 +4,13 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
-import main.java.com.djrapitops.plan.utilities.Check;
-
-import java.sql.SQLException;
+import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
  * This manage subcommand is used to import data from 3rd party plugins.
@@ -49,7 +47,7 @@ public class ManageImportCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG) + " " + this.getArguments(), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG) + " " + this.getArguments(), sender)) {
             return true;
         }
 
@@ -58,13 +56,11 @@ public class ManageImportCommand extends SubCommand {
     }
 
     private void runImport(String importer) {
-        plugin.getRunnableFactory().createNew("Import", new AbsRunnable() {
+        RunnableFactory.createNew("Import", new AbsRunnable() {
             @Override
             public void run() {
                 try {
                     ImporterManager.getImporter(importer).processImport();
-                } catch (SQLException e) {
-                    Log.toLog(this.getClass().getName(), e);
                 } finally {
                     this.cancel();
                 }

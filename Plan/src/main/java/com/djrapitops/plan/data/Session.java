@@ -172,7 +172,7 @@ public class Session {
      * Used to get the ID of the session in the Database.
      *
      * @return ID if present.
-     * @throws NullPointerException if Session was not fetched from DB. Check using {@code isFetchedFromDB}
+     * @throws NullPointerException if Session was not fetched from DB. Condition using {@code isFetchedFromDB}
      */
     public int getSessionID() {
         return sessionID;

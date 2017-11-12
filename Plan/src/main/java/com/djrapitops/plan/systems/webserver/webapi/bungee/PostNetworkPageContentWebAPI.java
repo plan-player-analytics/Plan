@@ -4,7 +4,8 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
-import com.djrapitops.plugin.utilities.Compatibility;
+
+import com.djrapitops.plugin.api.Check;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
 import main.java.com.djrapitops.plan.systems.info.BungeeInformationManager;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class PostNetworkPageContentWebAPI extends WebAPI {
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
-        if (Compatibility.isBukkitAvailable()) {
+        if (Check.isBukkitAvailable()) {
             return badRequest("Called a Bukkit server.");
         }
 

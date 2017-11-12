@@ -1,10 +1,11 @@
 package main.java.com.djrapitops.plan.systems.webserver;
 
+import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -48,6 +49,11 @@ public class WebServer {
         this.port = Settings.WEBSERVER_PORT.getNumber();
         webAPI = new WebAPIManager();
         registerWebAPIs();
+
+        StaticHolder.saveInstance(APIRequestHandler.class, plugin.getClass());
+        StaticHolder.saveInstance(RequestHandler.class, plugin.getClass());
+        StaticHolder.saveInstance(ResponseHandler.class, plugin.getClass());
+        StaticHolder.saveInstance(APIResponseHandler.class, plugin.getClass());
     }
 
     private void registerWebAPIs() {

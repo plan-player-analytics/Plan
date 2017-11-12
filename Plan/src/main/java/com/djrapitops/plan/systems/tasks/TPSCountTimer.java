@@ -1,9 +1,9 @@
 package main.java.com.djrapitops.plan.systems.tasks;
 
+import com.djrapitops.plugin.api.Check;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.utilities.Compatibility;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -38,7 +38,7 @@ public class TPSCountTimer extends AbsRunnable {
         lastCheckNano = -1;
         this.plugin = plugin;
         history = new ArrayList<>();
-        usingBungee = Compatibility.isBungeeAvailable();
+        usingBungee = Check.isBungeeAvailable();
     }
 
     @Override

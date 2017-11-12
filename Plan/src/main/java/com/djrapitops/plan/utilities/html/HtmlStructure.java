@@ -16,7 +16,6 @@ import main.java.com.djrapitops.plan.utilities.html.structure.SessionTabStructur
 import main.java.com.djrapitops.plan.utilities.html.tables.SessionsTableCreator;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -92,7 +91,7 @@ public class HtmlStructure {
         return builder.toString();
     }
 
-    public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) throws FileNotFoundException {
+    public static String[] createSessionsTabContentInspectPage(Map<String, List<Session>> sessions, List<Session> allSessions, UUID uuid) {
         Map<UUID, Map<String, List<Session>>> map = new HashMap<>();
         map.put(uuid, sessions);
         return SessionTabStructureCreator.creteStructure(map, allSessions, false);
@@ -114,11 +113,10 @@ public class HtmlStructure {
             String icon = Html.FONT_AWESOME_ICON.parse("server");
             // TODO Move plain text to Locale
             String headerText = Html.HEADER_2.parse(icon + " " + serverName) + Html.PARAGRAPH.parse("No Compatible Plugins");
-            return Html.DIV_W_CLASS.parse("plugins-server",
-                    Html.DIV_W_CLASS.parse("plugins-header",
-                            Html.ROW.parse(Html.DIV_W_CLASS.parse("box-header", headerText))
-                    )
-            );
+            String header = Html.DIV_W_CLASS.parse("box-header", headerText);
+            String row = Html.ROW.parse(header);
+            String pluginsHeader = Html.DIV_W_CLASS.parse("plugins-header", row);
+            return Html.DIV_W_CLASS.parse("plugins-server", pluginsHeader);
         }
 
         Map<String, List<String>> placeholders = getPlaceholdersInspect(plugins);

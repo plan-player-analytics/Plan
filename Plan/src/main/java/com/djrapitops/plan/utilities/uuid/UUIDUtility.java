@@ -5,8 +5,8 @@
  */
 package main.java.com.djrapitops.plan.utilities.uuid;
 
-import com.djrapitops.plugin.utilities.player.UUIDFetcher;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.UUIDFetcher;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.database.Database;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 

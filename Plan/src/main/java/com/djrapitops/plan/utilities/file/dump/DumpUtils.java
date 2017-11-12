@@ -1,7 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.file.dump;
 
+import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -169,12 +170,10 @@ public class DumpUtils {
      */
     private static void addPlanDetails(DumpLog log, Plan plan) {
         String planVersion = plan.getVersion();
-        String apfVersion = plan.getAPFVersion();
 
         log.addHeader("Plan Details");
 
         log.add("Plan Version", planVersion);
-        log.add("Abstract Plugin Framework Version", apfVersion);
     }
 
     /**
@@ -228,7 +227,7 @@ public class DumpUtils {
      * @param plan The Plan instance
      */
     private static void addTimings(DumpLog log, Plan plan) {
-        String[] timings = plan.benchmark().getTimings().getTimings();
+        String[] timings = Benchmark.getAverages().asStringArray();
 
         log.addHeader("Timings");
         log.addLines(timings);
@@ -242,7 +241,7 @@ public class DumpUtils {
      * @throws IOException when an error while reading occurred
      */
     private static void addErrorLog(DumpLog log, Plan plan) throws IOException {
-        File errorFile = new File(plan.getDataFolder(), plan.getPluginLogger().getErrorsFilename());
+        File errorFile = new File(plan.getDataFolder(), Log.ERROR_FILE_NAME);
 
         if (!Verify.exists(errorFile)) {
             return;
@@ -262,7 +261,7 @@ public class DumpUtils {
      * @throws IOException when an error while reading occurred
      */
     private static void addDebugLog(DumpLog log, Plan plan) throws IOException {
-        File debugFile = new File(plan.getDataFolder(), plan.getPluginLogger().getDebugFilename());
+        File debugFile = new File(plan.getDataFolder(), Log.DEBUG_FILE_NAME);
 
         if (!Verify.exists(debugFile)) {
             return;

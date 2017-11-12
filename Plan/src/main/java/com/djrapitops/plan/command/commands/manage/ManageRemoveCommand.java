@@ -1,11 +1,12 @@
 package main.java.com.djrapitops.plan.command.commands.manage;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
@@ -13,7 +14,7 @@ import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.uuid.UUIDUtility;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class ManageRemoveCommand extends SubCommand {
      */
     public ManageRemoveCommand(Plan plugin) {
         super("remove",
-                CommandType.CONSOLE_WITH_ARGUMENTS,
+                CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 Locale.get(Msg.CMD_USG_MANAGE_REMOVE).toString(),
                 "<player> [-a]");
@@ -56,7 +57,7 @@ public class ManageRemoveCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ONE_ARG).toString(), sender)) {
             return true;
         }
 
@@ -67,24 +68,24 @@ public class ManageRemoveCommand extends SubCommand {
     }
 
     private void runRemoveTask(String playerName, ISender sender, String[] args) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("DBRemoveTask " + playerName) {
+        RunnableFactory.createNew(new AbsRunnable("DBRemoveTask " + playerName) {
             @Override
             public void run() {
                 try {
                     UUID uuid = UUIDUtility.getUUIDOf(playerName);
                     String message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_VALID).toString();
 
-                    if (!Check.isTrue(Verify.notNull(uuid), message, sender)) {
+                    if (!Condition.isTrue(Verify.notNull(uuid), message, sender)) {
                         return;
                     }
 
                     message = Locale.get(Msg.CMD_FAIL_USERNAME_NOT_KNOWN).toString();
-                    if (!Check.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
+                    if (!Condition.isTrue(plugin.getDB().wasSeenBefore(uuid), message, sender)) {
                         return;
                     }
 
                     message = Locale.get(Msg.MANAGE_FAIL_CONFIRM).parse(Locale.get(Msg.MANAGE_NOTIFY_REMOVE).parse(plugin.getDB().getConfigName()));
-                    if (!Check.isTrue(Verify.contains("-a", args), message, sender)) {
+                    if (!Condition.isTrue(Verify.contains("-a", args), message, sender)) {
                         return;
                     }
 

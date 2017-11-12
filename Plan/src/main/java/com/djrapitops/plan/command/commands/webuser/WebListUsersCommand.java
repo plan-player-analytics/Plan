@@ -1,11 +1,12 @@
 package main.java.com.djrapitops.plan.command.commands.webuser;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.WebUser;
@@ -32,7 +33,7 @@ public class WebListUsersCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        plugin.getRunnableFactory().createNew(new AbsRunnable("Webuser List Task") {
+        RunnableFactory.createNew(new AbsRunnable("Webuser List Task") {
             @Override
             public void run() {
                 try {

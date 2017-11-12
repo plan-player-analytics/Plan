@@ -57,7 +57,7 @@ public abstract class Database {
     }
 
     /**
-     * Check if the user is saved in the database.
+     * Condition if the user is saved in the database.
      *
      * @param uuid UUID of the user.
      * @return true/false

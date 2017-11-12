@@ -9,7 +9,7 @@ package main.java.com.djrapitops.plan.api.exceptions;
  *
  * @author Rsl1122
  */
-public class WebAPINotFoundException extends WebAPIException {
+public class WebAPINotFoundException extends WebAPIFailException {
     public WebAPINotFoundException() {
         super("Not Found");
     }

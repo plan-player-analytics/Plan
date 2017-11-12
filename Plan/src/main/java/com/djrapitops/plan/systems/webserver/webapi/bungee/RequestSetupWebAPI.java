@@ -4,9 +4,10 @@
  */
 package main.java.com.djrapitops.plan.systems.webserver.webapi.bungee;
 
-import com.djrapitops.plugin.utilities.Compatibility;
+
+import com.djrapitops.plugin.api.Check;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.IPlan;
@@ -27,7 +28,7 @@ public class RequestSetupWebAPI extends WebAPI {
 
     @Override
     public Response onRequest(IPlan plugin, Map<String, String> variables) {
-        if (!Compatibility.isBungeeAvailable()) {
+        if (!Check.isBungeeAvailable()) {
             return badRequest("Called a Bukkit server.");
         }
         String serverUUIDS = variables.get("sender");
@@ -43,7 +44,7 @@ public class RequestSetupWebAPI extends WebAPI {
 
     @Override
     public void sendRequest(String address) throws WebAPIException {
-        if (!Compatibility.isBukkitAvailable()) {
+        if (!Check.isBukkitAvailable()) {
             throw new IllegalStateException("Not supposed to be called on Bungee");
         }
 
