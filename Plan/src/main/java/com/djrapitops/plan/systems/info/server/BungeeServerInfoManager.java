@@ -117,15 +117,17 @@ public class BungeeServerInfoManager {
     }
 
     public void sendConfigSettings(UUID serverUUID) {
+        String webAddress = null;
         try {
             ServerInfo server = bukkitServers.get(serverUUID);
             if (server == null) {
                 return;
             }
-            String webAddress = server.getWebAddress();
+            webAddress = server.getWebAddress();
             Log.debug("Sending config settings to " + webAddress + "");
             plugin.getWebServer().getWebAPI().getAPI(ConfigurationWebAPI.class).sendRequest(webAddress, serverUUID);
         } catch (WebAPIException e) {
+            Log.info("Connection to Bukkit (" + webAddress + ") did not succeed.");
             serverHasGoneOffline(serverUUID);
         }
     }
@@ -178,7 +180,6 @@ public class BungeeServerInfoManager {
     }
 
     public void serverHasGoneOffline(UUID serverUUID) {
-        Log.debug("Bukkit Server Marked Offline");
         onlineServers.remove(serverUUID);
     }
 }

@@ -39,7 +39,9 @@ public class APIRequestHandler implements HttpHandler {
             response.setResponseHeaders(responseHeaders);
             response.send(exchange);
         } catch (Exception e) {
-            Log.toLog(this.getClass().getName(), e);
+            if (Settings.DEV_MODE.isTrue()) {
+                Log.toLog(this.getClass().getName(), e);
+            }
         } finally {
             exchange.close();
         }

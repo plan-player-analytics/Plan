@@ -7,10 +7,7 @@ package main.java.com.djrapitops.plan.systems.info;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
-import main.java.com.djrapitops.plan.api.exceptions.ParseException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIConnectionFailException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIException;
-import main.java.com.djrapitops.plan.api.exceptions.WebAPIFailException;
+import main.java.com.djrapitops.plan.api.exceptions.*;
 import main.java.com.djrapitops.plan.command.commands.AnalyzeCommand;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
@@ -302,6 +299,8 @@ public class BukkitInformationManager extends InformationManager {
                 return true;
             } catch (WebAPIConnectionFailException e) {
                 plugin.getServerInfoManager().markConnectionFail();
+            } catch (WebAPINotFoundException e) {
+                Log.info("Bungee reported that UUID of this server is not in the MySQL-database. Try using '/plan m setup " + webServerAddress + "' again");
             } catch (WebAPIException e) {
                 Log.toLog(this.getClass().getName(), e);
             }
