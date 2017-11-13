@@ -7,8 +7,10 @@ package main.java.com.djrapitops.plan;
 import com.djrapitops.plugin.BungeePlugin;
 import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.Priority;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.systems.NotificationCenter;
 import com.djrapitops.plugin.api.utility.Version;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
@@ -74,6 +76,7 @@ public class PlanBungee extends BungeePlugin implements IPlan {
                     Log.infoColor("§a----------------------------------------");
                     Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
                     Log.infoColor("§a----------------------------------------");
+                    NotificationCenter.addNotification(Priority.HIGH, "New Version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
                 } else {
                     Log.info("You're using the latest version.");
                 }
