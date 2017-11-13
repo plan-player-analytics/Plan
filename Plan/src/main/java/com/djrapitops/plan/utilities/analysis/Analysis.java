@@ -316,6 +316,7 @@ public class Analysis {
 
             for (UUID uuid : playerCount.getUuids()) {
                 boolean banned = banSources.stream().anyMatch(pluginData -> {
+                    StaticHolder.saveInstance(this.getClass(), plugin.getClass());
                     try {
                         Serializable value = pluginData.getValue(uuid);
                         return value instanceof Boolean
