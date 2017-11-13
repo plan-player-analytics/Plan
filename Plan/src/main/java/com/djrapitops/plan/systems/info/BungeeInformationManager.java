@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.info;
 
+import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.api.exceptions.ParseException;
@@ -25,6 +26,7 @@ import main.java.com.djrapitops.plan.systems.webserver.webapi.bungee.RequestPlug
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
@@ -361,5 +363,11 @@ public class BungeeInformationManager extends InformationManager {
         Collection<ServerInfo> online = serverInfoManager.getOnlineBukkitServers();
         online.stream().map(ServerInfo::getUuid)
                 .forEach(serverInfoManager::sendConfigSettings);
+    }
+
+    @Override
+    public TreeMap<String, List<String>> getErrors() throws IOException {
+        // TODO Request Bukkit servers for errors
+        return ErrorLogger.getLoggedErrors(plugin);
     }
 }

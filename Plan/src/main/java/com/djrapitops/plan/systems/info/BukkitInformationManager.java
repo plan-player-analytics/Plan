@@ -4,6 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.info;
 
+import com.djrapitops.plugin.api.utility.log.ErrorLogger;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.Settings;
@@ -30,6 +31,7 @@ import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.analysis.Analysis;
 import main.java.com.djrapitops.plan.utilities.html.HtmlStructure;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
@@ -343,5 +345,10 @@ public class BukkitInformationManager extends InformationManager {
                 updateNetworkPageContent();
             }
         }
+    }
+
+    @Override
+    public TreeMap<String, List<String>> getErrors() throws IOException {
+        return ErrorLogger.getLoggedErrors(plugin);
     }
 }
