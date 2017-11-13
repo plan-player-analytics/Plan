@@ -5,6 +5,7 @@
  */
 package main.java.com.djrapitops.plan.utilities;
 
+import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
 import main.java.com.djrapitops.plan.Plan;
@@ -14,6 +15,7 @@ import main.java.com.djrapitops.plan.database.tables.UsersTable;
 import main.java.com.djrapitops.plan.systems.info.server.ServerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -37,6 +39,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class MiscUtilsTest {
 
     private SQLDB db;
+
+    @Before
+    public void setUp() throws Exception {
+        StaticHolder.saveInstance(MiscUtils.class, Plan.class);
+    }
 
     @Test
     public void testGetPlayerDisplayNameArgsPerm() {
@@ -114,7 +121,8 @@ public class MiscUtilsTest {
         String exp2 = "TestName2";
 
         UsersTable usersTable = db.getUsersTable();
-        usersTable.registerUser(UUID.randomUUID(), 0L, exp1);
+        UUID uuid1 = UUID.randomUUID();
+        usersTable.registerUser(uuid1, 0L, exp1);
         usersTable.registerUser(UUID.randomUUID(), 0L, exp2);
 
         String search = "testname";
@@ -134,9 +142,11 @@ public class MiscUtilsTest {
         UUID uuid = UUID.randomUUID();
         String userName = RandomData.randomString(10);
         db.getUsersTable().registerUser(uuid, 0L, userName);
+        db.getUsersTable().registerUser(MockUtils.getPlayerUUID(), 1L, "Not random");
 
         String nickname = "2" + RandomData.randomString(10);
         db.getNicknamesTable().saveUserName(uuid, nickname);
+        db.getNicknamesTable().saveUserName(MockUtils.getPlayerUUID(), "No nick");
 
         String search = "2";
 

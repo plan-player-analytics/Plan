@@ -260,14 +260,13 @@ public class UsersTable extends UserIDTable {
      * @throws SQLException when an error at fetching the names happens.
      */
     public List<String> getMatchingNames(String name) throws SQLException {
-        String searchString = "%" + name + "%";
+        String searchString = "%" + name.toLowerCase() + "%";
         NicknamesTable nicknamesTable = db.getNicknamesTable();
-        String sql = "SELECT " + columnName + " FROM " + tableName +
-                " WHERE " + columnName + " LIKE LOWER(?)" +
-                " UNION SELECT " + columnName + " FROM " + tableName +
-                " WHERE " + columnID + " =" +
-                " (SELECT " + columnID + " FROM " + nicknamesTable +
-                " WHERE " + nicknamesTable.getColumnNick() + " LIKE LOWER(?))";
+        String sql = "SELECT DISTINCT " + columnName + " FROM " + tableName +
+                " WHERE " + columnName + " LIKE ?" +
+                " UNION SELECT DISTINCT " + columnName + " FROM " + tableName +
+                " JOIN " + nicknamesTable + " on " + columnID + "=" + nicknamesTable + "." + nicknamesTable.getColumnUserID() +
+                " WHERE " + nicknamesTable.getColumnNick() + " LIKE ?";
 
         return query(new QueryStatement<List<String>>(sql, 5000) {
             @Override
@@ -280,7 +279,10 @@ public class UsersTable extends UserIDTable {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> matchingNames = new ArrayList<>();
                 while (set.next()) {
-                    matchingNames.add(set.getString("name"));
+                    String match = set.getString("name");
+                    if (!matchingNames.contains(match)) {
+                        matchingNames.add(match);
+                    }
                 }
                 return matchingNames;
             }

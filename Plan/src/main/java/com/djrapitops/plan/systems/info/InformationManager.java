@@ -9,6 +9,7 @@ import main.java.com.djrapitops.plan.systems.cache.DataCache;
 import main.java.com.djrapitops.plan.systems.cache.SessionCache;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -84,4 +85,6 @@ public abstract class InformationManager {
     public abstract void analysisReady(UUID serverUUID);
 
     public abstract void updateNetworkPageContent();
+
+    public abstract TreeMap<String,List<String>> getErrors() throws IOException;
 }

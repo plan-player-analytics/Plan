@@ -78,6 +78,8 @@ public class ResponseHandler extends APIResponseHandler {
 
             String page = args[1];
             switch (page) {
+                case "debug":
+                    return new DebugPageResponse();
                 case "players":
                     return PageCache.loadPage("players", PlayersPageResponse::new);
                 case "player":

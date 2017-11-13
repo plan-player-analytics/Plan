@@ -1,7 +1,9 @@
 package main.java.com.djrapitops.plan.utilities.dump;
 
+import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.collect.Iterables;
+import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.file.dump.Hastebin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;
@@ -35,6 +37,7 @@ public class HastebinTest {
         TestInit.init();
 
         Thread thread = new Thread(() -> {
+            StaticHolder.saveInstance(this.getClass(), MiscUtils.getIPlan().getClass());
             try {
                 Hastebin.upload(RandomData.randomString(10));
             } catch (IOException e) {
