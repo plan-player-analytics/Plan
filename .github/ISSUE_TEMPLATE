@@ -1,6 +1,6 @@
 Instructions for issue reporting:
 - Write description of the issue
-- Use `/plan m dump` & Copy the hastebin address here
+- Copy possible errors here, If you're using 4.0.7+ head to `<address>/debug` & copy the information to the ticket.
 
 For suggestions use any format you want. :)
 
@@ -8,6 +8,4 @@ For suggestions use any format you want. :)
 
 **Description of the issue**
 
-
-**Hastebin link**
-Link: 
+<REPLACE with error / debug-page contents>
