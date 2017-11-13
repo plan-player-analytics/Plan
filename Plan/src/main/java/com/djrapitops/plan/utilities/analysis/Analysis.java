@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plugin.StaticHolder;
 import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
@@ -173,6 +174,7 @@ public class Analysis {
         final AnalysisType boolTot = AnalysisType.BOOLEAN_TOTAL;
         Log.logDebug("Analysis", "Additional Sources: " + sources.size());
         sources.parallelStream().filter(Verify::notNull).forEach(source -> {
+            StaticHolder.saveInstance(this.getClass(), plugin.getClass());
             try {
                 Benchmark.start("Analysis", "Source " + source.getPlaceholder());
                 final List<AnalysisType> analysisTypes = source.getAnalysisTypes();
