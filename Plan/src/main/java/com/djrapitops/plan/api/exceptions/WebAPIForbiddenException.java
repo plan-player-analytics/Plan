@@ -9,7 +9,7 @@ package main.java.com.djrapitops.plan.api.exceptions;
  *
  * @author Rsl1122
  */
-public class WebAPIForbiddenException extends WebAPIException {
+public class WebAPIForbiddenException extends WebAPIFailException {
     public WebAPIForbiddenException(String url) {
         super("Forbidden: " + url);
     }

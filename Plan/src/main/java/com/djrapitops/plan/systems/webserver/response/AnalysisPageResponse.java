@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.AnalysisData;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
@@ -24,7 +25,7 @@ public class AnalysisPageResponse extends Response {
         if (informationManager instanceof BukkitInformationManager) {
             AnalysisData analysisData = ((BukkitInformationManager) informationManager).getAnalysisData();
             if (analysisData == null) {
-                Plan.getInstance().getRunnableFactory().createNew("OnRequestAnalysisRefreshTask", new AbsRunnable() {
+                RunnableFactory.createNew("OnRequestAnalysisRefreshTask", new AbsRunnable() {
                     @Override
                     public void run() {
                         informationManager.refreshAnalysis(Plan.getServerUUID());

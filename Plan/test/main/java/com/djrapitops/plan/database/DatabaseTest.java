@@ -46,7 +46,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * @author Rsl1122
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(JavaPlugin.class)
+@PrepareForTest({JavaPlugin.class})
 public class DatabaseTest {
 
     private final UUID uuid = MockUtils.getPlayerUUID();

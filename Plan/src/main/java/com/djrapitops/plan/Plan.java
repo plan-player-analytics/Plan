@@ -20,7 +20,14 @@
 package main.java.com.djrapitops.plan;
 
 import com.djrapitops.plugin.BukkitPlugin;
+import com.djrapitops.plugin.StaticHolder;
+import com.djrapitops.plugin.api.Benchmark;
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.config.Config;
+import com.djrapitops.plugin.api.systems.TaskCenter;
+import com.djrapitops.plugin.api.utility.Version;
+import com.djrapitops.plugin.api.utility.log.DebugLog;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
@@ -29,6 +36,7 @@ import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
+import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.command.PlanCommand;
 import main.java.com.djrapitops.plan.data.additional.HookHandler;
 import main.java.com.djrapitops.plan.database.Database;
@@ -41,7 +49,6 @@ import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 import main.java.com.djrapitops.plan.systems.info.BukkitInformationManager;
 import main.java.com.djrapitops.plan.systems.info.ImporterManager;
 import main.java.com.djrapitops.plan.systems.info.InformationManager;
-import main.java.com.djrapitops.plan.systems.info.pluginchannel.BukkitPluginChannelListener;
 import main.java.com.djrapitops.plan.systems.info.server.BukkitServerInfoManager;
 import main.java.com.djrapitops.plan.systems.listeners.*;
 import main.java.com.djrapitops.plan.systems.processing.Processor;
@@ -50,11 +57,14 @@ import main.java.com.djrapitops.plan.systems.queue.ProcessingQueue;
 import main.java.com.djrapitops.plan.systems.tasks.TPSCountTimer;
 import main.java.com.djrapitops.plan.systems.webserver.PageCache;
 import main.java.com.djrapitops.plan.systems.webserver.WebServer;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
+import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.metrics.BStats;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,10 +79,11 @@ import java.util.UUID;
  * @author Rsl1122
  * @since 1.0.0
  */
-public class Plan extends BukkitPlugin<Plan> implements IPlan {
+public class Plan extends BukkitPlugin implements IPlan {
 
-    private boolean reloading = false;
     private API api;
+
+    private Config config;
 
     private ProcessingQueue processingQueue;
     private HookHandler hookHandler; // Manages 3rd party data sources
@@ -102,7 +113,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         if (instance == null) {
             throw new IllegalStateException("Plugin not enabled properly, Singleton instance is null.");
         }
-        return instance.api;
+        return instance.getApi();
     }
 
     /**
@@ -111,7 +122,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
      * @return this object.
      */
     public static Plan getInstance() {
-        return (Plan) getPluginInstance(Plan.class);
+        return (Plan) StaticHolder.getInstance(Plan.class);
     }
 
     public static UUID getServerUUID() {
@@ -129,34 +140,45 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
      */
     @Override
     public void onEnable() {
+        super.onEnable();
         try {
-            // Sets the Required variables for BukkitPlugin instance to function correctly
-            setInstance(this);
-            super.setDebugMode(Settings.DEBUG.toString());
-            initColorScheme();
-            super.setLogPrefix("[Plan]");
-            super.setUpdateCheckUrl("https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml");
-            super.setUpdateUrl("https://www.spigotmc.org/resources/plan-player-analytics.32536/");
+            File configFile = new File(getDataFolder(), "config.yml");
+            config = new Config(configFile);
+            config.copyDefaults(FileUtil.lines(this, "config.yml"));
+            config.save();
 
-            // Initializes BukkitPlugin variables, Checks version & Logs the debug header
-            super.onEnableDefaultTasks();
+            Log.setDebugMode(Settings.DEBUG.toString());
+
+            String currentVersion = getVersion();
+            String githubVersionUrl = "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/Plan/src/main/resources/plugin.yml";
+            String spigotUrl = "https://www.spigotmc.org/resources/plan-player-analytics.32536/";
+            try {
+                if (Version.checkVersion(currentVersion, githubVersionUrl) || Version.checkVersion(currentVersion, spigotUrl)) {
+                    Log.infoColor("§a----------------------------------------");
+                    Log.infoColor("§aNew version is available at https://www.spigotmc.org/resources/plan-player-analytics.32536/");
+                    Log.infoColor("§a----------------------------------------");
+                } else {
+                    Log.info("You're using the latest version.");
+                }
+            } catch (IOException e) {
+                Log.error("Failed to check newest version number");
+            }
 
             Benchmark.start("Enable");
 
-            GeolocationCache.checkDB();
+            try {
+                GeolocationCache.checkDB();
+            } catch (UnknownHostException e) {
+                Log.error("Plan Requires internet access on first run to download GeoLite2 Geolocation database.");
+            } catch (IOException e) {
+                throw new PlanEnableException("Something went wrong saving the downloaded GeoLite2 Geolocation database", e);
+            }
 
             new Locale(this).loadLocale();
 
             Benchmark.start("Reading server variables");
             serverVariableHolder = new ServerVariableHolder(getServer());
             Benchmark.stop("Enable", "Reading server variables");
-
-            Benchmark.start("Copy default config");
-            getConfig().options().copyDefaults(true);
-            getConfig().options().header("Plan Config | More info at https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/documentation/Configuration.md");
-            saveConfig();
-            Benchmark.stop("Enable", "Copy default config");
-
 
             Benchmark.start("Init Database");
             Log.info(Locale.get(Msg.ENABLE_DB_INIT).toString());
@@ -197,7 +219,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 Log.info("Make sure that the alternative IP points to the Bukkit Server: " + Settings.ALTERNATIVE_IP.toString());
             }
 
-            registerCommand(new PlanCommand(this));
+            registerCommand("plan", new PlanCommand(this));
 
             Benchmark.start("Hook to 3rd party plugins");
             hookHandler = new HookHandler(this);
@@ -205,37 +227,29 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
             ImporterManager.registerImporter(new OfflinePlayerImporter());
 
-//            if (Settings.BUNGEE_OVERRIDE_STANDALONE_MODE.isFalse()) {
-//                registerPluginChannelListener();
-//            }
-
             BStats bStats = new BStats(this);
             bStats.registerMetrics();
 
             Log.debug("Verbose debug messages are enabled.");
-            Log.logDebug("Enable", Benchmark.stop("Enable", "Enable"));
+            Benchmark.stop("Enable", "Enable");
+            Log.logDebug("Enable");
             Log.info(Locale.get(Msg.ENABLED).toString());
+            StaticHolder.saveInstance(ShutdownHook.class, this.getClass());
             new ShutdownHook(this);
         } catch (Exception e) {
             Log.error("Plugin Failed to Initialize Correctly.");
-            Log.logStackTrace(e);
-            disablePlugin();
+            Log.toLog(this.getClass().getName(), e);
+            onDisable();
         }
     }
 
-    private void registerPluginChannelListener() {
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, "Plan", new BukkitPluginChannelListener(this));
-    }
-
     private void registerTasks() {
-        RunnableFactory runnableFactory = getRunnableFactory();
         String bootAnalysisMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_INFO).toString();
         String bootAnalysisRunMsg = Locale.get(Msg.ENABLE_BOOT_ANALYSIS_RUN_INFO).toString();
 
         Benchmark.start("Task Registration");
         tpsCountTimer = new TPSCountTimer(this);
-        runnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
+        RunnableFactory.createNew(tpsCountTimer).runTaskTimer(1000, TimeAmount.SECOND.ticks());
 
         // Analysis refresh settings
         int analysisRefreshMinutes = Settings.ANALYSIS_AUTO_REFRESH.getNumber();
@@ -244,7 +258,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
 
         Log.info(bootAnalysisMsg);
 
-        ITask bootAnalysisTask = runnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
+        ITask bootAnalysisTask = RunnableFactory.createNew("BootAnalysisTask", new AbsRunnable() {
             @Override
             public void run() {
                 Log.info(bootAnalysisRunMsg);
@@ -256,7 +270,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         bootAnalysisTaskID = bootAnalysisTask.getTaskId();
 
         if (analysisRefreshTaskIsEnabled) {
-            runnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
+            RunnableFactory.createNew("PeriodicalAnalysisTask", new AbsRunnable() {
                 @Override
                 public void run() {
                     infoManager.refreshAnalysis(getServerUUID());
@@ -264,7 +278,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
             }).runTaskTimerAsynchronously(analysisPeriod, analysisPeriod);
         }
 
-        runnableFactory.createNew("PeriodicNetworkBoxRefreshTask", new AbsRunnable() {
+        RunnableFactory.createNew("PeriodicNetworkBoxRefreshTask", new AbsRunnable() {
             @Override
             public void run() {
                 infoManager.updateNetworkPageContent();
@@ -274,15 +288,16 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         Benchmark.stop("Enable", "Task Registration");
     }
 
-    private void initColorScheme() {
+    @Override
+    public ColorScheme getColorScheme() {
         try {
             ChatColor mainColor = ChatColor.getByChar(Settings.COLOR_MAIN.toString().charAt(1));
             ChatColor secColor = ChatColor.getByChar(Settings.COLOR_SEC.toString().charAt(1));
             ChatColor terColor = ChatColor.getByChar(Settings.COLOR_TER.toString().charAt(1));
-            super.setColorScheme(new ColorScheme(mainColor, secColor, terColor));
+            return new ColorScheme(mainColor, secColor, terColor);
         } catch (Exception e) {
             Log.infoColor(ChatColor.RED + "Customization, Chat colors set-up wrong, using defaults.");
-            super.setColorScheme(new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE));
+            return new ColorScheme(ChatColor.DARK_GREEN, ChatColor.GRAY, ChatColor.WHITE);
         }
     }
 
@@ -308,7 +323,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                     processor.process();
                 }
             } else {
-                getRunnableFactory().createNew("Re-Add processors", new AbsRunnable() {
+                RunnableFactory.createNew("Re-Add processors", new AbsRunnable() {
                     @Override
                     public void run() {
                         addToProcessQueue(processors.toArray(new Processor[processors.size()]));
@@ -317,15 +332,24 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 5L);
             }
         }
-
-        getServer().getScheduler().cancelTasks(this);
-
-        if (Verify.notNull(infoManager, db)) {
-            taskStatus().cancelAllKnownTasks();
-        }
-
-        getPluginLogger().endAllDebugs();
         Log.info(Locale.get(Msg.DISABLED).toString());
+        Benchmark.pluginDisabled(Plan.class);
+        DebugLog.pluginDisabled(Plan.class);
+        TaskCenter.cancelAllKnownTasks(Plan.class);
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
+    }
+
+    @Override
+    public void onReload() {
+        try {
+            config.read();
+        } catch (IOException e) {
+            Log.toLog(this.getClass().getName(), e);
+        }
     }
 
     private void registerListeners() {
@@ -364,6 +388,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         }
 
         db.init();
+        Log.info(Locale.get(Msg.ENABLE_DB_INFO).parse(db.getConfigName()));
     }
 
     /**
@@ -460,7 +485,7 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
                 processingQueue.addToQueue(processor);
             }
         } else {
-            getRunnableFactory().createNew("Re-Add processors", new AbsRunnable() {
+            RunnableFactory.createNew("Re-Add processors", new AbsRunnable() {
                 @Override
                 public void run() {
                     addToProcessQueue(processors);
@@ -470,19 +495,66 @@ public class Plan extends BukkitPlugin<Plan> implements IPlan {
         }
     }
 
+    @Override
+    public Config getMainConfig() {
+        return config;
+    }
+
     public InformationManager getInfoManager() {
         return infoManager;
     }
 
-    public void restart() {
-        reloading = true;
-        onDisable();
-        reloadConfig();
-        onEnable();
-        reloading = false;
-    }
-
     public boolean isReloading() {
         return reloading;
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public void reloadConfig() {
+        throw new IllegalStateException("This method should be used on this plugin. Use onReload() instead");
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public FileConfiguration getConfig() {
+        throw new IllegalStateException("This method should be used on this plugin. Use getMainConfig() instead");
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public void saveConfig() {
+        throw new IllegalStateException("This method should be used on this plugin. Use getMainConfig().save() instead");
+    }
+
+    /**
+     * @deprecated Deprecated due to use of APF Config
+     */
+    @Override
+    @Deprecated
+    public void saveDefaultConfig() {
+        throw new IllegalStateException("This method should be used on this plugin.");
+    }
+
+    /**
+     * Method for getting the API.
+     * <p>
+     * Created due to necessity for testing, but can be used.
+     * For direct API getter use {@code Plan.getPlanAPI()}.
+     * <p>
+     * If Plan is reloaded a new API instance is created.
+     *
+     * @return Plan API instance.
+     */
+    public API getApi() {
+        return api;
     }
 }

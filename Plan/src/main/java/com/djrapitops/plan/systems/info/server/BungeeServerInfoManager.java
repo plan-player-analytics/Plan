@@ -5,8 +5,9 @@
 package main.java.com.djrapitops.plan.systems.info.server;
 
 import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.PlanBungee;
 import main.java.com.djrapitops.plan.ServerVariableHolder;
 import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
@@ -35,7 +36,7 @@ public class BungeeServerInfoManager {
     private final Set<UUID> onlineServers;
     private ServerTable serverTable;
 
-    public BungeeServerInfoManager(PlanBungee plugin) throws PlanEnableException {
+    public BungeeServerInfoManager(PlanBungee plugin) {
         this.plugin = plugin;
         this.db = plugin.getDB();
         serverTable = db.getServerTable();
@@ -116,15 +117,17 @@ public class BungeeServerInfoManager {
     }
 
     public void sendConfigSettings(UUID serverUUID) {
+        String webAddress = null;
         try {
             ServerInfo server = bukkitServers.get(serverUUID);
             if (server == null) {
                 return;
             }
-            String webAddress = server.getWebAddress();
+            webAddress = server.getWebAddress();
             Log.debug("Sending config settings to " + webAddress + "");
             plugin.getWebServer().getWebAPI().getAPI(ConfigurationWebAPI.class).sendRequest(webAddress, serverUUID);
         } catch (WebAPIException e) {
+            Log.info("Connection to Bukkit (" + webAddress + ") did not succeed.");
             serverHasGoneOffline(serverUUID);
         }
     }
@@ -135,32 +138,34 @@ public class BungeeServerInfoManager {
         onlineServers.add(server.getUuid());
     }
 
-    public void serverConnected(UUID serverUUID) {
+    public boolean serverConnected(UUID serverUUID) {
         if (plugin.getServerUuid().equals(serverUUID)) {
-            return;
+            return false;
         }
         Log.info("Received a connection from a Bukkit server..");
         if (onlineServers.contains(serverUUID)) {
             sendConfigSettings(serverUUID);
-            return;
+            return true;
         }
         try {
             Optional<ServerInfo> serverInfo = db.getServerTable().getServerInfo(serverUUID);
-            serverInfo.ifPresent(server -> {
-                        Log.info("Server Info found from DB: " + server.getName());
-                        plugin.getRunnableFactory().createNew("BukkitConnectionTask: " + server.getName(), new AbsRunnable() {
-                            @Override
-                            public void run() {
-                                attemptConnection(server);
-                                sendConfigSettings(serverUUID);
-                                this.cancel();
-                            }
-                        }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 3L);
+            if (serverInfo.isPresent()) {
+                ServerInfo server = serverInfo.get();
+                Log.info("Server Info found from DB: " + server.getName());
+                RunnableFactory.createNew("BukkitConnectionTask: " + server.getName(), new AbsRunnable() {
+                    @Override
+                    public void run() {
+                        attemptConnection(server);
+                        sendConfigSettings(serverUUID);
+                        this.cancel();
                     }
-            );
+                }).runTaskLaterAsynchronously(TimeAmount.SECOND.ticks() * 3L);
+                return true;
+            }
         } catch (SQLException e) {
             Log.toLog(this.getClass().getName(), e);
         }
+        return false;
     }
 
     public Collection<ServerInfo> getOnlineBukkitServers() {
@@ -175,7 +180,6 @@ public class BungeeServerInfoManager {
     }
 
     public void serverHasGoneOffline(UUID serverUUID) {
-        Log.debug("Bukkit Server Marked Offline");
         onlineServers.remove(serverUUID);
     }
 }

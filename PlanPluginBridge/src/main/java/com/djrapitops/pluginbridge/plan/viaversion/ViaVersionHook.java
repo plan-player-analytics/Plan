@@ -1,7 +1,7 @@
 package com.djrapitops.pluginbridge.plan.viaversion;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.pluginbridge.plan.Hook;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.API;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;

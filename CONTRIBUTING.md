@@ -29,5 +29,7 @@ Good practices that make PR easier to approve:
 - In case the feature in PR is not self explanatory an attempt to explain the feature should be made in the message / comments of the PR.
 - Code follows similar style as rest of the code and is easy to read. (Brackets used always, Classes with BigFirstLetter, variablesCamelCase)
 
+IF you do not want your PR to be merged yet, include WIP in the title of the PR.
+
 PRs are never merged directly to the `master`-branch, and are instead merged into next version specific branch.  
 IF no version specific branch is available when making a PR, select master and notify in the comments about the fact - Maintainers will create a new version specific branch and change the branch of the PR.

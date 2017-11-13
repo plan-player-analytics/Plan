@@ -4,7 +4,6 @@ import com.djrapitops.plugin.command.CommandType;
 import com.djrapitops.plugin.command.ISender;
 import com.djrapitops.plugin.command.SubCommand;
 import com.djrapitops.plugin.settings.ColorScheme;
-import com.djrapitops.plugin.settings.Version;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.locale.Locale;
@@ -40,11 +39,11 @@ public class InfoCommand extends SubCommand {
         String mColor = cs.getMainColor();
         String sColor = cs.getSecondaryColor();
         String tColor = cs.getTertiaryColor();
+        String ball = Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString();
         String[] messages = {
                 Locale.get(Msg.CMD_HEADER_INFO).toString(),
-                Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString() + mColor + " Version: " + sColor + plugin.getDescription().getVersion(),
-                Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString() + tColor + " " + Version.checkVersion(plugin),
-                Locale.get(Msg.CMD_CONSTANT_LIST_BALL).toString() + mColor + " Active Database: " + tColor + plugin.getDB().getConfigName(),
+                ball + mColor + " Version: " + sColor + plugin.getDescription().getVersion(),
+                ball + mColor + " Active Database: " + tColor + plugin.getDB().getConfigName(),
                 Locale.get(Msg.CMD_CONSTANT_FOOTER).toString()
         };
         sender.sendMessage(messages);

@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.data;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.data.analysis.*;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 import main.java.com.djrapitops.plan.utilities.html.HtmlUtils;
 

@@ -184,7 +184,7 @@ public abstract class Table {
     }
 
     protected boolean execute(ExecStatement statement) throws SQLException {
-        boolean updatedSomething = false;
+        boolean updatedSomething;
         Connection connection = null;
         try {
             connection = getConnection();

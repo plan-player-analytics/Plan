@@ -4,11 +4,11 @@
  */
 package main.java.com.djrapitops.plan.database.tables.move;
 
+import com.djrapitops.plugin.api.Benchmark;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DBCreateTableException;
 import main.java.com.djrapitops.plan.database.databases.SQLDB;
 import main.java.com.djrapitops.plan.database.tables.*;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.SQLException;
 import java.util.Optional;

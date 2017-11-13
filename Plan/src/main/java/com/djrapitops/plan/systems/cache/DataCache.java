@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.systems.cache;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.database.Database;
 
@@ -114,7 +114,7 @@ public class DataCache extends SessionCache {
     }
 
     /**
-     * Check if a session is player's first session on the server.
+     * Condition if a session is player's first session on the server.
      *
      * @param uuid UUID of the player
      * @return true / false

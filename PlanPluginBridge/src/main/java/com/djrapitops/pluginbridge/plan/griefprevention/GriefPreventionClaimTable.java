@@ -1,6 +1,6 @@
 package com.djrapitops.pluginbridge.plan.griefprevention;
 
-import com.djrapitops.plugin.utilities.FormattingUtils;
+import com.djrapitops.plugin.utilities.FormatUtils;
 import com.djrapitops.plugin.utilities.Verify;
 import main.java.com.djrapitops.plan.data.additional.PluginData;
 import main.java.com.djrapitops.plan.utilities.html.Html;
@@ -52,7 +52,7 @@ public class GriefPreventionClaimTable extends PluginData {
                 .filter(Objects::nonNull)
                 .filter(claim -> uuid.equals(claim.ownerID))
                 .forEach(claim -> {
-                    String location = FormattingUtils.formatLocation(claim.getGreaterBoundaryCorner());
+                    String location = FormatUtils.formatLocation(claim.getGreaterBoundaryCorner());
                     int area = claim.getArea();
                     html.append(Html.TABLELINE_2.parse(location, area));
                 });

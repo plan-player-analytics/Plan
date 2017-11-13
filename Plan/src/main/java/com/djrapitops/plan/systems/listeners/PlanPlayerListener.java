@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.systems.listeners;
 
-import com.djrapitops.plugin.utilities.player.Fetch;
+import com.djrapitops.plugin.api.systems.NotificationCenter;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.data.Session;
 import main.java.com.djrapitops.plan.systems.cache.DataCache;
@@ -80,7 +80,7 @@ public class PlanPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        plugin.getNotificationCenter().checkNotifications(Fetch.wrapBukkit(player));
+        NotificationCenter.checkNotifications(player);
 
         UUID uuid = player.getUniqueId();
         long time = MiscUtils.getTime();

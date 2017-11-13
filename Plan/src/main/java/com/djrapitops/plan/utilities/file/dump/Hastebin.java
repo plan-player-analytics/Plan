@@ -1,8 +1,8 @@
 package main.java.com.djrapitops.plan.utilities.file.dump;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import main.java.com.djrapitops.plan.Log;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

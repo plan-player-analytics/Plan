@@ -4,7 +4,7 @@
  */
 package main.java.com.djrapitops.plan.systems.processing.player;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.systems.cache.GeolocationCache;
 

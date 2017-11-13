@@ -30,7 +30,7 @@ public abstract class RawData {
     }
 
     /**
-     * Check if analyseData() has been called.
+     * Condition if analyseData() has been called.
      *
      * @return true if the method has been called.
      */

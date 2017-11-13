@@ -1,6 +1,6 @@
 package main.java.com.djrapitops.plan.systems.webserver.response;
 
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -8,7 +8,7 @@ import main.java.com.djrapitops.plan.utilities.file.FileUtil;
 import main.java.com.djrapitops.plan.utilities.html.Html;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class PlayersPageResponse extends Response {
             replace.put("content", buildContent(names));
             replace.put("version", plugin.getVersion());
             super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("players.html"), replace)));
-        } catch (SQLException | FileNotFoundException e) {
+        } catch (SQLException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             setContent(new InternalErrorResponse(e, "/players").getContent());
         }

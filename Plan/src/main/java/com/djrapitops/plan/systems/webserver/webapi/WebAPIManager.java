@@ -14,14 +14,13 @@ import java.util.*;
 public class WebAPIManager {
 
     private final Map<String, WebAPI> registry;
-    private final Set<String> accessKeys;
+    private static final Set<String> accessKeys = new HashSet<>();
 
     /**
      * Constructor used to hide the public constructor
      */
     public WebAPIManager() {
         registry = new HashMap<>();
-        accessKeys = new HashSet<>();
     }
 
     public void registerNewAPI(WebAPI... api) {

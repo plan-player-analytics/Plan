@@ -6,6 +6,7 @@ import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
+import main.java.com.djrapitops.plan.api.exceptions.PlanEnableException;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
 
 import java.io.File;
@@ -104,13 +105,12 @@ public class GeolocationCache {
     /**
      * Checks if the DB exists, if not, it downloads it
      *
-     * @throws IOException when an error at download or saving the DB happens
+     * @throws PlanEnableException when an error at download or saving the DB happens
      */
     public static void checkDB() throws IOException {
         if (geolocationDB.exists()) {
             return;
         }
-
         URL downloadSite = new URL("http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz");
         try (ReadableByteChannel rbc = Channels.newChannel(new GZIPInputStream(downloadSite.openStream()));
              FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())) {

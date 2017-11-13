@@ -1,3 +1,9 @@
+# -----------------------------------------------------
+# Plan Bungee Configuration file
+# More information about each setting:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bungee-Configuration
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
+# -----------------------------------------------------
 Server:
   IP: 0.0.0.0
 Network:
@@ -7,6 +13,10 @@ Plugin:
   Debug: 'false'
   Locale: default
 
+# -----------------------------------------------------
+# More information about SSL Certificate Settings:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
+# -----------------------------------------------------
 WebServer:
   Port: 8804
   InternalIP: 0.0.0.0
@@ -16,7 +26,7 @@ WebServer:
       KeyPass: 'default'
       StorePass: 'default'
       Alias: 'alias'
-
+# -----------------------------------------------------
 Database:
   MySQL:
     Host: localhost
@@ -24,7 +34,7 @@ Database:
     User: root
     Password: minecraft
     Database: Plan
-
+# -----------------------------------------------------
 Commands:
   AlternativeIP:
     Enabled: false
@@ -45,7 +55,7 @@ Data:
   Commands:
     LogUnknownCommands: false
     CombineCommandAliases: true
-
+# -----------------------------------------------------
 Customization:
   Formatting:
     DecimalPoints: '#.##'
@@ -61,6 +71,10 @@ Customization:
       Seconds: '%seconds%s'
       Zero: '0s'
 
+# -----------------------------------------------------
+# More information about Themes:
+# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+# -----------------------------------------------------
 Theme:
   Base: Default
   Font:
@@ -93,7 +107,7 @@ Theme:
     ActivityPie: '"#228B22", "#A9A9A9", "#808080", "#951800"'
     ServerPreferencePie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
 
-
+# -----------------------------------------------------
 Servers:
   Example:
     WebServerPort: 8034

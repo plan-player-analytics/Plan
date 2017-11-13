@@ -1,6 +1,7 @@
 package main.java.com.djrapitops.plan.utilities;
 
 import com.djrapitops.plugin.command.ISender;
+import com.djrapitops.plugin.command.bukkit.BukkitCMDSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import static junit.framework.TestCase.assertTrue;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JavaPlugin.class)
-public class CheckTest {
+public class ConditionTest {
 
     @Before
     public void setUp() throws Exception {
@@ -30,23 +31,23 @@ public class CheckTest {
     public void testTrueCheck() {
         String message = RandomData.randomString(10);
 
-        assertTrue(Check.isTrue(true, message));
+        assertTrue(Condition.isTrue(true, message));
     }
 
     @Test
     public void testTrueAtISenderCheck() {
         String message = RandomData.randomString(10);
-        ISender sender = MockUtils.mockIPlayer();
+        ISender sender = new BukkitCMDSender(MockUtils.mockPlayer());
 
-        assertTrue(Check.isTrue(true, message, sender));
-        assertFalse(Check.isTrue(false, message, sender));
+        assertTrue(Condition.isTrue(true, message, sender));
+        assertFalse(Condition.isTrue(false, message, sender));
     }
 
     @Test
     public void testErrorCheck() {
         String message = RandomData.randomString(10);
 
-        assertTrue(Check.errorIfFalse(true, message));
-        assertFalse(Check.errorIfFalse(false, message));
+        assertTrue(Condition.errorIfFalse(true, message));
+        assertFalse(Condition.errorIfFalse(false, message));
     }
 }

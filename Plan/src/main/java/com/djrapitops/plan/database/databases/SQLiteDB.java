@@ -1,8 +1,9 @@
 package main.java.com.djrapitops.plan.database.databases;
 
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.ITask;
-import main.java.com.djrapitops.plan.Log;
+import com.djrapitops.plugin.task.RunnableFactory;
 import main.java.com.djrapitops.plan.Plan;
 import main.java.com.djrapitops.plan.api.exceptions.DatabaseInitException;
 import main.java.com.djrapitops.plan.utilities.MiscUtils;
@@ -85,7 +86,7 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
 
         // Maintains Connection.
-        connectionPingTask = plugin.getRunnableFactory().createNew(new AbsRunnable("DBConnectionPingTask " + getName()) {
+        connectionPingTask = RunnableFactory.createNew(new AbsRunnable("DBConnectionPingTask " + getName()) {
             @Override
             public void run() {
                 Statement statement = null;

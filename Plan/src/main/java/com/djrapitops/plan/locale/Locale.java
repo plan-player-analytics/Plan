@@ -1,13 +1,13 @@
 package main.java.com.djrapitops.plan.locale;
 
+import com.djrapitops.plugin.api.Benchmark;
+import com.djrapitops.plugin.api.utility.log.Log;
 import com.djrapitops.plugin.settings.ColorScheme;
 import com.djrapitops.plugin.settings.DefaultMessages;
 import com.djrapitops.plugin.utilities.Verify;
-import main.java.com.djrapitops.plan.Log;
 import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.Settings;
 import main.java.com.djrapitops.plan.api.IPlan;
-import main.java.com.djrapitops.plan.utilities.Benchmark;
 import main.java.com.djrapitops.plan.utilities.comparators.LocaleEntryComparator;
 import main.java.com.djrapitops.plan.utilities.comparators.StringLengthComparator;
 import main.java.com.djrapitops.plan.utilities.file.FileUtil;
@@ -97,7 +97,8 @@ public class Locale {
                 .map(entry -> getSpacedIdentifier(entry.getKey().getIdentifier(), length) + "|| " + entry.getValue().toString())
                 .collect(Collectors.toList());
         Files.write(new File(plugin.getDataFolder(), "locale.txt").toPath(), lines, StandardCharsets.UTF_8);
-        plugin.getIConfig().getConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
+        plugin.getMainConfig().set(Settings.WRITE_NEW_LOCALE.getPath(), false);
+        plugin.getMainConfig().save();
     }
 
     private String getSpacedIdentifier(String identifier, int length) {
@@ -150,7 +151,7 @@ public class Locale {
         add(Msg.ANALYSIS_FETCH, analysis + "Fetching Data..");
         add(Msg.ANALYSIS_PHASE_START, analysis + "Data Fetched (${0} users, took ${1}ms), beginning Analysis of data..");
         add(Msg.ANALYSIS_3RD_PARTY, analysis + "Analyzing additional data sources (3rd party)");
-        add(Msg.ANALYSIS_FINISHED, analysis + "Analysis Complete. (took ${0}ms) ${1}");
+        add(Msg.ANALYSIS_FINISHED, analysis + "Analysis Complete. (took ${0} ms) ${1}");
         add(Msg.ANALYSIS_FAIL_NO_PLAYERS, analysis + "Analysis failed, no known players.");
         add(Msg.ANALYSIS_FAIL_NO_DATA, analysis + "Analysis failed, no data in the database.");
         add(Msg.ANALYSIS_FAIL_FETCH_EXCEPTION, analysis + "Failed to fetch data for Analysis, Exception occurred.");

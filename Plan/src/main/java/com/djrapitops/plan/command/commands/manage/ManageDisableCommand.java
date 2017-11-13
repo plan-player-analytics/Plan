@@ -7,7 +7,7 @@ import main.java.com.djrapitops.plan.Permissions;
 import main.java.com.djrapitops.plan.locale.Locale;
 import main.java.com.djrapitops.plan.locale.Msg;
 import main.java.com.djrapitops.plan.systems.listeners.PlanPlayerListener;
-import main.java.com.djrapitops.plan.utilities.Check;
+import main.java.com.djrapitops.plan.utilities.Condition;
 
 /**
  * This manage SubCommand is used to disable some features of the plugin temporarily.
@@ -21,7 +21,7 @@ public class ManageDisableCommand extends SubCommand {
      */
     public ManageDisableCommand() {
         super("disable",
-                CommandType.CONSOLE_WITH_ARGUMENTS,
+                CommandType.PLAYER_OR_ARGS,
                 Permissions.MANAGE.getPermission(),
                 "Used to disable some features of the Plugin temporarily",
                 "<feature>");
@@ -29,7 +29,7 @@ public class ManageDisableCommand extends SubCommand {
 
     @Override
     public boolean onCommand(ISender sender, String commandLabel, String[] args) {
-        if (!Check.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
+        if (!Condition.isTrue(args.length >= 1, Locale.get(Msg.CMD_FAIL_REQ_ARGS).parse(this.getArguments()), sender)) {
             return true;
         }
         switch (args[0].toLowerCase()) {
