@@ -28,7 +28,7 @@ public class PluginConfigSectionHandler {
             return false;
         }
 
-        ConfigNode pluginSection = section.getConfigNode(pluginName);
+        ConfigNode pluginSection = section.getConfigNode(pluginName + ".Data");
         return pluginSection.getChildren().containsKey(dataSource.placeholder);
     }
 
