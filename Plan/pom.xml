@@ -158,28 +158,16 @@
                 <targetPath>.</targetPath>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>*.keystore</include>
-                    <include>*.css</include>
-                    <include>*.yml</include>
-                    <include>*.html</include>
+                    <include>**/*.keystore</include>
+                    <include>**/*.css</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.html</include>
+                    <include>**/*.js</include>
+                    <include>**/*.css</include>
                 </includes>
                 <excludes>
                     <exclude>licence.yml</exclude>
                 </excludes>
-            </resource>
-            <resource>
-                <targetPath>.</targetPath>
-                <directory>${basedir}/src/main/resources/html</directory>
-                <includes>
-                    <include>*.html</include>
-                </includes>
-            </resource>
-            <resource>
-                <targetPath>.</targetPath>
-                <directory>${basedir}/src/main/resources/js</directory>
-                <includes>
-                    <include>*.js</include>
-                </includes>
             </resource>
         </resources>
         <plugins>

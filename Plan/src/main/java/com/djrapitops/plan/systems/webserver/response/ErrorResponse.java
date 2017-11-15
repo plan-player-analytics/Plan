@@ -26,7 +26,7 @@ public class ErrorResponse extends Response {
 
     public ErrorResponse() {
         try {
-            setContent(Theme.replaceColors(FileUtil.getStringFromResource("error.html")));
+            setContent(Theme.replaceColors(FileUtil.getStringFromResource("web/error.html")));
         } catch (IOException e) {
             Log.toLog(this.getClass().getName(), e);
         }

@@ -58,7 +58,7 @@ public class NetworkPageParser extends PageParser {
             Map<UUID, String> networkPageContents = ((BungeeInformationManager) plugin.getInfoManager()).getNetworkPageContent();
             addValue("contentServers", HtmlStructure.createNetworkPageContent(networkPageContents));
 
-            return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("network.html"), placeHolders);
+            return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/network.html"), placeHolders);
         } catch (Exception e) {
             throw new ParseException(e);
         }

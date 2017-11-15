@@ -45,7 +45,7 @@ public class RequestHandler implements HttpHandler {
             response.send(exchange);
         } catch (IOException e) {
             if (Settings.DEV_MODE.isTrue()) {
-                Log.toLog(this.getClass().getName(), e);
+                e.printStackTrace();
             }
         } finally {
             exchange.close();

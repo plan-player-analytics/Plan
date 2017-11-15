@@ -27,7 +27,7 @@ public class PlayersPageResponse extends Response {
             Map<String, String> replace = new HashMap<>();
             replace.put("content", buildContent(names));
             replace.put("version", plugin.getVersion());
-            super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("players.html"), replace)));
+            super.setContent(Theme.replaceColors(StrSubstitutor.replace(FileUtil.getStringFromResource("web/players.html"), replace)));
         } catch (SQLException | IOException e) {
             Log.toLog(this.getClass().getName(), e);
             setContent(new InternalErrorResponse(e, "/players").getContent());

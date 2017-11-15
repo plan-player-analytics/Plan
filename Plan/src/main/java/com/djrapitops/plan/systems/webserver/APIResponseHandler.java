@@ -42,7 +42,7 @@ public class APIResponseHandler {
             return PageCache.loadPage("Redirect: favicon", () -> new RedirectResponse("https://puu.sh/tK0KL/6aa2ba141b.ico"));
         }
         if (target.endsWith(".css")) {
-            return PageCache.loadPage(target + "css", () -> new CSSResponse("main.css"));
+            return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
         }
 
         if (args.length < 2 || !"api".equals(args[1])) {

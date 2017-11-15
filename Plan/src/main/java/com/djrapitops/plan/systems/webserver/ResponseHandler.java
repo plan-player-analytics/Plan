@@ -47,12 +47,11 @@ public class ResponseHandler extends APIResponseHandler {
                 return getAPIResponse(request);
             }
             if (target.endsWith(".css")) {
-                return PageCache.loadPage(target + "css", () -> new CSSResponse("main.css"));
+                return PageCache.loadPage(target + "css", () -> new CSSResponse(target));
             }
 
             if (target.endsWith(".js")) {
-                String fileName = args[args.length - 1];
-                return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(fileName));
+                return PageCache.loadPage(target + "js", () -> new JavaScriptResponse(target));
             }
 
             UUID serverUUID = MiscUtils.getIPlan().getServerUuid();

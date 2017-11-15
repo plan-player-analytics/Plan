@@ -26,7 +26,8 @@ public class FileUtil {
     public static String getStringFromResource(String fileName) throws IOException {
         StringBuilder html = new StringBuilder();
         IPlan plugin = MiscUtils.getIPlan();
-        lines(MiscUtils.getIPlan(), new File(plugin.getDataFolder(), fileName), fileName)
+
+        lines(MiscUtils.getIPlan(), new File(plugin.getDataFolder(), fileName.replace("/", File.separator)), fileName)
                 .forEach(line -> html.append(line).append("\r\n"));
         return html.toString();
     }
@@ -47,7 +48,6 @@ public class FileUtil {
                 lines.add(scanner.nextLine());
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
             throw new FileNotFoundException("File not found inside jar: " + resource);
         } finally {
             MiscUtils.close(scanner);

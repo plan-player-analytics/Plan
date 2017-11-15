@@ -44,7 +44,7 @@ public class AnalysisPageParser extends PageParser {
         addValue("playersMax", plugin.getVariable().getMaxPlayers());
         addValue("playersOnline", getPlayersOnline());
         try {
-            return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("server.html"), placeHolders);
+            return HtmlUtils.replacePlaceholders(FileUtil.getStringFromResource("web/server.html"), placeHolders);
         } catch (IOException e) {
             throw new ParseException(e);
         }
