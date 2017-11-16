@@ -28,7 +28,7 @@ public enum Html {
     COLOR_E("<span class=\"yellow\">"),
     COLOR_F("<span class=\"white\">"),
     //
-    FONT_AWESOME_ICON("<i class=\"fa fa-${0}\" aria-hidden=\"true\"></i>"),
+    FONT_AWESOME_ICON("<i class=\"fa fa-${0}\"></i>"),
     SPAN("${0}</span>"),
     BUTTON("<a class=\"button\" href=\"${0}\">${1}</a>"),
     BUTTON_CLASS("class=\"button\""),
