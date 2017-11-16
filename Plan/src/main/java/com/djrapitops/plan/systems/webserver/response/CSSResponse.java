@@ -9,7 +9,7 @@ import main.java.com.djrapitops.plan.systems.webserver.theme.Theme;
 public class CSSResponse extends FileResponse {
 
     public CSSResponse(String fileName) {
-        super("web" + fileName);
+        super(format(fileName));
         super.setType(ResponseType.CSS);
         setContent(Theme.replaceColors(getContent()));
     }

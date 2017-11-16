@@ -31,7 +31,7 @@ public class DebugPageResponse extends ErrorResponse {
 
     public DebugPageResponse() {
         super.setHeader("HTTP/1.1 200 OK");
-        super.setTitle("Debug Information");
+        super.setTitle(Html.FONT_AWESOME_ICON.parse("bug") + " Debug Information");
         super.setParagraph(buildParagraph());
         replacePlaceholders();
     }

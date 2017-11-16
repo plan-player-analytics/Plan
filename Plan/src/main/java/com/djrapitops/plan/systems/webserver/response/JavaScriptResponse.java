@@ -7,7 +7,7 @@ package main.java.com.djrapitops.plan.systems.webserver.response;
 public class JavaScriptResponse extends FileResponse {
 
     public JavaScriptResponse(String fileName) {
-        super("web" + fileName);
+        super(format(fileName));
         super.setType(ResponseType.JAVASCRIPT);
     }
 }
