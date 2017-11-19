@@ -1,5 +1,6 @@
 package main.java.com.djrapitops.plan.utilities.analysis;
 
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.api.utility.log.Log;
 import main.java.com.djrapitops.plan.api.IPlan;
 import main.java.com.djrapitops.plan.data.Session;
@@ -218,6 +219,7 @@ public class AnalysisUtils {
         return total / numberOfDays;
     }
 
+    @Deprecated
     public static long getNewUsersPerDay(List<Long> registers, long scale) {
         long now = MiscUtils.getTime();
         long nowMinusScale = now - scale;
@@ -271,15 +273,30 @@ public class AnalysisUtils {
         }).collect(Collectors.toList());
     }
 
-    private static int getDayOfYear(Session session) {
+    public static int getDayOfYear(Session session) {
         return getDayOfYear(session.getSessionStart());
 
     }
 
-    private static int getDayOfYear(long date) {
+    public static int getDayOfYear(long date) {
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(date);
         return day.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public double getAveragePerDay(long after, long before, long total) {
+        return total / getNumberOfDaysBetween(after, before);
+    }
+
+    public static long getNumberOfDaysBetween(long start, long end) {
+        long value = 0;
+        long test = start;
+        long day = TimeAmount.DAY.ms();
+        while (test < end) {
+            test += day;
+            value++;
+        }
+        return value;
     }
 
     @Deprecated

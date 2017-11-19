@@ -202,6 +202,9 @@ public class PlayerProfile implements OfflinePlayer {
         return 0L;
     }
 
+    public boolean playedBetween(long after, long before) {
+        return getSessions(after, before).findFirst().isPresent();
+    }
 
     // Special Getters
 
@@ -211,7 +214,7 @@ public class PlayerProfile implements OfflinePlayer {
 
     public Stream<Session> getSessions(long after, long before) {
         return getAllSessions()
-                .filter(session -> session.getSessionStart() > after && session.getSessionEnd() < before);
+                .filter(session -> session.getSessionStart() >= after && session.getSessionEnd() <= before);
     }
 
     public GeoInfo getMostRecentGeoInfo() {
